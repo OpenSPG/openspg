@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 Ant Group CO., Ltd.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper.DataSourceUsageDOMapper">
+  <resultMap id="BaseResultMap" type="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceUsageDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="data_source_name" jdbcType="VARCHAR" property="dataSourceName" />
+    <result column="usage_type" jdbcType="VARCHAR" property="usageType" />
+    <result column="is_default" jdbcType="TINYINT" property="isDefault" />
+    <result column="mount_object_id" jdbcType="VARCHAR" property="mountObjectId" />
+    <result column="mount_object_type" jdbcType="VARCHAR" property="mountObjectType" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, gmt_create, gmt_modified, data_source_name, usage_type, is_default, mount_object_id, 
+    mount_object_type
+  </sql>
+  <select id="selectByExample" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceUsageDOExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from kg_data_source_usage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${@com.antgroup.openspg.cloudext.impl.repository.jdbc.SecurityUtils@trimSql4OrderBy(orderByClause)}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from kg_data_source_usage
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from kg_data_source_usage
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceUsageDOExample">
+    delete from kg_data_source_usage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceUsageDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into kg_data_source_usage (gmt_create, gmt_modified, data_source_name, 
+      usage_type, is_default, mount_object_id, 
+      mount_object_type)
+    values (#{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{dataSourceName,jdbcType=VARCHAR}, 
+      #{usageType,jdbcType=VARCHAR}, #{isDefault,jdbcType=TINYINT}, #{mountObjectId,jdbcType=VARCHAR}, 
+      #{mountObjectType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceUsageDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into kg_data_source_usage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+      <if test="dataSourceName != null">
+        data_source_name,
+      </if>
+      <if test="usageType != null">
+        usage_type,
+      </if>
+      <if test="isDefault != null">
+        is_default,
+      </if>
+      <if test="mountObjectId != null">
+        mount_object_id,
+      </if>
+      <if test="mountObjectType != null">
+        mount_object_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataSourceName != null">
+        #{dataSourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="usageType != null">
+        #{usageType,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=TINYINT},
+      </if>
+      <if test="mountObjectId != null">
+        #{mountObjectId,jdbcType=VARCHAR},
+      </if>
+      <if test="mountObjectType != null">
+        #{mountObjectType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceUsageDOExample" resultType="java.lang.Long">
+    select count(*) from kg_data_source_usage
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update kg_data_source_usage
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.gmtCreate != null">
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtModified != null">
+        gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.dataSourceName != null">
+        data_source_name = #{record.dataSourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usageType != null">
+        usage_type = #{record.usageType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDefault != null">
+        is_default = #{record.isDefault,jdbcType=TINYINT},
+      </if>
+      <if test="record.mountObjectId != null">
+        mount_object_id = #{record.mountObjectId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mountObjectType != null">
+        mount_object_type = #{record.mountObjectType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update kg_data_source_usage
+    set id = #{record.id,jdbcType=BIGINT},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      data_source_name = #{record.dataSourceName,jdbcType=VARCHAR},
+      usage_type = #{record.usageType,jdbcType=VARCHAR},
+      is_default = #{record.isDefault,jdbcType=TINYINT},
+      mount_object_id = #{record.mountObjectId,jdbcType=VARCHAR},
+      mount_object_type = #{record.mountObjectType,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceUsageDO">
+    update kg_data_source_usage
+    <set>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dataSourceName != null">
+        data_source_name = #{dataSourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="usageType != null">
+        usage_type = #{usageType,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null">
+        is_default = #{isDefault,jdbcType=TINYINT},
+      </if>
+      <if test="mountObjectId != null">
+        mount_object_id = #{mountObjectId,jdbcType=VARCHAR},
+      </if>
+      <if test="mountObjectType != null">
+        mount_object_type = #{mountObjectType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceUsageDO">
+    update kg_data_source_usage
+    set gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      data_source_name = #{dataSourceName,jdbcType=VARCHAR},
+      usage_type = #{usageType,jdbcType=VARCHAR},
+      is_default = #{isDefault,jdbcType=TINYINT},
+      mount_object_id = #{mountObjectId,jdbcType=VARCHAR},
+      mount_object_type = #{mountObjectType,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

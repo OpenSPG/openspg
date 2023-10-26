@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 Ant Group CO., Ltd.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper.OntologyPropertyDOMapper">
+  <resultMap id="BaseResultMap" type="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="domain_id" jdbcType="BIGINT" property="domainId" />
+    <result column="property_name" jdbcType="VARCHAR" property="propertyName" />
+    <result column="range_id" jdbcType="BIGINT" property="rangeId" />
+    <result column="property_name_zh" jdbcType="VARCHAR" property="propertyNameZh" />
+    <result column="constraint_id" jdbcType="BIGINT" property="constraintId" />
+    <result column="property_category" jdbcType="VARCHAR" property="propertyCategory" />
+    <result column="map_type" jdbcType="VARCHAR" property="mapType" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="original_id" jdbcType="BIGINT" property="originalId" />
+    <result column="store_property_name" jdbcType="VARCHAR" property="storePropertyName" />
+    <result column="transformer_id" jdbcType="BIGINT" property="transformerId" />
+    <result column="property_desc" jdbcType="VARCHAR" property="propertyDesc" />
+    <result column="property_desc_zh" jdbcType="VARCHAR" property="propertyDescZh" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="original_domain_id" jdbcType="BIGINT" property="originalDomainId" />
+    <result column="original_range_id" jdbcType="BIGINT" property="originalRangeId" />
+    <result column="version_status" jdbcType="VARCHAR" property="versionStatus" />
+    <result column="relation_source" jdbcType="VARCHAR" property="relationSource" />
+    <result column="direction" jdbcType="VARCHAR" property="direction" />
+    <result column="mask_type" jdbcType="VARCHAR" property="maskType" />
+    <result column="multiver_config" jdbcType="VARCHAR" property="multiverConfig" />
+    <result column="property_source" jdbcType="BIGINT" property="propertySource" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDO">
+    <result column="property_config" jdbcType="LONGVARCHAR" property="propertyConfig" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, domain_id, property_name, range_id, property_name_zh, constraint_id, property_category, 
+    map_type, version, status, gmt_create, gmt_modified, original_id, store_property_name, 
+    transformer_id, property_desc, property_desc_zh, project_id, original_domain_id, 
+    original_range_id, version_status, relation_source, direction, mask_type, multiver_config, 
+    property_source
+  </sql>
+  <sql id="Blob_Column_List">
+    property_config
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDOExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from kg_ontology_entity_property_range
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${@com.antgroup.openspg.cloudext.impl.repository.jdbc.SecurityUtils@trimSql4OrderBy(orderByClause)}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDOExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from kg_ontology_entity_property_range
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${@com.antgroup.openspg.cloudext.impl.repository.jdbc.SecurityUtils@trimSql4OrderBy(orderByClause)}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from kg_ontology_entity_property_range
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from kg_ontology_entity_property_range
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDOExample">
+    delete from kg_ontology_entity_property_range
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDO">
+    insert into kg_ontology_entity_property_range (id, domain_id, property_name, 
+      range_id, property_name_zh, constraint_id, 
+      property_category, map_type, version, 
+      status, gmt_create, gmt_modified, 
+      original_id, store_property_name, transformer_id, 
+      property_desc, property_desc_zh, project_id, 
+      original_domain_id, original_range_id, version_status, 
+      relation_source, direction, mask_type, 
+      multiver_config, property_source, property_config
+      )
+    values (#{id,jdbcType=BIGINT}, #{domainId,jdbcType=BIGINT}, #{propertyName,jdbcType=VARCHAR}, 
+      #{rangeId,jdbcType=BIGINT}, #{propertyNameZh,jdbcType=VARCHAR}, #{constraintId,jdbcType=BIGINT}, 
+      #{propertyCategory,jdbcType=VARCHAR}, #{mapType,jdbcType=VARCHAR}, #{version,jdbcType=INTEGER}, 
+      #{status,jdbcType=CHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{originalId,jdbcType=BIGINT}, #{storePropertyName,jdbcType=VARCHAR}, #{transformerId,jdbcType=BIGINT}, 
+      #{propertyDesc,jdbcType=VARCHAR}, #{propertyDescZh,jdbcType=VARCHAR}, #{projectId,jdbcType=BIGINT}, 
+      #{originalDomainId,jdbcType=BIGINT}, #{originalRangeId,jdbcType=BIGINT}, #{versionStatus,jdbcType=VARCHAR}, 
+      #{relationSource,jdbcType=VARCHAR}, #{direction,jdbcType=VARCHAR}, #{maskType,jdbcType=VARCHAR}, 
+      #{multiverConfig,jdbcType=VARCHAR}, #{propertySource,jdbcType=BIGINT}, #{propertyConfig,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDO">
+    insert into kg_ontology_entity_property_range
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="domainId != null">
+        domain_id,
+      </if>
+      <if test="propertyName != null">
+        property_name,
+      </if>
+      <if test="rangeId != null">
+        range_id,
+      </if>
+      <if test="propertyNameZh != null">
+        property_name_zh,
+      </if>
+      <if test="constraintId != null">
+        constraint_id,
+      </if>
+      <if test="propertyCategory != null">
+        property_category,
+      </if>
+      <if test="mapType != null">
+        map_type,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+      <if test="originalId != null">
+        original_id,
+      </if>
+      <if test="storePropertyName != null">
+        store_property_name,
+      </if>
+      <if test="transformerId != null">
+        transformer_id,
+      </if>
+      <if test="propertyDesc != null">
+        property_desc,
+      </if>
+      <if test="propertyDescZh != null">
+        property_desc_zh,
+      </if>
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="originalDomainId != null">
+        original_domain_id,
+      </if>
+      <if test="originalRangeId != null">
+        original_range_id,
+      </if>
+      <if test="versionStatus != null">
+        version_status,
+      </if>
+      <if test="relationSource != null">
+        relation_source,
+      </if>
+      <if test="direction != null">
+        direction,
+      </if>
+      <if test="maskType != null">
+        mask_type,
+      </if>
+      <if test="multiverConfig != null">
+        multiver_config,
+      </if>
+      <if test="propertySource != null">
+        property_source,
+      </if>
+      <if test="propertyConfig != null">
+        property_config,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="domainId != null">
+        #{domainId,jdbcType=BIGINT},
+      </if>
+      <if test="propertyName != null">
+        #{propertyName,jdbcType=VARCHAR},
+      </if>
+      <if test="rangeId != null">
+        #{rangeId,jdbcType=BIGINT},
+      </if>
+      <if test="propertyNameZh != null">
+        #{propertyNameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="constraintId != null">
+        #{constraintId,jdbcType=BIGINT},
+      </if>
+      <if test="propertyCategory != null">
+        #{propertyCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="mapType != null">
+        #{mapType,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="originalId != null">
+        #{originalId,jdbcType=BIGINT},
+      </if>
+      <if test="storePropertyName != null">
+        #{storePropertyName,jdbcType=VARCHAR},
+      </if>
+      <if test="transformerId != null">
+        #{transformerId,jdbcType=BIGINT},
+      </if>
+      <if test="propertyDesc != null">
+        #{propertyDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyDescZh != null">
+        #{propertyDescZh,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="originalDomainId != null">
+        #{originalDomainId,jdbcType=BIGINT},
+      </if>
+      <if test="originalRangeId != null">
+        #{originalRangeId,jdbcType=BIGINT},
+      </if>
+      <if test="versionStatus != null">
+        #{versionStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="relationSource != null">
+        #{relationSource,jdbcType=VARCHAR},
+      </if>
+      <if test="direction != null">
+        #{direction,jdbcType=VARCHAR},
+      </if>
+      <if test="maskType != null">
+        #{maskType,jdbcType=VARCHAR},
+      </if>
+      <if test="multiverConfig != null">
+        #{multiverConfig,jdbcType=VARCHAR},
+      </if>
+      <if test="propertySource != null">
+        #{propertySource,jdbcType=BIGINT},
+      </if>
+      <if test="propertyConfig != null">
+        #{propertyConfig,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDOExample" resultType="java.lang.Long">
+    select count(*) from kg_ontology_entity_property_range
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update kg_ontology_entity_property_range
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.domainId != null">
+        domain_id = #{record.domainId,jdbcType=BIGINT},
+      </if>
+      <if test="record.propertyName != null">
+        property_name = #{record.propertyName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rangeId != null">
+        range_id = #{record.rangeId,jdbcType=BIGINT},
+      </if>
+      <if test="record.propertyNameZh != null">
+        property_name_zh = #{record.propertyNameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.constraintId != null">
+        constraint_id = #{record.constraintId,jdbcType=BIGINT},
+      </if>
+      <if test="record.propertyCategory != null">
+        property_category = #{record.propertyCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="record.mapType != null">
+        map_type = #{record.mapType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.version != null">
+        version = #{record.version,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=CHAR},
+      </if>
+      <if test="record.gmtCreate != null">
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtModified != null">
+        gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.originalId != null">
+        original_id = #{record.originalId,jdbcType=BIGINT},
+      </if>
+      <if test="record.storePropertyName != null">
+        store_property_name = #{record.storePropertyName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.transformerId != null">
+        transformer_id = #{record.transformerId,jdbcType=BIGINT},
+      </if>
+      <if test="record.propertyDesc != null">
+        property_desc = #{record.propertyDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.propertyDescZh != null">
+        property_desc_zh = #{record.propertyDescZh,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectId != null">
+        project_id = #{record.projectId,jdbcType=BIGINT},
+      </if>
+      <if test="record.originalDomainId != null">
+        original_domain_id = #{record.originalDomainId,jdbcType=BIGINT},
+      </if>
+      <if test="record.originalRangeId != null">
+        original_range_id = #{record.originalRangeId,jdbcType=BIGINT},
+      </if>
+      <if test="record.versionStatus != null">
+        version_status = #{record.versionStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.relationSource != null">
+        relation_source = #{record.relationSource,jdbcType=VARCHAR},
+      </if>
+      <if test="record.direction != null">
+        direction = #{record.direction,jdbcType=VARCHAR},
+      </if>
+      <if test="record.maskType != null">
+        mask_type = #{record.maskType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.multiverConfig != null">
+        multiver_config = #{record.multiverConfig,jdbcType=VARCHAR},
+      </if>
+      <if test="record.propertySource != null">
+        property_source = #{record.propertySource,jdbcType=BIGINT},
+      </if>
+      <if test="record.propertyConfig != null">
+        property_config = #{record.propertyConfig,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update kg_ontology_entity_property_range
+    set id = #{record.id,jdbcType=BIGINT},
+      domain_id = #{record.domainId,jdbcType=BIGINT},
+      property_name = #{record.propertyName,jdbcType=VARCHAR},
+      range_id = #{record.rangeId,jdbcType=BIGINT},
+      property_name_zh = #{record.propertyNameZh,jdbcType=VARCHAR},
+      constraint_id = #{record.constraintId,jdbcType=BIGINT},
+      property_category = #{record.propertyCategory,jdbcType=VARCHAR},
+      map_type = #{record.mapType,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=CHAR},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      original_id = #{record.originalId,jdbcType=BIGINT},
+      store_property_name = #{record.storePropertyName,jdbcType=VARCHAR},
+      transformer_id = #{record.transformerId,jdbcType=BIGINT},
+      property_desc = #{record.propertyDesc,jdbcType=VARCHAR},
+      property_desc_zh = #{record.propertyDescZh,jdbcType=VARCHAR},
+      project_id = #{record.projectId,jdbcType=BIGINT},
+      original_domain_id = #{record.originalDomainId,jdbcType=BIGINT},
+      original_range_id = #{record.originalRangeId,jdbcType=BIGINT},
+      version_status = #{record.versionStatus,jdbcType=VARCHAR},
+      relation_source = #{record.relationSource,jdbcType=VARCHAR},
+      direction = #{record.direction,jdbcType=VARCHAR},
+      mask_type = #{record.maskType,jdbcType=VARCHAR},
+      multiver_config = #{record.multiverConfig,jdbcType=VARCHAR},
+      property_source = #{record.propertySource,jdbcType=BIGINT},
+      property_config = #{record.propertyConfig,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update kg_ontology_entity_property_range
+    set id = #{record.id,jdbcType=BIGINT},
+      domain_id = #{record.domainId,jdbcType=BIGINT},
+      property_name = #{record.propertyName,jdbcType=VARCHAR},
+      range_id = #{record.rangeId,jdbcType=BIGINT},
+      property_name_zh = #{record.propertyNameZh,jdbcType=VARCHAR},
+      constraint_id = #{record.constraintId,jdbcType=BIGINT},
+      property_category = #{record.propertyCategory,jdbcType=VARCHAR},
+      map_type = #{record.mapType,jdbcType=VARCHAR},
+      version = #{record.version,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=CHAR},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      original_id = #{record.originalId,jdbcType=BIGINT},
+      store_property_name = #{record.storePropertyName,jdbcType=VARCHAR},
+      transformer_id = #{record.transformerId,jdbcType=BIGINT},
+      property_desc = #{record.propertyDesc,jdbcType=VARCHAR},
+      property_desc_zh = #{record.propertyDescZh,jdbcType=VARCHAR},
+      project_id = #{record.projectId,jdbcType=BIGINT},
+      original_domain_id = #{record.originalDomainId,jdbcType=BIGINT},
+      original_range_id = #{record.originalRangeId,jdbcType=BIGINT},
+      version_status = #{record.versionStatus,jdbcType=VARCHAR},
+      relation_source = #{record.relationSource,jdbcType=VARCHAR},
+      direction = #{record.direction,jdbcType=VARCHAR},
+      mask_type = #{record.maskType,jdbcType=VARCHAR},
+      multiver_config = #{record.multiverConfig,jdbcType=VARCHAR},
+      property_source = #{record.propertySource,jdbcType=BIGINT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDO">
+    update kg_ontology_entity_property_range
+    <set>
+      <if test="domainId != null">
+        domain_id = #{domainId,jdbcType=BIGINT},
+      </if>
+      <if test="propertyName != null">
+        property_name = #{propertyName,jdbcType=VARCHAR},
+      </if>
+      <if test="rangeId != null">
+        range_id = #{rangeId,jdbcType=BIGINT},
+      </if>
+      <if test="propertyNameZh != null">
+        property_name_zh = #{propertyNameZh,jdbcType=VARCHAR},
+      </if>
+      <if test="constraintId != null">
+        constraint_id = #{constraintId,jdbcType=BIGINT},
+      </if>
+      <if test="propertyCategory != null">
+        property_category = #{propertyCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="mapType != null">
+        map_type = #{mapType,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="originalId != null">
+        original_id = #{originalId,jdbcType=BIGINT},
+      </if>
+      <if test="storePropertyName != null">
+        store_property_name = #{storePropertyName,jdbcType=VARCHAR},
+      </if>
+      <if test="transformerId != null">
+        transformer_id = #{transformerId,jdbcType=BIGINT},
+      </if>
+      <if test="propertyDesc != null">
+        property_desc = #{propertyDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="propertyDescZh != null">
+        property_desc_zh = #{propertyDescZh,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="originalDomainId != null">
+        original_domain_id = #{originalDomainId,jdbcType=BIGINT},
+      </if>
+      <if test="originalRangeId != null">
+        original_range_id = #{originalRangeId,jdbcType=BIGINT},
+      </if>
+      <if test="versionStatus != null">
+        version_status = #{versionStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="relationSource != null">
+        relation_source = #{relationSource,jdbcType=VARCHAR},
+      </if>
+      <if test="direction != null">
+        direction = #{direction,jdbcType=VARCHAR},
+      </if>
+      <if test="maskType != null">
+        mask_type = #{maskType,jdbcType=VARCHAR},
+      </if>
+      <if test="multiverConfig != null">
+        multiver_config = #{multiverConfig,jdbcType=VARCHAR},
+      </if>
+      <if test="propertySource != null">
+        property_source = #{propertySource,jdbcType=BIGINT},
+      </if>
+      <if test="propertyConfig != null">
+        property_config = #{propertyConfig,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDO">
+    update kg_ontology_entity_property_range
+    set domain_id = #{domainId,jdbcType=BIGINT},
+      property_name = #{propertyName,jdbcType=VARCHAR},
+      range_id = #{rangeId,jdbcType=BIGINT},
+      property_name_zh = #{propertyNameZh,jdbcType=VARCHAR},
+      constraint_id = #{constraintId,jdbcType=BIGINT},
+      property_category = #{propertyCategory,jdbcType=VARCHAR},
+      map_type = #{mapType,jdbcType=VARCHAR},
+      version = #{version,jdbcType=INTEGER},
+      status = #{status,jdbcType=CHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      original_id = #{originalId,jdbcType=BIGINT},
+      store_property_name = #{storePropertyName,jdbcType=VARCHAR},
+      transformer_id = #{transformerId,jdbcType=BIGINT},
+      property_desc = #{propertyDesc,jdbcType=VARCHAR},
+      property_desc_zh = #{propertyDescZh,jdbcType=VARCHAR},
+      project_id = #{projectId,jdbcType=BIGINT},
+      original_domain_id = #{originalDomainId,jdbcType=BIGINT},
+      original_range_id = #{originalRangeId,jdbcType=BIGINT},
+      version_status = #{versionStatus,jdbcType=VARCHAR},
+      relation_source = #{relationSource,jdbcType=VARCHAR},
+      direction = #{direction,jdbcType=VARCHAR},
+      mask_type = #{maskType,jdbcType=VARCHAR},
+      multiver_config = #{multiverConfig,jdbcType=VARCHAR},
+      property_source = #{propertySource,jdbcType=BIGINT},
+      property_config = #{propertyConfig,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDO">
+    update kg_ontology_entity_property_range
+    set domain_id = #{domainId,jdbcType=BIGINT},
+      property_name = #{propertyName,jdbcType=VARCHAR},
+      range_id = #{rangeId,jdbcType=BIGINT},
+      property_name_zh = #{propertyNameZh,jdbcType=VARCHAR},
+      constraint_id = #{constraintId,jdbcType=BIGINT},
+      property_category = #{propertyCategory,jdbcType=VARCHAR},
+      map_type = #{mapType,jdbcType=VARCHAR},
+      version = #{version,jdbcType=INTEGER},
+      status = #{status,jdbcType=CHAR},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      original_id = #{originalId,jdbcType=BIGINT},
+      store_property_name = #{storePropertyName,jdbcType=VARCHAR},
+      transformer_id = #{transformerId,jdbcType=BIGINT},
+      property_desc = #{propertyDesc,jdbcType=VARCHAR},
+      property_desc_zh = #{propertyDescZh,jdbcType=VARCHAR},
+      project_id = #{projectId,jdbcType=BIGINT},
+      original_domain_id = #{originalDomainId,jdbcType=BIGINT},
+      original_range_id = #{originalRangeId,jdbcType=BIGINT},
+      version_status = #{versionStatus,jdbcType=VARCHAR},
+      relation_source = #{relationSource,jdbcType=VARCHAR},
+      direction = #{direction,jdbcType=VARCHAR},
+      mask_type = #{maskType,jdbcType=VARCHAR},
+      multiver_config = #{multiverConfig,jdbcType=VARCHAR},
+      property_source = #{propertySource,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

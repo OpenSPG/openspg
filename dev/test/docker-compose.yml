@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+    mysql:
+        extends:
+            file: docker-compose-no-es.yml
+            service: mysql
+
+    tugraph:
+        extends:
+            file: docker-compose-no-es.yml
+            service: tugraph
+
+    elasticsearch:
+        image: elasticsearch:8.5.3
+        container_name: test-openspg-elasticsearch
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        environment:
+            - discovery.type=single-node
+            - xpack.security.enabled=false
+
+
+
+

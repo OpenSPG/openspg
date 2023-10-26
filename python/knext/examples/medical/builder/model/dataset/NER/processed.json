@@ -1,0 +1,9 @@
+{
+    "content": "已知实体类型(entity_type)包括:[Medical.Disease:疾病]。从下列句子中抽取所有实体(entity)，如果存在以JSON格式返回，如果不存在返回空字符串。\n\tinput:甲状腺结节\n\t输出格式为:[{\"entity\": ,\"entity_type\": },]\n\t\"output\":",
+    "summary": [
+        {
+            "entity": "甲状腺结节",
+            "entity_type": "疾病"
+        }
+    ]
+}

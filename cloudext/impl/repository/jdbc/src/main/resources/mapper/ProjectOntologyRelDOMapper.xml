@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 Ant Group CO., Ltd.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper.ProjectOntologyRelDOMapper">
+  <resultMap id="BaseResultMap" type="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="entity_id" jdbcType="BIGINT" property="entityId" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="version_status" jdbcType="VARCHAR" property="versionStatus" />
+    <result column="referenced" jdbcType="CHAR" property="referenced" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="ref_source" jdbcType="VARCHAR" property="refSource" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, gmt_create, gmt_modified, project_id, entity_id, version, version_status, referenced, 
+    type, ref_source
+  </sql>
+  <select id="selectByExample" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDOExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from kg_project_entity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${@com.antgroup.openspg.cloudext.impl.repository.jdbc.SecurityUtils@trimSql4OrderBy(orderByClause)}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from kg_project_entity
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from kg_project_entity
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDOExample">
+    delete from kg_project_entity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDO">
+    insert into kg_project_entity (id, gmt_create, gmt_modified, 
+      project_id, entity_id, version, 
+      version_status, referenced, type, 
+      ref_source)
+    values (#{id,jdbcType=BIGINT}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{projectId,jdbcType=BIGINT}, #{entityId,jdbcType=BIGINT}, #{version,jdbcType=INTEGER}, 
+      #{versionStatus,jdbcType=VARCHAR}, #{referenced,jdbcType=CHAR}, #{type,jdbcType=VARCHAR}, 
+      #{refSource,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDO">
+    insert into kg_project_entity
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified,
+      </if>
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="entityId != null">
+        entity_id,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="versionStatus != null">
+        version_status,
+      </if>
+      <if test="referenced != null">
+        referenced,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="refSource != null">
+        ref_source,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projectId != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="entityId != null">
+        #{entityId,jdbcType=BIGINT},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="versionStatus != null">
+        #{versionStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="referenced != null">
+        #{referenced,jdbcType=CHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="refSource != null">
+        #{refSource,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDOExample" resultType="java.lang.Long">
+    select count(*) from kg_project_entity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update kg_project_entity
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.gmtCreate != null">
+        gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.gmtModified != null">
+        gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.projectId != null">
+        project_id = #{record.projectId,jdbcType=BIGINT},
+      </if>
+      <if test="record.entityId != null">
+        entity_id = #{record.entityId,jdbcType=BIGINT},
+      </if>
+      <if test="record.version != null">
+        version = #{record.version,jdbcType=INTEGER},
+      </if>
+      <if test="record.versionStatus != null">
+        version_status = #{record.versionStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.referenced != null">
+        referenced = #{record.referenced,jdbcType=CHAR},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.refSource != null">
+        ref_source = #{record.refSource,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update kg_project_entity
+    set id = #{record.id,jdbcType=BIGINT},
+      gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
+      project_id = #{record.projectId,jdbcType=BIGINT},
+      entity_id = #{record.entityId,jdbcType=BIGINT},
+      version = #{record.version,jdbcType=INTEGER},
+      version_status = #{record.versionStatus,jdbcType=VARCHAR},
+      referenced = #{record.referenced,jdbcType=CHAR},
+      type = #{record.type,jdbcType=VARCHAR},
+      ref_source = #{record.refSource,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDO">
+    update kg_project_entity
+    <set>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModified != null">
+        gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="entityId != null">
+        entity_id = #{entityId,jdbcType=BIGINT},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="versionStatus != null">
+        version_status = #{versionStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="referenced != null">
+        referenced = #{referenced,jdbcType=CHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="refSource != null">
+        ref_source = #{refSource,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDO">
+    update kg_project_entity
+    set gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      project_id = #{projectId,jdbcType=BIGINT},
+      entity_id = #{entityId,jdbcType=BIGINT},
+      version = #{version,jdbcType=INTEGER},
+      version_status = #{versionStatus,jdbcType=VARCHAR},
+      referenced = #{referenced,jdbcType=CHAR},
+      type = #{type,jdbcType=VARCHAR},
+      ref_source = #{refSource,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

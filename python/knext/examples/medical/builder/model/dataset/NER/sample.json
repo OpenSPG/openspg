@@ -1,0 +1,9 @@
+{
+    "input": "甲状腺结节",
+    "output": [
+        {
+            "entity": "甲状腺结节",
+            "entity_type": "疾病"
+        }
+    ]
+}
