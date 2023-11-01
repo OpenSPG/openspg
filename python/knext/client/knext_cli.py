@@ -96,6 +96,11 @@ operator.command("list")(list_operator)
 @_main.group()
 def project() -> None:
     """Project client."""
+    project_cfg, root_path = get_config()
+
+    if project_cfg.has_section("global"):
+        for cfg in GLOBAL_CONFIG:
+            os.environ[CFG_PREFIX + cfg.upper()] = project_cfg.get("global", cfg)
     pass
 
 

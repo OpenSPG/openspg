@@ -114,8 +114,10 @@ def _get_cfg_files():
     Get global and local knext config files and paths.
     """
     global_cfg_path = (
-        os.environ.get("XDG_CONFIG_HOME") or Path("~/.config").expanduser()
-    ) / ".knext.cfg"
+                          Path(os.environ.get("XDG_CONFIG_HOME") or "~/.config").expanduser()
+                      ) / ".knext.cfg"
+    if not global_cfg_path.parent.exists():
+        Path.mkdir(global_cfg_path.parent)
     global_cfg = ConfigParser()
     global_cfg.read(global_cfg_path)
     local_cfg_path = _closest_cfg()

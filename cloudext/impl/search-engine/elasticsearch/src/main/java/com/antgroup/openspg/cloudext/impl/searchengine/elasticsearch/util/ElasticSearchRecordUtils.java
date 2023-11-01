@@ -60,6 +60,9 @@ public class ElasticSearchRecordUtils {
             for (IdxRecord idxRecord : idxRecords) {
                 ForestResponse<String> upsert = client.upsert(
                     idxName, idxRecord.getDocId(), idxRecord.getFields());
+                if (upsert.isTimeout()) {
+                    throw new RuntimeException("upsertIdxRecords timeout");
+                }
                 if (!upsert.isSuccess()) {
                     throw new RuntimeException("upsertIdxRecords error, errorMsg=" + upsert.getContent());
                 }
