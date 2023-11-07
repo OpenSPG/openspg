@@ -14,4 +14,4 @@
 #
 
 # mvn clean package -DskipTests
-docker buildx build -f Dockerfile --platform linux/amd64 --push -t baifuyu/openspg:0.0.1-beta1 -t baifuyu/openspg:latest .
+docker buildx build -f Dockerfile --platform linux/amd64 --push -t baifuyu/openspg:0.0.1-beta2 -t baifuyu/openspg:latest .

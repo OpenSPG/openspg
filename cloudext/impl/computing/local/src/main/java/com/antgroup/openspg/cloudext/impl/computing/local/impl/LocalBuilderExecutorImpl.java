@@ -154,14 +154,14 @@ public class LocalBuilderExecutorImpl implements LocalBuilderExecutor {
                     builderStat.success(finalI);
                 } catch (Throwable e) {
                     builderStat.failure(finalI);
-                    log.warn("run buildingJobInstId={} error", jobInst.getJobInstId(), e);
+                    log.error("run buildingJobInstId={} error", jobInst.getJobInstId(), e);
                 } finally {
                     if (builderStat.isFinished()) {
                         try {
                             builderMetric.close();
                             recordCollector.close();
                         } catch (Throwable e) {
-                            log.warn("close builderMetric or recordCollector error", e);
+                            log.error("close builderMetric or recordCollector error", e);
                         }
                     }
                 }
