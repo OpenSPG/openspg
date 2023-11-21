@@ -13,46 +13,44 @@
 
 package com.antgroup.openspg.core.spgbuilder.engine.runtime;
 
-import lombok.Getter;
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
+import lombok.Getter;
+import org.apache.commons.collections4.CollectionUtils;
 
 @Getter
 public class BuilderStat implements Serializable {
 
-    private final BuilderMetric metric;
-    private final RecordCollector collector;
+  private final BuilderMetric metric;
+  private final RecordCollector collector;
 
-    private final int parallelism;
-    private final Set<Integer> successSplitIds;
-    private final Set<Integer> failedSplitIds;
+  private final int parallelism;
+  private final Set<Integer> successSplitIds;
+  private final Set<Integer> failedSplitIds;
 
-    public BuilderStat(BuilderMetric metric, RecordCollector collector, int parallelism) {
-        this.metric = metric;
-        this.collector = collector;
-        this.parallelism = parallelism;
-        this.successSplitIds = Collections.newSetFromMap(new ConcurrentHashMap<>());
-        this.failedSplitIds = Collections.newSetFromMap(new ConcurrentHashMap<>());
-    }
+  public BuilderStat(BuilderMetric metric, RecordCollector collector, int parallelism) {
+    this.metric = metric;
+    this.collector = collector;
+    this.parallelism = parallelism;
+    this.successSplitIds = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    this.failedSplitIds = Collections.newSetFromMap(new ConcurrentHashMap<>());
+  }
 
-    public void success(Integer splitId) {
-        successSplitIds.add(splitId);
-    }
+  public void success(Integer splitId) {
+    successSplitIds.add(splitId);
+  }
 
-    public void failure(Integer splitId) {
-        failedSplitIds.add(splitId);
-    }
+  public void failure(Integer splitId) {
+    failedSplitIds.add(splitId);
+  }
 
-    public boolean isFailure() {
-        return CollectionUtils.isNotEmpty(failedSplitIds);
-    }
+  public boolean isFailure() {
+    return CollectionUtils.isNotEmpty(failedSplitIds);
+  }
 
-    public boolean isFinished() {
-        return successSplitIds.size() + failedSplitIds.size() == parallelism;
-    }
+  public boolean isFinished() {
+    return successSplitIds.size() + failedSplitIds.size() == parallelism;
+  }
 }

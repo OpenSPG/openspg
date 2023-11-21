@@ -15,18 +15,15 @@ package com.antgroup.openspg.cloudext.interfaces.jobscheduler.model;
 
 import com.antgroup.openspg.common.model.job.BaseJobRunResult;
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
-
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.io.Serializable;
-
 
 @Getter
 @AllArgsConstructor
 public class CallbackResult implements Serializable {
 
-    private final JobInstStatusEnum status;
+  private final JobInstStatusEnum status;
 
-    private final BaseJobRunResult result;
+  private final BaseJobRunResult result;
 }

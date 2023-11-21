@@ -18,50 +18,42 @@ import com.antgroup.openspg.common.model.datasource.connection.BaseConnectionInf
 
 public class DataSource extends BaseModel {
 
-    /**
-     * Unique name of the data source
-     */
-    private final String uniqueName;
+  /** Unique name of the data source */
+  private final String uniqueName;
 
-    /**
-     * Data source type
-     */
-    private final DataSourceTypeEnum dataSourceType;
+  /** Data source type */
+  private final DataSourceTypeEnum dataSourceType;
 
-    /**
-     * Physical cluster information
-     */
-    private final String physicalInfo;
+  /** Physical cluster information */
+  private final String physicalInfo;
 
-    /**
-     * Data source connection information
-     */
-    private final BaseConnectionInfo connectionInfo;
+  /** Data source connection information */
+  private final BaseConnectionInfo connectionInfo;
 
-    public DataSource(
-        String uniqueName,
-        DataSourceTypeEnum dataSourceType,
-        String physicalInfo,
-        BaseConnectionInfo connectionInfo) {
-        this.uniqueName = uniqueName;
-        this.dataSourceType = dataSourceType;
-        this.physicalInfo = physicalInfo;
-        this.connectionInfo = connectionInfo;
-    }
+  public DataSource(
+      String uniqueName,
+      DataSourceTypeEnum dataSourceType,
+      String physicalInfo,
+      BaseConnectionInfo connectionInfo) {
+    this.uniqueName = uniqueName;
+    this.dataSourceType = dataSourceType;
+    this.physicalInfo = physicalInfo;
+    this.connectionInfo = connectionInfo;
+  }
 
-    public String getUniqueName() {
-        return uniqueName;
-    }
+  public String getUniqueName() {
+    return uniqueName;
+  }
 
-    public DataSourceTypeEnum getDataSourceType() {
-        return dataSourceType;
-    }
+  public DataSourceTypeEnum getDataSourceType() {
+    return dataSourceType;
+  }
 
-    public String getPhysicalInfo() {
-        return physicalInfo;
-    }
+  public String getPhysicalInfo() {
+    return physicalInfo;
+  }
 
-    public BaseConnectionInfo getConnectionInfo() {
-        return connectionInfo;
-    }
+  public BaseConnectionInfo getConnectionInfo() {
+    return connectionInfo;
+  }
 }

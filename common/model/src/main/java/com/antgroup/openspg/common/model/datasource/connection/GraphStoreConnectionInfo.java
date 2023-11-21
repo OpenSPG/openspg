@@ -13,7 +13,4 @@
 
 package com.antgroup.openspg.common.model.datasource.connection;
 
-
-public class GraphStoreConnectionInfo extends BaseConnectionInfo {
-
-}
+public class GraphStoreConnectionInfo extends BaseConnectionInfo {}

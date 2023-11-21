@@ -13,32 +13,20 @@
 
 package com.antgroup.openspg.core.spgschema.model.identifier;
 
-/**
- * This enumeration class defines identity type in SPG framework
- */
+/** This enumeration class defines identity type in SPG framework */
 public enum SPGIdentifierTypeEnum {
-    /**
-     * SPG type, such as EntityType, ConceptType, EventType etc.
-     */
-    SPG_TYPE,
+  /** SPG type, such as EntityType, ConceptType, EventType etc. */
+  SPG_TYPE,
 
-    /**
-     * SPG triple, such as Property, Relation and SubProperty etc.
-     */
-    SPG_TRIPLE,
+  /** SPG triple, such as Property, Relation and SubProperty etc. */
+  SPG_TRIPLE,
 
-    /**
-     * Concept instance
-     */
-    CONCEPT,
+  /** Concept instance */
+  CONCEPT,
 
-    /**
-     * Predicate in SPO triple
-     */
-    PREDICATE,
+  /** Predicate in SPO triple */
+  PREDICATE,
 
-    /**
-     * Operator define on SPG type
-     */
-    OPERATOR
+  /** Operator define on SPG type */
+  OPERATOR
 }

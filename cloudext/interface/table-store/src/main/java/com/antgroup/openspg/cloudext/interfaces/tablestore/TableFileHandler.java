@@ -14,17 +14,15 @@
 package com.antgroup.openspg.cloudext.interfaces.tablestore;
 
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.TableRecord;
-
 import java.util.List;
-
 
 public interface TableFileHandler {
 
-    String getTableName();
+  String getTableName();
 
-    int write(TableRecord record);
+  int write(TableRecord record);
 
-    int batchWrite(List<TableRecord> records);
+  int batchWrite(List<TableRecord> records);
 
-    void close() throws Exception;
+  void close() throws Exception;
 }

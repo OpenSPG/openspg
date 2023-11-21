@@ -15,26 +15,25 @@ package com.antgroup.openspg.api.facade.dto.builder.request;
 
 import java.util.Map;
 
-
 public class BaseAdvancedEditRequest extends BaseEditRequest {
 
-    private String bizId;
+  private String bizId;
 
-    private Map<String, String> properties;
+  private Map<String, String> properties;
 
-    public String getBizId() {
-        return bizId;
-    }
+  public String getBizId() {
+    return bizId;
+  }
 
-    public void setBizId(String bizId) {
-        this.bizId = bizId;
-    }
+  public void setBizId(String bizId) {
+    this.bizId = bizId;
+  }
 
-    public Map<String, String> getProperties() {
-        return properties;
-    }
+  public Map<String, String> getProperties() {
+    return properties;
+  }
 
-    public void setProperties(Map<String, String> properties) {
-        this.properties = properties;
-    }
+  public void setProperties(Map<String, String> properties) {
+    this.properties = properties;
+  }
 }

@@ -15,19 +15,16 @@ package com.antgroup.openspg.core.spgbuilder.model.pipeline.config;
 
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.NodeTypeEnum;
 
-
 public abstract class BaseNodeConfig {
 
-    /**
-     * The type of the node.
-     */
-    private final NodeTypeEnum type;
+  /** The type of the node. */
+  private final NodeTypeEnum type;
 
-    public BaseNodeConfig(NodeTypeEnum type) {
-        this.type = type;
-    }
+  public BaseNodeConfig(NodeTypeEnum type) {
+    this.type = type;
+  }
 
-    public NodeTypeEnum getType() {
-        return type;
-    }
+  public NodeTypeEnum getType() {
+    return type;
+  }
 }

@@ -15,28 +15,27 @@ package com.antgroup.openspg.api.facade.dto.reasoner.request;
 
 import com.antgroup.openspg.common.model.base.BaseQuery;
 
-
 public class ReasonerJobInfoQuery extends BaseQuery {
 
-    private Long reasonerJobInfoId;
+  private Long reasonerJobInfoId;
 
-    private String externalJobInfoId;
+  private String externalJobInfoId;
 
-    public Long getReasonerJobInfoId() {
-        return reasonerJobInfoId;
-    }
+  public Long getReasonerJobInfoId() {
+    return reasonerJobInfoId;
+  }
 
-    public ReasonerJobInfoQuery setReasonerJobInfoId(Long reasonerJobInfoId) {
-        this.reasonerJobInfoId = reasonerJobInfoId;
-        return this;
-    }
+  public ReasonerJobInfoQuery setReasonerJobInfoId(Long reasonerJobInfoId) {
+    this.reasonerJobInfoId = reasonerJobInfoId;
+    return this;
+  }
 
-    public String getExternalJobInfoId() {
-        return externalJobInfoId;
-    }
+  public String getExternalJobInfoId() {
+    return externalJobInfoId;
+  }
 
-    public ReasonerJobInfoQuery setExternalJobInfoId(String externalJobInfoId) {
-        this.externalJobInfoId = externalJobInfoId;
-        return this;
-    }
+  public ReasonerJobInfoQuery setExternalJobInfoId(String externalJobInfoId) {
+    this.externalJobInfoId = externalJobInfoId;
+    return this;
+  }
 }

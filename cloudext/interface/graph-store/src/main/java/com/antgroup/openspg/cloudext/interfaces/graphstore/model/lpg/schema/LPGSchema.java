@@ -14,28 +14,22 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
+import java.util.List;
 import lombok.Getter;
 
-import java.util.List;
-
 /**
- * <p>
- * {@link LPGSchema LPGSchema} constants a list of {@link VertexType VertexTypes} and the other list of
- * {@link EdgeType EdgeTypes}, and represents schema information of <tt>LPG</tt>,
- * </P>
+ * {@link LPGSchema LPGSchema} constants a list of {@link VertexType VertexTypes} and the other list
+ * of {@link EdgeType EdgeTypes}, and represents schema information of <tt>LPG</tt>,
  */
 @Getter
 public class LPGSchema extends BaseValObj {
 
-    private final List<VertexType> vertexTypes;
+  private final List<VertexType> vertexTypes;
 
-    private final List<EdgeType> edgeTypes;
+  private final List<EdgeType> edgeTypes;
 
-    public LPGSchema(
-        List<VertexType> vertexTypes,
-        List<EdgeType> edgeTypes) {
-        this.vertexTypes = vertexTypes;
-        this.edgeTypes = edgeTypes;
-    }
+  public LPGSchema(List<VertexType> vertexTypes, List<EdgeType> edgeTypes) {
+    this.vertexTypes = vertexTypes;
+    this.edgeTypes = edgeTypes;
+  }
 }

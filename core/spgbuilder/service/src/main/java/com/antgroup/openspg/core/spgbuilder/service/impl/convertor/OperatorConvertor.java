@@ -17,19 +17,17 @@ import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorOverview;
 import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorVersion;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.OperatorConfig;
 
-
 public class OperatorConvertor {
 
-    public static OperatorConfig toOperatorConfig(
-        OperatorOverview overview, OperatorVersion version) {
-        return new OperatorConfig(
-            overview.getName(),
-            version.getVersion(),
-            version.getFilePath(),
-            version.getMainClass(),
-            overview.getLangType(),
-            overview.getType(),
-            null
-        );
-    }
+  public static OperatorConfig toOperatorConfig(
+      OperatorOverview overview, OperatorVersion version) {
+    return new OperatorConfig(
+        overview.getName(),
+        version.getVersion(),
+        version.getFilePath(),
+        version.getMainClass(),
+        overview.getLangType(),
+        overview.getType(),
+        null);
+  }
 }

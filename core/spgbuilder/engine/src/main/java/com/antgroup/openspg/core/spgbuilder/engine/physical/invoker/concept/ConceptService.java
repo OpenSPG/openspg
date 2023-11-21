@@ -16,8 +16,7 @@ package com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.concept;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.core.spgschema.model.type.ConceptList;
 
-
 public interface ConceptService {
 
-    ConceptList query(BaseSPGRecord spgRecord);
+  ConceptList query(BaseSPGRecord spgRecord);
 }

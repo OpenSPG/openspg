@@ -21,65 +21,58 @@ import com.antgroup.openspg.cloudext.interfaces.repository.sequence.SequenceRepo
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.core.spgschema.model.constraint.Constraint;
 import com.antgroup.openspg.core.spgschema.service.predicate.repository.ConstraintRepository;
-
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-
 @Repository
 public class ConstraintRepositoryImpl implements ConstraintRepository {
 
-    @Autowired
-    private SequenceRepository sequenceRepository;
-    @Autowired
-    private ConstraintDOMapper constraintDOMapper;
+  @Autowired private SequenceRepository sequenceRepository;
+  @Autowired private ConstraintDOMapper constraintDOMapper;
 
-    @Override
-    public int upsert(Constraint constraint) {
-        int cnt;
-        ConstraintDO constraintDO = ConstraintDOConvertor.toConstraintDO(constraint);
-        if (constraintDO.getId() == null) {
-            constraintDO.setId(sequenceRepository.getSeqIdByTime());
-            constraintDO.setGmtCreate(new Date());
-            constraintDO.setGmtModified(new Date());
-            cnt = constraintDOMapper.insert(constraintDO);
-        } else {
-            constraintDO.setGmtModified(new Date());
-            cnt = constraintDOMapper.updateByPrimaryKeySelective(constraintDO);
-        }
-
-        constraint.setId(constraintDO.getId());
-        return cnt;
+  @Override
+  public int upsert(Constraint constraint) {
+    int cnt;
+    ConstraintDO constraintDO = ConstraintDOConvertor.toConstraintDO(constraint);
+    if (constraintDO.getId() == null) {
+      constraintDO.setId(sequenceRepository.getSeqIdByTime());
+      constraintDO.setGmtCreate(new Date());
+      constraintDO.setGmtModified(new Date());
+      cnt = constraintDOMapper.insert(constraintDO);
+    } else {
+      constraintDO.setGmtModified(new Date());
+      cnt = constraintDOMapper.updateByPrimaryKeySelective(constraintDO);
     }
 
-    @Override
-    public int deleteById(Long id) {
-        return constraintDOMapper.deleteByPrimaryKey(id);
+    constraint.setId(constraintDO.getId());
+    return cnt;
+  }
+
+  @Override
+  public int deleteById(Long id) {
+    return constraintDOMapper.deleteByPrimaryKey(id);
+  }
+
+  @Override
+  public List<Constraint> queryById(List<Long> constraintIds) {
+    if (CollectionUtils.isEmpty(constraintIds)) {
+      return Collections.emptyList();
     }
 
-    @Override
-    public List<Constraint> queryById(List<Long> constraintIds) {
-        if (CollectionUtils.isEmpty(constraintIds)) {
-            return Collections.emptyList();
-        }
+    ConstraintDOExample example = new ConstraintDOExample();
+    example.createCriteria().andIdIn(constraintIds);
+    List<ConstraintDO> constraintDOS = constraintDOMapper.selectByExampleWithBLOBs(example);
+    return CollectionsUtils.listMap(constraintDOS, ConstraintDOConvertor::toConstraint);
+  }
 
-        ConstraintDOExample example = new ConstraintDOExample();
-        example.createCriteria()
-            .andIdIn(constraintIds);
-        List<ConstraintDO> constraintDOS = constraintDOMapper.selectByExampleWithBLOBs(example);
-        return CollectionsUtils.listMap(constraintDOS, ConstraintDOConvertor::toConstraint);
-    }
-
-    @Override
-    public int deleteById(List<Long> ids) {
-        ConstraintDOExample example = new ConstraintDOExample();
-        example.createCriteria()
-            .andIdIn(ids);
-        return constraintDOMapper.deleteByExample(example);
-    }
+  @Override
+  public int deleteById(List<Long> ids) {
+    ConstraintDOExample example = new ConstraintDOExample();
+    example.createCriteria().andIdIn(ids);
+    return constraintDOMapper.deleteByExample(example);
+  }
 }

@@ -15,24 +15,21 @@ package com.antgroup.openspg.core.spgbuilder.model.service;
 
 import com.antgroup.openspg.common.model.base.BaseToString;
 
-
 /**
  * Base class for building receipts.
- * <p>
- * Contains the building mode and the building receipt type for the current building instance
+ *
+ * <p>Contains the building mode and the building receipt type for the current building instance
  */
 public abstract class BaseBuilderReceipt extends BaseToString {
 
-    /**
-     * the building receipt type
-     */
-    private final BuilderReceiptTypeEnum receiptType;
+  /** the building receipt type */
+  private final BuilderReceiptTypeEnum receiptType;
 
-    public BaseBuilderReceipt(BuilderReceiptTypeEnum receiptType) {
-        this.receiptType = receiptType;
-    }
+  public BaseBuilderReceipt(BuilderReceiptTypeEnum receiptType) {
+    this.receiptType = receiptType;
+  }
 
-    public BuilderReceiptTypeEnum getReceiptType() {
-        return receiptType;
-    }
+  public BuilderReceiptTypeEnum getReceiptType() {
+    return receiptType;
+  }
 }

@@ -26,66 +26,62 @@ import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.core.spgschema.model.alter.AlterStatusEnum;
 import com.antgroup.openspg.core.spgschema.model.type.ParentTypeInfo;
 import com.antgroup.openspg.core.spgschema.service.type.repository.OntologyParentRelRepository;
-
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 @Repository
 public class OntologyParentRelRepositoryImpl implements OntologyParentRelRepository {
 
-    @Autowired
-    private OntologyDOMapper ontologyDOMapper;
-    @Autowired
-    private OntologyParentRelDOMapper ontologyParentRelDOMapper;
-    @Autowired
-    private SequenceRepository sequenceRepository;
+  @Autowired private OntologyDOMapper ontologyDOMapper;
+  @Autowired private OntologyParentRelDOMapper ontologyParentRelDOMapper;
+  @Autowired private SequenceRepository sequenceRepository;
 
-    @Override
-    public ParentTypeInfo query(Long uniqueId) {
-        List<ParentTypeInfo> parentTypeInfos = this.query(Lists.newArrayList(uniqueId));
-        return CollectionUtils.isEmpty(parentTypeInfos) ? null : parentTypeInfos.get(0);
+  @Override
+  public ParentTypeInfo query(Long uniqueId) {
+    List<ParentTypeInfo> parentTypeInfos = this.query(Lists.newArrayList(uniqueId));
+    return CollectionUtils.isEmpty(parentTypeInfos) ? null : parentTypeInfos.get(0);
+  }
+
+  @Override
+  public int save(ParentTypeInfo inheritInfo) {
+    OntologyParentRelDO ontologyParentRelDO = OntologyParentRelConvertor.toDO(inheritInfo);
+    ontologyParentRelDO.setId(sequenceRepository.getSeqIdByTime());
+    return ontologyParentRelDOMapper.insert(ontologyParentRelDO);
+  }
+
+  @Override
+  public int delete(Long entityId) {
+    OntologyParentRelDOExample example = new OntologyParentRelDOExample();
+    example.createCriteria().andEntityIdEqualTo(entityId);
+    return ontologyParentRelDOMapper.deleteByExample(example);
+  }
+
+  @Override
+  public List<ParentTypeInfo> query(List<Long> uniqueIds) {
+    OntologyParentRelDOExample example = new OntologyParentRelDOExample();
+    example.createCriteria().andEntityIdIn(uniqueIds);
+    List<OntologyParentRelDO> ontologyParentRelDOS =
+        ontologyParentRelDOMapper.selectByExample(example);
+    if (CollectionUtils.isEmpty(ontologyParentRelDOS)) {
+      return new ArrayList<>(0);
     }
 
-    @Override
-    public int save(ParentTypeInfo inheritInfo) {
-        OntologyParentRelDO ontologyParentRelDO = OntologyParentRelConvertor.toDO(inheritInfo);
-        ontologyParentRelDO.setId(sequenceRepository.getSeqIdByTime());
-        return ontologyParentRelDOMapper.insert(ontologyParentRelDO);
+    List<Long> parentIds =
+        CollectionsUtils.listMap(ontologyParentRelDOS, OntologyParentRelDO::getParentId);
+    List<OntologyDOWithBLOBs> parentDOS = null;
+    if (CollectionUtils.isNotEmpty(parentIds)) {
+      OntologyDOExample example2 = new OntologyDOExample();
+      example2
+          .createCriteria()
+          .andOriginalIdIn(parentIds)
+          .andVersionStatusEqualTo(AlterStatusEnum.ONLINE.name())
+          .andStatusEqualTo(ValidStatusEnum.VALID.getCode());
+      parentDOS = ontologyDOMapper.selectByExampleWithBLOBs(example2);
     }
-
-    @Override
-    public int delete(Long entityId) {
-        OntologyParentRelDOExample example = new OntologyParentRelDOExample();
-        example.createCriteria().andEntityIdEqualTo(entityId);
-        return ontologyParentRelDOMapper.deleteByExample(example);
-    }
-
-    @Override
-    public List<ParentTypeInfo> query(List<Long> uniqueIds) {
-        OntologyParentRelDOExample example = new OntologyParentRelDOExample();
-        example.createCriteria()
-            .andEntityIdIn(uniqueIds);
-        List<OntologyParentRelDO> ontologyParentRelDOS = ontologyParentRelDOMapper.selectByExample(example);
-        if (CollectionUtils.isEmpty(ontologyParentRelDOS)) {
-            return new ArrayList<>(0);
-        }
-
-        List<Long> parentIds = CollectionsUtils.listMap(ontologyParentRelDOS, OntologyParentRelDO::getParentId);
-        List<OntologyDOWithBLOBs> parentDOS = null;
-        if (CollectionUtils.isNotEmpty(parentIds)) {
-            OntologyDOExample example2 = new OntologyDOExample();
-            example2.createCriteria()
-                .andOriginalIdIn(parentIds)
-                .andVersionStatusEqualTo(AlterStatusEnum.ONLINE.name())
-                .andStatusEqualTo(ValidStatusEnum.VALID.getCode());
-            parentDOS = ontologyDOMapper.selectByExampleWithBLOBs(example2);
-        }
-        return OntologyParentRelConvertor.toModel(ontologyParentRelDOS, parentDOS);
-    }
+    return OntologyParentRelConvertor.toModel(ontologyParentRelDOS, parentDOS);
+  }
 }

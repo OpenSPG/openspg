@@ -13,28 +13,26 @@
 
 package com.antgroup.openspg.core.spgreasoner.model.service;
 
-
 import java.util.List;
 
 public class TableReasonerReceipt extends BaseReasonerReceipt {
 
-    // todo TableLpgRecordStruct
-    private final List<String> columns;
+  // todo TableLpgRecordStruct
+  private final List<String> columns;
 
-    private final List<List<Object>> cells;
+  private final List<List<Object>> cells;
 
-    public TableReasonerReceipt(
-        List<String> columns, List<List<Object>> cells) {
-        super(ReasonerReceiptTypeEnum.TABLE);
-        this.columns = columns;
-        this.cells = cells;
-    }
+  public TableReasonerReceipt(List<String> columns, List<List<Object>> cells) {
+    super(ReasonerReceiptTypeEnum.TABLE);
+    this.columns = columns;
+    this.cells = cells;
+  }
 
-    public List<String> getColumns() {
-        return columns;
-    }
+  public List<String> getColumns() {
+    return columns;
+  }
 
-    public List<List<Object>> getCells() {
-        return cells;
-    }
+  public List<List<Object>> getCells() {
+    return cells;
+  }
 }

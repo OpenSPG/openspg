@@ -15,42 +15,40 @@ package com.antgroup.openspg.core.spgschema.model.type;
 
 import com.antgroup.openspg.core.spgschema.model.alter.AlterOperationEnum;
 
-/**
- * An interface provides some methods to check and get altering operation.
- */
+/** An interface provides some methods to check and get altering operation. */
 public interface WithAlterOperation {
 
-    /**
-     * Get alter operation.
-     *
-     * @return true/false
-     */
-    AlterOperationEnum getAlterOperation();
+  /**
+   * Get alter operation.
+   *
+   * @return true/false
+   */
+  AlterOperationEnum getAlterOperation();
 
-    /**
-     * If the alter operation is creating
-     *
-     * @return true/false
-     */
-    default boolean isCreate() {
-        return AlterOperationEnum.CREATE.equals(getAlterOperation());
-    }
+  /**
+   * If the alter operation is creating
+   *
+   * @return true/false
+   */
+  default boolean isCreate() {
+    return AlterOperationEnum.CREATE.equals(getAlterOperation());
+  }
 
-    /**
-     * If the alter operation is updating.
-     *
-     * @return true/false
-     */
-    default boolean isUpdate() {
-        return AlterOperationEnum.UPDATE.equals(getAlterOperation());
-    }
+  /**
+   * If the alter operation is updating.
+   *
+   * @return true/false
+   */
+  default boolean isUpdate() {
+    return AlterOperationEnum.UPDATE.equals(getAlterOperation());
+  }
 
-    /**
-     * If the alter operation is deleting.
-     *
-     * @return true/false
-     */
-    default boolean isDelete() {
-        return AlterOperationEnum.DELETE.equals(getAlterOperation());
-    }
+  /**
+   * If the alter operation is deleting.
+   *
+   * @return true/false
+   */
+  default boolean isDelete() {
+    return AlterOperationEnum.DELETE.equals(getAlterOperation());
+  }
 }

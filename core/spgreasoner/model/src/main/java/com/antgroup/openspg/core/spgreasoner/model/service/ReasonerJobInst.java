@@ -15,103 +15,101 @@ package com.antgroup.openspg.core.spgreasoner.model.service;
 
 import com.antgroup.openspg.common.model.base.BaseModel;
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
-
 import java.util.Date;
-
 
 public class ReasonerJobInst extends BaseModel {
 
-    private final Long jobId;
-    private final Long projectId;
-    private final Date startTime;
-    private final Date endTime;
-    private final String logInfo;
-    private ReasonerProgress progress;
-    private BaseReasonerResult result;
-    private Long jobInstId;
-    private JobInstStatusEnum status;
-    private String externalJobInstId;
+  private final Long jobId;
+  private final Long projectId;
+  private final Date startTime;
+  private final Date endTime;
+  private final String logInfo;
+  private ReasonerProgress progress;
+  private BaseReasonerResult result;
+  private Long jobInstId;
+  private JobInstStatusEnum status;
+  private String externalJobInstId;
 
-    public ReasonerJobInst(
-        Long jobId,
-        Long projectId,
-        JobInstStatusEnum status,
-        BaseReasonerResult result,
-        Date startTime,
-        Date endTime,
-        ReasonerProgress progress,
-        String logInfo) {
-        this.jobId = jobId;
-        this.projectId = projectId;
-        this.status = status;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.result = result;
-        this.progress = progress;
-        this.logInfo = logInfo;
-    }
+  public ReasonerJobInst(
+      Long jobId,
+      Long projectId,
+      JobInstStatusEnum status,
+      BaseReasonerResult result,
+      Date startTime,
+      Date endTime,
+      ReasonerProgress progress,
+      String logInfo) {
+    this.jobId = jobId;
+    this.projectId = projectId;
+    this.status = status;
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.result = result;
+    this.progress = progress;
+    this.logInfo = logInfo;
+  }
 
-    public boolean isFinished() {
-        return status.isFinished();
-    }
+  public boolean isFinished() {
+    return status.isFinished();
+  }
 
-    public boolean isRunning() {
-        return status.isRunning();
-    }
+  public boolean isRunning() {
+    return status.isRunning();
+  }
 
-    public Long getJobInstId() {
-        return jobInstId;
-    }
+  public Long getJobInstId() {
+    return jobInstId;
+  }
 
-    public ReasonerJobInst setJobInstId(Long jobInstId) {
-        this.jobInstId = jobInstId;
-        return this;
-    }
+  public ReasonerJobInst setJobInstId(Long jobInstId) {
+    this.jobInstId = jobInstId;
+    return this;
+  }
 
-    public Long getJobId() {
-        return jobId;
-    }
+  public Long getJobId() {
+    return jobId;
+  }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public JobInstStatusEnum getStatus() {
-        return status;
-    }
+  public JobInstStatusEnum getStatus() {
+    return status;
+  }
 
-    public void setProgress(ReasonerStatusWithProgress progress) {
-        this.status = progress.getStatus();
-        this.result = progress.getResult();
-        this.progress = progress.getProgress();
-    }
+  public void setProgress(ReasonerStatusWithProgress progress) {
+    this.status = progress.getStatus();
+    this.result = progress.getResult();
+    this.progress = progress.getProgress();
+  }
 
-    public Date getStartTime() {
-        return startTime;
-    }
+  public Date getStartTime() {
+    return startTime;
+  }
 
-    public Date getEndTime() {
-        return endTime;
-    }
+  public Date getEndTime() {
+    return endTime;
+  }
 
-    public BaseReasonerResult getResult() {
-        return result;
-    }
+  public BaseReasonerResult getResult() {
+    return result;
+  }
 
-    public ReasonerProgress getProgress() {
-        return progress;
-    }
+  public ReasonerProgress getProgress() {
+    return progress;
+  }
 
-    public String getLogInfo() {
-        return logInfo;
-    }
+  public String getLogInfo() {
+    return logInfo;
+  }
 
-    public String getExternalJobInstId() {
-        return externalJobInstId;
-    }
+  public String getExternalJobInstId() {
+    return externalJobInstId;
+  }
 
-    public ReasonerJobInst setExternalJobInstId(String externalJobInstId) {
-        this.externalJobInstId = externalJobInstId;
-        return this;
-    }
+  public ReasonerJobInst setExternalJobInstId(String externalJobInstId) {
+    this.externalJobInstId = externalJobInstId;
+    return this;
+  }
 }

@@ -16,15 +16,13 @@ package com.antgroup.openspg.core.spgbuilder.engine.physical.invoker;
 import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
-
 import java.util.List;
-
 
 public interface InvokerFactory {
 
-    void init(RuntimeContext context);
+  void init(RuntimeContext context);
 
-    void register(OperatorConfig operatorConfig);
+  void register(OperatorConfig operatorConfig);
 
-    List<BaseRecord> invoke(InvokerParam param);
+  List<BaseRecord> invoke(InvokerParam param);
 }

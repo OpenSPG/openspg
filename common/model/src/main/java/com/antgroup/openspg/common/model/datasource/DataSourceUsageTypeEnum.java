@@ -13,11 +13,15 @@
 
 package com.antgroup.openspg.common.model.datasource;
 
-/**
- * Data source usage type
- */
+/** Data source usage type */
 public enum DataSourceUsageTypeEnum {
-
-    KG_STORE, OPERATOR_STORE, FILE_STORE, SEARCH, JOB_SCHEDULER, COMPUTING, TABLE_STORE, UNKNOWN,
-    ;
+  KG_STORE,
+  OPERATOR_STORE,
+  FILE_STORE,
+  SEARCH,
+  JOB_SCHEDULER,
+  COMPUTING,
+  TABLE_STORE,
+  UNKNOWN,
+  ;
 }

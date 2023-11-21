@@ -15,23 +15,20 @@ package com.antgroup.openspg.core.spgreasoner.model.service;
 
 import com.antgroup.openspg.common.model.base.BaseToString;
 
-
 /**
- * The base class of reasoning content, subclasses can inherit this base class to enrich the information under different
- * reasoning content types
+ * The base class of reasoning content, subclasses can inherit this base class to enrich the
+ * information under different reasoning content types
  */
 public abstract class BaseReasonerContent extends BaseToString {
 
-    /**
-     * reasoning content types
-     */
-    private final ReasonerContentTypeEnum paramType;
+  /** reasoning content types */
+  private final ReasonerContentTypeEnum paramType;
 
-    public BaseReasonerContent(ReasonerContentTypeEnum paramType) {
-        this.paramType = paramType;
-    }
+  public BaseReasonerContent(ReasonerContentTypeEnum paramType) {
+    this.paramType = paramType;
+  }
 
-    public ReasonerContentTypeEnum getParamType() {
-        return paramType;
-    }
+  public ReasonerContentTypeEnum getParamType() {
+    return paramType;
+  }
 }

@@ -13,43 +13,33 @@
 
 package com.antgroup.openspg.core.spgschema.model.type;
 
-/**
- * Enumeration of operator types.
- */
+/** Enumeration of operator types. */
 public enum OperatorTypeEnum {
 
-    /**
-     * The operator is used to extract knowledge.
-     */
-    KNOWLEDGE_EXTRACT,
+  /** The operator is used to extract knowledge. */
+  KNOWLEDGE_EXTRACT,
 
-    /**
-     * The operator is used to find entity in graph.
-     */
-    ENTITY_LINK,
+  /** The operator is used to find entity in graph. */
+  ENTITY_LINK,
 
-    /**
-     * The operator is used to normalize property value.
-     */
-    PROPERTY_NORMALIZE,
+  /** The operator is used to normalize property value. */
+  PROPERTY_NORMALIZE,
 
-    /**
-     * The operator is used to fuse multi entity into one entity.
-     */
-    ENTITY_FUSE;
+  /** The operator is used to fuse multi entity into one entity. */
+  ENTITY_FUSE;
 
-    /**
-     * Get enum item that mapping to the val.
-     *
-     * @param val
-     * @return
-     */
-    public static OperatorTypeEnum toEnum(String val) {
-        for (OperatorTypeEnum operatorType : OperatorTypeEnum.values()) {
-            if (operatorType.name().equalsIgnoreCase(val)) {
-                return operatorType;
-            }
-        }
-        throw new IllegalArgumentException("unknown type: " + val);
+  /**
+   * Get enum item that mapping to the val.
+   *
+   * @param val
+   * @return
+   */
+  public static OperatorTypeEnum toEnum(String val) {
+    for (OperatorTypeEnum operatorType : OperatorTypeEnum.values()) {
+      if (operatorType.name().equalsIgnoreCase(val)) {
+        return operatorType;
+      }
     }
+    throw new IllegalArgumentException("unknown type: " + val);
+  }
 }

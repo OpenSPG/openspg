@@ -13,16 +13,15 @@
 
 package com.antgroup.openspg.core.spgreasoner.model.service;
 
-
 public class SuccessReasonerResult extends BaseReasonerResult {
 
-    private final String tableName;
+  private final String tableName;
 
-    public SuccessReasonerResult(String resultTableName) {
-        this.tableName = resultTableName;
-    }
+  public SuccessReasonerResult(String resultTableName) {
+    this.tableName = resultTableName;
+  }
 
-    public String getTableName() {
-        return tableName;
-    }
+  public String getTableName() {
+    return tableName;
+  }
 }

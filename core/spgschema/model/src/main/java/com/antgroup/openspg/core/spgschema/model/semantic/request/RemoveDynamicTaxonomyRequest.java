@@ -15,36 +15,30 @@ package com.antgroup.openspg.core.spgschema.model.semantic.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-/**
- * Request to remove dynamic taxonomy of concept.
- */
+/** Request to remove dynamic taxonomy of concept. */
 public class RemoveDynamicTaxonomyRequest extends BaseRequest {
 
-    private static final long serialVersionUID = 3663132552543144765L;
+  private static final long serialVersionUID = 3663132552543144765L;
 
-    /**
-     * The unique name of object concept type.
-     */
-    private String objectConceptTypeName;
+  /** The unique name of object concept type. */
+  private String objectConceptTypeName;
 
-    /**
-     * The concept name of object in spo triple
-     */
-    private String objectConceptName;
+  /** The concept name of object in spo triple */
+  private String objectConceptName;
 
-    public String getObjectConceptName() {
-        return objectConceptName;
-    }
+  public String getObjectConceptName() {
+    return objectConceptName;
+  }
 
-    public void setObjectConceptName(String objectConceptName) {
-        this.objectConceptName = objectConceptName;
-    }
+  public void setObjectConceptName(String objectConceptName) {
+    this.objectConceptName = objectConceptName;
+  }
 
-    public String getObjectConceptTypeName() {
-        return objectConceptTypeName;
-    }
+  public String getObjectConceptTypeName() {
+    return objectConceptTypeName;
+  }
 
-    public void setObjectConceptTypeName(String objectConceptTypeName) {
-        this.objectConceptTypeName = objectConceptTypeName;
-    }
+  public void setObjectConceptTypeName(String objectConceptTypeName) {
+    this.objectConceptTypeName = objectConceptTypeName;
+  }
 }

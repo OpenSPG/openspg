@@ -16,28 +16,28 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.quer
 import java.util.List;
 
 /**
- * This is a composite query condition class that can be composed of multiple simple queries. The simple queries can be
- * combined using OR, AND, and NOT operators.
+ * This is a composite query condition class that can be composed of multiple simple queries. The
+ * simple queries can be combined using OR, AND, and NOT operators.
  */
 public class QueryGroup extends BaseQuery {
 
-    private List<BaseQuery> queries;
-    private OperatorType operator;
+  private List<BaseQuery> queries;
+  private OperatorType operator;
 
-    public QueryGroup(List<BaseQuery> queries, OperatorType operator) {
-        this.queries = queries;
-        this.operator = operator;
-    }
+  public QueryGroup(List<BaseQuery> queries, OperatorType operator) {
+    this.queries = queries;
+    this.operator = operator;
+  }
 
-    public OperatorType getOperator() {
-        return operator;
-    }
+  public OperatorType getOperator() {
+    return operator;
+  }
 
-    public List<BaseQuery> getQueries() {
-        return queries;
-    }
+  public List<BaseQuery> getQueries() {
+    return queries;
+  }
 
-    public void setQueries(List<BaseQuery> queries) {
-        this.queries = queries;
-    }
+  public void setQueries(List<BaseQuery> queries) {
+    this.queries = queries;
+  }
 }

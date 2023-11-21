@@ -27,64 +27,61 @@ import com.antgroup.openspg.common.model.datasource.connection.ComputingConnecti
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderStatusWithProgress;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerStatusWithProgress;
 import com.antgroup.openspg.core.spgreasoner.model.service.TableReasonerReceipt;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
 
 @Slf4j
 public class LocalComputingClient implements ComputingClient {
 
-    private final static String BUILDER_NUMBER_OF_THREAD = "builder.nThreads";
+  private static final String BUILDER_NUMBER_OF_THREAD = "builder.nThreads";
 
-    @Getter
-    private final ComputingConnectionInfo connInfo;
-    private final LocalBuilderExecutor localBuilderExecutor;
-    private final LocalReasonerExecutor localReasonerExecutor;
+  @Getter private final ComputingConnectionInfo connInfo;
+  private final LocalBuilderExecutor localBuilderExecutor;
+  private final LocalReasonerExecutor localReasonerExecutor;
 
-    public LocalComputingClient(ComputingConnectionInfo connInfo) {
-        this.connInfo = connInfo;
+  public LocalComputingClient(ComputingConnectionInfo connInfo) {
+    this.connInfo = connInfo;
 
-        localBuilderExecutor = new LocalBuilderExecutorImpl(
-            (String) connInfo.getParamOrDefault(BUILDER_NUMBER_OF_THREAD, "*2")
-        );
-        localReasonerExecutor = new LocalReasonerExecutorImpl(
-            (String) connInfo.getParamOrDefault(BUILDER_NUMBER_OF_THREAD, "*2")
-        );
-    }
+    localBuilderExecutor =
+        new LocalBuilderExecutorImpl(
+            (String) connInfo.getParamOrDefault(BUILDER_NUMBER_OF_THREAD, "*2"));
+    localReasonerExecutor =
+        new LocalReasonerExecutorImpl(
+            (String) connInfo.getParamOrDefault(BUILDER_NUMBER_OF_THREAD, "*2"));
+  }
 
-    @Override
-    public BuilderStatusWithProgress query(BuilderJobProcessQuery query) {
-        return localBuilderExecutor.query(query);
-    }
+  @Override
+  public BuilderStatusWithProgress query(BuilderJobProcessQuery query) {
+    return localBuilderExecutor.query(query);
+  }
 
-    @Override
-    public boolean canSubmit(BuilderJobCanSubmitQuery query) {
-        return localBuilderExecutor.canSubmit(query);
-    }
+  @Override
+  public boolean canSubmit(BuilderJobCanSubmitQuery query) {
+    return localBuilderExecutor.canSubmit(query);
+  }
 
-    @Override
-    public String submit(BuilderJobSubmitCmd cmd) {
-        return localBuilderExecutor.submit(cmd);
-    }
+  @Override
+  public String submit(BuilderJobSubmitCmd cmd) {
+    return localBuilderExecutor.submit(cmd);
+  }
 
-    @Override
-    public ReasonerStatusWithProgress query(ReasonerJobProcessQuery query) {
-        return localReasonerExecutor.query(query);
-    }
+  @Override
+  public ReasonerStatusWithProgress query(ReasonerJobProcessQuery query) {
+    return localReasonerExecutor.query(query);
+  }
 
-    @Override
-    public boolean canSubmit(ReasonerJobCanSubmitQuery query) {
-        return localReasonerExecutor.canSubmit(query);
-    }
+  @Override
+  public boolean canSubmit(ReasonerJobCanSubmitQuery query) {
+    return localReasonerExecutor.canSubmit(query);
+  }
 
-    @Override
-    public String submit(ReasonerJobSubmitCmd cmd) {
-        return localReasonerExecutor.submit(cmd);
-    }
+  @Override
+  public String submit(ReasonerJobSubmitCmd cmd) {
+    return localReasonerExecutor.submit(cmd);
+  }
 
-    @Override
-    public TableReasonerReceipt run(ReasonerJobRunCmd cmd) {
-        return localReasonerExecutor.run(cmd);
-    }
+  @Override
+  public TableReasonerReceipt run(ReasonerJobRunCmd cmd) {
+    return localReasonerExecutor.run(cmd);
+  }
 }

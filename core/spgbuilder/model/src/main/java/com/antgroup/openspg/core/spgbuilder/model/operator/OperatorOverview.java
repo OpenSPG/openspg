@@ -17,63 +17,49 @@ import com.antgroup.openspg.common.model.LangTypeEnum;
 import com.antgroup.openspg.common.model.base.BaseModel;
 import com.antgroup.openspg.core.spgschema.model.type.OperatorTypeEnum;
 
-
 public class OperatorOverview extends BaseModel {
 
-    /**
-     * Unique ID of the operator.
-     */
-    private final Long id;
+  /** Unique ID of the operator. */
+  private final Long id;
 
-    /**
-     * Name of the operator
-     */
-    private final String name;
+  /** Name of the operator */
+  private final String name;
 
-    /**
-     * Description of the operator.
-     */
-    private final String desc;
+  /** Description of the operator. */
+  private final String desc;
 
-    /**
-     * Type of the operator
-     */
-    private final OperatorTypeEnum type;
+  /** Type of the operator */
+  private final OperatorTypeEnum type;
 
-    /**
-     * Development language for the operator can be Java or Python.
-     */
-    private final LangTypeEnum langType;
+  /** Development language for the operator can be Java or Python. */
+  private final LangTypeEnum langType;
 
-    public OperatorOverview(
-        Long id,
-        String name, String desc,
-        OperatorTypeEnum type,
-        LangTypeEnum langType) {
-        this.id = id;
-        this.name = name;
-        this.desc = desc;
-        this.type = type;
-        this.langType = langType;
-    }
+  public OperatorOverview(
+      Long id, String name, String desc, OperatorTypeEnum type, LangTypeEnum langType) {
+    this.id = id;
+    this.name = name;
+    this.desc = desc;
+    this.type = type;
+    this.langType = langType;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getDesc() {
-        return desc;
-    }
+  public String getDesc() {
+    return desc;
+  }
 
-    public OperatorTypeEnum getType() {
-        return type;
-    }
+  public OperatorTypeEnum getType() {
+    return type;
+  }
 
-    public LangTypeEnum getLangType() {
-        return langType;
-    }
+  public LangTypeEnum getLangType() {
+    return langType;
+  }
 }

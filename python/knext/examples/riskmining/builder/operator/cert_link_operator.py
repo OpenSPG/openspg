@@ -30,5 +30,7 @@ class CertLinkerOperator(EntityLinkOp):
         query = {"match": {"certNum": has_cert}}
         recall_certs = self.search_client.search(query, start=0, size=10)
         if recall_certs is not None:
-            return [Vertex(biz_id=recall_certs[0].doc_id, vertex_type="RiskMining.Cert")]
+            return [
+                Vertex(biz_id=recall_certs[0].doc_id, vertex_type="RiskMining.Cert")
+            ]
         return [Vertex(biz_id=has_cert, vertex_type="RiskMining.Cert")]

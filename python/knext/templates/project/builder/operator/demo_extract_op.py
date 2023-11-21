@@ -18,7 +18,6 @@ from knext.core.builder.operator.model.op import KnowledgeExtractOp
 
 
 class DemoExtractOp(KnowledgeExtractOp):
-
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
 

@@ -17,25 +17,29 @@ import com.antgroup.openspg.core.spgschema.model.BasicInfo;
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.predicate.Property;
 import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
-
 import java.util.List;
 
 /**
  * Class definition of the Concept.<br>
- * <p>
- * A concept is an abstract generalization of a type of entity with similar features, expressing a semantic
- * understanding or classification of the entity type. Concepts can be divided into two types: common sense concepts and
- * classification concepts. The concept of common sense generally refers to a common sense summary of a certain entity
- * type, such as brand, administration, etc. And the concept of classification expresses the classification of a certain
- * ntity type, such as user classification, drug classification etc. As the type definition of a concept,
- * {@link ConceptType} usually has the following configuration information:
+ *
+ * <p>A concept is an abstract generalization of a type of entity with similar features, expressing
+ * a semantic understanding or classification of the entity type. Concepts can be divided into two
+ * types: common sense concepts and classification concepts. The concept of common sense generally
+ * refers to a common sense summary of a certain entity type, such as brand, administration, etc.
+ * And the concept of classification expresses the classification of a certain ntity type, such as
+ * user classification, drug classification etc. As the type definition of a concept, {@link
+ * ConceptType} usually has the following configuration information:
+ *
  * <ul>
- * <li>{@link ConceptType#conceptLayerConfig}：include the hypernym predicate and name of each layer.</li>
- * <li>{@link ConceptType#conceptTaxonomicConfig}: taxonomy configuration of the concept.</li>
- * <li>{@link ConceptType#conceptMultiVersionConfig}: multi version configuration.</li>
+ *   <li>{@link ConceptType#conceptLayerConfig}：include the hypernym predicate and name of each
+ *       layer.
+ *   <li>{@link ConceptType#conceptTaxonomicConfig}: taxonomy configuration of the concept.
+ *   <li>{@link ConceptType#conceptMultiVersionConfig}: multi version configuration.
  * </ul>
+ *
  * <br>
  * Take Administration as an example:<br>
+ *
  * <pre>
  * Administration   country  province  city   county <br>
  *                    China(postCode: CHN, alias: 中华, 华夏, 中华人民共和国) <br>
@@ -43,62 +47,56 @@ import java.util.List;
  *                              ｜------HangZhou (postCode: 310000, alias: 杭州) <br>
  *                                        ｜-----XiHu (postcode: 310012)
  * </pre>
+ *
  * <ul>
- * <li>unique name: AdminArea </li>
- * <li>hypernym predicate: locateAt </li>
- * <li>layer names: [country, province, city, county] </li>
+ *   <li>unique name: AdminArea
+ *   <li>hypernym predicate: locateAt
+ *   <li>layer names: [country, province, city, county]
  * </ul>
- * </p>
  */
 public class ConceptType extends BaseAdvancedType {
 
-    private static final long serialVersionUID = 4965144707881225899L;
+  private static final long serialVersionUID = 4965144707881225899L;
 
-    /**
-     * The relationship between child concept and its parent concept.
-     */
-    private final ConceptLayerConfig conceptLayerConfig;
+  /** The relationship between child concept and its parent concept. */
+  private final ConceptLayerConfig conceptLayerConfig;
 
-    /**
-     * The configuration of taxonomic concept.
-     */
-    private final ConceptTaxonomicConfig conceptTaxonomicConfig;
+  /** The configuration of taxonomic concept. */
+  private final ConceptTaxonomicConfig conceptTaxonomicConfig;
 
-    /**
-     * The multi version configuration.
-     */
-    private final MultiVersionConfig conceptMultiVersionConfig;
+  /** The multi version configuration. */
+  private final MultiVersionConfig conceptMultiVersionConfig;
 
-    public ConceptType(
-        BasicInfo<SPGTypeIdentifier> basicInfo,
-        ParentTypeInfo parentTypeInfo,
-        List<Property> properties,
-        List<Relation> relations,
-        SPGTypeAdvancedConfig advancedConfig,
-        ConceptLayerConfig conceptLayerConfig,
-        ConceptTaxonomicConfig conceptTaxonomicConfig,
-        MultiVersionConfig multiVersionConfig) {
-        super(basicInfo, parentTypeInfo, SPGTypeEnum.CONCEPT_TYPE,
-            properties, relations, advancedConfig
-        );
-        this.conceptLayerConfig = conceptLayerConfig;
-        this.conceptTaxonomicConfig = conceptTaxonomicConfig;
-        this.conceptMultiVersionConfig = multiVersionConfig;
-    }
+  public ConceptType(
+      BasicInfo<SPGTypeIdentifier> basicInfo,
+      ParentTypeInfo parentTypeInfo,
+      List<Property> properties,
+      List<Relation> relations,
+      SPGTypeAdvancedConfig advancedConfig,
+      ConceptLayerConfig conceptLayerConfig,
+      ConceptTaxonomicConfig conceptTaxonomicConfig,
+      MultiVersionConfig multiVersionConfig) {
+    super(
+        basicInfo, parentTypeInfo, SPGTypeEnum.CONCEPT_TYPE, properties, relations, advancedConfig);
+    this.conceptLayerConfig = conceptLayerConfig;
+    this.conceptTaxonomicConfig = conceptTaxonomicConfig;
+    this.conceptMultiVersionConfig = multiVersionConfig;
+  }
 
-    public ConceptLayerConfig getConceptLayerConfig() {
-        return conceptLayerConfig;
-    }
+  public ConceptLayerConfig getConceptLayerConfig() {
+    return conceptLayerConfig;
+  }
 
-    public ConceptTaxonomicConfig getConceptTaxonomicConfig() {
-        return conceptTaxonomicConfig;
-    }
+  public ConceptTaxonomicConfig getConceptTaxonomicConfig() {
+    return conceptTaxonomicConfig;
+  }
 
-    public MultiVersionConfig getConceptMultiVersionConfig() {
-        return conceptMultiVersionConfig;
-    }
+  public MultiVersionConfig getConceptMultiVersionConfig() {
+    return conceptMultiVersionConfig;
+  }
 
-    public boolean isTaxonomicConcept() {
-        return conceptTaxonomicConfig != null && conceptTaxonomicConfig.getTaxonomicTypeIdentifier() != null;
-    }
+  public boolean isTaxonomicConcept() {
+    return conceptTaxonomicConfig != null
+        && conceptTaxonomicConfig.getTaxonomicTypeIdentifier() != null;
+  }
 }

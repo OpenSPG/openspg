@@ -14,57 +14,51 @@
 package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
-
 import java.io.Serializable;
-
 
 public class GraphConfiguration implements Serializable {
 
-    /**
-     * Description of graph instance.
-     */
-    @JSONField(name = "description")
-    private String description;
+  /** Description of graph instance. */
+  @JSONField(name = "description")
+  private String description;
 
-    /**
-     * Max size of graph instance (GB).
-     */
-    @JSONField(name = "max_size_GB")
-    private Integer maxSizeGb;
+  /** Max size of graph instance (GB). */
+  @JSONField(name = "max_size_GB")
+  private Integer maxSizeGb;
 
-    /**
-     * Getter method for property <tt>description</tt>.
-     *
-     * @return property value of description
-     */
-    public String getDescription() {
-        return description;
-    }
+  /**
+   * Getter method for property <tt>description</tt>.
+   *
+   * @return property value of description
+   */
+  public String getDescription() {
+    return description;
+  }
 
-    /**
-     * Setter method for property <tt>description</tt>.
-     *
-     * @param description value to be assigned to property description
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  /**
+   * Setter method for property <tt>description</tt>.
+   *
+   * @param description value to be assigned to property description
+   */
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    /**
-     * Getter method for property <tt>maxSizeGb</tt>.
-     *
-     * @return property value of maxSizeGb
-     */
-    public Integer getMaxSizeGb() {
-        return maxSizeGb;
-    }
+  /**
+   * Getter method for property <tt>maxSizeGb</tt>.
+   *
+   * @return property value of maxSizeGb
+   */
+  public Integer getMaxSizeGb() {
+    return maxSizeGb;
+  }
 
-    /**
-     * Setter method for property <tt>maxSizeGb</tt>.
-     *
-     * @param maxSizeGb value to be assigned to property maxSizeGb
-     */
-    public void setMaxSizeGb(Integer maxSizeGb) {
-        this.maxSizeGb = maxSizeGb;
-    }
+  /**
+   * Setter method for property <tt>maxSizeGb</tt>.
+   *
+   * @param maxSizeGb value to be assigned to property maxSizeGb
+   */
+  public void setMaxSizeGb(Integer maxSizeGb) {
+    this.maxSizeGb = maxSizeGb;
+  }
 }

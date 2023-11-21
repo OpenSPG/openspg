@@ -19,37 +19,25 @@ import com.antgroup.openspg.core.spgschema.model.predicate.Property;
 import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
 import com.antgroup.openspg.core.spgschema.model.type.BaseAdvancedType;
 import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
-
+import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
-import java.util.Map;
-
-/**
- * Schema alter information wrapper, holding altered spg type, properties and relations.
- */
+/** Schema alter information wrapper, holding altered spg type, properties and relations. */
 @Getter
 @AllArgsConstructor
 public class AlterInfoWrap {
 
-    /**
-     * List of altered spg type, has sorted by inherit path.
-     */
-    private final List<BaseAdvancedType> sortedAlterTypes;
+  /** List of altered spg type, has sorted by inherit path. */
+  private final List<BaseAdvancedType> sortedAlterTypes;
 
-    /**
-     * Map contains altered spg type
-     */
-    private final Map<SPGTypeIdentifier, BaseSPGType> spgTypeMap;
+  /** Map contains altered spg type */
+  private final Map<SPGTypeIdentifier, BaseSPGType> spgTypeMap;
 
-    /**
-     * Map contains all properties in the spg type.
-     */
-    private final Map<SPGTripleIdentifier, Property> propertyMap;
+  /** Map contains all properties in the spg type. */
+  private final Map<SPGTripleIdentifier, Property> propertyMap;
 
-    /**
-     * Map contains all relations in the spg type.
-     */
-    private final Map<SPGTripleIdentifier, Relation> relationMap;
+  /** Map contains all relations in the spg type. */
+  private final Map<SPGTripleIdentifier, Relation> relationMap;
 }

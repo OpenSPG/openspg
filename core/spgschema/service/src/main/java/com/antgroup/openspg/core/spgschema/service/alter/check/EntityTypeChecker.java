@@ -16,15 +16,14 @@ package com.antgroup.openspg.core.spgschema.service.alter.check;
 import com.antgroup.openspg.core.spgschema.model.type.BaseAdvancedType;
 import com.antgroup.openspg.core.spgschema.model.type.EntityType;
 
-
 public class EntityTypeChecker extends BaseSpgTypeChecker {
 
-    @Override
-    public void checkAdvancedConfig(BaseAdvancedType advancedType, SchemaCheckContext context) {
-        EntityType entityType = (EntityType) advancedType;
-        String schemaTypeName = entityType.getName();
+  @Override
+  public void checkAdvancedConfig(BaseAdvancedType advancedType, SchemaCheckContext context) {
+    EntityType entityType = (EntityType) advancedType;
+    String schemaTypeName = entityType.getName();
 
-        OperatorChecker.check(schemaTypeName, entityType.getAdvancedConfig().getLinkOperator());
-        OperatorChecker.check(schemaTypeName, entityType.getAdvancedConfig().getFuseOperator());
-    }
+    OperatorChecker.check(schemaTypeName, entityType.getAdvancedConfig().getLinkOperator());
+    OperatorChecker.check(schemaTypeName, entityType.getAdvancedConfig().getFuseOperator());
+  }
 }

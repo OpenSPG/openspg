@@ -15,37 +15,34 @@ package com.antgroup.openspg.core.spgschema.service.alter;
 
 import com.antgroup.openspg.core.spgschema.service.alter.model.SchemaAlterContext;
 import com.antgroup.openspg.core.spgschema.service.alter.stage.BaseAlterStage;
-
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
-
 /**
- * Alter schema involve multiple operations, including steps such as building a new project schema, persisting to
- * database and graph storage, and cleaning up schema drafts. these processes are abstracted to different stages. The
- * pipeline connects the execution of stages to represent a complete schema altering.
+ * Alter schema involve multiple operations, including steps such as building a new project schema,
+ * persisting to database and graph storage, and cleaning up schema drafts. these processes are
+ * abstracted to different stages. The pipeline connects the execution of stages to represent a
+ * complete schema altering.
  */
 @Slf4j
 public class SchemaAlterPipeline {
 
-    /**
-     * Every stage during pipeline running.
-     */
-    private List<BaseAlterStage> stages;
+  /** Every stage during pipeline running. */
+  private List<BaseAlterStage> stages;
 
-    /**
-     * Start to run the pipeline, it will execute every stage defined in pipeline.
-     *
-     * @param context holds information that used during schema alter, such as project、draft etc.
-     */
-    public void run(SchemaAlterContext context) {
-        for (BaseAlterStage stage : stages) {
-            stage.execute(context);
-            log.info("finish to execute stage: {}", stage.getName());
-        }
+  /**
+   * Start to run the pipeline, it will execute every stage defined in pipeline.
+   *
+   * @param context holds information that used during schema alter, such as project、draft etc.
+   */
+  public void run(SchemaAlterContext context) {
+    for (BaseAlterStage stage : stages) {
+      stage.execute(context);
+      log.info("finish to execute stage: {}", stage.getName());
     }
+  }
 
-    public void setStages(List<BaseAlterStage> stages) {
-        this.stages = stages;
-    }
+  public void setStages(List<BaseAlterStage> stages) {
+    this.stages = stages;
+  }
 }

@@ -14,32 +14,23 @@
 package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.List;
+import lombok.Data;
 
-/**
- * Schema of TuGraph.
- */
+/** Schema of TuGraph. */
 @Data
 public class BaseTuGraphOntology implements Serializable {
 
-    /**
-     * Type
-     */
-    @JSONField(name = "type")
-    protected TypeEnum type;
+  /** Type */
+  @JSONField(name = "type")
+  protected TypeEnum type;
 
-    /**
-     * Label name
-     */
-    @JSONField(name = "label")
-    protected String label;
+  /** Label name */
+  @JSONField(name = "label")
+  protected String label;
 
-    /**
-     * Properties
-     */
-    @JSONField(name = "properties")
-    protected List<TuGraphProperty> properties;
+  /** Properties */
+  @JSONField(name = "properties")
+  protected List<TuGraphProperty> properties;
 }

@@ -13,8 +13,7 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.sort;
 
-
 public enum SortType {
-    desc,
-    asc
+  desc,
+  asc
 }

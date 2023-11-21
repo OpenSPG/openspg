@@ -13,49 +13,43 @@
 
 package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.procedure;
 
-/**
- * Delete graph procedure.
- */
+/** Delete graph procedure. */
 public class DeleteGraphProcedure extends BaseTuGraphProcedure {
 
-    /**
-     * Cypher template
-     */
-    private static final String GET_GRAPH_LIST_CYPHER_TEMPLATE = "CALL dbms.graph.deleteGraph('${graphName}')";
+  /** Cypher template */
+  private static final String GET_GRAPH_LIST_CYPHER_TEMPLATE =
+      "CALL dbms.graph.deleteGraph('${graphName}')";
 
-    /**
-     * Graph name.
-     */
-    private final String graphName;
+  /** Graph name. */
+  private final String graphName;
 
-    /**
-     * Constructor.
-     */
-    private DeleteGraphProcedure(String cypher, String graphName) {
-        super(cypher);
-        this.graphName = graphName;
-    }
+  /** Constructor. */
+  private DeleteGraphProcedure(String cypher, String graphName) {
+    super(cypher);
+    this.graphName = graphName;
+  }
 
-    public static DeleteGraphProcedure of(String graphName) {
-        return new DeleteGraphProcedure(
-            GET_GRAPH_LIST_CYPHER_TEMPLATE,
-            graphName
-        );
-    }
+  public static DeleteGraphProcedure of(String graphName) {
+    return new DeleteGraphProcedure(GET_GRAPH_LIST_CYPHER_TEMPLATE, graphName);
+  }
 
-    /**
-     * Getter method for property <tt>graphName</tt>.
-     *
-     * @return property value of graphName
-     */
-    public String getGraphName() {
-        return graphName;
-    }
+  /**
+   * Getter method for property <tt>graphName</tt>.
+   *
+   * @return property value of graphName
+   */
+  public String getGraphName() {
+    return graphName;
+  }
 
-    @Override
-    public String toString() {
-        return "{\"procedure\":\"DeleteGraphProcedure\", "
-            + "\"graphName\":\"" + graphName + "\", "
-            + "\"cypherTemplate\":\"" + getCypherTemplate() + "\"}";
-    }
+  @Override
+  public String toString() {
+    return "{\"procedure\":\"DeleteGraphProcedure\", "
+        + "\"graphName\":\""
+        + graphName
+        + "\", "
+        + "\"cypherTemplate\":\""
+        + getCypherTemplate()
+        + "\"}";
+  }
 }

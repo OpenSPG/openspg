@@ -15,21 +15,20 @@ package com.antgroup.openspg.core.spgbuilder.engine.runtime;
 
 import com.antgroup.openspg.core.spgbuilder.engine.physical.process.BaseProcessor;
 import com.antgroup.openspg.core.spgbuilder.model.BuilderException;
-
 import lombok.Getter;
-
 
 @Getter
 public class BuilderRecordException extends BuilderException {
 
-    private final BaseProcessor<?> processor;
+  private final BaseProcessor<?> processor;
 
-    public BuilderRecordException(BaseProcessor<?> processor, Throwable cause, String messagePattern, Object... args) {
-        super(cause, messagePattern, args);
-        this.processor = processor;
-    }
+  public BuilderRecordException(
+      BaseProcessor<?> processor, Throwable cause, String messagePattern, Object... args) {
+    super(cause, messagePattern, args);
+    this.processor = processor;
+  }
 
-    public BuilderRecordException(BaseProcessor<?> processor, String messagePattern, Object... args) {
-        this(processor, null, messagePattern, args);
-    }
+  public BuilderRecordException(BaseProcessor<?> processor, String messagePattern, Object... args) {
+    this(processor, null, messagePattern, args);
+  }
 }

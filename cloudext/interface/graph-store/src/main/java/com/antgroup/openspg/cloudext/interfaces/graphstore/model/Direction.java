@@ -13,23 +13,21 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model;
 
-
 public enum Direction {
+  OUT(0),
 
-    OUT(0),
+  IN(1),
 
-    IN(1),
+  BOTH(2),
+  ;
 
-    BOTH(2),
-    ;
+  private final int value;
 
-    private final int value;
+  Direction(int value) {
+    this.value = value;
+  }
 
-    Direction(int value) {
-        this.value = value;
-    }
-
-    public int getValue() {
-        return value;
-    }
+  public int getValue() {
+    return value;
+  }
 }

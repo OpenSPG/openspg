@@ -13,33 +13,25 @@
 
 package com.antgroup.openspg.core.spgschema.model.alter;
 
-/**
- * Enumeration of schema alter operations.
- */
+/** Enumeration of schema alter operations. */
 public enum AlterOperationEnum {
 
-    /**
-     * Create operation, such as creating a new SPG type, property or relation.
-     */
-    CREATE,
+  /** Create operation, such as creating a new SPG type, property or relation. */
+  CREATE,
 
-    /**
-     * Update operation, such as updating the structure of SPG type, property or relation.
-     */
-    UPDATE,
+  /** Update operation, such as updating the structure of SPG type, property or relation. */
+  UPDATE,
 
-    /**
-     * Delete operation, such as deleting a SPG type, property or relation.
-     */
-    DELETE,
-    ;
+  /** Delete operation, such as deleting a SPG type, property or relation. */
+  DELETE,
+  ;
 
-    public static AlterOperationEnum toEnum(String name) {
-        for (AlterOperationEnum alterOperationEnum : AlterOperationEnum.values()) {
-            if (alterOperationEnum.name().equalsIgnoreCase(name)) {
-                return alterOperationEnum;
-            }
-        }
-        throw new IllegalArgumentException("unknown type: " + name);
+  public static AlterOperationEnum toEnum(String name) {
+    for (AlterOperationEnum alterOperationEnum : AlterOperationEnum.values()) {
+      if (alterOperationEnum.name().equalsIgnoreCase(name)) {
+        return alterOperationEnum;
+      }
     }
+    throw new IllegalArgumentException("unknown type: " + name);
+  }
 }

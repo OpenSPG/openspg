@@ -14,20 +14,20 @@
 package com.antgroup.openspg.core.spgschema.model.constraint;
 
 /**
- * Non-null constraint, which means that the value of the attribute cannot be empty, such as the user's name attribute,
- * since each user has a name, suitable for configuring non-null constraint.
+ * Non-null constraint, which means that the value of the attribute cannot be empty, such as the
+ * user's name attribute, since each user has a name, suitable for configuring non-null constraint.
  */
 public class NotNullConstraint extends BaseConstraintItem {
 
-    private static final long serialVersionUID = -6970332512136993837L;
+  private static final long serialVersionUID = -6970332512136993837L;
 
-    @Override
-    public ConstraintTypeEnum getConstraintTypeEnum() {
-        return ConstraintTypeEnum.NOT_NULL;
-    }
+  @Override
+  public ConstraintTypeEnum getConstraintTypeEnum() {
+    return ConstraintTypeEnum.NOT_NULL;
+  }
 
-    @Override
-    public boolean checkIsLegal(Object value) {
-        return value != null;
-    }
+  @Override
+  public boolean checkIsLegal(Object value) {
+    return value != null;
+  }
 }

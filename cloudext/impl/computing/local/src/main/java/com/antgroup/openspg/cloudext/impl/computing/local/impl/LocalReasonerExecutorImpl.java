@@ -13,6 +13,10 @@
 
 package com.antgroup.openspg.cloudext.impl.computing.local.impl;
 
+import com.antgroup.kg.reasoner.catalog.impl.KgSchemaConnectionInfo;
+import com.antgroup.kg.reasoner.local.KGReasonerLocalRunner;
+import com.antgroup.kg.reasoner.local.model.LocalReasonerResult;
+import com.antgroup.kg.reasoner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.cloudext.impl.computing.local.LocalReasonerExecutor;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobCanSubmitQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobProcessQuery;
@@ -40,14 +44,6 @@ import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerStatusWithPro
 import com.antgroup.openspg.core.spgreasoner.model.service.SuccessReasonerResult;
 import com.antgroup.openspg.core.spgreasoner.model.service.TableReasonerReceipt;
 import com.antgroup.openspg.core.spgreasoner.service.util.LocalRunnerUtils;
-
-import com.antgroup.kg.reasoner.catalog.impl.KgSchemaConnectionInfo;
-import com.antgroup.kg.reasoner.local.KGReasonerLocalRunner;
-import com.antgroup.kg.reasoner.local.model.LocalReasonerResult;
-import com.antgroup.kg.reasoner.local.model.LocalReasonerTask;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,170 +53,172 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 
 @Slf4j
 public class LocalReasonerExecutorImpl implements LocalReasonerExecutor {
 
-    // for reasoner job
-    private final ThreadPoolExecutor jobDriver;
-    private final ThreadPoolExecutor jobWorker;
-    private final Map<String, Future<ReasonerStatusWithProgress>> runningReasonerJobInst;
+  // for reasoner job
+  private final ThreadPoolExecutor jobDriver;
+  private final ThreadPoolExecutor jobWorker;
+  private final Map<String, Future<ReasonerStatusWithProgress>> runningReasonerJobInst;
 
-    // for olap
-    private final ThreadPoolExecutor olapDriver;
-    private final ThreadPoolExecutor olapWorker;
+  // for olap
+  private final ThreadPoolExecutor olapDriver;
+  private final ThreadPoolExecutor olapWorker;
 
-    public LocalReasonerExecutorImpl(String nThreads) {
-        jobDriver = ThreadUtils.newDaemonFixedThreadPool(1, "localReasonerDriver");
-        jobWorker = ThreadUtils.newDaemonFixedThreadPool(
-            ThreadUtils.nThreads(nThreads), "localReasonerWorker"
-        );
+  public LocalReasonerExecutorImpl(String nThreads) {
+    jobDriver = ThreadUtils.newDaemonFixedThreadPool(1, "localReasonerDriver");
+    jobWorker =
+        ThreadUtils.newDaemonFixedThreadPool(ThreadUtils.nThreads(nThreads), "localReasonerWorker");
 
-        olapDriver = ThreadUtils.newDaemonFixedThreadPool(
-            ThreadUtils.nThreads("*1"), "olapReasonerDriver"
-        );
-        olapWorker = ThreadUtils.newDaemonFixedThreadPool(
-            ThreadUtils.nThreads(nThreads), "olapReasonerWorker"
-        );
-        runningReasonerJobInst = new ConcurrentHashMap<>();
+    olapDriver =
+        ThreadUtils.newDaemonFixedThreadPool(ThreadUtils.nThreads("*1"), "olapReasonerDriver");
+    olapWorker =
+        ThreadUtils.newDaemonFixedThreadPool(ThreadUtils.nThreads(nThreads), "olapReasonerWorker");
+    runningReasonerJobInst = new ConcurrentHashMap<>();
+  }
+
+  @Override
+  public ReasonerStatusWithProgress query(ReasonerJobProcessQuery query) {
+    Future<ReasonerStatusWithProgress> future =
+        runningReasonerJobInst.get(query.getComputingJobInstId());
+    if (future == null) {
+      return null;
     }
-
-    @Override
-    public ReasonerStatusWithProgress query(ReasonerJobProcessQuery query) {
-        Future<ReasonerStatusWithProgress> future = runningReasonerJobInst
-            .get(query.getComputingJobInstId());
-        if (future == null) {
-            return null;
-        }
-        if (future.isDone()) {
-            // if finished, remove it from runningBuilderJobInst
-            runningReasonerJobInst.remove(query.getComputingJobInstId());
-            ReasonerStatusWithProgress progress = null;
-            try {
-                progress = future.get();
-            } catch (Throwable e) {
-                throw ReasonerException.reasonerError(e);
-            }
-            return progress;
-        } else {
-            return new ReasonerStatusWithProgress(JobInstStatusEnum.RUNNING);
-        }
+    if (future.isDone()) {
+      // if finished, remove it from runningBuilderJobInst
+      runningReasonerJobInst.remove(query.getComputingJobInstId());
+      ReasonerStatusWithProgress progress = null;
+      try {
+        progress = future.get();
+      } catch (Throwable e) {
+        throw ReasonerException.reasonerError(e);
+      }
+      return progress;
+    } else {
+      return new ReasonerStatusWithProgress(JobInstStatusEnum.RUNNING);
     }
+  }
 
-    @Override
-    public boolean canSubmit(ReasonerJobCanSubmitQuery query) {
-        return runningReasonerJobInst.isEmpty();
-    }
+  @Override
+  public boolean canSubmit(ReasonerJobCanSubmitQuery query) {
+    return runningReasonerJobInst.isEmpty();
+  }
 
-    @Override
-    public String submit(ReasonerJobSubmitCmd cmd) {
-        ReasonerJobInst jobInst = cmd.getJobInst();
+  @Override
+  public String submit(ReasonerJobSubmitCmd cmd) {
+    ReasonerJobInst jobInst = cmd.getJobInst();
+    if (runningReasonerJobInst.isEmpty()) {
+      synchronized (runningReasonerJobInst) {
         if (runningReasonerJobInst.isEmpty()) {
-            synchronized (runningReasonerJobInst) {
-                if (runningReasonerJobInst.isEmpty()) {
-                    Future<ReasonerStatusWithProgress> future = doSubmit(cmd);
-                    String computingJobInstId = String.valueOf(jobInst.getJobInstId());
-                    runningReasonerJobInst.put(computingJobInstId, future);
-                    return computingJobInstId;
-                }
-            }
+          Future<ReasonerStatusWithProgress> future = doSubmit(cmd);
+          String computingJobInstId = String.valueOf(jobInst.getJobInstId());
+          runningReasonerJobInst.put(computingJobInstId, future);
+          return computingJobInstId;
         }
-        return null;
+      }
     }
+    return null;
+  }
 
-    @Override
-    public TableReasonerReceipt run(ReasonerJobRunCmd cmd) {
-        Future<TableReasonerReceipt> future = olapDriver.submit(() -> {
-            LocalReasonerResult localReasonerResult = doRun(cmd.getProjectId(), cmd.getSchemaUrl(),
-                cmd.getConnInfo(), cmd.getContent(), olapWorker
-            );
-            return buildReceipt(localReasonerResult);
-        });
-        try {
-            return future.get(3, TimeUnit.MINUTES);
-        } catch (InterruptedException | ExecutionException e) {
-            throw ReasonerException.reasonerError(e);
-        } catch (TimeoutException e) {
-            future.cancel(true);
-            throw ReasonerException.timeout(3);
-        }
+  @Override
+  public TableReasonerReceipt run(ReasonerJobRunCmd cmd) {
+    Future<TableReasonerReceipt> future =
+        olapDriver.submit(
+            () -> {
+              LocalReasonerResult localReasonerResult =
+                  doRun(
+                      cmd.getProjectId(),
+                      cmd.getSchemaUrl(),
+                      cmd.getConnInfo(),
+                      cmd.getContent(),
+                      olapWorker);
+              return buildReceipt(localReasonerResult);
+            });
+    try {
+      return future.get(3, TimeUnit.MINUTES);
+    } catch (InterruptedException | ExecutionException e) {
+      throw ReasonerException.reasonerError(e);
+    } catch (TimeoutException e) {
+      future.cancel(true);
+      throw ReasonerException.timeout(3);
     }
+  }
 
-    private Future<ReasonerStatusWithProgress> doSubmit(ReasonerJobSubmitCmd cmd) {
-        return jobDriver.submit(() -> {
-            try {
-                ReasonerJobInfo jobInfo = cmd.getJobInfo();
-                LocalReasonerResult localReasonerResult = doRun(
-                    jobInfo.getProjectId(), cmd.getSchemaUrl(),
+  private Future<ReasonerStatusWithProgress> doSubmit(ReasonerJobSubmitCmd cmd) {
+    return jobDriver.submit(
+        () -> {
+          try {
+            ReasonerJobInfo jobInfo = cmd.getJobInfo();
+            LocalReasonerResult localReasonerResult =
+                doRun(
+                    jobInfo.getProjectId(),
+                    cmd.getSchemaUrl(),
                     cmd.getGraphStoreConnInfo(),
-                    jobInfo.getContent(), jobWorker
-                );
-                JobInstStatusEnum status = null;
-                BaseReasonerResult result = null;
-                ReasonerProgress progress = new ReasonerProgress();
-                if (StringUtils.isNotBlank(localReasonerResult.getErrMsg())) {
-                    status = JobInstStatusEnum.FAILURE;
-                    result = new FailureReasonerResult(localReasonerResult.getErrMsg());
-                } else {
-                    status = JobInstStatusEnum.SUCCESS;
-                    result = writeResult2TableFile(cmd, localReasonerResult);
-                }
-                return new ReasonerStatusWithProgress(status, result, progress);
-            } catch (Throwable e) {
-                throw ReasonerException.reasonerError(e);
+                    jobInfo.getContent(),
+                    jobWorker);
+            JobInstStatusEnum status = null;
+            BaseReasonerResult result = null;
+            ReasonerProgress progress = new ReasonerProgress();
+            if (StringUtils.isNotBlank(localReasonerResult.getErrMsg())) {
+              status = JobInstStatusEnum.FAILURE;
+              result = new FailureReasonerResult(localReasonerResult.getErrMsg());
+            } else {
+              status = JobInstStatusEnum.SUCCESS;
+              result = writeResult2TableFile(cmd, localReasonerResult);
             }
+            return new ReasonerStatusWithProgress(status, result, progress);
+          } catch (Throwable e) {
+            throw ReasonerException.reasonerError(e);
+          }
         });
+  }
+
+  private LocalReasonerResult doRun(
+      Long projectId,
+      String schemaUrl,
+      GraphStoreConnectionInfo connInfo,
+      BaseReasonerContent content,
+      ThreadPoolExecutor executor) {
+    KGReasonerLocalRunner localRunner = new KGReasonerLocalRunner();
+    LocalReasonerTask reasonerTask = new LocalReasonerTask();
+    reasonerTask.setThreadPoolExecutor(executor);
+    reasonerTask.setCatalog(
+        LocalRunnerUtils.buildCatalog(projectId, new KgSchemaConnectionInfo(schemaUrl, "")));
+    reasonerTask.setGraphState(LocalRunnerUtils.buildGraphState(connInfo));
+    reasonerTask.setDsl(((KgdslReasonerContent) content).getKgdsl());
+    return localRunner.run(reasonerTask);
+  }
+
+  private SuccessReasonerResult writeResult2TableFile(
+      ReasonerJobSubmitCmd cmd, LocalReasonerResult result) throws Exception {
+    TableStoreClient tableStoreClient =
+        TableStoreClientDriverManager.getClient(cmd.getTableStoreConnInfo());
+
+    if (CollectionUtils.isEmpty(result.getColumns())) {
+      return new SuccessReasonerResult(null);
     }
+    String tableName = cmd.tableName();
+    TableFileHandler fileHandler =
+        tableStoreClient.create(
+            new TableFileCreateCmd(
+                tableName,
+                result.getColumns().stream().map(ColumnMeta::new).toArray(ColumnMeta[]::new)));
 
-    private LocalReasonerResult doRun(Long projectId, String schemaUrl,
-        GraphStoreConnectionInfo connInfo, BaseReasonerContent content, ThreadPoolExecutor executor) {
-        KGReasonerLocalRunner localRunner = new KGReasonerLocalRunner();
-        LocalReasonerTask reasonerTask = new LocalReasonerTask();
-        reasonerTask.setThreadPoolExecutor(executor);
-        reasonerTask.setCatalog(LocalRunnerUtils.buildCatalog(
-            projectId,
-            new KgSchemaConnectionInfo(schemaUrl, "")
-        ));
-        reasonerTask.setGraphState(LocalRunnerUtils.buildGraphState(connInfo));
-        reasonerTask.setDsl(((KgdslReasonerContent) content).getKgdsl());
-        return localRunner.run(reasonerTask);
+    fileHandler.batchWrite(
+        result.getRows().stream().map(TableRecord::new).collect(Collectors.toList()));
+    fileHandler.close();
+    return new SuccessReasonerResult(fileHandler.getTableName());
+  }
+
+  private TableReasonerReceipt buildReceipt(LocalReasonerResult reasonerResult) {
+    if (StringUtils.isNotBlank(reasonerResult.getErrMsg())) {
+      throw ReasonerException.reasonerError(reasonerResult.getErrMsg());
     }
-
-    private SuccessReasonerResult writeResult2TableFile(
-        ReasonerJobSubmitCmd cmd, LocalReasonerResult result) throws Exception {
-        TableStoreClient tableStoreClient = TableStoreClientDriverManager
-            .getClient(cmd.getTableStoreConnInfo());
-
-        if (CollectionUtils.isEmpty(result.getColumns())) {
-            return new SuccessReasonerResult(null);
-        }
-        String tableName = cmd.tableName();
-        TableFileHandler fileHandler = tableStoreClient.create(
-            new TableFileCreateCmd(tableName,
-                result.getColumns().stream()
-                    .map(ColumnMeta::new)
-                    .toArray(ColumnMeta[]::new)
-            )
-        );
-
-        fileHandler.batchWrite(result.getRows().stream()
-            .map(TableRecord::new)
-            .collect(Collectors.toList())
-        );
-        fileHandler.close();
-        return new SuccessReasonerResult(fileHandler.getTableName());
-    }
-
-    private TableReasonerReceipt buildReceipt(LocalReasonerResult reasonerResult) {
-        if (StringUtils.isNotBlank(reasonerResult.getErrMsg())) {
-            throw ReasonerException.reasonerError(reasonerResult.getErrMsg());
-        }
-        return new TableReasonerReceipt(reasonerResult.getColumns(),
-            reasonerResult
-                .getRows()
-                .stream()
-                .map(Arrays::asList)
-                .collect(Collectors.toList()));
-    }
+    return new TableReasonerReceipt(
+        reasonerResult.getColumns(),
+        reasonerResult.getRows().stream().map(Arrays::asList).collect(Collectors.toList()));
+  }
 }

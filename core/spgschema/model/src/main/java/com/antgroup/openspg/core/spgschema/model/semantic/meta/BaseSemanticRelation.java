@@ -15,27 +15,26 @@ package com.antgroup.openspg.core.spgschema.model.semantic.meta;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-
 import java.util.EnumSet;
 
 public class BaseSemanticRelation extends BaseValObj {
 
-    private static final long serialVersionUID = 7769133536707677102L;
+  private static final long serialVersionUID = 7769133536707677102L;
 
-    protected EnumSet<SPGTypeEnum> subjectType;
+  protected EnumSet<SPGTypeEnum> subjectType;
 
-    protected EnumSet<SPGTypeEnum> objectType;
+  protected EnumSet<SPGTypeEnum> objectType;
 
-    public BaseSemanticRelation(EnumSet<SPGTypeEnum> subjectType, EnumSet<SPGTypeEnum> objectType) {
-        this.subjectType = subjectType;
-        this.objectType = objectType;
-    }
+  public BaseSemanticRelation(EnumSet<SPGTypeEnum> subjectType, EnumSet<SPGTypeEnum> objectType) {
+    this.subjectType = subjectType;
+    this.objectType = objectType;
+  }
 
-    public EnumSet<SPGTypeEnum> getSubjectType() {
-        return subjectType;
-    }
+  public EnumSet<SPGTypeEnum> getSubjectType() {
+    return subjectType;
+  }
 
-    public EnumSet<SPGTypeEnum> getObjectType() {
-        return objectType;
-    }
+  public EnumSet<SPGTypeEnum> getObjectType() {
+    return objectType;
+  }
 }

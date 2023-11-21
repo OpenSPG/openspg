@@ -13,25 +13,29 @@
 
 from knext.core.builder.job.builder import BuilderJob
 from knext.core.builder.job.model.component import EntityMappingComponent
-from knext.core.builder.job.model.component import SourceCsvComponent, SinkToKgComponent, RelationMappingComponent
+from knext.core.builder.job.model.component import (
+    SourceCsvComponent,
+    SinkToKgComponent,
+    RelationMappingComponent,
+)
 from schema.riskmining_schema_helper import RiskMining
 
 
 class Person(BuilderJob):
-
     def build(self):
         source = SourceCsvComponent(
             local_path="./builder/job/data/Person.csv",
             columns=["id", "name", "age", "hasPhone"],
-            start_row=2
+            start_row=2,
         )
 
-        mapping = EntityMappingComponent(
-            spg_type_name=RiskMining.Person
-        ).add_field("id", RiskMining.Person.id) \
-            .add_field("name", RiskMining.Person.name) \
-            .add_field("age", RiskMining.Person.age) \
+        mapping = (
+            EntityMappingComponent(spg_type_name=RiskMining.Person)
+            .add_field("id", RiskMining.Person.id)
+            .add_field("name", RiskMining.Person.name)
+            .add_field("age", RiskMining.Person.age)
             .add_field("hasPhone", RiskMining.Person.hasPhone)
+        )
 
         sink = SinkToKgComponent()
 
@@ -39,22 +43,24 @@ class Person(BuilderJob):
 
 
 class PersonFundTrans(BuilderJob):
-
     def build(self):
         source = SourceCsvComponent(
             local_path="./builder/job/data/Person_fundTrans_Person.csv",
-            columns=['src', 'dst', 'transDate', 'transAmt'],
-            start_row=2
+            columns=["src", "dst", "transDate", "transAmt"],
+            start_row=2,
         )
 
-        mapping = RelationMappingComponent(
-            subject_name=RiskMining.Person,
-            predicate_name="fundTrans",
-            object_name=RiskMining.Person
-        ).add_field("src", "srcId") \
-            .add_field("dst", "dstId") \
-            .add_field("transDate", 'transDate') \
-            .add_field("transAmt", 'transAmt')
+        mapping = (
+            RelationMappingComponent(
+                subject_name=RiskMining.Person,
+                predicate_name="fundTrans",
+                object_name=RiskMining.Person,
+            )
+            .add_field("src", "srcId")
+            .add_field("dst", "dstId")
+            .add_field("transDate", "transDate")
+            .add_field("transAmt", "transAmt")
+        )
 
         sink = SinkToKgComponent()
 
@@ -65,16 +71,19 @@ class PersonHasDevice(BuilderJob):
     def build(self):
         source = SourceCsvComponent(
             local_path="./builder/job/data/Person_hasDevice_Device.csv",
-            columns=['src', 'dst'],
-            start_row=2
+            columns=["src", "dst"],
+            start_row=2,
         )
 
-        mapping = RelationMappingComponent(
-            subject_name=RiskMining.Person,
-            predicate_name='hasDevice',
-            object_name=RiskMining.Device
-        ).add_field("src", "srcId") \
+        mapping = (
+            RelationMappingComponent(
+                subject_name=RiskMining.Person,
+                predicate_name="hasDevice",
+                object_name=RiskMining.Device,
+            )
+            .add_field("src", "srcId")
             .add_field("dst", "dstId")
+        )
 
         sink = SinkToKgComponent()
 
@@ -82,20 +91,22 @@ class PersonHasDevice(BuilderJob):
 
 
 class PersonHoldShare(BuilderJob):
-
     def build(self):
         source = SourceCsvComponent(
             local_path="./builder/job/data/Person_holdShare_Company.csv",
-            columns=['src', 'dst'],
-            start_row=2
+            columns=["src", "dst"],
+            start_row=2,
         )
 
-        mapping = RelationMappingComponent(
-            subject_name=RiskMining.Person,
-            predicate_name='holdShare',
-            object_name=RiskMining.Company
-        ).add_field("src", "srcId") \
+        mapping = (
+            RelationMappingComponent(
+                subject_name=RiskMining.Person,
+                predicate_name="holdShare",
+                object_name=RiskMining.Company,
+            )
+            .add_field("src", "srcId")
             .add_field("dst", "dstId")
+        )
 
         sink = SinkToKgComponent()
 

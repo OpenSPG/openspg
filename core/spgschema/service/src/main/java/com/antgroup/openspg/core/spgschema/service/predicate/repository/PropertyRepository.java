@@ -16,81 +16,80 @@ package com.antgroup.openspg.core.spgschema.service.predicate.repository;
 import com.antgroup.openspg.core.spgschema.model.predicate.PropertyRef;
 import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.spgschema.service.predicate.model.SimpleProperty;
-
 import java.util.List;
 
 /**
- * The read-write interface for property or relation in the database, provides methods for saving, updating, deleting,
- * and querying properties and relations.
+ * The read-write interface for property or relation in the database, provides methods for saving,
+ * updating, deleting, and querying properties and relations.
  */
 public interface PropertyRepository {
 
-    /**
-     * Save a new property record into db
-     *
-     * @param simpleProperty property detail.
-     * @return record count that added
-     */
-    int save(SimpleProperty simpleProperty);
+  /**
+   * Save a new property record into db
+   *
+   * @param simpleProperty property detail.
+   * @return record count that added
+   */
+  int save(SimpleProperty simpleProperty);
 
-    /**
-     * Update property detail in db.
-     *
-     * @param simpleProperty property detail.
-     * @return record count that updated
-     */
-    int update(SimpleProperty simpleProperty);
+  /**
+   * Update property detail in db.
+   *
+   * @param simpleProperty property detail.
+   * @return record count that updated
+   */
+  int update(SimpleProperty simpleProperty);
 
-    /**
-     * Delete a property in db.
-     *
-     * @param simpleProperty property detail.
-     * @return record count that deleted
-     */
-    int delete(SimpleProperty simpleProperty);
+  /**
+   * Delete a property in db.
+   *
+   * @param simpleProperty property detail.
+   * @return record count that deleted
+   */
+  int delete(SimpleProperty simpleProperty);
 
-    /**
-     * Query properties or relations by list of spg type id.
-     *
-     * @param subjectIds   list of spg type id
-     * @param ontologyEnum
-     * @return list of simple property object.
-     */
-    List<SimpleProperty> queryBySubjectId(List<Long> subjectIds, SPGOntologyEnum ontologyEnum);
+  /**
+   * Query properties or relations by list of spg type id.
+   *
+   * @param subjectIds list of spg type id
+   * @param ontologyEnum
+   * @return list of simple property object.
+   */
+  List<SimpleProperty> queryBySubjectId(List<Long> subjectIds, SPGOntologyEnum ontologyEnum);
 
-    /**
-     * Batch query properties or relations by unique id.
-     *
-     * @param uniqueIds    list of unique id
-     * @param ontologyEnum ontology type
-     * @return list of simple property object
-     */
-    List<SimpleProperty> queryByUniqueId(List<Long> uniqueIds, SPGOntologyEnum ontologyEnum);
+  /**
+   * Batch query properties or relations by unique id.
+   *
+   * @param uniqueIds list of unique id
+   * @param ontologyEnum ontology type
+   * @return list of simple property object
+   */
+  List<SimpleProperty> queryByUniqueId(List<Long> uniqueIds, SPGOntologyEnum ontologyEnum);
 
-    /**
-     * Query property by unique id
-     *
-     * @param uniqueId     unique id
-     * @param ontologyEnum ontology type
-     * @return property
-     */
-    SimpleProperty queryByUniqueId(Long uniqueId, SPGOntologyEnum ontologyEnum);
+  /**
+   * Query property by unique id
+   *
+   * @param uniqueId unique id
+   * @param ontologyEnum ontology type
+   * @return property
+   */
+  SimpleProperty queryByUniqueId(Long uniqueId, SPGOntologyEnum ontologyEnum);
 
-    /**
-     * Query unique id by property name and object type name.
-     *
-     * @param objectTypeName unique name of taxonomic concept type
-     * @param predicateName  property name
-     * @return unique id of belongTo relation
-     */
-    Long queryUniqueIdByPO(String predicateName, String objectTypeName);
+  /**
+   * Query unique id by property name and object type name.
+   *
+   * @param objectTypeName unique name of taxonomic concept type
+   * @param predicateName property name
+   * @return unique id of belongTo relation
+   */
+  Long queryUniqueIdByPO(String predicateName, String objectTypeName);
 
-    /**
-     * Query property type ref by unique id.
-     *
-     * @param uniqueIds    list of unique id
-     * @param ontologyEnum ontology type
-     * @return list of property type ref
-     */
-    List<PropertyRef> queryRefByUniqueId(List<Long> uniqueIds, SPGOntologyEnum ontologyEnum);
+  /**
+   * Query property type ref by unique id.
+   *
+   * @param uniqueIds list of unique id
+   * @param ontologyEnum ontology type
+   * @return list of property type ref
+   */
+  List<PropertyRef> queryRefByUniqueId(List<Long> uniqueIds, SPGOntologyEnum ontologyEnum);
 }

@@ -16,33 +16,31 @@ package com.antgroup.openspg.core.spgschema.model.type;
 import com.antgroup.openspg.core.spgschema.model.BasicInfo;
 import com.antgroup.openspg.core.spgschema.model.identifier.BaseSPGIdentifier;
 
-/**
- * An interface provides some methods to get basic information of type.
- */
+/** An interface provides some methods to get basic information of type. */
 public interface WithBasicInfo<N extends BaseSPGIdentifier> {
 
-    /**
-     * Get basic information of onotlogy.
-     *
-     * @return basic info
-     */
-    BasicInfo<N> getBasicInfo();
+  /**
+   * Get basic information of onotlogy.
+   *
+   * @return basic info
+   */
+  BasicInfo<N> getBasicInfo();
 
-    /**
-     * Get SPG identifier of ontology
-     *
-     * @return identifier
-     */
-    default N getBaseSpgIdentifier() {
-        return getBasicInfo().getName();
-    }
+  /**
+   * Get SPG identifier of ontology
+   *
+   * @return identifier
+   */
+  default N getBaseSpgIdentifier() {
+    return getBasicInfo().getName();
+  }
 
-    /**
-     * Get name of ontology.
-     *
-     * @return name string
-     */
-    default String getName() {
-        return getBaseSpgIdentifier().toString();
-    }
+  /**
+   * Get name of ontology.
+   *
+   * @return name string
+   */
+  default String getName() {
+    return getBaseSpgIdentifier().toString();
+  }
 }

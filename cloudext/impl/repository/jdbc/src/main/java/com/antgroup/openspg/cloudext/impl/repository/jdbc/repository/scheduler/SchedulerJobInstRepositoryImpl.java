@@ -22,52 +22,45 @@ import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.scheduler.c
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
 
 @Repository
 public class SchedulerJobInstRepositoryImpl implements SchedulerJobInstRepository {
 
-    @Autowired
-    private JobInstDOMapper jobInstInfoDOMapper;
+  @Autowired private JobInstDOMapper jobInstInfoDOMapper;
 
-    @Override
-    public String save(SchedulerJobInst jobInst) {
-        JobInstDO jobInstDO = SchedulerJobInstConvertor.toDO(jobInst);
-        jobInstInfoDOMapper.insert(jobInstDO);
-        return String.valueOf(jobInstDO.getId());
+  @Override
+  public String save(SchedulerJobInst jobInst) {
+    JobInstDO jobInstDO = SchedulerJobInstConvertor.toDO(jobInst);
+    jobInstInfoDOMapper.insert(jobInstDO);
+    return String.valueOf(jobInstDO.getId());
+  }
+
+  @Override
+  public List<SchedulerJobInst> query(SchedulerJobInstQuery query) {
+    JobInstDOExample example = new JobInstDOExample();
+    JobInstDOExample.Criteria criteria = example.createCriteria();
+
+    if (query.getStatus() != null) {
+      criteria.andStatusIn(CollectionsUtils.listMap(query.getStatus(), Enum::name));
+    }
+    if (query.getOrderBy() != null) {
+      example.setOrderByClause(query.getOrderBy());
     }
 
-    @Override
-    public List<SchedulerJobInst> query(SchedulerJobInstQuery query) {
-        JobInstDOExample example = new JobInstDOExample();
-        JobInstDOExample.Criteria criteria = example.createCriteria();
+    List<JobInstDO> jobInstDOS = jobInstInfoDOMapper.selectByExample(example);
+    return CollectionsUtils.listMap(jobInstDOS, SchedulerJobInstConvertor::toModel);
+  }
 
-        if (query.getStatus() != null) {
-            criteria.andStatusIn(
-                CollectionsUtils.listMap(query.getStatus(), Enum::name)
-            );
-        }
-        if (query.getOrderBy() != null) {
-            example.setOrderByClause(query.getOrderBy());
-        }
+  @Override
+  public int updateStatus(String jobInstId, JobInstStatusEnum status) {
+    JobInstDOExample example = new JobInstDOExample();
+    example.createCriteria().andIdEqualTo(Long.valueOf(jobInstId));
 
-        List<JobInstDO> jobInstDOS = jobInstInfoDOMapper.selectByExample(example);
-        return CollectionsUtils.listMap(jobInstDOS, SchedulerJobInstConvertor::toModel);
-    }
-
-    @Override
-    public int updateStatus(String jobInstId, JobInstStatusEnum status) {
-        JobInstDOExample example = new JobInstDOExample();
-        example.createCriteria()
-            .andIdEqualTo(Long.valueOf(jobInstId));
-
-        JobInstDO jobInstDO = new JobInstDO();
-        jobInstDO.setStatus(status.name());
-        return jobInstInfoDOMapper.updateByExampleSelective(jobInstDO, example);
-    }
+    JobInstDO jobInstDO = new JobInstDO();
+    jobInstDO.setStatus(status.name());
+    return jobInstInfoDOMapper.updateByExampleSelective(jobInstDO, example);
+  }
 }

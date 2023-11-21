@@ -16,83 +16,83 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 import java.util.Date;
 
 public class JobInfoDO {
-    private Long id;
+  private Long id;
 
-    private Date gmtCreate;
+  private Date gmtCreate;
 
-    private Date gmtModified;
+  private Date gmtModified;
 
-    private String name;
+  private String name;
 
-    private String type;
+  private String type;
 
-    private String cron;
+  private String cron;
 
-    private String status;
+  private String status;
 
-    private String idempotentId;
+  private String idempotentId;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
+  public Date getGmtCreate() {
+    return gmtCreate;
+  }
 
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
+  public void setGmtCreate(Date gmtCreate) {
+    this.gmtCreate = gmtCreate;
+  }
 
-    public Date getGmtModified() {
-        return gmtModified;
-    }
+  public Date getGmtModified() {
+    return gmtModified;
+  }
 
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
+  public void setGmtModified(Date gmtModified) {
+    this.gmtModified = gmtModified;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+  public void setName(String name) {
+    this.name = name == null ? null : name.trim();
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+  public void setType(String type) {
+    this.type = type == null ? null : type.trim();
+  }
 
-    public String getCron() {
-        return cron;
-    }
+  public String getCron() {
+    return cron;
+  }
 
-    public void setCron(String cron) {
-        this.cron = cron == null ? null : cron.trim();
-    }
+  public void setCron(String cron) {
+    this.cron = cron == null ? null : cron.trim();
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public String getStatus() {
+    return status;
+  }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
+  public void setStatus(String status) {
+    this.status = status == null ? null : status.trim();
+  }
 
-    public String getIdempotentId() {
-        return idempotentId;
-    }
+  public String getIdempotentId() {
+    return idempotentId;
+  }
 
-    public void setIdempotentId(String idempotentId) {
-        this.idempotentId = idempotentId == null ? null : idempotentId.trim();
-    }
+  public void setIdempotentId(String idempotentId) {
+    this.idempotentId = idempotentId == null ? null : idempotentId.trim();
+  }
 }

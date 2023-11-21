@@ -17,41 +17,38 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.Id
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchemaAlterItem;
 import com.antgroup.openspg.common.model.base.BaseCmd;
 import com.antgroup.openspg.core.spgschema.model.alter.AlterOperationEnum;
-
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 @Getter
 @AllArgsConstructor
 public class IdxSchemaAlterCmd extends BaseCmd {
 
-    private List<IdxSchemaAlterItem> alterItems;
+  private List<IdxSchemaAlterItem> alterItems;
 
-    public boolean isEmpty() {
-        return CollectionUtils.isEmpty(alterItems);
-    }
+  public boolean isEmpty() {
+    return CollectionUtils.isEmpty(alterItems);
+  }
 
-    public List<IdxSchema> getCreateIdx() {
-        return getIdx(AlterOperationEnum.CREATE);
-    }
+  public List<IdxSchema> getCreateIdx() {
+    return getIdx(AlterOperationEnum.CREATE);
+  }
 
-    public List<IdxSchema> getUpdateIdx() {
-        return getIdx(AlterOperationEnum.UPDATE);
-    }
+  public List<IdxSchema> getUpdateIdx() {
+    return getIdx(AlterOperationEnum.UPDATE);
+  }
 
-    public List<IdxSchema> getDeleteIdx() {
-        return getIdx(AlterOperationEnum.DELETE);
-    }
+  public List<IdxSchema> getDeleteIdx() {
+    return getIdx(AlterOperationEnum.DELETE);
+  }
 
-    private List<IdxSchema> getIdx(AlterOperationEnum alterOp) {
-        return alterItems.stream()
-            .filter(i -> i.getAlterOp().equals(alterOp))
-            .map(IdxSchemaAlterItem::getIdxSchema)
-            .collect(Collectors.toList());
-    }
+  private List<IdxSchema> getIdx(AlterOperationEnum alterOp) {
+    return alterItems.stream()
+        .filter(i -> i.getAlterOp().equals(alterOp))
+        .map(IdxSchemaAlterItem::getIdxSchema)
+        .collect(Collectors.toList());
+  }
 }

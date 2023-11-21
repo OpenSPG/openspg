@@ -16,123 +16,123 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 import java.util.Date;
 
 public class SemanticDO {
-    private Long id;
+  private Long id;
 
-    private Date gmtCreate;
+  private Date gmtCreate;
 
-    private Date gmtModified;
+  private Date gmtModified;
 
-    private String resourceId;
+  private String resourceId;
 
-    private String semanticType;
+  private String semanticType;
 
-    private String originalResourceId;
+  private String originalResourceId;
 
-    private String resourceType;
+  private String resourceType;
 
-    private Integer status;
+  private Integer status;
 
-    private String ruleId;
+  private String ruleId;
 
-    private String subjectMetaType;
+  private String subjectMetaType;
 
-    private String objectMetaType;
+  private String objectMetaType;
 
-    private String config;
+  private String config;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
+  public Date getGmtCreate() {
+    return gmtCreate;
+  }
 
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
+  public void setGmtCreate(Date gmtCreate) {
+    this.gmtCreate = gmtCreate;
+  }
 
-    public Date getGmtModified() {
-        return gmtModified;
-    }
+  public Date getGmtModified() {
+    return gmtModified;
+  }
 
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
+  public void setGmtModified(Date gmtModified) {
+    this.gmtModified = gmtModified;
+  }
 
-    public String getResourceId() {
-        return resourceId;
-    }
+  public String getResourceId() {
+    return resourceId;
+  }
 
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId == null ? null : resourceId.trim();
-    }
+  public void setResourceId(String resourceId) {
+    this.resourceId = resourceId == null ? null : resourceId.trim();
+  }
 
-    public String getSemanticType() {
-        return semanticType;
-    }
+  public String getSemanticType() {
+    return semanticType;
+  }
 
-    public void setSemanticType(String semanticType) {
-        this.semanticType = semanticType == null ? null : semanticType.trim();
-    }
+  public void setSemanticType(String semanticType) {
+    this.semanticType = semanticType == null ? null : semanticType.trim();
+  }
 
-    public String getOriginalResourceId() {
-        return originalResourceId;
-    }
+  public String getOriginalResourceId() {
+    return originalResourceId;
+  }
 
-    public void setOriginalResourceId(String originalResourceId) {
-        this.originalResourceId = originalResourceId == null ? null : originalResourceId.trim();
-    }
+  public void setOriginalResourceId(String originalResourceId) {
+    this.originalResourceId = originalResourceId == null ? null : originalResourceId.trim();
+  }
 
-    public String getResourceType() {
-        return resourceType;
-    }
+  public String getResourceType() {
+    return resourceType;
+  }
 
-    public void setResourceType(String resourceType) {
-        this.resourceType = resourceType == null ? null : resourceType.trim();
-    }
+  public void setResourceType(String resourceType) {
+    this.resourceType = resourceType == null ? null : resourceType.trim();
+  }
 
-    public Integer getStatus() {
-        return status;
-    }
+  public Integer getStatus() {
+    return status;
+  }
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+  public void setStatus(Integer status) {
+    this.status = status;
+  }
 
-    public String getRuleId() {
-        return ruleId;
-    }
+  public String getRuleId() {
+    return ruleId;
+  }
 
-    public void setRuleId(String ruleId) {
-        this.ruleId = ruleId == null ? null : ruleId.trim();
-    }
+  public void setRuleId(String ruleId) {
+    this.ruleId = ruleId == null ? null : ruleId.trim();
+  }
 
-    public String getSubjectMetaType() {
-        return subjectMetaType;
-    }
+  public String getSubjectMetaType() {
+    return subjectMetaType;
+  }
 
-    public void setSubjectMetaType(String subjectMetaType) {
-        this.subjectMetaType = subjectMetaType == null ? null : subjectMetaType.trim();
-    }
+  public void setSubjectMetaType(String subjectMetaType) {
+    this.subjectMetaType = subjectMetaType == null ? null : subjectMetaType.trim();
+  }
 
-    public String getObjectMetaType() {
-        return objectMetaType;
-    }
+  public String getObjectMetaType() {
+    return objectMetaType;
+  }
 
-    public void setObjectMetaType(String objectMetaType) {
-        this.objectMetaType = objectMetaType == null ? null : objectMetaType.trim();
-    }
+  public void setObjectMetaType(String objectMetaType) {
+    this.objectMetaType = objectMetaType == null ? null : objectMetaType.trim();
+  }
 
-    public String getConfig() {
-        return config;
-    }
+  public String getConfig() {
+    return config;
+  }
 
-    public void setConfig(String config) {
-        this.config = config == null ? null : config.trim();
-    }
+  public void setConfig(String config) {
+    this.config = config == null ? null : config.trim();
+  }
 }

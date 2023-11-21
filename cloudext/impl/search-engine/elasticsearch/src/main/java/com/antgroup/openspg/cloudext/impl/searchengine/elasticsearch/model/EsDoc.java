@@ -14,17 +14,14 @@
 package com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.model;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
-import lombok.Data;
-
 import java.util.Map;
-
+import lombok.Data;
 
 @Data
 public class EsDoc extends BaseValObj {
 
-    private String _index;
-    private String _id;
-    private double _score;
-    private Map<String, Object> _source;
+  private String _index;
+  private String _id;
+  private double _score;
+  private Map<String, Object> _source;
 }

@@ -42,17 +42,13 @@ class BaseReasonerReceipt(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'receipt_type': 'str'
-    }
+    openapi_types = {"receipt_type": "str"}
 
-    attribute_map = {
-        'receipt_type': 'receiptType'
-    }
+    attribute_map = {"receipt_type": "receiptType"}
 
     discriminator_value_class_map = {
-        'JOB': 'JobReasonerReceipt',
-        'TABLE': 'TableReasonerReceipt'
+        "JOB": "JobReasonerReceipt",
+        "TABLE": "TableReasonerReceipt",
     }
 
     def __init__(self, receipt_type=None, local_vars_configuration=None):  # noqa: E501
@@ -84,21 +80,30 @@ class BaseReasonerReceipt(object):
         :param receipt_type: The receipt_type of this BaseReasonerReceipt.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and receipt_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `receipt_type`, must not be `None`")  # noqa: E501
-        allowed_values = ["TABLE", "JOB"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and receipt_type not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and receipt_type is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `receipt_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(receipt_type, allowed_values)
+                "Invalid value for `receipt_type`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = ["TABLE", "JOB"]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and receipt_type not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `receipt_type` ({0}), must be one of {1}".format(  # noqa: E501
+                    receipt_type, allowed_values
+                )
             )
 
         self._receipt_type = receipt_type
 
     def get_real_child_model(self, data):
         """Returns the child model by discriminator"""
-        if '@type' in data:
-            child_type = data.get('@type')
+        if "@type" in data:
+            child_type = data.get("@type")
             real_child_model = self.discriminator_value_class_map.get(child_type)
             return real_child_model
         return None
@@ -110,18 +115,20 @@ class BaseReasonerReceipt(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

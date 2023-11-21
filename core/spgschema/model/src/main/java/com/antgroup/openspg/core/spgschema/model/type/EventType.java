@@ -18,70 +18,69 @@ import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.predicate.Property;
 import com.antgroup.openspg.core.spgschema.model.predicate.PropertyGroupEnum;
 import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
-
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * Class definition of temporal events<br>
- * <p>
- * An event is a special entity with temporal characteristics, sometimes referred to as HyperGraph, expressing a certain
- * behavior that occurs between multiple entities in a certain spatiotemporal environment. Event type, as the type
- * definition of an event, generally includes the following configuration information:
+ *
+ * <p>An event is a special entity with temporal characteristics, sometimes referred to as
+ * HyperGraph, expressing a certain behavior that occurs between multiple entities in a certain
+ * spatiotemporal environment. Event type, as the type definition of an event, generally includes
+ * the following configuration information:
+ *
  * <ul>
- * <li>the occur time: the begin time, end time when the event occurs.</li>
- * <li>the occur address: the LBS information where the event occurs.</li>
- * <li>the subject of an event: subject entity of the event, may include multiple entities.</li>
- * <li>the object of an event: object entity of event, may include multiple entities.</li>
+ *   <li>the occur time: the begin time, end time when the event occurs.
+ *   <li>the occur address: the LBS information where the event occurs.
+ *   <li>the subject of an event: subject entity of the event, may include multiple entities.
+ *   <li>the object of an event: object entity of event, may include multiple entities.
  * </ul>
- * Take epidemic event as an example: On December 27, 2019, Director Zhang Jixian of the Respiratory Department of
- * Hubei Hospital detected that Mark was infected with the new coronavirus;<br>
+ *
+ * Take epidemic event as an example: On December 27, 2019, Director Zhang Jixian of the Respiratory
+ * Department of Hubei Hospital detected that Mark was infected with the new coronavirus;<br>
  * we can define an event type named EpidemicEvent<br>
+ *
  * <ul>
- * <li>subject: Director Zhang Jixian</li>
- * <li>object: Mark</li>
- * <li>event time: December 27, 2019</li>
- * <li>event address: Hubei Hospital</li>
+ *   <li>subject: Director Zhang Jixian
+ *   <li>object: Mark
+ *   <li>event time: December 27, 2019
+ *   <li>event address: Hubei Hospital
  * </ul>
- * </p>
  */
 public class EventType extends BaseAdvancedType {
 
-    private static final long serialVersionUID = -3556413141077741935L;
+  private static final long serialVersionUID = -3556413141077741935L;
 
-    public EventType(
-        BasicInfo<SPGTypeIdentifier> basicInfo,
-        ParentTypeInfo parentTypeInfo,
-        List<Property> properties,
-        List<Relation> relations,
-        SPGTypeAdvancedConfig advancedConfig) {
-        super(basicInfo, parentTypeInfo, SPGTypeEnum.EVENT_TYPE,
-            properties, relations, advancedConfig
-        );
+  public EventType(
+      BasicInfo<SPGTypeIdentifier> basicInfo,
+      ParentTypeInfo parentTypeInfo,
+      List<Property> properties,
+      List<Relation> relations,
+      SPGTypeAdvancedConfig advancedConfig) {
+    super(basicInfo, parentTypeInfo, SPGTypeEnum.EVENT_TYPE, properties, relations, advancedConfig);
+  }
+
+  public List<Property> getTimeProperties() {
+    return this.getPropertyByGroup(PropertyGroupEnum.TIME);
+  }
+
+  public List<Property> getSubjectProperties() {
+    return this.getPropertyByGroup(PropertyGroupEnum.SUBJECT);
+  }
+
+  public List<Property> getObjectProperties() {
+    return this.getPropertyByGroup(PropertyGroupEnum.OBJECT);
+  }
+
+  private List<Property> getPropertyByGroup(PropertyGroupEnum groupEnum) {
+    List<Property> properties = getProperties();
+    if (CollectionUtils.isEmpty(properties) || null == groupEnum) {
+      return properties;
     }
 
-    public List<Property> getTimeProperties() {
-        return this.getPropertyByGroup(PropertyGroupEnum.TIME);
-    }
-
-    public List<Property> getSubjectProperties() {
-        return this.getPropertyByGroup(PropertyGroupEnum.SUBJECT);
-    }
-
-    public List<Property> getObjectProperties() {
-        return this.getPropertyByGroup(PropertyGroupEnum.OBJECT);
-    }
-
-    private List<Property> getPropertyByGroup(PropertyGroupEnum groupEnum) {
-        List<Property> properties = getProperties();
-        if (CollectionUtils.isEmpty(properties) || null == groupEnum) {
-            return properties;
-        }
-
-        return properties.stream()
-            .filter(e -> groupEnum.equals(e.getPropertyGroup()))
-            .collect(Collectors.toList());
-    }
+    return properties.stream()
+        .filter(e -> groupEnum.equals(e.getPropertyGroup()))
+        .collect(Collectors.toList());
+  }
 }

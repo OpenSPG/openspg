@@ -13,28 +13,29 @@
 
 package com.antgroup.openspg.common.model.exception;
 
-
 public class ProjectException extends OpenSPGException {
 
-    private ProjectException(Throwable cause, String messagePattern, Object... args) {
-        super(cause, true, true, messagePattern, args);
-    }
+  private ProjectException(Throwable cause, String messagePattern, Object... args) {
+    super(cause, true, true, messagePattern, args);
+  }
 
-    private ProjectException(String messagePattern, Object... args) {
-        this(null, messagePattern, args);
-    }
+  private ProjectException(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
+  }
 
-    public static ProjectException projectNotExist(Long projectId) {
-        return new ProjectException("cannot find project with id={}", projectId);
-    }
+  public static ProjectException projectNotExist(Long projectId) {
+    return new ProjectException("cannot find project with id={}", projectId);
+  }
 
-    public static ProjectException projectNameAlreadyExist(String projectName) {
-        return new ProjectException("project name:{} has already exist, "
-            + "please change the project name and try again ", projectName);
-    }
+  public static ProjectException projectNameAlreadyExist(String projectName) {
+    return new ProjectException(
+        "project name:{} has already exist, " + "please change the project name and try again ",
+        projectName);
+  }
 
-    public static ProjectException namespaceAlreadyExist(String namespace) {
-        return new ProjectException("namespace:{} has already exist, "
-            + "please change the namespace and try again ", namespace);
-    }
+  public static ProjectException namespaceAlreadyExist(String namespace) {
+    return new ProjectException(
+        "namespace:{} has already exist, " + "please change the namespace and try again ",
+        namespace);
+  }
 }

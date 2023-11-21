@@ -27,30 +27,27 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.Id
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchemaAlterItem;
 import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordManipulateCmd;
 import com.antgroup.openspg.core.spgschema.model.SPGSchemaAlterCmd;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+public abstract class BaseIdxSearchEngineClient
+    implements SearchEngineClient, IdxDataDefinitionService, IdxDataManipulationService {
 
-public abstract class BaseIdxSearchEngineClient implements SearchEngineClient,
-    IdxDataDefinitionService, IdxDataManipulationService {
+  private final SPGRecord2IdxService spgRecord2IdxService = new SPGRecord2IdxServiceImpl();
+  private final SPGSchema2IdxService spgSchema2IdxService = new SPGSchema2IdxServiceImpl(this);
 
-    private final SPGRecord2IdxService spgRecord2IdxService = new SPGRecord2IdxServiceImpl();
-    private final SPGSchema2IdxService spgSchema2IdxService = new SPGSchema2IdxServiceImpl(this);
+  @Override
+  public int alterSchema(SPGSchemaAlterCmd cmd) {
+    List<IdxSchemaAlterItem> alterItems = spgSchema2IdxService.generate(cmd.getSpgSchema());
+    return alterSchema(new IdxSchemaAlterCmd(alterItems));
+  }
 
-    @Override
-    public int alterSchema(SPGSchemaAlterCmd cmd) {
-        List<IdxSchemaAlterItem> alterItems = spgSchema2IdxService.generate(cmd.getSpgSchema());
-        return alterSchema(new IdxSchemaAlterCmd(alterItems));
-    }
-
-    @Override
-    public int manipulateRecord(SPGRecordManipulateCmd cmd) {
-        List<IdxRecordAlterItem> alterItems = cmd.getAlterItems()
-            .stream()
+  @Override
+  public int manipulateRecord(SPGRecordManipulateCmd cmd) {
+    List<IdxRecordAlterItem> alterItems =
+        cmd.getAlterItems().stream()
             .flatMap(alterItem -> spgRecord2IdxService.build(alterItem).stream())
             .collect(Collectors.toList());
-        return manipulateRecord(new IdxRecordManipulateCmd(alterItems));
-    }
-
+    return manipulateRecord(new IdxRecordManipulateCmd(alterItems));
+  }
 }

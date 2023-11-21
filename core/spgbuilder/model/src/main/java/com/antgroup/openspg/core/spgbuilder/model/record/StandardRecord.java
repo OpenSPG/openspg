@@ -13,54 +13,49 @@
 
 package com.antgroup.openspg.core.spgbuilder.model.record;
 
-
 import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.spgschema.model.type.StandardType;
-
 import java.util.Collections;
 import java.util.List;
 
-
 public class StandardRecord extends BaseAdvancedRecord {
 
-    private final StandardType standardType;
+  private final StandardType standardType;
 
-    private final String standardId;
+  private final String standardId;
 
-    private final List<SPGPropertyRecord> properties;
+  private final List<SPGPropertyRecord> properties;
 
-    public StandardRecord(
-        StandardType standardType,
-        String standardId,
-        List<SPGPropertyRecord> properties) {
-        super(SPGRecordTypeEnum.STANDARD);
-        this.standardType = standardType;
-        this.standardId = standardId;
-        this.properties = properties;
-    }
+  public StandardRecord(
+      StandardType standardType, String standardId, List<SPGPropertyRecord> properties) {
+    super(SPGRecordTypeEnum.STANDARD);
+    this.standardType = standardType;
+    this.standardId = standardId;
+    this.properties = properties;
+  }
 
-    @Override
-    public BaseSPGType getSpgType() {
-        return standardType;
-    }
+  @Override
+  public BaseSPGType getSpgType() {
+    return standardType;
+  }
 
-    @Override
-    public List<BasePropertyRecord> getProperties() {
-        return Collections.unmodifiableList(properties);
-    }
+  @Override
+  public List<BasePropertyRecord> getProperties() {
+    return Collections.unmodifiableList(properties);
+  }
 
-    @Override
-    public String getId() {
-        return standardId;
-    }
+  @Override
+  public String getId() {
+    return standardId;
+  }
 
-    @Override
-    public List<SPGPropertyRecord> getSpgProperties() {
-        return Collections.unmodifiableList(properties);
-    }
+  @Override
+  public List<SPGPropertyRecord> getSpgProperties() {
+    return Collections.unmodifiableList(properties);
+  }
 
-    @Override
-    public void addSpgProperties(SPGPropertyRecord record) {
-        properties.add(record);
-    }
+  @Override
+  public void addSpgProperties(SPGPropertyRecord record) {
+    properties.add(record);
+  }
 }

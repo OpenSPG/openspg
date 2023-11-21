@@ -19,21 +19,22 @@ import com.antgroup.openspg.core.spgschema.model.predicate.PropertyRef;
 import com.antgroup.openspg.core.spgschema.model.semantic.PredicateSemantic;
 import com.antgroup.openspg.core.spgschema.model.semantic.SystemPredicateEnum;
 
-
 public class PredicateSemanticMockFactory {
 
-    public static PredicateSemantic mockInverseOfSemantic(String subjectTypeName, Long subjectTypeId,
-        String objectTypeName, Long objectTypeId) {
-        PropertyRef subjectRef = PropertyMockFactory
-            .mockEntityProperty(subjectTypeName, subjectTypeId,
-                objectTypeName, objectTypeId).toRef();
-        subjectRef.setOntologyId(new OntologyId(MockConstants.ENTITY_PROPERTY_ID));
-        PropertyRef objectRef = PropertyMockFactory
-            .mockEntityProperty(objectTypeName, objectTypeId,
-                subjectTypeName, subjectTypeId).toRef();
-        objectRef.setOntologyId(new OntologyId(MockConstants.INVERSE_PROPERTY_ID));
+  public static PredicateSemantic mockInverseOfSemantic(
+      String subjectTypeName, Long subjectTypeId, String objectTypeName, Long objectTypeId) {
+    PropertyRef subjectRef =
+        PropertyMockFactory.mockEntityProperty(
+                subjectTypeName, subjectTypeId, objectTypeName, objectTypeId)
+            .toRef();
+    subjectRef.setOntologyId(new OntologyId(MockConstants.ENTITY_PROPERTY_ID));
+    PropertyRef objectRef =
+        PropertyMockFactory.mockEntityProperty(
+                objectTypeName, objectTypeId, subjectTypeName, subjectTypeId)
+            .toRef();
+    objectRef.setOntologyId(new OntologyId(MockConstants.INVERSE_PROPERTY_ID));
 
-        return new PredicateSemantic(subjectRef, new PredicateIdentifier(SystemPredicateEnum.INVERSE_OF.getName()),
-            objectRef);
-    }
+    return new PredicateSemantic(
+        subjectRef, new PredicateIdentifier(SystemPredicateEnum.INVERSE_OF.getName()), objectRef);
+  }
 }

@@ -16,64 +16,59 @@ package com.antgroup.openspg.core.spgbuilder.model.record;
 import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
 import com.antgroup.openspg.core.spgschema.model.predicate.SubProperty;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-
 import java.util.Collections;
 import java.util.List;
 
-
 public class RelationRecord extends BaseSPGRecord {
 
-    private final Relation relationType;
+  private final Relation relationType;
 
-    private final String srcId;
-    private final String dstId;
+  private final String srcId;
+  private final String dstId;
 
-    private final List<SPGSubPropertyRecord> properties;
+  private final List<SPGSubPropertyRecord> properties;
 
-    public RelationRecord(
-        Relation relationType,
-        String srcId,
-        String dstId,
-        List<SPGSubPropertyRecord> properties) {
-        super(SPGRecordTypeEnum.RELATION);
-        this.relationType = relationType;
-        this.srcId = srcId;
-        this.dstId = dstId;
-        this.properties = properties;
+  public RelationRecord(
+      Relation relationType, String srcId, String dstId, List<SPGSubPropertyRecord> properties) {
+    super(SPGRecordTypeEnum.RELATION);
+    this.relationType = relationType;
+    this.srcId = srcId;
+    this.dstId = dstId;
+    this.properties = properties;
+  }
+
+  public Relation getRelationType() {
+    return relationType;
+  }
+
+  public String getSrcId() {
+    return srcId;
+  }
+
+  public String getDstId() {
+    return dstId;
+  }
+
+  public List<SPGSubPropertyRecord> getSubProperties() {
+    return properties;
+  }
+
+  public SPGSubPropertyRecord getSubPropertyRecord(SubProperty property) {
+    for (SPGSubPropertyRecord record : getSubProperties()) {
+      if (record.getSubPropertyType().getName().equals(property.getName())) {
+        return record;
+      }
     }
+    return null;
+  }
 
-    public Relation getRelationType() {
-        return relationType;
-    }
+  @Override
+  public List<BasePropertyRecord> getProperties() {
+    return Collections.unmodifiableList(properties);
+  }
 
-    public String getSrcId() {
-        return srcId;
-    }
-
-    public String getDstId() {
-        return dstId;
-    }
-
-    public List<SPGSubPropertyRecord> getSubProperties() {
-        return properties;
-    }
-
-    public SPGSubPropertyRecord getSubPropertyRecord(SubProperty property) {
-        for (SPGSubPropertyRecord record : getSubProperties()) {
-            if (record.getSubPropertyType().getName().equals(property.getName())) {
-                return record;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public List<BasePropertyRecord> getProperties() {
-        return Collections.unmodifiableList(properties);
-    }
-
-    @Override
-    public SPGTypeEnum getSpgTypeEnum() {
-        return null;
-    }
+  @Override
+  public SPGTypeEnum getSpgTypeEnum() {
+    return null;
+  }
 }

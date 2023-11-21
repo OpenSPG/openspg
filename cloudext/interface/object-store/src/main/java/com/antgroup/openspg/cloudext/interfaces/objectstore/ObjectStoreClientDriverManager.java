@@ -16,43 +16,37 @@ package com.antgroup.openspg.cloudext.interfaces.objectstore;
 import com.antgroup.openspg.common.model.datasource.connection.ObjectStoreConnectionInfo;
 import com.antgroup.openspg.common.model.exception.CloudExtException;
 import com.antgroup.openspg.common.util.DriverManagerUtils;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ObjectStoreClientDriverManager {
 
-    private final static CopyOnWriteArrayList<ObjectStoreClientDriver>
-        registeredDrivers = new CopyOnWriteArrayList<>();
+  private static final CopyOnWriteArrayList<ObjectStoreClientDriver> registeredDrivers =
+      new CopyOnWriteArrayList<>();
 
-    private ObjectStoreClientDriverManager() {
+  private ObjectStoreClientDriverManager() {}
 
+  static {
+    DriverManagerUtils.loadDrivers("cloudext.objectstore.drivers", ObjectStoreClientDriver.class);
+    log.info("object-store DriverManager initialized");
+  }
+
+  public static synchronized void registerDriver(ObjectStoreClientDriver driver) {
+    if (driver != null) {
+      registeredDrivers.addIfAbsent(driver);
+    } else {
+      throw new NullPointerException();
     }
+    log.info("registerDriver: {}", driver);
+  }
 
-    static {
-        DriverManagerUtils.loadDrivers(
-            "cloudext.objectstore.drivers", ObjectStoreClientDriver.class);
-        log.info("object-store DriverManager initialized");
+  public static ObjectStoreClient getClient(ObjectStoreConnectionInfo config) {
+    for (ObjectStoreClientDriver driver : registeredDrivers) {
+      if (driver.acceptsConfig(config)) {
+        return driver.connect(config);
+      }
     }
-
-    public static synchronized void registerDriver(ObjectStoreClientDriver driver) {
-        if (driver != null) {
-            registeredDrivers.addIfAbsent(driver);
-        } else {
-            throw new NullPointerException();
-        }
-        log.info("registerDriver: {}", driver);
-    }
-
-    public static ObjectStoreClient getClient(ObjectStoreConnectionInfo config) {
-        for (ObjectStoreClientDriver driver : registeredDrivers) {
-            if (driver.acceptsConfig(config)) {
-                return driver.connect(config);
-            }
-        }
-        throw CloudExtException.driverNotExist(config);
-    }
+    throw CloudExtException.driverNotExist(config);
+  }
 }

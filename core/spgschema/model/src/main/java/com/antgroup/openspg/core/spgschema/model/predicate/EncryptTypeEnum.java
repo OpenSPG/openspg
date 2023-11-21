@@ -13,82 +13,58 @@
 
 package com.antgroup.openspg.core.spgschema.model.predicate;
 
-/**
- * Enumeration of property encryption methods
- */
+/** Enumeration of property encryption methods */
 public enum EncryptTypeEnum {
 
-    /**
-     * Identifier card.
-     */
-    IDENTITY_CARD("identityCard"),
+  /** Identifier card. */
+  IDENTITY_CARD("identityCard"),
 
-    /**
-     * Mobile number.
-     */
-    MOBILE("mobile"),
+  /** Mobile number. */
+  MOBILE("mobile"),
 
-    /**
-     * Email address.
-     */
-    EMAIL("email"),
+  /** Email address. */
+  EMAIL("email"),
 
-    /**
-     * Bank card
-     */
-    BANK_CARD("bankCard"),
+  /** Bank card */
+  BANK_CARD("bankCard"),
 
-    /**
-     * IP or Mac Address
-     */
-    IP_OR_MAC("ipOrMac"),
+  /** IP or Mac Address */
+  IP_OR_MAC("ipOrMac"),
 
-    /**
-     * User name
-     */
-    USERNAME("userName"),
+  /** User name */
+  USERNAME("userName"),
 
-    /**
-     * Car number
-     */
-    CARNO("carNo"),
+  /** Car number */
+  CARNO("carNo"),
 
-    /**
-     * Vin number
-     */
-    VINNO("vinNo"),
+  /** Vin number */
+  VINNO("vinNo"),
 
-    /**
-     * User address
-     */
-    ADDRESS("address"),
+  /** User address */
+  ADDRESS("address"),
 
-    /**
-     * Universal encryption method.
-     */
-    COMMON("common"),
+  /** Universal encryption method. */
+  COMMON("common"),
 
-    /**
-     * No encryption
-     */
-    NONE("NONE");
+  /** No encryption */
+  NONE("NONE");
 
-    private final String type;
+  private final String type;
 
-    EncryptTypeEnum(String type) {
-        this.type = type;
+  EncryptTypeEnum(String type) {
+    this.type = type;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public static EncryptTypeEnum toEnum(String type) {
+    for (EncryptTypeEnum maskTypeEnum : EncryptTypeEnum.values()) {
+      if (maskTypeEnum.getType().equalsIgnoreCase(type)) {
+        return maskTypeEnum;
+      }
     }
-
-    public String getType() {
-        return type;
-    }
-
-    public static EncryptTypeEnum toEnum(String type) {
-        for (EncryptTypeEnum maskTypeEnum : EncryptTypeEnum.values()) {
-            if (maskTypeEnum.getType().equalsIgnoreCase(type)) {
-                return maskTypeEnum;
-            }
-        }
-        return EncryptTypeEnum.NONE;
-    }
+    return EncryptTypeEnum.NONE;
+  }
 }

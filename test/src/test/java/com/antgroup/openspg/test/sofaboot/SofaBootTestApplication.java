@@ -15,7 +15,6 @@ package com.antgroup.openspg.test.sofaboot;
 
 import com.antgroup.openspg.api.http.client.util.ConnectionInfo;
 import com.antgroup.openspg.api.http.client.util.HttpClientBootstrap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -34,12 +33,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class SofaBootTestApplication {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SofaBootTestApplication.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SofaBootTestApplication.class);
 
-    public static void main(String[] args) {
-        HttpClientBootstrap.init(new ConnectionInfo("http://127.0.0.1:8887"));
+  public static void main(String[] args) {
+    HttpClientBootstrap.init(new ConnectionInfo("http://127.0.0.1:8887"));
 
-        SpringApplication.run(SofaBootTestApplication.class, args);
-        LOGGER.info("SOFABoot Application Started!!!");
-    }
+    SpringApplication.run(SofaBootTestApplication.class, args);
+    LOGGER.info("SOFABoot Application Started!!!");
+  }
 }

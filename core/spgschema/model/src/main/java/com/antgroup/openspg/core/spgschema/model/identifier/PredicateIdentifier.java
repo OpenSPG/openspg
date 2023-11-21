@@ -15,46 +15,42 @@ package com.antgroup.openspg.core.spgschema.model.identifier;
 
 import java.util.Objects;
 
-/**
- * The identity of predicate, consists by the name of the predicate.
- */
+/** The identity of predicate, consists by the name of the predicate. */
 public class PredicateIdentifier extends BaseSPGIdentifier {
 
-    private static final long serialVersionUID = 5678679675787525025L;
+  private static final long serialVersionUID = 5678679675787525025L;
 
-    /**
-     * Unique name of predicate.
-     */
-    private final String name;
+  /** Unique name of predicate. */
+  private final String name;
 
-    public PredicateIdentifier(String name) {
-        super(SPGIdentifierTypeEnum.PREDICATE);
-        this.name = name;
+  public PredicateIdentifier(String name) {
+    super(SPGIdentifierTypeEnum.PREDICATE);
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public String toString() {
+    return name;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public String getName() {
-        return name;
+    if (!(o instanceof PredicateIdentifier)) {
+      return false;
     }
+    PredicateIdentifier that = (PredicateIdentifier) o;
+    return Objects.equals(getName(), that.getName());
+  }
 
-    @Override
-    public String toString() {
-        return name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof PredicateIdentifier)) {
-            return false;
-        }
-        PredicateIdentifier that = (PredicateIdentifier) o;
-        return Objects.equals(getName(), that.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName());
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(getName());
+  }
 }

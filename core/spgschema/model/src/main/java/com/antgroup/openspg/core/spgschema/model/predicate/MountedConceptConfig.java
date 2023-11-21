@@ -17,53 +17,52 @@ import com.antgroup.openspg.common.model.base.BaseValObj;
 
 /**
  * The configuration of the property mounted concept<br>
- * <p>When a concept type is selected for the property, it can be mounted to a concept subtree or a certain layer.
- * the configuration will be used to find the matching concept for property when importing property data. <br>
+ *
+ * <p>When a concept type is selected for the property, it can be mounted to a concept subtree or a
+ * certain layer. the configuration will be used to find the matching concept for property when
+ * importing property data. <br>
  * <br>
- * For example, user's native place property，the range type is AdminArea, mounted to city layer, so the configuration is
- * like this:
+ * For example, user's native place property，the range type is AdminArea, mounted to city layer, so
+ * the configuration is like this:
+ *
  * <ul>
- *     <li>conceptBranch: China</li>
- *     <li>conceptLayer: city</li>
+ *   <li>conceptBranch: China
+ *   <li>conceptLayer: city
  * </ul>
- * </p>
  */
 public class MountedConceptConfig extends BaseValObj {
 
-    private static final long serialVersionUID = -8116179573933561438L;
+  private static final long serialVersionUID = -8116179573933561438L;
 
-    /**
-     * If property is mounted to ConceptType, then the value = null, else if it mounted to a layer or a concept ,then
-     * the value = concept value.
-     */
-    private String conceptBranch;
+  /**
+   * If property is mounted to ConceptType, then the value = null, else if it mounted to a layer or
+   * a concept ,then the value = concept value.
+   */
+  private String conceptBranch;
 
-    /**
-     * The layer name if the property is mounted to a layer.
-     */
-    private String conceptLayer;
+  /** The layer name if the property is mounted to a layer. */
+  private String conceptLayer;
 
-    public MountedConceptConfig() {
-    }
+  public MountedConceptConfig() {}
 
-    public MountedConceptConfig(String conceptBranch, String conceptLayer) {
-        this.conceptBranch = conceptBranch;
-        this.conceptLayer = conceptLayer;
-    }
+  public MountedConceptConfig(String conceptBranch, String conceptLayer) {
+    this.conceptBranch = conceptBranch;
+    this.conceptLayer = conceptLayer;
+  }
 
-    public String getConceptBranch() {
-        return conceptBranch;
-    }
+  public String getConceptBranch() {
+    return conceptBranch;
+  }
 
-    public void setConceptBranch(String conceptBranch) {
-        this.conceptBranch = conceptBranch;
-    }
+  public void setConceptBranch(String conceptBranch) {
+    this.conceptBranch = conceptBranch;
+  }
 
-    public String getConceptLayer() {
-        return conceptLayer;
-    }
+  public String getConceptLayer() {
+    return conceptLayer;
+  }
 
-    public void setConceptLayer(String conceptLayer) {
-        this.conceptLayer = conceptLayer;
-    }
+  public void setConceptLayer(String conceptLayer) {
+    this.conceptLayer = conceptLayer;
+  }
 }

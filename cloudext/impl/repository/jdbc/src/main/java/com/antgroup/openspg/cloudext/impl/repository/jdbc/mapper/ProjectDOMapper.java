@@ -16,29 +16,30 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectDO;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectDOExample;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface ProjectDOMapper {
-    long countByExample(ProjectDOExample example);
+  long countByExample(ProjectDOExample example);
 
-    int deleteByExample(ProjectDOExample example);
+  int deleteByExample(ProjectDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(ProjectDO record);
+  int insert(ProjectDO record);
 
-    int insertSelective(ProjectDO record);
+  int insertSelective(ProjectDO record);
 
-    List<ProjectDO> selectByExample(ProjectDOExample example);
+  List<ProjectDO> selectByExample(ProjectDOExample example);
 
-    ProjectDO selectByPrimaryKey(Long id);
+  ProjectDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") ProjectDO record, @Param("example") ProjectDOExample example);
+  int updateByExampleSelective(
+      @Param("record") ProjectDO record, @Param("example") ProjectDOExample example);
 
-    int updateByExample(@Param("record") ProjectDO record, @Param("example") ProjectDOExample example);
+  int updateByExample(
+      @Param("record") ProjectDO record, @Param("example") ProjectDOExample example);
 
-    int updateByPrimaryKeySelective(ProjectDO record);
+  int updateByPrimaryKeySelective(ProjectDO record);
 
-    int updateByPrimaryKey(ProjectDO record);
+  int updateByPrimaryKey(ProjectDO record);
 }

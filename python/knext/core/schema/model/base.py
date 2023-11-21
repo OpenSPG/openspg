@@ -62,9 +62,7 @@ class AlterOperationEnum(str, Enum):
 
 
 def iter_init(klass):
-    """Initialize a REST model.
-
-    """
+    """Initialize a REST model."""
     instance = klass()
     for attr, attr_type in klass.openapi_types.items():
         if hasattr(rest, attr_type):
@@ -80,9 +78,7 @@ def iter_init(klass):
 
 
 class BaseProperty(ABC):
-    """Base class of `Property` and `Relation`.
-
-    """
+    """Base class of `Property` and `Relation`."""
 
     _rest_model: Union[rest.Relation, rest.Property]
 
@@ -529,9 +525,7 @@ class BaseProperty(ABC):
 
 
 class BaseSpgType(ABC):
-    """Base class of `ConceptType`, `EntityType`, `EventType`, `StandardType`, `BasicType`.
-
-    """
+    """Base class of `ConceptType`, `EntityType`, `EventType`, `StandardType`, `BasicType`."""
 
     _rest_model: Union[
         rest.ConceptType, rest.EntityType, rest.EventType, rest.StandardType

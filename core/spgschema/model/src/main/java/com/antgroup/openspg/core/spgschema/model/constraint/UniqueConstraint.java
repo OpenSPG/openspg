@@ -14,20 +14,20 @@
 package com.antgroup.openspg.core.spgschema.model.constraint;
 
 /**
- * The unique constraint of attribute value means that there is only one attribute value, which is different from the
- * {@link MultiValConstraint}
+ * The unique constraint of attribute value means that there is only one attribute value, which is
+ * different from the {@link MultiValConstraint}
  */
 public class UniqueConstraint extends BaseConstraintItem {
 
-    private static final long serialVersionUID = 2770310716268904304L;
+  private static final long serialVersionUID = 2770310716268904304L;
 
-    @Override
-    public ConstraintTypeEnum getConstraintTypeEnum() {
-        return ConstraintTypeEnum.UNIQUE;
-    }
+  @Override
+  public ConstraintTypeEnum getConstraintTypeEnum() {
+    return ConstraintTypeEnum.UNIQUE;
+  }
 
-    @Override
-    public boolean checkIsLegal(Object value) {
-        return true;
-    }
+  @Override
+  public boolean checkIsLegal(Object value) {
+    return true;
+  }
 }

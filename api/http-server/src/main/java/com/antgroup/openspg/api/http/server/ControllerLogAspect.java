@@ -16,8 +16,11 @@ package com.antgroup.openspg.api.http.server;
 import com.antgroup.openspg.biz.common.util.BaseLogAspect;
 import com.antgroup.openspg.biz.common.util.BizThreadLocal;
 import com.antgroup.openspg.common.util.logger.LoggerConstants;
-
 import com.google.common.base.Stopwatch;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -26,92 +29,91 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-
-/**
- * Logging Aspect of Controller
- */
+/** Logging Aspect of Controller */
 @Slf4j
 public class ControllerLogAspect implements BaseLogAspect {
 
-    /**
-     * Controller Layer Logging
-     */
-    private static final String CONTROLLER_DIGEST_LOGGER_NAME = "CONTROLLER-DIGEST";
-    private static final Logger CONTROLLER_DIGEST_LOGGER = LoggerFactory.getLogger(
-        CONTROLLER_DIGEST_LOGGER_NAME);
+  /** Controller Layer Logging */
+  private static final String CONTROLLER_DIGEST_LOGGER_NAME = "CONTROLLER-DIGEST";
 
-    /**
-     * Controller Around Point
-     */
-    public Object doAround(ProceedingJoinPoint point) throws Throwable {
-        Stopwatch stopwatch = Stopwatch.createStarted();
+  private static final Logger CONTROLLER_DIGEST_LOGGER =
+      LoggerFactory.getLogger(CONTROLLER_DIGEST_LOGGER_NAME);
 
-        // Method Class, Method Name, and Arguments
-        final String className = point.getTarget().getClass().getSimpleName();
-        final String methodName = ((MethodSignature) (point.getSignature())).getMethod().getName();
-        Object[] methodArgs = point.getArgs();
-        if (methodArgs != null) {
-            methodArgs = Arrays.stream(methodArgs)
-                .filter(x -> !(x instanceof HttpServletRequest))
-                .filter(x -> !(x instanceof HttpServletResponse))
-                .toArray();
-        }
+  /** Controller Around Point */
+  public Object doAround(ProceedingJoinPoint point) throws Throwable {
+    Stopwatch stopwatch = Stopwatch.createStarted();
 
-        Object result = null;
-        try {
-            // Start executing the business method.
-            BizThreadLocal.enter();
-            result = point.proceed();
-            return result;
-        } catch (Throwable e) {
-            // Under normal circumstances, this exception should not occur,
-            // and the exception should be handled by BizTemplate.
-            log.error("An error occurred while the Controller intercepted and printed the system service logs.", e);
-            throw e;
-        } finally {
-            try {
-                final long elapsedTime = stopwatch.elapsed(TimeUnit.MILLISECONDS);
-                Boolean isSuccess = isSuccess(result);
-                // Print summary logs.
-                if (CONTROLLER_DIGEST_LOGGER.isInfoEnabled()) {
-                    CONTROLLER_DIGEST_LOGGER.info(
-                        constructLog(className, methodName, elapsedTime, methodArgs,
-                            result, !BooleanUtils.isTrue(isSuccess), true)
-                    );
-                }
-            } catch (Exception e) {
-                log.error("An error occurred while the Controller intercepted and printed the system service logs.", e);
-            }
-            // The business method has completed execution.
-            BizThreadLocal.exit();
-        }
+    // Method Class, Method Name, and Arguments
+    final String className = point.getTarget().getClass().getSimpleName();
+    final String methodName = ((MethodSignature) (point.getSignature())).getMethod().getName();
+    Object[] methodArgs = point.getArgs();
+    if (methodArgs != null) {
+      methodArgs =
+          Arrays.stream(methodArgs)
+              .filter(x -> !(x instanceof HttpServletRequest))
+              .filter(x -> !(x instanceof HttpServletResponse))
+              .toArray();
     }
 
-    @Override
-    public Boolean isSuccess(Object result) {
-        Boolean isSuccess = Boolean.TRUE;
-        if (result instanceof ResponseEntity) {
-            ResponseEntity<?> response = (ResponseEntity<?>) result;
-            isSuccess = response.getStatusCode().is2xxSuccessful();
-        } else if (result instanceof Boolean) {
-            isSuccess = (Boolean) result;
+    Object result = null;
+    try {
+      // Start executing the business method.
+      BizThreadLocal.enter();
+      result = point.proceed();
+      return result;
+    } catch (Throwable e) {
+      // Under normal circumstances, this exception should not occur,
+      // and the exception should be handled by BizTemplate.
+      log.error(
+          "An error occurred while the Controller intercepted and printed the system service logs.",
+          e);
+      throw e;
+    } finally {
+      try {
+        final long elapsedTime = stopwatch.elapsed(TimeUnit.MILLISECONDS);
+        Boolean isSuccess = isSuccess(result);
+        // Print summary logs.
+        if (CONTROLLER_DIGEST_LOGGER.isInfoEnabled()) {
+          CONTROLLER_DIGEST_LOGGER.info(
+              constructLog(
+                  className,
+                  methodName,
+                  elapsedTime,
+                  methodArgs,
+                  result,
+                  !BooleanUtils.isTrue(isSuccess),
+                  true));
         }
-        return isSuccess;
+      } catch (Exception e) {
+        log.error(
+            "An error occurred while the Controller intercepted and printed the system service logs.",
+            e);
+      }
+      // The business method has completed execution.
+      BizThreadLocal.exit();
     }
+  }
 
-    @Override
-    public String getResultSize(Object result) {
-        if (result instanceof ResponseEntity) {
-            ResponseEntity<?> response = (ResponseEntity<?>) result;
-            if (isSuccess(result)) {
-                return obj2Size(response);
-            }
-        }
-        return LoggerConstants.LOG_DEFAULT;
+  @Override
+  public Boolean isSuccess(Object result) {
+    Boolean isSuccess = Boolean.TRUE;
+    if (result instanceof ResponseEntity) {
+      ResponseEntity<?> response = (ResponseEntity<?>) result;
+      isSuccess = response.getStatusCode().is2xxSuccessful();
+    } else if (result instanceof Boolean) {
+      isSuccess = (Boolean) result;
     }
+    return isSuccess;
+  }
+
+  @Override
+  public String getResultSize(Object result) {
+    if (result instanceof ResponseEntity) {
+      ResponseEntity<?> response = (ResponseEntity<?>) result;
+      if (isSuccess(result)) {
+        return obj2Size(response);
+      }
+    }
+    return LoggerConstants.LOG_DEFAULT;
+  }
 }

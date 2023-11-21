@@ -14,44 +14,43 @@
 package com.antgroup.openspg.core.spgschema.service.predicate.repository;
 
 import com.antgroup.openspg.core.spgschema.model.constraint.Constraint;
-
 import java.util.List;
 
 /**
- * The read-write interface for constraint in the database, provides methods for saving, updating, deleting, and
- * querying constraints.
+ * The read-write interface for constraint in the database, provides methods for saving, updating,
+ * deleting, and querying constraints.
  */
 public interface ConstraintRepository {
 
-    /**
-     * Save or update a constraint in db.
-     *
-     * @param constraint constraint detail
-     * @return record count that added or update
-     */
-    int upsert(Constraint constraint);
+  /**
+   * Save or update a constraint in db.
+   *
+   * @param constraint constraint detail
+   * @return record count that added or update
+   */
+  int upsert(Constraint constraint);
 
-    /**
-     * Delete a constraint by id.
-     *
-     * @param id constraint id
-     * @return record count that deleted
-     */
-    int deleteById(Long id);
+  /**
+   * Delete a constraint by id.
+   *
+   * @param id constraint id
+   * @return record count that deleted
+   */
+  int deleteById(Long id);
 
-    /**
-     * Query constraint by id.
-     *
-     * @param constraintIds list of constraint id
-     * @return list of constraint
-     */
-    List<Constraint> queryById(List<Long> constraintIds);
+  /**
+   * Query constraint by id.
+   *
+   * @param constraintIds list of constraint id
+   * @return list of constraint
+   */
+  List<Constraint> queryById(List<Long> constraintIds);
 
-    /**
-     * Delete constraint by id
-     *
-     * @param ids list of id
-     * @return record cnt that deleted
-     */
-    int deleteById(List<Long> ids);
+  /**
+   * Delete constraint by id
+   *
+   * @param ids list of id
+   * @return record cnt that deleted
+   */
+  int deleteById(List<Long> ids);
 }

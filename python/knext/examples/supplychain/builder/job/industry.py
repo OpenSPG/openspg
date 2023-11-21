@@ -12,7 +12,11 @@
 #  or implied.
 
 from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import SourceCsvComponent, SinkToKgComponent, EntityMappingComponent
+from knext.core.builder.job.model.component import (
+    SourceCsvComponent,
+    SinkToKgComponent,
+    EntityMappingComponent,
+)
 from schema.supplychain_schema_helper import SupplyChain
 
 
@@ -22,13 +26,13 @@ class Industry(BuilderJob):
     def build(self):
         source = SourceCsvComponent(
             local_path="./builder/job/data/Industry.csv",
-            columns=['fullname'],
-            start_row=2
+            columns=["fullname"],
+            start_row=2,
         )
 
-        mapping = EntityMappingComponent(
-            spg_type_name=SupplyChain.Industry
-        ).add_field("fullname", SupplyChain.Industry.id)
+        mapping = EntityMappingComponent(spg_type_name=SupplyChain.Industry).add_field(
+            "fullname", SupplyChain.Industry.id
+        )
 
         sink = SinkToKgComponent()
 

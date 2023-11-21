@@ -13,15 +13,10 @@
 
 package com.antgroup.openspg.core.spgschema.service.alter.sync;
 
-
 public enum SchemaStorageEnum {
-    /**
-     * Graph store
-     */
-    GRAPH,
+  /** Graph store */
+  GRAPH,
 
-    /**
-     * Search engine
-     */
-    SEARCH_ENGINE
+  /** Search engine */
+  SEARCH_ENGINE
 }

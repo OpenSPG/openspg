@@ -15,12 +15,10 @@ package com.antgroup.openspg.core.spgbuilder.service;
 
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.core.spgschema.model.type.OperatorKey;
-
 import java.util.Collection;
 import java.util.List;
 
-
 public interface OperatorService {
 
-    List<OperatorConfig> query(Collection<OperatorKey> keys);
+  List<OperatorConfig> query(Collection<OperatorKey> keys);
 }

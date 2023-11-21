@@ -16,8 +16,5 @@ package com.antgroup.openspg.cloudext.interfaces.computing;
 import com.antgroup.openspg.common.model.datasource.connection.ComputingConnectionInfo;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClientDriver;
 
-
 public interface ComputingClientDriver
-    extends CloudExtClientDriver<ComputingClient, ComputingConnectionInfo> {
-
-}
+    extends CloudExtClientDriver<ComputingClient, ComputingConnectionInfo> {}

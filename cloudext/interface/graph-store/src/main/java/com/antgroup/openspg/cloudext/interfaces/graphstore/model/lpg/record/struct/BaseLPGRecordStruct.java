@@ -15,24 +15,22 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.str
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGDataQueryService;
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <p>
- * Provides a generic base implementation for <tt>LPGRecordStruct</tt>.
- * <tt>LPGRecordStruct</tt> constants a set of LPG records, and is used for the query response by
- * {@link LPGDataQueryService LPGDataQueryService}. All types of <tt>LPGRecordStruct</tt> are the following:
- *     <ul>
- *         <li><code>TABLE</code></li>
- *         <li><code>GRAPH</code></li>
- *     </ul>
- * </P>
+ * Provides a generic base implementation for <tt>LPGRecordStruct</tt>. <tt>LPGRecordStruct</tt>
+ * constants a set of LPG records, and is used for the query response by {@link LPGDataQueryService
+ * LPGDataQueryService}. All types of <tt>LPGRecordStruct</tt> are the following:
+ *
+ * <ul>
+ *   <li><code>TABLE</code>
+ *   <li><code>GRAPH</code>
+ * </ul>
  */
 @Getter
 @AllArgsConstructor
 public abstract class BaseLPGRecordStruct extends BaseValObj {
 
-    private final LPGRecordStructEnum recordStruct;
+  private final LPGRecordStructEnum recordStruct;
 }

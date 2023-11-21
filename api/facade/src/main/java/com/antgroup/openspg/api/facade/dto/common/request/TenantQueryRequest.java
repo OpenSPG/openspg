@@ -15,16 +15,15 @@ package com.antgroup.openspg.api.facade.dto.common.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-
 public class TenantQueryRequest extends BaseRequest {
 
-    private Long tenantId;
+  private Long tenantId;
 
-    public Long getTenantId() {
-        return tenantId;
-    }
+  public Long getTenantId() {
+    return tenantId;
+  }
 
-    public void setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-    }
+  public void setTenantId(Long tenantId) {
+    this.tenantId = tenantId;
+  }
 }

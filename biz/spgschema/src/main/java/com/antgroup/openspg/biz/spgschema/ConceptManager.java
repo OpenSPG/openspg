@@ -19,45 +19,43 @@ import com.antgroup.openspg.core.spgschema.model.semantic.request.RemoveDynamicT
 import com.antgroup.openspg.core.spgschema.model.semantic.request.RemoveLogicalCausationRequest;
 import com.antgroup.openspg.core.spgschema.model.type.ConceptList;
 
-/**
- * Provide method to manage concept
- */
+/** Provide method to manage concept */
 public interface ConceptManager {
 
-    /**
-     * define dynamic taxonomy.
-     *
-     * @param request request
-     */
-    void defineDynamicTaxonomy(DefineDynamicTaxonomyRequest request);
+  /**
+   * define dynamic taxonomy.
+   *
+   * @param request request
+   */
+  void defineDynamicTaxonomy(DefineDynamicTaxonomyRequest request);
 
-    /**
-     * remove dynamic taxonomy.
-     *
-     * @param request request
-     */
-    void removeDynamicTaxonomy(RemoveDynamicTaxonomyRequest request);
+  /**
+   * remove dynamic taxonomy.
+   *
+   * @param request request
+   */
+  void removeDynamicTaxonomy(RemoveDynamicTaxonomyRequest request);
 
-    /**
-     * define logical causation.
-     *
-     * @param request request
-     */
-    void defineLogicalCausation(DefineLogicalCausationRequest request);
+  /**
+   * define logical causation.
+   *
+   * @param request request
+   */
+  void defineLogicalCausation(DefineLogicalCausationRequest request);
 
-    /**
-     * remove logical causation.
-     *
-     * @param request
-     */
-    void removeLogicalCausation(RemoveLogicalCausationRequest request);
+  /**
+   * remove logical causation.
+   *
+   * @param request
+   */
+  void removeLogicalCausation(RemoveLogicalCausationRequest request);
 
-    /**
-     * Get concept detail by concept type.
-     *
-     * @param conceptTypeName unique name of concept type
-     * @param conceptName     unique name of concept
-     * @return list of concept
-     */
-    ConceptList getConceptDetail(String conceptTypeName, String conceptName);
+  /**
+   * Get concept detail by concept type.
+   *
+   * @param conceptTypeName unique name of concept type
+   * @param conceptName unique name of concept
+   * @return list of concept
+   */
+  ConceptList getConceptDetail(String conceptTypeName, String conceptName);
 }

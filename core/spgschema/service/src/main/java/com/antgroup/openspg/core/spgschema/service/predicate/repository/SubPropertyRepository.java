@@ -15,53 +15,52 @@ package com.antgroup.openspg.core.spgschema.service.predicate.repository;
 
 import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.spgschema.service.predicate.model.SimpleSubProperty;
-
 import java.util.List;
 
 /**
- * The read-write interface for sub property objects in the database, provides methods for saving, updating, deleting,
- * and querying sub properties.
+ * The read-write interface for sub property objects in the database, provides methods for saving,
+ * updating, deleting, and querying sub properties.
  */
 public interface SubPropertyRepository {
 
-    /**
-     * Save a new sub property to db.
-     *
-     * @param simpleSubProperty sub property detail
-     * @return record count that added
-     */
-    int save(SimpleSubProperty simpleSubProperty);
+  /**
+   * Save a new sub property to db.
+   *
+   * @param simpleSubProperty sub property detail
+   * @return record count that added
+   */
+  int save(SimpleSubProperty simpleSubProperty);
 
-    /**
-     * Update sub property information in db.
-     *
-     * @param simpleSubProperty sub property detail
-     * @return record count that updated
-     */
-    int update(SimpleSubProperty simpleSubProperty);
+  /**
+   * Update sub property information in db.
+   *
+   * @param simpleSubProperty sub property detail
+   * @return record count that updated
+   */
+  int update(SimpleSubProperty simpleSubProperty);
 
-    /**
-     * Delete a sub property in db.
-     *
-     * @param simpleSubProperty sub property detail
-     * @return record count that deleted
-     */
-    int delete(SimpleSubProperty simpleSubProperty);
+  /**
+   * Delete a sub property in db.
+   *
+   * @param simpleSubProperty sub property detail
+   * @return record count that deleted
+   */
+  int delete(SimpleSubProperty simpleSubProperty);
 
-    /**
-     * Query sub property by unique id
-     *
-     * @param uniqueId unique id of sub property
-     * @return sub property
-     */
-    SimpleSubProperty queryByUniqueId(Long uniqueId);
+  /**
+   * Query sub property by unique id
+   *
+   * @param uniqueId unique id of sub property
+   * @return sub property
+   */
+  SimpleSubProperty queryByUniqueId(Long uniqueId);
 
-    /**
-     * Query sub properties in db by property or relation id.
-     *
-     * @param subjectIds   list of property or relation id
-     * @param ontologyEnum ontology type
-     * @return list of sub property
-     */
-    List<SimpleSubProperty> queryBySubjectId(List<Long> subjectIds, SPGOntologyEnum ontologyEnum);
+  /**
+   * Query sub properties in db by property or relation id.
+   *
+   * @param subjectIds list of property or relation id
+   * @param ontologyEnum ontology type
+   * @return list of sub property
+   */
+  List<SimpleSubProperty> queryBySubjectId(List<Long> subjectIds, SPGOntologyEnum ontologyEnum);
 }

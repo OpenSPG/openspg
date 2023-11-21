@@ -13,24 +13,19 @@
 
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums;
 
-
 public enum PropertyCategoryEnum {
-    /**
-     * Basic type.
-     */
-    BASIC,
+  /** Basic type. */
+  BASIC,
 
-    /**
-     * Advanced type.
-     */
-    ADVANCED;
+  /** Advanced type. */
+  ADVANCED;
 
-    public static PropertyCategoryEnum getEnum(String name) {
-        for (PropertyCategoryEnum categoryEnum : PropertyCategoryEnum.values()) {
-            if (categoryEnum.name().equalsIgnoreCase(name)) {
-                return categoryEnum;
-            }
-        }
-        throw new IllegalArgumentException("illegal type=" + name);
+  public static PropertyCategoryEnum getEnum(String name) {
+    for (PropertyCategoryEnum categoryEnum : PropertyCategoryEnum.values()) {
+      if (categoryEnum.name().equalsIgnoreCase(name)) {
+        return categoryEnum;
+      }
     }
+    throw new IllegalArgumentException("illegal type=" + name);
+  }
 }

@@ -43,34 +43,45 @@ class Relation(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'basic_info': 'SubPropertyBasicInfo',
-        'subject_type_ref': 'SpgTypeRef',
-        'object_type_ref': 'SpgTypeRef',
-        'inherited': 'bool',
-        'advanced_config': 'PropertyAdvancedConfig',
-        'project_id': 'int',
-        'ontology_id': 'OntologyId',
-        'alter_operation': 'str',
-        'ext_info': 'object',
-        'is_dynamic': 'bool'
+        "basic_info": "SubPropertyBasicInfo",
+        "subject_type_ref": "SpgTypeRef",
+        "object_type_ref": "SpgTypeRef",
+        "inherited": "bool",
+        "advanced_config": "PropertyAdvancedConfig",
+        "project_id": "int",
+        "ontology_id": "OntologyId",
+        "alter_operation": "str",
+        "ext_info": "object",
+        "is_dynamic": "bool",
     }
 
     attribute_map = {
-        'basic_info': 'basicInfo',
-        'subject_type_ref': 'subjectTypeRef',
-        'object_type_ref': 'objectTypeRef',
-        'inherited': 'inherited',
-        'advanced_config': 'advancedConfig',
-        'project_id': 'projectId',
-        'ontology_id': 'ontologyId',
-        'alter_operation': 'alterOperation',
-        'ext_info': 'extInfo',
-        'is_dynamic': 'isDynamic'
+        "basic_info": "basicInfo",
+        "subject_type_ref": "subjectTypeRef",
+        "object_type_ref": "objectTypeRef",
+        "inherited": "inherited",
+        "advanced_config": "advancedConfig",
+        "project_id": "projectId",
+        "ontology_id": "ontologyId",
+        "alter_operation": "alterOperation",
+        "ext_info": "extInfo",
+        "is_dynamic": "isDynamic",
     }
 
-    def __init__(self, basic_info=None, subject_type_ref=None, object_type_ref=None, inherited=None,
-                 advanced_config=None, project_id=None, ontology_id=None, alter_operation=None, ext_info=None,
-                 is_dynamic=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        basic_info=None,
+        subject_type_ref=None,
+        object_type_ref=None,
+        inherited=None,
+        advanced_config=None,
+        project_id=None,
+        ontology_id=None,
+        alter_operation=None,
+        ext_info=None,
+        is_dynamic=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """Relation - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -275,10 +286,14 @@ class Relation(object):
         :type: str
         """
         allowed_values = ["CREATE", "UPDATE", "DELETE"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and alter_operation not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and alter_operation not in allowed_values
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `alter_operation` ({0}), must be one of {1}"  # noqa: E501
-                .format(alter_operation, allowed_values)
+                "Invalid value for `alter_operation` ({0}), must be one of {1}".format(  # noqa: E501
+                    alter_operation, allowed_values
+                )
             )
 
         self._alter_operation = alter_operation
@@ -332,18 +347,20 @@ class Relation(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

@@ -16,73 +16,73 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 import java.util.Date;
 
 public class TenantDO {
-    private Long id;
+  private Long id;
 
-    private Date gmtCreate;
+  private Date gmtCreate;
 
-    private Date gmtModified;
+  private Date gmtModified;
 
-    private String name;
+  private String name;
 
-    private String status;
+  private String status;
 
-    private String description;
+  private String description;
 
-    private String globalConfig;
+  private String globalConfig;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
+  public Date getGmtCreate() {
+    return gmtCreate;
+  }
 
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
+  public void setGmtCreate(Date gmtCreate) {
+    this.gmtCreate = gmtCreate;
+  }
 
-    public Date getGmtModified() {
-        return gmtModified;
-    }
+  public Date getGmtModified() {
+    return gmtModified;
+  }
 
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
+  public void setGmtModified(Date gmtModified) {
+    this.gmtModified = gmtModified;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+  public void setName(String name) {
+    this.name = name == null ? null : name.trim();
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public String getStatus() {
+    return status;
+  }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
+  public void setStatus(String status) {
+    this.status = status == null ? null : status.trim();
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
-    }
+  public void setDescription(String description) {
+    this.description = description == null ? null : description.trim();
+  }
 
-    public String getGlobalConfig() {
-        return globalConfig;
-    }
+  public String getGlobalConfig() {
+    return globalConfig;
+  }
 
-    public void setGlobalConfig(String globalConfig) {
-        this.globalConfig = globalConfig == null ? null : globalConfig.trim();
-    }
+  public void setGlobalConfig(String globalConfig) {
+    this.globalConfig = globalConfig == null ? null : globalConfig.trim();
+  }
 }

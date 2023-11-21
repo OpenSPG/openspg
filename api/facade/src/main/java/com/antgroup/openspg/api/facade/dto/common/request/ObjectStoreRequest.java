@@ -15,16 +15,15 @@ package com.antgroup.openspg.api.facade.dto.common.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-
 public class ObjectStoreRequest extends BaseRequest {
 
-    private String name;
+  private String name;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 }

@@ -22,115 +22,111 @@ import com.antgroup.openspg.core.spgschema.model.constraint.NotNullConstraint;
 import com.antgroup.openspg.core.spgschema.model.constraint.RangeConstraint;
 import com.antgroup.openspg.core.spgschema.model.constraint.RegularConstraint;
 import com.antgroup.openspg.core.spgschema.model.constraint.UniqueConstraint;
-
 import com.google.common.collect.Lists;
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import org.apache.commons.collections4.CollectionUtils;
 
 public class ConstraintItemConfigDOConvertor {
 
-    /**
-     * convert constraint config to AbstractConstraintItem object.
-     *
-     * @param configDOS
-     * @return
-     */
-    public static List<BaseConstraintItem> toConstraintItem(List<ConstraintItemConfigDO> configDOS) {
-        if (CollectionUtils.isEmpty(configDOS)) {
-            return Collections.emptyList();
-        }
-
-        List<BaseConstraintItem> constraintItems = Lists.newArrayList();
-
-        List<ConstraintItemConfigDO> rangConfigDOS = Lists.newArrayList();
-        for (ConstraintItemConfigDO config : configDOS) {
-            ConstraintEnum itemEnum = ConstraintEnum.getConstraint(config.getId());
-            switch (itemEnum) {
-                case REQUIRE:
-                    constraintItems.add(new NotNullConstraint());
-                    break;
-                case UNIQUE:
-                    constraintItems.add(new UniqueConstraint());
-                    break;
-                case ENUM:
-                    List<String> enumValues = new ArrayList<>();
-                    if (config.getValue() instanceof List) {
-                        enumValues = (List) config.getValue();
-                    }
-                    constraintItems.add(new EnumConstraint(enumValues));
-                    break;
-                case REGULAR:
-                    constraintItems.add(new RegularConstraint(String.valueOf(config.getValue())));
-                    break;
-                case MULTIVALUE:
-                    constraintItems.add(new MultiValConstraint());
-                    break;
-                case RANGE:
-                    constraintItems.add((RangeConstraint) config.getValue());
-                    break;
-                default:
-                    rangConfigDOS.add(config);
-                    break;
-            }
-        }
-
-        //兼容老的数值型约束
-        if (CollectionUtils.isNotEmpty(rangConfigDOS)) {
-            RangeConstraint rangeConstraint = new RangeConstraint();
-            for (ConstraintItemConfigDO configDO : rangConfigDOS) {
-                ConstraintEnum itemEnum = ConstraintEnum.getConstraint(configDO.getId());
-                switch (itemEnum) {
-                    case MAXIMUM_LT:
-                        rangeConstraint.setRightOpen(true);
-                        rangeConstraint.setMaximumValue(configDO.getValue().toString());
-                        break;
-                    case MAXIMUM_LT_OE:
-                        rangeConstraint.setRightOpen(false);
-                        rangeConstraint.setMaximumValue(configDO.getValue().toString());
-                        break;
-                    case MINIMUM_GT:
-                        rangeConstraint.setLeftOpen(true);
-                        rangeConstraint.setMinimumValue(configDO.getValue().toString());
-                        break;
-                    case MINIMUM_GT_OE:
-                        rangeConstraint.setLeftOpen(false);
-                        rangeConstraint.setMinimumValue(configDO.getValue().toString());
-                        break;
-                    default:
-                        throw new IllegalArgumentException(
-                            "invalid ConstraintEnum:" + itemEnum.name());
-                }
-            }
-            constraintItems.add(rangeConstraint);
-        }
-        return constraintItems;
+  /**
+   * convert constraint config to AbstractConstraintItem object.
+   *
+   * @param configDOS
+   * @return
+   */
+  public static List<BaseConstraintItem> toConstraintItem(List<ConstraintItemConfigDO> configDOS) {
+    if (CollectionUtils.isEmpty(configDOS)) {
+      return Collections.emptyList();
     }
 
-    public static ConstraintItemConfigDO toConfigDO(BaseConstraintItem item) {
-        ConstraintItemConfigDO configDO = new ConstraintItemConfigDO();
-        configDO.setId(item.getConstraintTypeEnum().name());
+    List<BaseConstraintItem> constraintItems = Lists.newArrayList();
 
-        switch (item.getConstraintTypeEnum()) {
-            case ENUM:
-                EnumConstraint enumConstraint = (EnumConstraint) item;
-                configDO.setValue(enumConstraint.getEnumValues());
-                break;
-            case REGULAR:
-                RegularConstraint regularConstraint = (RegularConstraint) item;
-                configDO.setValue(regularConstraint.getRegularPattern());
-                break;
-            case RANGE:
-                RangeConstraint rangeConstraint = (RangeConstraint) item;
-                configDO.setValue(rangeConstraint);
-                break;
-            default:
-                configDO.setValue(null);
-                break;
-        }
-        return configDO;
+    List<ConstraintItemConfigDO> rangConfigDOS = Lists.newArrayList();
+    for (ConstraintItemConfigDO config : configDOS) {
+      ConstraintEnum itemEnum = ConstraintEnum.getConstraint(config.getId());
+      switch (itemEnum) {
+        case REQUIRE:
+          constraintItems.add(new NotNullConstraint());
+          break;
+        case UNIQUE:
+          constraintItems.add(new UniqueConstraint());
+          break;
+        case ENUM:
+          List<String> enumValues = new ArrayList<>();
+          if (config.getValue() instanceof List) {
+            enumValues = (List) config.getValue();
+          }
+          constraintItems.add(new EnumConstraint(enumValues));
+          break;
+        case REGULAR:
+          constraintItems.add(new RegularConstraint(String.valueOf(config.getValue())));
+          break;
+        case MULTIVALUE:
+          constraintItems.add(new MultiValConstraint());
+          break;
+        case RANGE:
+          constraintItems.add((RangeConstraint) config.getValue());
+          break;
+        default:
+          rangConfigDOS.add(config);
+          break;
+      }
     }
+
+    // 兼容老的数值型约束
+    if (CollectionUtils.isNotEmpty(rangConfigDOS)) {
+      RangeConstraint rangeConstraint = new RangeConstraint();
+      for (ConstraintItemConfigDO configDO : rangConfigDOS) {
+        ConstraintEnum itemEnum = ConstraintEnum.getConstraint(configDO.getId());
+        switch (itemEnum) {
+          case MAXIMUM_LT:
+            rangeConstraint.setRightOpen(true);
+            rangeConstraint.setMaximumValue(configDO.getValue().toString());
+            break;
+          case MAXIMUM_LT_OE:
+            rangeConstraint.setRightOpen(false);
+            rangeConstraint.setMaximumValue(configDO.getValue().toString());
+            break;
+          case MINIMUM_GT:
+            rangeConstraint.setLeftOpen(true);
+            rangeConstraint.setMinimumValue(configDO.getValue().toString());
+            break;
+          case MINIMUM_GT_OE:
+            rangeConstraint.setLeftOpen(false);
+            rangeConstraint.setMinimumValue(configDO.getValue().toString());
+            break;
+          default:
+            throw new IllegalArgumentException("invalid ConstraintEnum:" + itemEnum.name());
+        }
+      }
+      constraintItems.add(rangeConstraint);
+    }
+    return constraintItems;
+  }
+
+  public static ConstraintItemConfigDO toConfigDO(BaseConstraintItem item) {
+    ConstraintItemConfigDO configDO = new ConstraintItemConfigDO();
+    configDO.setId(item.getConstraintTypeEnum().name());
+
+    switch (item.getConstraintTypeEnum()) {
+      case ENUM:
+        EnumConstraint enumConstraint = (EnumConstraint) item;
+        configDO.setValue(enumConstraint.getEnumValues());
+        break;
+      case REGULAR:
+        RegularConstraint regularConstraint = (RegularConstraint) item;
+        configDO.setValue(regularConstraint.getRegularPattern());
+        break;
+      case RANGE:
+        RangeConstraint rangeConstraint = (RangeConstraint) item;
+        configDO.setValue(rangeConstraint);
+        break;
+      default:
+        configDO.setValue(null);
+        break;
+    }
+    return configDO;
+  }
 }

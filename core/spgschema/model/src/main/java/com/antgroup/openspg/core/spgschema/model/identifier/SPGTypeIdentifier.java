@@ -15,69 +15,64 @@ package com.antgroup.openspg.core.spgschema.model.identifier;
 
 import java.util.Objects;
 
-
 public class SPGTypeIdentifier extends BaseSPGIdentifier {
 
-    private static final long serialVersionUID = 815110692255122360L;
+  private static final long serialVersionUID = 815110692255122360L;
 
-    /**
-     * The namespace of the schema type
-     */
-    private final String namespace;
+  /** The namespace of the schema type */
+  private final String namespace;
 
-    /**
-     * The English name of the schema type
-     */
-    private final String nameEn;
+  /** The English name of the schema type */
+  private final String nameEn;
 
-    public SPGTypeIdentifier(String namespace, String nameEn) {
-        super(SPGIdentifierTypeEnum.SPG_TYPE);
-        this.namespace = namespace;
-        this.nameEn = nameEn;
+  public SPGTypeIdentifier(String namespace, String nameEn) {
+    super(SPGIdentifierTypeEnum.SPG_TYPE);
+    this.namespace = namespace;
+    this.nameEn = nameEn;
+  }
+
+  public static SPGTypeIdentifier parse(String uniqueName) {
+    String[] splits = uniqueName.trim().split("\\.");
+    if (splits.length == 1) {
+      return new SPGTypeIdentifier(null, splits[0]);
+    } else if (splits.length == 2) {
+      return new SPGTypeIdentifier(splits[0], splits[1]);
+    } else {
+      throw new IllegalArgumentException("invalid uniqueName: " + uniqueName);
     }
+  }
 
-    public static SPGTypeIdentifier parse(String uniqueName) {
-        String[] splits = uniqueName.trim().split("\\.");
-        if (splits.length == 1) {
-            return new SPGTypeIdentifier(null, splits[0]);
-        } else if (splits.length == 2) {
-            return new SPGTypeIdentifier(splits[0], splits[1]);
-        } else {
-            throw new IllegalArgumentException("invalid uniqueName: " + uniqueName);
-        }
-    }
+  public String getNamespace() {
+    return namespace;
+  }
 
-    public String getNamespace() {
-        return namespace;
-    }
+  public String getNameEn() {
+    return nameEn;
+  }
 
-    public String getNameEn() {
-        return nameEn;
+  @Override
+  public String toString() {
+    if (namespace == null) {
+      return nameEn;
     }
+    return String.format("%s.%s", namespace, nameEn);
+  }
 
-    @Override
-    public String toString() {
-        if (namespace == null) {
-            return nameEn;
-        }
-        return String.format("%s.%s", namespace, nameEn);
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (!(o instanceof SPGTypeIdentifier)) {
+      return false;
+    }
+    SPGTypeIdentifier that = (SPGTypeIdentifier) o;
+    return Objects.equals(getNamespace(), that.getNamespace())
+        && Objects.equals(getNameEn(), that.getNameEn());
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SPGTypeIdentifier)) {
-            return false;
-        }
-        SPGTypeIdentifier that = (SPGTypeIdentifier) o;
-        return Objects.equals(getNamespace(), that.getNamespace()) &&
-            Objects.equals(getNameEn(), that.getNameEn());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getNamespace(), getNameEn());
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(getNamespace(), getNameEn());
+  }
 }

@@ -21,9 +21,7 @@ from knext.core.schema.model.base import (
 
 
 class Property(BaseProperty):
-    """Property Model.
-
-    """
+    """Property Model."""
 
     name: str
     object_type_name: str

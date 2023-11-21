@@ -15,17 +15,16 @@ package com.antgroup.openspg.api.facade.dto.builder.response;
 
 import com.antgroup.openspg.common.model.base.BaseResponse;
 
-
 public class OperatorCreateResponse extends BaseResponse {
 
-    private String name;
+  private String name;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public OperatorCreateResponse setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public OperatorCreateResponse setName(String name) {
+    this.name = name;
+    return this;
+  }
 }

@@ -42,17 +42,13 @@ class VertexReasonerContent(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'starting_vertices': 'list[StartingVertex]',
-        'param_type': 'str'
-    }
+    openapi_types = {"starting_vertices": "list[StartingVertex]", "param_type": "str"}
 
-    attribute_map = {
-        'starting_vertices': 'startingVertices',
-        'param_type': 'paramType'
-    }
+    attribute_map = {"starting_vertices": "startingVertices", "param_type": "paramType"}
 
-    def __init__(self, starting_vertices=None, param_type='VERTEX', local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, starting_vertices=None, param_type="VERTEX", local_vars_configuration=None
+    ):  # noqa: E501
         """VertexReasonerContent - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -83,8 +79,13 @@ class VertexReasonerContent(object):
         :param starting_vertices: The starting_vertices of this VertexReasonerContent.  # noqa: E501
         :type: list[StartingVertex]
         """
-        if self.local_vars_configuration.client_side_validation and starting_vertices is None:  # noqa: E501
-            raise ValueError("Invalid value for `starting_vertices`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and starting_vertices is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `starting_vertices`, must not be `None`"
+            )  # noqa: E501
 
         self._starting_vertices = starting_vertices
 
@@ -106,13 +107,21 @@ class VertexReasonerContent(object):
         :param param_type: The param_type of this VertexReasonerContent.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and param_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `param_type`, must not be `None`")  # noqa: E501
-        allowed_values = ["VERTEX", "KGDSL"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and param_type not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and param_type is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `param_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(param_type, allowed_values)
+                "Invalid value for `param_type`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = ["VERTEX", "KGDSL"]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and param_type not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `param_type` ({0}), must be one of {1}".format(  # noqa: E501
+                    param_type, allowed_values
+                )
             )
 
         self._param_type = param_type
@@ -124,18 +133,20 @@ class VertexReasonerContent(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

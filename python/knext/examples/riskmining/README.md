@@ -57,4 +57,3 @@ knext reasoner query --dsl "MATCH (s:\`RiskMining.TaxOfRiskApp\`/\`赌博应用\
 knext reasoner query --dsl "MATCH (s:\`RiskMining.TaxOfRiskUser\`/\`赌博App开发者\`) RETURN s.id,s.name"
 ```
 
-

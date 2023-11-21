@@ -16,73 +16,73 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 import java.util.Date;
 
 public class OperatorOverviewDO {
-    private Long id;
+  private Long id;
 
-    private String name;
+  private String name;
 
-    private String type;
+  private String type;
 
-    private Date gmtCreate;
+  private Date gmtCreate;
 
-    private Date gmtModified;
+  private Date gmtModified;
 
-    private String description;
+  private String description;
 
-    private String lang;
+  private String lang;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+  public void setName(String name) {
+    this.name = name == null ? null : name.trim();
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+  public void setType(String type) {
+    this.type = type == null ? null : type.trim();
+  }
 
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
+  public Date getGmtCreate() {
+    return gmtCreate;
+  }
 
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
+  public void setGmtCreate(Date gmtCreate) {
+    this.gmtCreate = gmtCreate;
+  }
 
-    public Date getGmtModified() {
-        return gmtModified;
-    }
+  public Date getGmtModified() {
+    return gmtModified;
+  }
 
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
+  public void setGmtModified(Date gmtModified) {
+    this.gmtModified = gmtModified;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
-    }
+  public void setDescription(String description) {
+    this.description = description == null ? null : description.trim();
+  }
 
-    public String getLang() {
-        return lang;
-    }
+  public String getLang() {
+    return lang;
+  }
 
-    public void setLang(String lang) {
-        this.lang = lang == null ? null : lang.trim();
-    }
+  public void setLang(String lang) {
+    this.lang = lang == null ? null : lang.trim();
+  }
 }

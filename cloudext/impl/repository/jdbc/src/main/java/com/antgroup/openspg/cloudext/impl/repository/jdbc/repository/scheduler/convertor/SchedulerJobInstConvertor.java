@@ -18,33 +18,31 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobI
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.common.util.StringUtils;
 
-
 public class SchedulerJobInstConvertor {
 
-    public static JobInstDO toDO(SchedulerJobInst jobInst) {
-        JobInstDO jobInstDO = new JobInstDO();
+  public static JobInstDO toDO(SchedulerJobInst jobInst) {
+    JobInstDO jobInstDO = new JobInstDO();
 
-        if (StringUtils.isNotBlank(jobInst.getJobInstId())) {
-            jobInstDO.setId(Long.valueOf(jobInst.getJobInstId()));
-        }
-        jobInstDO.setJobId(Long.valueOf(jobInst.getJobId()));
-        jobInstDO.setType(jobInst.getJobType());
-        jobInstDO.setStatus(jobInst.getStatus().name());
-        jobInstDO.setIdempotentId(jobInst.getIdempotentId());
-        return jobInstDO;
+    if (StringUtils.isNotBlank(jobInst.getJobInstId())) {
+      jobInstDO.setId(Long.valueOf(jobInst.getJobInstId()));
     }
+    jobInstDO.setJobId(Long.valueOf(jobInst.getJobId()));
+    jobInstDO.setType(jobInst.getJobType());
+    jobInstDO.setStatus(jobInst.getStatus().name());
+    jobInstDO.setIdempotentId(jobInst.getIdempotentId());
+    return jobInstDO;
+  }
 
-    public static SchedulerJobInst toModel(JobInstDO jobInstDO) {
-        if (jobInstDO == null) {
-            return null;
-        }
-        return new SchedulerJobInst(
-            String.valueOf(jobInstDO.getId()),
-            String.valueOf(jobInstDO.getJobId()),
-            jobInstDO.getType(),
-            JobInstStatusEnum.valueOf(jobInstDO.getStatus()),
-            jobInstDO.getHost(),
-            jobInstDO.getIdempotentId()
-        );
+  public static SchedulerJobInst toModel(JobInstDO jobInstDO) {
+    if (jobInstDO == null) {
+      return null;
     }
+    return new SchedulerJobInst(
+        String.valueOf(jobInstDO.getId()),
+        String.valueOf(jobInstDO.getJobId()),
+        jobInstDO.getType(),
+        JobInstStatusEnum.valueOf(jobInstDO.getStatus()),
+        jobInstDO.getHost(),
+        jobInstDO.getIdempotentId());
+  }
 }

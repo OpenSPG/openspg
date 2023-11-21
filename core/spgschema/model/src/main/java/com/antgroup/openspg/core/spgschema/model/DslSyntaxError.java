@@ -15,22 +15,21 @@ package com.antgroup.openspg.core.spgschema.model;
 
 import com.antgroup.openspg.common.model.exception.OpenSPGException;
 
-
 public class DslSyntaxError extends OpenSPGException {
 
-    private DslSyntaxError(Throwable cause, String messagePattern, Object... args) {
-        super(cause, true, true, messagePattern, args);
-    }
+  private DslSyntaxError(Throwable cause, String messagePattern, Object... args) {
+    super(cause, true, true, messagePattern, args);
+  }
 
-    private DslSyntaxError(String messagePattern, Object... args) {
-        this(null, messagePattern, args);
-    }
+  private DslSyntaxError(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
+  }
 
-    public static DslSyntaxError dslSyntaxError(String errorPart) {
-        return new DslSyntaxError("dsl has syntax error: {}", errorPart);
-    }
+  public static DslSyntaxError dslSyntaxError(String errorPart) {
+    return new DslSyntaxError("dsl has syntax error: {}", errorPart);
+  }
 
-    public static DslSyntaxError dslSyntaxError(Throwable cause) {
-        return new DslSyntaxError(cause, "dsl is invalid: {}", cause.getMessage());
-    }
+  public static DslSyntaxError dslSyntaxError(Throwable cause) {
+    return new DslSyntaxError(cause, "dsl is invalid: {}", cause.getMessage());
+  }
 }

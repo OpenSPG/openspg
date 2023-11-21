@@ -14,49 +14,40 @@
 package com.antgroup.openspg.core.spgschema.model.predicate;
 
 /**
- * Property group enums of event type, since event type must have properties about time/location/subject/obejct etc.
+ * Property group enums of event type, since event type must have properties about
+ * time/location/subject/obejct etc.
  */
 public enum PropertyGroupEnum {
 
-    /**
-     * Properties in this group are generally of date and time type.
-     */
-    TIME("time"),
+  /** Properties in this group are generally of date and time type. */
+  TIME("time"),
 
-    /**
-     * Properties in this group are generally subject of an EventType.
-     */
-    SUBJECT("subject"),
+  /** Properties in this group are generally subject of an EventType. */
+  SUBJECT("subject"),
 
-    /**
-     * Properties in this group are generally object of an EventType.
-     */
-    OBJECT("object"),
+  /** Properties in this group are generally object of an EventType. */
+  OBJECT("object"),
 
-    /**
-     * Properties in this group are generally represent geographic location.
-     */
-    LOC("loc");
+  /** Properties in this group are generally represent geographic location. */
+  LOC("loc");
 
-    /**
-     * Name of group.
-     */
-    private final String nameEn;
+  /** Name of group. */
+  private final String nameEn;
 
-    PropertyGroupEnum(String nameEn) {
-        this.nameEn = nameEn;
+  PropertyGroupEnum(String nameEn) {
+    this.nameEn = nameEn;
+  }
+
+  public static PropertyGroupEnum toEnum(String name) {
+    for (PropertyGroupEnum propertyGroupEnum : PropertyGroupEnum.values()) {
+      if (propertyGroupEnum.name().equals(name)) {
+        return propertyGroupEnum;
+      }
     }
+    return null;
+  }
 
-    public static PropertyGroupEnum toEnum(String name) {
-        for (PropertyGroupEnum propertyGroupEnum : PropertyGroupEnum.values()) {
-            if (propertyGroupEnum.name().equals(name)) {
-                return propertyGroupEnum;
-            }
-        }
-        return null;
-    }
-
-    public String getNameEn() {
-        return nameEn;
-    }
+  public String getNameEn() {
+    return nameEn;
+  }
 }

@@ -24,62 +24,65 @@ import com.antgroup.openspg.core.spgbuilder.engine.physical.BuilderRecord;
 import com.antgroup.openspg.core.spgbuilder.engine.runtime.BuilderRecordException;
 import com.antgroup.openspg.core.spgbuilder.engine.runtime.RecordCollector;
 
-
 public class DefaultRecordCollector implements RecordCollector {
 
-    private final static String RECORD_ID = "recordId";
-    private final static String COMPONENT = "componentName";
-    private final static String ERROR_MSG = "errorMsg";
+  private static final String RECORD_ID = "recordId";
+  private static final String COMPONENT = "componentName";
+  private static final String ERROR_MSG = "errorMsg";
 
-    private final String tableName;
-    private final TableStoreConnectionInfo connInfo;
-    private volatile TableFileHandler tableFileHandler;
+  private final String tableName;
+  private final TableStoreConnectionInfo connInfo;
+  private volatile TableFileHandler tableFileHandler;
 
-    public DefaultRecordCollector(String tableName, TableStoreConnectionInfo connInfo) {
-        this.connInfo = connInfo;
-        this.tableName = tableName;
-    }
+  public DefaultRecordCollector(String tableName, TableStoreConnectionInfo connInfo) {
+    this.connInfo = connInfo;
+    this.tableName = tableName;
+  }
 
-    private void init() {
+  private void init() {
+    if (tableFileHandler == null) {
+      synchronized (this) {
         if (tableFileHandler == null) {
-            synchronized (this) {
-                if (tableFileHandler == null) {
-                    TableStoreClient tableStoreClient = TableStoreClientDriverManager.getClient(connInfo);
-                    tableFileHandler = tableStoreClient.create(
-                        new TableFileCreateCmd(tableName, new ColumnMeta[]{
-                            new ColumnMeta(RECORD_ID), new ColumnMeta(COMPONENT), new ColumnMeta(ERROR_MSG)
-                        })
-                    );
-                }
-            }
+          TableStoreClient tableStoreClient = TableStoreClientDriverManager.getClient(connInfo);
+          tableFileHandler =
+              tableStoreClient.create(
+                  new TableFileCreateCmd(
+                      tableName,
+                      new ColumnMeta[] {
+                        new ColumnMeta(RECORD_ID),
+                        new ColumnMeta(COMPONENT),
+                        new ColumnMeta(ERROR_MSG)
+                      }));
         }
+      }
     }
+  }
 
-    @Override
-    public boolean haveCollected() {
-        return tableFileHandler != null;
-    }
+  @Override
+  public boolean haveCollected() {
+    return tableFileHandler != null;
+  }
 
-    @Override
-    public String getTableName() {
-        if (tableFileHandler != null) {
-            return tableFileHandler.getTableName();
-        }
-        return null;
+  @Override
+  public String getTableName() {
+    if (tableFileHandler != null) {
+      return tableFileHandler.getTableName();
     }
+    return null;
+  }
 
-    @Override
-    public void collectRecord(BuilderRecord record, BuilderRecordException e) {
-        init();
-        tableFileHandler.write(new TableRecord(
-            new Object[]{record.getRecordId(), e.getProcessor().getName(), e.getMessage()}
-        ));
-    }
+  @Override
+  public void collectRecord(BuilderRecord record, BuilderRecordException e) {
+    init();
+    tableFileHandler.write(
+        new TableRecord(
+            new Object[] {record.getRecordId(), e.getProcessor().getName(), e.getMessage()}));
+  }
 
-    @Override
-    public void close() throws Exception {
-        if (tableFileHandler != null) {
-            tableFileHandler.close();
-        }
+  @Override
+  public void close() throws Exception {
+    if (tableFileHandler != null) {
+      tableFileHandler.close();
     }
+  }
 }

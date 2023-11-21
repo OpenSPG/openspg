@@ -20,31 +20,34 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface ReleaseDOMapper {
-    long countByExample(ReleaseDOExample example);
+  long countByExample(ReleaseDOExample example);
 
-    int deleteByExample(ReleaseDOExample example);
+  int deleteByExample(ReleaseDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(ReleaseDOWithBLOBs record);
+  int insert(ReleaseDOWithBLOBs record);
 
-    int insertSelective(ReleaseDOWithBLOBs record);
+  int insertSelective(ReleaseDOWithBLOBs record);
 
-    List<ReleaseDOWithBLOBs> selectByExampleWithBLOBs(ReleaseDOExample example);
+  List<ReleaseDOWithBLOBs> selectByExampleWithBLOBs(ReleaseDOExample example);
 
-    List<ReleaseDO> selectByExample(ReleaseDOExample example);
+  List<ReleaseDO> selectByExample(ReleaseDOExample example);
 
-    ReleaseDOWithBLOBs selectByPrimaryKey(Long id);
+  ReleaseDOWithBLOBs selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") ReleaseDOWithBLOBs record, @Param("example") ReleaseDOExample example);
+  int updateByExampleSelective(
+      @Param("record") ReleaseDOWithBLOBs record, @Param("example") ReleaseDOExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") ReleaseDOWithBLOBs record, @Param("example") ReleaseDOExample example);
+  int updateByExampleWithBLOBs(
+      @Param("record") ReleaseDOWithBLOBs record, @Param("example") ReleaseDOExample example);
 
-    int updateByExample(@Param("record") ReleaseDO record, @Param("example") ReleaseDOExample example);
+  int updateByExample(
+      @Param("record") ReleaseDO record, @Param("example") ReleaseDOExample example);
 
-    int updateByPrimaryKeySelective(ReleaseDOWithBLOBs record);
+  int updateByPrimaryKeySelective(ReleaseDOWithBLOBs record);
 
-    int updateByPrimaryKeyWithBLOBs(ReleaseDOWithBLOBs record);
+  int updateByPrimaryKeyWithBLOBs(ReleaseDOWithBLOBs record);
 
-    int updateByPrimaryKey(ReleaseDO record);
+  int updateByPrimaryKey(ReleaseDO record);
 }

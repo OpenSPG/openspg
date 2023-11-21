@@ -42,20 +42,16 @@ class BaseSpgIdentifier(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'identity_type': 'str'
-    }
+    openapi_types = {"identity_type": "str"}
 
-    attribute_map = {
-        'identity_type': 'identityType'
-    }
+    attribute_map = {"identity_type": "identityType"}
 
     discriminator_value_class_map = {
-        'SPG_TYPE': 'SpgTypeIdentifier',
-        'SPG_TRIPLE': 'SpgTripleIdentifier',
-        'CONCEPT': 'ConceptIdentifier',
-        'PREDICATE': 'PredicateIdentifier',
-        'OPERATOR': 'OperatorIdentifier'
+        "SPG_TYPE": "SpgTypeIdentifier",
+        "SPG_TRIPLE": "SpgTripleIdentifier",
+        "CONCEPT": "ConceptIdentifier",
+        "PREDICATE": "PredicateIdentifier",
+        "OPERATOR": "OperatorIdentifier",
     }
 
     def __init__(self, identity_type=None, local_vars_configuration=None):  # noqa: E501
@@ -87,21 +83,36 @@ class BaseSpgIdentifier(object):
         :param identity_type: The identity_type of this BaseSpgIdentifier.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and identity_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `identity_type`, must not be `None`")  # noqa: E501
-        allowed_values = ["SPG_TYPE", "SPG_TRIPLE", "CONCEPT", "PREDICATE", "OPERATOR"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and identity_type not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and identity_type is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `identity_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(identity_type, allowed_values)
+                "Invalid value for `identity_type`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = [
+            "SPG_TYPE",
+            "SPG_TRIPLE",
+            "CONCEPT",
+            "PREDICATE",
+            "OPERATOR",
+        ]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and identity_type not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `identity_type` ({0}), must be one of {1}".format(  # noqa: E501
+                    identity_type, allowed_values
+                )
             )
 
         self._identity_type = identity_type
 
     def get_real_child_model(self, data):
         """Returns the child model by discriminator"""
-        if '@type' in data:
-            child_type = data.get('@type')
+        if "@type" in data:
+            child_type = data.get("@type")
             real_child_model = self.discriminator_value_class_map.get(child_type)
             return real_child_model
         return None
@@ -113,18 +124,20 @@ class BaseSpgIdentifier(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

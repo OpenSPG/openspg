@@ -15,71 +15,62 @@ package com.antgroup.openspg.core.spgschema.model.constraint;
 
 import com.antgroup.openspg.common.model.base.BaseModel;
 import com.antgroup.openspg.core.spgschema.model.predicate.Property;
-
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
 
 /**
- * Constraint information, generally acts on {@link Property}, and requires that the value range of the property must
- * meet the constraint conditions. Constraints include non-null, unique, multi-value, enumeration, regular pattern,
- * numerical interval constraints, etc. When the attribute is configured with constraints, it will check whether the
- * property value meets the constraint conditions during knowledge importing, and only the property value that meet the
+ * Constraint information, generally acts on {@link Property}, and requires that the value range of
+ * the property must meet the constraint conditions. Constraints include non-null, unique,
+ * multi-value, enumeration, regular pattern, numerical interval constraints, etc. When the
+ * attribute is configured with constraints, it will check whether the property value meets the
+ * constraint conditions during knowledge importing, and only the property value that meet the
  * constraint conditions will be written to the storage.
  */
-
 public class Constraint extends BaseModel {
 
-    private static final long serialVersionUID = -8877939106327053823L;
+  private static final long serialVersionUID = -8877939106327053823L;
 
-    /**
-     * Unique id
-     */
-    private Long id;
+  /** Unique id */
+  private Long id;
 
-    /**
-     * The constraint items
-     */
-    private List<BaseConstraintItem> constraintItems = new ArrayList<>();
+  /** The constraint items */
+  private List<BaseConstraintItem> constraintItems = new ArrayList<>();
 
-    public Constraint() {
+  public Constraint() {}
+
+  public Constraint(Long id, List<BaseConstraintItem> constraintItems) {
+    this.id = id;
+    this.constraintItems = constraintItems.stream().sorted().collect(Collectors.toList());
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public List<BaseConstraintItem> getConstraintItems() {
+    return constraintItems;
+  }
+
+  public void setConstraintItems(List<BaseConstraintItem> constraintItems) {
+    this.constraintItems = constraintItems;
+  }
+
+  public boolean contains(ConstraintTypeEnum constraintTypeEnum) {
+    if (CollectionUtils.isEmpty(constraintItems)) {
+      return false;
     }
 
-    public Constraint(Long id, List<BaseConstraintItem> constraintItems) {
-        this.id = id;
-        this.constraintItems = constraintItems
-            .stream().sorted()
-            .collect(Collectors.toList());
+    for (BaseConstraintItem item : constraintItems) {
+      if (constraintTypeEnum.equals(item.getConstraintTypeEnum())) {
+        return true;
+      }
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<BaseConstraintItem> getConstraintItems() {
-        return constraintItems;
-    }
-
-    public void setConstraintItems(List<BaseConstraintItem> constraintItems) {
-        this.constraintItems = constraintItems;
-    }
-
-    public boolean contains(ConstraintTypeEnum constraintTypeEnum) {
-        if (CollectionUtils.isEmpty(constraintItems)) {
-            return false;
-        }
-
-        for (BaseConstraintItem item : constraintItems) {
-            if (constraintTypeEnum.equals(item.getConstraintTypeEnum())) {
-                return true;
-            }
-        }
-        return false;
-    }
+    return false;
+  }
 }

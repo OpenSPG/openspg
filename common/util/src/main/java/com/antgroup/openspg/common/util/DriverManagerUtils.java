@@ -13,54 +13,53 @@
 
 package com.antgroup.openspg.common.util;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Iterator;
 import java.util.ServiceLoader;
-
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DriverManagerUtils {
 
-    public static <T> void loadDrivers(String systemProperty, Class<T> clazz) {
-        String drivers = null;
-        try {
-            drivers = AccessController.doPrivileged(
-                (PrivilegedAction<String>) () -> System.getProperty(systemProperty)
-            );
-        } catch (Exception ex) {
-            // do nothing
-        }
-
-        AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-            ServiceLoader<T> loadedDrivers = ServiceLoader.load(clazz);
-            Iterator<T> driversIterator = loadedDrivers.iterator();
-
-            try {
-                while (driversIterator.hasNext()) {
-                    driversIterator.next();
-                }
-            } catch (Throwable t) {
-                // do nothing
-            }
-            return null;
-        });
-
-        log.info("DriverManager.initialize: {} = {}", systemProperty, drivers);
-
-        if (drivers == null || "".equals(drivers)) {
-            return;
-        }
-        for (String driver : drivers.split(":")) {
-            try {
-                log.info("DriverManager.initialize: loading {}", driver);
-                Class.forName(driver, true,
-                    ClassLoader.getSystemClassLoader());
-            } catch (Exception e) {
-                log.error("DriverManager.initialize: load failed", e);
-            }
-        }
+  public static <T> void loadDrivers(String systemProperty, Class<T> clazz) {
+    String drivers = null;
+    try {
+      drivers =
+          AccessController.doPrivileged(
+              (PrivilegedAction<String>) () -> System.getProperty(systemProperty));
+    } catch (Exception ex) {
+      // do nothing
     }
+
+    AccessController.doPrivileged(
+        (PrivilegedAction<Void>)
+            () -> {
+              ServiceLoader<T> loadedDrivers = ServiceLoader.load(clazz);
+              Iterator<T> driversIterator = loadedDrivers.iterator();
+
+              try {
+                while (driversIterator.hasNext()) {
+                  driversIterator.next();
+                }
+              } catch (Throwable t) {
+                // do nothing
+              }
+              return null;
+            });
+
+    log.info("DriverManager.initialize: {} = {}", systemProperty, drivers);
+
+    if (drivers == null || "".equals(drivers)) {
+      return;
+    }
+    for (String driver : drivers.split(":")) {
+      try {
+        log.info("DriverManager.initialize: loading {}", driver);
+        Class.forName(driver, true, ClassLoader.getSystemClassLoader());
+      } catch (Exception e) {
+        log.error("DriverManager.initialize: load failed", e);
+      }
+    }
+  }
 }

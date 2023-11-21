@@ -14,20 +14,19 @@
 package com.antgroup.openspg.common.util;
 
 import com.antgroup.openspg.api.facade.JSON;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class JsonUtils {
 
-    public static String toJsonString(Object object) {
-        String result = null;
-        try {
-            result = JSON.serialize(object);
-        } catch (Exception e) {
-            log.error("toJsonString error, object={}", object, e);
-            result = StringUtils.toString(object);
-        }
-        return result;
+  public static String toJsonString(Object object) {
+    String result = null;
+    try {
+      result = JSON.serialize(object);
+    } catch (Exception e) {
+      log.error("toJsonString error, object={}", object, e);
+      result = StringUtils.toString(object);
     }
+    return result;
+  }
 }

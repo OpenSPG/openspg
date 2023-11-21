@@ -14,26 +14,23 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.LPGProperty;
-
 import java.util.List;
-
 
 public abstract class BaseCreateTypeOperation extends BaseLPGSchemaOperation {
 
-    protected BaseCreateTypeOperation(
-        VertexEdgeTypeOperationEnum operationTypeEnum,
-        List<BaseSchemaAtomicOperation> atomicOperations) {
-        super(operationTypeEnum, atomicOperations);
-    }
+  protected BaseCreateTypeOperation(
+      VertexEdgeTypeOperationEnum operationTypeEnum,
+      List<BaseSchemaAtomicOperation> atomicOperations) {
+    super(operationTypeEnum, atomicOperations);
+  }
 
-    public abstract void addProperty(LPGProperty property);
+  public abstract void addProperty(LPGProperty property);
 
-    public abstract void createIndex(String propertyName);
+  public abstract void createIndex(String propertyName);
 
-    public abstract void createIndex(String propertyName, boolean isUnique);
+  public abstract void createIndex(String propertyName, boolean isUnique);
 
-    public abstract void createIndex(String propertyName, boolean isUnique, boolean isGlobal);
+  public abstract void createIndex(String propertyName, boolean isUnique, boolean isGlobal);
 
-    public abstract void setTTL(String propertyName, long ts);
-
+  public abstract void setTTL(String propertyName, long ts);
 }

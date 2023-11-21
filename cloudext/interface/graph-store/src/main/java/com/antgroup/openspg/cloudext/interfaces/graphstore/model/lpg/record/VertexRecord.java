@@ -15,53 +15,46 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record;
 
 import com.antgroup.openspg.api.facade.ApiConstants;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.VertexType;
-
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * <p>
- * {@link VertexRecord VertexRecord} represents the persistent record of a {@link VertexType VertexType} in
- * <tt>LPG</tt>, identified by vertex id <tt>(id)</tt>.
- * </p>
+ * {@link VertexRecord VertexRecord} represents the persistent record of a {@link VertexType
+ * VertexType} in <tt>LPG</tt>, identified by vertex id <tt>(id)</tt>.
  */
 @Getter
 public class VertexRecord extends BaseLPGRecord {
 
-    @Setter
-    private String vertexType;
+  @Setter private String vertexType;
 
-    private final String id;
+  private final String id;
 
-    public VertexRecord(
-        String id,
-        String vertexType,
-        List<LPGPropertyRecord> properties) {
-        super(LPGRecordTypeEnum.VERTEX, properties);
-        this.id = id;
-        this.vertexType = vertexType;
-    }
+  public VertexRecord(String id, String vertexType, List<LPGPropertyRecord> properties) {
+    super(LPGRecordTypeEnum.VERTEX, properties);
+    this.id = id;
+    this.vertexType = vertexType;
+  }
 
-    @Override
-    public Map<String, Object> toPropertyMapWithId() {
-        Map<String, Object> otherProperties = toPropertyMap();
-        otherProperties.put(VertexType.ID, id);
-        return otherProperties;
-    }
+  @Override
+  public Map<String, Object> toPropertyMapWithId() {
+    Map<String, Object> otherProperties = toPropertyMap();
+    otherProperties.put(VertexType.ID, id);
+    return otherProperties;
+  }
 
-    public Map<String, Map<Long, Object>> toPropertyMapWithIdAndVersion() {
-        Map<String, Object> otherProperties = toPropertyMapWithId();
+  public Map<String, Map<Long, Object>> toPropertyMapWithIdAndVersion() {
+    Map<String, Object> otherProperties = toPropertyMapWithId();
 
-        Map<String, Map<Long, Object>> results = new HashMap<>(otherProperties.size());
-        otherProperties.forEach((key, value) -> {
-            Map<Long, Object> propertyVersion = new HashMap<>(1);
-            propertyVersion.put(ApiConstants.DEFAULT_VERSION, value);
-            results.put(key, propertyVersion);
+    Map<String, Map<Long, Object>> results = new HashMap<>(otherProperties.size());
+    otherProperties.forEach(
+        (key, value) -> {
+          Map<Long, Object> propertyVersion = new HashMap<>(1);
+          propertyVersion.put(ApiConstants.DEFAULT_VERSION, value);
+          results.put(key, propertyVersion);
         });
-        return results;
-    }
+    return results;
+  }
 }

@@ -44,166 +44,158 @@ import com.antgroup.openspg.core.spgbuilder.model.service.FailureBuilderResult;
 import com.antgroup.openspg.core.spgbuilder.service.BuilderJobInfoService;
 import com.antgroup.openspg.core.spgbuilder.service.BuilderJobInstService;
 import com.antgroup.openspg.core.spgbuilder.service.repo.BuilderJobInstRepository;
-
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
 @Service
 public class BuilderJobInstServiceImpl implements BuilderJobInstService {
 
-    @Autowired
-    private AppEnvConfig appEnvConfig;
+  @Autowired private AppEnvConfig appEnvConfig;
 
-    @Autowired
-    private BuilderJobInstRepository builderJobInstRepository;
+  @Autowired private BuilderJobInstRepository builderJobInstRepository;
 
-    @Autowired
-    private DataSourceService dataSourceService;
+  @Autowired private DataSourceService dataSourceService;
 
-    @Autowired
-    private BuilderJobInfoService builderJobInfoService;
+  @Autowired private BuilderJobInfoService builderJobInfoService;
 
-    private final SchemaFacade schemaFacade = new HttpSchemaFacade();
+  private final SchemaFacade schemaFacade = new HttpSchemaFacade();
 
-    @Override
-    public Long create(BuilderJobInfo builderJobInfo, BuilderJobInst builderJobInst) {
-        JobSchedulerClient jobSchedulerClient =
-            dataSourceService.buildSharedJobSchedulerClient();
-        Long buildingJobInstId = builderJobInstRepository.save(builderJobInst);
+  @Override
+  public Long create(BuilderJobInfo builderJobInfo, BuilderJobInst builderJobInst) {
+    JobSchedulerClient jobSchedulerClient = dataSourceService.buildSharedJobSchedulerClient();
+    Long buildingJobInstId = builderJobInstRepository.save(builderJobInst);
 
-        SchedulerJobInst schedulerJobInst = new SchedulerJobInst(
+    SchedulerJobInst schedulerJobInst =
+        new SchedulerJobInst(
             null,
             builderJobInfo.getExternalJobInfoId(),
             JobTypeEnum.BUILDING.name(),
             builderJobInst.getStatus(),
             null,
-            String.valueOf(buildingJobInstId)
-        );
-        String schedulerJobInstId = jobSchedulerClient.createJobInst(schedulerJobInst);
+            String.valueOf(buildingJobInstId));
+    String schedulerJobInstId = jobSchedulerClient.createJobInst(schedulerJobInst);
 
-        builderJobInst.setExternalJobInstId(schedulerJobInstId);
-        builderJobInstRepository.updateExternalJobId(buildingJobInstId, schedulerJobInstId);
-        return buildingJobInstId;
+    builderJobInst.setExternalJobInstId(schedulerJobInstId);
+    builderJobInstRepository.updateExternalJobId(buildingJobInstId, schedulerJobInstId);
+    return buildingJobInstId;
+  }
+
+  @Override
+  public List<BuilderJobInst> query(BuilderJobInstQuery query) {
+    return builderJobInstRepository.query(query);
+  }
+
+  @Override
+  @Transactional
+  public BuilderJobInst pollingBuilderJob(SchedulerJobInst jobInst) {
+    ComputingClient computingClient = dataSourceService.buildSharedComputingClient();
+
+    BuilderJobInst builderJobInst = queryByExternalJobInstId(jobInst.getJobInstId());
+    if (builderJobInst.isFinished()) {
+      return builderJobInst;
+    } else if (builderJobInst.isRunning()) {
+      BuilderStatusWithProgress progress =
+          computingClient.query(
+              new BuilderJobProcessQuery(String.valueOf(builderJobInst.getJobInstId())));
+      if (progress == null) {
+        // if status is null, rerun it
+        progress = new BuilderStatusWithProgress(JobInstStatusEnum.QUEUE);
+        builderJobInst.setProgress(progress);
+        builderJobInstRepository.queue(builderJobInst.getJobInstId(), progress);
+        return builderJobInst;
+      } else if (progress.getStatus().isRunning()) {
+        builderJobInstRepository.running(builderJobInst.getJobInstId(), progress);
+        return builderJobInst;
+      } else if (progress.getStatus().isFinished()) {
+        builderJobInst.setProgress(progress);
+        builderJobInstRepository.finish(builderJobInst.getJobInstId(), progress);
+        return builderJobInst;
+      }
     }
 
-    @Override
-    public List<BuilderJobInst> query(BuilderJobInstQuery query) {
-        return builderJobInstRepository.query(query);
+    // The task is not in finished or running status, try to submit the task
+    if (!computingClient.canSubmit(new BuilderJobCanSubmitQuery())) {
+      return builderJobInst;
     }
 
-    @Override
-    @Transactional
-    public BuilderJobInst pollingBuilderJob(SchedulerJobInst jobInst) {
-        ComputingClient computingClient = dataSourceService.buildSharedComputingClient();
-
-        BuilderJobInst builderJobInst = queryByExternalJobInstId(jobInst.getJobInstId());
-        if (builderJobInst.isFinished()) {
-            return builderJobInst;
-        } else if (builderJobInst.isRunning()) {
-            BuilderStatusWithProgress progress = computingClient.query(new BuilderJobProcessQuery(
-                String.valueOf(builderJobInst.getJobInstId())
-            ));
-            if (progress == null) {
-                // if status is null, rerun it
-                progress = new BuilderStatusWithProgress(JobInstStatusEnum.QUEUE);
-                builderJobInst.setProgress(progress);
-                builderJobInstRepository.queue(builderJobInst.getJobInstId(), progress);
-                return builderJobInst;
-            } else if (progress.getStatus().isRunning()) {
-                builderJobInstRepository.running(builderJobInst.getJobInstId(), progress);
-                return builderJobInst;
-            } else if (progress.getStatus().isFinished()) {
-                builderJobInst.setProgress(progress);
-                builderJobInstRepository.finish(builderJobInst.getJobInstId(), progress);
-                return builderJobInst;
-            }
-        }
-
-        // The task is not in finished or running status, try to submit the task
-        if (!computingClient.canSubmit(new BuilderJobCanSubmitQuery())) {
-            return builderJobInst;
-        }
-
-        BuilderJobInfo builderJobInfo = builderJobInfoService.queryById(builderJobInst.getJobId());
-        GraphStoreSinkNodeConfig sinkNodeConfig = fillSinkNodeConfig(builderJobInfo);
-        String submit = computingClient.submit(
+    BuilderJobInfo builderJobInfo = builderJobInfoService.queryById(builderJobInst.getJobId());
+    GraphStoreSinkNodeConfig sinkNodeConfig = fillSinkNodeConfig(builderJobInfo);
+    String submit =
+        computingClient.submit(
             new BuilderJobSubmitCmd(
                 builderJobInst,
                 builderJobInfo,
                 sinkNodeConfig,
                 appEnvConfig.getSchemaUri(),
-                schemaFacade.queryProjectSchema(
-                    new ProjectSchemaRequest(builderJobInfo.getProjectId())).getData(),
-                builderParams()
-            )
-        );
-        if (submit != null) {
-            // The task is submitted successfully and the task is set to running status.
-            BuilderStatusWithProgress progress = new BuilderStatusWithProgress(
-                JobInstStatusEnum.RUNNING, null, null);
-            builderJobInstRepository.start(builderJobInst.getJobInstId(), progress);
-            return builderJobInst;
+                schemaFacade
+                    .queryProjectSchema(new ProjectSchemaRequest(builderJobInfo.getProjectId()))
+                    .getData(),
+                builderParams()));
+    if (submit != null) {
+      // The task is submitted successfully and the task is set to running status.
+      BuilderStatusWithProgress progress =
+          new BuilderStatusWithProgress(JobInstStatusEnum.RUNNING, null, null);
+      builderJobInstRepository.start(builderJobInst.getJobInstId(), progress);
+      return builderJobInst;
+    }
+    return builderJobInst;
+  }
+
+  @Override
+  public BuilderJobInst queryByExternalJobInstId(String externalJobInstId) {
+    BuilderJobInstQuery query = new BuilderJobInstQuery().setExternalJobInstId(externalJobInstId);
+    List<BuilderJobInst> jobInsts = builderJobInstRepository.query(query);
+    return CollectionUtils.isNotEmpty(jobInsts) ? jobInsts.get(0) : null;
+  }
+
+  @Override
+  public int updateToFailure(Long jobInstId, FailureBuilderResult result) {
+    return builderJobInstRepository.finish(
+        jobInstId, new BuilderStatusWithProgress(JobInstStatusEnum.FAILURE, result, null));
+  }
+
+  private GraphStoreSinkNodeConfig fillSinkNodeConfig(BuilderJobInfo jobInfo) {
+    Pipeline pipeline = jobInfo.getPipeline();
+    for (Node node : pipeline.getNodes()) {
+      if (NodeTypeEnum.GRAPH_SINK.equals(node.getType())) {
+        GraphStoreSinkNodeConfig nodeConfig = (GraphStoreSinkNodeConfig) node.getNodeConfig();
+        if (nodeConfig.getGraphStoreConnectionInfo() == null) {
+          DataSource graphStoreDataSource =
+              dataSourceService.getFirstDataSource(
+                  jobInfo.getProjectId(), DataSourceUsageTypeEnum.KG_STORE);
+          nodeConfig.setGraphStoreConnectionInfo(
+              (GraphStoreConnectionInfo) graphStoreDataSource.getConnectionInfo());
         }
-        return builderJobInst;
-    }
-
-    @Override
-    public BuilderJobInst queryByExternalJobInstId(String externalJobInstId) {
-        BuilderJobInstQuery query = new BuilderJobInstQuery()
-            .setExternalJobInstId(externalJobInstId);
-        List<BuilderJobInst> jobInsts = builderJobInstRepository.query(query);
-        return CollectionUtils.isNotEmpty(jobInsts) ? jobInsts.get(0) : null;
-    }
-
-    @Override
-    public int updateToFailure(Long jobInstId, FailureBuilderResult result) {
-        return builderJobInstRepository.finish(jobInstId,
-            new BuilderStatusWithProgress(JobInstStatusEnum.FAILURE, result, null)
-        );
-    }
-
-    private GraphStoreSinkNodeConfig fillSinkNodeConfig(BuilderJobInfo jobInfo) {
-        Pipeline pipeline = jobInfo.getPipeline();
-        for (Node node : pipeline.getNodes()) {
-            if (NodeTypeEnum.GRAPH_SINK.equals(node.getType())) {
-                GraphStoreSinkNodeConfig nodeConfig = (GraphStoreSinkNodeConfig) node.getNodeConfig();
-                if (nodeConfig.getGraphStoreConnectionInfo() == null) {
-                    DataSource graphStoreDataSource = dataSourceService.getFirstDataSource(
-                        jobInfo.getProjectId(), DataSourceUsageTypeEnum.KG_STORE);
-                    nodeConfig.setGraphStoreConnectionInfo(
-                        (GraphStoreConnectionInfo) graphStoreDataSource.getConnectionInfo());
-                }
-                if (nodeConfig.getSearchEngineConnectionInfo() == null) {
-                    DataSource searchEngineDataSource = dataSourceService.getFirstDataSource(
-                        jobInfo.getProjectId(), DataSourceUsageTypeEnum.SEARCH);
-                    nodeConfig.setSearchEngineConnectionInfo(
-                        (SearchEngineConnectionInfo) searchEngineDataSource.getConnectionInfo());
-                }
-                if (nodeConfig.getTableStoreConnectionInfo() == null) {
-                    DataSource tableStoreDataSource = dataSourceService.getFirstDataSource(
-                        jobInfo.getProjectId(), DataSourceUsageTypeEnum.TABLE_STORE);
-                    nodeConfig.setTableStoreConnectionInfo(
-                        (TableStoreConnectionInfo) tableStoreDataSource.getConnectionInfo()
-                    );
-                }
-                return nodeConfig;
-            }
+        if (nodeConfig.getSearchEngineConnectionInfo() == null) {
+          DataSource searchEngineDataSource =
+              dataSourceService.getFirstDataSource(
+                  jobInfo.getProjectId(), DataSourceUsageTypeEnum.SEARCH);
+          nodeConfig.setSearchEngineConnectionInfo(
+              (SearchEngineConnectionInfo) searchEngineDataSource.getConnectionInfo());
         }
-        throw new IllegalStateException("graph sink node is null");
+        if (nodeConfig.getTableStoreConnectionInfo() == null) {
+          DataSource tableStoreDataSource =
+              dataSourceService.getFirstDataSource(
+                  jobInfo.getProjectId(), DataSourceUsageTypeEnum.TABLE_STORE);
+          nodeConfig.setTableStoreConnectionInfo(
+              (TableStoreConnectionInfo) tableStoreDataSource.getConnectionInfo());
+        }
+        return nodeConfig;
+      }
     }
+    throw new IllegalStateException("graph sink node is null");
+  }
 
-    private Map<String, Object> builderParams() {
-        Map<String, Object> params = new HashMap<>(5);
-        params.put(BuilderJobInfo.SEARCH_ENGINE, appEnvConfig.getEnableSearchEngine());
-        params.put(PythonOperatorFactory.PYTHON_EXEC, appEnvConfig.getBuilderOperatorPythonExec());
-        params.put(PythonOperatorFactory.PYTHON_PATHS, appEnvConfig.getBuilderOperatorPythonPaths());
-        return params;
-    }
+  private Map<String, Object> builderParams() {
+    Map<String, Object> params = new HashMap<>(5);
+    params.put(BuilderJobInfo.SEARCH_ENGINE, appEnvConfig.getEnableSearchEngine());
+    params.put(PythonOperatorFactory.PYTHON_EXEC, appEnvConfig.getBuilderOperatorPythonExec());
+    params.put(PythonOperatorFactory.PYTHON_PATHS, appEnvConfig.getBuilderOperatorPythonPaths());
+    return params;
+  }
 }

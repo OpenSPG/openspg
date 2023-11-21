@@ -18,32 +18,32 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobI
 import com.antgroup.openspg.core.spgreasoner.model.service.FailureReasonerResult;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInfo;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInst;
-
 import java.util.List;
-
 
 public interface ReasonerJobInstService {
 
-    Long create(ReasonerJobInfo reasonerJobInfo, ReasonerJobInst reasonerJobInst);
+  Long create(ReasonerJobInfo reasonerJobInfo, ReasonerJobInst reasonerJobInst);
 
-    List<ReasonerJobInst> query(ReasonerJobInstQuery query);
+  List<ReasonerJobInst> query(ReasonerJobInstQuery query);
 
-    /* ----------------------- *
-     |      For Scheduler      |
-     * ----------------------- */
+  /* ----------------------- *
+  |      For Scheduler      |
+  * ----------------------- */
 
-    /**
-     * Triggered by the scheduling system to poll the status of the reasoner job, the main process includes:
-     * <p>
-     * 1. If the job is in the final state, return directly; 2. If the job is running, query the computing pool to
-     * determine whether the task is completed; 3. If the job is in waiting state, try to submit the task;
-     *
-     * @param jobInst scheduling job instance
-     * @return reasoner job instance
-     */
-    ReasonerJobInst pollingReasonerJob(SchedulerJobInst jobInst);
+  /**
+   * Triggered by the scheduling system to poll the status of the reasoner job, the main process
+   * includes:
+   *
+   * <p>1. If the job is in the final state, return directly; 2. If the job is running, query the
+   * computing pool to determine whether the task is completed; 3. If the job is in waiting state,
+   * try to submit the task;
+   *
+   * @param jobInst scheduling job instance
+   * @return reasoner job instance
+   */
+  ReasonerJobInst pollingReasonerJob(SchedulerJobInst jobInst);
 
-    ReasonerJobInst queryByExternalJobInstId(String externalJobInstId);
+  ReasonerJobInst queryByExternalJobInstId(String externalJobInstId);
 
-    int updateToFailure(Long jobInstId, FailureReasonerResult result);
+  int updateToFailure(Long jobInstId, FailureReasonerResult result);
 }

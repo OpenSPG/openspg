@@ -19,31 +19,34 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface SemanticDOMapper {
-    long countByExample(SemanticDOExample example);
+  long countByExample(SemanticDOExample example);
 
-    int deleteByExample(SemanticDOExample example);
+  int deleteByExample(SemanticDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(SemanticDO record);
+  int insert(SemanticDO record);
 
-    int insertSelective(SemanticDO record);
+  int insertSelective(SemanticDO record);
 
-    List<SemanticDO> selectByExampleWithBLOBs(SemanticDOExample example);
+  List<SemanticDO> selectByExampleWithBLOBs(SemanticDOExample example);
 
-    List<SemanticDO> selectByExample(SemanticDOExample example);
+  List<SemanticDO> selectByExample(SemanticDOExample example);
 
-    SemanticDO selectByPrimaryKey(Long id);
+  SemanticDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") SemanticDO record, @Param("example") SemanticDOExample example);
+  int updateByExampleSelective(
+      @Param("record") SemanticDO record, @Param("example") SemanticDOExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") SemanticDO record, @Param("example") SemanticDOExample example);
+  int updateByExampleWithBLOBs(
+      @Param("record") SemanticDO record, @Param("example") SemanticDOExample example);
 
-    int updateByExample(@Param("record") SemanticDO record, @Param("example") SemanticDOExample example);
+  int updateByExample(
+      @Param("record") SemanticDO record, @Param("example") SemanticDOExample example);
 
-    int updateByPrimaryKeySelective(SemanticDO record);
+  int updateByPrimaryKeySelective(SemanticDO record);
 
-    int updateByPrimaryKeyWithBLOBs(SemanticDO record);
+  int updateByPrimaryKeyWithBLOBs(SemanticDO record);
 
-    int updateByPrimaryKey(SemanticDO record);
+  int updateByPrimaryKey(SemanticDO record);
 }

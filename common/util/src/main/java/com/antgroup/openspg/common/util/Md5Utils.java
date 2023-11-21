@@ -17,10 +17,10 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 public class Md5Utils {
 
-    public static String md5Of(String... strs) {
-        if (strs == null) {
-            return "";
-        }
-        return DigestUtils.md5Hex(String.join(";", strs));
+  public static String md5Of(String... strs) {
+    if (strs == null) {
+      return "";
     }
+    return DigestUtils.md5Hex(String.join(";", strs));
+  }
 }

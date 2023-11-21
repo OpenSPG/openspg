@@ -15,50 +15,49 @@ package com.antgroup.openspg.api.facade.dto.common.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-
 public class ProjectQueryRequest extends BaseRequest {
 
-    private Long tenantId;
+  private Long tenantId;
 
-    private Long projectId;
+  private Long projectId;
 
-    private String name;
+  private String name;
 
-    private String namespace;
+  private String namespace;
 
-    public Long getTenantId() {
-        return tenantId;
-    }
+  public Long getTenantId() {
+    return tenantId;
+  }
 
-    public ProjectQueryRequest setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
-        return this;
-    }
+  public ProjectQueryRequest setTenantId(Long tenantId) {
+    this.tenantId = tenantId;
+    return this;
+  }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public ProjectQueryRequest setProjectId(Long projectId) {
-        this.projectId = projectId;
-        return this;
-    }
+  public ProjectQueryRequest setProjectId(Long projectId) {
+    this.projectId = projectId;
+    return this;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public ProjectQueryRequest setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public ProjectQueryRequest setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public String getNamespace() {
-        return namespace;
-    }
+  public String getNamespace() {
+    return namespace;
+  }
 
-    public ProjectQueryRequest setNamespace(String namespace) {
-        this.namespace = namespace;
-        return this;
-    }
+  public ProjectQueryRequest setNamespace(String namespace) {
+    this.namespace = namespace;
+    return this;
+  }
 }

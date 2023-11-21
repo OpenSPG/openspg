@@ -16,19 +16,18 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.common.con
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.TenantDO;
 import com.antgroup.openspg.common.model.tenant.Tenant;
 
-
 public class TenantConvertor {
 
-    public static TenantDO toDO(Tenant tenant) {
-        TenantDO tenantDO = new TenantDO();
+  public static TenantDO toDO(Tenant tenant) {
+    TenantDO tenantDO = new TenantDO();
 
-        tenantDO.setId(tenant.getId());
-        tenantDO.setName(tenant.getName());
-        tenantDO.setDescription(tenant.getDescription());
-        return tenantDO;
-    }
+    tenantDO.setId(tenant.getId());
+    tenantDO.setName(tenant.getName());
+    tenantDO.setDescription(tenant.getDescription());
+    return tenantDO;
+  }
 
-    public static Tenant toModel(TenantDO domainDO) {
-        return new Tenant(domainDO.getId(), domainDO.getName(), domainDO.getDescription());
-    }
+  public static Tenant toModel(TenantDO domainDO) {
+    return new Tenant(domainDO.getId(), domainDO.getName(), domainDO.getDescription());
+  }
 }

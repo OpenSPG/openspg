@@ -13,40 +13,40 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.cmd;
 
-import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGTypeNameConvertor;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.LPGRecordStructEnum;
-import com.antgroup.openspg.common.model.base.BaseQuery;
-
-import lombok.Getter;
-
 import static com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.LPGRecordStructEnum.GRAPH;
 import static com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.LPGRecordStructEnum.TABLE;
 
+import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGTypeNameConvertor;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.LPGRecordStructEnum;
+import com.antgroup.openspg.common.model.base.BaseQuery;
+import lombok.Getter;
 
 @Getter
 public abstract class BaseLPGRecordQuery extends BaseQuery {
 
-    @Getter
-    public enum LpgRecordQueryType {
-        // 基于脚本的查询方式底层存储返回 TableLpgRecordStruct
-        SCRIPT(TABLE),
+  @Getter
+  public enum LpgRecordQueryType {
+    // 基于脚本的查询方式底层存储返回 TableLpgRecordStruct
+    SCRIPT(TABLE),
 
-        // 查询点详情，或者查询一跳子图方式，底层存储返回 GraphLpgRecordStruct
-        VERTEX(GRAPH), SCAN(GRAPH), ONE_HOP_SUBGRAPH(GRAPH),
-        ;
+    // 查询点详情，或者查询一跳子图方式，底层存储返回 GraphLpgRecordStruct
+    VERTEX(GRAPH),
+    SCAN(GRAPH),
+    ONE_HOP_SUBGRAPH(GRAPH),
+    ;
 
-        private final LPGRecordStructEnum struct;
+    private final LPGRecordStructEnum struct;
 
-        LpgRecordQueryType(LPGRecordStructEnum struct) {
-            this.struct = struct;
-        }
+    LpgRecordQueryType(LPGRecordStructEnum struct) {
+      this.struct = struct;
     }
+  }
 
-    private final LpgRecordQueryType queryType;
+  private final LpgRecordQueryType queryType;
 
-    public BaseLPGRecordQuery(LpgRecordQueryType queryType) {
-        this.queryType = queryType;
-    }
+  public BaseLPGRecordQuery(LpgRecordQueryType queryType) {
+    this.queryType = queryType;
+  }
 
-    public abstract String toScript(LPGTypeNameConvertor lpgTypeNameConvertor);
+  public abstract String toScript(LPGTypeNameConvertor lpgTypeNameConvertor);
 }

@@ -13,62 +13,56 @@
 
 package com.antgroup.openspg.core.spgbuilder.model.record;
 
-
 import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.spgschema.model.type.EventType;
-
 import java.util.Collections;
 import java.util.List;
 
-
 public class EventRecord extends BaseAdvancedRecord {
 
-    private final EventType eventType;
+  private final EventType eventType;
 
-    private final String eventId;
+  private final String eventId;
 
-    private final List<SPGPropertyRecord> properties;
+  private final List<SPGPropertyRecord> properties;
 
-    public EventRecord(
-        EventType eventType,
-        String eventId,
-        List<SPGPropertyRecord> properties) {
-        super(SPGRecordTypeEnum.EVENT);
-        this.eventType = eventType;
-        this.eventId = eventId;
-        this.properties = properties;
-    }
+  public EventRecord(EventType eventType, String eventId, List<SPGPropertyRecord> properties) {
+    super(SPGRecordTypeEnum.EVENT);
+    this.eventType = eventType;
+    this.eventId = eventId;
+    this.properties = properties;
+  }
 
-    @Override
-    public BaseSPGType getSpgType() {
-        return eventType;
-    }
+  @Override
+  public BaseSPGType getSpgType() {
+    return eventType;
+  }
 
-    @Override
-    public String getId() {
-        return eventId;
-    }
+  @Override
+  public String getId() {
+    return eventId;
+  }
 
-    @Override
-    public List<SPGPropertyRecord> getSpgProperties() {
-        return Collections.unmodifiableList(properties);
-    }
+  @Override
+  public List<SPGPropertyRecord> getSpgProperties() {
+    return Collections.unmodifiableList(properties);
+  }
 
-    @Override
-    public void addSpgProperties(SPGPropertyRecord record) {
-        properties.add(record);
-    }
+  @Override
+  public void addSpgProperties(SPGPropertyRecord record) {
+    properties.add(record);
+  }
 
-    @Override
-    public List<BasePropertyRecord> getProperties() {
-        return Collections.unmodifiableList(properties);
-    }
+  @Override
+  public List<BasePropertyRecord> getProperties() {
+    return Collections.unmodifiableList(properties);
+  }
 
-    public EventType getEventType() {
-        return eventType;
-    }
+  public EventType getEventType() {
+    return eventType;
+  }
 
-    public String getEventId() {
-        return eventId;
-    }
+  public String getEventId() {
+    return eventId;
+  }
 }

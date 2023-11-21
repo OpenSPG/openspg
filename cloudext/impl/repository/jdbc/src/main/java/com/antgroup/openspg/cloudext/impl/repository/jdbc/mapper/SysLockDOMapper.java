@@ -19,25 +19,27 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface SysLockDOMapper {
-    long countByExample(SysLockDOExample example);
+  long countByExample(SysLockDOExample example);
 
-    int deleteByExample(SysLockDOExample example);
+  int deleteByExample(SysLockDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(SysLockDO record);
+  int insert(SysLockDO record);
 
-    int insertSelective(SysLockDO record);
+  int insertSelective(SysLockDO record);
 
-    List<SysLockDO> selectByExample(SysLockDOExample example);
+  List<SysLockDO> selectByExample(SysLockDOExample example);
 
-    SysLockDO selectByPrimaryKey(Long id);
+  SysLockDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") SysLockDO record, @Param("example") SysLockDOExample example);
+  int updateByExampleSelective(
+      @Param("record") SysLockDO record, @Param("example") SysLockDOExample example);
 
-    int updateByExample(@Param("record") SysLockDO record, @Param("example") SysLockDOExample example);
+  int updateByExample(
+      @Param("record") SysLockDO record, @Param("example") SysLockDOExample example);
 
-    int updateByPrimaryKeySelective(SysLockDO record);
+  int updateByPrimaryKeySelective(SysLockDO record);
 
-    int updateByPrimaryKey(SysLockDO record);
+  int updateByPrimaryKey(SysLockDO record);
 }

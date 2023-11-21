@@ -13,27 +13,24 @@
 
 package com.antgroup.openspg.api.http.server;
 
-
 import com.antgroup.openspg.api.facade.JSON;
-
+import java.util.Collections;
+import java.util.List;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Collections;
-import java.util.List;
-
-
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Override
-    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
-        GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-        gsonHttpMessageConverter.setGson(JSON.gson);
-        gsonHttpMessageConverter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
-        converters.add(0, gsonHttpMessageConverter);
-    }
+  @Override
+  public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+    GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
+    gsonHttpMessageConverter.setGson(JSON.gson);
+    gsonHttpMessageConverter.setSupportedMediaTypes(
+        Collections.singletonList(MediaType.APPLICATION_JSON));
+    converters.add(0, gsonHttpMessageConverter);
+  }
 }

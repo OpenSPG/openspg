@@ -21,42 +21,47 @@ import com.antgroup.openspg.core.spgschema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.spgschema.service.semantic.model.SimpleSemantic;
 
-
 public class SimpleSemanticConvertor {
 
-    public static SemanticDO toDO(SimpleSemantic simpleSemantic) {
-        SemanticDO semanticDO = new SemanticDO();
-        semanticDO.setResourceId(simpleSemantic.getSubjectId());
-        semanticDO.setSemanticType(simpleSemantic.getPredicateIdentifier().getName());
-        semanticDO.setOriginalResourceId(simpleSemantic.getObjectId());
-        semanticDO.setResourceType(simpleSemantic.getOntologyType().name());
-        if (simpleSemantic.getSubjectTypeIdentifier() != null) {
-            semanticDO.setSubjectMetaType(simpleSemantic.getSubjectTypeIdentifier().toString());
-        }
-        if (simpleSemantic.getObjectTypeIdentifier() != null) {
-            semanticDO.setObjectMetaType(simpleSemantic.getObjectTypeIdentifier().toString());
-        }
-        if (simpleSemantic.getRuleCode() != null) {
-            semanticDO.setRuleId(simpleSemantic.getRuleCode().getCode());
-        }
-        return semanticDO;
+  public static SemanticDO toDO(SimpleSemantic simpleSemantic) {
+    SemanticDO semanticDO = new SemanticDO();
+    semanticDO.setResourceId(simpleSemantic.getSubjectId());
+    semanticDO.setSemanticType(simpleSemantic.getPredicateIdentifier().getName());
+    semanticDO.setOriginalResourceId(simpleSemantic.getObjectId());
+    semanticDO.setResourceType(simpleSemantic.getOntologyType().name());
+    if (simpleSemantic.getSubjectTypeIdentifier() != null) {
+      semanticDO.setSubjectMetaType(simpleSemantic.getSubjectTypeIdentifier().toString());
     }
+    if (simpleSemantic.getObjectTypeIdentifier() != null) {
+      semanticDO.setObjectMetaType(simpleSemantic.getObjectTypeIdentifier().toString());
+    }
+    if (simpleSemantic.getRuleCode() != null) {
+      semanticDO.setRuleId(simpleSemantic.getRuleCode().getCode());
+    }
+    return semanticDO;
+  }
 
-    public static SimpleSemantic toSimpleSemantic(SemanticDO semanticDO) {
-        SPGOntologyEnum ontologyEnum = SPGOntologyEnum.toEnum(semanticDO.getResourceType());
-        String subjectId = semanticDO.getResourceId();
-        String objectId = semanticDO.getOriginalResourceId();
-        SimpleSemantic simpleSemantic = new SimpleSemantic(ontologyEnum, subjectId,
-            objectId, new PredicateIdentifier(semanticDO.getSemanticType()));
-        if (StringUtils.isNotBlank(semanticDO.getSubjectMetaType())) {
-            simpleSemantic.setSubjectTypeIdentifier(SPGTypeIdentifier.parse(semanticDO.getSubjectMetaType()));
-        }
-        if (StringUtils.isNotBlank(semanticDO.getObjectMetaType())) {
-            simpleSemantic.setObjectTypeIdentifier(SPGTypeIdentifier.parse(semanticDO.getObjectMetaType()));
-        }
-        if (StringUtils.isNotBlank(semanticDO.getRuleId())) {
-            simpleSemantic.setRuleCode(new RuleCode(semanticDO.getRuleId()));
-        }
-        return simpleSemantic;
+  public static SimpleSemantic toSimpleSemantic(SemanticDO semanticDO) {
+    SPGOntologyEnum ontologyEnum = SPGOntologyEnum.toEnum(semanticDO.getResourceType());
+    String subjectId = semanticDO.getResourceId();
+    String objectId = semanticDO.getOriginalResourceId();
+    SimpleSemantic simpleSemantic =
+        new SimpleSemantic(
+            ontologyEnum,
+            subjectId,
+            objectId,
+            new PredicateIdentifier(semanticDO.getSemanticType()));
+    if (StringUtils.isNotBlank(semanticDO.getSubjectMetaType())) {
+      simpleSemantic.setSubjectTypeIdentifier(
+          SPGTypeIdentifier.parse(semanticDO.getSubjectMetaType()));
     }
+    if (StringUtils.isNotBlank(semanticDO.getObjectMetaType())) {
+      simpleSemantic.setObjectTypeIdentifier(
+          SPGTypeIdentifier.parse(semanticDO.getObjectMetaType()));
+    }
+    if (StringUtils.isNotBlank(semanticDO.getRuleId())) {
+      simpleSemantic.setRuleCode(new RuleCode(semanticDO.getRuleId()));
+    }
+    return simpleSemantic;
+  }
 }

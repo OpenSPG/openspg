@@ -12,23 +12,27 @@
 #  or implied.
 
 from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import SourceCsvComponent, SinkToKgComponent, EntityMappingComponent
+from knext.core.builder.job.model.component import (
+    SourceCsvComponent,
+    SinkToKgComponent,
+    EntityMappingComponent,
+)
 from schema.riskmining_schema_helper import RiskMining
 
 
 class TaxOfRiskApp(BuilderJob):
-
     def build(self):
         source = SourceCsvComponent(
             local_path="./builder/job/data/TaxOfRiskApp.csv",
             columns=["id"],
-            start_row=2
+            start_row=2,
         )
 
-        mapping = EntityMappingComponent(
-            spg_type_name=RiskMining.TaxOfRiskApp
-        ).add_field("id", RiskMining.TaxOfRiskApp.id) \
+        mapping = (
+            EntityMappingComponent(spg_type_name=RiskMining.TaxOfRiskApp)
+            .add_field("id", RiskMining.TaxOfRiskApp.id)
             .add_field("id", RiskMining.TaxOfRiskApp.name)
+        )
 
         sink = SinkToKgComponent()
 

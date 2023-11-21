@@ -15,31 +15,26 @@ package com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.model;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
-import lombok.Data;
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import lombok.Data;
+import org.apache.commons.collections4.CollectionUtils;
 
 @Data
 public class EsHits extends BaseValObj {
 
-    private List<EsDoc> hits;
+  private List<EsDoc> hits;
 
-    public List<IdxRecord> toIdxRecord() {
-        if (CollectionUtils.isEmpty(hits)) {
-            return new ArrayList<>(0);
-        }
-        return hits.stream()
-            .map(esDoc -> new IdxRecord(
-                esDoc.get_index(),
-                esDoc.get_id(),
-                esDoc.get_score(),
-                esDoc.get_source()
-            ))
-            .collect(Collectors.toList());
+  public List<IdxRecord> toIdxRecord() {
+    if (CollectionUtils.isEmpty(hits)) {
+      return new ArrayList<>(0);
     }
+    return hits.stream()
+        .map(
+            esDoc ->
+                new IdxRecord(
+                    esDoc.get_index(), esDoc.get_id(), esDoc.get_score(), esDoc.get_source()))
+        .collect(Collectors.toList());
+  }
 }

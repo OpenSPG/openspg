@@ -27,87 +27,71 @@ import com.antgroup.openspg.core.spgschema.model.type.ConceptType;
 import com.antgroup.openspg.core.spgschema.model.type.EntityType;
 import com.antgroup.openspg.core.spgschema.model.type.EventType;
 import com.antgroup.openspg.core.spgschema.model.type.StandardType;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * <p>
- * Convertor for {@link VertexRecord} and {@link BaseAdvancedRecord AdvancedRecord}s.
- * <strong>NOTE: </strong> {@link BaseAdvancedRecord AdvancedRecord} includes
- * {@link ConceptRecord}, {@link EntityRecord}, {@link EventRecord}, {@link StandardRecord}.
- * </P>
+ * Convertor for {@link VertexRecord} and {@link BaseAdvancedRecord AdvancedRecord}s. <strong>NOTE:
+ * </strong> {@link BaseAdvancedRecord AdvancedRecord} includes {@link ConceptRecord}, {@link
+ * EntityRecord}, {@link EventRecord}, {@link StandardRecord}.
  */
 public class VertexRecordConvertor {
 
-    public static VertexRecord toVertexRecord(BaseAdvancedRecord advancedRecord) {
-        return new VertexRecord(
-            advancedRecord.getId(),
-            advancedRecord.getName(),
-            PropertyRecordConvertor.toLPGProperties(advancedRecord.getProperties())
-        );
-    }
+  public static VertexRecord toVertexRecord(BaseAdvancedRecord advancedRecord) {
+    return new VertexRecord(
+        advancedRecord.getId(),
+        advancedRecord.getName(),
+        PropertyRecordConvertor.toLPGProperties(advancedRecord.getProperties()));
+  }
 
-    public static List<VertexRecord> toVertexRecords(SPGPropertyRecord propertyRecord) {
-        if (propertyRecord.isBasicType()) {
-            throw GraphStoreException.unexpectedSPGPropertyRecordType(propertyRecord);
-        }
-        String vertexType = propertyRecord.getPropertyType().getObjectTypeRef().getName();
-        List<String> vertexIdList = propertyRecord.getValue().getSplitIds();
-        return vertexIdList.stream()
-            .map(vertexId -> new VertexRecord(
-                vertexId,
-                vertexType,
-                Collections.emptyList())
-            ).collect(Collectors.toList());
+  public static List<VertexRecord> toVertexRecords(SPGPropertyRecord propertyRecord) {
+    if (propertyRecord.isBasicType()) {
+      throw GraphStoreException.unexpectedSPGPropertyRecordType(propertyRecord);
     }
+    String vertexType = propertyRecord.getPropertyType().getObjectTypeRef().getName();
+    List<String> vertexIdList = propertyRecord.getValue().getSplitIds();
+    return vertexIdList.stream()
+        .map(vertexId -> new VertexRecord(vertexId, vertexType, Collections.emptyList()))
+        .collect(Collectors.toList());
+  }
 
-    public static BaseAdvancedRecord toAdvancedRecord(
-        BaseSPGType baseSpgType,
-        String bizId, Map<String, String> properties) {
-        BaseAdvancedRecord advancedRecord = null;
-        switch (baseSpgType.getSpgTypeEnum()) {
-            case ENTITY_TYPE:
-                advancedRecord = new EntityRecord(
-                    (EntityType) baseSpgType,
-                    bizId,
-                    PropertyRecordConvertor.toSPGProperties(
-                        properties, baseSpgType
-                    )
-                );
-                break;
-            case CONCEPT_TYPE:
-                advancedRecord = new ConceptRecord(
-                    (ConceptType) baseSpgType,
-                    new ConceptIdentifier(bizId),
-                    PropertyRecordConvertor.toSPGProperties(
-                        properties, baseSpgType
-                    )
-                );
-                break;
-            case EVENT_TYPE:
-                advancedRecord = new EventRecord(
-                    (EventType) baseSpgType,
-                    bizId,
-                    PropertyRecordConvertor.toSPGProperties(
-                        properties, baseSpgType
-                    )
-                );
-                break;
-            case STANDARD_TYPE:
-                advancedRecord = new StandardRecord(
-                    (StandardType) baseSpgType,
-                    bizId,
-                    PropertyRecordConvertor.toSPGProperties(
-                        properties, baseSpgType
-                    )
-                );
-                break;
-            default:
-                throw GraphStoreException.unexpectedSPGTypeEnum(baseSpgType.getSpgTypeEnum());
-        }
-        return advancedRecord;
+  public static BaseAdvancedRecord toAdvancedRecord(
+      BaseSPGType baseSpgType, String bizId, Map<String, String> properties) {
+    BaseAdvancedRecord advancedRecord = null;
+    switch (baseSpgType.getSpgTypeEnum()) {
+      case ENTITY_TYPE:
+        advancedRecord =
+            new EntityRecord(
+                (EntityType) baseSpgType,
+                bizId,
+                PropertyRecordConvertor.toSPGProperties(properties, baseSpgType));
+        break;
+      case CONCEPT_TYPE:
+        advancedRecord =
+            new ConceptRecord(
+                (ConceptType) baseSpgType,
+                new ConceptIdentifier(bizId),
+                PropertyRecordConvertor.toSPGProperties(properties, baseSpgType));
+        break;
+      case EVENT_TYPE:
+        advancedRecord =
+            new EventRecord(
+                (EventType) baseSpgType,
+                bizId,
+                PropertyRecordConvertor.toSPGProperties(properties, baseSpgType));
+        break;
+      case STANDARD_TYPE:
+        advancedRecord =
+            new StandardRecord(
+                (StandardType) baseSpgType,
+                bizId,
+                PropertyRecordConvertor.toSPGProperties(properties, baseSpgType));
+        break;
+      default:
+        throw GraphStoreException.unexpectedSPGTypeEnum(baseSpgType.getSpgTypeEnum());
     }
+    return advancedRecord;
+  }
 }

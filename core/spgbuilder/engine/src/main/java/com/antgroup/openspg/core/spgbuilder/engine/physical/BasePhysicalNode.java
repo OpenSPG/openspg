@@ -14,103 +14,92 @@
 package com.antgroup.openspg.core.spgbuilder.engine.physical;
 
 import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
-
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 /**
- * Base class of physical execution nodes, initializes the physical execution node based on the configuration of the
- * logical execution node.
+ * Base class of physical execution nodes, initializes the physical execution node based on the
+ * configuration of the logical execution node.
  *
- * <p> Currently, there are three types of physical nodes, namely data source nodes,
- * processing nodes, and sink nodes.
+ * <p>Currently, there are three types of physical nodes, namely data source nodes, processing
+ * nodes, and sink nodes.
+ *
  * <ul>
- *     <li> Data source nodes
- *          - Data source nodes are responsible for reading data from sources such as files,
- *            databases, graph stores, and so on. </li>
- *      <li> Processing nodes
- *          - Process the data read from the data source, such as extracting structured data from unstructured text,
- *            standardizing non-standard field values, linking semantic type by semantic fields, and so on. </li>
- *      <li> Sink Nodes
- *          - Sink nodes are used to output the build results to specific storage media,
- *           such as graph stores, search engines, and key-value stores. </li>
+ *   <li>Data source nodes - Data source nodes are responsible for reading data from sources such as
+ *       files, databases, graph stores, and so on.
+ *   <li>Processing nodes - Process the data read from the data source, such as extracting
+ *       structured data from unstructured text, standardizing non-standard field values, linking
+ *       semantic type by semantic fields, and so on.
+ *   <li>Sink Nodes - Sink nodes are used to output the build results to specific storage media,
+ *       such as graph stores, search engines, and key-value stores.
  * </ul>
  */
 @Getter
 @AllArgsConstructor
 public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
 
-    /**
-     * ID of the physical node.
-     */
-    protected final String id;
+  /** ID of the physical node. */
+  protected final String id;
 
-    /**
-     * Name of the physical node.
-     */
-    protected final String name;
+  /** Name of the physical node. */
+  protected final String name;
 
-    /**
-     * Runtime context of the physical node.
-     *
-     * <p> Provide runtime context information to each execution node,
-     * such as project ID, task ID, instance ID, task parallelism, and so on. The task parallelism can be used for
-     * distributed data reading and partitioning.
-     *
-     * <p> For detailed runtime parameters, please refer to the {@link RuntimeContext} class.
-     */
-    protected RuntimeContext context;
+  /**
+   * Runtime context of the physical node.
+   *
+   * <p>Provide runtime context information to each execution node, such as project ID, task ID,
+   * instance ID, task parallelism, and so on. The task parallelism can be used for distributed data
+   * reading and partitioning.
+   *
+   * <p>For detailed runtime parameters, please refer to the {@link RuntimeContext} class.
+   */
+  protected RuntimeContext context;
 
-    /**
-     * Whether the node is initialized.
-     */
-    private volatile boolean isInitialized = false;
+  /** Whether the node is initialized. */
+  private volatile boolean isInitialized = false;
 
-    public BasePhysicalNode(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+  public BasePhysicalNode(String id, String name) {
+    this.id = id;
+    this.name = name;
+  }
 
-    public void init(RuntimeContext context) throws Exception {
-        this.context = context;
+  public void init(RuntimeContext context) throws Exception {
+    this.context = context;
+    if (!isInitialized) {
+      synchronized (this) {
         if (!isInitialized) {
-            synchronized (this) {
-                if (!isInitialized) {
-                    doInit(context);
-                    isInitialized = true;
-                }
-            }
+          doInit(context);
+          isInitialized = true;
         }
+      }
     }
+  }
 
-    public void doInit(RuntimeContext context) throws Exception {
+  public void doInit(RuntimeContext context) throws Exception {}
 
+  public abstract void close() throws Exception;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public abstract void close() throws Exception;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof BasePhysicalNode)) {
-            return false;
-        }
-        BasePhysicalNode that = (BasePhysicalNode) o;
-        return Objects.equals(getId(), that.getId());
+    if (!(o instanceof BasePhysicalNode)) {
+      return false;
     }
+    BasePhysicalNode that = (BasePhysicalNode) o;
+    return Objects.equals(getId(), that.getId());
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(getId());
+  }
 
-    @Override
-    public int compareTo(@NotNull BasePhysicalNode o) {
-        return o.getId().compareTo(this.id);
-    }
+  @Override
+  public int compareTo(@NotNull BasePhysicalNode o) {
+    return o.getId().compareTo(this.id);
+  }
 }

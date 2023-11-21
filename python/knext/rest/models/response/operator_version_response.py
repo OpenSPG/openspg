@@ -42,17 +42,13 @@ class OperatorVersionResponse(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'operator_name': 'str',
-        'latest_version': 'str'
-    }
+    openapi_types = {"operator_name": "str", "latest_version": "str"}
 
-    attribute_map = {
-        'operator_name': 'operatorName',
-        'latest_version': 'latestVersion'
-    }
+    attribute_map = {"operator_name": "operatorName", "latest_version": "latestVersion"}
 
-    def __init__(self, operator_name=None, latest_version=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, operator_name=None, latest_version=None, local_vars_configuration=None
+    ):  # noqa: E501
         """OperatorVersionResponse - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -83,8 +79,13 @@ class OperatorVersionResponse(object):
         :param operator_name: The operator_name of this OperatorVersionResponse.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and operator_name is None:  # noqa: E501
-            raise ValueError("Invalid value for `operator_name`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and operator_name is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `operator_name`, must not be `None`"
+            )  # noqa: E501
 
         self._operator_name = operator_name
 
@@ -106,8 +107,13 @@ class OperatorVersionResponse(object):
         :param latest_version: The latest_version of this OperatorVersionResponse.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and latest_version is None:  # noqa: E501
-            raise ValueError("Invalid value for `latest_version`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and latest_version is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `latest_version`, must not be `None`"
+            )  # noqa: E501
 
         self._latest_version = latest_version
 
@@ -118,18 +124,20 @@ class OperatorVersionResponse(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

@@ -13,10 +13,9 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine;
 
-
 public interface IdxNameConvertor {
 
-    String convertIdxName(String idxName);
+  String convertIdxName(String idxName);
 
-    String restoreIdxName(String idxName);
+  String restoreIdxName(String idxName);
 }

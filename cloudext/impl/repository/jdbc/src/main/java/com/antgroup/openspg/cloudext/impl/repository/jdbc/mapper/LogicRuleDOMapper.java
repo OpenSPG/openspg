@@ -16,35 +16,37 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.LogicRuleDO;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.LogicRuleDOExample;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface LogicRuleDOMapper {
-    long countByExample(LogicRuleDOExample example);
+  long countByExample(LogicRuleDOExample example);
 
-    int deleteByExample(LogicRuleDOExample example);
+  int deleteByExample(LogicRuleDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(LogicRuleDO record);
+  int insert(LogicRuleDO record);
 
-    int insertSelective(LogicRuleDO record);
+  int insertSelective(LogicRuleDO record);
 
-    List<LogicRuleDO> selectByExampleWithBLOBs(LogicRuleDOExample example);
+  List<LogicRuleDO> selectByExampleWithBLOBs(LogicRuleDOExample example);
 
-    List<LogicRuleDO> selectByExample(LogicRuleDOExample example);
+  List<LogicRuleDO> selectByExample(LogicRuleDOExample example);
 
-    LogicRuleDO selectByPrimaryKey(Long id);
+  LogicRuleDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") LogicRuleDO record, @Param("example") LogicRuleDOExample example);
+  int updateByExampleSelective(
+      @Param("record") LogicRuleDO record, @Param("example") LogicRuleDOExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") LogicRuleDO record, @Param("example") LogicRuleDOExample example);
+  int updateByExampleWithBLOBs(
+      @Param("record") LogicRuleDO record, @Param("example") LogicRuleDOExample example);
 
-    int updateByExample(@Param("record") LogicRuleDO record, @Param("example") LogicRuleDOExample example);
+  int updateByExample(
+      @Param("record") LogicRuleDO record, @Param("example") LogicRuleDOExample example);
 
-    int updateByPrimaryKeySelective(LogicRuleDO record);
+  int updateByPrimaryKeySelective(LogicRuleDO record);
 
-    int updateByPrimaryKeyWithBLOBs(LogicRuleDO record);
+  int updateByPrimaryKeyWithBLOBs(LogicRuleDO record);
 
-    int updateByPrimaryKey(LogicRuleDO record);
+  int updateByPrimaryKey(LogicRuleDO record);
 }

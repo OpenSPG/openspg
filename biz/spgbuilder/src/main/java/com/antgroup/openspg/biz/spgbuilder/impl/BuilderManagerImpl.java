@@ -24,54 +24,53 @@ import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInst;
 import com.antgroup.openspg.core.spgbuilder.model.service.JobBuilderReceipt;
 import com.antgroup.openspg.core.spgbuilder.service.BuilderJobInfoService;
 import com.antgroup.openspg.core.spgbuilder.service.BuilderJobInstService;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-
 @Service
 public class BuilderManagerImpl implements BuilderManager {
 
-    @Autowired
-    private BuilderJobInfoService builderJobInfoService;
+  @Autowired private BuilderJobInfoService builderJobInfoService;
 
-    @Autowired
-    private BuilderJobInstService builderJobInstService;
+  @Autowired private BuilderJobInstService builderJobInstService;
 
-    @Override
-    @Transactional
-    public JobBuilderReceipt submitJobInfo(BuilderJobSubmitRequest request) {
-        BuilderJobInfo builderJobInfo = new BuilderJobInfo(
+  @Override
+  @Transactional
+  public JobBuilderReceipt submitJobInfo(BuilderJobSubmitRequest request) {
+    BuilderJobInfo builderJobInfo =
+        new BuilderJobInfo(
             request.getJobName(),
-            request.getProjectId(), request.getPipeline(),
-            request.getCron(), JobInfoStateEnum.ENABLE,
-            request.getParams()
-        );
+            request.getProjectId(),
+            request.getPipeline(),
+            request.getCron(),
+            JobInfoStateEnum.ENABLE,
+            request.getParams());
 
-        // create a builder job
-        Long builderJobInfoId = builderJobInfoService.create(builderJobInfo);
+    // create a builder job
+    Long builderJobInfoId = builderJobInfoService.create(builderJobInfo);
 
-        // if the cron expression is empty, create a builder job instance
-        Long builderJobInstId = null;
-        if (StringUtils.isBlank(request.getCron())) {
-            BuilderJobInst builderJobInst = new BuilderJobInst(
-                builderJobInfoId,
-                builderJobInfo.getProjectId(),
-                JobInstStatusEnum.INIT, null,
-                null, null,
-                null, null
-            );
-            builderJobInstId = builderJobInstService
-                .create(builderJobInfo, builderJobInst);
-        }
-        return new JobBuilderReceipt(builderJobInfoId, builderJobInstId);
+    // if the cron expression is empty, create a builder job instance
+    Long builderJobInstId = null;
+    if (StringUtils.isBlank(request.getCron())) {
+      BuilderJobInst builderJobInst =
+          new BuilderJobInst(
+              builderJobInfoId,
+              builderJobInfo.getProjectId(),
+              JobInstStatusEnum.INIT,
+              null,
+              null,
+              null,
+              null,
+              null);
+      builderJobInstId = builderJobInstService.create(builderJobInfo, builderJobInst);
     }
+    return new JobBuilderReceipt(builderJobInfoId, builderJobInstId);
+  }
 
-    @Override
-    public List<BuilderJobInst> queryJobInst(BuilderJobInstQuery query) {
-        return builderJobInstService.query(query);
-    }
+  @Override
+  public List<BuilderJobInst> queryJobInst(BuilderJobInstQuery query) {
+    return builderJobInstService.query(query);
+  }
 }

@@ -24,48 +24,43 @@ import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
 import com.antgroup.openspg.common.service.datasource.DataSourceRepository;
 import com.antgroup.openspg.common.service.datasource.DataSourceService;
 import com.antgroup.openspg.common.service.datasource.DataSourceUsageRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DataSourceManagerImpl implements DataSourceManager {
 
-    @Autowired
-    private DataSourceService dataSourceService;
+  @Autowired private DataSourceService dataSourceService;
 
-    @Autowired
-    private DataSourceRepository dataSourceRepository;
+  @Autowired private DataSourceRepository dataSourceRepository;
 
-    @Autowired
-    private DataSourceUsageRepository dataSourceUsageRepository;
+  @Autowired private DataSourceUsageRepository dataSourceUsageRepository;
 
-    @Override
-    public DataSource create(DataSourceCreateRequest request) {
-        DataSource dataSource = DataSourceConvertor.convert(request);
-        dataSourceRepository.save(dataSource);
-        return dataSource;
-    }
+  @Override
+  public DataSource create(DataSourceCreateRequest request) {
+    DataSource dataSource = DataSourceConvertor.convert(request);
+    dataSourceRepository.save(dataSource);
+    return dataSource;
+  }
 
-    @Override
-    public List<DataSource> query(DataSourceQueryRequest request) {
-        Map<String, DataSource> dataSourceMap = dataSourceRepository.query(request);
-        return new ArrayList<>(dataSourceMap.values());
-    }
+  @Override
+  public List<DataSource> query(DataSourceQueryRequest request) {
+    Map<String, DataSource> dataSourceMap = dataSourceRepository.query(request);
+    return new ArrayList<>(dataSourceMap.values());
+  }
 
-    @Override
-    public DataSourceUsage mount(DataSourceUsageCreateRequest request) {
-        DataSourceUsage dataSourceUsage = DataSourceConvertor.convert(request);
-        dataSourceUsageRepository.save(dataSourceUsage);
-        return dataSourceUsage;
-    }
+  @Override
+  public DataSourceUsage mount(DataSourceUsageCreateRequest request) {
+    DataSourceUsage dataSourceUsage = DataSourceConvertor.convert(request);
+    dataSourceUsageRepository.save(dataSourceUsage);
+    return dataSourceUsage;
+  }
 
-    @Override
-    public List<DataSourceUsage> query(DataSourceUsageQueryRequest request) {
-        return dataSourceUsageRepository.query(request);
-    }
+  @Override
+  public List<DataSourceUsage> query(DataSourceUsageQueryRequest request) {
+    return dataSourceUsageRepository.query(request);
+  }
 }

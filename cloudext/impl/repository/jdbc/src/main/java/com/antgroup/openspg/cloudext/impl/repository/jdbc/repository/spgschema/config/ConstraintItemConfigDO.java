@@ -15,27 +15,18 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.
 
 import lombok.Data;
 
-
 @Data
 public class ConstraintItemConfigDO {
 
-    /**
-     * 约束id
-     */
-    private String id;
+  /** 约束id */
+  private String id;
 
-    /**
-     * 约束名称
-     */
-    private String name;
+  /** 约束名称 */
+  private String name;
 
-    /**
-     * 约束英文名称
-     */
-    private String nameZh;
+  /** 约束英文名称 */
+  private String nameZh;
 
-    /**
-     * 约束值
-     */
-    private Object value;
+  /** 约束值 */
+  private Object value;
 }

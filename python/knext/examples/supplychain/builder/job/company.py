@@ -12,8 +12,12 @@
 #  or implied.
 
 from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import SourceCsvComponent, SinkToKgComponent, EntityMappingComponent, \
-    RelationMappingComponent
+from knext.core.builder.job.model.component import (
+    SourceCsvComponent,
+    SinkToKgComponent,
+    EntityMappingComponent,
+    RelationMappingComponent,
+)
 from schema.supplychain_schema_helper import SupplyChain
 
 
@@ -24,14 +28,15 @@ class Company(BuilderJob):
         source = SourceCsvComponent(
             local_path="./builder/job/data/Company.csv",
             columns=["id", "name", "products"],
-            start_row=2
+            start_row=2,
         )
 
-        mapping = EntityMappingComponent(
-            spg_type_name=SupplyChain.Company
-        ).add_field("id", SupplyChain.Company.id) \
-            .add_field("name", SupplyChain.Company.name) \
+        mapping = (
+            EntityMappingComponent(spg_type_name=SupplyChain.Company)
+            .add_field("id", SupplyChain.Company.id)
+            .add_field("name", SupplyChain.Company.name)
             .add_field("products", SupplyChain.Company.product)
+        )
 
         sink = SinkToKgComponent()
 
@@ -45,14 +50,15 @@ class CompanyUpdate(BuilderJob):
         source = SourceCsvComponent(
             local_path="./builder/job/data/CompanyUpdate.csv",
             columns=["id", "name", "products"],
-            start_row=2
+            start_row=2,
         )
 
-        mapping = EntityMappingComponent(
-            spg_type_name=SupplyChain.Company
-        ).add_field("id", SupplyChain.Company.id) \
-            .add_field("name", SupplyChain.Company.name) \
+        mapping = (
+            EntityMappingComponent(spg_type_name=SupplyChain.Company)
+            .add_field("id", SupplyChain.Company.id)
+            .add_field("name", SupplyChain.Company.name)
             .add_field("products", SupplyChain.Company.product)
+        )
 
         sink = SinkToKgComponent()
 
@@ -60,22 +66,24 @@ class CompanyUpdate(BuilderJob):
 
 
 class CompanyFundTrans(BuilderJob):
-
     def build(self):
         source = SourceCsvComponent(
             local_path="./builder/job/data/Company_fundTrans_Company.csv",
-            columns=["src", "dst", 'transDate', 'transAmt'],
-            start_row=2
+            columns=["src", "dst", "transDate", "transAmt"],
+            start_row=2,
         )
 
-        mapping = RelationMappingComponent(
-            subject_name=SupplyChain.Company,
-            predicate_name='fundTrans',
-            object_name=SupplyChain.Company
-        ).add_field("src", "srcId") \
-            .add_field("dst", "dstId") \
-            .add_field("transDate", 'transDate') \
-            .add_field('transAmt', 'transAmt')
+        mapping = (
+            RelationMappingComponent(
+                subject_name=SupplyChain.Company,
+                predicate_name="fundTrans",
+                object_name=SupplyChain.Company,
+            )
+            .add_field("src", "srcId")
+            .add_field("dst", "dstId")
+            .add_field("transDate", "transDate")
+            .add_field("transAmt", "transAmt")
+        )
 
         sink = SinkToKgComponent()
 

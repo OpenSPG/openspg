@@ -43,21 +43,27 @@ class OperatorVersion(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'overview_id': 'int',
-        'main_class': 'str',
-        'file_path': 'str',
-        'version': 'int'
+        "overview_id": "int",
+        "main_class": "str",
+        "file_path": "str",
+        "version": "int",
     }
 
     attribute_map = {
-        'overview_id': 'overviewId',
-        'main_class': 'mainClass',
-        'file_path': 'filePath',
-        'version': 'version'
+        "overview_id": "overviewId",
+        "main_class": "mainClass",
+        "file_path": "filePath",
+        "version": "version",
     }
 
-    def __init__(self, overview_id=None, main_class=None, file_path=None, version=None,
-                 local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        overview_id=None,
+        main_class=None,
+        file_path=None,
+        version=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """OperatorVersion - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -92,8 +98,12 @@ class OperatorVersion(object):
         :param overview_id: The overview_id of this OperatorVersion.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and overview_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `overview_id`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and overview_id is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `overview_id`, must not be `None`"
+            )  # noqa: E501
 
         self._overview_id = overview_id
 
@@ -115,8 +125,12 @@ class OperatorVersion(object):
         :param main_class: The main_class of this OperatorVersion.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and main_class is None:  # noqa: E501
-            raise ValueError("Invalid value for `main_class`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and main_class is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `main_class`, must not be `None`"
+            )  # noqa: E501
 
         self._main_class = main_class
 
@@ -138,8 +152,12 @@ class OperatorVersion(object):
         :param file_path: The file_path of this OperatorVersion.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and file_path is None:  # noqa: E501
-            raise ValueError("Invalid value for `file_path`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and file_path is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `file_path`, must not be `None`"
+            )  # noqa: E501
 
         self._file_path = file_path
 
@@ -161,8 +179,12 @@ class OperatorVersion(object):
         :param version: The version of this OperatorVersion.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and version is None:  # noqa: E501
-            raise ValueError("Invalid value for `version`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and version is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `version`, must not be `None`"
+            )  # noqa: E501
 
         self._version = version
 
@@ -173,18 +195,20 @@ class OperatorVersion(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

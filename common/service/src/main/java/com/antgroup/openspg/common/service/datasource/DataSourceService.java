@@ -36,59 +36,56 @@ import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnect
 
 public interface DataSourceService {
 
-    /**
-     * When a resource is configured to a project with ID -1, the resource is shared by all projects
-     */
-    long SHARED_PROJECT_ID = -1L;
+  /**
+   * When a resource is configured to a project with ID -1, the resource is shared by all projects
+   */
+  long SHARED_PROJECT_ID = -1L;
 
-    DataSource getFirstDataSource(Long projectId, DataSourceUsageTypeEnum dataSourceUsageType);
+  DataSource getFirstDataSource(Long projectId, DataSourceUsageTypeEnum dataSourceUsageType);
 
-    default GraphStoreClient buildSharedKgStoreClient() {
-        DataSource graphStore = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.KG_STORE);
-        return GraphStoreClientDriverManager.getClient(
-            (GraphStoreConnectionInfo) graphStore.getConnectionInfo()
-        );
-    }
+  default GraphStoreClient buildSharedKgStoreClient() {
+    DataSource graphStore = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.KG_STORE);
+    return GraphStoreClientDriverManager.getClient(
+        (GraphStoreConnectionInfo) graphStore.getConnectionInfo());
+  }
 
-    default ObjectStoreClient buildSharedOperatorStoreClient() {
-        DataSource objectStore = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.OPERATOR_STORE);
-        return ObjectStoreClientDriverManager.getClient(
-            (ObjectStoreConnectionInfo) objectStore.getConnectionInfo()
-        );
-    }
+  default ObjectStoreClient buildSharedOperatorStoreClient() {
+    DataSource objectStore =
+        getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.OPERATOR_STORE);
+    return ObjectStoreClientDriverManager.getClient(
+        (ObjectStoreConnectionInfo) objectStore.getConnectionInfo());
+  }
 
-    default ObjectStoreClient buildSharedFileStoreClient() {
-        DataSource objectStore = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.FILE_STORE);
-        return ObjectStoreClientDriverManager.getClient(
-            (ObjectStoreConnectionInfo) objectStore.getConnectionInfo()
-        );
-    }
+  default ObjectStoreClient buildSharedFileStoreClient() {
+    DataSource objectStore =
+        getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.FILE_STORE);
+    return ObjectStoreClientDriverManager.getClient(
+        (ObjectStoreConnectionInfo) objectStore.getConnectionInfo());
+  }
 
-    default SearchEngineClient buildSharedSearchEngineClient() {
-        DataSource searchEngine = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.SEARCH);
-        return SearchEngineClientDriverManager.getClient(
-            (SearchEngineConnectionInfo) searchEngine.getConnectionInfo()
-        );
-    }
+  default SearchEngineClient buildSharedSearchEngineClient() {
+    DataSource searchEngine = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.SEARCH);
+    return SearchEngineClientDriverManager.getClient(
+        (SearchEngineConnectionInfo) searchEngine.getConnectionInfo());
+  }
 
-    default JobSchedulerClient buildSharedJobSchedulerClient() {
-        DataSource scheduler = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.JOB_SCHEDULER);
-        return JobSchedulerClientDriverManager.getClient(
-            (JobSchedulerConnectionInfo) scheduler.getConnectionInfo()
-        );
-    }
+  default JobSchedulerClient buildSharedJobSchedulerClient() {
+    DataSource scheduler =
+        getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.JOB_SCHEDULER);
+    return JobSchedulerClientDriverManager.getClient(
+        (JobSchedulerConnectionInfo) scheduler.getConnectionInfo());
+  }
 
-    default ComputingClient buildSharedComputingClient() {
-        DataSource computing = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.COMPUTING);
-        return ComputingClientDriverManager.getClient(
-            (ComputingConnectionInfo) computing.getConnectionInfo()
-        );
-    }
+  default ComputingClient buildSharedComputingClient() {
+    DataSource computing = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.COMPUTING);
+    return ComputingClientDriverManager.getClient(
+        (ComputingConnectionInfo) computing.getConnectionInfo());
+  }
 
-    default TableStoreClient buildSharedTableStoreClient() {
-        DataSource computing = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.TABLE_STORE);
-        return TableStoreClientDriverManager.getClient(
-            (TableStoreConnectionInfo) computing.getConnectionInfo()
-        );
-    }
+  default TableStoreClient buildSharedTableStoreClient() {
+    DataSource computing =
+        getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.TABLE_STORE);
+    return TableStoreClientDriverManager.getClient(
+        (TableStoreConnectionInfo) computing.getConnectionInfo());
+  }
 }

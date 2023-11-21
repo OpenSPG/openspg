@@ -19,31 +19,37 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface OntologyPropertyDOMapper {
-    long countByExample(OntologyPropertyDOExample example);
+  long countByExample(OntologyPropertyDOExample example);
 
-    int deleteByExample(OntologyPropertyDOExample example);
+  int deleteByExample(OntologyPropertyDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(OntologyPropertyDO record);
+  int insert(OntologyPropertyDO record);
 
-    int insertSelective(OntologyPropertyDO record);
+  int insertSelective(OntologyPropertyDO record);
 
-    List<OntologyPropertyDO> selectByExampleWithBLOBs(OntologyPropertyDOExample example);
+  List<OntologyPropertyDO> selectByExampleWithBLOBs(OntologyPropertyDOExample example);
 
-    List<OntologyPropertyDO> selectByExample(OntologyPropertyDOExample example);
+  List<OntologyPropertyDO> selectByExample(OntologyPropertyDOExample example);
 
-    OntologyPropertyDO selectByPrimaryKey(Long id);
+  OntologyPropertyDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") OntologyPropertyDO record, @Param("example") OntologyPropertyDOExample example);
+  int updateByExampleSelective(
+      @Param("record") OntologyPropertyDO record,
+      @Param("example") OntologyPropertyDOExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") OntologyPropertyDO record, @Param("example") OntologyPropertyDOExample example);
+  int updateByExampleWithBLOBs(
+      @Param("record") OntologyPropertyDO record,
+      @Param("example") OntologyPropertyDOExample example);
 
-    int updateByExample(@Param("record") OntologyPropertyDO record, @Param("example") OntologyPropertyDOExample example);
+  int updateByExample(
+      @Param("record") OntologyPropertyDO record,
+      @Param("example") OntologyPropertyDOExample example);
 
-    int updateByPrimaryKeySelective(OntologyPropertyDO record);
+  int updateByPrimaryKeySelective(OntologyPropertyDO record);
 
-    int updateByPrimaryKeyWithBLOBs(OntologyPropertyDO record);
+  int updateByPrimaryKeyWithBLOBs(OntologyPropertyDO record);
 
-    int updateByPrimaryKey(OntologyPropertyDO record);
+  int updateByPrimaryKey(OntologyPropertyDO record);
 }

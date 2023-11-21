@@ -15,65 +15,59 @@ package com.antgroup.openspg.core.spgschema.model.semantic.meta;
 
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-
 import java.util.EnumSet;
 
 public class SequentialRelation extends BaseSemanticRelation {
 
-    private static final long serialVersionUID = -2382855534544499669L;
+  private static final long serialVersionUID = -2382855534544499669L;
 
-    enum SequentialPredicateEnum {
+  enum SequentialPredicateEnum {
 
-        /**
-         * happened-before
-         */
-        happenedBefore("先于...发生"),
-        ;
+    /** happened-before */
+    happenedBefore("先于...发生"),
+    ;
 
-        private final String nameZh;
+    private final String nameZh;
 
-        SequentialPredicateEnum(String nameZh) {
-            this.nameZh = nameZh;
-        }
-
-        public String getNameZh() {
-            return nameZh;
-        }
+    SequentialPredicateEnum(String nameZh) {
+      this.nameZh = nameZh;
     }
 
-    /**
-     * Accept concept/event type
-     */
-    private final SPGTypeIdentifier subjectTypeIdentifier;
-
-    /**
-     * Accept concept/event type，keep consistent with the type of subjectTypeIdentifier
-     */
-    private final SPGTypeIdentifier objectTypeIdentifier;
-
-    private final SequentialPredicateEnum predicate;
-
-    public SequentialRelation(
-        SPGTypeIdentifier subjectTypeIdentifier,
-        SPGTypeIdentifier objectTypeIdentifier,
-        SequentialPredicateEnum predicate) {
-        super(EnumSet.of(SPGTypeEnum.CONCEPT_TYPE, SPGTypeEnum.EVENT_TYPE),
-            EnumSet.of(SPGTypeEnum.CONCEPT_TYPE, SPGTypeEnum.EVENT_TYPE));
-
-        this.subjectTypeIdentifier = subjectTypeIdentifier;
-        this.objectTypeIdentifier = objectTypeIdentifier;
-        this.predicate = predicate;
+    public String getNameZh() {
+      return nameZh;
     }
+  }
 
-    public SPGTypeIdentifier getSubjectTypeIdentifier() {
-        return subjectTypeIdentifier;
-    }
+  /** Accept concept/event type */
+  private final SPGTypeIdentifier subjectTypeIdentifier;
 
-    public SPGTypeIdentifier getObjectTypeIdentifier() {
-        return objectTypeIdentifier;
-    }
+  /** Accept concept/event type，keep consistent with the type of subjectTypeIdentifier */
+  private final SPGTypeIdentifier objectTypeIdentifier;
 
-    public SequentialPredicateEnum getPredicate() {
-        return predicate;
-    }
+  private final SequentialPredicateEnum predicate;
+
+  public SequentialRelation(
+      SPGTypeIdentifier subjectTypeIdentifier,
+      SPGTypeIdentifier objectTypeIdentifier,
+      SequentialPredicateEnum predicate) {
+    super(
+        EnumSet.of(SPGTypeEnum.CONCEPT_TYPE, SPGTypeEnum.EVENT_TYPE),
+        EnumSet.of(SPGTypeEnum.CONCEPT_TYPE, SPGTypeEnum.EVENT_TYPE));
+
+    this.subjectTypeIdentifier = subjectTypeIdentifier;
+    this.objectTypeIdentifier = objectTypeIdentifier;
+    this.predicate = predicate;
+  }
+
+  public SPGTypeIdentifier getSubjectTypeIdentifier() {
+    return subjectTypeIdentifier;
+  }
+
+  public SPGTypeIdentifier getObjectTypeIdentifier() {
+    return objectTypeIdentifier;
+  }
+
+  public SequentialPredicateEnum getPredicate() {
+    return predicate;
+  }
 }

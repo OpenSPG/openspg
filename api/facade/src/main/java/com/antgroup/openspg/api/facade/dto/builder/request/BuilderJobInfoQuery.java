@@ -15,28 +15,27 @@ package com.antgroup.openspg.api.facade.dto.builder.request;
 
 import com.antgroup.openspg.common.model.base.BaseQuery;
 
-
 public class BuilderJobInfoQuery extends BaseQuery {
 
-    private Long buildingJobInfoId;
+  private Long buildingJobInfoId;
 
-    private String externalJobInfoId;
+  private String externalJobInfoId;
 
-    public Long getBuildingJobInfoId() {
-        return buildingJobInfoId;
-    }
+  public Long getBuildingJobInfoId() {
+    return buildingJobInfoId;
+  }
 
-    public BuilderJobInfoQuery setBuildingJobInfoId(Long buildingJobInfoId) {
-        this.buildingJobInfoId = buildingJobInfoId;
-        return this;
-    }
+  public BuilderJobInfoQuery setBuildingJobInfoId(Long buildingJobInfoId) {
+    this.buildingJobInfoId = buildingJobInfoId;
+    return this;
+  }
 
-    public String getExternalJobInfoId() {
-        return externalJobInfoId;
-    }
+  public String getExternalJobInfoId() {
+    return externalJobInfoId;
+  }
 
-    public BuilderJobInfoQuery setExternalJobInfoId(String externalJobInfoId) {
-        this.externalJobInfoId = externalJobInfoId;
-        return this;
-    }
+  public BuilderJobInfoQuery setExternalJobInfoId(String externalJobInfoId) {
+    this.externalJobInfoId = externalJobInfoId;
+    return this;
+  }
 }

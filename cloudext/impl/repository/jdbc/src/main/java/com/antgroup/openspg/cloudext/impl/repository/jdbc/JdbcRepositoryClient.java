@@ -16,11 +16,10 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc;
 import com.antgroup.openspg.cloudext.interfaces.repository.RepositoryClient;
 import com.antgroup.openspg.common.model.datasource.connection.BaseConnectionInfo;
 
-
 public class JdbcRepositoryClient implements RepositoryClient {
 
-    @Override
-    public BaseConnectionInfo getConnInfo() {
-        return null;
-    }
+  @Override
+  public BaseConnectionInfo getConnInfo() {
+    return null;
+  }
 }

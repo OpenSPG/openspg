@@ -21,25 +21,28 @@ import com.antgroup.openspg.common.model.datasource.connection.ConnectionInfoFac
 
 public class DataSourceConvertor {
 
-    public static DataSource toModel(DataSourceDOWithBLOBs dataSourceDO) {
-        if (dataSourceDO == null) {
-            return null;
-        }
-
-        DataSourceTypeEnum dataSourceType = DataSourceTypeEnum.valueOf(dataSourceDO.getType());
-        BaseConnectionInfo connectionInfo = ConnectionInfoFactory.from(dataSourceDO.getConnInfo(), dataSourceType);
-        return new DataSource(dataSourceDO.getUniqueName(),
-            dataSourceType, dataSourceDO.getPhysicalInfo(), connectionInfo
-        );
+  public static DataSource toModel(DataSourceDOWithBLOBs dataSourceDO) {
+    if (dataSourceDO == null) {
+      return null;
     }
 
-    public static DataSourceDOWithBLOBs toDO(DataSource dataSource) {
-        DataSourceDOWithBLOBs dataSourceDO = new DataSourceDOWithBLOBs();
+    DataSourceTypeEnum dataSourceType = DataSourceTypeEnum.valueOf(dataSourceDO.getType());
+    BaseConnectionInfo connectionInfo =
+        ConnectionInfoFactory.from(dataSourceDO.getConnInfo(), dataSourceType);
+    return new DataSource(
+        dataSourceDO.getUniqueName(),
+        dataSourceType,
+        dataSourceDO.getPhysicalInfo(),
+        connectionInfo);
+  }
 
-        dataSourceDO.setUniqueName(dataSource.getUniqueName());
-        dataSourceDO.setType(dataSource.getDataSourceType().name());
-        dataSourceDO.setPhysicalInfo(dataSource.getPhysicalInfo());
-        dataSourceDO.setConnInfo(dataSource.getConnectionInfo().toString());
-        return dataSourceDO;
-    }
+  public static DataSourceDOWithBLOBs toDO(DataSource dataSource) {
+    DataSourceDOWithBLOBs dataSourceDO = new DataSourceDOWithBLOBs();
+
+    dataSourceDO.setUniqueName(dataSource.getUniqueName());
+    dataSourceDO.setType(dataSource.getDataSourceType().name());
+    dataSourceDO.setPhysicalInfo(dataSource.getPhysicalInfo());
+    dataSourceDO.setConnInfo(dataSource.getConnectionInfo().toString());
+    return dataSourceDO;
+  }
 }

@@ -42,20 +42,21 @@ class SpgTypeIdentifier(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'identity_type': 'str',
-        'namespace': 'str',
-        'name_en': 'str'
-    }
+    openapi_types = {"identity_type": "str", "namespace": "str", "name_en": "str"}
 
     attribute_map = {
-        'identity_type': 'identityType',
-        'namespace': 'namespace',
-        'name_en': 'nameEn'
+        "identity_type": "identityType",
+        "namespace": "namespace",
+        "name_en": "nameEn",
     }
 
-    def __init__(self, identity_type='SPG_TYPE', namespace=None, name_en=None,
-                 local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        identity_type="SPG_TYPE",
+        namespace=None,
+        name_en=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """SpgTypeIdentifier - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -90,13 +91,28 @@ class SpgTypeIdentifier(object):
         :param identity_type: The identity_type of this SpgTypeIdentifier.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and identity_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `identity_type`, must not be `None`")  # noqa: E501
-        allowed_values = ["SPG_TYPE", "SPG_TRIPLE", "CONCEPT", "PREDICATE", "OPERATOR"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and identity_type not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and identity_type is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `identity_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(identity_type, allowed_values)
+                "Invalid value for `identity_type`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = [
+            "SPG_TYPE",
+            "SPG_TRIPLE",
+            "CONCEPT",
+            "PREDICATE",
+            "OPERATOR",
+        ]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and identity_type not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `identity_type` ({0}), must be one of {1}".format(  # noqa: E501
+                    identity_type, allowed_values
+                )
             )
 
         self._identity_type = identity_type
@@ -151,7 +167,7 @@ class SpgTypeIdentifier(object):
         :return: The full name of this SpgTypeIdentifier.  # noqa: E501
         :rtype: str
         """
-        return self.namespace + '.' + self.name_en if self.namespace else self.name_en
+        return self.namespace + "." + self.name_en if self.namespace else self.name_en
 
     @name.setter
     def name(self, name):
@@ -162,7 +178,7 @@ class SpgTypeIdentifier(object):
         :type: str
         """
 
-        name_split = name.split('.')
+        name_split = name.split(".")
         if len(name_split) == 1:
             self.name_en = name
         elif len(name_split) == 2:
@@ -176,18 +192,20 @@ class SpgTypeIdentifier(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

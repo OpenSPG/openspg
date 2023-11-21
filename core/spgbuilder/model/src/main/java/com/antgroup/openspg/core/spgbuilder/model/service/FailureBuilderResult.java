@@ -13,16 +13,15 @@
 
 package com.antgroup.openspg.core.spgbuilder.model.service;
 
-
 public class FailureBuilderResult extends BaseBuilderResult {
 
-    private final String errorMsg;
+  private final String errorMsg;
 
-    public FailureBuilderResult(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
+  public FailureBuilderResult(String errorMsg) {
+    this.errorMsg = errorMsg;
+  }
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
+  public String getErrorMsg() {
+    return errorMsg;
+  }
 }

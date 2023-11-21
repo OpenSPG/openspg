@@ -16,15 +16,11 @@ package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.model;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
-/**
- * Vertex schema of TuGraph.
- */
+/** Vertex schema of TuGraph. */
 @Data
 public class TuGraphVertexType extends BaseTuGraphOntology {
 
-    /**
-     * Primary property (for vertex)
-     */
-    @JSONField(name = "primary")
-    private String primary;
+  /** Primary property (for vertex) */
+  @JSONField(name = "primary")
+  private String primary;
 }

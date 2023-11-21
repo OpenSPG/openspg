@@ -23,7 +23,9 @@ import com.antgroup.openspg.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.biz.spgbuilder.OperatorManager;
 import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorOverview;
 import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorVersion;
-
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,77 +36,74 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-
 @Controller
 @RequestMapping("/public/v1/operator")
 public class OperatorController extends BaseController {
 
-    @Autowired
-    private OperatorManager operatorManager;
+  @Autowired private OperatorManager operatorManager;
 
-    @RequestMapping(value = "/overview", method = RequestMethod.GET)
-    public ResponseEntity<Object> queryOverview(@RequestParam(required = false) String name) {
-        return HttpBizTemplate.execute(new HttpBizCallback<List<OperatorOverview>>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/overview", method = RequestMethod.GET)
+  public ResponseEntity<Object> queryOverview(@RequestParam(required = false) String name) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<List<OperatorOverview>>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public List<OperatorOverview> action() {
-                return operatorManager.listOverview(name);
-            }
+          @Override
+          public List<OperatorOverview> action() {
+            return operatorManager.listOverview(name);
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/version", method = RequestMethod.GET)
-    public ResponseEntity<Object> queryVersion(@RequestParam String name) {
-        return HttpBizTemplate.execute(new HttpBizCallback<List<OperatorVersion>>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/version", method = RequestMethod.GET)
+  public ResponseEntity<Object> queryVersion(@RequestParam String name) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<List<OperatorVersion>>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public List<OperatorVersion> action() {
-                return operatorManager.listVersion(name);
-            }
+          @Override
+          public List<OperatorVersion> action() {
+            return operatorManager.listVersion(name);
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/overview", method = RequestMethod.POST)
-    public ResponseEntity<Object> create(@RequestBody OperatorCreateRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<OperatorCreateResponse>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/overview", method = RequestMethod.POST)
+  public ResponseEntity<Object> create(@RequestBody OperatorCreateRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<OperatorCreateResponse>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public OperatorCreateResponse action() {
-                return operatorManager.create(request);
-            }
+          @Override
+          public OperatorCreateResponse action() {
+            return operatorManager.create(request);
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/version", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Object> addVersion(OperatorVersionRequest request, MultipartFile file) {
-        return HttpBizTemplate.execute(new HttpBizCallback<OperatorVersionResponse>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(
+      value = "/version",
+      method = RequestMethod.POST,
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<Object> addVersion(OperatorVersionRequest request, MultipartFile file) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<OperatorVersionResponse>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public OperatorVersionResponse action() {
-                InputStream inputStream = null;
-                try {
-                    inputStream = file.getInputStream();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                return operatorManager.addVersion(request, inputStream);
+          @Override
+          public OperatorVersionResponse action() {
+            InputStream inputStream = null;
+            try {
+              inputStream = file.getInputStream();
+            } catch (IOException e) {
+              throw new RuntimeException(e);
             }
+            return operatorManager.addVersion(request, inputStream);
+          }
         });
-    }
+  }
 }

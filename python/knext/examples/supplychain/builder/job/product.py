@@ -12,7 +12,11 @@
 #  or implied.
 
 from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import SourceCsvComponent, SinkToKgComponent, EntityMappingComponent
+from knext.core.builder.job.model.component import (
+    SourceCsvComponent,
+    SinkToKgComponent,
+    EntityMappingComponent,
+)
 from schema.supplychain_schema_helper import SupplyChain
 
 
@@ -23,13 +27,14 @@ class Product(BuilderJob):
         source = SourceCsvComponent(
             local_path="./builder/job/data/Product.csv",
             columns=["fullname", "belongToIndustry", "hasSupplyChain"],
-            start_row=2
+            start_row=2,
         )
 
-        mapping = EntityMappingComponent(
-            spg_type_name=SupplyChain.Product
-        ).add_field("fullname", SupplyChain.Product.id) \
+        mapping = (
+            EntityMappingComponent(spg_type_name=SupplyChain.Product)
+            .add_field("fullname", SupplyChain.Product.id)
             .add_field("belongToIndustry", SupplyChain.Product.belongToIndustry)
+        )
 
         sink = SinkToKgComponent()
 
@@ -43,13 +48,14 @@ class ProductHasSupplyChain(BuilderJob):
         source = SourceCsvComponent(
             local_path="./builder/job/data/Product.csv",
             columns=["fullname", "belongToIndustry", "hasSupplyChain"],
-            start_row=2
+            start_row=2,
         )
 
-        mapping = (EntityMappingComponent(
-            spg_type_name="SupplyChain.Product"
-        ).add_field("fullname", "id") \
-                   .add_field("hasSupplyChain", "hasSupplyChain"))
+        mapping = (
+            EntityMappingComponent(spg_type_name="SupplyChain.Product")
+            .add_field("fullname", "id")
+            .add_field("hasSupplyChain", "hasSupplyChain")
+        )
 
         sink = SinkToKgComponent()
 

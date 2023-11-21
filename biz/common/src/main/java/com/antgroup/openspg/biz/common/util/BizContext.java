@@ -13,58 +13,45 @@
 
 package com.antgroup.openspg.biz.common.util;
 
-
 import com.alipay.common.tracer.core.generator.TraceIdGenerator;
 import com.alipay.common.tracer.core.utils.TracerUtils;
-
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-/**
- * 业务线程上下文
- */
+/** 业务线程上下文 */
 @Getter
 @Slf4j
 public final class BizContext {
 
-    /**
-     * traceId
-     */
-    private String traceId;
+  /** traceId */
+  private String traceId;
 
-    /**
-     * callerApp
-     */
-    private String callerApp = "";
+  /** callerApp */
+  private String callerApp = "";
 
-    /**
-     * rpcId
-     */
-    private final String rpcId;
+  /** rpcId */
+  private final String rpcId;
 
-    /**
-     * level
-     */
-    private final AtomicInteger level = new AtomicInteger();
+  /** level */
+  private final AtomicInteger level = new AtomicInteger();
 
-    public BizContext() {
-        traceId = TracerUtils.getTraceId();
-        if (StringUtils.isBlank(traceId)) {
-            traceId = TraceIdGenerator.generate();
-        }
-        // todo
-        callerApp = "";
-        rpcId = "";
+  public BizContext() {
+    traceId = TracerUtils.getTraceId();
+    if (StringUtils.isBlank(traceId)) {
+      traceId = TraceIdGenerator.generate();
     }
+    // todo
+    callerApp = "";
+    rpcId = "";
+  }
 
-    public int enter() {
-        return level.incrementAndGet();
-    }
+  public int enter() {
+    return level.incrementAndGet();
+  }
 
-    public int release() {
-        return level.decrementAndGet();
-    }
+  public int release() {
+    return level.decrementAndGet();
+  }
 }

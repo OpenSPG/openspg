@@ -21,57 +21,50 @@ import com.antgroup.openspg.cloudext.interfaces.repository.sequence.SequenceRepo
 import com.antgroup.openspg.common.service.lock.SysLockRepository;
 import com.antgroup.openspg.common.service.lock.model.SysLock;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import java.util.Date;
 import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class SysLockRepositoryImpl implements SysLockRepository {
 
-    @Autowired
-    private SequenceRepository sequenceRepository;
-    @Autowired
-    private SysLockDOMapper sysLockDOMapper;
+  @Autowired private SequenceRepository sequenceRepository;
+  @Autowired private SysLockDOMapper sysLockDOMapper;
 
-    @Override
-    public List<SysLock> queryAllLock() {
-        SysLockDOExample example = new SysLockDOExample();
-        List<SysLockDO> sysLockDOS = sysLockDOMapper.selectByExample(example);
-        return CollectionsUtils.listMap(sysLockDOS, SysLockConvertor::toModel);
-    }
+  @Override
+  public List<SysLock> queryAllLock() {
+    SysLockDOExample example = new SysLockDOExample();
+    List<SysLockDO> sysLockDOS = sysLockDOMapper.selectByExample(example);
+    return CollectionsUtils.listMap(sysLockDOS, SysLockConvertor::toModel);
+  }
 
-    @Override
-    public boolean exist(String lockName) {
-        SysLockDOExample example = new SysLockDOExample();
-        example.createCriteria()
-            .andMethodNameEqualTo(lockName);
-        return sysLockDOMapper.selectByExample(example).size() > 0;
-    }
+  @Override
+  public boolean exist(String lockName) {
+    SysLockDOExample example = new SysLockDOExample();
+    example.createCriteria().andMethodNameEqualTo(lockName);
+    return sysLockDOMapper.selectByExample(example).size() > 0;
+  }
 
-    @Override
-    public boolean addLock(String lockName, String lockValue) {
-        try {
-            SysLockDO sysLockDO = new SysLockDO();
-            sysLockDO.setId(sequenceRepository.getSeqIdByTime());
-            sysLockDO.setGmtCreate(new Date());
-            sysLockDO.setGmtModified(new Date());
-            sysLockDO.setMethodName(lockName);
-            sysLockDO.setMethodValue(lockValue);
-            return sysLockDOMapper.insert(sysLockDO) > 0;
-        } catch (Exception e) {
-            return false;
-        }
+  @Override
+  public boolean addLock(String lockName, String lockValue) {
+    try {
+      SysLockDO sysLockDO = new SysLockDO();
+      sysLockDO.setId(sequenceRepository.getSeqIdByTime());
+      sysLockDO.setGmtCreate(new Date());
+      sysLockDO.setGmtModified(new Date());
+      sysLockDO.setMethodName(lockName);
+      sysLockDO.setMethodValue(lockValue);
+      return sysLockDOMapper.insert(sysLockDO) > 0;
+    } catch (Exception e) {
+      return false;
     }
+  }
 
-    @Override
-    public boolean removeLock(String lockName) {
-        SysLockDOExample example = new SysLockDOExample();
-        example.createCriteria()
-            .andMethodNameEqualTo(lockName);
-        return sysLockDOMapper.deleteByExample(example) > 0;
-    }
+  @Override
+  public boolean removeLock(String lockName) {
+    SysLockDOExample example = new SysLockDOExample();
+    example.createCriteria().andMethodNameEqualTo(lockName);
+    return sysLockDOMapper.deleteByExample(example) > 0;
+  }
 }

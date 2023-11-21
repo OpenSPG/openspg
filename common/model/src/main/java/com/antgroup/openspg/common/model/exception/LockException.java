@@ -13,18 +13,17 @@
 
 package com.antgroup.openspg.common.model.exception;
 
-
 public class LockException extends OpenSPGException {
 
-    private LockException(Throwable cause, String messagePattern, Object... args) {
-        super(cause, true, true, messagePattern, args);
-    }
+  private LockException(Throwable cause, String messagePattern, Object... args) {
+    super(cause, true, true, messagePattern, args);
+  }
 
-    private LockException(String messagePattern, Object... args) {
-        this(null, messagePattern, args);
-    }
+  private LockException(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
+  }
 
-    public static LockException lockFail(String lockKey) {
-        return new LockException("lock {} fail", lockKey);
-    }
+  public static LockException lockFail(String lockKey) {
+    return new LockException("lock {} fail", lockKey);
+  }
 }

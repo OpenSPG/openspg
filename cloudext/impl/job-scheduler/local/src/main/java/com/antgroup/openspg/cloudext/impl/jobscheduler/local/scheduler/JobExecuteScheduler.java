@@ -21,84 +21,84 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobI
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.common.util.thread.SPGThread;
 import com.antgroup.openspg.common.util.thread.ThreadUtils;
-
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 
 @Slf4j
 public class JobExecuteScheduler extends BaseScheduler {
 
-    private final SchedulerJobInstService schedulerJobInstService;
-    private final Map<String, SchedulerCallback> schedulerCallbacks;
+  private final SchedulerJobInstService schedulerJobInstService;
+  private final Map<String, SchedulerCallback> schedulerCallbacks;
 
-    public JobExecuteScheduler(
-        SchedulerJobInstService schedulerJobInstService,
-        List<SchedulerCallback> schedulerCallbacks) {
-        this.schedulerJobInstService = schedulerJobInstService;
+  public JobExecuteScheduler(
+      SchedulerJobInstService schedulerJobInstService, List<SchedulerCallback> schedulerCallbacks) {
+    this.schedulerJobInstService = schedulerJobInstService;
 
-        this.schedulerCallbacks = new HashMap<>(JobTypeEnum.values().length);
-        for (SchedulerCallback schedulerCallback : schedulerCallbacks) {
-            for (JobTypeEnum jobType : schedulerCallback.accept()) {
-                this.schedulerCallbacks.put(jobType.name(), schedulerCallback);
-            }
-        }
+    this.schedulerCallbacks = new HashMap<>(JobTypeEnum.values().length);
+    for (SchedulerCallback schedulerCallback : schedulerCallbacks) {
+      for (JobTypeEnum jobType : schedulerCallback.accept()) {
+        this.schedulerCallbacks.put(jobType.name(), schedulerCallback);
+      }
     }
+  }
 
-    public void init() {
-        log.info("init JobExecuteScheduler...");
-        new SPGThread("JobExecuteScheduler", () -> {
-            while (true) {
+  public void init() {
+    log.info("init JobExecuteScheduler...");
+    new SPGThread(
+            "JobExecuteScheduler",
+            () -> {
+              while (true) {
                 try {
-                    doExecute();
-                    ThreadUtils.sleep(3000);
+                  doExecute();
+                  ThreadUtils.sleep(3000);
                 } catch (Throwable e) {
-                    log.warn("JobExecuteScheduler execute fail", e);
+                  log.warn("JobExecuteScheduler execute fail", e);
                 }
-            }
-        }).start();
+              }
+            })
+        .start();
+  }
+
+  private void doExecute() {
+    List<SchedulerJobInst> runningJobInsts = schedulerJobInstService.queryRunningJobInsts();
+    if (CollectionUtils.isNotEmpty(runningJobInsts)) {
+      processJobInsts(runningJobInsts);
+      return;
     }
 
-    private void doExecute() {
-        List<SchedulerJobInst> runningJobInsts =
-            schedulerJobInstService.queryRunningJobInsts();
-        if (CollectionUtils.isNotEmpty(runningJobInsts)) {
-            processJobInsts(runningJobInsts);
-            return;
-        }
-
-        List<SchedulerJobInst> queuedJobInsts =
-            schedulerJobInstService.queryToRunJobInsts();
-        if (CollectionUtils.isNotEmpty(queuedJobInsts)) {
-            processJobInsts(queuedJobInsts);
-        }
+    List<SchedulerJobInst> queuedJobInsts = schedulerJobInstService.queryToRunJobInsts();
+    if (CollectionUtils.isNotEmpty(queuedJobInsts)) {
+      processJobInsts(queuedJobInsts);
     }
+  }
 
-    private void processJobInsts(List<SchedulerJobInst> jobInsts) {
-        for (SchedulerJobInst jobInst : jobInsts) {
-            log.info("polling jobType={} schedulerJobInstId={}",
-                jobInst.getJobType(), jobInst.getJobInstId());
+  private void processJobInsts(List<SchedulerJobInst> jobInsts) {
+    for (SchedulerJobInst jobInst : jobInsts) {
+      log.info(
+          "polling jobType={} schedulerJobInstId={}", jobInst.getJobType(), jobInst.getJobInstId());
 
-            SchedulerCallback callback = schedulerCallbacks.get(jobInst.getJobType());
-            if (callback == null) {
-                updateStatus(jobInst, JobInstStatusEnum.FAILURE);
-                continue;
-            }
-            CallbackResult result = callback.polling(jobInst);
-            JobInstStatusEnum newStatus = result.getStatus();
-            updateStatus(jobInst, newStatus);
-        }
+      SchedulerCallback callback = schedulerCallbacks.get(jobInst.getJobType());
+      if (callback == null) {
+        updateStatus(jobInst, JobInstStatusEnum.FAILURE);
+        continue;
+      }
+      CallbackResult result = callback.polling(jobInst);
+      JobInstStatusEnum newStatus = result.getStatus();
+      updateStatus(jobInst, newStatus);
     }
+  }
 
-    private void updateStatus(SchedulerJobInst jobInst, JobInstStatusEnum newStatus) {
-        if (!newStatus.equals(jobInst.getStatus())) {
-            log.info("update schedulerJobInstId={} from status={} to status={}",
-                jobInst.getJobInstId(), jobInst.getStatus(), newStatus);
-            schedulerJobInstService.updateStatus(jobInst.getJobInstId(), newStatus);
-        }
+  private void updateStatus(SchedulerJobInst jobInst, JobInstStatusEnum newStatus) {
+    if (!newStatus.equals(jobInst.getStatus())) {
+      log.info(
+          "update schedulerJobInstId={} from status={} to status={}",
+          jobInst.getJobInstId(),
+          jobInst.getStatus(),
+          newStatus);
+      schedulerJobInstService.updateStatus(jobInst.getJobInstId(), newStatus);
     }
+  }
 }

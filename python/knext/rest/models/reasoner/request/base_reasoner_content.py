@@ -42,17 +42,13 @@ class BaseReasonerContent(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'param_type': 'str'
-    }
+    openapi_types = {"param_type": "str"}
 
-    attribute_map = {
-        'param_type': 'paramType'
-    }
+    attribute_map = {"param_type": "paramType"}
 
     discriminator_value_class_map = {
-        'KGDSL': 'KgdslReasonerContent',
-        'VERTEX': 'VertexReasonerContent'
+        "KGDSL": "KgdslReasonerContent",
+        "VERTEX": "VertexReasonerContent",
     }
 
     def __init__(self, param_type=None, local_vars_configuration=None):  # noqa: E501
@@ -84,21 +80,29 @@ class BaseReasonerContent(object):
         :param param_type: The param_type of this BaseReasonerContent.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and param_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `param_type`, must not be `None`")  # noqa: E501
-        allowed_values = ["VERTEX", "KGDSL"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and param_type not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and param_type is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `param_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(param_type, allowed_values)
+                "Invalid value for `param_type`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = ["VERTEX", "KGDSL"]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and param_type not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `param_type` ({0}), must be one of {1}".format(  # noqa: E501
+                    param_type, allowed_values
+                )
             )
 
         self._param_type = param_type
 
     def get_real_child_model(self, data):
         """Returns the child model by discriminator"""
-        if '@type' in data:
-            child_type = data.get('@type')
+        if "@type" in data:
+            child_type = data.get("@type")
             real_child_model = self.discriminator_value_class_map.get(child_type)
             return real_child_model
         return None
@@ -110,18 +114,20 @@ class BaseReasonerContent(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

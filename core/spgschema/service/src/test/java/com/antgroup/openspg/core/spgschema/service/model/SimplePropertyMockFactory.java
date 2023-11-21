@@ -21,20 +21,26 @@ import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.spgschema.service.predicate.model.SimpleProperty;
 
-
 public class SimplePropertyMockFactory {
 
-    public static SimpleProperty mock() {
-        BasicInfo<PredicateIdentifier> basicInfo = new BasicInfo<>(
-            new PredicateIdentifier("gender"), "性别", "desc gender");
+  public static SimpleProperty mock() {
+    BasicInfo<PredicateIdentifier> basicInfo =
+        new BasicInfo<>(new PredicateIdentifier("gender"), "性别", "desc gender");
 
-        PropertyAdvancedConfig advancedConfig = new PropertyAdvancedConfig();
-        advancedConfig.setConstraint(ConstraintMockFactory.mockGenderEnumConstraint());
+    PropertyAdvancedConfig advancedConfig = new PropertyAdvancedConfig();
+    advancedConfig.setConstraint(ConstraintMockFactory.mockGenderEnumConstraint());
 
-        return new SimpleProperty(
-            basicInfo, new OntologyId(6L), new OntologyId(1L),
-            SPGTypeEnum.BASIC_TYPE, null, null,
-            null, null, null, null,
-            SPGOntologyEnum.PROPERTY);
-    }
+    return new SimpleProperty(
+        basicInfo,
+        new OntologyId(6L),
+        new OntologyId(1L),
+        SPGTypeEnum.BASIC_TYPE,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        SPGOntologyEnum.PROPERTY);
+  }
 }

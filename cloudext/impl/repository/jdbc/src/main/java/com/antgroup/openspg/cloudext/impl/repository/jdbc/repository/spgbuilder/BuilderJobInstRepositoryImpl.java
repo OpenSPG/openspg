@@ -23,85 +23,80 @@ import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInst;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderStatusWithProgress;
 import com.antgroup.openspg.core.spgbuilder.service.repo.BuilderJobInstRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class BuilderJobInstRepositoryImpl implements BuilderJobInstRepository {
 
-    @Autowired
-    private SPGJobInstDOMapper spgJobInstDOMapper;
+  @Autowired private SPGJobInstDOMapper spgJobInstDOMapper;
 
-    @Override
-    public Long save(BuilderJobInst jobInst) {
-        SPGJobInstDOWithBLOBs jobInstDO = BuilderJobInstConvertor.toDO(jobInst);
-        spgJobInstDOMapper.insert(jobInstDO);
-        return jobInstDO.getId();
+  @Override
+  public Long save(BuilderJobInst jobInst) {
+    SPGJobInstDOWithBLOBs jobInstDO = BuilderJobInstConvertor.toDO(jobInst);
+    spgJobInstDOMapper.insert(jobInstDO);
+    return jobInstDO.getId();
+  }
+
+  @Override
+  public int updateExternalJobId(Long builderJobInstId, String externalJobInstId) {
+    SPGJobInstDOExample example = new SPGJobInstDOExample();
+    example.createCriteria().andIdEqualTo(builderJobInstId);
+
+    SPGJobInstDOWithBLOBs jobInstDO = new SPGJobInstDOWithBLOBs();
+    jobInstDO.setExternalJobInstId(externalJobInstId);
+    return spgJobInstDOMapper.updateByExampleSelective(jobInstDO, example);
+  }
+
+  @Override
+  public List<BuilderJobInst> query(BuilderJobInstQuery query) {
+    SPGJobInstDOExample example = new SPGJobInstDOExample();
+    SPGJobInstDOExample.Criteria criteria = example.createCriteria();
+    if (query.getBuildingJobInstId() != null) {
+      criteria.andIdEqualTo(query.getBuildingJobInstId());
+    }
+    if (query.getExternalJobInstId() != null) {
+      criteria.andExternalJobInstIdEqualTo(query.getExternalJobInstId());
     }
 
-    @Override
-    public int updateExternalJobId(Long builderJobInstId, String externalJobInstId) {
-        SPGJobInstDOExample example = new SPGJobInstDOExample();
-        example.createCriteria().andIdEqualTo(builderJobInstId);
+    List<SPGJobInstDOWithBLOBs> spgJobInstDOS =
+        spgJobInstDOMapper.selectByExampleWithBLOBs(example);
+    return CollectionsUtils.listMap(spgJobInstDOS, BuilderJobInstConvertor::toModel);
+  }
 
-        SPGJobInstDOWithBLOBs jobInstDO = new SPGJobInstDOWithBLOBs();
-        jobInstDO.setExternalJobInstId(externalJobInstId);
-        return spgJobInstDOMapper.updateByExampleSelective(jobInstDO, example);
-    }
+  @Override
+  public int start(Long jobInstId, BuilderStatusWithProgress progress) {
+    return updateStatus(jobInstId, progress, x -> x.setStartTime(new Date()));
+  }
 
-    @Override
-    public List<BuilderJobInst> query(BuilderJobInstQuery query) {
-        SPGJobInstDOExample example = new SPGJobInstDOExample();
-        SPGJobInstDOExample.Criteria criteria = example.createCriteria();
-        if (query.getBuildingJobInstId() != null) {
-            criteria.andIdEqualTo(query.getBuildingJobInstId());
-        }
-        if (query.getExternalJobInstId() != null) {
-            criteria.andExternalJobInstIdEqualTo(query.getExternalJobInstId());
-        }
+  @Override
+  public int running(Long jobInstId, BuilderStatusWithProgress progress) {
+    return updateStatus(jobInstId, progress, x -> {});
+  }
 
-        List<SPGJobInstDOWithBLOBs> spgJobInstDOS = spgJobInstDOMapper.selectByExampleWithBLOBs(example);
-        return CollectionsUtils.listMap(spgJobInstDOS, BuilderJobInstConvertor::toModel);
-    }
+  @Override
+  public int finish(Long jobInstId, BuilderStatusWithProgress progress) {
+    return updateStatus(jobInstId, progress, x -> x.setEndTime(new Date()));
+  }
 
-    @Override
-    public int start(Long jobInstId, BuilderStatusWithProgress progress) {
-        return updateStatus(jobInstId, progress, x -> x.setStartTime(new Date()));
-    }
+  @Override
+  public int queue(Long jobInstId, BuilderStatusWithProgress progress) {
+    return updateStatus(jobInstId, progress, x -> {});
+  }
 
-    @Override
-    public int running(Long jobInstId, BuilderStatusWithProgress progress) {
-        return updateStatus(jobInstId, progress, x -> {
-        });
-    }
+  private int updateStatus(
+      Long jobInstId, BuilderStatusWithProgress process, Consumer<SPGJobInstDOWithBLOBs> setter) {
+    SPGJobInstDOExample example = new SPGJobInstDOExample();
+    example.createCriteria().andIdEqualTo(jobInstId);
 
-    @Override
-    public int finish(Long jobInstId, BuilderStatusWithProgress progress) {
-        return updateStatus(jobInstId, progress, x -> x.setEndTime(new Date()));
-    }
-
-    @Override
-    public int queue(Long jobInstId, BuilderStatusWithProgress progress) {
-        return updateStatus(jobInstId, progress, x -> {
-        });
-    }
-
-    private int updateStatus(Long jobInstId, BuilderStatusWithProgress process,
-        Consumer<SPGJobInstDOWithBLOBs> setter) {
-        SPGJobInstDOExample example = new SPGJobInstDOExample();
-        example.createCriteria().andIdEqualTo(jobInstId);
-
-        SPGJobInstDOWithBLOBs jobInstDO = new SPGJobInstDOWithBLOBs();
-        jobInstDO.setStatus(process.getStatus().name());
-        jobInstDO.setResult(JSON.serialize(process.getResult()));
-        jobInstDO.setProgress(JSON.serialize(process.getProgress()));
-        setter.accept(jobInstDO);
-        return spgJobInstDOMapper.updateByExampleSelective(jobInstDO, example);
-    }
+    SPGJobInstDOWithBLOBs jobInstDO = new SPGJobInstDOWithBLOBs();
+    jobInstDO.setStatus(process.getStatus().name());
+    jobInstDO.setResult(JSON.serialize(process.getResult()));
+    jobInstDO.setProgress(JSON.serialize(process.getProgress()));
+    setter.accept(jobInstDO);
+    return spgJobInstDOMapper.updateByExampleSelective(jobInstDO, example);
+  }
 }

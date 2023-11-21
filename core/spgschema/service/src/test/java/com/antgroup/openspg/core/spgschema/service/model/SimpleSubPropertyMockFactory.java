@@ -18,16 +18,13 @@ import com.antgroup.openspg.core.spgschema.model.OntologyId;
 import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.spgschema.service.predicate.model.SimpleSubProperty;
 
-
 public class SimpleSubPropertyMockFactory {
 
-    public static SimpleSubProperty mock() {
-        BasicInfo<PredicateIdentifier> basicInfo = new BasicInfo<>(
-            new PredicateIdentifier("confi"), "置信度", "置信度");
+  public static SimpleSubProperty mock() {
+    BasicInfo<PredicateIdentifier> basicInfo =
+        new BasicInfo<>(new PredicateIdentifier("confi"), "置信度", "置信度");
 
-        return new SimpleSubProperty(
-            basicInfo, new OntologyId(100L), new OntologyId(1L),
-            null, null, null,
-            false);
-    }
+    return new SimpleSubProperty(
+        basicInfo, new OntologyId(100L), new OntologyId(1L), null, null, null, false);
+  }
 }

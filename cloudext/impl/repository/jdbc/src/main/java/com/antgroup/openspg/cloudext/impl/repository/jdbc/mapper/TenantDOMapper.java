@@ -19,25 +19,26 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface TenantDOMapper {
-    long countByExample(TenantDOExample example);
+  long countByExample(TenantDOExample example);
 
-    int deleteByExample(TenantDOExample example);
+  int deleteByExample(TenantDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(TenantDO record);
+  int insert(TenantDO record);
 
-    int insertSelective(TenantDO record);
+  int insertSelective(TenantDO record);
 
-    List<TenantDO> selectByExample(TenantDOExample example);
+  List<TenantDO> selectByExample(TenantDOExample example);
 
-    TenantDO selectByPrimaryKey(Long id);
+  TenantDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") TenantDO record, @Param("example") TenantDOExample example);
+  int updateByExampleSelective(
+      @Param("record") TenantDO record, @Param("example") TenantDOExample example);
 
-    int updateByExample(@Param("record") TenantDO record, @Param("example") TenantDOExample example);
+  int updateByExample(@Param("record") TenantDO record, @Param("example") TenantDOExample example);
 
-    int updateByPrimaryKeySelective(TenantDO record);
+  int updateByPrimaryKeySelective(TenantDO record);
 
-    int updateByPrimaryKey(TenantDO record);
+  int updateByPrimaryKey(TenantDO record);
 }

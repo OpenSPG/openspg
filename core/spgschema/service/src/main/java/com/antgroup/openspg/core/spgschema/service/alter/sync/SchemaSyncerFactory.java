@@ -15,18 +15,16 @@ package com.antgroup.openspg.core.spgschema.service.alter.sync;
 
 import java.util.Map;
 
-/**
- * The factory of schema writer.
- */
+/** The factory of schema writer. */
 public class SchemaSyncerFactory {
 
-    private Map<SchemaStorageEnum, BaseSchemaSyncer> schemaSyncerMap;
+  private Map<SchemaStorageEnum, BaseSchemaSyncer> schemaSyncerMap;
 
-    public BaseSchemaSyncer getSchemaSyncer(SchemaStorageEnum schemaStorage) {
-        return schemaSyncerMap.get(schemaStorage);
-    }
+  public BaseSchemaSyncer getSchemaSyncer(SchemaStorageEnum schemaStorage) {
+    return schemaSyncerMap.get(schemaStorage);
+  }
 
-    public void setSchemaSyncerMap(Map<SchemaStorageEnum, BaseSchemaSyncer> schemaSyncerMap) {
-        this.schemaSyncerMap = schemaSyncerMap;
-    }
+  public void setSchemaSyncerMap(Map<SchemaStorageEnum, BaseSchemaSyncer> schemaSyncerMap) {
+    this.schemaSyncerMap = schemaSyncerMap;
+  }
 }

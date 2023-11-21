@@ -17,14 +17,10 @@ package com.antgroup.openspg.core.spgbuilder.model.pipeline.enums;
  * The mapping types of mapping nodes are mainly divided into SPG mapping and relationship mapping.
  */
 public enum MappingTypeEnum {
-    /**
-     * The type of Spg mapping, include entity, concept, standard type, event and basic type.
-     */
-    SPG_TYPE,
+  /** The type of Spg mapping, include entity, concept, standard type, event and basic type. */
+  SPG_TYPE,
 
-    /**
-     * The type of relationship mapping.
-     */
-    RELATION,
-    ;
+  /** The type of relationship mapping. */
+  RELATION,
+  ;
 }

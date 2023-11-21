@@ -14,58 +14,51 @@
 package com.antgroup.openspg.core.spgschema.model.type;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
 import java.util.Objects;
 
-/**
- * Value object of operator key, include a name and a version.
- */
+/** Value object of operator key, include a name and a version. */
 public class OperatorKey extends BaseValObj {
 
-    private static final long serialVersionUID = -7062235408406879995L;
+  private static final long serialVersionUID = -7062235408406879995L;
 
-    /**
-     * Operator name.
-     */
-    private final String name;
+  /** Operator name. */
+  private final String name;
 
-    /**
-     * Operator version.
-     */
-    private final Integer version;
+  /** Operator version. */
+  private final Integer version;
 
-    public OperatorKey(String name, Integer version) {
-        this.name = name;
-        this.version = version;
+  public OperatorKey(String name, Integer version) {
+    this.name = name;
+    this.version = version;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Integer getVersion() {
+    return version;
+  }
+
+  @Override
+  public String toString() {
+    return String.format("%s_%s", name, version);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public String getName() {
-        return name;
+    if (o == null || getClass() != o.getClass()) {
+      return false;
     }
+    OperatorKey that = (OperatorKey) o;
+    return Objects.equals(name, that.name) && Objects.equals(version, that.version);
+  }
 
-    public Integer getVersion() {
-        return version;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s_%s", name, version);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        OperatorKey that = (OperatorKey) o;
-        return Objects.equals(name, that.name) && Objects.equals(version, that.version);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, version);
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, version);
+  }
 }

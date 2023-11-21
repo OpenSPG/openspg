@@ -22,45 +22,36 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobI
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
 import com.antgroup.openspg.common.model.datasource.connection.JobSchedulerConnectionInfo;
 import com.antgroup.openspg.common.service.spring.SpringContextHolder;
-
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
-
 public class LocalJobSchedulerClient implements JobSchedulerClient {
 
-    @Getter
-    private final JobSchedulerConnectionInfo connInfo;
-    @Getter
-    private final List<SchedulerCallback> schedulerCallbacks;
+  @Getter private final JobSchedulerConnectionInfo connInfo;
+  @Getter private final List<SchedulerCallback> schedulerCallbacks;
 
-    @Setter
-    private SchedulerJobInfoService jobInfoService;
-    @Setter
-    private SchedulerJobInstService jobInstService;
+  @Setter private SchedulerJobInfoService jobInfoService;
+  @Setter private SchedulerJobInstService jobInstService;
 
-    public LocalJobSchedulerClient(JobSchedulerConnectionInfo connInfo) {
-        this.connInfo = connInfo;
-        jobInfoService = SpringContextHolder.getBean(SchedulerJobInfoService.class);
-        jobInstService = SpringContextHolder.getBean(SchedulerJobInstService.class);
-        schedulerCallbacks = SpringContextHolder.getBeans(SchedulerCallback.class);
-        new JobExecuteScheduler(jobInstService, schedulerCallbacks).init();
-    }
+  public LocalJobSchedulerClient(JobSchedulerConnectionInfo connInfo) {
+    this.connInfo = connInfo;
+    jobInfoService = SpringContextHolder.getBean(SchedulerJobInfoService.class);
+    jobInstService = SpringContextHolder.getBean(SchedulerJobInstService.class);
+    schedulerCallbacks = SpringContextHolder.getBeans(SchedulerCallback.class);
+    new JobExecuteScheduler(jobInstService, schedulerCallbacks).init();
+  }
 
-    @Override
-    public String createJobInfo(SchedulerJobInfo jobInfo) {
-        return jobInfoService.create(jobInfo);
-    }
+  @Override
+  public String createJobInfo(SchedulerJobInfo jobInfo) {
+    return jobInfoService.create(jobInfo);
+  }
 
-    @Override
-    public String createJobInst(SchedulerJobInst jobInst) {
-        return jobInstService.create(jobInst);
-    }
+  @Override
+  public String createJobInst(SchedulerJobInst jobInst) {
+    return jobInstService.create(jobInst);
+  }
 
-    @Override
-    public void close() throws Exception {
-
-    }
+  @Override
+  public void close() throws Exception {}
 }

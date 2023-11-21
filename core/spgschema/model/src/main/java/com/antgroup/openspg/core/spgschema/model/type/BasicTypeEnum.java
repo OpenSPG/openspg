@@ -14,57 +14,44 @@
 package com.antgroup.openspg.core.spgschema.model.type;
 
 import com.google.common.collect.Lists;
-
 import java.util.List;
 
-/**
- * The enumeration of basic types, including text, integer, and float.
- */
+/** The enumeration of basic types, including text, integer, and float. */
 public enum BasicTypeEnum {
 
-    /**
-     * String literal
-     */
-    TEXT("Text", Lists.newArrayList("TEXT", "STRING")),
+  /** String literal */
+  TEXT("Text", Lists.newArrayList("TEXT", "STRING")),
 
-    /**
-     * Integer number
-     */
-    LONG("Integer", Lists.newArrayList("LONG", "BIGINT", "INTEGER", "INT")),
+  /** Integer number */
+  LONG("Integer", Lists.newArrayList("LONG", "BIGINT", "INTEGER", "INT")),
 
-    /**
-     * Float number
-     */
-    DOUBLE("Float", Lists.newArrayList("DOUBLE", "FLOAT")),
-    ;
+  /** Float number */
+  DOUBLE("Float", Lists.newArrayList("DOUBLE", "FLOAT")),
+  ;
 
-    /**
-     * The corresponding SPG type identification.
-     */
-    private final String flag;
+  /** The corresponding SPG type identification. */
+  private final String flag;
 
-    /**
-     * The corresponding data type.
-     */
-    public final List<String> mappingTypes;
+  /** The corresponding data type. */
+  public final List<String> mappingTypes;
 
-    BasicTypeEnum(String flag, List<String> mappingTypes) {
-        this.flag = flag;
-        this.mappingTypes = mappingTypes;
-    }
+  BasicTypeEnum(String flag, List<String> mappingTypes) {
+    this.flag = flag;
+    this.mappingTypes = mappingTypes;
+  }
 
-    public static BasicTypeEnum from(String name) {
-        for (BasicTypeEnum basicTypeEnum : BasicTypeEnum.values()) {
-            for (String type : basicTypeEnum.mappingTypes) {
-                if (type.equalsIgnoreCase(name)) {
-                    return basicTypeEnum;
-                }
-            }
+  public static BasicTypeEnum from(String name) {
+    for (BasicTypeEnum basicTypeEnum : BasicTypeEnum.values()) {
+      for (String type : basicTypeEnum.mappingTypes) {
+        if (type.equalsIgnoreCase(name)) {
+          return basicTypeEnum;
         }
-        throw new IllegalArgumentException("illegal basicType=" + name);
+      }
     }
+    throw new IllegalArgumentException("illegal basicType=" + name);
+  }
 
-    public String getFlag() {
-        return flag;
-    }
+  public String getFlag() {
+    return flag;
+  }
 }

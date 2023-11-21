@@ -16,16 +16,16 @@ package com.antgroup.openspg.common.service.project;
 import com.antgroup.openspg.common.model.project.Project;
 
 /**
- * The domain interface of the project model provides management methods for adding, modifying, querying, and deleting
- * projects.
+ * The domain interface of the project model provides management methods for adding, modifying,
+ * querying, and deleting projects.
  */
 public interface ProjectService {
 
-    /**
-     * Query project information based on project ID.
-     *
-     * @param projectId the unique id of project
-     * @return project information
-     */
-    Project queryById(Long projectId);
+  /**
+   * Query project information based on project ID.
+   *
+   * @param projectId the unique id of project
+   * @return project information
+   */
+  Project queryById(Long projectId);
 }

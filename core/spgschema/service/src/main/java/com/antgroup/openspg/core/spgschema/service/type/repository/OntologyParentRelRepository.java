@@ -14,44 +14,43 @@
 package com.antgroup.openspg.core.spgschema.service.type.repository;
 
 import com.antgroup.openspg.core.spgschema.model.type.ParentTypeInfo;
-
 import java.util.List;
 
 /**
- * The read-write interface for the inheritance relationship between spg type and parent type, provides methods for
- * adding, deleting, and querying spg type inheritance management.
+ * The read-write interface for the inheritance relationship between spg type and parent type,
+ * provides methods for adding, deleting, and querying spg type inheritance management.
  */
 public interface OntologyParentRelRepository {
 
-    /**
-     * Save inheritance relationship of a spg type into database
-     *
-     * @param inheritInfo inheritance relationship
-     * @return record count
-     */
-    int save(ParentTypeInfo inheritInfo);
+  /**
+   * Save inheritance relationship of a spg type into database
+   *
+   * @param inheritInfo inheritance relationship
+   * @return record count
+   */
+  int save(ParentTypeInfo inheritInfo);
 
-    /**
-     * Delete inheritance relationship of a spg type in database
-     *
-     * @param uniqueId unique id of a spg type
-     * @return record count
-     */
-    int delete(Long uniqueId);
+  /**
+   * Delete inheritance relationship of a spg type in database
+   *
+   * @param uniqueId unique id of a spg type
+   * @return record count
+   */
+  int delete(Long uniqueId);
 
-    /**
-     * Query inheritance relationship of a spg type
-     *
-     * @param uniqueId unique id of a spg type
-     * @return inheritance relationship
-     */
-    ParentTypeInfo query(Long uniqueId);
+  /**
+   * Query inheritance relationship of a spg type
+   *
+   * @param uniqueId unique id of a spg type
+   * @return inheritance relationship
+   */
+  ParentTypeInfo query(Long uniqueId);
 
-    /**
-     * Batch query inheritance relationship of spg types
-     *
-     * @param uniqueIds list of unique id
-     * @return list of inheritance relationship
-     */
-    List<ParentTypeInfo> query(List<Long> uniqueIds);
+  /**
+   * Batch query inheritance relationship of spg types
+   *
+   * @param uniqueIds list of unique id
+   * @return list of inheritance relationship
+   */
+  List<ParentTypeInfo> query(List<Long> uniqueIds);
 }

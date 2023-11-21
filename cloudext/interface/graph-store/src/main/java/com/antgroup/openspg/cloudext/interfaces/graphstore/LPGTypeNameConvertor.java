@@ -16,16 +16,16 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
 
 /**
- * {@link LPGTypeNameConvertor} provides interfaces to convert type names of vertex and edge into the type names which
- * store in <tt>LPGEngine</tt>.
+ * {@link LPGTypeNameConvertor} provides interfaces to convert type names of vertex and edge into
+ * the type names which store in <tt>LPGEngine</tt>.
  */
 public interface LPGTypeNameConvertor {
 
-    String convertVertexTypeName(String vertexTypeName);
+  String convertVertexTypeName(String vertexTypeName);
 
-    String convertEdgeTypeName(EdgeTypeName edgeTypeName);
+  String convertEdgeTypeName(EdgeTypeName edgeTypeName);
 
-    String restoreVertexTypeName(String vertexTypeNameInStore);
+  String restoreVertexTypeName(String vertexTypeNameInStore);
 
-    EdgeTypeName restoreEdgeTypeName(String edgeTypeNameInStore);
+  EdgeTypeName restoreEdgeTypeName(String edgeTypeNameInStore);
 }

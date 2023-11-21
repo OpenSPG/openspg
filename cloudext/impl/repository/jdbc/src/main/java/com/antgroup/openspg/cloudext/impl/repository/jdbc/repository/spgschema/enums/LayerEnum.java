@@ -13,10 +13,8 @@
 
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums;
 
-
 public enum LayerEnum {
+  CORE,
 
-    CORE,
-
-    EXTENSION
+  EXTENSION
 }

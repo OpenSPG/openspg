@@ -19,7 +19,6 @@ import com.antgroup.openspg.api.http.server.BaseController;
 import com.antgroup.openspg.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.biz.common.SearchEngineManager;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,28 +27,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Tag(name = "SearchEngineController")
 @Controller
 @RequestMapping("/public/v1/searchEngine")
 public class SearchEngineController extends BaseController {
 
-    @Autowired
-    private SearchEngineManager searchEngineManager;
+  @Autowired private SearchEngineManager searchEngineManager;
 
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public ResponseEntity<Object> queryIndex(@RequestParam String spgType) {
-        return HttpBizTemplate.execute(new HttpBizCallback<SearchEngineIndexResponse>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/index", method = RequestMethod.GET)
+  public ResponseEntity<Object> queryIndex(@RequestParam String spgType) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<SearchEngineIndexResponse>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public SearchEngineIndexResponse action() {
-                SearchEngineIndexRequest request = new SearchEngineIndexRequest();
-                request.setSpgType(spgType);
-                return searchEngineManager.queryIndex(request);
-            }
+          @Override
+          public SearchEngineIndexResponse action() {
+            SearchEngineIndexRequest request = new SearchEngineIndexRequest();
+            request.setSpgType(spgType);
+            return searchEngineManager.queryIndex(request);
+          }
         });
-    }
+  }
 }

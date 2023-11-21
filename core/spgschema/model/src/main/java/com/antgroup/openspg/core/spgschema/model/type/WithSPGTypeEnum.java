@@ -13,69 +13,67 @@
 
 package com.antgroup.openspg.core.spgschema.model.type;
 
-/**
- * An interface provides some methods to get and check type enumeration.
- */
+/** An interface provides some methods to get and check type enumeration. */
 public interface WithSPGTypeEnum {
 
-    /**
-     * Get enumeration of spg type.
-     *
-     * @return enumeration
-     */
-    SPGTypeEnum getSpgTypeEnum();
+  /**
+   * Get enumeration of spg type.
+   *
+   * @return enumeration
+   */
+  SPGTypeEnum getSpgTypeEnum();
 
-    /**
-     * If the type is an instance of AdvancedType.
-     *
-     * @return true/false
-     */
-    default boolean isAdvancedType() {
-        return !isBasicType();
-    }
+  /**
+   * If the type is an instance of AdvancedType.
+   *
+   * @return true/false
+   */
+  default boolean isAdvancedType() {
+    return !isBasicType();
+  }
 
-    /**
-     * If the type is an instance of  BasicType.
-     *
-     * @return true/false
-     */
-    default boolean isBasicType() {
-        return SPGTypeEnum.BASIC_TYPE.equals(getSpgTypeEnum());
-    }
+  /**
+   * If the type is an instance of BasicType.
+   *
+   * @return true/false
+   */
+  default boolean isBasicType() {
+    return SPGTypeEnum.BASIC_TYPE.equals(getSpgTypeEnum());
+  }
 
-    /**
-     * If the type is an instance of EntityType.
-     *
-     * @return true/false
-     */
-    default boolean isEntityType() {
-        return SPGTypeEnum.ENTITY_TYPE.equals(getSpgTypeEnum());
-    }
+  /**
+   * If the type is an instance of EntityType.
+   *
+   * @return true/false
+   */
+  default boolean isEntityType() {
+    return SPGTypeEnum.ENTITY_TYPE.equals(getSpgTypeEnum());
+  }
 
-    /**
-     * If the type is an instance of ConceptType.
-     *
-     * @return true/false
-     */
-    default boolean isConceptType() {
-        return SPGTypeEnum.CONCEPT_TYPE.equals(getSpgTypeEnum());
-    }
+  /**
+   * If the type is an instance of ConceptType.
+   *
+   * @return true/false
+   */
+  default boolean isConceptType() {
+    return SPGTypeEnum.CONCEPT_TYPE.equals(getSpgTypeEnum());
+  }
 
-    /**
-     * If the type is an instance of EventType.
-     *
-     * @return true/false
-     */
-    default boolean isEventType() {
-        return SPGTypeEnum.EVENT_TYPE.equals(getSpgTypeEnum());
-    }
+  /**
+   * If the type is an instance of EventType.
+   *
+   * @return true/false
+   */
+  default boolean isEventType() {
+    return SPGTypeEnum.EVENT_TYPE.equals(getSpgTypeEnum());
+  }
 
-    /**
-     * If the type is an instance of StandardType.
-     *
-     * @return true/false
-     */
-    default boolean isStandardType() {
-        return SPGTypeEnum.STANDARD_TYPE.equals(getSpgTypeEnum());
-    }
+  /**
+   * If the type is an instance of StandardType.
+   *
+   * @return true/false
+   */
+  default boolean isStandardType() {
+    return SPGTypeEnum.STANDARD_TYPE.equals(getSpgTypeEnum());
+  }
 }

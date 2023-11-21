@@ -16,13 +16,11 @@ package com.antgroup.openspg.biz.common;
 import com.antgroup.openspg.api.facade.dto.common.request.TenantCreateRequest;
 import com.antgroup.openspg.api.facade.dto.common.request.TenantQueryRequest;
 import com.antgroup.openspg.common.model.tenant.Tenant;
-
 import java.util.List;
-
 
 public interface TenantManager {
 
-    Tenant save(TenantCreateRequest request);
+  Tenant save(TenantCreateRequest request);
 
-    List<Tenant> query(TenantQueryRequest request);
+  List<Tenant> query(TenantQueryRequest request);
 }

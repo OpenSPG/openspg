@@ -18,20 +18,19 @@ import com.antgroup.openspg.cloudext.interfaces.objectstore.ObjectStoreClientDri
 import com.antgroup.openspg.cloudext.interfaces.objectstore.ObjectStoreClientDriverManager;
 import com.antgroup.openspg.common.model.datasource.connection.ObjectStoreConnectionInfo;
 
-
 public class LocalObjectStoreClientDriver implements ObjectStoreClientDriver {
 
-    static {
-        ObjectStoreClientDriverManager.registerDriver(new LocalObjectStoreClientDriver());
-    }
+  static {
+    ObjectStoreClientDriverManager.registerDriver(new LocalObjectStoreClientDriver());
+  }
 
-    @Override
-    public String driverScheme() {
-        return "local";
-    }
+  @Override
+  public String driverScheme() {
+    return "local";
+  }
 
-    @Override
-    public ObjectStoreClient connect(ObjectStoreConnectionInfo connInfo) {
-        return new LocalObjectStoreClient(connInfo);
-    }
+  @Override
+  public ObjectStoreClient connect(ObjectStoreConnectionInfo connInfo) {
+    return new LocalObjectStoreClient(connInfo);
+  }
 }

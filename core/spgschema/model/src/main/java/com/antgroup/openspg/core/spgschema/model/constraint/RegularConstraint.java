@@ -16,39 +16,38 @@ package com.antgroup.openspg.core.spgschema.model.constraint;
 import java.util.regex.Pattern;
 
 /**
- * Regular expression constraints are applicable to text-type property with a certain format, such as mobile phone
- * number, email address, etc. Users can define regular expressions, and the property value must match the regular
- * expression to be considered valid.
+ * Regular expression constraints are applicable to text-type property with a certain format, such
+ * as mobile phone number, email address, etc. Users can define regular expressions, and the
+ * property value must match the regular expression to be considered valid.
  */
 public class RegularConstraint extends BaseConstraintItem {
 
-    private static final long serialVersionUID = -2333649026241875412L;
+  private static final long serialVersionUID = -2333649026241875412L;
 
-    /**
-     * regular pattern
-     */
-    private final String regularPattern;
-    private final Pattern pattern;
+  /** regular pattern */
+  private final String regularPattern;
 
-    public RegularConstraint(String regularPattern) {
-        this.regularPattern = regularPattern;
-        this.pattern = Pattern.compile(regularPattern);
+  private final Pattern pattern;
+
+  public RegularConstraint(String regularPattern) {
+    this.regularPattern = regularPattern;
+    this.pattern = Pattern.compile(regularPattern);
+  }
+
+  public String getRegularPattern() {
+    return regularPattern;
+  }
+
+  @Override
+  public ConstraintTypeEnum getConstraintTypeEnum() {
+    return ConstraintTypeEnum.REGULAR;
+  }
+
+  @Override
+  public boolean checkIsLegal(Object value) {
+    if (value == null) {
+      return true;
     }
-
-    public String getRegularPattern() {
-        return regularPattern;
-    }
-
-    @Override
-    public ConstraintTypeEnum getConstraintTypeEnum() {
-        return ConstraintTypeEnum.REGULAR;
-    }
-
-    @Override
-    public boolean checkIsLegal(Object value) {
-        if (value == null) {
-            return true;
-        }
-        return pattern.matcher(value.toString()).matches();
-    }
+    return pattern.matcher(value.toString()).matches();
+  }
 }

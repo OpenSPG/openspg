@@ -21,92 +21,76 @@ import com.antgroup.openspg.core.spgschema.model.predicate.EncryptTypeEnum;
 import com.antgroup.openspg.core.spgschema.model.type.MultiVersionConfig;
 
 /**
- * Domain model of simple sub property, contains the unique id of spo triple, corresponding to the DO object in the
- * database.
+ * Domain model of simple sub property, contains the unique id of spo triple, corresponding to the
+ * DO object in the database.
  */
 public class SimpleSubProperty extends BaseSpoTriple {
 
-    private static final long serialVersionUID = -3094375554984263917L;
+  private static final long serialVersionUID = -3094375554984263917L;
 
-    /**
-     * Basic information, such as name, nameZh, desc.
-     */
-    private final BasicInfo<PredicateIdentifier> basicInfo;
+  /** Basic information, such as name, nameZh, desc. */
+  private final BasicInfo<PredicateIdentifier> basicInfo;
 
-    /**
-     * Unique id of property or relation type.
-     */
-    private final OntologyId subjectId;
+  /** Unique id of property or relation type. */
+  private final OntologyId subjectId;
 
-    /**
-     * Unique id of object type.
-     */
-    private final OntologyId objectId;
+  /** Unique id of object type. */
+  private final OntologyId objectId;
 
-    /**
-     * The config of multi version
-     */
-    private final MultiVersionConfig multiVersionConfig;
+  /** The config of multi version */
+  private final MultiVersionConfig multiVersionConfig;
 
-    /**
-     * The encrypt type.
-     */
-    private final EncryptTypeEnum encryptTypeEnum;
+  /** The encrypt type. */
+  private final EncryptTypeEnum encryptTypeEnum;
 
-    /**
-     * The id of constraint defined on property.
-     */
-    private final Long constraintId;
+  /** The id of constraint defined on property. */
+  private final Long constraintId;
 
-    /**
-     * If the sub property is defined on relation type
-     */
-    private final boolean fromRelation;
+  /** If the sub property is defined on relation type */
+  private final boolean fromRelation;
 
-    public SimpleSubProperty(
-        BasicInfo<PredicateIdentifier> basicInfo,
-        OntologyId subjectId,
-        OntologyId objectId,
-        MultiVersionConfig multiVersionConfig,
-        EncryptTypeEnum encryptTypeEnum,
-        Long constraintId,
-        boolean fromRelation) {
-        this.basicInfo = basicInfo;
-        this.subjectId = subjectId;
-        this.objectId = objectId;
-        this.multiVersionConfig = multiVersionConfig;
-        this.encryptTypeEnum = encryptTypeEnum;
-        this.constraintId = constraintId;
-        this.fromRelation = fromRelation;
-    }
+  public SimpleSubProperty(
+      BasicInfo<PredicateIdentifier> basicInfo,
+      OntologyId subjectId,
+      OntologyId objectId,
+      MultiVersionConfig multiVersionConfig,
+      EncryptTypeEnum encryptTypeEnum,
+      Long constraintId,
+      boolean fromRelation) {
+    this.basicInfo = basicInfo;
+    this.subjectId = subjectId;
+    this.objectId = objectId;
+    this.multiVersionConfig = multiVersionConfig;
+    this.encryptTypeEnum = encryptTypeEnum;
+    this.constraintId = constraintId;
+    this.fromRelation = fromRelation;
+  }
 
-    public BasicInfo<PredicateIdentifier> getBasicInfo() {
-        return basicInfo;
-    }
+  public BasicInfo<PredicateIdentifier> getBasicInfo() {
+    return basicInfo;
+  }
 
-    public OntologyId getSubjectId() {
-        return subjectId;
-    }
+  public OntologyId getSubjectId() {
+    return subjectId;
+  }
 
-    public OntologyId getObjectId() {
-        return objectId;
-    }
+  public OntologyId getObjectId() {
+    return objectId;
+  }
 
-    public MultiVersionConfig getMultiVersionConfig() {
-        return multiVersionConfig;
-    }
+  public MultiVersionConfig getMultiVersionConfig() {
+    return multiVersionConfig;
+  }
 
-    public EncryptTypeEnum getEncryptTypeEnum() {
-        return encryptTypeEnum;
-    }
+  public EncryptTypeEnum getEncryptTypeEnum() {
+    return encryptTypeEnum;
+  }
 
-    public Long getConstraintId() {
-        return constraintId;
-    }
+  public Long getConstraintId() {
+    return constraintId;
+  }
 
-    public boolean isFromRelation() {
-        return fromRelation;
-    }
+  public boolean isFromRelation() {
+    return fromRelation;
+  }
 }
-
-

@@ -17,61 +17,51 @@ import com.antgroup.openspg.common.model.base.BaseModel;
 
 public class DataSourceUsage extends BaseModel {
 
-    /**
-     * Data source name
-     */
-    private final String dataSourceName;
+  /** Data source name */
+  private final String dataSourceName;
 
-    /**
-     * Data source usage object ID
-     */
-    private final String mountObjectId;
+  /** Data source usage object ID */
+  private final String mountObjectId;
 
-    /**
-     * Data source usage object type
-     */
-    private final DataSourceMountObjectTypeEnum mountObjectType;
+  /** Data source usage object type */
+  private final DataSourceMountObjectTypeEnum mountObjectType;
 
-    /**
-     * Data source usage type
-     */
-    private final DataSourceUsageTypeEnum usageType;
+  /** Data source usage type */
+  private final DataSourceUsageTypeEnum usageType;
 
-    /**
-     * Whether it is the default resource for this usage scenario
-     */
-    private final boolean isDefault;
+  /** Whether it is the default resource for this usage scenario */
+  private final boolean isDefault;
 
-    public DataSourceUsage(
-        String dataSourceName,
-        String mountObjectId,
-        DataSourceMountObjectTypeEnum mountObjectType,
-        DataSourceUsageTypeEnum usageType,
-        boolean isDefault) {
-        this.dataSourceName = dataSourceName;
-        this.mountObjectId = mountObjectId;
-        this.mountObjectType = mountObjectType;
-        this.usageType = usageType;
-        this.isDefault = isDefault;
-    }
+  public DataSourceUsage(
+      String dataSourceName,
+      String mountObjectId,
+      DataSourceMountObjectTypeEnum mountObjectType,
+      DataSourceUsageTypeEnum usageType,
+      boolean isDefault) {
+    this.dataSourceName = dataSourceName;
+    this.mountObjectId = mountObjectId;
+    this.mountObjectType = mountObjectType;
+    this.usageType = usageType;
+    this.isDefault = isDefault;
+  }
 
-    public String getDataSourceName() {
-        return dataSourceName;
-    }
+  public String getDataSourceName() {
+    return dataSourceName;
+  }
 
-    public String getMountObjectId() {
-        return mountObjectId;
-    }
+  public String getMountObjectId() {
+    return mountObjectId;
+  }
 
-    public DataSourceMountObjectTypeEnum getMountObjectType() {
-        return mountObjectType;
-    }
+  public DataSourceMountObjectTypeEnum getMountObjectType() {
+    return mountObjectType;
+  }
 
-    public DataSourceUsageTypeEnum getUsageType() {
-        return usageType;
-    }
+  public DataSourceUsageTypeEnum getUsageType() {
+    return usageType;
+  }
 
-    public boolean isDefault() {
-        return isDefault;
-    }
+  public boolean isDefault() {
+    return isDefault;
+  }
 }

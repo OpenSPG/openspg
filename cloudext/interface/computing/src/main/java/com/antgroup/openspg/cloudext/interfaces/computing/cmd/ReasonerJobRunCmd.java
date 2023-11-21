@@ -16,20 +16,18 @@ package com.antgroup.openspg.cloudext.interfaces.computing.cmd;
 import com.antgroup.openspg.common.model.base.BaseCmd;
 import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.antgroup.openspg.core.spgreasoner.model.service.BaseReasonerContent;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 
 @Getter
 @AllArgsConstructor
 public class ReasonerJobRunCmd extends BaseCmd {
 
-    private final Long projectId;
+  private final Long projectId;
 
-    private final String schemaUrl;
+  private final String schemaUrl;
 
-    private final GraphStoreConnectionInfo connInfo;
+  private final GraphStoreConnectionInfo connInfo;
 
-    private final BaseReasonerContent content;
+  private final BaseReasonerContent content;
 }

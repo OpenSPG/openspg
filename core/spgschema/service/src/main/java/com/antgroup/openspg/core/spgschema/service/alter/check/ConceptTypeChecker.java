@@ -18,35 +18,31 @@ import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.type.BaseAdvancedType;
 import com.antgroup.openspg.core.spgschema.model.type.ConceptType;
 
-
 public class ConceptTypeChecker extends BaseSpgTypeChecker {
 
-    @Override
-    public void checkAdvancedConfig(BaseAdvancedType advancedType, SchemaCheckContext context) {
-        ConceptType conceptType = (ConceptType) advancedType;
-        String schemaTypeName = conceptType.getName();
+  @Override
+  public void checkAdvancedConfig(BaseAdvancedType advancedType, SchemaCheckContext context) {
+    ConceptType conceptType = (ConceptType) advancedType;
+    String schemaTypeName = conceptType.getName();
 
-        OperatorChecker.check(schemaTypeName, conceptType.getAdvancedConfig().getNormalizedOperator());
-        OperatorChecker.check(schemaTypeName, conceptType.getAdvancedConfig().getFuseOperator());
+    OperatorChecker.check(schemaTypeName, conceptType.getAdvancedConfig().getNormalizedOperator());
+    OperatorChecker.check(schemaTypeName, conceptType.getAdvancedConfig().getFuseOperator());
 
-        if (null == conceptType.getConceptLayerConfig()) {
-            throw new IllegalArgumentException(String.format(
-                "conceptLayerConfig of %s is null", schemaTypeName)
-            );
-        }
-        if (StringUtils.isBlank(conceptType.getConceptLayerConfig().getHypernymPredicate())) {
-            throw new IllegalArgumentException(String.format(
-                "hypernymPredicate of %s is blank", schemaTypeName)
-            );
-        }
-        if (null != conceptType.getConceptTaxonomicConfig()) {
-            SPGTypeIdentifier taxonomicTypeIdentifier = conceptType.getConceptTaxonomicConfig()
-                .getTaxonomicTypeIdentifier();
-            if (taxonomicTypeIdentifier != null && !context.containSpgType(taxonomicTypeIdentifier)) {
-                throw new IllegalArgumentException(String.format(
-                    "taxonomic type: %s not exists", taxonomicTypeIdentifier)
-                );
-            }
-        }
+    if (null == conceptType.getConceptLayerConfig()) {
+      throw new IllegalArgumentException(
+          String.format("conceptLayerConfig of %s is null", schemaTypeName));
     }
+    if (StringUtils.isBlank(conceptType.getConceptLayerConfig().getHypernymPredicate())) {
+      throw new IllegalArgumentException(
+          String.format("hypernymPredicate of %s is blank", schemaTypeName));
+    }
+    if (null != conceptType.getConceptTaxonomicConfig()) {
+      SPGTypeIdentifier taxonomicTypeIdentifier =
+          conceptType.getConceptTaxonomicConfig().getTaxonomicTypeIdentifier();
+      if (taxonomicTypeIdentifier != null && !context.containSpgType(taxonomicTypeIdentifier)) {
+        throw new IllegalArgumentException(
+            String.format("taxonomic type: %s not exists", taxonomicTypeIdentifier));
+      }
+    }
+  }
 }

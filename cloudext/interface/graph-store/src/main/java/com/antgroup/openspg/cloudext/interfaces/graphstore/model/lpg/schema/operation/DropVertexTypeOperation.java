@@ -13,29 +13,25 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation;
 
+import java.util.Collections;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Collections;
-
 
 @Getter
 public class DropVertexTypeOperation extends BaseLPGSchemaOperation {
 
-    @Setter
-    private String vertexTypeName;
+  @Setter private String vertexTypeName;
 
-    public DropVertexTypeOperation(String vertexTypeName) {
-        super(VertexEdgeTypeOperationEnum.DROP_VERTEX_TYPE, Collections.EMPTY_LIST);
-        this.vertexTypeName = vertexTypeName;
-    }
+  public DropVertexTypeOperation(String vertexTypeName) {
+    super(VertexEdgeTypeOperationEnum.DROP_VERTEX_TYPE, Collections.EMPTY_LIST);
+    this.vertexTypeName = vertexTypeName;
+  }
 
-    @Override
-    public String getTargetTypeName() {
-        return this.vertexTypeName;
-    }
+  @Override
+  public String getTargetTypeName() {
+    return this.vertexTypeName;
+  }
 
-    @Override
-    public void checkSchemaAtomicOperations() {
-    }
+  @Override
+  public void checkSchemaAtomicOperations() {}
 }

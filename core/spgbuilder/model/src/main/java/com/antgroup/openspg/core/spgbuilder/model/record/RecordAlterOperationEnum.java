@@ -13,18 +13,10 @@
 
 package com.antgroup.openspg.core.spgbuilder.model.record;
 
-/**
- * <pp>
- * Provides alter operation type for data record.
- * </pp>
- */
+/** <pp> Provides alter operation type for data record. </pp> */
 public enum RecordAlterOperationEnum {
-    /**
-     * If existed then update it, else insert it.
-     */
-    UPSERT,
-    /**
-     * If existed then delete it.
-     */
-    DELETE,
+  /** If existed then update it, else insert it. */
+  UPSERT,
+  /** If existed then delete it. */
+  DELETE,
 }

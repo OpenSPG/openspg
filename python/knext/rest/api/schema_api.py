@@ -28,10 +28,7 @@ import re  # noqa: F401
 import six
 
 from knext.rest.api_client import ApiClient
-from knext.rest.exceptions import (  # noqa: F401
-    ApiTypeError,
-    ApiValueError
-)
+from knext.rest.exceptions import ApiTypeError, ApiValueError  # noqa: F401
 
 
 class SchemaApi(object):
@@ -67,7 +64,7 @@ class SchemaApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.schema_alter_schema_post_with_http_info(**kwargs)  # noqa: E501
 
     def schema_alter_schema_post_with_http_info(self, **kwargs):  # noqa: E501
@@ -96,26 +93,24 @@ class SchemaApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'schema_alter_request'
-        ]
+        all_params = ["schema_alter_request"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method schema_alter_schema_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -129,34 +124,42 @@ class SchemaApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'schema_alter_request' in local_var_params:
-            body_params = local_var_params['schema_alter_request']
+        if "schema_alter_request" in local_var_params:
+            body_params = local_var_params["schema_alter_request"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/schema/alterSchema', 'POST',
+            "/schema/alterSchema",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='object',  # noqa: E501
+            response_type="object",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def schema_query_project_schema_get(self, project_id, **kwargs):  # noqa: E501
         """query_project_schema  # noqa: E501
@@ -179,10 +182,14 @@ class SchemaApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.schema_query_project_schema_get_with_http_info(project_id, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.schema_query_project_schema_get_with_http_info(
+            project_id, **kwargs
+        )  # noqa: E501
 
-    def schema_query_project_schema_get_with_http_info(self, project_id, **kwargs):  # noqa: E501
+    def schema_query_project_schema_get_with_http_info(
+        self, project_id, **kwargs
+    ):  # noqa: E501
         """query_project_schema  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
@@ -208,39 +215,45 @@ class SchemaApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'project_id'
-        ]
+        all_params = ["project_id"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method schema_query_project_schema_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'project_id' is set
-        if self.api_client.client_side_validation and ('project_id' not in local_var_params or  # noqa: E501
-                                                       local_var_params['project_id'] is None):  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "project_id" not in local_var_params
+            or local_var_params["project_id"] is None  # noqa: E501
+        ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `project_id` when calling `schema_query_project_schema_get`")  # noqa: E501
+                "Missing the required parameter `project_id` when calling `schema_query_project_schema_get`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'project_id' in local_var_params and local_var_params['project_id'] is not None:  # noqa: E501
-            query_params.append(('projectId', local_var_params['project_id']))  # noqa: E501
+        if (
+            "project_id" in local_var_params
+            and local_var_params["project_id"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("projectId", local_var_params["project_id"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -249,29 +262,36 @@ class SchemaApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/schema/queryProjectSchema', 'GET',
+            "/schema/queryProjectSchema",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='ProjectSchema',  # noqa: E501
+            response_type="ProjectSchema",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
-    def schema_query_relation_get(self, s_name, relation, o_name, **kwargs):  # noqa: E501
+    def schema_query_relation_get(
+        self, s_name, relation, o_name, **kwargs
+    ):  # noqa: E501
         """query_relation  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
@@ -294,10 +314,14 @@ class SchemaApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.schema_query_relation_get_with_http_info(s_name, relation, o_name, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.schema_query_relation_get_with_http_info(
+            s_name, relation, o_name, **kwargs
+        )  # noqa: E501
 
-    def schema_query_relation_get_with_http_info(self, s_name, relation, o_name, **kwargs):  # noqa: E501
+    def schema_query_relation_get_with_http_info(
+        self, s_name, relation, o_name, **kwargs
+    ):  # noqa: E501
         """query_relation  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
@@ -325,55 +349,68 @@ class SchemaApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            's_name',
-            'relation',
-            'o_name'
-        ]
+        all_params = ["s_name", "relation", "o_name"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method schema_query_relation_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 's_name' is set
-        if self.api_client.client_side_validation and ('s_name' not in local_var_params or  # noqa: E501
-                                                       local_var_params['s_name'] is None):  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "s_name" not in local_var_params
+            or local_var_params["s_name"] is None  # noqa: E501
+        ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `s_name` when calling `schema_query_relation_get`")  # noqa: E501
+                "Missing the required parameter `s_name` when calling `schema_query_relation_get`"
+            )  # noqa: E501
         # verify the required parameter 'relation' is set
-        if self.api_client.client_side_validation and ('relation' not in local_var_params or  # noqa: E501
-                                                       local_var_params['relation'] is None):  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "relation" not in local_var_params
+            or local_var_params["relation"] is None  # noqa: E501
+        ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `relation` when calling `schema_query_relation_get`")  # noqa: E501
+                "Missing the required parameter `relation` when calling `schema_query_relation_get`"
+            )  # noqa: E501
         # verify the required parameter 'o_name' is set
-        if self.api_client.client_side_validation and ('o_name' not in local_var_params or  # noqa: E501
-                                                       local_var_params['o_name'] is None):  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "o_name" not in local_var_params
+            or local_var_params["o_name"] is None  # noqa: E501
+        ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `o_name` when calling `schema_query_relation_get`")  # noqa: E501
+                "Missing the required parameter `o_name` when calling `schema_query_relation_get`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 's_name' in local_var_params and local_var_params['s_name'] is not None:  # noqa: E501
-            query_params.append(('sName', local_var_params['s_name']))  # noqa: E501
-        if 'relation' in local_var_params and local_var_params['relation'] is not None:  # noqa: E501
-            query_params.append(('relation', local_var_params['relation']))  # noqa: E501
-        if 'o_name' in local_var_params and local_var_params['o_name'] is not None:  # noqa: E501
-            query_params.append(('oName', local_var_params['o_name']))  # noqa: E501
+        if (
+            "s_name" in local_var_params and local_var_params["s_name"] is not None
+        ):  # noqa: E501
+            query_params.append(("sName", local_var_params["s_name"]))  # noqa: E501
+        if (
+            "relation" in local_var_params and local_var_params["relation"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("relation", local_var_params["relation"])
+            )  # noqa: E501
+        if (
+            "o_name" in local_var_params and local_var_params["o_name"] is not None
+        ):  # noqa: E501
+            query_params.append(("oName", local_var_params["o_name"]))  # noqa: E501
 
         header_params = {}
 
@@ -382,27 +419,32 @@ class SchemaApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/schema/queryRelation', 'GET',
+            "/schema/queryRelation",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='Relation',  # noqa: E501
+            response_type="Relation",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def schema_query_spg_type_get(self, name, **kwargs):  # noqa: E501
         """query_spg_type  # noqa: E501
@@ -425,8 +467,10 @@ class SchemaApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.schema_query_spg_type_get_with_http_info(name, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.schema_query_spg_type_get_with_http_info(
+            name, **kwargs
+        )  # noqa: E501
 
     def schema_query_spg_type_get_with_http_info(self, name, **kwargs):  # noqa: E501
         """query_spg_type  # noqa: E501
@@ -454,39 +498,42 @@ class SchemaApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'name'
-        ]
+        all_params = ["name"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method schema_query_spg_type_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
-                                                       local_var_params['name'] is None):  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `schema_query_spg_type_get`")  # noqa: E501
+                "Missing the required parameter `name` when calling `schema_query_spg_type_get`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'name' in local_var_params and local_var_params['name'] is not None:  # noqa: E501
-            query_params.append(('name', local_var_params['name']))  # noqa: E501
+        if (
+            "name" in local_var_params and local_var_params["name"] is not None
+        ):  # noqa: E501
+            query_params.append(("name", local_var_params["name"]))  # noqa: E501
 
         header_params = {}
 
@@ -495,24 +542,29 @@ class SchemaApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/schema/querySpgType', 'GET',
+            "/schema/querySpgType",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='BaseSpgType',  # noqa: E501
+            response_type="BaseSpgType",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )

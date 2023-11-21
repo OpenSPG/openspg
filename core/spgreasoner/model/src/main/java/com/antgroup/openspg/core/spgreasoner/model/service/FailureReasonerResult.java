@@ -13,16 +13,15 @@
 
 package com.antgroup.openspg.core.spgreasoner.model.service;
 
-
 public class FailureReasonerResult extends BaseReasonerResult {
 
-    private final String errorMsg;
+  private final String errorMsg;
 
-    public FailureReasonerResult(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
+  public FailureReasonerResult(String errorMsg) {
+    this.errorMsg = errorMsg;
+  }
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
+  public String getErrorMsg() {
+    return errorMsg;
+  }
 }

@@ -18,60 +18,53 @@ import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 
 /**
- * The taxonomic semantic between entity and concept. the predicate is fixed to be {@code SystemPredicate.BelongTo} and
- * the object is target concept. usually it contains a logical rule to express the taxonomic condition.
+ * The taxonomic semantic between entity and concept. the predicate is fixed to be {@code
+ * SystemPredicate.BelongTo} and the object is target concept. usually it contains a logical rule to
+ * express the taxonomic condition.
  */
 public class DynamicTaxonomySemantic extends BaseConceptSemantic {
 
-    private static final long serialVersionUID = 8151467193342790248L;
+  private static final long serialVersionUID = 8151467193342790248L;
 
-    /**
-     * Identifier of the taxonomy predicate, it's fixed to be belongTo.
-     */
-    private final PredicateIdentifier predicateIdentifier =
-        new PredicateIdentifier(SystemPredicateEnum.BELONG_TO.getName());
+  /** Identifier of the taxonomy predicate, it's fixed to be belongTo. */
+  private final PredicateIdentifier predicateIdentifier =
+      new PredicateIdentifier(SystemPredicateEnum.BELONG_TO.getName());
 
-    /**
-     * The unique name of the object concept type.
-     */
-    private final SPGTypeIdentifier conceptTypeIdentifier;
+  /** The unique name of the object concept type. */
+  private final SPGTypeIdentifier conceptTypeIdentifier;
 
-    /**
-     * The name of the concept.
-     */
-    private final ConceptIdentifier conceptIdentifier;
+  /** The name of the concept. */
+  private final ConceptIdentifier conceptIdentifier;
 
-    /**
-     * Details of the logic rule
-     */
-    private final LogicalRule logicalRule;
+  /** Details of the logic rule */
+  private final LogicalRule logicalRule;
 
-    public DynamicTaxonomySemantic(
-        SPGTypeIdentifier conceptTypeIdentifier,
-        ConceptIdentifier conceptIdentifier,
-        LogicalRule logicalRule) {
-        this.conceptTypeIdentifier = conceptTypeIdentifier;
-        this.conceptIdentifier = conceptIdentifier;
-        this.logicalRule = logicalRule;
-    }
+  public DynamicTaxonomySemantic(
+      SPGTypeIdentifier conceptTypeIdentifier,
+      ConceptIdentifier conceptIdentifier,
+      LogicalRule logicalRule) {
+    this.conceptTypeIdentifier = conceptTypeIdentifier;
+    this.conceptIdentifier = conceptIdentifier;
+    this.logicalRule = logicalRule;
+  }
 
-    public PredicateIdentifier getPredicateIdentifier() {
-        return predicateIdentifier;
-    }
+  public PredicateIdentifier getPredicateIdentifier() {
+    return predicateIdentifier;
+  }
 
-    public SPGTypeIdentifier getConceptTypeIdentifier() {
-        return conceptTypeIdentifier;
-    }
+  public SPGTypeIdentifier getConceptTypeIdentifier() {
+    return conceptTypeIdentifier;
+  }
 
-    public ConceptIdentifier getConceptIdentifier() {
-        return conceptIdentifier;
-    }
+  public ConceptIdentifier getConceptIdentifier() {
+    return conceptIdentifier;
+  }
 
-    public LogicalRule getLogicalRule() {
-        return logicalRule;
-    }
+  public LogicalRule getLogicalRule() {
+    return logicalRule;
+  }
 
-    public RuleCode getRuleCode() {
-        return logicalRule == null ? null : logicalRule.getCode();
-    }
+  public RuleCode getRuleCode() {
+    return logicalRule == null ? null : logicalRule.getCode();
+  }
 }

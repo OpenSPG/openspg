@@ -14,17 +14,15 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.LPGProperty;
-
 import lombok.Getter;
-
 
 @Getter
 public class AddPropertyOperation extends BaseSchemaAtomicOperation {
 
-    private LPGProperty property;
+  private LPGProperty property;
 
-    public AddPropertyOperation(LPGProperty property) {
-        super(SchemaAtomicOperationEnum.ADD_PROPERTY);
-        this.property = property;
-    }
+  public AddPropertyOperation(LPGProperty property) {
+    super(SchemaAtomicOperationEnum.ADD_PROPERTY);
+    this.property = property;
+  }
 }

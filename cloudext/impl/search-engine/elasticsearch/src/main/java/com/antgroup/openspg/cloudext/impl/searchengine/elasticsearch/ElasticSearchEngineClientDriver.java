@@ -19,20 +19,19 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientD
 import com.antgroup.openspg.cloudext.interfaces.searchengine.impl.DefaultIdxNameConvertor;
 import com.antgroup.openspg.common.model.datasource.connection.SearchEngineConnectionInfo;
 
-
 public class ElasticSearchEngineClientDriver implements SearchEngineClientDriver {
 
-    static {
-        SearchEngineClientDriverManager.registerDriver(new ElasticSearchEngineClientDriver());
-    }
+  static {
+    SearchEngineClientDriverManager.registerDriver(new ElasticSearchEngineClientDriver());
+  }
 
-    @Override
-    public String driverScheme() {
-        return "elasticsearch";
-    }
+  @Override
+  public String driverScheme() {
+    return "elasticsearch";
+  }
 
-    @Override
-    public SearchEngineClient connect(SearchEngineConnectionInfo connInfo) {
-        return new ElasticSearchEngineClient(connInfo, new DefaultIdxNameConvertor());
-    }
+  @Override
+  public SearchEngineClient connect(SearchEngineConnectionInfo connInfo) {
+    return new ElasticSearchEngineClient(connInfo, new DefaultIdxNameConvertor());
+  }
 }

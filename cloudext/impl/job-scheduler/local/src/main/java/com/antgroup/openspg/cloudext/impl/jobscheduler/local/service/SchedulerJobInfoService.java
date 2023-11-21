@@ -15,8 +15,7 @@ package com.antgroup.openspg.cloudext.impl.jobscheduler.local.service;
 
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInfo;
 
-
 public interface SchedulerJobInfoService {
 
-    String create(SchedulerJobInfo jobInfo);
+  String create(SchedulerJobInfo jobInfo);
 }

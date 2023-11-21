@@ -17,54 +17,53 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-
 public class ConnectionInfo implements Serializable {
 
-    private final String scheme;
-    private final String host;
-    private final String port;
+  private final String scheme;
+  private final String host;
+  private final String port;
 
-    private Integer connectTimeout;
-    private Integer readTimeout;
+  private Integer connectTimeout;
+  private Integer readTimeout;
 
-    public ConnectionInfo(String uriStr) {
-        try {
-            URI uri = new URI(uriStr);
-            scheme = uri.getScheme();
-            host = uri.getHost();
-            port = String.valueOf(uri.getPort());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+  public ConnectionInfo(String uriStr) {
+    try {
+      URI uri = new URI(uriStr);
+      scheme = uri.getScheme();
+      host = uri.getHost();
+      port = String.valueOf(uri.getPort());
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    public String getScheme() {
-        return scheme;
-    }
+  public String getScheme() {
+    return scheme;
+  }
 
-    public String getHost() {
-        return host;
-    }
+  public String getHost() {
+    return host;
+  }
 
-    public String getPort() {
-        return port;
-    }
+  public String getPort() {
+    return port;
+  }
 
-    public Integer getConnectTimeout() {
-        return connectTimeout;
-    }
+  public Integer getConnectTimeout() {
+    return connectTimeout;
+  }
 
-    public ConnectionInfo setConnectTimeout(Integer connectTimeout) {
-        this.connectTimeout = connectTimeout;
-        return this;
-    }
+  public ConnectionInfo setConnectTimeout(Integer connectTimeout) {
+    this.connectTimeout = connectTimeout;
+    return this;
+  }
 
-    public Integer getReadTimeout() {
-        return readTimeout;
-    }
+  public Integer getReadTimeout() {
+    return readTimeout;
+  }
 
-    public ConnectionInfo setReadTimeout(Integer readTimeout) {
-        this.readTimeout = readTimeout;
-        return this;
-    }
+  public ConnectionInfo setReadTimeout(Integer readTimeout) {
+    this.readTimeout = readTimeout;
+    return this;
+  }
 }

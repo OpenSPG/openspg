@@ -17,38 +17,35 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.Id
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecordAlterItem;
 import com.antgroup.openspg.common.model.base.BaseCmd;
 import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.apache.commons.collections4.CollectionUtils;
 
 @Getter
 @AllArgsConstructor
 public class IdxRecordManipulateCmd extends BaseCmd {
 
-    private final List<IdxRecordAlterItem> alterItems;
+  private final List<IdxRecordAlterItem> alterItems;
 
-    public boolean isEmpty() {
-        return CollectionUtils.isEmpty(alterItems);
-    }
+  public boolean isEmpty() {
+    return CollectionUtils.isEmpty(alterItems);
+  }
 
-    public Map<String, List<IdxRecord>> getUpsertIdxRecords() {
-        return getIdxRecords(RecordAlterOperationEnum.UPSERT);
-    }
+  public Map<String, List<IdxRecord>> getUpsertIdxRecords() {
+    return getIdxRecords(RecordAlterOperationEnum.UPSERT);
+  }
 
-    public Map<String, List<IdxRecord>> getDeleteIdxRecords() {
-        return getIdxRecords(RecordAlterOperationEnum.DELETE);
-    }
+  public Map<String, List<IdxRecord>> getDeleteIdxRecords() {
+    return getIdxRecords(RecordAlterOperationEnum.DELETE);
+  }
 
-    private Map<String, List<IdxRecord>> getIdxRecords(RecordAlterOperationEnum alterOp) {
-        return alterItems.stream()
-            .filter(i -> i.getAlterOp().equals(alterOp))
-            .map(IdxRecordAlterItem::getIdxRecord)
-            .collect(Collectors.groupingBy(IdxRecord::getIdxName, Collectors.toList()));
-    }
+  private Map<String, List<IdxRecord>> getIdxRecords(RecordAlterOperationEnum alterOp) {
+    return alterItems.stream()
+        .filter(i -> i.getAlterOp().equals(alterOp))
+        .map(IdxRecordAlterItem::getIdxRecord)
+        .collect(Collectors.groupingBy(IdxRecord::getIdxName, Collectors.toList()));
+  }
 }

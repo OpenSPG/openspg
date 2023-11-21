@@ -16,8 +16,5 @@ package com.antgroup.openspg.cloudext.interfaces.jobscheduler;
 import com.antgroup.openspg.common.model.datasource.connection.JobSchedulerConnectionInfo;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClientDriver;
 
-
 public interface JobSchedulerClientDriver
-    extends CloudExtClientDriver<JobSchedulerClient, JobSchedulerConnectionInfo> {
-
-}
+    extends CloudExtClientDriver<JobSchedulerClient, JobSchedulerConnectionInfo> {}

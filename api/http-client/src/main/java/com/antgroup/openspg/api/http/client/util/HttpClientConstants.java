@@ -13,13 +13,12 @@
 
 package com.antgroup.openspg.api.http.client.util;
 
-
 public class HttpClientConstants {
 
-    public static final String SCHEME = "openspgHttpScheme";
-    public static final String SCHEME_VAR = "{openspgHttpScheme}";
-    public static final String HOST = "openspgHttpHost";
-    public static final String HOST_VAR = "{openspgHttpHost}";
-    public static final String PORT = "openspgHttpPort";
-    public static final String PORT_VAR = "{openspgHttpPort}";
+  public static final String SCHEME = "openspgHttpScheme";
+  public static final String SCHEME_VAR = "{openspgHttpScheme}";
+  public static final String HOST = "openspgHttpHost";
+  public static final String HOST_VAR = "{openspgHttpHost}";
+  public static final String PORT = "openspgHttpPort";
+  public static final String PORT_VAR = "{openspgHttpPort}";
 }

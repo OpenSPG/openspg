@@ -14,33 +14,25 @@
 package com.antgroup.openspg.common.model.exception;
 
 import com.antgroup.openspg.common.model.MessageFormatter;
-
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * This should be a superclass of exceptions arising from OpenSPG code.
- */
+/** This should be a superclass of exceptions arising from OpenSPG code. */
 public class OpenSPGException extends RuntimeException {
 
-    public OpenSPGException(
-        Throwable cause,
-        boolean enableSuppression,
-        boolean writableStackTrace,
-        String messagePattern,
-        Object[] args) {
-        super(
-            format(messagePattern, args),
-            cause,
-            enableSuppression,
-            writableStackTrace
-        );
-    }
+  public OpenSPGException(
+      Throwable cause,
+      boolean enableSuppression,
+      boolean writableStackTrace,
+      String messagePattern,
+      Object[] args) {
+    super(format(messagePattern, args), cause, enableSuppression, writableStackTrace);
+  }
 
-    private static String format(String messagePattern, Object[] args) {
-        if (StringUtils.isBlank(messagePattern)) {
-            return "";
-        } else {
-            return MessageFormatter.format(messagePattern, args);
-        }
+  private static String format(String messagePattern, Object[] args) {
+    if (StringUtils.isBlank(messagePattern)) {
+      return "";
+    } else {
+      return MessageFormatter.format(messagePattern, args);
     }
+  }
 }

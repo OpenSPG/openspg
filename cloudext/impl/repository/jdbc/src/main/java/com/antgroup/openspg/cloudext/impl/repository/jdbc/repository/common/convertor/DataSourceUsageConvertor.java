@@ -20,28 +20,27 @@ import com.antgroup.openspg.common.model.datasource.DataSourceUsageTypeEnum;
 
 public class DataSourceUsageConvertor {
 
-    public static DataSourceUsage toModel(DataSourceUsageDO dataSourceUsageDO) {
-        if (dataSourceUsageDO == null) {
-            return null;
-        }
-
-        return new DataSourceUsage(
-            dataSourceUsageDO.getDataSourceName(),
-            dataSourceUsageDO.getMountObjectId(),
-            DataSourceMountObjectTypeEnum.valueOf(dataSourceUsageDO.getMountObjectType()),
-            DataSourceUsageTypeEnum.valueOf(dataSourceUsageDO.getUsageType()),
-            Byte.valueOf((byte) 1).equals(dataSourceUsageDO.getIsDefault())
-        );
+  public static DataSourceUsage toModel(DataSourceUsageDO dataSourceUsageDO) {
+    if (dataSourceUsageDO == null) {
+      return null;
     }
 
-    public static DataSourceUsageDO toDO(DataSourceUsage dataSourceUsage) {
-        DataSourceUsageDO dataSourceUsageDO = new DataSourceUsageDO();
+    return new DataSourceUsage(
+        dataSourceUsageDO.getDataSourceName(),
+        dataSourceUsageDO.getMountObjectId(),
+        DataSourceMountObjectTypeEnum.valueOf(dataSourceUsageDO.getMountObjectType()),
+        DataSourceUsageTypeEnum.valueOf(dataSourceUsageDO.getUsageType()),
+        Byte.valueOf((byte) 1).equals(dataSourceUsageDO.getIsDefault()));
+  }
 
-        dataSourceUsageDO.setDataSourceName(dataSourceUsage.getDataSourceName());
-        dataSourceUsageDO.setMountObjectId(dataSourceUsage.getMountObjectId());
-        dataSourceUsageDO.setMountObjectType(dataSourceUsage.getMountObjectType().name());
-        dataSourceUsageDO.setIsDefault((byte) (dataSourceUsage.isDefault() ? 1 : 0));
-        dataSourceUsageDO.setUsageType(dataSourceUsage.getUsageType().name());
-        return dataSourceUsageDO;
-    }
+  public static DataSourceUsageDO toDO(DataSourceUsage dataSourceUsage) {
+    DataSourceUsageDO dataSourceUsageDO = new DataSourceUsageDO();
+
+    dataSourceUsageDO.setDataSourceName(dataSourceUsage.getDataSourceName());
+    dataSourceUsageDO.setMountObjectId(dataSourceUsage.getMountObjectId());
+    dataSourceUsageDO.setMountObjectType(dataSourceUsage.getMountObjectType().name());
+    dataSourceUsageDO.setIsDefault((byte) (dataSourceUsage.isDefault() ? 1 : 0));
+    dataSourceUsageDO.setUsageType(dataSourceUsage.getUsageType().name());
+    return dataSourceUsageDO;
+  }
 }

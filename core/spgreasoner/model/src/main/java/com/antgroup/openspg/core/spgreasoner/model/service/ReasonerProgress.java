@@ -15,7 +15,4 @@ package com.antgroup.openspg.core.spgreasoner.model.service;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
 
-
-public class ReasonerProgress extends BaseValObj {
-
-}
+public class ReasonerProgress extends BaseValObj {}

@@ -16,13 +16,11 @@ package com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.concept;
 import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
-
 import java.util.List;
-
 
 public interface ConceptPredicateInvoker {
 
-    void init(RuntimeContext context);
+  void init(RuntimeContext context);
 
-    List<BaseSPGRecord> invoke(BaseAdvancedRecord record);
+  List<BaseSPGRecord> invoke(BaseAdvancedRecord record);
 }

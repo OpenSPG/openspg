@@ -15,75 +15,63 @@ package com.antgroup.openspg.core.spgschema.model.semantic.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-/**
- * Request to remove logical causation between concepts.
- */
+/** Request to remove logical causation between concepts. */
 public class RemoveLogicalCausationRequest extends BaseRequest {
 
-    private static final long serialVersionUID = 3663132552543144765L;
+  private static final long serialVersionUID = 3663132552543144765L;
 
-    /**
-     * The unique name of subject concept type.
-     */
-    private String subjectConceptTypeName;
+  /** The unique name of subject concept type. */
+  private String subjectConceptTypeName;
 
-    /**
-     * The concept name of subject in spo triple.
-     */
-    private String subjectConceptName;
+  /** The concept name of subject in spo triple. */
+  private String subjectConceptName;
 
-    /**
-     * The predicate name in spo triple
-     */
-    private String predicateName;
+  /** The predicate name in spo triple */
+  private String predicateName;
 
-    /**
-     * The unique name of object concept type.
-     */
-    private String objectConceptTypeName;
+  /** The unique name of object concept type. */
+  private String objectConceptTypeName;
 
-    /**
-     * The concept name of object in spo triple
-     */
-    private String objectConceptName;
+  /** The concept name of object in spo triple */
+  private String objectConceptName;
 
-    public String getSubjectConceptName() {
-        return subjectConceptName;
-    }
+  public String getSubjectConceptName() {
+    return subjectConceptName;
+  }
 
-    public void setSubjectConceptName(String subjectConceptName) {
-        this.subjectConceptName = subjectConceptName;
-    }
+  public void setSubjectConceptName(String subjectConceptName) {
+    this.subjectConceptName = subjectConceptName;
+  }
 
-    public String getPredicateName() {
-        return predicateName;
-    }
+  public String getPredicateName() {
+    return predicateName;
+  }
 
-    public void setPredicateName(String predicateName) {
-        this.predicateName = predicateName;
-    }
+  public void setPredicateName(String predicateName) {
+    this.predicateName = predicateName;
+  }
 
-    public String getObjectConceptName() {
-        return objectConceptName;
-    }
+  public String getObjectConceptName() {
+    return objectConceptName;
+  }
 
-    public void setObjectConceptName(String objectConceptName) {
-        this.objectConceptName = objectConceptName;
-    }
+  public void setObjectConceptName(String objectConceptName) {
+    this.objectConceptName = objectConceptName;
+  }
 
-    public String getSubjectConceptTypeName() {
-        return subjectConceptTypeName;
-    }
+  public String getSubjectConceptTypeName() {
+    return subjectConceptTypeName;
+  }
 
-    public void setSubjectConceptTypeName(String subjectConceptTypeName) {
-        this.subjectConceptTypeName = subjectConceptTypeName;
-    }
+  public void setSubjectConceptTypeName(String subjectConceptTypeName) {
+    this.subjectConceptTypeName = subjectConceptTypeName;
+  }
 
-    public String getObjectConceptTypeName() {
-        return objectConceptTypeName;
-    }
+  public String getObjectConceptTypeName() {
+    return objectConceptTypeName;
+  }
 
-    public void setObjectConceptTypeName(String objectConceptTypeName) {
-        this.objectConceptTypeName = objectConceptTypeName;
-    }
+  public void setObjectConceptTypeName(String objectConceptTypeName) {
+    this.objectConceptTypeName = objectConceptTypeName;
+  }
 }

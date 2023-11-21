@@ -16,18 +16,16 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.common.con
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SysLockDO;
 import com.antgroup.openspg.common.service.lock.model.SysLock;
 
-
 public class SysLockConvertor {
 
-    public static SysLock toModel(SysLockDO lockDO) {
-        if (null == lockDO) {
-            return null;
-        }
-        return new SysLock(
-            lockDO.getGmtCreate(),
-            lockDO.getGmtModified(),
-            lockDO.getMethodName(),
-            lockDO.getMethodValue()
-        );
+  public static SysLock toModel(SysLockDO lockDO) {
+    if (null == lockDO) {
+      return null;
     }
+    return new SysLock(
+        lockDO.getGmtCreate(),
+        lockDO.getGmtModified(),
+        lockDO.getMethodName(),
+        lockDO.getMethodValue());
+  }
 }

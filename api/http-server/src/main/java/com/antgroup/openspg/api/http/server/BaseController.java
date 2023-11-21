@@ -13,6 +13,4 @@
 
 package com.antgroup.openspg.api.http.server;
 
-public class BaseController {
-
-}
+public class BaseController {}

@@ -16,22 +16,21 @@ package com.antgroup.openspg.core.spgbuilder.engine.runtime;
 import com.antgroup.openspg.core.spgbuilder.engine.physical.PhysicalPlan;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.Pipeline;
 
-
 public interface PipelineExecutor {
 
-    /**
-     * Transform the logical execution plan into a physical execution plan.
-     *
-     * @param pipeline: The pipeline of the logical execution plan.
-     * @return Physical execution plan.
-     */
-    PhysicalPlan plan(Pipeline pipeline);
+  /**
+   * Transform the logical execution plan into a physical execution plan.
+   *
+   * @param pipeline: The pipeline of the logical execution plan.
+   * @return Physical execution plan.
+   */
+  PhysicalPlan plan(Pipeline pipeline);
 
-    /**
-     * Execute the physical execution plan, traversing and executing each component.
-     *
-     * @param plan:    Physical execution plan.
-     * @param context: Runtime parameters, such as job info, schema address, etc.
-     */
-    void execute(PhysicalPlan plan, RuntimeContext context);
+  /**
+   * Execute the physical execution plan, traversing and executing each component.
+   *
+   * @param plan: Physical execution plan.
+   * @param context: Runtime parameters, such as job info, schema address, etc.
+   */
+  void execute(PhysicalPlan plan, RuntimeContext context);
 }

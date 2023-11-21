@@ -16,43 +16,37 @@ package com.antgroup.openspg.cloudext.interfaces.jobscheduler;
 import com.antgroup.openspg.common.model.datasource.connection.JobSchedulerConnectionInfo;
 import com.antgroup.openspg.common.model.exception.CloudExtException;
 import com.antgroup.openspg.common.util.DriverManagerUtils;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class JobSchedulerClientDriverManager {
 
-    private final static CopyOnWriteArrayList<JobSchedulerClientDriver>
-        registeredDrivers = new CopyOnWriteArrayList<>();
+  private static final CopyOnWriteArrayList<JobSchedulerClientDriver> registeredDrivers =
+      new CopyOnWriteArrayList<>();
 
-    private JobSchedulerClientDriverManager() {
+  private JobSchedulerClientDriverManager() {}
 
+  static {
+    DriverManagerUtils.loadDrivers("cloudext.jobscheduler.drivers", JobSchedulerClientDriver.class);
+    log.info("job-scheduler DriverManager initialized");
+  }
+
+  public static synchronized void registerDriver(JobSchedulerClientDriver driver) {
+    if (driver != null) {
+      registeredDrivers.addIfAbsent(driver);
+    } else {
+      throw new NullPointerException();
     }
+    log.info("registerDriver: {}", driver);
+  }
 
-    static {
-        DriverManagerUtils.loadDrivers(
-            "cloudext.jobscheduler.drivers", JobSchedulerClientDriver.class);
-        log.info("job-scheduler DriverManager initialized");
+  public static JobSchedulerClient getClient(JobSchedulerConnectionInfo config) {
+    for (JobSchedulerClientDriver driver : registeredDrivers) {
+      if (driver.acceptsConfig(config)) {
+        return driver.connect(config);
+      }
     }
-
-    public static synchronized void registerDriver(JobSchedulerClientDriver driver) {
-        if (driver != null) {
-            registeredDrivers.addIfAbsent(driver);
-        } else {
-            throw new NullPointerException();
-        }
-        log.info("registerDriver: {}", driver);
-    }
-
-    public static JobSchedulerClient getClient(JobSchedulerConnectionInfo config) {
-        for (JobSchedulerClientDriver driver : registeredDrivers) {
-            if (driver.acceptsConfig(config)) {
-                return driver.connect(config);
-            }
-        }
-        throw CloudExtException.driverNotExist(config);
-    }
+    throw CloudExtException.driverNotExist(config);
+  }
 }

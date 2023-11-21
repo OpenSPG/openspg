@@ -14,28 +14,27 @@
 package com.antgroup.openspg.core.spgreasoner.model.struct;
 
 import com.antgroup.openspg.common.model.base.BaseToString;
-
 import java.util.Set;
 
 public class StartingVertex extends BaseToString {
 
-    private String typeName;
+  private String typeName;
 
-    private Set<String> bizIds;
+  private Set<String> bizIds;
 
-    public String getTypeName() {
-        return typeName;
-    }
+  public String getTypeName() {
+    return typeName;
+  }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
-    }
+  public void setTypeName(String typeName) {
+    this.typeName = typeName;
+  }
 
-    public Set<String> getBizIds() {
-        return bizIds;
-    }
+  public Set<String> getBizIds() {
+    return bizIds;
+  }
 
-    public void setBizIds(Set<String> bizIds) {
-        this.bizIds = bizIds;
-    }
+  public void setBizIds(Set<String> bizIds) {
+    this.bizIds = bizIds;
+  }
 }

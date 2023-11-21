@@ -15,7 +15,7 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.quer
 
 public class MatchQuery extends Query {
 
-    public MatchQuery(String name, Object text) {
-        super(name, text);
-    }
+  public MatchQuery(String name, Object text) {
+    super(name, text);
+  }
 }

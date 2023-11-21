@@ -14,40 +14,37 @@
 package com.antgroup.openspg.core.spgbuilder.model.record;
 
 import com.antgroup.openspg.core.spgschema.model.type.WithSPGTypeEnum;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+public abstract class BaseSPGRecord extends BaseRecord implements WithSPGTypeEnum {
 
-public abstract class BaseSPGRecord extends BaseRecord
-    implements WithSPGTypeEnum {
+  private final SPGRecordTypeEnum recordType;
 
-    private final SPGRecordTypeEnum recordType;
+  protected BaseSPGRecord(SPGRecordTypeEnum recordType) {
+    this.recordType = recordType;
+  }
 
-    protected BaseSPGRecord(SPGRecordTypeEnum recordType) {
-        this.recordType = recordType;
+  public SPGRecordTypeEnum getRecordType() {
+    return recordType;
+  }
+
+  public abstract List<BasePropertyRecord> getProperties();
+
+  public Map<String, String> getRawPropertyValueMap() {
+    Map<String, String> rawPropertyValueMap = new HashMap<>(getProperties().size());
+    for (BasePropertyRecord propertyRecord : getProperties()) {
+      rawPropertyValueMap.put(propertyRecord.getName(), propertyRecord.getValue().getRaw());
     }
+    return rawPropertyValueMap;
+  }
 
-    public SPGRecordTypeEnum getRecordType() {
-        return recordType;
+  public Map<String, Object> getStdPropertyValueMap() {
+    Map<String, Object> stdPropertyValueMap = new HashMap<>(getProperties().size());
+    for (BasePropertyRecord propertyRecord : getProperties()) {
+      stdPropertyValueMap.put(propertyRecord.getName(), propertyRecord.getValue().getStd());
     }
-
-    public abstract List<BasePropertyRecord> getProperties();
-
-    public Map<String, String> getRawPropertyValueMap() {
-        Map<String, String> rawPropertyValueMap = new HashMap<>(getProperties().size());
-        for (BasePropertyRecord propertyRecord : getProperties()) {
-            rawPropertyValueMap.put(propertyRecord.getName(), propertyRecord.getValue().getRaw());
-        }
-        return rawPropertyValueMap;
-    }
-
-    public Map<String, Object> getStdPropertyValueMap() {
-        Map<String, Object> stdPropertyValueMap = new HashMap<>(getProperties().size());
-        for (BasePropertyRecord propertyRecord : getProperties()) {
-            stdPropertyValueMap.put(propertyRecord.getName(), propertyRecord.getValue().getStd());
-        }
-        return stdPropertyValueMap;
-    }
+    return stdPropertyValueMap;
+  }
 }

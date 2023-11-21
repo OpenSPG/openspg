@@ -15,14 +15,13 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.ope
 
 import lombok.Getter;
 
-
 @Getter
 public class DropPropertyOperation extends BaseSchemaAtomicOperation {
 
-    private final String propertyName;
+  private final String propertyName;
 
-    public DropPropertyOperation(String propertyName) {
-        super(SchemaAtomicOperationEnum.DROP_PROPERTY);
-        this.propertyName = propertyName;
-    }
+  public DropPropertyOperation(String propertyName) {
+    super(SchemaAtomicOperationEnum.DROP_PROPERTY);
+    this.propertyName = propertyName;
+  }
 }

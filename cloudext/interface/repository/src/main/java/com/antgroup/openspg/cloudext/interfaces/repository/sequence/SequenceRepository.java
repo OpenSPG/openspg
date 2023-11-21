@@ -13,8 +13,7 @@
 
 package com.antgroup.openspg.cloudext.interfaces.repository.sequence;
 
-
 public interface SequenceRepository {
 
-    Long getSeqIdByTime();
+  Long getSeqIdByTime();
 }

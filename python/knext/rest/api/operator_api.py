@@ -28,10 +28,7 @@ import re  # noqa: F401
 import six
 
 from knext.rest.api_client import ApiClient
-from knext.rest.exceptions import (  # noqa: F401
-    ApiTypeError,
-    ApiValueError
-)
+from knext.rest.exceptions import ApiTypeError, ApiValueError  # noqa: F401
 
 
 class OperatorApi(object):
@@ -67,7 +64,7 @@ class OperatorApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.operator_overview_get_with_http_info(name, **kwargs)  # noqa: E501
 
     def operator_overview_get_with_http_info(self, name, **kwargs):  # noqa: E501
@@ -96,39 +93,42 @@ class OperatorApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'name'
-        ]
+        all_params = ["name"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method operator_overview_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
-                                                       local_var_params['name'] is None):  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `operator_overview_get`")  # noqa: E501
+                "Missing the required parameter `name` when calling `operator_overview_get`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'name' in local_var_params and local_var_params['name'] is not None:  # noqa: E501
-            query_params.append(('name', local_var_params['name']))  # noqa: E501
+        if (
+            "name" in local_var_params and local_var_params["name"] is not None
+        ):  # noqa: E501
+            query_params.append(("name", local_var_params["name"]))  # noqa: E501
 
         header_params = {}
 
@@ -137,27 +137,32 @@ class OperatorApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/operator/overview', 'GET',
+            "/operator/overview",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[OperatorOverview]',  # noqa: E501
+            response_type="list[OperatorOverview]",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def operator_overview_post(self, **kwargs):  # noqa: E501
         """create_overview  # noqa: E501
@@ -180,7 +185,7 @@ class OperatorApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.operator_overview_post_with_http_info(**kwargs)  # noqa: E501
 
     def operator_overview_post_with_http_info(self, **kwargs):  # noqa: E501
@@ -209,26 +214,24 @@ class OperatorApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'operator_create_request'
-        ]
+        all_params = ["operator_create_request"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method operator_overview_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -242,34 +245,42 @@ class OperatorApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'operator_create_request' in local_var_params:
-            body_params = local_var_params['operator_create_request']
+        if "operator_create_request" in local_var_params:
+            body_params = local_var_params["operator_create_request"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/operator/overview', 'POST',
+            "/operator/overview",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='OperatorCreateResponse',  # noqa: E501
+            response_type="OperatorCreateResponse",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def operator_version_get(self, name, **kwargs):  # noqa: E501
         """query_version  # noqa: E501
@@ -292,7 +303,7 @@ class OperatorApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.operator_version_get_with_http_info(name, **kwargs)  # noqa: E501
 
     def operator_version_get_with_http_info(self, name, **kwargs):  # noqa: E501
@@ -321,39 +332,42 @@ class OperatorApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'name'
-        ]
+        all_params = ["name"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method operator_version_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
         # verify the required parameter 'name' is set
-        if self.api_client.client_side_validation and ('name' not in local_var_params or  # noqa: E501
-                                                       local_var_params['name'] is None):  # noqa: E501
+        if self.api_client.client_side_validation and (
+            "name" not in local_var_params
+            or local_var_params["name"] is None  # noqa: E501
+        ):  # noqa: E501
             raise ApiValueError(
-                "Missing the required parameter `name` when calling `operator_version_get`")  # noqa: E501
+                "Missing the required parameter `name` when calling `operator_version_get`"
+            )  # noqa: E501
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'name' in local_var_params and local_var_params['name'] is not None:  # noqa: E501
-            query_params.append(('name', local_var_params['name']))  # noqa: E501
+        if (
+            "name" in local_var_params and local_var_params["name"] is not None
+        ):  # noqa: E501
+            query_params.append(("name", local_var_params["name"]))  # noqa: E501
 
         header_params = {}
 
@@ -362,27 +376,32 @@ class OperatorApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/operator/version', 'GET',
+            "/operator/version",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[OperatorVersion]',  # noqa: E501
+            response_type="list[OperatorVersion]",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def operator_version_post(self, **kwargs):  # noqa: E501
         """add_version  # noqa: E501
@@ -407,7 +426,7 @@ class OperatorApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.operator_version_post_with_http_info(**kwargs)  # noqa: E501
 
     def operator_version_post_with_http_info(self, **kwargs):  # noqa: E501
@@ -438,28 +457,24 @@ class OperatorApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'project_id',
-            'operator_id',
-            'file'
-        ]
+        all_params = ["project_id", "operator_id", "file"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method operator_version_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -471,37 +486,49 @@ class OperatorApi(object):
 
         form_params = []
         local_var_files = {}
-        if 'project_id' in local_var_params:
-            form_params.append(('projectId', local_var_params['project_id']))  # noqa: E501
-        if 'operator_id' in local_var_params:
-            form_params.append(('operatorId', local_var_params['operator_id']))  # noqa: E501
-        if 'file' in local_var_params:
-            local_var_files['file'] = local_var_params['file']  # noqa: E501
+        if "project_id" in local_var_params:
+            form_params.append(
+                ("projectId", local_var_params["project_id"])
+            )  # noqa: E501
+        if "operator_id" in local_var_params:
+            form_params.append(
+                ("operatorId", local_var_params["operator_id"])
+            )  # noqa: E501
+        if "file" in local_var_params:
+            local_var_files["file"] = local_var_params["file"]  # noqa: E501
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['multipart/form-data'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["multipart/form-data"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/operator/version', 'POST',
+            "/operator/version",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='OperatorVersionResponse',  # noqa: E501
+            response_type="OperatorVersionResponse",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )

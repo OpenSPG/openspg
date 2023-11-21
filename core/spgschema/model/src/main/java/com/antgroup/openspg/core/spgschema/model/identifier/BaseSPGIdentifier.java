@@ -13,33 +13,30 @@
 
 package com.antgroup.openspg.core.spgschema.model.identifier;
 
-
 import com.antgroup.openspg.common.model.base.BaseValObj;
 
 /**
- * This base class of SPG identifier. Currently, there are two methods for SPG naming. The first is the node naming
- * method, which consists of a namespace and a real name.
- * <p>
- * The second is the edge naming method, which consists of the starting node and the ending node plus the real name of
- * the edge.
+ * This base class of SPG identifier. Currently, there are two methods for SPG naming. The first is
+ * the node naming method, which consists of a namespace and a real name.
+ *
+ * <p>The second is the edge naming method, which consists of the starting node and the ending node
+ * plus the real name of the edge.
  */
 public abstract class BaseSPGIdentifier extends BaseValObj {
 
-    private static final long serialVersionUID = -1365635665645757525L;
+  private static final long serialVersionUID = -1365635665645757525L;
 
-    /**
-     * SPG naming type
-     */
-    private final SPGIdentifierTypeEnum identityType;
+  /** SPG naming type */
+  private final SPGIdentifierTypeEnum identityType;
 
-    protected BaseSPGIdentifier(SPGIdentifierTypeEnum nameType) {
-        this.identityType = nameType;
-    }
+  protected BaseSPGIdentifier(SPGIdentifierTypeEnum nameType) {
+    this.identityType = nameType;
+  }
 
-    public SPGIdentifierTypeEnum getIdentifierType() {
-        return identityType;
-    }
+  public SPGIdentifierTypeEnum getIdentifierType() {
+    return identityType;
+  }
 
-    @Override
-    public abstract String toString();
+  @Override
+  public abstract String toString();
 }

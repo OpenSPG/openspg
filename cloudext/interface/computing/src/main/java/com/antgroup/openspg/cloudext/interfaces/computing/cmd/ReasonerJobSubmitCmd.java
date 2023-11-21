@@ -18,32 +18,27 @@ import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnect
 import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInfo;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInst;
-
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.Map;
-
 
 @Getter
 @AllArgsConstructor
 public class ReasonerJobSubmitCmd extends BaseCmd {
 
-    private final ReasonerJobInst jobInst;
+  private final ReasonerJobInst jobInst;
 
-    private final ReasonerJobInfo jobInfo;
+  private final ReasonerJobInfo jobInfo;
 
-    private final GraphStoreConnectionInfo graphStoreConnInfo;
+  private final GraphStoreConnectionInfo graphStoreConnInfo;
 
-    private final TableStoreConnectionInfo tableStoreConnInfo;
+  private final TableStoreConnectionInfo tableStoreConnInfo;
 
-    private final String schemaUrl;
+  private final String schemaUrl;
 
-    private final Map<String, Object> params;
+  private final Map<String, Object> params;
 
-    public String tableName() {
-        return String.format("spgreasoner_%s_%s_result",
-            jobInfo.getJobName(), jobInst.getJobInstId()
-        );
-    }
+  public String tableName() {
+    return String.format("spgreasoner_%s_%s_result", jobInfo.getJobName(), jobInst.getJobInstId());
+  }
 }

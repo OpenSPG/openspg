@@ -15,18 +15,17 @@ package com.antgroup.openspg.api.facade.dto.schema.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-
 public class SchemaDataSourceRequest extends BaseRequest {
 
-    private static final long serialVersionUID = 609688932662538752L;
+  private static final long serialVersionUID = 609688932662538752L;
 
-    private Long projectId;
+  private Long projectId;
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+  public void setProjectId(Long projectId) {
+    this.projectId = projectId;
+  }
 }

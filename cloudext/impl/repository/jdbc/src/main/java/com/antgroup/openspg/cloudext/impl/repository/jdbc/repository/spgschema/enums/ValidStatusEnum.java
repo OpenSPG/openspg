@@ -13,19 +13,18 @@
 
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums;
 
-
 public enum ValidStatusEnum {
-    VALID("1"),
+  VALID("1"),
 
-    INVALID("0");
+  INVALID("0");
 
-    private final String code;
+  private final String code;
 
-    ValidStatusEnum(String code) {
-        this.code = code;
-    }
+  ValidStatusEnum(String code) {
+    this.code = code;
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public String getCode() {
+    return code;
+  }
 }

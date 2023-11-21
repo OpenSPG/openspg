@@ -13,49 +13,37 @@
 
 package com.antgroup.openspg.core.spgschema.model.semantic;
 
-/**
- * Enumeration of predicate functions
- */
+/** Enumeration of predicate functions */
 public enum PredicateFunctionEnum {
-    /**
-     * Concept hierarchy, used between concept types
-     */
-    HYPERNYM("hypernym"),
+  /** Concept hierarchy, used between concept types */
+  HYPERNYM("hypernym"),
 
-    /**
-     * Entity classification, such as belongTo
-     */
-    TAXONOMIC("taxonomic"),
+  /** Entity classification, such as belongTo */
+  TAXONOMIC("taxonomic"),
 
-    /**
-     * Causal correlation, such as leadTo
-     */
-    REASONER("reasoner"),
+  /** Causal correlation, such as leadTo */
+  REASONER("reasoner"),
 
-    /**
-     * Semantic, used to describe semantics between ordinary properties or relations.
-     */
-    SEMANTIC("semantic");
+  /** Semantic, used to describe semantics between ordinary properties or relations. */
+  SEMANTIC("semantic");
 
-    /**
-     * Function name
-     */
-    private final String name;
+  /** Function name */
+  private final String name;
 
-    PredicateFunctionEnum(String name) {
-        this.name = name;
+  PredicateFunctionEnum(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public static PredicateFunctionEnum toEnum(String val) {
+    for (PredicateFunctionEnum functionEnum : PredicateFunctionEnum.values()) {
+      if (functionEnum.name().equalsIgnoreCase(val)) {
+        return functionEnum;
+      }
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public static PredicateFunctionEnum toEnum(String val) {
-        for (PredicateFunctionEnum functionEnum : PredicateFunctionEnum.values()) {
-            if (functionEnum.name().equalsIgnoreCase(val)) {
-                return functionEnum;
-            }
-        }
-        throw new IllegalArgumentException("unknown type: " + val);
-    }
+    throw new IllegalArgumentException("unknown type: " + val);
+  }
 }

@@ -13,29 +13,28 @@
 
 package com.antgroup.openspg.common.util;
 
+import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.text.StringSubstitutor;
 
-import java.util.Map;
-
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
-    /**
-     * 将object转化成string返回，常用于POJO对象未实现toString()场景，
-     *
-     * @param object 对象
-     * @return 对象string表示
-     */
-    public static String toString(Object object) {
-        if (object instanceof String) {
-            return object.toString();
-        }
-        return ToStringBuilder.reflectionToString(object, ToStringStyle.SHORT_PREFIX_STYLE);
+  /**
+   * 将object转化成string返回，常用于POJO对象未实现toString()场景，
+   *
+   * @param object 对象
+   * @return 对象string表示
+   */
+  public static String toString(Object object) {
+    if (object instanceof String) {
+      return object.toString();
     }
+    return ToStringBuilder.reflectionToString(object, ToStringStyle.SHORT_PREFIX_STYLE);
+  }
 
-    public static String dictFormat(Map<String, Object> vars, String template) {
-        StringSubstitutor substitutor = new StringSubstitutor(vars, "${", "}");
-        return substitutor.replace(template);
-    }
+  public static String dictFormat(Map<String, Object> vars, String template) {
+    StringSubstitutor substitutor = new StringSubstitutor(vars, "${", "}");
+    return substitutor.replace(template);
+  }
 }

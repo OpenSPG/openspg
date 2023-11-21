@@ -14,26 +14,23 @@
 package com.antgroup.openspg.core.spgbuilder.model.record;
 
 import com.antgroup.openspg.common.model.base.BaseCmd;
-
 import com.google.common.collect.Lists;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class SPGRecordManipulateCmd extends BaseCmd {
 
-    private final List<SPGRecordAlterItem> alterItems;
+  private final List<SPGRecordAlterItem> alterItems;
 
-    public SPGRecordManipulateCmd(SPGRecordAlterItem alterItem) {
-        this(Lists.newArrayList(alterItem));
-    }
+  public SPGRecordManipulateCmd(SPGRecordAlterItem alterItem) {
+    this(Lists.newArrayList(alterItem));
+  }
 
-    public SPGRecordManipulateCmd(List<SPGRecordAlterItem> alterItems) {
-        this.alterItems = new ArrayList<>(alterItems);
-    }
+  public SPGRecordManipulateCmd(List<SPGRecordAlterItem> alterItems) {
+    this.alterItems = new ArrayList<>(alterItems);
+  }
 
-    public List<SPGRecordAlterItem> getAlterItems() {
-        return alterItems;
-    }
+  public List<SPGRecordAlterItem> getAlterItems() {
+    return alterItems;
+  }
 }

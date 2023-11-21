@@ -17,29 +17,29 @@ import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.core.spgschema.model.type.OperatorKey;
 
-
 public interface OperatorFactory {
 
-    /**
-     * Operator initialization.
-     *
-     * @param context: Initialize related parameters.
-     */
-    void init(RuntimeContext context);
+  /**
+   * Operator initialization.
+   *
+   * @param context: Initialize related parameters.
+   */
+  void init(RuntimeContext context);
 
-    /**
-     * Operator registration.
-     *
-     * @param config: Operator configuration parameters, including operator name, type, version, and address.
-     */
-    void register(OperatorConfig config);
+  /**
+   * Operator registration.
+   *
+   * @param config: Operator configuration parameters, including operator name, type, version, and
+   *     address.
+   */
+  void register(OperatorConfig config);
 
-    /**
-     * Operator invocation.
-     *
-     * @param key:  The unique key of an operator, consisting of its name and version.
-     * @param input
-     * @return
-     */
-    Object invoke(OperatorKey key, Object... input);
+  /**
+   * Operator invocation.
+   *
+   * @param key: The unique key of an operator, consisting of its name and version.
+   * @param input
+   * @return
+   */
+  Object invoke(OperatorKey key, Object... input);
 }

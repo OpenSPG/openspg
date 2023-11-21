@@ -13,28 +13,23 @@
 
 package com.antgroup.openspg.common.model.base;
 
+import java.io.Serializable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.io.Serializable;
-
-/**
- * As a serializable base class, it overrides the toString method
- */
+/** As a serializable base class, it overrides the toString method */
 public class BaseToString implements Serializable {
 
-    /**
-     * To ensure forward compatibility, the default serialization UID remains unchanged.
-     */
-    protected static final long serialVersionUID = 1L;
+  /** To ensure forward compatibility, the default serialization UID remains unchanged. */
+  protected static final long serialVersionUID = 1L;
 
-    /**
-     * Override the toString method
-     *
-     * @return The string representation of object
-     */
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    }
+  /**
+   * Override the toString method
+   *
+   * @return The string representation of object
+   */
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+  }
 }

@@ -28,202 +28,194 @@ import com.antgroup.openspg.core.spgschema.service.type.convertor.SPGTypeAssembl
 import com.antgroup.openspg.core.spgschema.service.type.convertor.SPGTypeConvertor;
 import com.antgroup.openspg.core.spgschema.service.type.model.SimpleSPGType;
 import com.antgroup.openspg.core.spgschema.service.type.repository.SPGTypeRepository;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-
 @Slf4j
 @Service
 public class SPGTypeServiceImpl implements SPGTypeService {
 
-    @Autowired
-    private SPGTypeRepository spgTypeRepository;
-    @Autowired
-    private PropertyService propertyService;
-    @Autowired
-    private RelationService relationService;
+  @Autowired private SPGTypeRepository spgTypeRepository;
+  @Autowired private PropertyService propertyService;
+  @Autowired private RelationService relationService;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public int create(BaseAdvancedType advancedType) {
-        if (CollectionUtils.isNotEmpty(advancedType.getProperties())) {
-            advancedType.getProperties().forEach(property -> propertyService.create(property));
-            log.info("property of schemaType: {} is created", advancedType.getName());
-        }
-
-        if (CollectionUtils.isNotEmpty(advancedType.getRelations())) {
-            advancedType.getRelations().forEach(relation -> relationService.create(relation));
-            log.info("relation of schemaType: {} is created", advancedType.getName());
-        }
-
-        int cnt = spgTypeRepository.save(SPGTypeConvertor.toSimpleSpgType(advancedType));
-        log.info("schema type: {} is created", advancedType.getName());
-        return cnt;
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public int create(BaseAdvancedType advancedType) {
+    if (CollectionUtils.isNotEmpty(advancedType.getProperties())) {
+      advancedType.getProperties().forEach(property -> propertyService.create(property));
+      log.info("property of schemaType: {} is created", advancedType.getName());
     }
 
-    @Override
-    public int update(BaseAdvancedType advancedType) {
-        if (CollectionUtils.isNotEmpty(advancedType.getProperties())) {
-            this.alterProperties(advancedType.getProperties());
-            log.info("properties of schemaType: {} is updated", advancedType.getName());
-        }
-
-        if (CollectionUtils.isNotEmpty(advancedType.getRelations())) {
-            this.alterRelations(advancedType.getRelations());
-            log.info("relations of schemaType: {} is updated", advancedType.getName());
-        }
-
-        int cnt = spgTypeRepository.update(SPGTypeConvertor.toSimpleSpgType(advancedType));
-        log.info("schema type: {} is updated", advancedType.getName());
-        return cnt;
+    if (CollectionUtils.isNotEmpty(advancedType.getRelations())) {
+      advancedType.getRelations().forEach(relation -> relationService.create(relation));
+      log.info("relation of schemaType: {} is created", advancedType.getName());
     }
 
-    @Override
-    public int delete(BaseAdvancedType advancedType) {
-        if (CollectionUtils.isNotEmpty(advancedType.getProperties())) {
-            advancedType.getProperties().forEach(property -> propertyService.delete(property));
-            log.info("property of schemaType: {} is deleted", advancedType.getName());
-        }
+    int cnt = spgTypeRepository.save(SPGTypeConvertor.toSimpleSpgType(advancedType));
+    log.info("schema type: {} is created", advancedType.getName());
+    return cnt;
+  }
 
-        if (CollectionUtils.isNotEmpty(advancedType.getRelations())) {
-            advancedType.getRelations().forEach(relation -> relationService.delete(relation));
-            log.info("relation of schemaType: {} is deleted", advancedType.getName());
-        }
-
-        int cnt = spgTypeRepository.delete(SPGTypeConvertor.toSimpleSpgType(advancedType));
-        log.info("schema type: {} is deleted", advancedType.getName());
-        return cnt;
+  @Override
+  public int update(BaseAdvancedType advancedType) {
+    if (CollectionUtils.isNotEmpty(advancedType.getProperties())) {
+      this.alterProperties(advancedType.getProperties());
+      log.info("properties of schemaType: {} is updated", advancedType.getName());
     }
 
-    @Override
-    public ProjectSchema queryProjectSchema(Long projectId) {
-        List<SimpleSPGType> basicTypes = spgTypeRepository.queryAllBasicType();
-        List<BaseAdvancedType> customizedTypes = this.queryCustomizedType(projectId);
-
-        List<BaseSPGType> spgTypes = new ArrayList<>();
-        spgTypes.addAll(SPGTypeConvertor.toBaseSpgType(basicTypes));
-        spgTypes.addAll(customizedTypes);
-
-        return new ProjectSchema(spgTypes);
+    if (CollectionUtils.isNotEmpty(advancedType.getRelations())) {
+      this.alterRelations(advancedType.getRelations());
+      log.info("relations of schemaType: {} is updated", advancedType.getName());
     }
 
-    @Override
-    public BaseSPGType querySPGTypeByIdentifier(SPGTypeIdentifier spgTypeIdentifier) {
-        SimpleSPGType simpleSpgType = spgTypeRepository.queryByName(spgTypeIdentifier.toString());
-        if (simpleSpgType == null) {
-            return null;
-        }
-        if (SPGTypeEnum.BASIC_TYPE.equals(simpleSpgType.getSpgTypeEnum())) {
-            return SPGTypeConvertor.toBaseSpgType(simpleSpgType);
-        }
+    int cnt = spgTypeRepository.update(SPGTypeConvertor.toSimpleSpgType(advancedType));
+    log.info("schema type: {} is updated", advancedType.getName());
+    return cnt;
+  }
 
-        List<BaseAdvancedType> spgTypes = this.withDetail(Lists.newArrayList(simpleSpgType));
-        return spgTypes.get(0);
+  @Override
+  public int delete(BaseAdvancedType advancedType) {
+    if (CollectionUtils.isNotEmpty(advancedType.getProperties())) {
+      advancedType.getProperties().forEach(property -> propertyService.delete(property));
+      log.info("property of schemaType: {} is deleted", advancedType.getName());
     }
 
-    @Override
-    public List<BaseSPGType> querySPGTypeById(List<Long> uniqueIds) {
-        if (CollectionUtils.isEmpty(uniqueIds)) {
-            return Collections.emptyList();
-        }
+    if (CollectionUtils.isNotEmpty(advancedType.getRelations())) {
+      advancedType.getRelations().forEach(relation -> relationService.delete(relation));
+      log.info("relation of schemaType: {} is deleted", advancedType.getName());
+    }
 
-        List<BaseSPGType> spgTypes = new ArrayList<>();
-        List<SimpleSPGType> simpleSpgTypes = spgTypeRepository.queryByUniqueId(uniqueIds);
-        List<SimpleSPGType> advancedSimpleTypes = new ArrayList<>();
-        simpleSpgTypes.forEach(simpleSpgType -> {
-            if (SPGTypeEnum.BASIC_TYPE.equals(simpleSpgType.getSpgTypeEnum())) {
-                spgTypes.add(SPGTypeConvertor.toBaseSpgType(simpleSpgType));
-            } else {
-                advancedSimpleTypes.add(simpleSpgType);
-            }
+    int cnt = spgTypeRepository.delete(SPGTypeConvertor.toSimpleSpgType(advancedType));
+    log.info("schema type: {} is deleted", advancedType.getName());
+    return cnt;
+  }
+
+  @Override
+  public ProjectSchema queryProjectSchema(Long projectId) {
+    List<SimpleSPGType> basicTypes = spgTypeRepository.queryAllBasicType();
+    List<BaseAdvancedType> customizedTypes = this.queryCustomizedType(projectId);
+
+    List<BaseSPGType> spgTypes = new ArrayList<>();
+    spgTypes.addAll(SPGTypeConvertor.toBaseSpgType(basicTypes));
+    spgTypes.addAll(customizedTypes);
+
+    return new ProjectSchema(spgTypes);
+  }
+
+  @Override
+  public BaseSPGType querySPGTypeByIdentifier(SPGTypeIdentifier spgTypeIdentifier) {
+    SimpleSPGType simpleSpgType = spgTypeRepository.queryByName(spgTypeIdentifier.toString());
+    if (simpleSpgType == null) {
+      return null;
+    }
+    if (SPGTypeEnum.BASIC_TYPE.equals(simpleSpgType.getSpgTypeEnum())) {
+      return SPGTypeConvertor.toBaseSpgType(simpleSpgType);
+    }
+
+    List<BaseAdvancedType> spgTypes = this.withDetail(Lists.newArrayList(simpleSpgType));
+    return spgTypes.get(0);
+  }
+
+  @Override
+  public List<BaseSPGType> querySPGTypeById(List<Long> uniqueIds) {
+    if (CollectionUtils.isEmpty(uniqueIds)) {
+      return Collections.emptyList();
+    }
+
+    List<BaseSPGType> spgTypes = new ArrayList<>();
+    List<SimpleSPGType> simpleSpgTypes = spgTypeRepository.queryByUniqueId(uniqueIds);
+    List<SimpleSPGType> advancedSimpleTypes = new ArrayList<>();
+    simpleSpgTypes.forEach(
+        simpleSpgType -> {
+          if (SPGTypeEnum.BASIC_TYPE.equals(simpleSpgType.getSpgTypeEnum())) {
+            spgTypes.add(SPGTypeConvertor.toBaseSpgType(simpleSpgType));
+          } else {
+            advancedSimpleTypes.add(simpleSpgType);
+          }
         });
-        spgTypes.addAll(this.withDetail(advancedSimpleTypes));
-        return spgTypes;
+    spgTypes.addAll(this.withDetail(advancedSimpleTypes));
+    return spgTypes;
+  }
+
+  private List<BaseAdvancedType> queryCustomizedType(Long projectId) {
+    List<SimpleSPGType> standardTypes = spgTypeRepository.queryAllStandardType();
+    List<SimpleSPGType> simpleSpgTypes = spgTypeRepository.queryByProject(projectId);
+
+    return this.withDetail(
+        Streams.concat(standardTypes.stream(), simpleSpgTypes.stream())
+            .collect(Collectors.toList()));
+  }
+
+  private List<BaseAdvancedType> withDetail(List<SimpleSPGType> simpleSpgTypes) {
+    if (CollectionUtils.isEmpty(simpleSpgTypes)) {
+      return Collections.emptyList();
     }
 
-    private List<BaseAdvancedType> queryCustomizedType(Long projectId) {
-        List<SimpleSPGType> standardTypes = spgTypeRepository.queryAllStandardType();
-        List<SimpleSPGType> simpleSpgTypes = spgTypeRepository.queryByProject(projectId);
-
-        return this.withDetail(Streams.concat(standardTypes.stream(),
-            simpleSpgTypes.stream()).collect(Collectors.toList()));
+    Set<Long> uniqueIds = Sets.newHashSet();
+    for (SimpleSPGType simpleSpgType : simpleSpgTypes) {
+      if (simpleSpgType.getParentTypeInfo() != null
+          && CollectionUtils.isNotEmpty(simpleSpgType.getParentTypeInfo().getInheritPath())) {
+        uniqueIds.addAll(simpleSpgType.getParentTypeInfo().getInheritPath());
+      } else {
+        uniqueIds.add(simpleSpgType.getUniqueId());
+      }
     }
 
-    private List<BaseAdvancedType> withDetail(List<SimpleSPGType> simpleSpgTypes) {
-        if (CollectionUtils.isEmpty(simpleSpgTypes)) {
-            return Collections.emptyList();
-        }
+    List<Property> properties = propertyService.queryBySubjectId(Lists.newArrayList(uniqueIds));
+    List<Relation> relations = relationService.queryBySubjectId(Lists.newArrayList(uniqueIds));
+    Set<SPGTypeIdentifier> spreadStdTypeNames = this.querySpreadStdTypeName();
 
-        Set<Long> uniqueIds = Sets.newHashSet();
-        for (SimpleSPGType simpleSpgType : simpleSpgTypes) {
-            if (simpleSpgType.getParentTypeInfo() != null
-                && CollectionUtils.isNotEmpty(simpleSpgType.getParentTypeInfo().getInheritPath())) {
-                uniqueIds.addAll(simpleSpgType.getParentTypeInfo().getInheritPath());
-            } else {
-                uniqueIds.add(simpleSpgType.getUniqueId());
-            }
-        }
+    List<BaseSPGType> spgTypes =
+        SPGTypeAssemble.assemble(simpleSpgTypes, properties, relations, spreadStdTypeNames);
+    return spgTypes.stream().map(e -> (BaseAdvancedType) e).collect(Collectors.toList());
+  }
 
-        List<Property> properties = propertyService.queryBySubjectId(Lists.newArrayList(uniqueIds));
-        List<Relation> relations = relationService.queryBySubjectId(Lists.newArrayList(uniqueIds));
-        Set<SPGTypeIdentifier> spreadStdTypeNames = this.querySpreadStdTypeName();
+  private void alterProperties(List<Property> propertys) {
+    List<Property> deleteProperties =
+        propertys.stream().filter(WithAlterOperation::isDelete).collect(Collectors.toList());
+    deleteProperties.forEach(e -> propertyService.delete(e));
 
-        List<BaseSPGType> spgTypes = SPGTypeAssemble.assemble(
-            simpleSpgTypes, properties, relations, spreadStdTypeNames);
-        return spgTypes.stream().map(e -> (BaseAdvancedType) e).collect(Collectors.toList());
-    }
+    List<Property> updateProperties =
+        propertys.stream().filter(WithAlterOperation::isUpdate).collect(Collectors.toList());
+    updateProperties.forEach(e -> propertyService.update(e));
 
-    private void alterProperties(List<Property> propertys) {
-        List<Property> deleteProperties = propertys.stream()
-            .filter(WithAlterOperation::isDelete)
-            .collect(Collectors.toList());
-        deleteProperties.forEach(e -> propertyService.delete(e));
+    List<Property> createProperties =
+        propertys.stream().filter(WithAlterOperation::isCreate).collect(Collectors.toList());
+    createProperties.forEach(e -> propertyService.create(e));
+  }
 
-        List<Property> updateProperties = propertys.stream()
-            .filter(WithAlterOperation::isUpdate)
-            .collect(Collectors.toList());
-        updateProperties.forEach(e -> propertyService.update(e));
+  private void alterRelations(List<Relation> relations) {
+    List<Relation> deleteRelations =
+        relations.stream().filter(WithAlterOperation::isDelete).collect(Collectors.toList());
+    deleteRelations.forEach(e -> relationService.delete(e));
 
-        List<Property> createProperties = propertys.stream()
-            .filter(WithAlterOperation::isCreate)
-            .collect(Collectors.toList());
-        createProperties.forEach(e -> propertyService.create(e));
-    }
+    List<Relation> updateRelations =
+        relations.stream().filter(WithAlterOperation::isUpdate).collect(Collectors.toList());
+    updateRelations.forEach(e -> relationService.update(e));
 
-    private void alterRelations(List<Relation> relations) {
-        List<Relation> deleteRelations = relations.stream()
-            .filter(WithAlterOperation::isDelete)
-            .collect(Collectors.toList());
-        deleteRelations.forEach(e -> relationService.delete(e));
+    List<Relation> createRelations =
+        relations.stream().filter(WithAlterOperation::isCreate).collect(Collectors.toList());
+    createRelations.forEach(e -> relationService.create(e));
+  }
 
-        List<Relation> updateRelations = relations.stream()
-            .filter(WithAlterOperation::isUpdate)
-            .collect(Collectors.toList());
-        updateRelations.forEach(e -> relationService.update(e));
-
-        List<Relation> createRelations = relations.stream()
-            .filter(WithAlterOperation::isCreate)
-            .collect(Collectors.toList());
-        createRelations.forEach(e -> relationService.create(e));
-    }
-
-    @Override
-    public Set<SPGTypeIdentifier> querySpreadStdTypeName() {
-        List<SimpleSPGType> standardTypes = spgTypeRepository.queryAllStandardType();
-        return standardTypes.stream().filter(e -> Boolean.TRUE.equals(e.getSpreadable()))
-            .map(SimpleSPGType::getSpgTypeIdentifier).collect(Collectors.toSet());
-    }
+  @Override
+  public Set<SPGTypeIdentifier> querySpreadStdTypeName() {
+    List<SimpleSPGType> standardTypes = spgTypeRepository.queryAllStandardType();
+    return standardTypes.stream()
+        .filter(e -> Boolean.TRUE.equals(e.getSpreadable()))
+        .map(SimpleSPGType::getSpgTypeIdentifier)
+        .collect(Collectors.toSet());
+  }
 }

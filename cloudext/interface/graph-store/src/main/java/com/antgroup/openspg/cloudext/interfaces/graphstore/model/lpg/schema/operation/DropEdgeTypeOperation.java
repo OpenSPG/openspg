@@ -14,30 +14,25 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
-
+import java.util.Collections;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Collections;
-
 
 @Getter
 public class DropEdgeTypeOperation extends BaseLPGSchemaOperation {
 
-    @Setter
-    private EdgeTypeName edgeTypeName;
+  @Setter private EdgeTypeName edgeTypeName;
 
-    public DropEdgeTypeOperation(EdgeTypeName edgeTypeName) {
-        super(VertexEdgeTypeOperationEnum.DROP_EDGE_TYPE, Collections.EMPTY_LIST);
-        this.edgeTypeName = edgeTypeName;
-    }
+  public DropEdgeTypeOperation(EdgeTypeName edgeTypeName) {
+    super(VertexEdgeTypeOperationEnum.DROP_EDGE_TYPE, Collections.EMPTY_LIST);
+    this.edgeTypeName = edgeTypeName;
+  }
 
-    @Override
-    public String getTargetTypeName() {
-        return this.edgeTypeName.toString();
-    }
+  @Override
+  public String getTargetTypeName() {
+    return this.edgeTypeName.toString();
+  }
 
-    @Override
-    public void checkSchemaAtomicOperations() {
-    }
+  @Override
+  public void checkSchemaAtomicOperations() {}
 }

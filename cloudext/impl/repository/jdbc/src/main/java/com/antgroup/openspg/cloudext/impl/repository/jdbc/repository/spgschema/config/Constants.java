@@ -13,21 +13,14 @@
 
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.config;
 
-
 public class Constants {
 
-    /**
-     * schema版本的分隔符
-     */
-    public final static String SCHEMA_VERSION_SPLIT_KEY = "$V";
+  /** schema版本的分隔符 */
+  public static final String SCHEMA_VERSION_SPLIT_KEY = "$V";
 
-    /**
-     * schema命名空间与名称的分隔符
-     */
-    public final static String SCHEMA_NAMESPACE_NAME_SPLIT_KEY = ".";
+  /** schema命名空间与名称的分隔符 */
+  public static final String SCHEMA_NAMESPACE_NAME_SPLIT_KEY = ".";
 
-    /**
-     * 继承路径分隔符
-     */
-    public final static String INHERIT_PATH_SEP = ",";
+  /** 继承路径分隔符 */
+  public static final String INHERIT_PATH_SEP = ",";
 }

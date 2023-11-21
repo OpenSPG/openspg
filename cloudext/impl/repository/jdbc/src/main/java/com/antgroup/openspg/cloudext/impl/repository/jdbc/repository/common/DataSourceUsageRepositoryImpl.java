@@ -23,64 +23,62 @@ import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
 import com.antgroup.openspg.common.model.datasource.DataSourceUsageTypeEnum;
 import com.antgroup.openspg.common.service.datasource.DataSourceUsageRepository;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
 
 @Repository
 public class DataSourceUsageRepositoryImpl implements DataSourceUsageRepository {
 
-    @Autowired
-    private DataSourceUsageDOMapper dataSourceUsageDOMapper;
+  @Autowired private DataSourceUsageDOMapper dataSourceUsageDOMapper;
 
-    @Override
-    public int save(DataSourceUsage dataSourceUsage) {
-        DataSourceUsageDO dataSourceUsageDO = DataSourceUsageConvertor.toDO(dataSourceUsage);
-        return dataSourceUsageDOMapper.insert(dataSourceUsageDO);
-    }
+  @Override
+  public int save(DataSourceUsage dataSourceUsage) {
+    DataSourceUsageDO dataSourceUsageDO = DataSourceUsageConvertor.toDO(dataSourceUsage);
+    return dataSourceUsageDOMapper.insert(dataSourceUsageDO);
+  }
 
-    @Override
-    public List<DataSourceUsage> getByMountObject(
-        String mountObjectId,
-        DataSourceMountObjectTypeEnum mountObjectType,
-        DataSourceUsageTypeEnum usageType) {
-        DataSourceUsageDOExample example = new DataSourceUsageDOExample();
+  @Override
+  public List<DataSourceUsage> getByMountObject(
+      String mountObjectId,
+      DataSourceMountObjectTypeEnum mountObjectType,
+      DataSourceUsageTypeEnum usageType) {
+    DataSourceUsageDOExample example = new DataSourceUsageDOExample();
 
-        DataSourceUsageDOExample.Criteria criteria = example.createCriteria()
+    DataSourceUsageDOExample.Criteria criteria =
+        example
+            .createCriteria()
             .andMountObjectIdEqualTo(mountObjectId)
             .andMountObjectTypeEqualTo(mountObjectType.name());
 
-        if (usageType != null) {
-            criteria.andUsageTypeEqualTo(usageType.name());
-        }
-
-        example.setOrderByClause("id ASC");
-        List<DataSourceUsageDO> dataSourceUsageDOS = dataSourceUsageDOMapper.selectByExample(example);
-        return CollectionsUtils.listMap(dataSourceUsageDOS, DataSourceUsageConvertor::toModel);
+    if (usageType != null) {
+      criteria.andUsageTypeEqualTo(usageType.name());
     }
 
-    @Override
-    public List<DataSourceUsage> query(DataSourceUsageQueryRequest request) {
-        DataSourceUsageDOExample example = new DataSourceUsageDOExample();
+    example.setOrderByClause("id ASC");
+    List<DataSourceUsageDO> dataSourceUsageDOS = dataSourceUsageDOMapper.selectByExample(example);
+    return CollectionsUtils.listMap(dataSourceUsageDOS, DataSourceUsageConvertor::toModel);
+  }
 
-        DataSourceUsageDOExample.Criteria criteria = example.createCriteria();
-        if (request.getDataSourceName() != null) {
-            criteria.andDataSourceNameEqualTo(request.getDataSourceName());
-        }
-        if (request.getUsageType() != null) {
-            criteria.andUsageTypeEqualTo(request.getUsageType());
-        }
-        if (request.getMountObjectId() != null) {
-            criteria.andMountObjectIdEqualTo(request.getMountObjectId());
-        }
-        if (request.getMountObjectType() != null) {
-            criteria.andMountObjectTypeEqualTo(request.getMountObjectType());
-        }
-        example.setOrderByClause("id ASC");
-        List<DataSourceUsageDO> dataSourceUsageDOS = dataSourceUsageDOMapper.selectByExample(example);
-        return CollectionsUtils.listMap(dataSourceUsageDOS, DataSourceUsageConvertor::toModel);
+  @Override
+  public List<DataSourceUsage> query(DataSourceUsageQueryRequest request) {
+    DataSourceUsageDOExample example = new DataSourceUsageDOExample();
+
+    DataSourceUsageDOExample.Criteria criteria = example.createCriteria();
+    if (request.getDataSourceName() != null) {
+      criteria.andDataSourceNameEqualTo(request.getDataSourceName());
     }
+    if (request.getUsageType() != null) {
+      criteria.andUsageTypeEqualTo(request.getUsageType());
+    }
+    if (request.getMountObjectId() != null) {
+      criteria.andMountObjectIdEqualTo(request.getMountObjectId());
+    }
+    if (request.getMountObjectType() != null) {
+      criteria.andMountObjectTypeEqualTo(request.getMountObjectType());
+    }
+    example.setOrderByClause("id ASC");
+    List<DataSourceUsageDO> dataSourceUsageDOS = dataSourceUsageDOMapper.selectByExample(example);
+    return CollectionsUtils.listMap(dataSourceUsageDOS, DataSourceUsageConvertor::toModel);
+  }
 }

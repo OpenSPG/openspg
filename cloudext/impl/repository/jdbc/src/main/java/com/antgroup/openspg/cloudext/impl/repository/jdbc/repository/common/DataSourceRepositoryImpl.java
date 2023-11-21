@@ -20,70 +20,69 @@ import com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper.DataSourceDOMap
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.common.convertor.DataSourceConvertor;
 import com.antgroup.openspg.common.model.datasource.DataSource;
 import com.antgroup.openspg.common.service.datasource.DataSourceRepository;
-
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-
 @Repository
 public class DataSourceRepositoryImpl implements DataSourceRepository {
 
-    @Autowired
-    private DataSourceDOMapper dataSourceDOMapper;
+  @Autowired private DataSourceDOMapper dataSourceDOMapper;
 
-    @Override
-    public int save(DataSource dataSource) {
-        DataSourceDOWithBLOBs dataSourceDO = DataSourceConvertor.toDO(dataSource);
-        return dataSourceDOMapper.insert(dataSourceDO);
+  @Override
+  public int save(DataSource dataSource) {
+    DataSourceDOWithBLOBs dataSourceDO = DataSourceConvertor.toDO(dataSource);
+    return dataSourceDOMapper.insert(dataSourceDO);
+  }
+
+  @Override
+  public DataSource get(String uniqueName) {
+    DataSourceDOExample example = new DataSourceDOExample();
+
+    DataSourceDOExample.Criteria criteria = example.createCriteria();
+    criteria.andUniqueNameEqualTo(uniqueName);
+
+    List<DataSourceDOWithBLOBs> dataSourceDOs =
+        dataSourceDOMapper.selectByExampleWithBLOBs(example);
+    if (CollectionUtils.isEmpty(dataSourceDOs)) {
+      return null;
+    }
+    return DataSourceConvertor.toModel(dataSourceDOs.get(0));
+  }
+
+  @Override
+  public Map<String, DataSource> query(DataSourceQueryRequest request) {
+    DataSourceDOExample example = new DataSourceDOExample();
+
+    DataSourceDOExample.Criteria criteria = example.createCriteria();
+    if (request.getType() != null) {
+      criteria.andTypeEqualTo(request.getType());
+    }
+    if (request.getName() != null) {
+      criteria.andUniqueNameEqualTo(request.getName());
     }
 
-    @Override
-    public DataSource get(String uniqueName) {
-        DataSourceDOExample example = new DataSourceDOExample();
+    List<DataSourceDOWithBLOBs> dataSourceDOs =
+        dataSourceDOMapper.selectByExampleWithBLOBs(example);
+    return dataSourceDOs.stream()
+        .collect(
+            Collectors.toMap(DataSourceDOWithBLOBs::getUniqueName, DataSourceConvertor::toModel));
+  }
 
-        DataSourceDOExample.Criteria criteria = example.createCriteria();
-        criteria.andUniqueNameEqualTo(uniqueName);
+  @Override
+  public Map<String, DataSource> batchGet(List<String> uniqueNames) {
+    DataSourceDOExample example = new DataSourceDOExample();
 
-        List<DataSourceDOWithBLOBs> dataSourceDOs = dataSourceDOMapper.selectByExampleWithBLOBs(example);
-        if (CollectionUtils.isEmpty(dataSourceDOs)) {
-            return null;
-        }
-        return DataSourceConvertor.toModel(dataSourceDOs.get(0));
-    }
+    DataSourceDOExample.Criteria criteria = example.createCriteria();
+    criteria.andUniqueNameIn(uniqueNames);
 
-    @Override
-    public Map<String, DataSource> query(DataSourceQueryRequest request) {
-        DataSourceDOExample example = new DataSourceDOExample();
-
-        DataSourceDOExample.Criteria criteria = example.createCriteria();
-        if (request.getType() != null) {
-            criteria.andTypeEqualTo(request.getType());
-        }
-        if (request.getName() != null) {
-            criteria.andUniqueNameEqualTo(request.getName());
-        }
-
-        List<DataSourceDOWithBLOBs> dataSourceDOs = dataSourceDOMapper.selectByExampleWithBLOBs(example);
-        return dataSourceDOs.stream().collect(Collectors.toMap(
-            DataSourceDOWithBLOBs::getUniqueName, DataSourceConvertor::toModel
-        ));
-    }
-
-    @Override
-    public Map<String, DataSource> batchGet(List<String> uniqueNames) {
-        DataSourceDOExample example = new DataSourceDOExample();
-
-        DataSourceDOExample.Criteria criteria = example.createCriteria();
-        criteria.andUniqueNameIn(uniqueNames);
-
-        List<DataSourceDOWithBLOBs> dataSourceDOs = dataSourceDOMapper.selectByExampleWithBLOBs(example);
-        return dataSourceDOs.stream().collect(Collectors.toMap(
-            DataSourceDOWithBLOBs::getUniqueName, DataSourceConvertor::toModel
-        ));
-    }
+    List<DataSourceDOWithBLOBs> dataSourceDOs =
+        dataSourceDOMapper.selectByExampleWithBLOBs(example);
+    return dataSourceDOs.stream()
+        .collect(
+            Collectors.toMap(DataSourceDOWithBLOBs::getUniqueName, DataSourceConvertor::toModel));
+  }
 }

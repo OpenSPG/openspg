@@ -13,24 +13,28 @@
 
 from knext.core.builder.job.builder import BuilderJob
 from knext.core.builder.job.model.component import EntityMappingComponent
-from knext.core.builder.job.model.component import SourceCsvComponent, SinkToKgComponent, RelationMappingComponent
+from knext.core.builder.job.model.component import (
+    SourceCsvComponent,
+    SinkToKgComponent,
+    RelationMappingComponent,
+)
 from schema.riskmining_schema_helper import RiskMining
 
 
 class Company(BuilderJob):
-
     def build(self):
         source = SourceCsvComponent(
             local_path="./builder/job/data/Company.csv",
-            columns=["id", 'name', 'phone'],
-            start_row=2
+            columns=["id", "name", "phone"],
+            start_row=2,
         )
 
-        mapping = EntityMappingComponent(
-            spg_type_name=RiskMining.Company
-        ).add_field("id", RiskMining.Company.id) \
-            .add_field("name", RiskMining.Company.name) \
+        mapping = (
+            EntityMappingComponent(spg_type_name=RiskMining.Company)
+            .add_field("id", RiskMining.Company.id)
+            .add_field("name", RiskMining.Company.name)
             .add_field("phone", RiskMining.Company.hasPhone)
+        )
 
         sink = SinkToKgComponent()
 
@@ -38,20 +42,22 @@ class Company(BuilderJob):
 
 
 class CompanyHasCert(BuilderJob):
-
     def build(self):
         source = SourceCsvComponent(
             local_path="./builder/job/data/Company_hasCert_Cert.csv",
-            columns=['src', 'dst'],
-            start_row=2
+            columns=["src", "dst"],
+            start_row=2,
         )
 
-        mapping = RelationMappingComponent(
-            subject_name=RiskMining.Company,
-            predicate_name='hasCert',
-            object_name=RiskMining.Cert
-        ).add_field("src", "srcId") \
+        mapping = (
+            RelationMappingComponent(
+                subject_name=RiskMining.Company,
+                predicate_name="hasCert",
+                object_name=RiskMining.Cert,
+            )
+            .add_field("src", "srcId")
             .add_field("dst", "dstId")
+        )
 
         sink = SinkToKgComponent()
 

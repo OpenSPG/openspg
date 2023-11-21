@@ -13,20 +13,19 @@
 
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums;
 
-
 public enum MapTypeEnum {
-    EDGE,
+  EDGE,
 
-    PROP,
+  PROP,
 
-    TYPE;
+  TYPE;
 
-    public static MapTypeEnum getEnum(String name) {
-        for (MapTypeEnum mapTypeEnum : MapTypeEnum.values()) {
-            if (mapTypeEnum.name().equalsIgnoreCase(name)) {
-                return mapTypeEnum;
-            }
-        }
-        throw new IllegalArgumentException("illegal type=" + name);
+  public static MapTypeEnum getEnum(String name) {
+    for (MapTypeEnum mapTypeEnum : MapTypeEnum.values()) {
+      if (mapTypeEnum.name().equalsIgnoreCase(name)) {
+        return mapTypeEnum;
+      }
     }
+    throw new IllegalArgumentException("illegal type=" + name);
+  }
 }

@@ -15,7 +15,4 @@ package com.antgroup.openspg.common.model.job;
 
 import com.antgroup.openspg.common.model.base.BaseToString;
 
-
-public abstract class BaseJobRunResult extends BaseToString {
-
-}
+public abstract class BaseJobRunResult extends BaseToString {}

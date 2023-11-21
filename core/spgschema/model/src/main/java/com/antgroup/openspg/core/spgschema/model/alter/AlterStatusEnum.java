@@ -13,28 +13,21 @@
 
 package com.antgroup.openspg.core.spgschema.model.alter;
 
-
-/**
- * Enumeration of schema alter states
- */
+/** Enumeration of schema alter states */
 public enum AlterStatusEnum {
-    /**
-     * The spg ontology is published online
-     */
-    ONLINE,
+  /** The spg ontology is published online */
+  ONLINE,
 
-    /**
-     * The spg ontology is deleted.
-     */
-    DELETED;
+  /** The spg ontology is deleted. */
+  DELETED;
 
-    public static AlterStatusEnum toEnum(String value) {
-        for (AlterStatusEnum alterStatus : AlterStatusEnum.values()) {
-            if (alterStatus.name().equalsIgnoreCase(value)) {
-                return alterStatus;
-            }
-        }
-
-        throw new IllegalArgumentException("unknown type: " + value);
+  public static AlterStatusEnum toEnum(String value) {
+    for (AlterStatusEnum alterStatus : AlterStatusEnum.values()) {
+      if (alterStatus.name().equalsIgnoreCase(value)) {
+        return alterStatus;
+      }
     }
+
+    throw new IllegalArgumentException("unknown type: " + value);
+  }
 }

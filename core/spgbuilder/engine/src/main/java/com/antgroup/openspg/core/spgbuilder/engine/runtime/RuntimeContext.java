@@ -20,61 +20,58 @@ import com.antgroup.openspg.common.model.datasource.connection.SearchEngineConne
 import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInfo;
 import com.antgroup.openspg.core.spgschema.model.type.ProjectSchema;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.io.Serializable;
 import java.util.Map;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public class RuntimeContext implements Serializable {
 
-    public final static String GRAPH_STORE_CONN_INFO = "graphStoreConnInfo";
-    public final static String SEARCH_ENGINE_CONN_INFO = "searchEngineConnInfo";
-    public final static String TABLE_STORE_CONN_INFO = "tableStoreConnInfo";
-    public final static String GRAPH_STORE_CLIENT = "graphStoreClient";
-    public final static String SEARCH_ENGINE_CLIENT = "searchEngineClient";
+  public static final String GRAPH_STORE_CONN_INFO = "graphStoreConnInfo";
+  public static final String SEARCH_ENGINE_CONN_INFO = "searchEngineConnInfo";
+  public static final String TABLE_STORE_CONN_INFO = "tableStoreConnInfo";
+  public static final String GRAPH_STORE_CLIENT = "graphStoreClient";
+  public static final String SEARCH_ENGINE_CLIENT = "searchEngineClient";
 
-    private final long projectId;
-    private final String schemaUrl;
-    private final String builderJobName;
-    private final long builderJobInstId;
+  private final long projectId;
+  private final String schemaUrl;
+  private final String builderJobName;
+  private final long builderJobInstId;
 
-    private final RecordAlterOperationEnum operation;
-    private final int splitId;
-    private final int parallelism;
-    private final int batchSize;
-    private final ProjectSchema projectSchema;
+  private final RecordAlterOperationEnum operation;
+  private final int splitId;
+  private final int parallelism;
+  private final int batchSize;
+  private final ProjectSchema projectSchema;
 
-    private final Map<String, Object> params;
+  private final Map<String, Object> params;
 
-    private final BuilderMetric metrics;
-    private final RecordCollector recordCollector;
+  private final BuilderMetric metrics;
+  private final RecordCollector recordCollector;
 
-    public GraphStoreClient getGraphStoreClient() {
-        return (GraphStoreClient) params.get(GRAPH_STORE_CLIENT);
-    }
+  public GraphStoreClient getGraphStoreClient() {
+    return (GraphStoreClient) params.get(GRAPH_STORE_CLIENT);
+  }
 
-    public SearchEngineClient getSearchEngineClient() {
-        return (SearchEngineClient) params.get(SEARCH_ENGINE_CLIENT);
-    }
+  public SearchEngineClient getSearchEngineClient() {
+    return (SearchEngineClient) params.get(SEARCH_ENGINE_CLIENT);
+  }
 
-    public GraphStoreConnectionInfo getGraphStoreConnInfo() {
-        return (GraphStoreConnectionInfo) params.get(GRAPH_STORE_CONN_INFO);
-    }
+  public GraphStoreConnectionInfo getGraphStoreConnInfo() {
+    return (GraphStoreConnectionInfo) params.get(GRAPH_STORE_CONN_INFO);
+  }
 
-    public SearchEngineConnectionInfo getSearchEngineConnectionInfo() {
-        return (SearchEngineConnectionInfo) params.get(SEARCH_ENGINE_CONN_INFO);
-    }
+  public SearchEngineConnectionInfo getSearchEngineConnectionInfo() {
+    return (SearchEngineConnectionInfo) params.get(SEARCH_ENGINE_CONN_INFO);
+  }
 
-    public boolean isEnableLeadTo() {
-        return (boolean) params.getOrDefault(BuilderJobInfo.LEAD_TO, Boolean.FALSE);
-    }
+  public boolean isEnableLeadTo() {
+    return (boolean) params.getOrDefault(BuilderJobInfo.LEAD_TO, Boolean.FALSE);
+  }
 
-    public boolean isEnableSearchEngine() {
-        return (boolean) params.getOrDefault(BuilderJobInfo.SEARCH_ENGINE, Boolean.FALSE);
-    }
+  public boolean isEnableSearchEngine() {
+    return (boolean) params.getOrDefault(BuilderJobInfo.SEARCH_ENGINE, Boolean.FALSE);
+  }
 }

@@ -13,7 +13,4 @@
 
 package com.antgroup.openspg.common.model.datasource.connection;
 
-
-public class ObjectStoreConnectionInfo extends BaseConnectionInfo {
-
-}
+public class ObjectStoreConnectionInfo extends BaseConnectionInfo {}

@@ -15,14 +15,13 @@ package com.antgroup.openspg.core.spgbuilder.engine.runtime;
 
 import com.antgroup.openspg.core.spgbuilder.engine.physical.BuilderRecord;
 
-
 public interface RecordCollector {
 
-    boolean haveCollected();
+  boolean haveCollected();
 
-    String getTableName();
+  String getTableName();
 
-    void collectRecord(BuilderRecord record, BuilderRecordException e);
+  void collectRecord(BuilderRecord record, BuilderRecordException e);
 
-    void close() throws Exception;
+  void close() throws Exception;
 }

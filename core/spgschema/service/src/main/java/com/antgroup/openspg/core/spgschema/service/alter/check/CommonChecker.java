@@ -16,23 +16,22 @@ package com.antgroup.openspg.core.spgschema.service.alter.check;
 import com.antgroup.openspg.core.spgschema.model.constraint.Constraint;
 import com.antgroup.openspg.core.spgschema.model.constraint.ConstraintTypeEnum;
 
-
 public class CommonChecker {
 
-    /**
-     * check if contains forbidden constraint.
-     *
-     * @param constraint     constraint config
-     * @param constraintType forbidden constraint type
-     */
-    public static void containForbiddenConstraintType(Constraint constraint, ConstraintTypeEnum constraintType) {
-        if (null == constraint) {
-            return;
-        }
-
-        if (constraint.contains(constraintType)) {
-            throw new IllegalArgumentException(
-                "number property can not have multi value constraint");
-        }
+  /**
+   * check if contains forbidden constraint.
+   *
+   * @param constraint constraint config
+   * @param constraintType forbidden constraint type
+   */
+  public static void containForbiddenConstraintType(
+      Constraint constraint, ConstraintTypeEnum constraintType) {
+    if (null == constraint) {
+      return;
     }
+
+    if (constraint.contains(constraintType)) {
+      throw new IllegalArgumentException("number property can not have multi value constraint");
+    }
+  }
 }

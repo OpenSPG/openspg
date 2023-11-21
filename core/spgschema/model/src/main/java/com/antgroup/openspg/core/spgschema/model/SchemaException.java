@@ -14,47 +14,51 @@
 package com.antgroup.openspg.core.spgschema.model;
 
 import com.antgroup.openspg.common.model.exception.OpenSPGException;
-
 import org.apache.commons.lang3.StringUtils;
-
 
 public class SchemaException extends OpenSPGException {
 
-    private SchemaException(Throwable cause, String messagePattern, Object... args) {
-        super(cause, true, true, messagePattern, args);
-    }
+  private SchemaException(Throwable cause, String messagePattern, Object... args) {
+    super(cause, true, true, messagePattern, args);
+  }
 
-    private SchemaException(String messagePattern, Object... args) {
-        this(null, messagePattern, args);
-    }
+  private SchemaException(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
+  }
 
-    public static SchemaException alterError(Throwable cause) {
-        return new SchemaException(cause, StringUtils.isBlank(cause.getMessage())
-            ? "alter schema unknown error" : cause.getMessage());
-    }
+  public static SchemaException alterError(Throwable cause) {
+    return new SchemaException(
+        cause,
+        StringUtils.isBlank(cause.getMessage())
+            ? "alter schema unknown error"
+            : cause.getMessage());
+  }
 
-    public static SchemaException queryError(Throwable cause) {
-        return new SchemaException(cause, StringUtils.isBlank(cause.getMessage())
-            ? "query schema unknown error" : cause.getMessage());
-    }
+  public static SchemaException queryError(Throwable cause) {
+    return new SchemaException(
+        cause,
+        StringUtils.isBlank(cause.getMessage())
+            ? "query schema unknown error"
+            : cause.getMessage());
+  }
 
-    public static SchemaException uniqueIdNotExist(Long uniqueId) {
-        return new SchemaException("there is no spg type with uniqueId={}", uniqueId);
-    }
+  public static SchemaException uniqueIdNotExist(Long uniqueId) {
+    return new SchemaException("there is no spg type with uniqueId={}", uniqueId);
+  }
 
-    public static SchemaException spgTypeAlreadyExists(String spgTypeName) {
-        return new SchemaException("exist spg type with name={}", spgTypeName);
-    }
+  public static SchemaException spgTypeAlreadyExists(String spgTypeName) {
+    return new SchemaException("exist spg type with name={}", spgTypeName);
+  }
 
-    public static SchemaException spgTypeNotExist(String spgTypeName) {
-        return new SchemaException("there is no spg type with name={}", spgTypeName);
-    }
+  public static SchemaException spgTypeNotExist(String spgTypeName) {
+    return new SchemaException("there is no spg type with name={}", spgTypeName);
+  }
 
-    public static SchemaException propertyNotExist(String propertyName) {
-        return new SchemaException("there is no property with name={}", propertyName);
-    }
+  public static SchemaException propertyNotExist(String propertyName) {
+    return new SchemaException("there is no property with name={}", propertyName);
+  }
 
-    public static SchemaException relationNotExist(String relationName) {
-        return new SchemaException("there is no relation with name={}", relationName);
-    }
+  public static SchemaException relationNotExist(String relationName) {
+    return new SchemaException("there is no relation with name={}", relationName);
+  }
 }

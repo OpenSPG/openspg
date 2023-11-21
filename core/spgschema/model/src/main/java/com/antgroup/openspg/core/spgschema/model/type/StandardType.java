@@ -18,65 +18,63 @@ import com.antgroup.openspg.core.spgschema.model.constraint.BaseConstraintItem;
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.predicate.Property;
 import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
-
+import java.util.List;
 import org.apache.commons.lang3.BooleanUtils;
 
-import java.util.List;
-
 /**
- * Class definition of literal with standard format constraint and semantics.
- * <br>
+ * Class definition of literal with standard format constraint and semantics. <br>
+ *
  * <p>In the real world, some entities have standard format constraints and carry certain semantics.
- * Usually users can understand the meaning of the entity and what format the physical data needs to meet according to
- * entity name. Such as email-address, phone-number, mac-address and so on.
- * <br>
- * Like {@link BasicType}, {@link StandardType} are usually only used as value types of property and cannot be used as
- * the subject of SPO triples.<br> There are also differences between standard types. Some standard types are
- * spreadable, that is, based on the entity of the standard type, you can reversely find which entities point to it,
- * such as mobile phone numbers, email addresses etc., while some standard types only have format constraints and are
- * not semantically communicable, such as timestamp and constellation.
+ * Usually users can understand the meaning of the entity and what format the physical data needs to
+ * meet according to entity name. Such as email-address, phone-number, mac-address and so on. <br>
+ * Like {@link BasicType}, {@link StandardType} are usually only used as value types of property and
+ * cannot be used as the subject of SPO triples.<br>
+ * There are also differences between standard types. Some standard types are spreadable, that is,
+ * based on the entity of the standard type, you can reversely find which entities point to it, such
+ * as mobile phone numbers, email addresses etc., while some standard types only have format
+ * constraints and are not semantically communicable, such as timestamp and constellation.
  */
 public class StandardType extends BaseAdvancedType {
 
-    private static final long serialVersionUID = 7362461635734268212L;
+  private static final long serialVersionUID = 7362461635734268212L;
 
-    /**
-     * The namespace of standard types, the unique name of standard type is start with {@code STD}
-     */
-    public static final String STD_NAMESPACE = "STD";
+  /** The namespace of standard types, the unique name of standard type is start with {@code STD} */
+  public static final String STD_NAMESPACE = "STD";
 
-    /**
-     * If the standardType is spreadable, we can find source node by the standard type node
-     */
-    private final Boolean spreadable;
+  /** If the standardType is spreadable, we can find source node by the standard type node */
+  private final Boolean spreadable;
 
-    /**
-     * The constraint is used to normalize the property value that is attached to the StandardType.
-     */
-    private final List<BaseConstraintItem> constraintItems;
+  /**
+   * The constraint is used to normalize the property value that is attached to the StandardType.
+   */
+  private final List<BaseConstraintItem> constraintItems;
 
-    public StandardType(
-        BasicInfo<SPGTypeIdentifier> basicInfo,
-        ParentTypeInfo parentTypeInfo,
-        List<Property> properties,
-        List<Relation> relations,
-        SPGTypeAdvancedConfig advancedConfig,
-        Boolean spreadable,
-        List<BaseConstraintItem> constraintItems) {
-        super(basicInfo, parentTypeInfo, SPGTypeEnum.STANDARD_TYPE,
-            properties, relations, advancedConfig
-        );
+  public StandardType(
+      BasicInfo<SPGTypeIdentifier> basicInfo,
+      ParentTypeInfo parentTypeInfo,
+      List<Property> properties,
+      List<Relation> relations,
+      SPGTypeAdvancedConfig advancedConfig,
+      Boolean spreadable,
+      List<BaseConstraintItem> constraintItems) {
+    super(
+        basicInfo,
+        parentTypeInfo,
+        SPGTypeEnum.STANDARD_TYPE,
+        properties,
+        relations,
+        advancedConfig);
 
-        this.spreadable = spreadable != null && spreadable;
-        this.constraintItems = constraintItems;
-        this.getAdvancedConfig().setVisibleScope(VisibleScopeEnum.PUBLIC);
-    }
+    this.spreadable = spreadable != null && spreadable;
+    this.constraintItems = constraintItems;
+    this.getAdvancedConfig().setVisibleScope(VisibleScopeEnum.PUBLIC);
+  }
 
-    public Boolean getSpreadable() {
-        return BooleanUtils.isTrue(spreadable);
-    }
+  public Boolean getSpreadable() {
+    return BooleanUtils.isTrue(spreadable);
+  }
 
-    public List<BaseConstraintItem> getConstraintItems() {
-        return constraintItems;
-    }
+  public List<BaseConstraintItem> getConstraintItems() {
+    return constraintItems;
+  }
 }

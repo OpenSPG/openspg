@@ -14,34 +14,30 @@
 package com.antgroup.openspg.core.spgbuilder.model.pipeline;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
 import java.util.List;
 
 /**
- * The knowledge processing pipeline constructed by knext sdk or the frontend based on business needs.
+ * The knowledge processing pipeline constructed by knext sdk or the frontend based on business
+ * needs.
  */
 public class Pipeline extends BaseValObj {
 
-    /**
-     * The list of nodes in the pipeline.
-     */
-    private final List<Node> nodes;
+  /** The list of nodes in the pipeline. */
+  private final List<Node> nodes;
 
-    /**
-     * The list of edge in the pipeline.
-     */
-    private final List<Edge> edges;
+  /** The list of edge in the pipeline. */
+  private final List<Edge> edges;
 
-    public Pipeline(List<Node> nodes, List<Edge> edges) {
-        this.nodes = nodes;
-        this.edges = edges;
-    }
+  public Pipeline(List<Node> nodes, List<Edge> edges) {
+    this.nodes = nodes;
+    this.edges = edges;
+  }
 
-    public List<Node> getNodes() {
-        return nodes;
-    }
+  public List<Node> getNodes() {
+    return nodes;
+  }
 
-    public List<Edge> getEdges() {
-        return edges;
-    }
+  public List<Edge> getEdges() {
+    return edges;
+  }
 }

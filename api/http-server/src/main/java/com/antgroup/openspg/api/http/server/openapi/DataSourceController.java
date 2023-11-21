@@ -23,8 +23,8 @@ import com.antgroup.openspg.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.biz.common.DataSourceManager;
 import com.antgroup.openspg.common.model.datasource.DataSource;
 import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,83 +33,79 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 @Tag(name = "DataSourceController", description = "数据源管理")
 @Controller
 @RequestMapping("/public/v1")
 public class DataSourceController extends BaseController {
 
-    @Autowired
-    private DataSourceManager dataSourceManager;
+  @Autowired private DataSourceManager dataSourceManager;
 
-    @RequestMapping(value = "/dataSource", method = RequestMethod.POST)
-    public ResponseEntity<Object> create(@RequestBody DataSourceCreateRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<DataSource>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/dataSource", method = RequestMethod.POST)
+  public ResponseEntity<Object> create(@RequestBody DataSourceCreateRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<DataSource>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public DataSource action() {
-                return dataSourceManager.create(request);
-            }
+          @Override
+          public DataSource action() {
+            return dataSourceManager.create(request);
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/dataSource", method = RequestMethod.GET)
-    public ResponseEntity<Object> query(
-        @RequestParam(required = false) String type,
-        @RequestParam(required = false) String name) {
-        return HttpBizTemplate.execute(new HttpBizCallback<List<DataSource>>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/dataSource", method = RequestMethod.GET)
+  public ResponseEntity<Object> query(
+      @RequestParam(required = false) String type, @RequestParam(required = false) String name) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<List<DataSource>>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public List<DataSource> action() {
-                DataSourceQueryRequest request = new DataSourceQueryRequest();
-                request.setType(type);
-                request.setName(name);
-                return dataSourceManager.query(request);
-            }
+          @Override
+          public List<DataSource> action() {
+            DataSourceQueryRequest request = new DataSourceQueryRequest();
+            request.setType(type);
+            request.setName(name);
+            return dataSourceManager.query(request);
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/dataSourceUsage", method = RequestMethod.POST)
-    public ResponseEntity<Object> mount(@RequestBody DataSourceUsageCreateRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<DataSourceUsage>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/dataSourceUsage", method = RequestMethod.POST)
+  public ResponseEntity<Object> mount(@RequestBody DataSourceUsageCreateRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<DataSourceUsage>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public DataSourceUsage action() {
-                return dataSourceManager.mount(request);
-            }
+          @Override
+          public DataSourceUsage action() {
+            return dataSourceManager.mount(request);
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/dataSourceUsage", method = RequestMethod.GET)
-    public ResponseEntity<Object> query(
-        @RequestParam(required = false) String dataSourceName,
-        @RequestParam(required = false) String usageType,
-        @RequestParam(required = false) String mountObjectType,
-        @RequestParam(required = false) String mountObjectId) {
-        return HttpBizTemplate.execute(new HttpBizCallback<List<DataSourceUsage>>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/dataSourceUsage", method = RequestMethod.GET)
+  public ResponseEntity<Object> query(
+      @RequestParam(required = false) String dataSourceName,
+      @RequestParam(required = false) String usageType,
+      @RequestParam(required = false) String mountObjectType,
+      @RequestParam(required = false) String mountObjectId) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<List<DataSourceUsage>>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public List<DataSourceUsage> action() {
-                DataSourceUsageQueryRequest request = new DataSourceUsageQueryRequest();
-                request.setDataSourceName(dataSourceName);
-                request.setUsageType(usageType);
-                request.setMountObjectType(mountObjectType);
-                request.setMountObjectId(mountObjectId);
-                return dataSourceManager.query(request);
-            }
+          @Override
+          public List<DataSourceUsage> action() {
+            DataSourceUsageQueryRequest request = new DataSourceUsageQueryRequest();
+            request.setDataSourceName(dataSourceName);
+            request.setUsageType(usageType);
+            request.setMountObjectType(mountObjectType);
+            request.setMountObjectId(mountObjectId);
+            return dataSourceManager.query(request);
+          }
         });
-    }
+  }
 }

@@ -13,8 +13,11 @@
 
 package com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.client;
 
-import com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.model.EsMapping;
+import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.HOST_VAR;
+import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.PORT_VAR;
+import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.SCHEME_VAR;
 
+import com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.model.EsMapping;
 import com.dtflys.forest.annotation.Address;
 import com.dtflys.forest.annotation.Delete;
 import com.dtflys.forest.annotation.Get;
@@ -22,27 +25,23 @@ import com.dtflys.forest.annotation.JSONBody;
 import com.dtflys.forest.annotation.Put;
 import com.dtflys.forest.annotation.Var;
 import com.dtflys.forest.http.ForestResponse;
-
 import java.util.Map;
-
-import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.HOST_VAR;
-import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.PORT_VAR;
-import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.SCHEME_VAR;
-
 
 @Address(scheme = SCHEME_VAR, host = HOST_VAR, port = PORT_VAR)
 public interface ElasticSearchSchemaClient {
 
-    @Put(value = "/{idxName}")
-    ForestResponse<String> createIdx(@Var("idxName") String idxName, @JSONBody("mappings") EsMapping mapping);
+  @Put(value = "/{idxName}")
+  ForestResponse<String> createIdx(
+      @Var("idxName") String idxName, @JSONBody("mappings") EsMapping mapping);
 
-    @Put(value = "/{idxName}/_mapping")
-    ForestResponse<String> addNewFieldsIntoIdx(@Var("idxName") String idxName, @JSONBody("properties")
-    Map<String, EsMapping.PropertyConfig> properties);
+  @Put(value = "/{idxName}/_mapping")
+  ForestResponse<String> addNewFieldsIntoIdx(
+      @Var("idxName") String idxName,
+      @JSONBody("properties") Map<String, EsMapping.PropertyConfig> properties);
 
-    @Delete(value = "/{idxName}")
-    ForestResponse<String> deleteIdx(@Var("idxName") String idxName);
+  @Delete(value = "/{idxName}")
+  ForestResponse<String> deleteIdx(@Var("idxName") String idxName);
 
-    @Get(value = "/_mapping")
-    ForestResponse<String> queryAllIdxMappings();
+  @Get(value = "/_mapping")
+  ForestResponse<String> queryAllIdxMappings();
 }

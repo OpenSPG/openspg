@@ -13,12 +13,8 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct;
 
-/**
- * <p>
- * This enum provides types of <tt>LPGRecordStruct</tt>.
- * </p>
- */
+/** This enum provides types of <tt>LPGRecordStruct</tt>. */
 public enum LPGRecordStructEnum {
-    TABLE,
-    GRAPH,
+  TABLE,
+  GRAPH,
 }

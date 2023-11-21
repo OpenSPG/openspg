@@ -15,51 +15,40 @@ package com.antgroup.openspg.core.spgbuilder.model.operator;
 
 import com.antgroup.openspg.common.model.base.BaseModel;
 
-
 public class OperatorVersion extends BaseModel {
 
-    /**
-     * Unique ID of the operator.
-     */
-    private final Long overviewId;
+  /** Unique ID of the operator. */
+  private final Long overviewId;
 
-    /**
-     * Main class of the operator.
-     */
-    private final String mainClass;
+  /** Main class of the operator. */
+  private final String mainClass;
 
-    /**
-     * The file path of the operator is composed of the URL, operator name, and operator version.
-     */
-    private final String filePath;
+  /** The file path of the operator is composed of the URL, operator name, and operator version. */
+  private final String filePath;
 
-    /**
-     * Version of the operator increases by 1 after each release.
-     */
-    private final Integer version;
+  /** Version of the operator increases by 1 after each release. */
+  private final Integer version;
 
-    public OperatorVersion(
-        Long overviewId, String mainClass,
-        String filePath, Integer version) {
-        this.overviewId = overviewId;
-        this.mainClass = mainClass;
-        this.filePath = filePath;
-        this.version = version;
-    }
+  public OperatorVersion(Long overviewId, String mainClass, String filePath, Integer version) {
+    this.overviewId = overviewId;
+    this.mainClass = mainClass;
+    this.filePath = filePath;
+    this.version = version;
+  }
 
-    public Long getOverviewId() {
-        return overviewId;
-    }
+  public Long getOverviewId() {
+    return overviewId;
+  }
 
-    public String getMainClass() {
-        return mainClass;
-    }
+  public String getMainClass() {
+    return mainClass;
+  }
 
-    public String getFilePath() {
-        return filePath;
-    }
+  public String getFilePath() {
+    return filePath;
+  }
 
-    public Integer getVersion() {
-        return version;
-    }
+  public Integer getVersion() {
+    return version;
+  }
 }

@@ -15,38 +15,37 @@ package com.antgroup.openspg.api.facade.dto.reasoner.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 import com.antgroup.openspg.core.spgreasoner.model.service.BaseReasonerContent;
-
 import java.util.Map;
 
 public class ReasonerDslRunRequest extends BaseRequest {
 
-    private Long projectId;
+  private Long projectId;
 
-    private BaseReasonerContent content;
+  private BaseReasonerContent content;
 
-    private Map<String, Object> params;
+  private Map<String, Object> params;
 
-    public BaseReasonerContent getContent() {
-        return content;
-    }
+  public BaseReasonerContent getContent() {
+    return content;
+  }
 
-    public void setContent(BaseReasonerContent content) {
-        this.content = content;
-    }
+  public void setContent(BaseReasonerContent content) {
+    this.content = content;
+  }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+  public void setProjectId(Long projectId) {
+    this.projectId = projectId;
+  }
 
-    public Map<String, Object> getParams() {
-        return params;
-    }
+  public Map<String, Object> getParams() {
+    return params;
+  }
 
-    public void setParams(Map<String, Object> params) {
-        this.params = params;
-    }
+  public void setParams(Map<String, Object> params) {
+    this.params = params;
+  }
 }

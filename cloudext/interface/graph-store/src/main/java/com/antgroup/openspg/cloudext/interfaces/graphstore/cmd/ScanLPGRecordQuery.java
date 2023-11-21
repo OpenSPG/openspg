@@ -16,33 +16,30 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.cmd;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGTypeNameConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
 
-
 public class ScanLPGRecordQuery extends BaseLPGRecordQuery {
 
-    private final Object typeName;
-    private final Integer limit;
+  private final Object typeName;
+  private final Integer limit;
 
-    public ScanLPGRecordQuery(Object typeName, Integer limit) {
-        super(LpgRecordQueryType.SCAN);
-        this.typeName = typeName;
-        this.limit = limit;
-    }
+  public ScanLPGRecordQuery(Object typeName, Integer limit) {
+    super(LpgRecordQueryType.SCAN);
+    this.typeName = typeName;
+    this.limit = limit;
+  }
 
-    @Override
-    public String toScript(LPGTypeNameConvertor lpgTypeNameConvertor) {
-        String convertedTypeName = null;
-        if (typeName instanceof EdgeTypeName) {
-            convertedTypeName = lpgTypeNameConvertor
-                .convertEdgeTypeName((EdgeTypeName) typeName);
-        } else {
-            convertedTypeName = lpgTypeNameConvertor
-                .convertVertexTypeName(typeName.toString());
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("MATCH (s:%s) RETURN s", convertedTypeName));
-        if (limit != null) {
-            sb.append(" LIMIT ").append(limit);
-        }
-        return sb.toString();
+  @Override
+  public String toScript(LPGTypeNameConvertor lpgTypeNameConvertor) {
+    String convertedTypeName = null;
+    if (typeName instanceof EdgeTypeName) {
+      convertedTypeName = lpgTypeNameConvertor.convertEdgeTypeName((EdgeTypeName) typeName);
+    } else {
+      convertedTypeName = lpgTypeNameConvertor.convertVertexTypeName(typeName.toString());
     }
+    StringBuilder sb = new StringBuilder();
+    sb.append(String.format("MATCH (s:%s) RETURN s", convertedTypeName));
+    if (limit != null) {
+      sb.append(" LIMIT ").append(limit);
+    }
+    return sb.toString();
+  }
 }

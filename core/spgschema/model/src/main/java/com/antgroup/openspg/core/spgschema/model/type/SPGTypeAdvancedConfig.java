@@ -16,84 +16,74 @@ package com.antgroup.openspg.core.spgschema.model.type;
 import com.antgroup.openspg.common.model.base.BaseValObj;
 
 /**
- * Advanced configurations for SPG types, including configurations that are unique to different types, such as
- * extraction operator for event types and normalization operator for concept types.
+ * Advanced configurations for SPG types, including configurations that are unique to different
+ * types, such as extraction operator for event types and normalization operator for concept types.
  */
 public class SPGTypeAdvancedConfig extends BaseValObj {
 
-    private static final long serialVersionUID = 5985750316789734122L;
+  private static final long serialVersionUID = 5985750316789734122L;
 
-    /**
-     * The visible scope of the schema type.
-     */
-    private VisibleScopeEnum visibleScope;
+  /** The visible scope of the schema type. */
+  private VisibleScopeEnum visibleScope;
 
-    /**
-     * The linking operator.
-     */
-    private OperatorKey linkOperator;
+  /** The linking operator. */
+  private OperatorKey linkOperator;
 
-    /**
-     * The fusion operator.
-     */
-    private OperatorKey fuseOperator;
+  /** The fusion operator. */
+  private OperatorKey fuseOperator;
 
-    /**
-     * The extraction operator.
-     */
-    private OperatorKey extractOperator;
+  /** The extraction operator. */
+  private OperatorKey extractOperator;
 
-    /**
-     * Execute in knowledge process, to nomalize property value that matches constraint.
-     */
-    private OperatorKey normalizedOperator;
+  /** Execute in knowledge process, to nomalize property value that matches constraint. */
+  private OperatorKey normalizedOperator;
 
-    public SPGTypeAdvancedConfig() {
-        this(VisibleScopeEnum.DOMAIN);
-    }
+  public SPGTypeAdvancedConfig() {
+    this(VisibleScopeEnum.DOMAIN);
+  }
 
-    public SPGTypeAdvancedConfig(VisibleScopeEnum visibleScope) {
-        this.visibleScope = visibleScope;
-    }
+  public SPGTypeAdvancedConfig(VisibleScopeEnum visibleScope) {
+    this.visibleScope = visibleScope;
+  }
 
-    public VisibleScopeEnum getVisibleScope() {
-        return visibleScope;
-    }
+  public VisibleScopeEnum getVisibleScope() {
+    return visibleScope;
+  }
 
-    public SPGTypeAdvancedConfig setVisibleScope(VisibleScopeEnum visibleScope) {
-        this.visibleScope = visibleScope;
-        return this;
-    }
+  public SPGTypeAdvancedConfig setVisibleScope(VisibleScopeEnum visibleScope) {
+    this.visibleScope = visibleScope;
+    return this;
+  }
 
-    public OperatorKey getLinkOperator() {
-        return linkOperator;
-    }
+  public OperatorKey getLinkOperator() {
+    return linkOperator;
+  }
 
-    public void setLinkOperator(OperatorKey linkOperator) {
-        this.linkOperator = linkOperator;
-    }
+  public void setLinkOperator(OperatorKey linkOperator) {
+    this.linkOperator = linkOperator;
+  }
 
-    public OperatorKey getFuseOperator() {
-        return fuseOperator;
-    }
+  public OperatorKey getFuseOperator() {
+    return fuseOperator;
+  }
 
-    public void setFuseOperator(OperatorKey fuseOperator) {
-        this.fuseOperator = fuseOperator;
-    }
+  public void setFuseOperator(OperatorKey fuseOperator) {
+    this.fuseOperator = fuseOperator;
+  }
 
-    public OperatorKey getExtractOperator() {
-        return extractOperator;
-    }
+  public OperatorKey getExtractOperator() {
+    return extractOperator;
+  }
 
-    public void setExtractOperator(OperatorKey extractOperator) {
-        this.extractOperator = extractOperator;
-    }
+  public void setExtractOperator(OperatorKey extractOperator) {
+    this.extractOperator = extractOperator;
+  }
 
-    public OperatorKey getNormalizedOperator() {
-        return normalizedOperator;
-    }
+  public OperatorKey getNormalizedOperator() {
+    return normalizedOperator;
+  }
 
-    public void setNormalizedOperator(OperatorKey normalizedOperator) {
-        this.normalizedOperator = normalizedOperator;
-    }
+  public void setNormalizedOperator(OperatorKey normalizedOperator) {
+    this.normalizedOperator = normalizedOperator;
+  }
 }

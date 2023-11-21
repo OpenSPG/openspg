@@ -18,24 +18,22 @@ import com.antgroup.openspg.api.facade.dto.builder.request.BuilderJobSubmitReque
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInst;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderReceiptTypeEnum;
 import com.antgroup.openspg.core.spgbuilder.model.service.JobBuilderReceipt;
-
 import java.util.List;
-
 
 public interface BuilderManager {
 
-    /**
-     * This method is the entrance of the building service.
-     * <p>
-     * The front end can call the service to pass in building commands to perform building. Different building receipts
-     * will be returned according to different building modes. The front end can execute different follow-up processes
-     * according to different building receipts. The type of building receipts can refer to
-     * {@link BuilderReceiptTypeEnum}
-     *
-     * @param request The building commands
-     * @return The building receipts
-     */
-    JobBuilderReceipt submitJobInfo(BuilderJobSubmitRequest request);
+  /**
+   * This method is the entrance of the building service.
+   *
+   * <p>The front end can call the service to pass in building commands to perform building.
+   * Different building receipts will be returned according to different building modes. The front
+   * end can execute different follow-up processes according to different building receipts. The
+   * type of building receipts can refer to {@link BuilderReceiptTypeEnum}
+   *
+   * @param request The building commands
+   * @return The building receipts
+   */
+  JobBuilderReceipt submitJobInfo(BuilderJobSubmitRequest request);
 
-    List<BuilderJobInst> queryJobInst(BuilderJobInstQuery query);
+  List<BuilderJobInst> queryJobInst(BuilderJobInstQuery query);
 }

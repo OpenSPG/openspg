@@ -16,43 +16,37 @@ package com.antgroup.openspg.cloudext.interfaces.computing;
 import com.antgroup.openspg.common.model.datasource.connection.ComputingConnectionInfo;
 import com.antgroup.openspg.common.model.exception.CloudExtException;
 import com.antgroup.openspg.common.util.DriverManagerUtils;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ComputingClientDriverManager {
 
-    private final static CopyOnWriteArrayList<ComputingClientDriver>
-        registeredDrivers = new CopyOnWriteArrayList<>();
+  private static final CopyOnWriteArrayList<ComputingClientDriver> registeredDrivers =
+      new CopyOnWriteArrayList<>();
 
-    private ComputingClientDriverManager() {
+  private ComputingClientDriverManager() {}
 
+  static {
+    DriverManagerUtils.loadDrivers("cloudext.computing.drivers", ComputingClientDriver.class);
+    log.info("computing DriverManager initialized");
+  }
+
+  public static synchronized void registerDriver(ComputingClientDriver driver) {
+    if (driver != null) {
+      registeredDrivers.addIfAbsent(driver);
+    } else {
+      throw new NullPointerException();
     }
+    log.info("registerDriver: {}", driver);
+  }
 
-    static {
-        DriverManagerUtils.loadDrivers(
-            "cloudext.computing.drivers", ComputingClientDriver.class);
-        log.info("computing DriverManager initialized");
+  public static ComputingClient getClient(ComputingConnectionInfo config) {
+    for (ComputingClientDriver driver : registeredDrivers) {
+      if (driver.acceptsConfig(config)) {
+        return driver.connect(config);
+      }
     }
-
-    public static synchronized void registerDriver(ComputingClientDriver driver) {
-        if (driver != null) {
-            registeredDrivers.addIfAbsent(driver);
-        } else {
-            throw new NullPointerException();
-        }
-        log.info("registerDriver: {}", driver);
-    }
-
-    public static ComputingClient getClient(ComputingConnectionInfo config) {
-        for (ComputingClientDriver driver : registeredDrivers) {
-            if (driver.acceptsConfig(config)) {
-                return driver.connect(config);
-            }
-        }
-        throw CloudExtException.driverNotExist(config);
-    }
+    throw CloudExtException.driverNotExist(config);
+  }
 }

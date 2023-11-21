@@ -22,120 +22,123 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.oper
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.CreateVertexTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.SchemaAtomicOperationEnum;
 import com.antgroup.openspg.common.util.StringUtils;
-
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
 
-/**
- * Create label procedure.
- */
+/** Create label procedure. */
 public class CreateLabelProcedure extends BaseTuGraphProcedure {
 
-    /**
-     * The template of cypher
-     */
-    private static final String CREATE_LABEL_CYPHER_TEMPLATE
-        = "CALL db.createLabel('${labelType}', '${labelName}', '${extra}'${fieldSpec});";
+  /** The template of cypher */
+  private static final String CREATE_LABEL_CYPHER_TEMPLATE =
+      "CALL db.createLabel('${labelType}', '${labelName}', '${extra}'${fieldSpec});";
 
-    /**
-     * Type of the label
-     * <p>
-     * Either "vertex" and "edge"
-     */
-    private final String labelType;
+  /**
+   * Type of the label
+   *
+   * <p>Either "vertex" and "edge"
+   */
+  private final String labelType;
 
-    /**
-     * Name of the label
-     */
-    private final String labelName;
+  /** Name of the label */
+  private final String labelName;
 
-    /**
-     * Extra
-     * <p>
-     * For edge, it means constraints; for vertex, it means primary property
-     */
-    private final String extra;
+  /**
+   * Extra
+   *
+   * <p>For edge, it means constraints; for vertex, it means primary property
+   */
+  private final String extra;
 
-    /**
-     * Specification of a field
-     */
-    private final String fieldSpec;
+  /** Specification of a field */
+  private final String fieldSpec;
 
-    /**
-     * Constructor.
-     */
-    private CreateLabelProcedure(String cypherTemplate, String labelType,
-        String labelName, String extra, String fieldSpec) {
-        super(cypherTemplate);
-        this.labelType = labelType;
-        this.labelName = labelName;
-        this.extra = extra;
-        this.fieldSpec = fieldSpec;
-    }
+  /** Constructor. */
+  private CreateLabelProcedure(
+      String cypherTemplate, String labelType, String labelName, String extra, String fieldSpec) {
+    super(cypherTemplate);
+    this.labelType = labelType;
+    this.labelName = labelName;
+    this.extra = extra;
+    this.fieldSpec = fieldSpec;
+  }
 
-    public static CreateLabelProcedure of(CreateVertexTypeOperation createVertexTypeOperation) {
-        List<AddPropertyOperation> addPropertyOperations = createVertexTypeOperation.getAtomicOperations()
-            .stream()
-            .filter(atomicOperation ->
-                SchemaAtomicOperationEnum.ADD_PROPERTY.equals(atomicOperation.getOperationTypeEnum()))
+  public static CreateLabelProcedure of(CreateVertexTypeOperation createVertexTypeOperation) {
+    List<AddPropertyOperation> addPropertyOperations =
+        createVertexTypeOperation.getAtomicOperations().stream()
+            .filter(
+                atomicOperation ->
+                    SchemaAtomicOperationEnum.ADD_PROPERTY.equals(
+                        atomicOperation.getOperationTypeEnum()))
             .map(atomicOperation -> (AddPropertyOperation) atomicOperation)
             .collect(Collectors.toList());
-        CreateLabelProcedure procedure = new CreateLabelProcedure(
+    CreateLabelProcedure procedure =
+        new CreateLabelProcedure(
             CREATE_LABEL_CYPHER_TEMPLATE,
             TuGraphConstants.LABEL_TYPE_VERTEX,
             createVertexTypeOperation.getVertexTypeName(),
             VertexType.ID,
-            getLabelFieldSpecOfProperty(addPropertyOperations)
-        );
-        return procedure;
-    }
+            getLabelFieldSpecOfProperty(addPropertyOperations));
+    return procedure;
+  }
 
-    public static CreateLabelProcedure of(CreateEdgeTypeOperation createEdgeTypeOperation) {
-        List<AddPropertyOperation> addPropertyOperations = createEdgeTypeOperation.getAtomicOperations()
-            .stream()
-            .filter(atomicOperation ->
-                SchemaAtomicOperationEnum.ADD_PROPERTY.equals(atomicOperation.getOperationTypeEnum()))
+  public static CreateLabelProcedure of(CreateEdgeTypeOperation createEdgeTypeOperation) {
+    List<AddPropertyOperation> addPropertyOperations =
+        createEdgeTypeOperation.getAtomicOperations().stream()
+            .filter(
+                atomicOperation ->
+                    SchemaAtomicOperationEnum.ADD_PROPERTY.equals(
+                        atomicOperation.getOperationTypeEnum()))
             .map(atomicOperation -> (AddPropertyOperation) atomicOperation)
             .collect(Collectors.toList());
-        CreateLabelProcedure procedure = new CreateLabelProcedure(
+    CreateLabelProcedure procedure =
+        new CreateLabelProcedure(
             CREATE_LABEL_CYPHER_TEMPLATE,
             TuGraphConstants.LABEL_TYPE_EDGE,
             createEdgeTypeOperation.getEdgeTypeName().getEdgeLabel(),
             String.format(
                 "[[\"%s\",\"%s\"]]",
                 createEdgeTypeOperation.getEdgeTypeName().getStartVertexType(),
-                createEdgeTypeOperation.getEdgeTypeName().getEndVertexType()
-            ),
-            getLabelFieldSpecOfProperty(addPropertyOperations)
-        );
-        return procedure;
-    }
+                createEdgeTypeOperation.getEdgeTypeName().getEndVertexType()),
+            getLabelFieldSpecOfProperty(addPropertyOperations));
+    return procedure;
+  }
 
-    private static String getLabelFieldSpecOfProperty(List<AddPropertyOperation> addPropertyOperations) {
-        if (CollectionUtils.isEmpty(addPropertyOperations)) {
-            return StringUtils.EMPTY;
-        }
-        StringBuilder fieldSpecBuilder = new StringBuilder();
-        for (AddPropertyOperation addPropertyOperation : addPropertyOperations) {
-            LPGProperty lpgProperty = addPropertyOperation.getProperty();
-            fieldSpecBuilder.append(String.format(
-                ", ['%s',%s,%s]", lpgProperty.getName(),
-                TuGraphSchemaConvertor.toTuGraphDataType(lpgProperty.getType()).getLowercaseForm(),
-                lpgProperty.isOptional()
-            ));
-        }
-        return fieldSpecBuilder.toString();
+  private static String getLabelFieldSpecOfProperty(
+      List<AddPropertyOperation> addPropertyOperations) {
+    if (CollectionUtils.isEmpty(addPropertyOperations)) {
+      return StringUtils.EMPTY;
     }
+    StringBuilder fieldSpecBuilder = new StringBuilder();
+    for (AddPropertyOperation addPropertyOperation : addPropertyOperations) {
+      LPGProperty lpgProperty = addPropertyOperation.getProperty();
+      fieldSpecBuilder.append(
+          String.format(
+              ", ['%s',%s,%s]",
+              lpgProperty.getName(),
+              TuGraphSchemaConvertor.toTuGraphDataType(lpgProperty.getType()).getLowercaseForm(),
+              lpgProperty.isOptional()));
+    }
+    return fieldSpecBuilder.toString();
+  }
 
-    @Override
-    public String toString() {
-        return "{\"procedure\":\"CreateLabelProcedure\", "
-            + "\"labelType\":\"" + labelType + "\", "
-            + "\"labelName\":\"" + labelName + "\", "
-            + "\"extra\":\"" + extra + "\", "
-            + "\"fieldSpec\":\"" + fieldSpec + "\", "
-            + "\"cypherTemplate\":\"" + getCypherTemplate() + "\"}";
-    }
+  @Override
+  public String toString() {
+    return "{\"procedure\":\"CreateLabelProcedure\", "
+        + "\"labelType\":\""
+        + labelType
+        + "\", "
+        + "\"labelName\":\""
+        + labelName
+        + "\", "
+        + "\"extra\":\""
+        + extra
+        + "\", "
+        + "\"fieldSpec\":\""
+        + fieldSpec
+        + "\", "
+        + "\"cypherTemplate\":\""
+        + getCypherTemplate()
+        + "\"}";
+  }
 }

@@ -27,88 +27,87 @@ import com.antgroup.openspg.core.spgbuilder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.core.spgbuilder.model.record.BasePropertyRecord;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class InvokerFactoryImpl implements InvokerFactory {
 
-    private OperatorInvoker operatorInvoker;
-    private ConceptPredicateInvoker predicateInvoker;
+  private OperatorInvoker operatorInvoker;
+  private ConceptPredicateInvoker predicateInvoker;
 
-    @Override
-    public void init(RuntimeContext context) {
-        operatorInvoker = new OperatorInvokerImpl();
-        operatorInvoker.init(context);
+  @Override
+  public void init(RuntimeContext context) {
+    operatorInvoker = new OperatorInvokerImpl();
+    operatorInvoker.init(context);
 
-        predicateInvoker = new ConceptPredicateInvokerImpl();
-        predicateInvoker.init(context);
-    }
+    predicateInvoker = new ConceptPredicateInvokerImpl();
+    predicateInvoker.init(context);
+  }
 
-    @Override
-    public void register(OperatorConfig operatorConfig) {
-        operatorInvoker.register(operatorConfig);
-    }
+  @Override
+  public void register(OperatorConfig operatorConfig) {
+    operatorInvoker.register(operatorConfig);
+  }
 
-    @Override
-    public List<BaseRecord> invoke(InvokerParam param) {
-        List<BaseRecord> resultRecords = new ArrayList<>();
-        BaseSPGRecord baseSpgRecord = param.getBaseSpgRecord();
+  @Override
+  public List<BaseRecord> invoke(InvokerParam param) {
+    List<BaseRecord> resultRecords = new ArrayList<>();
+    BaseSPGRecord baseSpgRecord = param.getBaseSpgRecord();
 
-        if (baseSpgRecord instanceof BaseAdvancedRecord) {
-            BaseAdvancedRecord advancedRecord = (BaseAdvancedRecord) baseSpgRecord;
-            List<BaseSPGRecord> predicatedRecords = null;
-            try {
-                // 触发belongTo/leadTo等谓词计算
-                predicatedRecords = predicateInvoker.invoke(advancedRecord);
-            } catch (Throwable e) {
-                throw new BuilderRecordException(param.getProcessor(), e,
-                    "call predicate error, errorMsg={}", e.getMessage());
-            }
+    if (baseSpgRecord instanceof BaseAdvancedRecord) {
+      BaseAdvancedRecord advancedRecord = (BaseAdvancedRecord) baseSpgRecord;
+      List<BaseSPGRecord> predicatedRecords = null;
+      try {
+        // 触发belongTo/leadTo等谓词计算
+        predicatedRecords = predicateInvoker.invoke(advancedRecord);
+      } catch (Throwable e) {
+        throw new BuilderRecordException(
+            param.getProcessor(), e, "call predicate error, errorMsg={}", e.getMessage());
+      }
 
-            try {
-                for (BaseSPGRecord predicateRecord : predicatedRecords) {
-                    if (predicateRecord instanceof BaseAdvancedRecord) {
-                        BaseAdvancedRecord predicatedAdvancedRecord = (BaseAdvancedRecord) predicateRecord;
-                        // 触发属性标化/实体链指等算子计算
-                        BaseAdvancedRecord operatorRecord = operatorInvoker
-                            .invoke(predicatedAdvancedRecord, param.getProperty2Operator());
-                        resultRecords.add(operatorRecord);
-                    } else {
-                        resultRecords.add(predicateRecord);
-                    }
-                }
-            } catch (Throwable e) {
-                throw new BuilderRecordException(param.getProcessor(), e,
-                    "call operator error, errorMsg={}", e.getMessage());
-            }
-        } else {
-            resultRecords.add(baseSpgRecord);
+      try {
+        for (BaseSPGRecord predicateRecord : predicatedRecords) {
+          if (predicateRecord instanceof BaseAdvancedRecord) {
+            BaseAdvancedRecord predicatedAdvancedRecord = (BaseAdvancedRecord) predicateRecord;
+            // 触发属性标化/实体链指等算子计算
+            BaseAdvancedRecord operatorRecord =
+                operatorInvoker.invoke(predicatedAdvancedRecord, param.getProperty2Operator());
+            resultRecords.add(operatorRecord);
+          } else {
+            resultRecords.add(predicateRecord);
+          }
         }
-        resultRecords.forEach(r -> setStdAndIdsValue(param.getProcessor(), r));
-        return resultRecords;
+      } catch (Throwable e) {
+        throw new BuilderRecordException(
+            param.getProcessor(), e, "call operator error, errorMsg={}", e.getMessage());
+      }
+    } else {
+      resultRecords.add(baseSpgRecord);
+    }
+    resultRecords.forEach(r -> setStdAndIdsValue(param.getProcessor(), r));
+    return resultRecords;
+  }
+
+  private void setStdAndIdsValue(BaseProcessor<?> processor, BaseRecord baseRecord) {
+    if (!(baseRecord instanceof BaseSPGRecord)) {
+      return;
     }
 
-    private void setStdAndIdsValue(BaseProcessor<?> processor, BaseRecord baseRecord) {
-        if (!(baseRecord instanceof BaseSPGRecord)) {
-            return;
-        }
-
-        BaseSPGRecord baseSpgRecord = (BaseSPGRecord) baseRecord;
-        for (BasePropertyRecord propertyRecord : baseSpgRecord.getProperties()) {
-            // 统一设置std&ids
-            try {
-                propertyRecord.setStdValue();
-            } catch (NumberFormatException e) {
-                throw new BuilderRecordException(processor, e,
-                    "the type of property:{} is {}, but {} found",
-                    propertyRecord.getName(),
-                    propertyRecord.getObjectTypeRef().getName(),
-                    propertyRecord.getValue().getStdOrRawValue()
-                );
-            }
-            propertyRecord.setIdsValue();
-        }
+    BaseSPGRecord baseSpgRecord = (BaseSPGRecord) baseRecord;
+    for (BasePropertyRecord propertyRecord : baseSpgRecord.getProperties()) {
+      // 统一设置std&ids
+      try {
+        propertyRecord.setStdValue();
+      } catch (NumberFormatException e) {
+        throw new BuilderRecordException(
+            processor,
+            e,
+            "the type of property:{} is {}, but {} found",
+            propertyRecord.getName(),
+            propertyRecord.getObjectTypeRef().getName(),
+            propertyRecord.getValue().getStdOrRawValue());
+      }
+      propertyRecord.setIdsValue();
     }
+  }
 }

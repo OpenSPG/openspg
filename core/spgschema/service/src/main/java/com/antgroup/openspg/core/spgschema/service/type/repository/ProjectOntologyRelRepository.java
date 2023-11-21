@@ -17,55 +17,56 @@ import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
 import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.spgschema.service.type.model.ProjectOntologyRel;
-
 import java.util.List;
 
 /**
- * The read-write interface for project and ontology relationship, manages the definition and reference relationship
- * between projects and {@link BaseSPGType} or {@link Relation}, and provides methods for adding, deleting, and querying
- * project ontology relationships.
+ * The read-write interface for project and ontology relationship, manages the definition and
+ * reference relationship between projects and {@link BaseSPGType} or {@link Relation}, and provides
+ * methods for adding, deleting, and querying project ontology relationships.
  */
 public interface ProjectOntologyRelRepository {
 
-    /**
-     * Save the definition or reference relationship between the project and {@link BaseSPGType} or {@link Relation}
-     *
-     * @param projectOntologyRel relationship
-     * @return record count
-     */
-    int save(ProjectOntologyRel projectOntologyRel);
+  /**
+   * Save the definition or reference relationship between the project and {@link BaseSPGType} or
+   * {@link Relation}
+   *
+   * @param projectOntologyRel relationship
+   * @return record count
+   */
+  int save(ProjectOntologyRel projectOntologyRel);
 
-    /**
-     * Delete the definition or reference relationship between the project and {@link BaseSPGType} or {@link Relation}
-     *
-     * @param uniqueId unique id of relationship
-     * @return record count
-     */
-    int delete(Long uniqueId);
+  /**
+   * Delete the definition or reference relationship between the project and {@link BaseSPGType} or
+   * {@link Relation}
+   *
+   * @param uniqueId unique id of relationship
+   * @return record count
+   */
+  int delete(Long uniqueId);
 
-    /**
-     * Query the relationship by project id.
-     *
-     * @param projectId project id
-     * @return list of relationship between the project and {@link BaseSPGType} or {@link Relation}
-     */
-    List<ProjectOntologyRel> queryByProjectId(Long projectId);
+  /**
+   * Query the relationship by project id.
+   *
+   * @param projectId project id
+   * @return list of relationship between the project and {@link BaseSPGType} or {@link Relation}
+   */
+  List<ProjectOntologyRel> queryByProjectId(Long projectId);
 
-    /**
-     * Query the relationship by ontology id and ontology type
-     *
-     * @param uniqueId     unique id of spg type
-     * @param ontologyEnum spg type or relation type
-     * @return relationship between the project and {@link BaseSPGType} or {@link Relation}
-     */
-    ProjectOntologyRel queryByOntologyId(Long uniqueId, SPGOntologyEnum ontologyEnum);
+  /**
+   * Query the relationship by ontology id and ontology type
+   *
+   * @param uniqueId unique id of spg type
+   * @param ontologyEnum spg type or relation type
+   * @return relationship between the project and {@link BaseSPGType} or {@link Relation}
+   */
+  ProjectOntologyRel queryByOntologyId(Long uniqueId, SPGOntologyEnum ontologyEnum);
 
-    /**
-     * Batch Query the relationship by ontology id and ontology type
-     *
-     * @param uniqueIds    list of ontology id
-     * @param ontologyEnum spg type or relation type
-     * @return list of relationship
-     */
-    List<ProjectOntologyRel> queryByOntologyId(List<Long> uniqueIds, SPGOntologyEnum ontologyEnum);
+  /**
+   * Batch Query the relationship by ontology id and ontology type
+   *
+   * @param uniqueIds list of ontology id
+   * @param ontologyEnum spg type or relation type
+   * @return list of relationship
+   */
+  List<ProjectOntologyRel> queryByOntologyId(List<Long> uniqueIds, SPGOntologyEnum ontologyEnum);
 }

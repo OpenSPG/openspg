@@ -15,64 +15,57 @@ package com.antgroup.openspg.core.spgschema.model.semantic.meta;
 
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-
 import java.util.EnumSet;
 
 public class InclusiveRelation extends BaseSemanticRelation {
 
-    private static final long serialVersionUID = 987603016727346252L;
+  private static final long serialVersionUID = 987603016727346252L;
 
-    enum InclusivePredicateEnum {
+  enum InclusivePredicateEnum {
 
-        /**
-         * is-part-of
-         */
-        isPartOf("是...的一部分"),
-        ;
+    /** is-part-of */
+    isPartOf("是...的一部分"),
+    ;
 
-        private final String nameZh;
+    private final String nameZh;
 
-        InclusivePredicateEnum(String nameZh) {
-            this.nameZh = nameZh;
-        }
-
-        public String getNameZh() {
-            return nameZh;
-        }
+    InclusivePredicateEnum(String nameZh) {
+      this.nameZh = nameZh;
     }
 
-    /**
-     * Accept concept type only
-     */
-    private final SPGTypeIdentifier subjectConceptTypeIdentifier;
-
-    /**
-     * Accept concept type only
-     */
-    private final SPGTypeIdentifier objectConceptTypeIdentifier;
-
-    private final InclusivePredicateEnum predicate;
-
-    public InclusiveRelation(
-        SPGTypeIdentifier subjectConceptTypeIdentifier,
-        SPGTypeIdentifier objectConceptTypeIdentifier,
-        InclusivePredicateEnum predicateEnum) {
-        super(EnumSet.of(SPGTypeEnum.CONCEPT_TYPE), EnumSet.of(SPGTypeEnum.CONCEPT_TYPE));
-
-        this.subjectConceptTypeIdentifier = subjectConceptTypeIdentifier;
-        this.objectConceptTypeIdentifier = objectConceptTypeIdentifier;
-        this.predicate = predicateEnum;
+    public String getNameZh() {
+      return nameZh;
     }
+  }
 
-    public SPGTypeIdentifier getSubjectConceptTypeIdentifier() {
-        return subjectConceptTypeIdentifier;
-    }
+  /** Accept concept type only */
+  private final SPGTypeIdentifier subjectConceptTypeIdentifier;
 
-    public SPGTypeIdentifier getObjectConceptTypeIdentifier() {
-        return objectConceptTypeIdentifier;
-    }
+  /** Accept concept type only */
+  private final SPGTypeIdentifier objectConceptTypeIdentifier;
 
-    public InclusivePredicateEnum getPredicate() {
-        return predicate;
-    }
+  private final InclusivePredicateEnum predicate;
+
+  public InclusiveRelation(
+      SPGTypeIdentifier subjectConceptTypeIdentifier,
+      SPGTypeIdentifier objectConceptTypeIdentifier,
+      InclusivePredicateEnum predicateEnum) {
+    super(EnumSet.of(SPGTypeEnum.CONCEPT_TYPE), EnumSet.of(SPGTypeEnum.CONCEPT_TYPE));
+
+    this.subjectConceptTypeIdentifier = subjectConceptTypeIdentifier;
+    this.objectConceptTypeIdentifier = objectConceptTypeIdentifier;
+    this.predicate = predicateEnum;
+  }
+
+  public SPGTypeIdentifier getSubjectConceptTypeIdentifier() {
+    return subjectConceptTypeIdentifier;
+  }
+
+  public SPGTypeIdentifier getObjectConceptTypeIdentifier() {
+    return objectConceptTypeIdentifier;
+  }
+
+  public InclusivePredicateEnum getPredicate() {
+    return predicate;
+  }
 }

@@ -13,9 +13,8 @@
 
 package com.antgroup.openspg.common.model.job;
 
-
 public enum ScheduleTypeEnum {
-
-    ONCE, CRON,
-    ;
+  ONCE,
+  CRON,
+  ;
 }

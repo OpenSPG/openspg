@@ -14,43 +14,40 @@
 package com.antgroup.openspg.core.spgschema.service.predicate;
 
 import com.antgroup.openspg.core.spgschema.model.predicate.Property;
-
 import java.util.List;
 
-/**
- * Property domain service, provide method to save/update/query/delete property.
- */
+/** Property domain service, provide method to save/update/query/delete property. */
 public interface PropertyService {
 
-    /**
-     * Create a new property.
-     *
-     * @param property property type detail
-     * @return record count
-     */
-    int create(Property property);
+  /**
+   * Create a new property.
+   *
+   * @param property property type detail
+   * @return record count
+   */
+  int create(Property property);
 
-    /**
-     * Update property type detail.
-     *
-     * @param property property type detail
-     * @return record count
-     */
-    int update(Property property);
+  /**
+   * Update property type detail.
+   *
+   * @param property property type detail
+   * @return record count
+   */
+  int update(Property property);
 
-    /**
-     * Delete a property type.
-     *
-     * @param property property type detail
-     * @return record count
-     */
-    int delete(Property property);
+  /**
+   * Delete a property type.
+   *
+   * @param property property type detail
+   * @return record count
+   */
+  int delete(Property property);
 
-    /**
-     * Query property type by spg type id.
-     *
-     * @param subjectIds list of spg type id
-     * @return list of property type
-     */
-    List<Property> queryBySubjectId(List<Long> subjectIds);
+  /**
+   * Query property type by spg type id.
+   *
+   * @param subjectIds list of spg type id
+   * @return list of property type
+   */
+  List<Property> queryBySubjectId(List<Long> subjectIds);
 }

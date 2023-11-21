@@ -16,9 +16,7 @@ from typing import Dict, Any, List
 
 
 class Vertex:
-    """Data structure in operator, used to store entity information.
-
-    """
+    """Data structure in operator, used to store entity information."""
 
     def __init__(
         self, biz_id: str = "", vertex_type: str = "", properties: Dict[str, str] = None

@@ -15,24 +15,22 @@ package com.antgroup.openspg.cloudext.interfaces.jobscheduler.model;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 
 @Getter
 @AllArgsConstructor
 public class SchedulerJobInst extends BaseValObj {
 
-    private final String jobInstId;
+  private final String jobInstId;
 
-    private final String jobId;
+  private final String jobId;
 
-    private final String jobType;
+  private final String jobType;
 
-    private final JobInstStatusEnum status;
+  private final JobInstStatusEnum status;
 
-    private final String host;
+  private final String host;
 
-    private final String idempotentId;
+  private final String idempotentId;
 }

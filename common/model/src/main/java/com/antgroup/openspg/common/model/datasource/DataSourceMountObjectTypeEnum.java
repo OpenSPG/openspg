@@ -13,11 +13,9 @@
 
 package com.antgroup.openspg.common.model.datasource;
 
-/**
- * Data sources can be mounted on projects or on service views.
- */
+/** Data sources can be mounted on projects or on service views. */
 public enum DataSourceMountObjectTypeEnum {
-
-    PROJECT, SERVICE_VIEW,
-    ;
+  PROJECT,
+  SERVICE_VIEW,
+  ;
 }

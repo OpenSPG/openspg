@@ -18,9 +18,7 @@ from knext.core.schema.model.property import Property
 
 
 class Relation(BaseProperty):
-    """Relation Model.
-
-    """
+    """Relation Model."""
 
     name: str
     object_type_name: str

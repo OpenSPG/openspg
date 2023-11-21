@@ -16,37 +16,34 @@ package com.antgroup.openspg.core.spgbuilder.model.service;
 import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 
-
 public class BuilderStatusWithProgress extends BaseValObj {
 
-    private final JobInstStatusEnum status;
+  private final JobInstStatusEnum status;
 
-    private final BaseBuilderResult result;
+  private final BaseBuilderResult result;
 
-    private final BuilderProgress progress;
+  private final BuilderProgress progress;
 
-    public BuilderStatusWithProgress(JobInstStatusEnum status) {
-        this(status, null, null);
-    }
+  public BuilderStatusWithProgress(JobInstStatusEnum status) {
+    this(status, null, null);
+  }
 
-    public BuilderStatusWithProgress(
-        JobInstStatusEnum status,
-        BaseBuilderResult result,
-        BuilderProgress progress) {
-        this.status = status;
-        this.result = result;
-        this.progress = progress;
-    }
+  public BuilderStatusWithProgress(
+      JobInstStatusEnum status, BaseBuilderResult result, BuilderProgress progress) {
+    this.status = status;
+    this.result = result;
+    this.progress = progress;
+  }
 
-    public JobInstStatusEnum getStatus() {
-        return status;
-    }
+  public JobInstStatusEnum getStatus() {
+    return status;
+  }
 
-    public BaseBuilderResult getResult() {
-        return result;
-    }
+  public BaseBuilderResult getResult() {
+    return result;
+  }
 
-    public BuilderProgress getProgress() {
-        return progress;
-    }
+  public BuilderProgress getProgress() {
+    return progress;
+  }
 }

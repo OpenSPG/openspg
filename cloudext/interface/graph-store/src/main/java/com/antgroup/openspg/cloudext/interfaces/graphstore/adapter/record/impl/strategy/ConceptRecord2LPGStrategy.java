@@ -22,63 +22,58 @@ import com.antgroup.openspg.core.spgbuilder.model.record.ConceptRecord;
 import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordAlterItem;
 import com.antgroup.openspg.core.spgschema.model.identifier.ConceptIdentifier;
-
 import com.google.common.collect.Lists;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
-
-
 /**
- * <P>
- *     Strategy for translation from alter item of {@link ConceptRecord} to {@link LPGRecordAlterItem}s.
- * </P>
+ * Strategy for translation from alter item of {@link ConceptRecord} to {@link LPGRecordAlterItem}s.
  */
 public class ConceptRecord2LPGStrategy extends SPGTypeRecord2LPGStrategy {
 
-    @Override
-    public List<LPGRecordAlterItem> translate(SPGRecordAlterItem item) {
-        List<LPGRecordAlterItem> lpgRecordAlterItems = normalizeProperties(item);
+  @Override
+  public List<LPGRecordAlterItem> translate(SPGRecordAlterItem item) {
+    List<LPGRecordAlterItem> lpgRecordAlterItems = normalizeProperties(item);
 
-        lpgRecordAlterItems.add(simplify(item));
+    lpgRecordAlterItems.add(simplify(item));
 
-        // Generate alteration of semantic edge which is from concept vertex to its father.
-        lpgRecordAlterItems.addAll(generateConceptSemanticEdgeAlterItems(
+    // Generate alteration of semantic edge which is from concept vertex to its father.
+    lpgRecordAlterItems.addAll(
+        generateConceptSemanticEdgeAlterItems(
             (ConceptRecord) item.getSpgRecord(), item.getAlterOp()));
-        return lpgRecordAlterItems;
-    }
+    return lpgRecordAlterItems;
+  }
 
-    private List<LPGRecordAlterItem> generateConceptSemanticEdgeAlterItems(
-        ConceptRecord conceptRecord, RecordAlterOperationEnum recordAlterOperationEnum) {
-        // If it is root concept vertex, skip it.
-        if (isRootConcept(conceptRecord)) {
-            return Lists.newArrayList();
-        }
-        List<LPGRecordAlterItem> alterItems = Lists.newArrayList();
-        alterItems.add(new LPGRecordAlterItem(
-            recordAlterOperationEnum,
-            getConceptSemanticEdgeRecord(conceptRecord)
-        ));
-        return alterItems;
+  private List<LPGRecordAlterItem> generateConceptSemanticEdgeAlterItems(
+      ConceptRecord conceptRecord, RecordAlterOperationEnum recordAlterOperationEnum) {
+    // If it is root concept vertex, skip it.
+    if (isRootConcept(conceptRecord)) {
+      return Lists.newArrayList();
     }
+    List<LPGRecordAlterItem> alterItems = Lists.newArrayList();
+    alterItems.add(
+        new LPGRecordAlterItem(
+            recordAlterOperationEnum, getConceptSemanticEdgeRecord(conceptRecord)));
+    return alterItems;
+  }
 
-    private EdgeRecord getConceptSemanticEdgeRecord(ConceptRecord conceptRecord) {
-        ConceptIdentifier conceptName = conceptRecord.getConceptName();
-        String srcId = conceptName.getId();
-        String dstId = conceptName.getFatherId();
-        EdgeTypeName edgeTypeName = new EdgeTypeName(
+  private EdgeRecord getConceptSemanticEdgeRecord(ConceptRecord conceptRecord) {
+    ConceptIdentifier conceptName = conceptRecord.getConceptName();
+    String srcId = conceptName.getId();
+    String dstId = conceptName.getFatherId();
+    EdgeTypeName edgeTypeName =
+        new EdgeTypeName(
             conceptRecord.getConceptType().getName(),
             conceptRecord.getConceptType().getConceptLayerConfig().getHypernymPredicate(),
-            conceptRecord.getConceptType().getName()
-        );
-        List<LPGPropertyRecord> propertyRecords = Lists.newArrayList();
-        propertyRecords.add(new LPGPropertyRecord(EdgeType.SRC_ID, srcId));
-        propertyRecords.add(new LPGPropertyRecord(EdgeType.DST_ID, dstId));
-        return new EdgeRecord(srcId, dstId, edgeTypeName, propertyRecords);
-    }
+            conceptRecord.getConceptType().getName());
+    List<LPGPropertyRecord> propertyRecords = Lists.newArrayList();
+    propertyRecords.add(new LPGPropertyRecord(EdgeType.SRC_ID, srcId));
+    propertyRecords.add(new LPGPropertyRecord(EdgeType.DST_ID, dstId));
+    return new EdgeRecord(srcId, dstId, edgeTypeName, propertyRecords);
+  }
 
-    private boolean isRootConcept(ConceptRecord conceptRecord) {
-        ConceptIdentifier name = conceptRecord.getConceptName();
-        return StringUtils.isBlank(name.getFatherId());
-    }
+  private boolean isRootConcept(ConceptRecord conceptRecord) {
+    ConceptIdentifier name = conceptRecord.getConceptName();
+    return StringUtils.isBlank(name.getFatherId());
+  }
 }

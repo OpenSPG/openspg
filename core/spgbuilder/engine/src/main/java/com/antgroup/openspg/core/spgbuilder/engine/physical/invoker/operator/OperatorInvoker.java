@@ -17,18 +17,17 @@ import com.antgroup.openspg.core.spgbuilder.engine.physical.BuilderRecord;
 import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseAdvancedRecord;
-
 import java.util.List;
 import java.util.Map;
 
-
 public interface OperatorInvoker {
 
-    void init(RuntimeContext context);
+  void init(RuntimeContext context);
 
-    void register(OperatorConfig config);
+  void register(OperatorConfig config);
 
-    List<BuilderRecord> invoke(BuilderRecord builderRecord, OperatorConfig operatorConfig);
+  List<BuilderRecord> invoke(BuilderRecord builderRecord, OperatorConfig operatorConfig);
 
-    BaseAdvancedRecord invoke(BaseAdvancedRecord baseSpgRecord, Map<String, OperatorConfig> operatorConfigs);
+  BaseAdvancedRecord invoke(
+      BaseAdvancedRecord baseSpgRecord, Map<String, OperatorConfig> operatorConfigs);
 }

@@ -16,113 +16,113 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 import java.util.Date;
 
 public class SPGJobInfoDO {
-    private Long id;
+  private Long id;
 
-    private Date gmtCreate;
+  private Date gmtCreate;
 
-    private Date gmtModified;
+  private Date gmtModified;
 
-    private String name;
+  private String name;
 
-    private String type;
+  private String type;
 
-    private Long projectId;
+  private Long projectId;
 
-    private String cron;
+  private String cron;
 
-    private String status;
+  private String status;
 
-    private String extInfo;
+  private String extInfo;
 
-    private String externalJobInfoId;
+  private String externalJobInfoId;
 
-    private String content;
+  private String content;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
+  public Date getGmtCreate() {
+    return gmtCreate;
+  }
 
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
+  public void setGmtCreate(Date gmtCreate) {
+    this.gmtCreate = gmtCreate;
+  }
 
-    public Date getGmtModified() {
-        return gmtModified;
-    }
+  public Date getGmtModified() {
+    return gmtModified;
+  }
 
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
+  public void setGmtModified(Date gmtModified) {
+    this.gmtModified = gmtModified;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+  public void setName(String name) {
+    this.name = name == null ? null : name.trim();
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+  public void setType(String type) {
+    this.type = type == null ? null : type.trim();
+  }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+  public void setProjectId(Long projectId) {
+    this.projectId = projectId;
+  }
 
-    public String getCron() {
-        return cron;
-    }
+  public String getCron() {
+    return cron;
+  }
 
-    public void setCron(String cron) {
-        this.cron = cron == null ? null : cron.trim();
-    }
+  public void setCron(String cron) {
+    this.cron = cron == null ? null : cron.trim();
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public String getStatus() {
+    return status;
+  }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
+  public void setStatus(String status) {
+    this.status = status == null ? null : status.trim();
+  }
 
-    public String getExtInfo() {
-        return extInfo;
-    }
+  public String getExtInfo() {
+    return extInfo;
+  }
 
-    public void setExtInfo(String extInfo) {
-        this.extInfo = extInfo == null ? null : extInfo.trim();
-    }
+  public void setExtInfo(String extInfo) {
+    this.extInfo = extInfo == null ? null : extInfo.trim();
+  }
 
-    public String getExternalJobInfoId() {
-        return externalJobInfoId;
-    }
+  public String getExternalJobInfoId() {
+    return externalJobInfoId;
+  }
 
-    public void setExternalJobInfoId(String externalJobInfoId) {
-        this.externalJobInfoId = externalJobInfoId == null ? null : externalJobInfoId.trim();
-    }
+  public void setExternalJobInfoId(String externalJobInfoId) {
+    this.externalJobInfoId = externalJobInfoId == null ? null : externalJobInfoId.trim();
+  }
 
-    public String getContent() {
-        return content;
-    }
+  public String getContent() {
+    return content;
+  }
 
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
+  public void setContent(String content) {
+    this.content = content == null ? null : content.trim();
+  }
 }

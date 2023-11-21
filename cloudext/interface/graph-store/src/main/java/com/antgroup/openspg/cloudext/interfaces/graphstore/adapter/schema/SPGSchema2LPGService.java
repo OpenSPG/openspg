@@ -15,18 +15,16 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.schema;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.BaseLPGSchemaOperation;
 import com.antgroup.openspg.core.spgschema.model.SPGSchema;
-
 import java.util.List;
-
 
 public interface SPGSchema2LPGService {
 
-    /**
-     * This method is used to translate {@link SPGSchema} into a list of
-     * {@link BaseLPGSchemaOperation LPGSchemaOperation}
-     *
-     * @param spgSchema the {@link SPGSchema}
-     * @return a list of {@link BaseLPGSchemaOperation LPGSchemaOperation}
-     */
-    List<BaseLPGSchemaOperation> translate(SPGSchema spgSchema);
+  /**
+   * This method is used to translate {@link SPGSchema} into a list of {@link BaseLPGSchemaOperation
+   * LPGSchemaOperation}
+   *
+   * @param spgSchema the {@link SPGSchema}
+   * @return a list of {@link BaseLPGSchemaOperation LPGSchemaOperation}
+   */
+  List<BaseLPGSchemaOperation> translate(SPGSchema spgSchema);
 }

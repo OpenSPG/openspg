@@ -13,28 +13,26 @@
 
 package com.antgroup.openspg.common.model;
 
-
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
 
 public class UserInfo extends BaseValObj {
 
-    private static final long serialVersionUID = -5183739691162328616L;
+  private static final long serialVersionUID = -5183739691162328616L;
 
-    private final String userId;
+  private final String userId;
 
-    private final String nickName;
+  private final String nickName;
 
-    public UserInfo(String userId, String nickName) {
-        this.userId = userId;
-        this.nickName = nickName;
-    }
+  public UserInfo(String userId, String nickName) {
+    this.userId = userId;
+    this.nickName = nickName;
+  }
 
-    public String getUserId() {
-        return userId;
-    }
+  public String getUserId() {
+    return userId;
+  }
 
-    public String getNickName() {
-        return nickName;
-    }
+  public String getNickName() {
+    return nickName;
+  }
 }

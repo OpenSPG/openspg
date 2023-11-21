@@ -17,46 +17,45 @@ import com.antgroup.openspg.common.model.base.BaseRequest;
 import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordTypeEnum;
 
-
 public class BaseEditRequest extends BaseRequest {
 
-    private Long projectId;
+  private Long projectId;
 
-    private RecordAlterOperationEnum alterOp;
+  private RecordAlterOperationEnum alterOp;
 
-    private String spgName;
+  private String spgName;
 
-    private SPGRecordTypeEnum spgRecordType;
+  private SPGRecordTypeEnum spgRecordType;
 
-    public String getSpgName() {
-        return spgName;
-    }
+  public String getSpgName() {
+    return spgName;
+  }
 
-    public void setSpgName(String spgName) {
-        this.spgName = spgName;
-    }
+  public void setSpgName(String spgName) {
+    this.spgName = spgName;
+  }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+  public void setProjectId(Long projectId) {
+    this.projectId = projectId;
+  }
 
-    public RecordAlterOperationEnum getAlterOp() {
-        return alterOp;
-    }
+  public RecordAlterOperationEnum getAlterOp() {
+    return alterOp;
+  }
 
-    public void setAlterOp(RecordAlterOperationEnum alterOp) {
-        this.alterOp = alterOp;
-    }
+  public void setAlterOp(RecordAlterOperationEnum alterOp) {
+    this.alterOp = alterOp;
+  }
 
-    public SPGRecordTypeEnum getSpgRecordType() {
-        return spgRecordType;
-    }
+  public SPGRecordTypeEnum getSpgRecordType() {
+    return spgRecordType;
+  }
 
-    public void setSpgRecordType(SPGRecordTypeEnum spgRecordType) {
-        this.spgRecordType = spgRecordType;
-    }
+  public void setSpgRecordType(SPGRecordTypeEnum spgRecordType) {
+    this.spgRecordType = spgRecordType;
+  }
 }

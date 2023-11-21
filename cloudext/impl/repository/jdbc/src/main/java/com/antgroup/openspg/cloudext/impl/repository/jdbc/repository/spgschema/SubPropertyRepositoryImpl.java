@@ -24,71 +24,74 @@ import com.antgroup.openspg.core.spgschema.model.alter.AlterStatusEnum;
 import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.spgschema.service.predicate.model.SimpleSubProperty;
 import com.antgroup.openspg.core.spgschema.service.predicate.repository.SubPropertyRepository;
-
+import java.util.Collections;
+import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
-import java.util.List;
-
-
 @Repository
 public class SubPropertyRepositoryImpl implements SubPropertyRepository {
 
-    @Autowired
-    private OntologyPropertyDOMapper ontologyPropertyDOMapper;
+  @Autowired private OntologyPropertyDOMapper ontologyPropertyDOMapper;
 
-    @Override
-    public int save(SimpleSubProperty simpleSubProperty) {
-        OntologyPropertyDO ontologyPropertyDO = SimpleSubPropertyConvertor.toNewDO(simpleSubProperty);
-        return ontologyPropertyDOMapper.insert(ontologyPropertyDO);
+  @Override
+  public int save(SimpleSubProperty simpleSubProperty) {
+    OntologyPropertyDO ontologyPropertyDO = SimpleSubPropertyConvertor.toNewDO(simpleSubProperty);
+    return ontologyPropertyDOMapper.insert(ontologyPropertyDO);
+  }
+
+  @Override
+  public int update(SimpleSubProperty simpleProperty) {
+    OntologyPropertyDO ontologyPropertyDO = SimpleSubPropertyConvertor.toUpdateDO(simpleProperty);
+    return ontologyPropertyDOMapper.updateByPrimaryKeySelective(ontologyPropertyDO);
+  }
+
+  @Override
+  public int delete(SimpleSubProperty simpleSubProperty) {
+    OntologyPropertyDOExample example = new OntologyPropertyDOExample();
+    example.createCriteria().andOriginalIdEqualTo(simpleSubProperty.getUniqueId());
+    return ontologyPropertyDOMapper.deleteByExample(example);
+  }
+
+  @Override
+  public SimpleSubProperty queryByUniqueId(Long uniqueId) {
+    OntologyPropertyDOExample example = new OntologyPropertyDOExample();
+    example
+        .createCriteria()
+        .andOriginalIdEqualTo(uniqueId)
+        .andVersionStatusEqualTo(AlterStatusEnum.ONLINE.name())
+        .andPropertyCategoryEqualTo(PropertyCategoryEnum.BASIC.name());
+
+    List<OntologyPropertyDO> ontologyPropertyDOS =
+        ontologyPropertyDOMapper.selectByExampleWithBLOBs(example);
+
+    if (CollectionUtils.isEmpty(ontologyPropertyDOS)) {
+      return null;
     }
+    return SimpleSubPropertyConvertor.toModel(ontologyPropertyDOS.get(0));
+  }
 
-    @Override
-    public int update(SimpleSubProperty simpleProperty) {
-        OntologyPropertyDO ontologyPropertyDO = SimpleSubPropertyConvertor.toUpdateDO(simpleProperty);
-        return ontologyPropertyDOMapper.updateByPrimaryKeySelective(ontologyPropertyDO);
+  @Override
+  public List<SimpleSubProperty> queryBySubjectId(
+      List<Long> subjectIds, SPGOntologyEnum ontologyEnum) {
+    OntologyPropertyDOExample example = new OntologyPropertyDOExample();
+    example
+        .createCriteria()
+        .andOriginalDomainIdIn(subjectIds)
+        .andVersionStatusEqualTo(AlterStatusEnum.ONLINE.name())
+        .andMapTypeEqualTo(
+            SPGOntologyEnum.PROPERTY.equals(ontologyEnum)
+                ? MapTypeEnum.PROP.name()
+                : MapTypeEnum.EDGE.name())
+        .andPropertyCategoryEqualTo(PropertyCategoryEnum.BASIC.name());
+
+    List<OntologyPropertyDO> ontologyPropertyDOS =
+        ontologyPropertyDOMapper.selectByExampleWithBLOBs(example);
+
+    if (CollectionUtils.isEmpty(ontologyPropertyDOS)) {
+      return Collections.emptyList();
     }
-
-    @Override
-    public int delete(SimpleSubProperty simpleSubProperty) {
-        OntologyPropertyDOExample example = new OntologyPropertyDOExample();
-        example.createCriteria().andOriginalIdEqualTo(simpleSubProperty.getUniqueId());
-        return ontologyPropertyDOMapper.deleteByExample(example);
-    }
-
-    @Override
-    public SimpleSubProperty queryByUniqueId(Long uniqueId) {
-        OntologyPropertyDOExample example = new OntologyPropertyDOExample();
-        example.createCriteria()
-            .andOriginalIdEqualTo(uniqueId)
-            .andVersionStatusEqualTo(AlterStatusEnum.ONLINE.name())
-            .andPropertyCategoryEqualTo(PropertyCategoryEnum.BASIC.name());
-
-        List<OntologyPropertyDO> ontologyPropertyDOS = ontologyPropertyDOMapper.selectByExampleWithBLOBs(example);
-
-        if (CollectionUtils.isEmpty(ontologyPropertyDOS)) {
-            return null;
-        }
-        return SimpleSubPropertyConvertor.toModel(ontologyPropertyDOS.get(0));
-    }
-
-    @Override
-    public List<SimpleSubProperty> queryBySubjectId(List<Long> subjectIds, SPGOntologyEnum ontologyEnum) {
-        OntologyPropertyDOExample example = new OntologyPropertyDOExample();
-        example.createCriteria()
-            .andOriginalDomainIdIn(subjectIds)
-            .andVersionStatusEqualTo(AlterStatusEnum.ONLINE.name())
-            .andMapTypeEqualTo(SPGOntologyEnum.PROPERTY.equals(ontologyEnum)
-                ? MapTypeEnum.PROP.name() : MapTypeEnum.EDGE.name())
-            .andPropertyCategoryEqualTo(PropertyCategoryEnum.BASIC.name());
-
-        List<OntologyPropertyDO> ontologyPropertyDOS = ontologyPropertyDOMapper.selectByExampleWithBLOBs(example);
-
-        if (CollectionUtils.isEmpty(ontologyPropertyDOS)) {
-            return Collections.emptyList();
-        }
-        return CollectionsUtils.listMap(ontologyPropertyDOS, SimpleSubPropertyConvertor::toModel);
-    }
+    return CollectionsUtils.listMap(ontologyPropertyDOS, SimpleSubPropertyConvertor::toModel);
+  }
 }

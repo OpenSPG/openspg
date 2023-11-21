@@ -12,7 +12,11 @@
 #  or implied.
 
 from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import SourceCsvComponent, SinkToKgComponent, EntityMappingComponent
+from knext.core.builder.job.model.component import (
+    SourceCsvComponent,
+    SinkToKgComponent,
+    EntityMappingComponent,
+)
 from schema.supplychain_schema_helper import SupplyChain
 
 
@@ -22,17 +26,18 @@ class ProductChainEvent(BuilderJob):
     def build(self):
         source = SourceCsvComponent(
             local_path="./builder/job/data/ProductChainEvent.csv",
-            columns=["id", "name", "subject", 'index', 'trend'],
-            start_row=2
+            columns=["id", "name", "subject", "index", "trend"],
+            start_row=2,
         )
 
-        mapping = EntityMappingComponent(
-            spg_type_name=SupplyChain.ProductChainEvent
-        ).add_field("id", SupplyChain.ProductChainEvent.id) \
-            .add_field("name", SupplyChain.ProductChainEvent.name) \
-            .add_field("subject", SupplyChain.ProductChainEvent.subject) \
-            .add_field("index", SupplyChain.ProductChainEvent.index) \
+        mapping = (
+            EntityMappingComponent(spg_type_name=SupplyChain.ProductChainEvent)
+            .add_field("id", SupplyChain.ProductChainEvent.id)
+            .add_field("name", SupplyChain.ProductChainEvent.name)
+            .add_field("subject", SupplyChain.ProductChainEvent.subject)
+            .add_field("index", SupplyChain.ProductChainEvent.index)
             .add_field("trend", SupplyChain.ProductChainEvent.trend)
+        )
 
         sink = SinkToKgComponent()
 

@@ -14,33 +14,33 @@
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 
 public class SPGJobInstDOWithBLOBs extends SPGJobInstDO {
-    private String result;
+  private String result;
 
-    private String progress;
+  private String progress;
 
-    private String logInfo;
+  private String logInfo;
 
-    public String getResult() {
-        return result;
-    }
+  public String getResult() {
+    return result;
+  }
 
-    public void setResult(String result) {
-        this.result = result == null ? null : result.trim();
-    }
+  public void setResult(String result) {
+    this.result = result == null ? null : result.trim();
+  }
 
-    public String getProgress() {
-        return progress;
-    }
+  public String getProgress() {
+    return progress;
+  }
 
-    public void setProgress(String progress) {
-        this.progress = progress == null ? null : progress.trim();
-    }
+  public void setProgress(String progress) {
+    this.progress = progress == null ? null : progress.trim();
+  }
 
-    public String getLogInfo() {
-        return logInfo;
-    }
+  public String getLogInfo() {
+    return logInfo;
+  }
 
-    public void setLogInfo(String logInfo) {
-        this.logInfo = logInfo == null ? null : logInfo.trim();
-    }
+  public void setLogInfo(String logInfo) {
+    this.logInfo = logInfo == null ? null : logInfo.trim();
+  }
 }

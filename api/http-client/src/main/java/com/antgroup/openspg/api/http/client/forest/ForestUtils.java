@@ -16,46 +16,47 @@ package com.antgroup.openspg.api.http.client.forest;
 import com.antgroup.openspg.api.facade.ApiConstants;
 import com.antgroup.openspg.api.facade.ApiException;
 import com.antgroup.openspg.api.facade.ApiResponse;
-
 import com.dtflys.forest.Forest;
 import com.dtflys.forest.http.ForestResponse;
-
 import java.util.function.Function;
-
 
 public class ForestUtils {
 
-    public static <T, C> ApiResponse<T> call(
-        Class<C> clazz, Function<C, ForestResponse<T>> func) {
-        return call(clazz, func, forestResponse -> {
-            ApiResponse<T> apiResponse = null;
-            if (forestResponse.isSuccess()) {
-                apiResponse = ApiResponse.success(forestResponse.getResult());
-            } else if (forestResponse.getException() != null) {
-                throw ApiException.connectError(forestResponse.getException());
+  public static <T, C> ApiResponse<T> call(Class<C> clazz, Function<C, ForestResponse<T>> func) {
+    return call(
+        clazz,
+        func,
+        forestResponse -> {
+          ApiResponse<T> apiResponse = null;
+          if (forestResponse.isSuccess()) {
+            apiResponse = ApiResponse.success(forestResponse.getResult());
+          } else if (forestResponse.getException() != null) {
+            throw ApiException.connectError(forestResponse.getException());
+          } else {
+            if (forestResponse.getStatusCode() == 404) {
+              // If the response is 404, we return success status but data is null
+              apiResponse = ApiResponse.success(null);
             } else {
-                if (forestResponse.getStatusCode() == 404) {
-                    // If the response is 404, we return success status but data is null
-                    apiResponse = ApiResponse.success(null);
-                } else {
-                    // Otherwise we return a failure status with an error message
-                    apiResponse = ApiResponse.failure(forestResponse.getContent());
-                }
+              // Otherwise we return a failure status with an error message
+              apiResponse = ApiResponse.failure(forestResponse.getContent());
             }
-            return apiResponse;
+          }
+          return apiResponse;
         });
-    }
+  }
 
-    public static <T, C> ApiResponse<T> call(Class<C> clazz,
-        Function<C, ForestResponse<T>> func1, Function<ForestResponse<T>, ApiResponse<T>> func2) {
-        C client = Forest.client(clazz);
-        ForestResponse<T> forestResponse = func1.apply(client);
-        String remote = forestResponse.getHeaderValue(ApiConstants.REMOTE);
-        String traceId = forestResponse.getHeaderValue(ApiConstants.TRACE_ID);
+  public static <T, C> ApiResponse<T> call(
+      Class<C> clazz,
+      Function<C, ForestResponse<T>> func1,
+      Function<ForestResponse<T>, ApiResponse<T>> func2) {
+    C client = Forest.client(clazz);
+    ForestResponse<T> forestResponse = func1.apply(client);
+    String remote = forestResponse.getHeaderValue(ApiConstants.REMOTE);
+    String traceId = forestResponse.getHeaderValue(ApiConstants.TRACE_ID);
 
-        ApiResponse<T> apiResponse = func2.apply(forestResponse);
-        apiResponse.setTraceId(traceId);
-        apiResponse.setRemote(remote);
-        return apiResponse;
-    }
+    ApiResponse<T> apiResponse = func2.apply(forestResponse);
+    apiResponse.setTraceId(traceId);
+    apiResponse.setRemote(remote);
+    return apiResponse;
+  }
 }

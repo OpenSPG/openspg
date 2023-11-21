@@ -22,76 +22,67 @@ import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
 import com.antgroup.openspg.core.spgschema.model.type.WithBasicInfo;
 
-/**
- * Reference of the property or the relation.
- */
-public class PropertyRef extends BaseOntology
-    implements WithBasicInfo<PredicateIdentifier> {
+/** Reference of the property or the relation. */
+public class PropertyRef extends BaseOntology implements WithBasicInfo<PredicateIdentifier> {
 
-    private static final long serialVersionUID = -7716635374508722755L;
+  private static final long serialVersionUID = -7716635374508722755L;
 
-    /**
-     * Reference of the SPG type as the subject.
-     */
-    private final SPGTypeRef subjectTypeRef;
+  /** Reference of the SPG type as the subject. */
+  private final SPGTypeRef subjectTypeRef;
 
-    /**
-     * Basic information of the property.
-     */
-    private final BasicInfo<PredicateIdentifier> basicInfo;
+  /** Basic information of the property. */
+  private final BasicInfo<PredicateIdentifier> basicInfo;
 
-    /**
-     * Reference of SPG type as the object.
-     */
-    private final SPGTypeRef objectTypeRef;
+  /** Reference of SPG type as the object. */
+  private final SPGTypeRef objectTypeRef;
 
-    /**
-     * Ontology type, property or relation.
-     */
-    private final SPGOntologyEnum ontologyEnum;
+  /** Ontology type, property or relation. */
+  private final SPGOntologyEnum ontologyEnum;
 
-    public PropertyRef(
-        SPGTypeRef subjectTypeRef,
-        BasicInfo<PredicateIdentifier> basicInfo,
-        SPGTypeRef objectTypeRef,
-        SPGOntologyEnum ontologyEnum) {
-        this.subjectTypeRef = subjectTypeRef;
-        this.basicInfo = basicInfo;
-        this.objectTypeRef = objectTypeRef;
-        this.ontologyEnum = ontologyEnum;
-    }
+  public PropertyRef(
+      SPGTypeRef subjectTypeRef,
+      BasicInfo<PredicateIdentifier> basicInfo,
+      SPGTypeRef objectTypeRef,
+      SPGOntologyEnum ontologyEnum) {
+    this.subjectTypeRef = subjectTypeRef;
+    this.basicInfo = basicInfo;
+    this.objectTypeRef = objectTypeRef;
+    this.ontologyEnum = ontologyEnum;
+  }
 
-    public PropertyRef(
-        SPGTypeRef subjectTypeRef,
-        BasicInfo<PredicateIdentifier> basicInfo,
-        SPGTypeRef objectTypeRef,
-        SPGOntologyEnum ontologyEnum,
-        Long projectId,
-        OntologyId ontologyId) {
-        this(subjectTypeRef, basicInfo, objectTypeRef, ontologyEnum);
-        this.setProjectId(projectId);
-        this.setOntologyId(ontologyId);
-    }
+  public PropertyRef(
+      SPGTypeRef subjectTypeRef,
+      BasicInfo<PredicateIdentifier> basicInfo,
+      SPGTypeRef objectTypeRef,
+      SPGOntologyEnum ontologyEnum,
+      Long projectId,
+      OntologyId ontologyId) {
+    this(subjectTypeRef, basicInfo, objectTypeRef, ontologyEnum);
+    this.setProjectId(projectId);
+    this.setOntologyId(ontologyId);
+  }
 
-    public SPGTypeRef getSubjectTypeRef() {
-        return subjectTypeRef;
-    }
+  public SPGTypeRef getSubjectTypeRef() {
+    return subjectTypeRef;
+  }
 
-    @Override
-    public BasicInfo<PredicateIdentifier> getBasicInfo() {
-        return basicInfo;
-    }
+  @Override
+  public BasicInfo<PredicateIdentifier> getBasicInfo() {
+    return basicInfo;
+  }
 
-    public SPGTypeRef getObjectTypeRef() {
-        return objectTypeRef;
-    }
+  public SPGTypeRef getObjectTypeRef() {
+    return objectTypeRef;
+  }
 
-    public SPGOntologyEnum getOntologyType() {
-        return ontologyEnum;
-    }
+  public SPGOntologyEnum getOntologyType() {
+    return ontologyEnum;
+  }
 
-    public SPGTripleIdentifier newSpgTripleName() {
-        return new SPGTripleIdentifier(subjectTypeRef.getBasicInfo().getName(),
-            basicInfo.getName(), objectTypeRef.getBasicInfo().getName());
-    }
+  public SPGTripleIdentifier newSpgTripleName() {
+    return new SPGTripleIdentifier(
+        subjectTypeRef.getBasicInfo().getName(),
+        basicInfo.getName(),
+        objectTypeRef.getBasicInfo().getName());
+  }
 }

@@ -16,11 +16,9 @@ package com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.model;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-
 @Getter
 @AllArgsConstructor
 public class EsIdxDigest {
 
-    private final EsMapping mappings;
-
+  private final EsMapping mappings;
 }

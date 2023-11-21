@@ -16,35 +16,37 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.JobInstDO;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.JobInstDOExample;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface JobInstDOMapper {
-    long countByExample(JobInstDOExample example);
+  long countByExample(JobInstDOExample example);
 
-    int deleteByExample(JobInstDOExample example);
+  int deleteByExample(JobInstDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(JobInstDO record);
+  int insert(JobInstDO record);
 
-    int insertSelective(JobInstDO record);
+  int insertSelective(JobInstDO record);
 
-    List<JobInstDO> selectByExampleWithBLOBs(JobInstDOExample example);
+  List<JobInstDO> selectByExampleWithBLOBs(JobInstDOExample example);
 
-    List<JobInstDO> selectByExample(JobInstDOExample example);
+  List<JobInstDO> selectByExample(JobInstDOExample example);
 
-    JobInstDO selectByPrimaryKey(Long id);
+  JobInstDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") JobInstDO record, @Param("example") JobInstDOExample example);
+  int updateByExampleSelective(
+      @Param("record") JobInstDO record, @Param("example") JobInstDOExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") JobInstDO record, @Param("example") JobInstDOExample example);
+  int updateByExampleWithBLOBs(
+      @Param("record") JobInstDO record, @Param("example") JobInstDOExample example);
 
-    int updateByExample(@Param("record") JobInstDO record, @Param("example") JobInstDOExample example);
+  int updateByExample(
+      @Param("record") JobInstDO record, @Param("example") JobInstDOExample example);
 
-    int updateByPrimaryKeySelective(JobInstDO record);
+  int updateByPrimaryKeySelective(JobInstDO record);
 
-    int updateByPrimaryKeyWithBLOBs(JobInstDO record);
+  int updateByPrimaryKeyWithBLOBs(JobInstDO record);
 
-    int updateByPrimaryKey(JobInstDO record);
+  int updateByPrimaryKey(JobInstDO record);
 }

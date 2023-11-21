@@ -18,49 +18,42 @@ import com.antgroup.openspg.common.model.datasource.connection.SearchEngineConne
 import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.NodeTypeEnum;
 
-
 public class GraphStoreSinkNodeConfig extends BaseNodeConfig {
 
-    /**
-     * The configuration information for graph storage.
-     */
-    private GraphStoreConnectionInfo graphStoreConnectionInfo;
+  /** The configuration information for graph storage. */
+  private GraphStoreConnectionInfo graphStoreConnectionInfo;
 
-    /**
-     * The configuration information for the search engine.
-     */
-    private SearchEngineConnectionInfo searchEngineConnectionInfo;
+  /** The configuration information for the search engine. */
+  private SearchEngineConnectionInfo searchEngineConnectionInfo;
 
-    /**
-     * The configuration information for the table store.
-     */
-    private TableStoreConnectionInfo tableStoreConnectionInfo;
+  /** The configuration information for the table store. */
+  private TableStoreConnectionInfo tableStoreConnectionInfo;
 
-    public GraphStoreSinkNodeConfig() {
-        super(NodeTypeEnum.GRAPH_SINK);
-    }
+  public GraphStoreSinkNodeConfig() {
+    super(NodeTypeEnum.GRAPH_SINK);
+  }
 
-    public GraphStoreConnectionInfo getGraphStoreConnectionInfo() {
-        return graphStoreConnectionInfo;
-    }
+  public GraphStoreConnectionInfo getGraphStoreConnectionInfo() {
+    return graphStoreConnectionInfo;
+  }
 
-    public void setGraphStoreConnectionInfo(GraphStoreConnectionInfo graphStoreConnectionInfo) {
-        this.graphStoreConnectionInfo = graphStoreConnectionInfo;
-    }
+  public void setGraphStoreConnectionInfo(GraphStoreConnectionInfo graphStoreConnectionInfo) {
+    this.graphStoreConnectionInfo = graphStoreConnectionInfo;
+  }
 
-    public SearchEngineConnectionInfo getSearchEngineConnectionInfo() {
-        return searchEngineConnectionInfo;
-    }
+  public SearchEngineConnectionInfo getSearchEngineConnectionInfo() {
+    return searchEngineConnectionInfo;
+  }
 
-    public void setSearchEngineConnectionInfo(SearchEngineConnectionInfo searchEngineConnectionInfo) {
-        this.searchEngineConnectionInfo = searchEngineConnectionInfo;
-    }
+  public void setSearchEngineConnectionInfo(SearchEngineConnectionInfo searchEngineConnectionInfo) {
+    this.searchEngineConnectionInfo = searchEngineConnectionInfo;
+  }
 
-    public TableStoreConnectionInfo getTableStoreConnectionInfo() {
-        return tableStoreConnectionInfo;
-    }
+  public TableStoreConnectionInfo getTableStoreConnectionInfo() {
+    return tableStoreConnectionInfo;
+  }
 
-    public void setTableStoreConnectionInfo(TableStoreConnectionInfo tableStoreConnectionInfo) {
-        this.tableStoreConnectionInfo = tableStoreConnectionInfo;
-    }
+  public void setTableStoreConnectionInfo(TableStoreConnectionInfo tableStoreConnectionInfo) {
+    this.tableStoreConnectionInfo = tableStoreConnectionInfo;
+  }
 }

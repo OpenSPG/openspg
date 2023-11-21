@@ -20,38 +20,41 @@ import com.antgroup.openspg.core.spgschema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.spgschema.model.semantic.RuleScopeEnum;
 import com.antgroup.openspg.core.spgschema.model.semantic.RuleStatusEnum;
 
-
 public class LogicalRuleConvertor {
 
-    public static LogicRuleDO toDO(LogicalRule logicalRule) {
-        if (null == logicalRule) {
-            return null;
-        }
-
-        LogicRuleDO ruleDO = new LogicRuleDO();
-        ruleDO.setRuleId(logicalRule.getCode() == null ? null : logicalRule.getCode().getCode());
-        ruleDO.setName(logicalRule.getName());
-        ruleDO.setIsMaster((byte) (Boolean.FALSE.equals(logicalRule.getMaster()) ? 0 : 1));
-        ruleDO.setVersionId(logicalRule.getVersion() == null ? 1 : logicalRule.getVersion());
-        ruleDO.setExpression(logicalRule.getContent());
-        ruleDO.setStatus(logicalRule.getStatus() == null
-            ? RuleStatusEnum.PROD.name() : logicalRule.getStatus().name());
-        ruleDO.setUserNo(logicalRule.getCreator() == null
-            ? "000000" : logicalRule.getCreator().getUserId());
-        ruleDO.setEffectScope(RuleScopeEnum.QUERY.name());
-        return ruleDO;
+  public static LogicRuleDO toDO(LogicalRule logicalRule) {
+    if (null == logicalRule) {
+      return null;
     }
 
-    public static LogicalRule toModel(LogicRuleDO ruleDO) {
-        if (null == ruleDO) {
-            return null;
-        }
+    LogicRuleDO ruleDO = new LogicRuleDO();
+    ruleDO.setRuleId(logicalRule.getCode() == null ? null : logicalRule.getCode().getCode());
+    ruleDO.setName(logicalRule.getName());
+    ruleDO.setIsMaster((byte) (Boolean.FALSE.equals(logicalRule.getMaster()) ? 0 : 1));
+    ruleDO.setVersionId(logicalRule.getVersion() == null ? 1 : logicalRule.getVersion());
+    ruleDO.setExpression(logicalRule.getContent());
+    ruleDO.setStatus(
+        logicalRule.getStatus() == null
+            ? RuleStatusEnum.PROD.name()
+            : logicalRule.getStatus().name());
+    ruleDO.setUserNo(
+        logicalRule.getCreator() == null ? "000000" : logicalRule.getCreator().getUserId());
+    ruleDO.setEffectScope(RuleScopeEnum.QUERY.name());
+    return ruleDO;
+  }
 
-        return new LogicalRule(new RuleCode(ruleDO.getRuleId()),
-            ruleDO.getVersionId(), ruleDO.getName(),
-            new Byte((byte) 1).equals(ruleDO.getIsMaster()),
-            RuleStatusEnum.toEnum(ruleDO.getStatus()),
-            ruleDO.getExpression(),
-            new UserInfo(ruleDO.getUserNo(), null));
+  public static LogicalRule toModel(LogicRuleDO ruleDO) {
+    if (null == ruleDO) {
+      return null;
     }
+
+    return new LogicalRule(
+        new RuleCode(ruleDO.getRuleId()),
+        ruleDO.getVersionId(),
+        ruleDO.getName(),
+        new Byte((byte) 1).equals(ruleDO.getIsMaster()),
+        RuleStatusEnum.toEnum(ruleDO.getStatus()),
+        ruleDO.getExpression(),
+        new UserInfo(ruleDO.getUserNo(), null));
+  }
 }

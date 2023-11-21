@@ -15,37 +15,36 @@ package com.antgroup.openspg.core.spgschema.service.semantic;
 
 import com.antgroup.openspg.core.spgschema.model.semantic.PredicateSemantic;
 import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
-
 import java.util.List;
 
 /**
- * The domain interface of the predicate semantic model, providing methods for adding, modifying, deleting, and querying
- * predicate semantics.
+ * The domain interface of the predicate semantic model, providing methods for adding, modifying,
+ * deleting, and querying predicate semantics.
  */
 public interface SemanticService {
 
-    /**
-     * Query semantics of property or relation.
-     *
-     * @param subjectIds   list of subject id, such as unique ids of property or relation.
-     * @param ontologyEnum ontology type
-     * @return list of semantic
-     */
-    List<PredicateSemantic> queryBySubjectIds(List<Long> subjectIds, SPGOntologyEnum ontologyEnum);
+  /**
+   * Query semantics of property or relation.
+   *
+   * @param subjectIds list of subject id, such as unique ids of property or relation.
+   * @param ontologyEnum ontology type
+   * @return list of semantic
+   */
+  List<PredicateSemantic> queryBySubjectIds(List<Long> subjectIds, SPGOntologyEnum ontologyEnum);
 
-    /**
-     * Create or update a semantic
-     *
-     * @param predicateSemantic semantic model
-     * @return record count is added
-     */
-    int saveOrUpdate(PredicateSemantic predicateSemantic);
+  /**
+   * Create or update a semantic
+   *
+   * @param predicateSemantic semantic model
+   * @return record count is added
+   */
+  int saveOrUpdate(PredicateSemantic predicateSemantic);
 
-    /**
-     * Delete semantic by spo triple key
-     *
-     * @param predicateSemantic semantic model
-     * @return record count is deleted
-     */
-    int delete(PredicateSemantic predicateSemantic);
+  /**
+   * Delete semantic by spo triple key
+   *
+   * @param predicateSemantic semantic model
+   * @return record count is deleted
+   */
+  int delete(PredicateSemantic predicateSemantic);
 }

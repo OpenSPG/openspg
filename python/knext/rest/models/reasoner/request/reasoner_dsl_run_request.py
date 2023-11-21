@@ -43,18 +43,20 @@ class ReasonerDslRunRequest(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'project_id': 'int',
-        'content': 'BaseReasonerContent',
-        'params': 'object'
+        "project_id": "int",
+        "content": "BaseReasonerContent",
+        "params": "object",
     }
 
     attribute_map = {
-        'project_id': 'projectId',
-        'content': 'content',
-        'params': 'params'
+        "project_id": "projectId",
+        "content": "content",
+        "params": "params",
     }
 
-    def __init__(self, project_id=None, content=None, params=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, project_id=None, content=None, params=None, local_vars_configuration=None
+    ):  # noqa: E501
         """ReasonerDslRunRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -110,8 +112,12 @@ class ReasonerDslRunRequest(object):
         :param content: The content of this ReasonerDslRunRequest.  # noqa: E501
         :type: BaseReasonerContent
         """
-        if self.local_vars_configuration.client_side_validation and content is None:  # noqa: E501
-            raise ValueError("Invalid value for `content`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and content is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `content`, must not be `None`"
+            )  # noqa: E501
 
         self._content = content
 
@@ -143,18 +149,20 @@ class ReasonerDslRunRequest(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

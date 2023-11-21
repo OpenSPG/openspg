@@ -13,19 +13,18 @@
 
 package com.antgroup.openspg.common.model;
 
-
 public enum LangTypeEnum {
+  PYTHON("py"),
+  JAVA("jar"),
+  ;
 
-    PYTHON("py"), JAVA("jar"),
-    ;
+  private final String suffix;
 
-    private final String suffix;
+  LangTypeEnum(String suffix) {
+    this.suffix = suffix;
+  }
 
-    LangTypeEnum(String suffix) {
-        this.suffix = suffix;
-    }
-
-    public String getSuffix() {
-        return suffix;
-    }
+  public String getSuffix() {
+    return suffix;
+  }
 }

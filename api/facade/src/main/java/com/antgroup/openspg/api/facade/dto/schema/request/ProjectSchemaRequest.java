@@ -15,35 +15,30 @@ package com.antgroup.openspg.api.facade.dto.schema.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-/**
- * Get all schema type in project request.
- */
+/** Get all schema type in project request. */
 public class ProjectSchemaRequest extends BaseRequest {
 
-    private static final long serialVersionUID = -3780343797046897462L;
+  private static final long serialVersionUID = -3780343797046897462L;
 
-    /**
-     * The unique id of project.
-     */
-    private Long projectId;
+  /** The unique id of project. */
+  private Long projectId;
 
-    public ProjectSchemaRequest() {
-    }
+  public ProjectSchemaRequest() {}
 
-    public ProjectSchemaRequest(Long projectId) {
-        this.projectId = projectId;
-    }
+  public ProjectSchemaRequest(Long projectId) {
+    this.projectId = projectId;
+  }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+  public void setProjectId(Long projectId) {
+    this.projectId = projectId;
+  }
 
-    @Override
-    public String toString() {
-        return String.valueOf(projectId);
-    }
+  @Override
+  public String toString() {
+    return String.valueOf(projectId);
+  }
 }

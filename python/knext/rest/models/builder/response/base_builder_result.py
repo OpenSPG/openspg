@@ -47,8 +47,8 @@ class BaseBuilderResult(object):
     attribute_map = {}
 
     discriminator_value_class_map = {
-        'SUCCESS': 'SuccessBuilderResult',
-        'FAILURE': 'FailureBuilderResult'
+        "SUCCESS": "SuccessBuilderResult",
+        "FAILURE": "FailureBuilderResult",
     }
 
     def __init__(self, local_vars_configuration=None):  # noqa: E501
@@ -77,24 +77,33 @@ class BaseBuilderResult(object):
         :param receipt_type: The receipt_type of this BaseBuilderResult.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and receipt_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `receipt_type`, must not be `None`")  # noqa: E501
-        allowed_values = ["EMPTY", "JOB"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and receipt_type not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and receipt_type is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `receipt_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(receipt_type, allowed_values)
+                "Invalid value for `receipt_type`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = ["EMPTY", "JOB"]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and receipt_type not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `receipt_type` ({0}), must be one of {1}".format(  # noqa: E501
+                    receipt_type, allowed_values
+                )
             )
 
         self._receipt_type = receipt_type
 
     def get_real_child_model(self, data):
         """Returns the child model by discriminator"""
-        if 'errorMsg' in data:
-            real_child_model = self.discriminator_value_class_map.get('FAILURE')
+        if "errorMsg" in data:
+            real_child_model = self.discriminator_value_class_map.get("FAILURE")
             return real_child_model
-        if 'totalCnt' in data:
-            real_child_model = self.discriminator_value_class_map.get('SUCCESS')
+        if "totalCnt" in data:
+            real_child_model = self.discriminator_value_class_map.get("SUCCESS")
             return real_child_model
         return None
 
@@ -105,18 +114,20 @@ class BaseBuilderResult(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

@@ -14,23 +14,20 @@
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.common;
 
 import com.antgroup.openspg.cloudext.interfaces.repository.sequence.SequenceRepository;
-
-import org.springframework.stereotype.Repository;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class SequenceRepositoryImpl implements SequenceRepository {
 
-    private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
+  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    @Override
-    public Long getSeqIdByTime() {
-        LocalDateTime localDateTime = LocalDateTime.now();
-        String format = FORMATTER.format(localDateTime);
-        String result = format + (int) ((Math.random() * 9 + 1) * 10000000);
-        return Long.parseLong(result);
-    }
+  @Override
+  public Long getSeqIdByTime() {
+    LocalDateTime localDateTime = LocalDateTime.now();
+    String format = FORMATTER.format(localDateTime);
+    String result = format + (int) ((Math.random() * 9 + 1) * 10000000);
+    return Long.parseLong(result);
+  }
 }

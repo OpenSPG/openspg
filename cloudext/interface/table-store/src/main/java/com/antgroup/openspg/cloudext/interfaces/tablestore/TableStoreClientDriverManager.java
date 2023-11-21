@@ -16,43 +16,37 @@ package com.antgroup.openspg.cloudext.interfaces.tablestore;
 import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
 import com.antgroup.openspg.common.model.exception.CloudExtException;
 import com.antgroup.openspg.common.util.DriverManagerUtils;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class TableStoreClientDriverManager {
 
-    private final static CopyOnWriteArrayList<TableStoreClientDriver>
-        registeredDrivers = new CopyOnWriteArrayList<>();
+  private static final CopyOnWriteArrayList<TableStoreClientDriver> registeredDrivers =
+      new CopyOnWriteArrayList<>();
 
-    private TableStoreClientDriverManager() {
+  private TableStoreClientDriverManager() {}
 
+  static {
+    DriverManagerUtils.loadDrivers("cloudext.tablestore.drivers", TableStoreClientDriver.class);
+    log.info("table-store DriverManager initialized");
+  }
+
+  public static synchronized void registerDriver(TableStoreClientDriver driver) {
+    if (driver != null) {
+      registeredDrivers.addIfAbsent(driver);
+    } else {
+      throw new NullPointerException();
     }
+    log.info("registerDriver: {}", driver);
+  }
 
-    static {
-        DriverManagerUtils.loadDrivers(
-            "cloudext.tablestore.drivers", TableStoreClientDriver.class);
-        log.info("table-store DriverManager initialized");
+  public static TableStoreClient getClient(TableStoreConnectionInfo config) {
+    for (TableStoreClientDriver driver : registeredDrivers) {
+      if (driver.acceptsConfig(config)) {
+        return driver.connect(config);
+      }
     }
-
-    public static synchronized void registerDriver(TableStoreClientDriver driver) {
-        if (driver != null) {
-            registeredDrivers.addIfAbsent(driver);
-        } else {
-            throw new NullPointerException();
-        }
-        log.info("registerDriver: {}", driver);
-    }
-
-    public static TableStoreClient getClient(TableStoreConnectionInfo config) {
-        for (TableStoreClientDriver driver : registeredDrivers) {
-            if (driver.acceptsConfig(config)) {
-                return driver.connect(config);
-            }
-        }
-        throw CloudExtException.driverNotExist(config);
-    }
+    throw CloudExtException.driverNotExist(config);
+  }
 }

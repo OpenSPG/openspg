@@ -25,67 +25,69 @@ import com.antgroup.openspg.core.spgschema.model.alter.AlterStatusEnum;
 import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.spgschema.service.type.model.ProjectOntologyRel;
 import com.antgroup.openspg.core.spgschema.service.type.repository.ProjectOntologyRelRepository;
-
 import com.google.common.collect.Lists;
+import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-
 @Repository
 public class ProjectOntologyRelRepositoryImpl implements ProjectOntologyRelRepository {
 
-    @Autowired
-    private ProjectOntologyRelDOMapper projectOntologyRelDOMapper;
-    @Autowired
-    private SequenceRepository sequenceRepository;
+  @Autowired private ProjectOntologyRelDOMapper projectOntologyRelDOMapper;
+  @Autowired private SequenceRepository sequenceRepository;
 
-    @Override
-    public int save(ProjectOntologyRel projectOntologyRel) {
-        ProjectOntologyRelDO projectOntologyRelDO = ProjectOntologyRelConvertor.toDO(projectOntologyRel);
-        projectOntologyRelDO.setId(sequenceRepository.getSeqIdByTime());
-        return projectOntologyRelDOMapper.insert(projectOntologyRelDO);
-    }
+  @Override
+  public int save(ProjectOntologyRel projectOntologyRel) {
+    ProjectOntologyRelDO projectOntologyRelDO =
+        ProjectOntologyRelConvertor.toDO(projectOntologyRel);
+    projectOntologyRelDO.setId(sequenceRepository.getSeqIdByTime());
+    return projectOntologyRelDOMapper.insert(projectOntologyRelDO);
+  }
 
-    @Override
-    public int delete(Long uniqueId) {
-        ProjectOntologyRelDOExample example = new ProjectOntologyRelDOExample();
-        example.createCriteria()
-            .andEntityIdEqualTo(uniqueId)
-            .andTypeEqualTo(ProjectEntityTypeEnum.ENTITY_TYPE.name());
-        return projectOntologyRelDOMapper.deleteByExample(example);
-    }
+  @Override
+  public int delete(Long uniqueId) {
+    ProjectOntologyRelDOExample example = new ProjectOntologyRelDOExample();
+    example
+        .createCriteria()
+        .andEntityIdEqualTo(uniqueId)
+        .andTypeEqualTo(ProjectEntityTypeEnum.ENTITY_TYPE.name());
+    return projectOntologyRelDOMapper.deleteByExample(example);
+  }
 
-    @Override
-    public List<ProjectOntologyRel> queryByProjectId(Long projectId) {
-        ProjectOntologyRelDOExample example = new ProjectOntologyRelDOExample();
-        example.createCriteria()
-            .andProjectIdEqualTo(projectId)
-            .andReferencedEqualTo(YesOrNoEnum.N.name())
-            .andVersionStatusEqualTo(AlterStatusEnum.ONLINE.name())
-            .andTypeEqualTo(ProjectEntityTypeEnum.getType(SPGOntologyEnum.TYPE));
-        List<ProjectOntologyRelDO> projectOntologyRelDOS = projectOntologyRelDOMapper.selectByExample(example);
-        return CollectionsUtils.listMap(projectOntologyRelDOS, ProjectOntologyRelConvertor::toModel);
+  @Override
+  public List<ProjectOntologyRel> queryByProjectId(Long projectId) {
+    ProjectOntologyRelDOExample example = new ProjectOntologyRelDOExample();
+    example
+        .createCriteria()
+        .andProjectIdEqualTo(projectId)
+        .andReferencedEqualTo(YesOrNoEnum.N.name())
+        .andVersionStatusEqualTo(AlterStatusEnum.ONLINE.name())
+        .andTypeEqualTo(ProjectEntityTypeEnum.getType(SPGOntologyEnum.TYPE));
+    List<ProjectOntologyRelDO> projectOntologyRelDOS =
+        projectOntologyRelDOMapper.selectByExample(example);
+    return CollectionsUtils.listMap(projectOntologyRelDOS, ProjectOntologyRelConvertor::toModel);
+  }
 
-    }
+  @Override
+  public ProjectOntologyRel queryByOntologyId(Long uniqueId, SPGOntologyEnum ontologyEnum) {
+    List<ProjectOntologyRel> rels =
+        this.queryByOntologyId(Lists.newArrayList(uniqueId), ontologyEnum);
+    return CollectionUtils.isEmpty(rels) ? null : rels.get(0);
+  }
 
-    @Override
-    public ProjectOntologyRel queryByOntologyId(Long uniqueId, SPGOntologyEnum ontologyEnum) {
-        List<ProjectOntologyRel> rels = this.queryByOntologyId(Lists.newArrayList(uniqueId), ontologyEnum);
-        return CollectionUtils.isEmpty(rels) ? null : rels.get(0);
-    }
-
-    @Override
-    public List<ProjectOntologyRel> queryByOntologyId(List<Long> uniqueIds, SPGOntologyEnum ontologyEnum) {
-        ProjectOntologyRelDOExample example = new ProjectOntologyRelDOExample();
-        example.createCriteria()
-            .andEntityIdIn(uniqueIds)
-            .andTypeEqualTo(ProjectEntityTypeEnum.getType(ontologyEnum))
-            .andReferencedEqualTo(YesOrNoEnum.N.name())
-            .andVersionStatusEqualTo(AlterStatusEnum.ONLINE.name());
-        List<ProjectOntologyRelDO> projectOntologyRelDOS = projectOntologyRelDOMapper.selectByExample(example);
-        return CollectionsUtils.listMap(projectOntologyRelDOS, ProjectOntologyRelConvertor::toModel);
-    }
+  @Override
+  public List<ProjectOntologyRel> queryByOntologyId(
+      List<Long> uniqueIds, SPGOntologyEnum ontologyEnum) {
+    ProjectOntologyRelDOExample example = new ProjectOntologyRelDOExample();
+    example
+        .createCriteria()
+        .andEntityIdIn(uniqueIds)
+        .andTypeEqualTo(ProjectEntityTypeEnum.getType(ontologyEnum))
+        .andReferencedEqualTo(YesOrNoEnum.N.name())
+        .andVersionStatusEqualTo(AlterStatusEnum.ONLINE.name());
+    List<ProjectOntologyRelDO> projectOntologyRelDOS =
+        projectOntologyRelDOMapper.selectByExample(example);
+    return CollectionsUtils.listMap(projectOntologyRelDOS, ProjectOntologyRelConvertor::toModel);
+  }
 }

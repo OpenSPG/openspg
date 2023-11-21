@@ -13,12 +13,8 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore;
 
-
 import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClientDriver;
 
-
 public interface GraphStoreClientDriver
-    extends CloudExtClientDriver<GraphStoreClient, GraphStoreConnectionInfo> {
-
-}
+    extends CloudExtClientDriver<GraphStoreClient, GraphStoreConnectionInfo> {}

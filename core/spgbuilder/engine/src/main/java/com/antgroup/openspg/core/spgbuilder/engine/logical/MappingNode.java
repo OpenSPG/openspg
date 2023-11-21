@@ -13,14 +13,12 @@
 
 package com.antgroup.openspg.core.spgbuilder.engine.logical;
 
-
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.NodeTypeEnum;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.MappingNodeConfig;
 
-
 public class MappingNode extends BaseNode<MappingNodeConfig> {
 
-    public MappingNode(String id, String name, MappingNodeConfig nodeConfig) {
-        super(id, name, NodeTypeEnum.MAPPING, nodeConfig);
-    }
+  public MappingNode(String id, String name, MappingNodeConfig nodeConfig) {
+    super(id, name, NodeTypeEnum.MAPPING, nodeConfig);
+  }
 }

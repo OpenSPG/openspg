@@ -15,16 +15,14 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 
 @Getter
 @AllArgsConstructor
 public class IdxRecordAlterItem extends BaseValObj {
 
-    private final RecordAlterOperationEnum alterOp;
+  private final RecordAlterOperationEnum alterOp;
 
-    private final IdxRecord idxRecord;
+  private final IdxRecord idxRecord;
 }

@@ -17,38 +17,30 @@ import com.antgroup.openspg.core.spgschema.model.BaseOntology;
 import com.antgroup.openspg.core.spgschema.model.BasicInfo;
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 
-/**
- * Reference of the SPG type.
- */
+/** Reference of the SPG type. */
 public class SPGTypeRef extends BaseOntology
     implements WithBasicInfo<SPGTypeIdentifier>, WithSPGTypeEnum {
 
-    private static final long serialVersionUID = -7765941631008945356L;
+  private static final long serialVersionUID = -7765941631008945356L;
 
-    /**
-     * Basic information of the SPG type.
-     */
-    private final BasicInfo<SPGTypeIdentifier> basicInfo;
+  /** Basic information of the SPG type. */
+  private final BasicInfo<SPGTypeIdentifier> basicInfo;
 
-    /**
-     * Enumeration value of the SPG type.
-     */
-    private final SPGTypeEnum spgTypeEnum;
+  /** Enumeration value of the SPG type. */
+  private final SPGTypeEnum spgTypeEnum;
 
-    public SPGTypeRef(
-        BasicInfo<SPGTypeIdentifier> basicInfo,
-        SPGTypeEnum spgTypeEnum) {
-        this.basicInfo = basicInfo;
-        this.spgTypeEnum = spgTypeEnum;
-    }
+  public SPGTypeRef(BasicInfo<SPGTypeIdentifier> basicInfo, SPGTypeEnum spgTypeEnum) {
+    this.basicInfo = basicInfo;
+    this.spgTypeEnum = spgTypeEnum;
+  }
 
-    @Override
-    public BasicInfo<SPGTypeIdentifier> getBasicInfo() {
-        return basicInfo;
-    }
+  @Override
+  public BasicInfo<SPGTypeIdentifier> getBasicInfo() {
+    return basicInfo;
+  }
 
-    @Override
-    public SPGTypeEnum getSpgTypeEnum() {
-        return spgTypeEnum;
-    }
+  @Override
+  public SPGTypeEnum getSpgTypeEnum() {
+    return spgTypeEnum;
+  }
 }

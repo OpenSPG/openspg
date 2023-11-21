@@ -15,49 +15,41 @@ package com.antgroup.openspg.core.spgschema.model.semantic.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-/**
- * Request to define dynamic taxonomy
- */
+/** Request to define dynamic taxonomy */
 public class DefineDynamicTaxonomyRequest extends BaseRequest {
 
-    private static final long serialVersionUID = 4142844732718634621L;
+  private static final long serialVersionUID = 4142844732718634621L;
 
-    /**
-     * The unique name of concept type.
-     */
-    private String conceptTypeName;
+  /** The unique name of concept type. */
+  private String conceptTypeName;
 
-    /**
-     * The name of concept.
-     */
-    private String conceptName;
+  /** The name of concept. */
+  private String conceptName;
 
-    /**
-     * The dsl concept of logical rule.
-     */
-    private String dsl;
+  /** The dsl concept of logical rule. */
+  private String dsl;
 
-    public String getConceptTypeName() {
-        return conceptTypeName;
-    }
+  public String getConceptTypeName() {
+    return conceptTypeName;
+  }
 
-    public void setConceptTypeName(String conceptTypeName) {
-        this.conceptTypeName = conceptTypeName;
-    }
+  public void setConceptTypeName(String conceptTypeName) {
+    this.conceptTypeName = conceptTypeName;
+  }
 
-    public String getConceptName() {
-        return conceptName;
-    }
+  public String getConceptName() {
+    return conceptName;
+  }
 
-    public void setConceptName(String conceptName) {
-        this.conceptName = conceptName;
-    }
+  public void setConceptName(String conceptName) {
+    this.conceptName = conceptName;
+  }
 
-    public String getDsl() {
-        return dsl;
-    }
+  public String getDsl() {
+    return dsl;
+  }
 
-    public void setDsl(String dsl) {
-        this.dsl = dsl;
-    }
+  public void setDsl(String dsl) {
+    this.dsl = dsl;
+  }
 }

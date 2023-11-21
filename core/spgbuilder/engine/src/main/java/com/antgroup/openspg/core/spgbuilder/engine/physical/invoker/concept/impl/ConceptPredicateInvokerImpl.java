@@ -13,6 +13,10 @@
 
 package com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.concept.impl;
 
+import com.antgroup.kg.reasoner.catalog.impl.KgSchemaConnectionInfo;
+import com.antgroup.kg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.kg.reasoner.graphstate.GraphState;
+import com.antgroup.kg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.concept.ConceptPredicateInvoker;
 import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.concept.ConceptService;
 import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
@@ -22,63 +26,57 @@ import com.antgroup.openspg.core.spgreasoner.service.util.LocalRunnerUtils;
 import com.antgroup.openspg.core.spgschema.model.semantic.DynamicTaxonomySemantic;
 import com.antgroup.openspg.core.spgschema.model.semantic.LogicalCausationSemantic;
 import com.antgroup.openspg.core.spgschema.model.type.ConceptList;
-
-import com.antgroup.kg.reasoner.catalog.impl.KgSchemaConnectionInfo;
-import com.antgroup.kg.reasoner.common.graph.vertex.IVertexId;
-import com.antgroup.kg.reasoner.graphstate.GraphState;
-import com.antgroup.kg.reasoner.lube.catalog.Catalog;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ConceptPredicateInvokerImpl implements ConceptPredicateInvoker {
 
-    private final ConceptService conceptService = new ConceptServiceImpl();
-    private RuntimeContext context;
-    private BelongToPredicate belongToPredicate;
-    private LeadToPredicate leadToPredicate;
+  private final ConceptService conceptService = new ConceptServiceImpl();
+  private RuntimeContext context;
+  private BelongToPredicate belongToPredicate;
+  private LeadToPredicate leadToPredicate;
 
-    @Override
-    public void init(RuntimeContext context) {
-        this.context = context;
-        Catalog catalog = LocalRunnerUtils.buildCatalog(context.getProjectId(),
-            new KgSchemaConnectionInfo(context.getSchemaUrl(), "")
-        );
-        GraphState<IVertexId> graphState = LocalRunnerUtils.buildGraphState(context.getGraphStoreConnInfo());
+  @Override
+  public void init(RuntimeContext context) {
+    this.context = context;
+    Catalog catalog =
+        LocalRunnerUtils.buildCatalog(
+            context.getProjectId(), new KgSchemaConnectionInfo(context.getSchemaUrl(), ""));
+    GraphState<IVertexId> graphState =
+        LocalRunnerUtils.buildGraphState(context.getGraphStoreConnInfo());
 
-        belongToPredicate = new BelongToPredicate();
-        belongToPredicate.setCatalog(catalog);
-        belongToPredicate.setGraphState(graphState);
+    belongToPredicate = new BelongToPredicate();
+    belongToPredicate.setCatalog(catalog);
+    belongToPredicate.setGraphState(graphState);
 
-        leadToPredicate = new LeadToPredicate(belongToPredicate, conceptService);
-        leadToPredicate.setCatalog(catalog);
-        leadToPredicate.setGraphState(graphState);
+    leadToPredicate = new LeadToPredicate(belongToPredicate, conceptService);
+    leadToPredicate.setCatalog(catalog);
+    leadToPredicate.setGraphState(graphState);
+  }
+
+  @Override
+  public List<BaseSPGRecord> invoke(BaseAdvancedRecord record) {
+    List<BaseSPGRecord> results = new ArrayList<>(1);
+    results.add(record);
+
+    if (!context.isEnableLeadTo()) {
+      return results;
     }
 
-    @Override
-    public List<BaseSPGRecord> invoke(BaseAdvancedRecord record) {
-        List<BaseSPGRecord> results = new ArrayList<>(1);
-        results.add(record);
-
-        if (!context.isEnableLeadTo()) {
-            return results;
-        }
-
-        ConceptList conceptList = conceptService.query(record);
-        if (conceptList == null) {
-            return results;
-        }
-
-        // First run the belongTo concept semantics and assign the result to the record field.
-        for (DynamicTaxonomySemantic belongTo : conceptList.getDynamicTaxonomyList()) {
-            results = belongToPredicate.process(results, belongTo);
-        }
-
-        // Then run leadTo based on the results of belongTo
-        for (LogicalCausationSemantic leadTo : conceptList.getLogicalCausation()) {
-            results = leadToPredicate.process(results, leadTo);
-        }
-        return results;
+    ConceptList conceptList = conceptService.query(record);
+    if (conceptList == null) {
+      return results;
     }
+
+    // First run the belongTo concept semantics and assign the result to the record field.
+    for (DynamicTaxonomySemantic belongTo : conceptList.getDynamicTaxonomyList()) {
+      results = belongToPredicate.process(results, belongTo);
+    }
+
+    // Then run leadTo based on the results of belongTo
+    for (LogicalCausationSemantic leadTo : conceptList.getLogicalCausation()) {
+      results = leadToPredicate.process(results, leadTo);
+    }
+    return results;
+  }
 }

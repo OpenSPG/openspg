@@ -18,7 +18,8 @@ import com.antgroup.openspg.api.facade.dto.common.response.ObjectStoreResponse;
 import com.antgroup.openspg.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.biz.common.ObjectStoreManager;
-
+import java.io.IOException;
+import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,34 +28,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-
 @Controller
 @RequestMapping("/public/v1/objectStore")
 public class ObjectStoreController {
 
-    @Autowired
-    private ObjectStoreManager objectStoreManager;
+  @Autowired private ObjectStoreManager objectStoreManager;
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Object> upload(ObjectStoreRequest request, MultipartFile file) {
-        return HttpBizTemplate.execute(new HttpBizCallback<ObjectStoreResponse>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public ResponseEntity<Object> upload(ObjectStoreRequest request, MultipartFile file) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<ObjectStoreResponse>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public ObjectStoreResponse action() {
-                InputStream inputStream = null;
-                try {
-                    inputStream = file.getInputStream();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                return objectStoreManager.objectStore(request, inputStream);
+          @Override
+          public ObjectStoreResponse action() {
+            InputStream inputStream = null;
+            try {
+              inputStream = file.getInputStream();
+            } catch (IOException e) {
+              throw new RuntimeException(e);
             }
+            return objectStoreManager.objectStore(request, inputStream);
+          }
         });
-    }
+  }
 }

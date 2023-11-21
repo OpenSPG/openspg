@@ -14,20 +14,21 @@
 package com.antgroup.openspg.core.spgschema.model.constraint;
 
 /**
- * A multi-value constraint means that the value of the attribute is an array with multiple values, such as the user's
- * hobbies attribute, which may have multiple values, making it suitable for configuring multi-value constraints.
+ * A multi-value constraint means that the value of the attribute is an array with multiple values,
+ * such as the user's hobbies attribute, which may have multiple values, making it suitable for
+ * configuring multi-value constraints.
  */
 public class MultiValConstraint extends BaseConstraintItem {
 
-    private static final long serialVersionUID = 141121651435846593L;
+  private static final long serialVersionUID = 141121651435846593L;
 
-    @Override
-    public ConstraintTypeEnum getConstraintTypeEnum() {
-        return ConstraintTypeEnum.MULTI_VALUE;
-    }
+  @Override
+  public ConstraintTypeEnum getConstraintTypeEnum() {
+    return ConstraintTypeEnum.MULTI_VALUE;
+  }
 
-    @Override
-    public boolean checkIsLegal(Object value) {
-        return true;
-    }
+  @Override
+  public boolean checkIsLegal(Object value) {
+    return true;
+  }
 }

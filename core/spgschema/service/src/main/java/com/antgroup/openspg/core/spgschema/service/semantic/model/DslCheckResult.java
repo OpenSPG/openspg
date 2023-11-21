@@ -14,26 +14,19 @@
 package com.antgroup.openspg.core.spgschema.service.semantic.model;
 
 import com.antgroup.openspg.common.model.base.BaseToString;
-
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Dsl content verification results
- */
+/** Dsl content verification results */
 @Getter
 @Setter
 public class DslCheckResult extends BaseToString {
 
-    private static final long serialVersionUID = -3009813729688112961L;
+  private static final long serialVersionUID = -3009813729688112961L;
 
-    /**
-     * Whether the dsl content verification passes
-     */
-    private boolean pass = true;
+  /** Whether the dsl content verification passes */
+  private boolean pass = true;
 
-    /**
-     * The part of dsl content that fails the verification
-     */
-    private String errorPart;
+  /** The part of dsl content that fails the verification */
+  private String errorPart;
 }

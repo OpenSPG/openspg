@@ -16,29 +16,32 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyParentRelDO;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyParentRelDOExample;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface OntologyParentRelDOMapper {
-    long countByExample(OntologyParentRelDOExample example);
+  long countByExample(OntologyParentRelDOExample example);
 
-    int deleteByExample(OntologyParentRelDOExample example);
+  int deleteByExample(OntologyParentRelDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(OntologyParentRelDO record);
+  int insert(OntologyParentRelDO record);
 
-    int insertSelective(OntologyParentRelDO record);
+  int insertSelective(OntologyParentRelDO record);
 
-    List<OntologyParentRelDO> selectByExample(OntologyParentRelDOExample example);
+  List<OntologyParentRelDO> selectByExample(OntologyParentRelDOExample example);
 
-    OntologyParentRelDO selectByPrimaryKey(Long id);
+  OntologyParentRelDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") OntologyParentRelDO record, @Param("example") OntologyParentRelDOExample example);
+  int updateByExampleSelective(
+      @Param("record") OntologyParentRelDO record,
+      @Param("example") OntologyParentRelDOExample example);
 
-    int updateByExample(@Param("record") OntologyParentRelDO record, @Param("example") OntologyParentRelDOExample example);
+  int updateByExample(
+      @Param("record") OntologyParentRelDO record,
+      @Param("example") OntologyParentRelDOExample example);
 
-    int updateByPrimaryKeySelective(OntologyParentRelDO record);
+  int updateByPrimaryKeySelective(OntologyParentRelDO record);
 
-    int updateByPrimaryKey(OntologyParentRelDO record);
+  int updateByPrimaryKey(OntologyParentRelDO record);
 }

@@ -13,42 +13,30 @@
 
 package com.antgroup.openspg.core.spgschema.model.semantic;
 
-/**
- * Status enum of semantic rule.
- */
+/** Status enum of semantic rule. */
 public enum RuleStatusEnum {
-    /**
-     * The rule is init.
-     */
-    INIT,
+  /** The rule is init. */
+  INIT,
 
-    /**
-     * The rule is used in gray env.
-     */
-    GRAY,
+  /** The rule is used in gray env. */
+  GRAY,
 
-    /**
-     * The rule is used in product env.
-     */
-    PROD,
+  /** The rule is used in product env. */
+  PROD,
 
-    /**
-     * The rule is offline
-     */
-    OFF,
+  /** The rule is offline */
+  OFF,
 
-    /**
-     * The rule is deleted
-     */
-    DEL;
+  /** The rule is deleted */
+  DEL;
 
-    public static RuleStatusEnum toEnum(String val) {
-        for (RuleStatusEnum ruleStatusEnum : RuleStatusEnum.values()) {
-            if (ruleStatusEnum.name().equalsIgnoreCase(val)) {
-                return ruleStatusEnum;
-            }
-        }
-
-        throw new IllegalArgumentException("unknown type: " + val);
+  public static RuleStatusEnum toEnum(String val) {
+    for (RuleStatusEnum ruleStatusEnum : RuleStatusEnum.values()) {
+      if (ruleStatusEnum.name().equalsIgnoreCase(val)) {
+        return ruleStatusEnum;
+      }
     }
+
+    throw new IllegalArgumentException("unknown type: " + val);
+  }
 }

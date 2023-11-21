@@ -15,18 +15,15 @@ package com.antgroup.openspg.cloudext.interfaces.objectstore.cmd;
 
 import com.antgroup.openspg.cloudext.interfaces.objectstore.model.ObjectStorePath;
 import com.antgroup.openspg.common.model.base.BaseCmd;
-
+import java.io.InputStream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.io.InputStream;
-
 
 @Getter
 @AllArgsConstructor
 public class ObjectStoreSaveCmd extends BaseCmd {
 
-    private final ObjectStorePath path;
+  private final ObjectStorePath path;
 
-    private final InputStream inputStream;
+  private final InputStream inputStream;
 }

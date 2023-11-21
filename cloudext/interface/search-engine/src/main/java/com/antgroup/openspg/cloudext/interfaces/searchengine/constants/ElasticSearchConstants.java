@@ -13,41 +13,26 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine.constants;
 
-
 public class ElasticSearchConstants {
 
-    /**
-     * The must clause keyword of ElasticSearch.
-     */
-    public static final String ES_QUERY_MUST_CLAUSE_KEY = "must";
+  /** The must clause keyword of ElasticSearch. */
+  public static final String ES_QUERY_MUST_CLAUSE_KEY = "must";
 
-    /**
-     * The not clause keyword of ElasticSearch.
-     */
-    public static final String ES_QUERY_NOT_CLAUSE_KEY = "must_not";
+  /** The not clause keyword of ElasticSearch. */
+  public static final String ES_QUERY_NOT_CLAUSE_KEY = "must_not";
 
-    /**
-     * The should clause keyword of ElasticSearch.
-     */
-    public static final String ES_QUERY_SHOULD_CLAUSE_KEY = "should";
+  /** The should clause keyword of ElasticSearch. */
+  public static final String ES_QUERY_SHOULD_CLAUSE_KEY = "should";
 
-    /**
-     * The term clause keyword of ElasticSearch.
-     */
-    public static final String ES_QUERY_TERM_CLAUSE_KEY = "term";
+  /** The term clause keyword of ElasticSearch. */
+  public static final String ES_QUERY_TERM_CLAUSE_KEY = "term";
 
-    /**
-     * The match clause keyword of ElasticSearch.
-     */
-    public static final String ES_QUERY_MATCH_CLAUSE_KEY = "match";
+  /** The match clause keyword of ElasticSearch. */
+  public static final String ES_QUERY_MATCH_CLAUSE_KEY = "match";
 
-    /**
-     * The bool clause keyword of ElasticSearch.
-     */
-    public static final String ES_QUERY_BOOL_CLAUSE_KEY = "bool";
+  /** The bool clause keyword of ElasticSearch. */
+  public static final String ES_QUERY_BOOL_CLAUSE_KEY = "bool";
 
-    /**
-     * The hits keyword of ElasticSearch query results
-     */
-    public static final String ES_RESULT_HITS_KEY = "hits";
+  /** The hits keyword of ElasticSearch query results */
+  public static final String ES_RESULT_HITS_KEY = "hits";
 }

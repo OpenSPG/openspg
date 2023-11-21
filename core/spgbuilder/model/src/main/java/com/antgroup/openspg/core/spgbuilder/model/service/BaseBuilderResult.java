@@ -15,7 +15,4 @@ package com.antgroup.openspg.core.spgbuilder.model.service;
 
 import com.antgroup.openspg.common.model.job.BaseJobRunResult;
 
-
-public abstract class BaseBuilderResult extends BaseJobRunResult {
-
-}
+public abstract class BaseBuilderResult extends BaseJobRunResult {}

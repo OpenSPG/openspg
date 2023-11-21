@@ -13,43 +13,41 @@
 
 package com.antgroup.openspg.common.model.datasource.connection;
 
-
 import com.antgroup.openspg.common.model.datasource.DataSourceTypeEnum;
-
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 
 public class ConnectionInfoFactory {
 
-    public static BaseConnectionInfo from(String connInfo, DataSourceTypeEnum dataSourceType) {
-        BaseConnectionInfo connectionInfo = null;
-        Gson gson = new Gson();
-        switch (dataSourceType) {
-            case GRAPH_STORE:
-                connectionInfo = gson.fromJson(connInfo, GraphStoreConnectionInfo.class);
-                break;
-            case SEARCH_ENGINE:
-                connectionInfo = gson.fromJson(connInfo, SearchEngineConnectionInfo.class);
-                break;
-            case OBJECT_STORE:
-                connectionInfo = gson.fromJson(connInfo, ObjectStoreConnectionInfo.class);
-                break;
-            case JOB_SCHEDULER:
-                connectionInfo = gson.fromJson(connInfo, JobSchedulerConnectionInfo.class);
-                break;
-            case COMPUTING:
-                connectionInfo = gson.fromJson(connInfo, ComputingConnectionInfo.class);
-                break;
-            case TABLE_STORE:
-                connectionInfo = gson.fromJson(connInfo, TableStoreConnectionInfo.class);
-                break;
-            default:
-                throw new IllegalArgumentException("illegal dataSourceType=" + dataSourceType);
-        }
-
-        if (StringUtils.isBlank(connectionInfo.getScheme())) {
-            throw new IllegalArgumentException("illegal uri param for connInfo=" + connInfo);
-        }
-        return connectionInfo;
+  public static BaseConnectionInfo from(String connInfo, DataSourceTypeEnum dataSourceType) {
+    BaseConnectionInfo connectionInfo = null;
+    Gson gson = new Gson();
+    switch (dataSourceType) {
+      case GRAPH_STORE:
+        connectionInfo = gson.fromJson(connInfo, GraphStoreConnectionInfo.class);
+        break;
+      case SEARCH_ENGINE:
+        connectionInfo = gson.fromJson(connInfo, SearchEngineConnectionInfo.class);
+        break;
+      case OBJECT_STORE:
+        connectionInfo = gson.fromJson(connInfo, ObjectStoreConnectionInfo.class);
+        break;
+      case JOB_SCHEDULER:
+        connectionInfo = gson.fromJson(connInfo, JobSchedulerConnectionInfo.class);
+        break;
+      case COMPUTING:
+        connectionInfo = gson.fromJson(connInfo, ComputingConnectionInfo.class);
+        break;
+      case TABLE_STORE:
+        connectionInfo = gson.fromJson(connInfo, TableStoreConnectionInfo.class);
+        break;
+      default:
+        throw new IllegalArgumentException("illegal dataSourceType=" + dataSourceType);
     }
+
+    if (StringUtils.isBlank(connectionInfo.getScheme())) {
+      throw new IllegalArgumentException("illegal uri param for connInfo=" + connInfo);
+    }
+    return connectionInfo;
+  }
 }

@@ -13,28 +13,22 @@
 
 package com.antgroup.openspg.core.spgschema.model.type;
 
-/**
- * Enumeration of reference sources
- */
+/** Enumeration of reference sources */
 public enum RefSourceEnum {
 
-    /**
-     * Corekg
-     */
-    COREKG,
+  /** Corekg */
+  COREKG,
 
-    /**
-     * Other project.
-     */
-    PROJECT;
+  /** Other project. */
+  PROJECT;
 
-    public static RefSourceEnum toEnum(String val) {
-        for (RefSourceEnum refSourceEnum : RefSourceEnum.values()) {
-            if (refSourceEnum.name().equalsIgnoreCase(val)) {
-                return refSourceEnum;
-            }
-        }
-
-        throw new IllegalArgumentException("unknown type: " + val);
+  public static RefSourceEnum toEnum(String val) {
+    for (RefSourceEnum refSourceEnum : RefSourceEnum.values()) {
+      if (refSourceEnum.name().equalsIgnoreCase(val)) {
+        return refSourceEnum;
+      }
     }
+
+    throw new IllegalArgumentException("unknown type: " + val);
+  }
 }

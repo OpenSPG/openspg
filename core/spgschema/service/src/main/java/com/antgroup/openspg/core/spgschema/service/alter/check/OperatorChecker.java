@@ -15,23 +15,20 @@ package com.antgroup.openspg.core.spgschema.service.alter.check;
 
 import com.antgroup.openspg.core.spgschema.model.type.OperatorKey;
 
-
 public class OperatorChecker {
 
-    public static void check(String uniqueName, OperatorKey operatorKey) {
-        if (null == operatorKey) {
-            return;
-        }
-        if (null == operatorKey.getName()) {
-            throw new IllegalArgumentException(String.format(
-                "operator name of type: %s is null", uniqueName)
-            );
-        }
-
-        if (null == operatorKey.getVersion()) {
-            throw new IllegalArgumentException(String.format(
-                "operator version of type: %s is null", uniqueName)
-            );
-        }
+  public static void check(String uniqueName, OperatorKey operatorKey) {
+    if (null == operatorKey) {
+      return;
     }
+    if (null == operatorKey.getName()) {
+      throw new IllegalArgumentException(
+          String.format("operator name of type: %s is null", uniqueName));
+    }
+
+    if (null == operatorKey.getVersion()) {
+      throw new IllegalArgumentException(
+          String.format("operator version of type: %s is null", uniqueName));
+    }
+  }
 }

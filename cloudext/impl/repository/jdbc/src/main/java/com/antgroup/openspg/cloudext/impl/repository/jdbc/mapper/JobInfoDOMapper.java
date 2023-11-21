@@ -19,25 +19,27 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface JobInfoDOMapper {
-    long countByExample(JobInfoDOExample example);
+  long countByExample(JobInfoDOExample example);
 
-    int deleteByExample(JobInfoDOExample example);
+  int deleteByExample(JobInfoDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(JobInfoDO record);
+  int insert(JobInfoDO record);
 
-    int insertSelective(JobInfoDO record);
+  int insertSelective(JobInfoDO record);
 
-    List<JobInfoDO> selectByExample(JobInfoDOExample example);
+  List<JobInfoDO> selectByExample(JobInfoDOExample example);
 
-    JobInfoDO selectByPrimaryKey(Long id);
+  JobInfoDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") JobInfoDO record, @Param("example") JobInfoDOExample example);
+  int updateByExampleSelective(
+      @Param("record") JobInfoDO record, @Param("example") JobInfoDOExample example);
 
-    int updateByExample(@Param("record") JobInfoDO record, @Param("example") JobInfoDOExample example);
+  int updateByExample(
+      @Param("record") JobInfoDO record, @Param("example") JobInfoDOExample example);
 
-    int updateByPrimaryKeySelective(JobInfoDO record);
+  int updateByPrimaryKeySelective(JobInfoDO record);
 
-    int updateByPrimaryKey(JobInfoDO record);
+  int updateByPrimaryKey(JobInfoDO record);
 }

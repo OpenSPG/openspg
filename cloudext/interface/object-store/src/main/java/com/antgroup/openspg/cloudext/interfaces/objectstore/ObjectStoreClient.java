@@ -17,8 +17,7 @@ import com.antgroup.openspg.cloudext.interfaces.objectstore.cmd.ObjectStoreSaveC
 import com.antgroup.openspg.cloudext.interfaces.objectstore.model.ObjectStorePath;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClient;
 
-
 public interface ObjectStoreClient extends CloudExtClient {
 
-    ObjectStorePath save(ObjectStoreSaveCmd cmd);
+  ObjectStorePath save(ObjectStoreSaveCmd cmd);
 }

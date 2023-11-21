@@ -19,31 +19,34 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface SPGJobInfoDOMapper {
-    long countByExample(SPGJobInfoDOExample example);
+  long countByExample(SPGJobInfoDOExample example);
 
-    int deleteByExample(SPGJobInfoDOExample example);
+  int deleteByExample(SPGJobInfoDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(SPGJobInfoDO record);
+  int insert(SPGJobInfoDO record);
 
-    int insertSelective(SPGJobInfoDO record);
+  int insertSelective(SPGJobInfoDO record);
 
-    List<SPGJobInfoDO> selectByExampleWithBLOBs(SPGJobInfoDOExample example);
+  List<SPGJobInfoDO> selectByExampleWithBLOBs(SPGJobInfoDOExample example);
 
-    List<SPGJobInfoDO> selectByExample(SPGJobInfoDOExample example);
+  List<SPGJobInfoDO> selectByExample(SPGJobInfoDOExample example);
 
-    SPGJobInfoDO selectByPrimaryKey(Long id);
+  SPGJobInfoDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") SPGJobInfoDO record, @Param("example") SPGJobInfoDOExample example);
+  int updateByExampleSelective(
+      @Param("record") SPGJobInfoDO record, @Param("example") SPGJobInfoDOExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") SPGJobInfoDO record, @Param("example") SPGJobInfoDOExample example);
+  int updateByExampleWithBLOBs(
+      @Param("record") SPGJobInfoDO record, @Param("example") SPGJobInfoDOExample example);
 
-    int updateByExample(@Param("record") SPGJobInfoDO record, @Param("example") SPGJobInfoDOExample example);
+  int updateByExample(
+      @Param("record") SPGJobInfoDO record, @Param("example") SPGJobInfoDOExample example);
 
-    int updateByPrimaryKeySelective(SPGJobInfoDO record);
+  int updateByPrimaryKeySelective(SPGJobInfoDO record);
 
-    int updateByPrimaryKeyWithBLOBs(SPGJobInfoDO record);
+  int updateByPrimaryKeyWithBLOBs(SPGJobInfoDO record);
 
-    int updateByPrimaryKey(SPGJobInfoDO record);
+  int updateByPrimaryKey(SPGJobInfoDO record);
 }

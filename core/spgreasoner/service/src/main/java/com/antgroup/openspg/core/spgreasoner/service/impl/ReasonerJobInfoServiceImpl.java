@@ -21,55 +21,50 @@ import com.antgroup.openspg.common.service.datasource.DataSourceService;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInfo;
 import com.antgroup.openspg.core.spgreasoner.service.ReasonerJobInfoService;
 import com.antgroup.openspg.core.spgreasoner.service.repo.ReasonerJobInfoRepository;
-
+import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-
 @Service
 public class ReasonerJobInfoServiceImpl implements ReasonerJobInfoService {
 
-    @Autowired
-    private DataSourceService dataSourceService;
+  @Autowired private DataSourceService dataSourceService;
 
-    @Autowired
-    private ReasonerJobInfoRepository reasonerJobInfoRepository;
+  @Autowired private ReasonerJobInfoRepository reasonerJobInfoRepository;
 
-    @Override
-    public Long create(ReasonerJobInfo reasonerJobInfo) {
-        JobSchedulerClient jobSchedulerClient =
-            dataSourceService.buildSharedJobSchedulerClient();
-        Long reasonerJobInfoId = reasonerJobInfoRepository.save(reasonerJobInfo);
+  @Override
+  public Long create(ReasonerJobInfo reasonerJobInfo) {
+    JobSchedulerClient jobSchedulerClient = dataSourceService.buildSharedJobSchedulerClient();
+    Long reasonerJobInfoId = reasonerJobInfoRepository.save(reasonerJobInfo);
 
-        SchedulerJobInfo schedulerJobInfo = new SchedulerJobInfo(
+    SchedulerJobInfo schedulerJobInfo =
+        new SchedulerJobInfo(
             null,
             reasonerJobInfo.getJobName(),
             JobTypeEnum.REASONING.name(),
             reasonerJobInfo.getCron(),
             reasonerJobInfo.getStatus(),
-            String.valueOf(reasonerJobInfoId)
-        );
-        String schedulerJobInfoId = jobSchedulerClient.createJobInfo(schedulerJobInfo);
+            String.valueOf(reasonerJobInfoId));
+    String schedulerJobInfoId = jobSchedulerClient.createJobInfo(schedulerJobInfo);
 
-        reasonerJobInfo.setExternalJobInfoId(schedulerJobInfoId);
-        reasonerJobInfoRepository.updateExternalJobId(reasonerJobInfoId, schedulerJobInfoId);
-        return reasonerJobInfoId;
-    }
+    reasonerJobInfo.setExternalJobInfoId(schedulerJobInfoId);
+    reasonerJobInfoRepository.updateExternalJobId(reasonerJobInfoId, schedulerJobInfoId);
+    return reasonerJobInfoId;
+  }
 
-    @Override
-    public ReasonerJobInfo queryById(Long jobId) {
-        List<ReasonerJobInfo> reasonerJobInfos = query(new ReasonerJobInfoQuery().setReasonerJobInfoId(jobId));
-        if (CollectionUtils.isNotEmpty(reasonerJobInfos)) {
-            return reasonerJobInfos.get(0);
-        }
-        return null;
+  @Override
+  public ReasonerJobInfo queryById(Long jobId) {
+    List<ReasonerJobInfo> reasonerJobInfos =
+        query(new ReasonerJobInfoQuery().setReasonerJobInfoId(jobId));
+    if (CollectionUtils.isNotEmpty(reasonerJobInfos)) {
+      return reasonerJobInfos.get(0);
     }
+    return null;
+  }
 
-    @Override
-    public List<ReasonerJobInfo> query(ReasonerJobInfoQuery query) {
-        return reasonerJobInfoRepository.query(query);
-    }
+  @Override
+  public List<ReasonerJobInfo> query(ReasonerJobInfoQuery query) {
+    return reasonerJobInfoRepository.query(query);
+  }
 }

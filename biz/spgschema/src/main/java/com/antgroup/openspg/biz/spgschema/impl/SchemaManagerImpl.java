@@ -32,86 +32,80 @@ import com.antgroup.openspg.core.spgschema.service.alter.model.SchemaAlterContex
 import com.antgroup.openspg.core.spgschema.service.type.SPGTypeService;
 import com.antgroup.openspg.core.spgschema.service.type.model.BuiltInPropertyEnum;
 import com.antgroup.openspg.core.spgschema.service.util.PropertyUtils;
-
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 @Slf4j
 @Component
 public class SchemaManagerImpl implements SchemaManager {
 
-    private static final String SCHEMA_DEPLOY_LOCK_KEY = "schema_deploy_lock_";
-    private static final Long SCHEMA_DEPLOY_LOCK_TIMEOUT = 5 * 60 * 1000L;
+  private static final String SCHEMA_DEPLOY_LOCK_KEY = "schema_deploy_lock_";
+  private static final Long SCHEMA_DEPLOY_LOCK_TIMEOUT = 5 * 60 * 1000L;
 
-    @Autowired
-    private SPGTypeService spgTypeService;
-    @Autowired
-    private ProjectService projectService;
-    @Autowired
-    private SchemaAlterPipeline schemaAlterPipeline;
-    @Autowired
-    private DistributeLockService distributeLockService;
+  @Autowired private SPGTypeService spgTypeService;
+  @Autowired private ProjectService projectService;
+  @Autowired private SchemaAlterPipeline schemaAlterPipeline;
+  @Autowired private DistributeLockService distributeLockService;
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void alterSchema(SchemaAlterRequest request) {
-        Long projectId = request.getProjectId();
-        Project project = projectService.queryById(projectId);
-        if (null == project) {
-            throw ProjectException.projectNotExist(projectId);
-        }
-
-        String lockKey = String.format("%s%s", SCHEMA_DEPLOY_LOCK_KEY, projectId.toString());
-        boolean locked = distributeLockService.tryLock(lockKey, SCHEMA_DEPLOY_LOCK_TIMEOUT);
-        if (!locked) {
-            throw LockException.lockFail(lockKey);
-        }
-
-        try {
-            ProjectSchema projectSchema = spgTypeService.queryProjectSchema(projectId);
-            SchemaAlterContext context = new SchemaAlterContext()
-                .setProject(project)
-                .setReleasedSchema(projectSchema.getSpgTypes())
-                .setAlterSchema(request.getSchemaDraft().getAlterSpgTypes());
-            schemaAlterPipeline.run(context);
-        } catch (Exception e) {
-            throw SchemaException.alterError(e);
-        } finally {
-            distributeLockService.unlock(lockKey);
-        }
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void alterSchema(SchemaAlterRequest request) {
+    Long projectId = request.getProjectId();
+    Project project = projectService.queryById(projectId);
+    if (null == project) {
+      throw ProjectException.projectNotExist(projectId);
     }
 
-    @Override
-    public ProjectSchema getProjectSchema(Long projectId) {
-        Project project = projectService.queryById(projectId);
-        if (null == project) {
-            throw ProjectException.projectNotExist(projectId);
-        }
-
-        return spgTypeService.queryProjectSchema(projectId);
+    String lockKey = String.format("%s%s", SCHEMA_DEPLOY_LOCK_KEY, projectId.toString());
+    boolean locked = distributeLockService.tryLock(lockKey, SCHEMA_DEPLOY_LOCK_TIMEOUT);
+    if (!locked) {
+      throw LockException.lockFail(lockKey);
     }
 
-    @Override
-    public BaseSPGType getSpgType(String uniqueName) {
-        SPGTypeIdentifier spgTypeIdentifier = SPGTypeIdentifier.parse(uniqueName);
-        return spgTypeService.querySPGTypeByIdentifier(spgTypeIdentifier);
+    try {
+      ProjectSchema projectSchema = spgTypeService.queryProjectSchema(projectId);
+      SchemaAlterContext context =
+          new SchemaAlterContext()
+              .setProject(project)
+              .setReleasedSchema(projectSchema.getSpgTypes())
+              .setAlterSchema(request.getSchemaDraft().getAlterSpgTypes());
+      schemaAlterPipeline.run(context);
+    } catch (Exception e) {
+      throw SchemaException.alterError(e);
+    } finally {
+      distributeLockService.unlock(lockKey);
+    }
+  }
+
+  @Override
+  public ProjectSchema getProjectSchema(Long projectId) {
+    Project project = projectService.queryById(projectId);
+    if (null == project) {
+      throw ProjectException.projectNotExist(projectId);
     }
 
-    @Override
-    public List<Property> getBuiltInProperty(SPGTypeEnum spgTypeEnum) {
-        List<Property> builtInProperties = new ArrayList<>();
-        SPGTypeRef spgTypeRef = new SPGTypeRef(null, spgTypeEnum);
+    return spgTypeService.queryProjectSchema(projectId);
+  }
 
-        List<BuiltInPropertyEnum> builtInPropertyEnums =
-            BuiltInPropertyEnum.getBuiltInProperty(spgTypeEnum);
-        builtInPropertyEnums.forEach(e -> builtInProperties.add(
-            PropertyUtils.newProperty(spgTypeRef, e)));
-        return builtInProperties;
-    }
+  @Override
+  public BaseSPGType getSpgType(String uniqueName) {
+    SPGTypeIdentifier spgTypeIdentifier = SPGTypeIdentifier.parse(uniqueName);
+    return spgTypeService.querySPGTypeByIdentifier(spgTypeIdentifier);
+  }
+
+  @Override
+  public List<Property> getBuiltInProperty(SPGTypeEnum spgTypeEnum) {
+    List<Property> builtInProperties = new ArrayList<>();
+    SPGTypeRef spgTypeRef = new SPGTypeRef(null, spgTypeEnum);
+
+    List<BuiltInPropertyEnum> builtInPropertyEnums =
+        BuiltInPropertyEnum.getBuiltInProperty(spgTypeEnum);
+    builtInPropertyEnums.forEach(
+        e -> builtInProperties.add(PropertyUtils.newProperty(spgTypeRef, e)));
+    return builtInProperties;
+  }
 }

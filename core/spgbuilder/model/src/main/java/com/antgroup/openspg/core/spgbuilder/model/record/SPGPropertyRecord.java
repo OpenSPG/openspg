@@ -18,52 +18,48 @@ import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
 import com.antgroup.openspg.core.spgschema.model.type.WithSPGTypeEnum;
 
+public class SPGPropertyRecord extends BasePropertyRecord implements WithSPGTypeEnum {
 
-public class SPGPropertyRecord extends BasePropertyRecord
-    implements WithSPGTypeEnum {
+  private final Property propertyType;
 
-    private final Property propertyType;
+  public SPGPropertyRecord(Property propertyType, SPGPropertyValue value) {
+    super(value);
+    this.propertyType = propertyType;
+  }
 
-    public SPGPropertyRecord(
-        Property propertyType,
-        SPGPropertyValue value) {
-        super(value);
-        this.propertyType = propertyType;
-    }
+  public Property getPropertyType() {
+    return propertyType;
+  }
 
-    public Property getPropertyType() {
-        return propertyType;
-    }
+  public String getName() {
+    return propertyType.getName();
+  }
 
-    public String getName() {
-        return propertyType.getName();
-    }
+  public SPGPropertyValue getValue() {
+    return value;
+  }
 
-    public SPGPropertyValue getValue() {
-        return value;
-    }
+  @Override
+  public SPGTypeRef getObjectTypeRef() {
+    return getPropertyType().getObjectTypeRef();
+  }
 
-    @Override
-    public SPGTypeRef getObjectTypeRef() {
-        return getPropertyType().getObjectTypeRef();
-    }
+  @Override
+  public boolean isSemanticProperty() {
+    return propertyType.getObjectTypeRef().isAdvancedType();
+  }
 
-    @Override
-    public boolean isSemanticProperty() {
-        return propertyType.getObjectTypeRef().isAdvancedType();
-    }
+  @Override
+  public SPGTypeEnum getSpgTypeEnum() {
+    return getPropertyType().getObjectTypeRef().getSpgTypeEnum();
+  }
 
-    @Override
-    public SPGTypeEnum getSpgTypeEnum() {
-        return getPropertyType().getObjectTypeRef().getSpgTypeEnum();
-    }
-
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("SPGPropertyRecord{");
-        sb.append("propertyType=").append(propertyType.getName());
-        sb.append(", value=").append(value);
-        sb.append('}');
-        return sb.toString();
-    }
+  @Override
+  public String toString() {
+    final StringBuffer sb = new StringBuffer("SPGPropertyRecord{");
+    sb.append("propertyType=").append(propertyType.getName());
+    sb.append(", value=").append(value);
+    sb.append('}');
+    return sb.toString();
+  }
 }

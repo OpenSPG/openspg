@@ -14,20 +14,17 @@
 package com.antgroup.openspg.cloudext.interfaces.objectstore.model;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
 import lombok.Getter;
 import lombok.Setter;
-
 
 @Getter
 public class ObjectStorePath extends BaseValObj {
 
-    private final String relativePath;
+  private final String relativePath;
 
-    @Setter
-    private String absolutePath;
+  @Setter private String absolutePath;
 
-    public ObjectStorePath(String relativePath) {
-        this.relativePath = relativePath;
-    }
+  public ObjectStorePath(String relativePath) {
+    this.relativePath = relativePath;
+  }
 }

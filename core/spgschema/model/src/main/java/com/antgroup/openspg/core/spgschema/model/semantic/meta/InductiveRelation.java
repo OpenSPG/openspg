@@ -15,64 +15,58 @@ package com.antgroup.openspg.core.spgschema.model.semantic.meta;
 
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-
 import java.util.EnumSet;
 
 public class InductiveRelation extends BaseSemanticRelation {
 
-    private static final long serialVersionUID = -8989272387092424288L;
+  private static final long serialVersionUID = -8989272387092424288L;
 
-    enum InductivePredicateEnum {
-        /**
-         * Classification can be performed through rules defined on predicates.
-         */
-        belongTo("属于"),
-        ;
+  enum InductivePredicateEnum {
+    /** Classification can be performed through rules defined on predicates. */
+    belongTo("属于"),
+    ;
 
-        private final String nameZh;
+    private final String nameZh;
 
-        InductivePredicateEnum(String nameZh) {
-            this.nameZh = nameZh;
-        }
-
-        public String getNameZh() {
-            return nameZh;
-        }
+    InductivePredicateEnum(String nameZh) {
+      this.nameZh = nameZh;
     }
 
-    /**
-     * Accept entity/event type
-     */
-    private final SPGTypeIdentifier subjectTypeIdentifier;
-
-    /**
-     * Accept concept type only
-     */
-    private final SPGTypeIdentifier objectConceptTypeIdentifier;
-
-    private final InductivePredicateEnum predicate;
-
-    public InductiveRelation(
-        SPGTypeIdentifier typeIdentifier,
-        SPGTypeIdentifier conceptTypeIdentifier,
-        InductivePredicateEnum predicateEnum) {
-        super(EnumSet.of(SPGTypeEnum.ENTITY_TYPE, SPGTypeEnum.CONCEPT_TYPE), EnumSet.of(SPGTypeEnum.CONCEPT_TYPE));
-
-        this.subjectTypeIdentifier = typeIdentifier;
-        this.objectConceptTypeIdentifier = conceptTypeIdentifier;
-        this.predicate = predicateEnum;
+    public String getNameZh() {
+      return nameZh;
     }
+  }
 
-    public SPGTypeIdentifier getSubjectTypeIdentifier() {
-        return subjectTypeIdentifier;
-    }
+  /** Accept entity/event type */
+  private final SPGTypeIdentifier subjectTypeIdentifier;
 
-    public SPGTypeIdentifier getObjectConceptTypeIdentifier() {
-        return objectConceptTypeIdentifier;
-    }
+  /** Accept concept type only */
+  private final SPGTypeIdentifier objectConceptTypeIdentifier;
 
-    public InductivePredicateEnum getPredicate() {
-        return predicate;
-    }
+  private final InductivePredicateEnum predicate;
+
+  public InductiveRelation(
+      SPGTypeIdentifier typeIdentifier,
+      SPGTypeIdentifier conceptTypeIdentifier,
+      InductivePredicateEnum predicateEnum) {
+    super(
+        EnumSet.of(SPGTypeEnum.ENTITY_TYPE, SPGTypeEnum.CONCEPT_TYPE),
+        EnumSet.of(SPGTypeEnum.CONCEPT_TYPE));
+
+    this.subjectTypeIdentifier = typeIdentifier;
+    this.objectConceptTypeIdentifier = conceptTypeIdentifier;
+    this.predicate = predicateEnum;
+  }
+
+  public SPGTypeIdentifier getSubjectTypeIdentifier() {
+    return subjectTypeIdentifier;
+  }
+
+  public SPGTypeIdentifier getObjectConceptTypeIdentifier() {
+    return objectConceptTypeIdentifier;
+  }
+
+  public InductivePredicateEnum getPredicate() {
+    return predicate;
+  }
 }
-

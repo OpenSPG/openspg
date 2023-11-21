@@ -16,8 +16,5 @@ package com.antgroup.openspg.cloudext.interfaces.tablestore;
 import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClientDriver;
 
-
 public interface TableStoreClientDriver
-    extends CloudExtClientDriver<TableStoreClient, TableStoreConnectionInfo> {
-
-}
+    extends CloudExtClientDriver<TableStoreClient, TableStoreConnectionInfo> {}

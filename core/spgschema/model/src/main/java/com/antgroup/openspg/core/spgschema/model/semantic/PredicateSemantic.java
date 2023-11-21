@@ -17,67 +17,56 @@ import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTripleIdentifier;
 import com.antgroup.openspg.core.spgschema.model.predicate.PropertyRef;
 
-/**
- * The semantics between properties or relations.
- */
+/** The semantics between properties or relations. */
 public class PredicateSemantic extends BaseSemantic {
 
-    private static final long serialVersionUID = 8408543037073978968L;
+  private static final long serialVersionUID = 8408543037073978968L;
 
-    /**
-     * Property reference as the subject
-     */
-    private PropertyRef subjectTypeRef;
+  /** Property reference as the subject */
+  private PropertyRef subjectTypeRef;
 
-    /**
-     * Predicate name
-     */
-    private PredicateIdentifier predicateIdentifier;
+  /** Predicate name */
+  private PredicateIdentifier predicateIdentifier;
 
-    /**
-     * Property reference as the object
-     */
-    private PropertyRef objectTypeRef;
+  /** Property reference as the object */
+  private PropertyRef objectTypeRef;
 
-    public PredicateSemantic() {
-    }
+  public PredicateSemantic() {}
 
-    public PredicateSemantic(
-        PropertyRef subjectTypeRef,
-        PredicateIdentifier predicate,
-        PropertyRef objectTypeRef) {
-        super(subjectTypeRef.getOntologyType());
-        this.subjectTypeRef = subjectTypeRef;
-        this.predicateIdentifier = predicate;
-        this.objectTypeRef = objectTypeRef;
-    }
+  public PredicateSemantic(
+      PropertyRef subjectTypeRef, PredicateIdentifier predicate, PropertyRef objectTypeRef) {
+    super(subjectTypeRef.getOntologyType());
+    this.subjectTypeRef = subjectTypeRef;
+    this.predicateIdentifier = predicate;
+    this.objectTypeRef = objectTypeRef;
+  }
 
-    public void setSubjectTypeRef(PropertyRef subjectTypeRef) {
-        this.subjectTypeRef = subjectTypeRef;
-    }
+  public void setSubjectTypeRef(PropertyRef subjectTypeRef) {
+    this.subjectTypeRef = subjectTypeRef;
+  }
 
-    public PredicateIdentifier getPredicateIdentifier() {
-        return predicateIdentifier;
-    }
+  public PredicateIdentifier getPredicateIdentifier() {
+    return predicateIdentifier;
+  }
 
-    public PropertyRef getSubjectTypeRef() {
-        return subjectTypeRef;
-    }
+  public PropertyRef getSubjectTypeRef() {
+    return subjectTypeRef;
+  }
 
-    public PropertyRef getObjectTypeRef() {
-        return objectTypeRef;
-    }
+  public PropertyRef getObjectTypeRef() {
+    return objectTypeRef;
+  }
 
-    public Long getSubjectUniqueId() {
-        return subjectTypeRef == null ? null : subjectTypeRef.getUniqueId();
-    }
+  public Long getSubjectUniqueId() {
+    return subjectTypeRef == null ? null : subjectTypeRef.getUniqueId();
+  }
 
-    public Long getObjectUniqueId() {
-        return objectTypeRef == null ? null : objectTypeRef.getUniqueId();
-    }
+  public Long getObjectUniqueId() {
+    return objectTypeRef == null ? null : objectTypeRef.getUniqueId();
+  }
 
-    public SPGTripleIdentifier getTripleName() {
-        return new SPGTripleIdentifier(subjectTypeRef.newSpgTripleName(), predicateIdentifier,
-            objectTypeRef.newSpgTripleName());
-    }
+  public SPGTripleIdentifier getTripleName() {
+    return new SPGTripleIdentifier(
+        subjectTypeRef.newSpgTripleName(), predicateIdentifier, objectTypeRef.newSpgTripleName());
+  }
 }

@@ -13,10 +13,9 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query;
 
-
 public class TermQuery extends Query {
 
-    public TermQuery(String term, String value) {
-        super(term, value);
-    }
+  public TermQuery(String term, String value) {
+    super(term, value);
+  }
 }

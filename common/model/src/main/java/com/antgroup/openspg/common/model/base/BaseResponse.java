@@ -13,7 +13,4 @@
 
 package com.antgroup.openspg.common.model.base;
 
-
-public class BaseResponse extends BaseDTO {
-
-}
+public class BaseResponse extends BaseDTO {}

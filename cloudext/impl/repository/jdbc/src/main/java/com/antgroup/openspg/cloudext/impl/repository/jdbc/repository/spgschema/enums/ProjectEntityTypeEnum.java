@@ -15,33 +15,31 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.
 
 import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 
-
 public enum ProjectEntityTypeEnum {
+  ENTITY_TYPE,
 
-    ENTITY_TYPE,
+  RELATION_TYPE;
 
-    RELATION_TYPE;
-
-    public static String getType(SPGOntologyEnum ontologyEnum) {
-        switch (ontologyEnum) {
-            case TYPE:
-                return ENTITY_TYPE.name();
-            case RELATION:
-                return RELATION_TYPE.name();
-            default:
-                throw new IllegalArgumentException("illegal type=" + ontologyEnum);
-        }
+  public static String getType(SPGOntologyEnum ontologyEnum) {
+    switch (ontologyEnum) {
+      case TYPE:
+        return ENTITY_TYPE.name();
+      case RELATION:
+        return RELATION_TYPE.name();
+      default:
+        throw new IllegalArgumentException("illegal type=" + ontologyEnum);
     }
+  }
 
-    public static SPGOntologyEnum getOntologyType(String type) {
-        ProjectEntityTypeEnum projectEntityTypeEnum = ProjectEntityTypeEnum.valueOf(type);
-        switch (projectEntityTypeEnum) {
-            case ENTITY_TYPE:
-                return SPGOntologyEnum.TYPE;
-            case RELATION_TYPE:
-                return SPGOntologyEnum.RELATION;
-            default:
-                throw new IllegalArgumentException("illegal type=" + type);
-        }
+  public static SPGOntologyEnum getOntologyType(String type) {
+    ProjectEntityTypeEnum projectEntityTypeEnum = ProjectEntityTypeEnum.valueOf(type);
+    switch (projectEntityTypeEnum) {
+      case ENTITY_TYPE:
+        return SPGOntologyEnum.TYPE;
+      case RELATION_TYPE:
+        return SPGOntologyEnum.RELATION;
+      default:
+        throw new IllegalArgumentException("illegal type=" + type);
     }
+  }
 }

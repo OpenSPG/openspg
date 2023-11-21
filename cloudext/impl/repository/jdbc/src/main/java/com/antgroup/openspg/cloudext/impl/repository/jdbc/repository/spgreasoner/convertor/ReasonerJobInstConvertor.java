@@ -21,17 +21,16 @@ import com.antgroup.openspg.core.spgreasoner.model.service.BaseReasonerResult;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInst;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerProgress;
 
-
 public class ReasonerJobInstConvertor {
 
-    public static ReasonerJobInst toModel(SPGJobInstDOWithBLOBs jobInstDO) {
-        if (jobInstDO == null) {
-            return null;
-        }
-        if (!JobTypeEnum.REASONING.name().equals(jobInstDO.getType())) {
-            return null;
-        }
-        return new ReasonerJobInst(
+  public static ReasonerJobInst toModel(SPGJobInstDOWithBLOBs jobInstDO) {
+    if (jobInstDO == null) {
+      return null;
+    }
+    if (!JobTypeEnum.REASONING.name().equals(jobInstDO.getType())) {
+      return null;
+    }
+    return new ReasonerJobInst(
             jobInstDO.getJobId(),
             jobInstDO.getProjectId(),
             JobInstStatusEnum.valueOf(jobInstDO.getStatus()),
@@ -39,26 +38,26 @@ public class ReasonerJobInstConvertor {
             jobInstDO.getStartTime(),
             jobInstDO.getEndTime(),
             JSON.deserialize(jobInstDO.getProgress(), ReasonerProgress.class),
-            jobInstDO.getLogInfo()
-        ).setJobInstId(jobInstDO.getId())
-            .setExternalJobInstId(jobInstDO.getExternalJobInstId());
-    }
+            jobInstDO.getLogInfo())
+        .setJobInstId(jobInstDO.getId())
+        .setExternalJobInstId(jobInstDO.getExternalJobInstId());
+  }
 
-    public static SPGJobInstDOWithBLOBs toDO(ReasonerJobInst jobInst) {
-        SPGJobInstDOWithBLOBs jobInstDO = new SPGJobInstDOWithBLOBs();
+  public static SPGJobInstDOWithBLOBs toDO(ReasonerJobInst jobInst) {
+    SPGJobInstDOWithBLOBs jobInstDO = new SPGJobInstDOWithBLOBs();
 
-        jobInstDO.setId(jobInst.getJobInstId());
-        jobInstDO.setJobId(jobInst.getJobId());
-        jobInstDO.setType(JobTypeEnum.REASONING.name());
-        jobInstDO.setProjectId(jobInst.getProjectId());
-        jobInstDO.setStatus(jobInst.getStatus().name());
-        jobInstDO.setStartTime(jobInst.getStartTime());
-        jobInstDO.setEndTime(jobInst.getEndTime());
-        jobInstDO.setProgress(JSON.serialize(jobInst.getProgress()));
-        jobInstDO.setExternalJobInstId(jobInst.getExternalJobInstId());
-        jobInstDO.setResult(JSON.serialize(jobInst.getResult()));
-        jobInstDO.setLogInfo(jobInst.getLogInfo());
-        jobInstDO.setExternalJobInstId(jobInst.getExternalJobInstId());
-        return jobInstDO;
-    }
+    jobInstDO.setId(jobInst.getJobInstId());
+    jobInstDO.setJobId(jobInst.getJobId());
+    jobInstDO.setType(JobTypeEnum.REASONING.name());
+    jobInstDO.setProjectId(jobInst.getProjectId());
+    jobInstDO.setStatus(jobInst.getStatus().name());
+    jobInstDO.setStartTime(jobInst.getStartTime());
+    jobInstDO.setEndTime(jobInst.getEndTime());
+    jobInstDO.setProgress(JSON.serialize(jobInst.getProgress()));
+    jobInstDO.setExternalJobInstId(jobInst.getExternalJobInstId());
+    jobInstDO.setResult(JSON.serialize(jobInst.getResult()));
+    jobInstDO.setLogInfo(jobInst.getLogInfo());
+    jobInstDO.setExternalJobInstId(jobInst.getExternalJobInstId());
+    return jobInstDO;
+  }
 }

@@ -15,68 +15,67 @@ package com.antgroup.openspg.api.facade.dto.reasoner.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 import com.antgroup.openspg.core.spgreasoner.model.service.BaseReasonerContent;
-
 import java.util.Map;
 
 public class ReasonerJobSubmitRequest extends BaseRequest {
 
-    private String jobName;
+  private String jobName;
 
-    private Long projectId;
+  private Long projectId;
 
-    private BaseReasonerContent content;
+  private BaseReasonerContent content;
 
-    private String cron;
+  private String cron;
 
-    private String idempotentId;
+  private String idempotentId;
 
-    private Map<String, Object> params;
+  private Map<String, Object> params;
 
-    public BaseReasonerContent getContent() {
-        return content;
-    }
+  public BaseReasonerContent getContent() {
+    return content;
+  }
 
-    public void setContent(BaseReasonerContent content) {
-        this.content = content;
-    }
+  public void setContent(BaseReasonerContent content) {
+    this.content = content;
+  }
 
-    public String getJobName() {
-        return jobName;
-    }
+  public String getJobName() {
+    return jobName;
+  }
 
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
-    }
+  public void setJobName(String jobName) {
+    this.jobName = jobName;
+  }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+  public void setProjectId(Long projectId) {
+    this.projectId = projectId;
+  }
 
-    public String getCron() {
-        return cron;
-    }
+  public String getCron() {
+    return cron;
+  }
 
-    public void setCron(String cron) {
-        this.cron = cron;
-    }
+  public void setCron(String cron) {
+    this.cron = cron;
+  }
 
-    public String getIdempotentId() {
-        return idempotentId;
-    }
+  public String getIdempotentId() {
+    return idempotentId;
+  }
 
-    public void setIdempotentId(String idempotentId) {
-        this.idempotentId = idempotentId;
-    }
+  public void setIdempotentId(String idempotentId) {
+    this.idempotentId = idempotentId;
+  }
 
-    public Map<String, Object> getParams() {
-        return params;
-    }
+  public Map<String, Object> getParams() {
+    return params;
+  }
 
-    public void setParams(Map<String, Object> params) {
-        this.params = params;
-    }
+  public void setParams(Map<String, Object> params) {
+    this.params = params;
+  }
 }

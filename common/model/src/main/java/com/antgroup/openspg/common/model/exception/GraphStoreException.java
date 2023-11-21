@@ -13,49 +13,46 @@
 
 package com.antgroup.openspg.common.model.exception;
 
-
 public class GraphStoreException extends CloudExtException {
 
-    private GraphStoreException(Throwable cause, String messagePattern, Object... args) {
-        super(cause, messagePattern, args);
-    }
+  private GraphStoreException(Throwable cause, String messagePattern, Object... args) {
+    super(cause, messagePattern, args);
+  }
 
-    private GraphStoreException(String messagePattern, Object... args) {
-        this(null, messagePattern, args);
-    }
+  private GraphStoreException(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
+  }
 
-    public static GraphStoreException unexpectedAlterOperationEnum(
-        Object operationEnum) {
-        return new GraphStoreException("unexpected alter operation enum {}", String.valueOf(operationEnum));
-    }
+  public static GraphStoreException unexpectedAlterOperationEnum(Object operationEnum) {
+    return new GraphStoreException(
+        "unexpected alter operation enum {}", String.valueOf(operationEnum));
+  }
 
-    public static GraphStoreException unexpectedVertexEdgeTypeOperationEnum(
-        Object operationEnum) {
-        return new GraphStoreException("unexpected vertex edge type operation enum {}", String.valueOf(operationEnum));
-    }
+  public static GraphStoreException unexpectedVertexEdgeTypeOperationEnum(Object operationEnum) {
+    return new GraphStoreException(
+        "unexpected vertex edge type operation enum {}", String.valueOf(operationEnum));
+  }
 
-    public static GraphStoreException unexpectedSPGRecordTypeEnum(
-        Object recordTypeEnum) {
-        return new GraphStoreException("unexpected spg record type enum {}", String.valueOf(recordTypeEnum));
-    }
+  public static GraphStoreException unexpectedSPGRecordTypeEnum(Object recordTypeEnum) {
+    return new GraphStoreException(
+        "unexpected spg record type enum {}", String.valueOf(recordTypeEnum));
+  }
 
-    public static GraphStoreException unexpectedSPGRecordType(
-        Object spgRecord) {
-        return new GraphStoreException("unexpected spg record type {}", String.valueOf(spgRecord));
-    }
+  public static GraphStoreException unexpectedSPGRecordType(Object spgRecord) {
+    return new GraphStoreException("unexpected spg record type {}", String.valueOf(spgRecord));
+  }
 
-    public static GraphStoreException unexpectedSPGPropertyRecordType(
-        Object propertyRecord) {
-        return new GraphStoreException("unexpected spg property record type {}", String.valueOf(propertyRecord));
-    }
+  public static GraphStoreException unexpectedSPGPropertyRecordType(Object propertyRecord) {
+    return new GraphStoreException(
+        "unexpected spg property record type {}", String.valueOf(propertyRecord));
+  }
 
-    public static GraphStoreException unexpectedSPGTypeEnum(
-        Object spgTypeEnum) {
-        return new GraphStoreException("unexpected spg type enum {}", String.valueOf(spgTypeEnum));
-    }
+  public static GraphStoreException unexpectedSPGTypeEnum(Object spgTypeEnum) {
+    return new GraphStoreException("unexpected spg type enum {}", String.valueOf(spgTypeEnum));
+  }
 
-    public static GraphStoreException unexpectedLPGRecordTypeEnum(
-        Object lpgRecordTypeEnum) {
-        return new GraphStoreException("unexpected lpg record type enum {}", String.valueOf(lpgRecordTypeEnum));
-    }
+  public static GraphStoreException unexpectedLPGRecordTypeEnum(Object lpgRecordTypeEnum) {
+    return new GraphStoreException(
+        "unexpected lpg record type enum {}", String.valueOf(lpgRecordTypeEnum));
+  }
 }

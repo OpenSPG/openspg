@@ -15,22 +15,24 @@ package com.antgroup.openspg.core.spgreasoner.model.service;
 
 /**
  * The type of receipt returned by the knowledge reasoning engine.
- * <p>
- * Different reasoning modes produce different reasoning receipts. When reasoning locally, the reasoning receipt is the
- * reasoning result, which is usually expressed in the form of a table; in remote cluster reasoning, the reasoning
- * receipt may be a UUID, used for front-end continuous polling to obtain reasoning results
+ *
+ * <p>Different reasoning modes produce different reasoning receipts. When reasoning locally, the
+ * reasoning receipt is the reasoning result, which is usually expressed in the form of a table; in
+ * remote cluster reasoning, the reasoning receipt may be a UUID, used for front-end continuous
+ * polling to obtain reasoning results
  */
 public enum ReasonerReceiptTypeEnum {
-    /**
-     * When the reasoning engine finally executes a segment of KGDSL, the result is carried in a table data structure;
-     */
-    TABLE,
+  /**
+   * When the reasoning engine finally executes a segment of KGDSL, the result is carried in a table
+   * data structure;
+   */
+  TABLE,
 
-    /**
-     * However, when a reasoning task is sent to a remote cluster, the reasoning result returned by the inference
-     * service to the front-end may temporarily be a UUID, and the front-end will then obtain the real reasoning result
-     * from the reasoning service with the UUID, that is, a table
-     */
-    JOB,
-    ;
+  /**
+   * However, when a reasoning task is sent to a remote cluster, the reasoning result returned by
+   * the inference service to the front-end may temporarily be a UUID, and the front-end will then
+   * obtain the real reasoning result from the reasoning service with the UUID, that is, a table
+   */
+  JOB,
+  ;
 }

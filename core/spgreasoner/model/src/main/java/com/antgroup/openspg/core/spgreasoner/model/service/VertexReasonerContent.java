@@ -13,34 +13,31 @@
 
 package com.antgroup.openspg.core.spgreasoner.model.service;
 
-
 import com.antgroup.openspg.core.spgreasoner.model.struct.StartingVertex;
-
 import java.util.List;
 
 /**
  * Query or reason about the vertices passed in.
- * <p>
- * When the attribute of a vertex is defined by non-logical rules, we call this attribute fact data, when the attribute
- * of a vertex is defined by logical rules, we call this attribute data defined by derived rules.
- * <p>
- * When a vertex is passed in, we will perform reasoning calculations on the attributes defined by its logical rules,
- * and query the attributes defined by its non-logical rules, and finally return them together
+ *
+ * <p>When the attribute of a vertex is defined by non-logical rules, we call this attribute fact
+ * data, when the attribute of a vertex is defined by logical rules, we call this attribute data
+ * defined by derived rules.
+ *
+ * <p>When a vertex is passed in, we will perform reasoning calculations on the attributes defined
+ * by its logical rules, and query the attributes defined by its non-logical rules, and finally
+ * return them together
  */
 public class VertexReasonerContent extends BaseReasonerContent {
 
-    /**
-     * the vertices to reason about
-     */
-    private final List<StartingVertex> startingVertices;
+  /** the vertices to reason about */
+  private final List<StartingVertex> startingVertices;
 
-    public VertexReasonerContent(
-        List<StartingVertex> startingVertices) {
-        super(ReasonerContentTypeEnum.VERTEX);
-        this.startingVertices = startingVertices;
-    }
+  public VertexReasonerContent(List<StartingVertex> startingVertices) {
+    super(ReasonerContentTypeEnum.VERTEX);
+    this.startingVertices = startingVertices;
+  }
 
-    public List<StartingVertex> getStartingVertices() {
-        return startingVertices;
-    }
+  public List<StartingVertex> getStartingVertices() {
+    return startingVertices;
+  }
 }

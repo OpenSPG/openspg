@@ -15,17 +15,16 @@ package com.antgroup.openspg.api.facade.dto.builder.response;
 
 import com.antgroup.openspg.common.model.base.BaseResponse;
 
-
 public class BaseEditResponse extends BaseResponse {
 
-    private Integer updated;
+  private Integer updated;
 
-    public Integer getUpdated() {
-        return updated;
-    }
+  public Integer getUpdated() {
+    return updated;
+  }
 
-    public BaseEditResponse setUpdated(Integer updated) {
-        this.updated = updated;
-        return this;
-    }
+  public BaseEditResponse setUpdated(Integer updated) {
+    this.updated = updated;
+    return this;
+  }
 }

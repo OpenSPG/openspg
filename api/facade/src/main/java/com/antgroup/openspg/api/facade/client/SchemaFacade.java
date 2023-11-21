@@ -23,57 +23,58 @@ import com.antgroup.openspg.core.spgschema.model.predicate.Property;
 import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
 import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.spgschema.model.type.ProjectSchema;
-
 import java.util.List;
 
 /**
- * The interface to alter or query schema, which provides methods for creating and modifying the schema, querying the
- * details of the schema in the project.
+ * The interface to alter or query schema, which provides methods for creating and modifying the
+ * schema, querying the details of the schema in the project.
  */
 public interface SchemaFacade {
 
-    /**
-     * Define and change the schema of the project, such as adding an entity type, deleting a concept type, adding a
-     * property to an event type, or deleting a relation type. A single modification can include multiple operations,
-     * and the server ensures atomic submission of the changes.
-     *
-     * @param request The Request for alter the schema
-     * @return alter result
-     */
-    ApiResponse<Boolean> alterSchema(SchemaAlterRequest request);
+  /**
+   * Define and change the schema of the project, such as adding an entity type, deleting a concept
+   * type, adding a property to an event type, or deleting a relation type. A single modification
+   * can include multiple operations, and the server ensures atomic submission of the changes.
+   *
+   * @param request The Request for alter the schema
+   * @return alter result
+   */
+  ApiResponse<Boolean> alterSchema(SchemaAlterRequest request);
 
-    /**
-     * Query the whole schema detail defined in the project by project id, it will return list of the spg types with its
-     * own properties and relations.
-     *
-     * @param request The query request which contains a project id
-     * @return schema detail of project
-     */
-    ApiResponse<ProjectSchema> queryProjectSchema(ProjectSchemaRequest request);
+  /**
+   * Query the whole schema detail defined in the project by project id, it will return list of the
+   * spg types with its own properties and relations.
+   *
+   * @param request The query request which contains a project id
+   * @return schema detail of project
+   */
+  ApiResponse<ProjectSchema> queryProjectSchema(ProjectSchemaRequest request);
 
-    /**
-     * Querying the details of a SPG type, such as Entity type, Event. The input parameter is the unique name of the
-     * type, and the output is the details of the type. If the SPG type does not exist, null is returned.
-     *
-     * @param request The query request which contains a unique name of the SPG type
-     * @return The SPG type details
-     */
-    ApiResponse<BaseSPGType> querySPGType(SPGTypeRequest request);
+  /**
+   * Querying the details of a SPG type, such as Entity type, Event. The input parameter is the
+   * unique name of the type, and the output is the details of the type. If the SPG type does not
+   * exist, null is returned.
+   *
+   * @param request The query request which contains a unique name of the SPG type
+   * @return The SPG type details
+   */
+  ApiResponse<BaseSPGType> querySPGType(SPGTypeRequest request);
 
-    /**
-     * Querying the details of a relation type. The input parameter is the SPO triple of the relation, and the output is
-     * the details of the relation. If the relation type does not exist, null is returned.
-     *
-     * @param request The query request which contains a SPO triple name
-     * @return The relation detail
-     */
-    ApiResponse<Relation> queryRelation(RelationRequest request);
+  /**
+   * Querying the details of a relation type. The input parameter is the SPO triple of the relation,
+   * and the output is the details of the relation. If the relation type does not exist, null is
+   * returned.
+   *
+   * @param request The query request which contains a SPO triple name
+   * @return The relation detail
+   */
+  ApiResponse<Relation> queryRelation(RelationRequest request);
 
-    /**
-     * Query built-in properties of a specific SPG type.
-     *
-     * @param request The query request
-     * @return The list of properties
-     */
-    ApiResponse<List<Property>> queryBuiltInProperty(BuiltInPropertyRequest request);
+  /**
+   * Query built-in properties of a specific SPG type.
+   *
+   * @param request The query request
+   * @return The list of properties
+   */
+  ApiResponse<List<Property>> queryBuiltInProperty(BuiltInPropertyRequest request);
 }

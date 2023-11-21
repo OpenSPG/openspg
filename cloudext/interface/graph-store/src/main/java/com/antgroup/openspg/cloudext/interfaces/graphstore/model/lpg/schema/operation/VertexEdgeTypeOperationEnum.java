@@ -13,14 +13,11 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation;
 
-
 public enum VertexEdgeTypeOperationEnum {
-
-    CREATE_VERTEX_TYPE,
-    CREATE_EDGE_TYPE,
-    ALTER_VERTEX_TYPE,
-    ALTER_EDGE_TYPE,
-    DROP_VERTEX_TYPE,
-    DROP_EDGE_TYPE
-
+  CREATE_VERTEX_TYPE,
+  CREATE_EDGE_TYPE,
+  ALTER_VERTEX_TYPE,
+  ALTER_EDGE_TYPE,
+  DROP_VERTEX_TYPE,
+  DROP_EDGE_TYPE
 }

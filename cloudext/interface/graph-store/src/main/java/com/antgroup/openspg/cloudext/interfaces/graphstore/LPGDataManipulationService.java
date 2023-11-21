@@ -16,52 +16,42 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
-
 import java.util.List;
 
-/**
- * Provides data manipulation service for <tt>LPG</tt>.
- */
+/** Provides data manipulation service for <tt>LPG</tt>. */
 public interface LPGDataManipulationService {
 
-    /**
-     * <p>
-     * Batch upsert vertex by {@link VertexRecord}s which have the same type name.
-     * </p>
-     *
-     * @param vertexTypeName type name of vertex
-     * @param vertexRecords  {@link VertexRecord}s with the same type name to upsert.
-     */
-    void upsertVertex(String vertexTypeName, List<VertexRecord> vertexRecords) throws Exception;
+  /**
+   * Batch upsert vertex by {@link VertexRecord}s which have the same type name.
+   *
+   * @param vertexTypeName type name of vertex
+   * @param vertexRecords {@link VertexRecord}s with the same type name to upsert.
+   */
+  void upsertVertex(String vertexTypeName, List<VertexRecord> vertexRecords) throws Exception;
 
-    /**
-     * <p>
-     * Batch delete vertex by {@link VertexRecord}s which have the same type name.
-     * </p>
-     *
-     * @param vertexTypeName type name of vertex
-     * @param vertexRecords  {@link VertexRecord}s with the same type name to delete.
-     */
-    void deleteVertex(String vertexTypeName, List<VertexRecord> vertexRecords) throws Exception;
+  /**
+   * Batch delete vertex by {@link VertexRecord}s which have the same type name.
+   *
+   * @param vertexTypeName type name of vertex
+   * @param vertexRecords {@link VertexRecord}s with the same type name to delete.
+   */
+  void deleteVertex(String vertexTypeName, List<VertexRecord> vertexRecords) throws Exception;
 
-    /**
-     * <p>
-     * Batch upsert edge by {@link EdgeRecord}s which have the same {@link EdgeTypeName EdgeTypeName}.
-     * </p>
-     *
-     * @param edgeTypeName type name of edge
-     * @param edgeRecords  {@link EdgeRecord}s with the same {@link EdgeTypeName EdgeTypeName} to upsert.
-     */
-    void upsertEdge(String edgeTypeName, List<EdgeRecord> edgeRecords) throws Exception;
+  /**
+   * Batch upsert edge by {@link EdgeRecord}s which have the same {@link EdgeTypeName EdgeTypeName}.
+   *
+   * @param edgeTypeName type name of edge
+   * @param edgeRecords {@link EdgeRecord}s with the same {@link EdgeTypeName EdgeTypeName} to
+   *     upsert.
+   */
+  void upsertEdge(String edgeTypeName, List<EdgeRecord> edgeRecords) throws Exception;
 
-    /**
-     * <p>
-     * Batch delete edge by {@link EdgeRecord}s which have the same {@link EdgeTypeName EdgeTypeName}.
-     * </p>
-     *
-     * @param edgeTypeName type name of edge
-     * @param edgeRecords  {@link EdgeRecord}s with the same {@link EdgeTypeName EdgeTypeName} to delete.
-     */
-    void deleteEdge(String edgeTypeName, List<EdgeRecord> edgeRecords) throws Exception;
-
+  /**
+   * Batch delete edge by {@link EdgeRecord}s which have the same {@link EdgeTypeName EdgeTypeName}.
+   *
+   * @param edgeTypeName type name of edge
+   * @param edgeRecords {@link EdgeRecord}s with the same {@link EdgeTypeName EdgeTypeName} to
+   *     delete.
+   */
+  void deleteEdge(String edgeTypeName, List<EdgeRecord> edgeRecords) throws Exception;
 }

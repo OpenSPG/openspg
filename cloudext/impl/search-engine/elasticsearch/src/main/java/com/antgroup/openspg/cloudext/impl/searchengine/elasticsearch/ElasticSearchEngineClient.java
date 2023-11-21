@@ -28,109 +28,101 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.Id
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchema;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.SearchRequest;
 import com.antgroup.openspg.common.model.datasource.connection.SearchEngineConnectionInfo;
-
 import com.dtflys.forest.Forest;
 import com.dtflys.forest.config.ForestConfiguration;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ElasticSearchEngineClient extends BaseIdxSearchEngineClient {
 
-    private final ElasticSearchSchemaClient elasticSearchIdxClient;
-    private final ElasticSearchRecordClient elasticSearchDocClient;
+  private final ElasticSearchSchemaClient elasticSearchIdxClient;
+  private final ElasticSearchRecordClient elasticSearchDocClient;
 
-    @Getter
-    private final IdxNameConvertor idxNameConvertor;
+  @Getter private final IdxNameConvertor idxNameConvertor;
 
-    @Getter
-    private final SearchEngineConnectionInfo connInfo;
+  @Getter private final SearchEngineConnectionInfo connInfo;
 
-    public ElasticSearchEngineClient(
-        SearchEngineConnectionInfo connInfo, IdxNameConvertor idxNameConvertor) {
-        this.idxNameConvertor = idxNameConvertor;
+  public ElasticSearchEngineClient(
+      SearchEngineConnectionInfo connInfo, IdxNameConvertor idxNameConvertor) {
+    this.idxNameConvertor = idxNameConvertor;
 
-        this.connInfo = connInfo;
-        initElasticSearchEngine(connInfo);
+    this.connInfo = connInfo;
+    initElasticSearchEngine(connInfo);
 
-        elasticSearchIdxClient = Forest.client(ElasticSearchSchemaClient.class);
-        elasticSearchDocClient = Forest.client(ElasticSearchRecordClient.class);
-    }
+    elasticSearchIdxClient = Forest.client(ElasticSearchSchemaClient.class);
+    elasticSearchDocClient = Forest.client(ElasticSearchRecordClient.class);
+  }
 
-    @Override
-    public List<IdxSchema> querySchema() {
-        List<IdxSchema> idxSchemas = ElasticSearchSchemaUtils.queryAllIdxSchema(elasticSearchIdxClient);
+  @Override
+  public List<IdxSchema> querySchema() {
+    List<IdxSchema> idxSchemas = ElasticSearchSchemaUtils.queryAllIdxSchema(elasticSearchIdxClient);
 
-        IdxNameUtils.restoreIdxName(idxSchemas, idxNameConvertor);
+    IdxNameUtils.restoreIdxName(idxSchemas, idxNameConvertor);
 
-        return idxSchemas;
-    }
+    return idxSchemas;
+  }
 
-    @Override
-    public int alterSchema(IdxSchemaAlterCmd cmd) {
-        IdxNameUtils.convertIdxName(cmd, idxNameConvertor);
+  @Override
+  public int alterSchema(IdxSchemaAlterCmd cmd) {
+    IdxNameUtils.convertIdxName(cmd, idxNameConvertor);
 
-        int updated = 0;
-        List<IdxSchema> deleteIdx = cmd.getDeleteIdx();
-        updated += ElasticSearchSchemaUtils.deleteIdx(deleteIdx, elasticSearchIdxClient);
+    int updated = 0;
+    List<IdxSchema> deleteIdx = cmd.getDeleteIdx();
+    updated += ElasticSearchSchemaUtils.deleteIdx(deleteIdx, elasticSearchIdxClient);
 
-        List<IdxSchema> updateIdx = cmd.getUpdateIdx();
-        updated += ElasticSearchSchemaUtils.addNewFieldsIntoIdx(updateIdx, elasticSearchIdxClient);
+    List<IdxSchema> updateIdx = cmd.getUpdateIdx();
+    updated += ElasticSearchSchemaUtils.addNewFieldsIntoIdx(updateIdx, elasticSearchIdxClient);
 
-        List<IdxSchema> createIdx = cmd.getCreateIdx();
-        updated += ElasticSearchSchemaUtils.createIdx(createIdx, elasticSearchIdxClient);
-        return updated;
-    }
+    List<IdxSchema> createIdx = cmd.getCreateIdx();
+    updated += ElasticSearchSchemaUtils.createIdx(createIdx, elasticSearchIdxClient);
+    return updated;
+  }
 
-    @Override
-    public List<IdxRecord> mGet(IdxGetQuery query) {
-        List<IdxRecord> idxRecords = ElasticSearchRecordUtils.mGetIdxRecords(
-            query.getIdxName(), query.getDocIds(), elasticSearchDocClient
-        );
-        idxRecords.forEach(idxRecord ->
-            idxRecord.setIdxName(idxNameConvertor.restoreIdxName(idxRecord.getIdxName()))
-        );
-        return idxRecords;
-    }
+  @Override
+  public List<IdxRecord> mGet(IdxGetQuery query) {
+    List<IdxRecord> idxRecords =
+        ElasticSearchRecordUtils.mGetIdxRecords(
+            query.getIdxName(), query.getDocIds(), elasticSearchDocClient);
+    idxRecords.forEach(
+        idxRecord -> idxRecord.setIdxName(idxNameConvertor.restoreIdxName(idxRecord.getIdxName())));
+    return idxRecords;
+  }
 
-    @Override
-    public List<IdxRecord> search(SearchRequest request) {
-        List<IdxRecord> idxRecords = ElasticSearchRecordUtils.search(request, elasticSearchDocClient);
-        idxRecords.forEach(idxRecord ->
-            idxRecord.setIdxName(idxNameConvertor.restoreIdxName(idxRecord.getIdxName()))
-        );
-        return idxRecords;
-    }
+  @Override
+  public List<IdxRecord> search(SearchRequest request) {
+    List<IdxRecord> idxRecords = ElasticSearchRecordUtils.search(request, elasticSearchDocClient);
+    idxRecords.forEach(
+        idxRecord -> idxRecord.setIdxName(idxNameConvertor.restoreIdxName(idxRecord.getIdxName())));
+    return idxRecords;
+  }
 
-    @Override
-    public int manipulateRecord(IdxRecordManipulateCmd cmd) {
-        IdxNameUtils.convertIdxName(cmd, idxNameConvertor);
+  @Override
+  public int manipulateRecord(IdxRecordManipulateCmd cmd) {
+    IdxNameUtils.convertIdxName(cmd, idxNameConvertor);
 
-        ElasticSearchRecordUtils.upsertIdxRecords(cmd.getUpsertIdxRecords(), elasticSearchDocClient);
-        ElasticSearchRecordUtils.deleteIdxRecords(cmd.getDeleteIdxRecords(), elasticSearchDocClient);
-        return 0;
-    }
+    ElasticSearchRecordUtils.upsertIdxRecords(cmd.getUpsertIdxRecords(), elasticSearchDocClient);
+    ElasticSearchRecordUtils.deleteIdxRecords(cmd.getDeleteIdxRecords(), elasticSearchDocClient);
+    return 0;
+  }
 
-    private void initElasticSearchEngine(SearchEngineConnectionInfo connInfo) {
-        ForestConfiguration configuration = Forest.config();
+  private void initElasticSearchEngine(SearchEngineConnectionInfo connInfo) {
+    ForestConfiguration configuration = Forest.config();
 
-        String scheme = (String) connInfo.getNotNullParam(ApiConstants.SCHEME);
-        String host = (String) connInfo.getNotNullParam(ApiConstants.HOST);
-        Long port = Long.parseLong((String) connInfo.getNotNullParam(ApiConstants.PORT));
+    String scheme = (String) connInfo.getNotNullParam(ApiConstants.SCHEME);
+    String host = (String) connInfo.getNotNullParam(ApiConstants.HOST);
+    Long port = Long.parseLong((String) connInfo.getNotNullParam(ApiConstants.PORT));
 
-        configuration.setVariableValue(ElasticSearchConstants.SCHEME, scheme);
-        configuration.setVariableValue(ElasticSearchConstants.HOST, host);
-        configuration.setVariableValue(ElasticSearchConstants.PORT, port);
-        configuration.setReadTimeout(30, TimeUnit.SECONDS);
-        configuration.setLogEnabled(false);
-        configuration.setBackendName("httpclient");
-    }
+    configuration.setVariableValue(ElasticSearchConstants.SCHEME, scheme);
+    configuration.setVariableValue(ElasticSearchConstants.HOST, host);
+    configuration.setVariableValue(ElasticSearchConstants.PORT, port);
+    configuration.setReadTimeout(30, TimeUnit.SECONDS);
+    configuration.setLogEnabled(false);
+    configuration.setBackendName("httpclient");
+  }
 
-    @Override
-    public void close() {
-    }
+  @Override
+  public void close() {}
 }

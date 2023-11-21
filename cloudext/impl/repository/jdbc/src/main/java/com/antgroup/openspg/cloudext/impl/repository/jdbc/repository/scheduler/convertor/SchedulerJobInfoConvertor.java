@@ -17,34 +17,32 @@ import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.JobInfoDO;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInfo;
 import com.antgroup.openspg.common.model.job.JobInfoStateEnum;
 
-
 public class SchedulerJobInfoConvertor {
 
-    public static JobInfoDO toDO(SchedulerJobInfo jobInfo) {
-        JobInfoDO jobInfoDO = new JobInfoDO();
+  public static JobInfoDO toDO(SchedulerJobInfo jobInfo) {
+    JobInfoDO jobInfoDO = new JobInfoDO();
 
-        if (jobInfo.getJobId() != null) {
-            jobInfoDO.setId(Long.valueOf(jobInfo.getJobId()));
-        }
-        jobInfoDO.setName(jobInfo.getJobName());
-        jobInfoDO.setType(jobInfo.getJobType());
-        jobInfoDO.setCron(jobInfo.getCron());
-        jobInfoDO.setStatus(jobInfo.getStatus().name());
-        jobInfoDO.setIdempotentId(jobInfo.getIdempotentId());
-        return jobInfoDO;
+    if (jobInfo.getJobId() != null) {
+      jobInfoDO.setId(Long.valueOf(jobInfo.getJobId()));
     }
+    jobInfoDO.setName(jobInfo.getJobName());
+    jobInfoDO.setType(jobInfo.getJobType());
+    jobInfoDO.setCron(jobInfo.getCron());
+    jobInfoDO.setStatus(jobInfo.getStatus().name());
+    jobInfoDO.setIdempotentId(jobInfo.getIdempotentId());
+    return jobInfoDO;
+  }
 
-    public static SchedulerJobInfo toModel(JobInfoDO jobInfoDO) {
-        if (jobInfoDO == null) {
-            return null;
-        }
-        return new SchedulerJobInfo(
-            String.valueOf(jobInfoDO.getId()),
-            jobInfoDO.getName(),
-            jobInfoDO.getType(),
-            jobInfoDO.getCron(),
-            JobInfoStateEnum.valueOf(jobInfoDO.getStatus()),
-            jobInfoDO.getIdempotentId()
-        );
+  public static SchedulerJobInfo toModel(JobInfoDO jobInfoDO) {
+    if (jobInfoDO == null) {
+      return null;
     }
+    return new SchedulerJobInfo(
+        String.valueOf(jobInfoDO.getId()),
+        jobInfoDO.getName(),
+        jobInfoDO.getType(),
+        jobInfoDO.getCron(),
+        JobInfoStateEnum.valueOf(jobInfoDO.getStatus()),
+        jobInfoDO.getIdempotentId());
+  }
 }

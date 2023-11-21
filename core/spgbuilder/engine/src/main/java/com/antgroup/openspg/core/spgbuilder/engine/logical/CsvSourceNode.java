@@ -13,14 +13,12 @@
 
 package com.antgroup.openspg.core.spgbuilder.engine.logical;
 
-
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.NodeTypeEnum;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.CsvSourceNodeConfig;
 
-
 public class CsvSourceNode extends BaseNode<CsvSourceNodeConfig> {
 
-    public CsvSourceNode(String id, String name, CsvSourceNodeConfig nodeConfig) {
-        super(id, name, NodeTypeEnum.CSV_SOURCE, nodeConfig);
-    }
+  public CsvSourceNode(String id, String name, CsvSourceNodeConfig nodeConfig) {
+    super(id, name, NodeTypeEnum.CSV_SOURCE, nodeConfig);
+  }
 }

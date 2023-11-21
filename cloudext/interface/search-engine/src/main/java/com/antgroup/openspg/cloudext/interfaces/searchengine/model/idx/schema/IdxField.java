@@ -15,16 +15,14 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.spgschema.model.type.BasicTypeEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 
 @Getter
 @AllArgsConstructor
 public class IdxField extends BaseValObj {
 
-    private final String name;
+  private final String name;
 
-    private final BasicTypeEnum basicType;
+  private final BasicTypeEnum basicType;
 }

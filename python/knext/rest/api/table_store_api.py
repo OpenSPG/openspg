@@ -28,10 +28,7 @@ import re  # noqa: F401
 import six
 
 from knext.rest.api_client import ApiClient
-from knext.rest.exceptions import (  # noqa: F401
-    ApiTypeError,
-    ApiValueError
-)
+from knext.rest.exceptions import ApiTypeError, ApiValueError  # noqa: F401
 
 
 class TableStoreApi(object):
@@ -67,7 +64,7 @@ class TableStoreApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.table_store_download_get_with_http_info(**kwargs)  # noqa: E501
 
     def table_store_download_get_with_http_info(self, **kwargs):  # noqa: E501
@@ -96,34 +93,37 @@ class TableStoreApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'file_name'
-        ]
+        all_params = ["file_name"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method table_store_download_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'file_name' in local_var_params and local_var_params['file_name'] is not None:  # noqa: E501
-            query_params.append(('fileName', local_var_params['file_name']))  # noqa: E501
+        if (
+            "file_name" in local_var_params
+            and local_var_params["file_name"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("fileName", local_var_params["file_name"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -132,24 +132,29 @@ class TableStoreApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['*/*'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["*/*"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/tableStore/download', 'GET',
+            "/tableStore/download",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='object',  # noqa: E501
+            response_type="object",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )

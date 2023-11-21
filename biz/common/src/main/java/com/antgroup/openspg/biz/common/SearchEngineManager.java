@@ -16,8 +16,7 @@ package com.antgroup.openspg.biz.common;
 import com.antgroup.openspg.api.facade.dto.common.request.SearchEngineIndexRequest;
 import com.antgroup.openspg.api.facade.dto.common.response.SearchEngineIndexResponse;
 
-
 public interface SearchEngineManager {
 
-    SearchEngineIndexResponse queryIndex(SearchEngineIndexRequest request);
+  SearchEngineIndexResponse queryIndex(SearchEngineIndexRequest request);
 }

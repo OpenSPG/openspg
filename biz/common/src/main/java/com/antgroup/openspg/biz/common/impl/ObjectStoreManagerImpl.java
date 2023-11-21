@@ -20,31 +20,24 @@ import com.antgroup.openspg.cloudext.interfaces.objectstore.ObjectStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.cmd.ObjectStoreSaveCmd;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.model.ObjectStorePath;
 import com.antgroup.openspg.common.service.datasource.DataSourceService;
-
+import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.io.InputStream;
-
 
 @Service
 public class ObjectStoreManagerImpl implements ObjectStoreManager {
 
-    @Autowired
-    private DataSourceService dataSourceService;
+  @Autowired private DataSourceService dataSourceService;
 
-    @Override
-    public ObjectStoreResponse objectStore(ObjectStoreRequest request, InputStream file) {
-        ObjectStoreClient objectStoreClient = dataSourceService.buildSharedFileStoreClient();
+  @Override
+  public ObjectStoreResponse objectStore(ObjectStoreRequest request, InputStream file) {
+    ObjectStoreClient objectStoreClient = dataSourceService.buildSharedFileStoreClient();
 
-        ObjectStorePath filePath = objectStoreClient.save(
-            new ObjectStoreSaveCmd(
-                new ObjectStorePath(request.getName()),
-                file
-            )
-        );
-        return new ObjectStoreResponse()
-            .setRelativePath(filePath.getRelativePath())
-            .setAbsolutePath(filePath.getAbsolutePath());
-    }
+    ObjectStorePath filePath =
+        objectStoreClient.save(
+            new ObjectStoreSaveCmd(new ObjectStorePath(request.getName()), file));
+    return new ObjectStoreResponse()
+        .setRelativePath(filePath.getRelativePath())
+        .setAbsolutePath(filePath.getAbsolutePath());
+  }
 }
