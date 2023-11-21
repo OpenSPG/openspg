@@ -16,47 +16,44 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.impl;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGTypeNameConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
 
-
 public class DefaultLPGTypeNameConvertor implements LPGTypeNameConvertor {
 
-    private final static String DOT = ".";
-    private final static String UNDERSCORE = "_";
-    private final static String DOUBLE_UNDERSCORE = "__";
+  private static final String DOT = ".";
+  private static final String UNDERSCORE = "_";
+  private static final String DOUBLE_UNDERSCORE = "__";
 
-    @Override
-    public String convertVertexTypeName(String vertexName) {
-        return replace(vertexName, DOT, UNDERSCORE);
-    }
+  @Override
+  public String convertVertexTypeName(String vertexName) {
+    return replace(vertexName, DOT, UNDERSCORE);
+  }
 
-    @Override
-    public String convertEdgeTypeName(EdgeTypeName edgeTypeName) {
-        return String.format(
-            "%s%s%s%s%s",
-            convertVertexTypeName(edgeTypeName.getStartVertexType()), DOUBLE_UNDERSCORE,
-            edgeTypeName.getEdgeLabel(),
-            DOUBLE_UNDERSCORE, convertVertexTypeName(edgeTypeName.getEndVertexType())
-        );
-    }
+  @Override
+  public String convertEdgeTypeName(EdgeTypeName edgeTypeName) {
+    return String.format(
+        "%s%s%s%s%s",
+        convertVertexTypeName(edgeTypeName.getStartVertexType()),
+        DOUBLE_UNDERSCORE,
+        edgeTypeName.getEdgeLabel(),
+        DOUBLE_UNDERSCORE,
+        convertVertexTypeName(edgeTypeName.getEndVertexType()));
+  }
 
-    @Override
-    public String restoreVertexTypeName(String vertexName) {
-        return replace(vertexName, UNDERSCORE, DOT);
-    }
+  @Override
+  public String restoreVertexTypeName(String vertexName) {
+    return replace(vertexName, UNDERSCORE, DOT);
+  }
 
-    @Override
-    public EdgeTypeName restoreEdgeTypeName(String edgeName) {
-        String[] splits = edgeName.split(DOUBLE_UNDERSCORE);
-        if (splits.length != 3) {
-            throw new IllegalArgumentException("illegal edgeName=" + edgeName);
-        }
-        return new EdgeTypeName(
-            restoreVertexTypeName(splits[0]),
-            splits[1],
-            restoreVertexTypeName(splits[2])
-        );
+  @Override
+  public EdgeTypeName restoreEdgeTypeName(String edgeName) {
+    String[] splits = edgeName.split(DOUBLE_UNDERSCORE);
+    if (splits.length != 3) {
+      throw new IllegalArgumentException("illegal edgeName=" + edgeName);
     }
+    return new EdgeTypeName(
+        restoreVertexTypeName(splits[0]), splits[1], restoreVertexTypeName(splits[2]));
+  }
 
-    private String replace(String input, String oldStr, String newStr) {
-        return input.replace(oldStr, newStr);
-    }
+  private String replace(String input, String oldStr, String newStr) {
+    return input.replace(oldStr, newStr);
+  }
 }

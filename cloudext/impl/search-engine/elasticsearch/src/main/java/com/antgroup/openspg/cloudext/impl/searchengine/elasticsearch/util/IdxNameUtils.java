@@ -18,36 +18,37 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.cmd.IdxRecordManipu
 import com.antgroup.openspg.cloudext.interfaces.searchengine.cmd.IdxSchemaAlterCmd;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchema;
-
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.List;
-
+import org.apache.commons.collections4.CollectionUtils;
 
 public class IdxNameUtils {
 
-    public static void convertIdxName(IdxRecordManipulateCmd cmd, IdxNameConvertor convertor) {
-        cmd.getAlterItems().forEach(alterItem -> {
-                IdxRecord idxRecord = alterItem.getIdxRecord();
-                idxRecord.setIdxName(convertor.convertIdxName(idxRecord.getIdxName()));
-            }
-        );
-    }
+  public static void convertIdxName(IdxRecordManipulateCmd cmd, IdxNameConvertor convertor) {
+    cmd.getAlterItems()
+        .forEach(
+            alterItem -> {
+              IdxRecord idxRecord = alterItem.getIdxRecord();
+              idxRecord.setIdxName(convertor.convertIdxName(idxRecord.getIdxName()));
+            });
+  }
 
-    public static void convertIdxName(IdxSchemaAlterCmd cmd, IdxNameConvertor convertor) {
-        cmd.getAlterItems().forEach(alterItem -> {
-                IdxSchema idxSchema = alterItem.getIdxSchema();
-                idxSchema.setIdxName(convertor.convertIdxName(idxSchema.getIdxName()));
-            }
-        );
-    }
+  public static void convertIdxName(IdxSchemaAlterCmd cmd, IdxNameConvertor convertor) {
+    cmd.getAlterItems()
+        .forEach(
+            alterItem -> {
+              IdxSchema idxSchema = alterItem.getIdxSchema();
+              idxSchema.setIdxName(convertor.convertIdxName(idxSchema.getIdxName()));
+            });
+  }
 
-    public static void restoreIdxName(List<IdxSchema> idxSchemas, IdxNameConvertor convertor) {
-        if (CollectionUtils.isEmpty(idxSchemas)) {
-            return;
-        }
-        idxSchemas.stream().forEach(idxSchema -> {
-            idxSchema.setIdxName(convertor.restoreIdxName(idxSchema.getIdxName()));
-        });
+  public static void restoreIdxName(List<IdxSchema> idxSchemas, IdxNameConvertor convertor) {
+    if (CollectionUtils.isEmpty(idxSchemas)) {
+      return;
     }
+    idxSchemas.stream()
+        .forEach(
+            idxSchema -> {
+              idxSchema.setIdxName(convertor.restoreIdxName(idxSchema.getIdxName()));
+            });
+  }
 }

@@ -13,22 +13,16 @@
 
 package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.result;
 
-import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.model.TuGraphVertexType;
-
 import com.alibaba.fastjson.annotation.JSONField;
+import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.model.TuGraphVertexType;
+import java.io.Serializable;
 import lombok.Data;
 
-import java.io.Serializable;
-
-/**
- * Result of getting vertex schema.
- */
+/** Result of getting vertex schema. */
 @Data
 public class GetVertexSchemaResult implements Serializable {
 
-    /**
-     * Schema
-     */
-    @JSONField(name = "schema")
-    private TuGraphVertexType schema;
+  /** Schema */
+  @JSONField(name = "schema")
+  private TuGraphVertexType schema;
 }

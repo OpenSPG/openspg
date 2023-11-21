@@ -15,12 +15,13 @@ package com.antgroup.openspg.common.model.base;
 
 /**
  * Top-level parent class for domain models.
- * <p>
- * The code follows Domain-Driven Design (DDD) domain design specifications. All domain model classes inherit from
- * BaseModel. BaseModel inherit from BaseToString and provides a unified toString method for all subclasses. In the
- * future, some basic methods can also be added to this class.
+ *
+ * <p>The code follows Domain-Driven Design (DDD) domain design specifications. All domain model
+ * classes inherit from BaseModel. BaseModel inherit from BaseToString and provides a unified
+ * toString method for all subclasses. In the future, some basic methods can also be added to this
+ * class.
  */
 public abstract class BaseModel extends BaseToString {
 
-    private static final long serialVersionUID = 4683437081011010505L;
+  private static final long serialVersionUID = 4683437081011010505L;
 }

@@ -14,32 +14,28 @@
 package com.antgroup.openspg.api.http.server;
 
 import com.antgroup.openspg.common.model.exception.IllegalParamsException;
-
 import org.springframework.http.ResponseEntity;
-
 
 public interface HttpBizCallback<T> {
 
-    /**
-     * Perform some pre-validation, and if the validation fails, throw an {@link IllegalParamsException} exception
-     * directly.
-     */
-    void check();
+  /**
+   * Perform some pre-validation, and if the validation fails, throw an {@link
+   * IllegalParamsException} exception directly.
+   */
+  void check();
 
-    /**
-     * Execute the specific business logic.
-     *
-     * @return The result of executing the business logic.
-     */
-    T action();
+  /**
+   * Execute the specific business logic.
+   *
+   * @return The result of executing the business logic.
+   */
+  T action();
 
-    /**
-     * Return the corresponding ResponseEntity based on the action result.
-     */
-    default ResponseEntity<Object> response(T t) {
-        if (t == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(t);
+  /** Return the corresponding ResponseEntity based on the action result. */
+  default ResponseEntity<Object> response(T t) {
+    if (t == null) {
+      return ResponseEntity.notFound().build();
     }
+    return ResponseEntity.ok(t);
+  }
 }

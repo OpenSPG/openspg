@@ -17,12 +17,11 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobI
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClient;
 
-
 public interface JobSchedulerClient extends CloudExtClient {
 
-    String createJobInfo(SchedulerJobInfo jobInfo);
+  String createJobInfo(SchedulerJobInfo jobInfo);
 
-    String createJobInst(SchedulerJobInst jobInst);
+  String createJobInst(SchedulerJobInst jobInst);
 
-    void close() throws Exception;
+  void close() throws Exception;
 }

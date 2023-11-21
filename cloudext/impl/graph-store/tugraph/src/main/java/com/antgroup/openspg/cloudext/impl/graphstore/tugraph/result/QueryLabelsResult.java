@@ -14,35 +14,30 @@
 package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.result;
 
 import com.alibaba.fastjson.annotation.JSONField;
-
 import java.io.Serializable;
 
-/**
- * Result of querying labels.
- */
+/** Result of querying labels. */
 public class QueryLabelsResult implements Serializable {
 
-    /**
-     * Name of label.
-     */
-    @JSONField(name = "labelName")
-    private String labelName;
+  /** Name of label. */
+  @JSONField(name = "labelName")
+  private String labelName;
 
-    /**
-     * Getter method for property <tt>labelName</tt>.
-     *
-     * @return property value of labelName
-     */
-    public String getLabelName() {
-        return labelName;
-    }
+  /**
+   * Getter method for property <tt>labelName</tt>.
+   *
+   * @return property value of labelName
+   */
+  public String getLabelName() {
+    return labelName;
+  }
 
-    /**
-     * Setter method for property <tt>labelName</tt>.
-     *
-     * @param labelName value to be assigned to property labelName
-     */
-    public void setLabelName(String labelName) {
-        this.labelName = labelName;
-    }
+  /**
+   * Setter method for property <tt>labelName</tt>.
+   *
+   * @param labelName value to be assigned to property labelName
+   */
+  public void setLabelName(String labelName) {
+    this.labelName = labelName;
+  }
 }

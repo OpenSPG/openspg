@@ -20,7 +20,6 @@ import com.antgroup.openspg.core.spgschema.model.semantic.request.DefineLogicalC
 import com.antgroup.openspg.core.spgschema.model.semantic.request.RemoveDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.spgschema.model.semantic.request.RemoveLogicalCausationRequest;
 import com.antgroup.openspg.core.spgschema.model.type.ConceptList;
-
 import com.dtflys.forest.annotation.Address;
 import com.dtflys.forest.annotation.BodyType;
 import com.dtflys.forest.annotation.Get;
@@ -29,23 +28,25 @@ import com.dtflys.forest.annotation.Post;
 import com.dtflys.forest.annotation.Query;
 import com.dtflys.forest.http.ForestResponse;
 
-
 @BodyType(type = "json")
-@Address(scheme = HttpClientConstants.SCHEME_VAR, host = HttpClientConstants.HOST_VAR, port = HttpClientConstants.PORT_VAR)
+@Address(
+    scheme = HttpClientConstants.SCHEME_VAR,
+    host = HttpClientConstants.HOST_VAR,
+    port = HttpClientConstants.PORT_VAR)
 public interface ConceptForestClient {
 
-    @Get(value = "/public/v1/concept/queryConcept")
-    ForestResponse<ConceptList> queryConcept(@Query ConceptRequest request);
+  @Get(value = "/public/v1/concept/queryConcept")
+  ForestResponse<ConceptList> queryConcept(@Query ConceptRequest request);
 
-    @Post(value = "/public/v1/concept/defineDynamicTaxonomy")
-    ForestResponse<Boolean> defineDynamicTaxonomy(@JSONBody DefineDynamicTaxonomyRequest request);
+  @Post(value = "/public/v1/concept/defineDynamicTaxonomy")
+  ForestResponse<Boolean> defineDynamicTaxonomy(@JSONBody DefineDynamicTaxonomyRequest request);
 
-    @Post(value = "/public/v1/concept/defineLogicalCausation")
-    ForestResponse<Boolean> defineLogicalCausation(@JSONBody DefineLogicalCausationRequest request);
+  @Post(value = "/public/v1/concept/defineLogicalCausation")
+  ForestResponse<Boolean> defineLogicalCausation(@JSONBody DefineLogicalCausationRequest request);
 
-    @Post(value = "/public/v1/concept/removeDynamicTaxonomy")
-    ForestResponse<Boolean> removeDynamicTaxonomy(@JSONBody RemoveDynamicTaxonomyRequest request);
+  @Post(value = "/public/v1/concept/removeDynamicTaxonomy")
+  ForestResponse<Boolean> removeDynamicTaxonomy(@JSONBody RemoveDynamicTaxonomyRequest request);
 
-    @Post(value = "/public/v1/concept/removeLogicalCausation")
-    ForestResponse<Boolean> removeLogicalCausation(@JSONBody RemoveLogicalCausationRequest request);
+  @Post(value = "/public/v1/concept/removeLogicalCausation")
+  ForestResponse<Boolean> removeLogicalCausation(@JSONBody RemoveLogicalCausationRequest request);
 }

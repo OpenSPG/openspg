@@ -19,12 +19,10 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.impl;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGInternalIdGenerator;
 
-
 public class NoChangedIdGenerator implements LPGInternalIdGenerator {
 
-    @Override
-    public Object gen(String type, String bizId) {
-        return bizId;
-    }
-
+  @Override
+  public Object gen(String type, String bizId) {
+    return bizId;
+  }
 }

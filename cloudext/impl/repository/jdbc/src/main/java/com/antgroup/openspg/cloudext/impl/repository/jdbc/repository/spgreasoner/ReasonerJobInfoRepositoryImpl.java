@@ -21,49 +21,44 @@ import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgreasoner
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInfo;
 import com.antgroup.openspg.core.spgreasoner.service.repo.ReasonerJobInfoRepository;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
 
 @Repository
 public class ReasonerJobInfoRepositoryImpl implements ReasonerJobInfoRepository {
 
-    @Autowired
-    private SPGJobInfoDOMapper spgJobInfoDOMapper;
+  @Autowired private SPGJobInfoDOMapper spgJobInfoDOMapper;
 
-    @Override
-    public Long save(ReasonerJobInfo jobInfo) {
-        SPGJobInfoDO jobInfoDO = ReasonerJobInfoConvertor.toDO(jobInfo);
-        spgJobInfoDOMapper.insert(jobInfoDO);
-        return jobInfoDO.getId();
+  @Override
+  public Long save(ReasonerJobInfo jobInfo) {
+    SPGJobInfoDO jobInfoDO = ReasonerJobInfoConvertor.toDO(jobInfo);
+    spgJobInfoDOMapper.insert(jobInfoDO);
+    return jobInfoDO.getId();
+  }
+
+  @Override
+  public int updateExternalJobId(Long reasonerJobInfoId, String externalJobInfoId) {
+    SPGJobInfoDOExample example = new SPGJobInfoDOExample();
+    example.createCriteria().andIdEqualTo(reasonerJobInfoId);
+
+    SPGJobInfoDO jobInfoDO = new SPGJobInfoDO();
+    jobInfoDO.setExternalJobInfoId(externalJobInfoId);
+    return spgJobInfoDOMapper.updateByExampleSelective(jobInfoDO, example);
+  }
+
+  @Override
+  public List<ReasonerJobInfo> query(ReasonerJobInfoQuery query) {
+    SPGJobInfoDOExample example = new SPGJobInfoDOExample();
+    SPGJobInfoDOExample.Criteria criteria = example.createCriteria();
+    if (query.getReasonerJobInfoId() != null) {
+      criteria.andIdEqualTo(query.getReasonerJobInfoId());
     }
-
-    @Override
-    public int updateExternalJobId(Long reasonerJobInfoId, String externalJobInfoId) {
-        SPGJobInfoDOExample example = new SPGJobInfoDOExample();
-        example.createCriteria()
-            .andIdEqualTo(reasonerJobInfoId);
-
-        SPGJobInfoDO jobInfoDO = new SPGJobInfoDO();
-        jobInfoDO.setExternalJobInfoId(externalJobInfoId);
-        return spgJobInfoDOMapper.updateByExampleSelective(jobInfoDO, example);
+    if (query.getExternalJobInfoId() != null) {
+      criteria.andExternalJobInfoIdEqualTo(query.getExternalJobInfoId());
     }
-
-    @Override
-    public List<ReasonerJobInfo> query(ReasonerJobInfoQuery query) {
-        SPGJobInfoDOExample example = new SPGJobInfoDOExample();
-        SPGJobInfoDOExample.Criteria criteria = example.createCriteria();
-        if (query.getReasonerJobInfoId() != null) {
-            criteria.andIdEqualTo(query.getReasonerJobInfoId());
-        }
-        if (query.getExternalJobInfoId() != null) {
-            criteria.andExternalJobInfoIdEqualTo(query.getExternalJobInfoId());
-        }
-        example.setOrderByClause("id desc");
-        List<SPGJobInfoDO> spgJobInfoDOS = spgJobInfoDOMapper.selectByExampleWithBLOBs(example);
-        return CollectionsUtils.listMap(spgJobInfoDOS, ReasonerJobInfoConvertor::toModel);
-    }
+    example.setOrderByClause("id desc");
+    List<SPGJobInfoDO> spgJobInfoDOS = spgJobInfoDOMapper.selectByExampleWithBLOBs(example);
+    return CollectionsUtils.listMap(spgJobInfoDOS, ReasonerJobInfoConvertor::toModel);
+  }
 }

@@ -28,10 +28,7 @@ import re  # noqa: F401
 import six
 
 from knext.rest.api_client import ApiClient
-from knext.rest.exceptions import (  # noqa: F401
-    ApiTypeError,
-    ApiValueError
-)
+from knext.rest.exceptions import ApiTypeError, ApiValueError  # noqa: F401
 
 
 class ConceptApi(object):
@@ -67,10 +64,14 @@ class ConceptApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.concept_define_dynamic_taxonomy_post_with_http_info(**kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.concept_define_dynamic_taxonomy_post_with_http_info(
+            **kwargs
+        )  # noqa: E501
 
-    def concept_define_dynamic_taxonomy_post_with_http_info(self, **kwargs):  # noqa: E501
+    def concept_define_dynamic_taxonomy_post_with_http_info(
+        self, **kwargs
+    ):  # noqa: E501
         """define_dynamic_taxonomy  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
@@ -96,26 +97,24 @@ class ConceptApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'define_dynamic_taxonomy_request'
-        ]
+        all_params = ["define_dynamic_taxonomy_request"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method concept_define_dynamic_taxonomy_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -129,34 +128,42 @@ class ConceptApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'define_dynamic_taxonomy_request' in local_var_params:
-            body_params = local_var_params['define_dynamic_taxonomy_request']
+        if "define_dynamic_taxonomy_request" in local_var_params:
+            body_params = local_var_params["define_dynamic_taxonomy_request"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/concept/defineDynamicTaxonomy', 'POST',
+            "/concept/defineDynamicTaxonomy",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='bool',  # noqa: E501
+            response_type="bool",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def concept_define_logical_causation_post(self, **kwargs):  # noqa: E501
         """define_logical_causation  # noqa: E501
@@ -179,10 +186,14 @@ class ConceptApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.concept_define_logical_causation_post_with_http_info(**kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.concept_define_logical_causation_post_with_http_info(
+            **kwargs
+        )  # noqa: E501
 
-    def concept_define_logical_causation_post_with_http_info(self, **kwargs):  # noqa: E501
+    def concept_define_logical_causation_post_with_http_info(
+        self, **kwargs
+    ):  # noqa: E501
         """define_logical_causation  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
@@ -208,26 +219,24 @@ class ConceptApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'define_logical_causation_request'
-        ]
+        all_params = ["define_logical_causation_request"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method concept_define_logical_causation_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -241,34 +250,42 @@ class ConceptApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'define_logical_causation_request' in local_var_params:
-            body_params = local_var_params['define_logical_causation_request']
+        if "define_logical_causation_request" in local_var_params:
+            body_params = local_var_params["define_logical_causation_request"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/concept/defineLogicalCausation', 'POST',
+            "/concept/defineLogicalCausation",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='bool',  # noqa: E501
+            response_type="bool",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def concept_remove_dynamic_taxonomy_get(self, **kwargs):  # noqa: E501
         """remove_dynamic_taxonomy  # noqa: E501
@@ -291,10 +308,14 @@ class ConceptApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.concept_remove_dynamic_taxonomy_get_with_http_info(**kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.concept_remove_dynamic_taxonomy_get_with_http_info(
+            **kwargs
+        )  # noqa: E501
 
-    def concept_remove_dynamic_taxonomy_get_with_http_info(self, **kwargs):  # noqa: E501
+    def concept_remove_dynamic_taxonomy_get_with_http_info(
+        self, **kwargs
+    ):  # noqa: E501
         """remove_dynamic_taxonomy  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
@@ -320,26 +341,24 @@ class ConceptApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'remove_dynamic_taxonomy_request'
-        ]
+        all_params = ["remove_dynamic_taxonomy_request"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method concept_remove_dynamic_taxonomy_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -353,34 +372,42 @@ class ConceptApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'remove_dynamic_taxonomy_request' in local_var_params:
-            body_params = local_var_params['remove_dynamic_taxonomy_request']
+        if "remove_dynamic_taxonomy_request" in local_var_params:
+            body_params = local_var_params["remove_dynamic_taxonomy_request"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/concept/removeDynamicTaxonomy', 'GET',
+            "/concept/removeDynamicTaxonomy",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='bool',  # noqa: E501
+            response_type="bool",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def schema_remove_logical_causation_get(self, **kwargs):  # noqa: E501
         """remove_logical_causation  # noqa: E501
@@ -403,10 +430,14 @@ class ConceptApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.schema_remove_logical_causation_get_with_http_info(**kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.schema_remove_logical_causation_get_with_http_info(
+            **kwargs
+        )  # noqa: E501
 
-    def schema_remove_logical_causation_get_with_http_info(self, **kwargs):  # noqa: E501
+    def schema_remove_logical_causation_get_with_http_info(
+        self, **kwargs
+    ):  # noqa: E501
         """remove_logical_causation  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
@@ -432,26 +463,24 @@ class ConceptApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'remove_logical_causation_request'
-        ]
+        all_params = ["remove_logical_causation_request"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method schema_remove_logical_causation_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -465,31 +494,39 @@ class ConceptApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'remove_logical_causation_request' in local_var_params:
-            body_params = local_var_params['remove_logical_causation_request']
+        if "remove_logical_causation_request" in local_var_params:
+            body_params = local_var_params["remove_logical_causation_request"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/schema/removeLogicalCausation', 'GET',
+            "/schema/removeLogicalCausation",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='bool',  # noqa: E501
+            response_type="bool",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )

@@ -42,15 +42,13 @@ class MultiValConstraint(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'constraint_type_enum': 'str'
-    }
+    openapi_types = {"constraint_type_enum": "str"}
 
-    attribute_map = {
-        'constraint_type_enum': 'constraintTypeEnum'
-    }
+    attribute_map = {"constraint_type_enum": "constraintTypeEnum"}
 
-    def __init__(self, constraint_type_enum='MULTI_VALUE', local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, constraint_type_enum="MULTI_VALUE", local_vars_configuration=None
+    ):  # noqa: E501
         """MultiValConstraint - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -79,11 +77,23 @@ class MultiValConstraint(object):
         :param constraint_type_enum: The constraint_type_enum of this MultiValConstraint.  # noqa: E501
         :type: str
         """
-        allowed_values = [None, "NOT_NULL", "UNIQUE", "MULTI_VALUE", "ENUM", "RANGE", "REGULAR"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and constraint_type_enum not in allowed_values:  # noqa: E501
+        allowed_values = [
+            None,
+            "NOT_NULL",
+            "UNIQUE",
+            "MULTI_VALUE",
+            "ENUM",
+            "RANGE",
+            "REGULAR",
+        ]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and constraint_type_enum not in allowed_values
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `constraint_type_enum` ({0}), must be one of {1}"  # noqa: E501
-                .format(constraint_type_enum, allowed_values)
+                "Invalid value for `constraint_type_enum` ({0}), must be one of {1}".format(  # noqa: E501
+                    constraint_type_enum, allowed_values
+                )
             )
 
         self._constraint_type_enum = constraint_type_enum
@@ -95,18 +105,20 @@ class MultiValConstraint(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

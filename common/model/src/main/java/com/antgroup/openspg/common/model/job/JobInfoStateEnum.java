@@ -13,8 +13,7 @@
 
 package com.antgroup.openspg.common.model.job;
 
-
 public enum JobInfoStateEnum {
-    ENABLE,
-    ;
+  ENABLE,
+  ;
 }

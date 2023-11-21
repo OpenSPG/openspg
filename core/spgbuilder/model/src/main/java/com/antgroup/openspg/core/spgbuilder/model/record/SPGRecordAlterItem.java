@@ -15,23 +15,22 @@ package com.antgroup.openspg.core.spgbuilder.model.record;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
 
-
 public class SPGRecordAlterItem extends BaseValObj {
 
-    private final RecordAlterOperationEnum alterOp;
+  private final RecordAlterOperationEnum alterOp;
 
-    private final BaseSPGRecord spgRecord;
+  private final BaseSPGRecord spgRecord;
 
-    public SPGRecordAlterItem(RecordAlterOperationEnum alterOp, BaseSPGRecord spgRecord) {
-        this.alterOp = alterOp;
-        this.spgRecord = spgRecord;
-    }
+  public SPGRecordAlterItem(RecordAlterOperationEnum alterOp, BaseSPGRecord spgRecord) {
+    this.alterOp = alterOp;
+    this.spgRecord = spgRecord;
+  }
 
-    public RecordAlterOperationEnum getAlterOp() {
-        return alterOp;
-    }
+  public RecordAlterOperationEnum getAlterOp() {
+    return alterOp;
+  }
 
-    public BaseSPGRecord getSpgRecord() {
-        return spgRecord;
-    }
+  public BaseSPGRecord getSpgRecord() {
+    return spgRecord;
+  }
 }

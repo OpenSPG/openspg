@@ -14,12 +14,10 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema;
 
 /**
- * <p>
- * Differentiates between {@link VertexType VertexType} and {@link EdgeType EdgeType} in the labeled property
- * graph<tt>(LPG)</tt>.
- * </P>
+ * Differentiates between {@link VertexType VertexType} and {@link EdgeType EdgeType} in the labeled
+ * property graph<tt>(LPG)</tt>.
  */
 public enum LPGOntologyTypeEnum {
-    VERTEX,
-    EDGE,
+  VERTEX,
+  EDGE,
 }

@@ -19,58 +19,56 @@ import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.e
 import com.antgroup.openspg.core.spgschema.model.alter.AlterStatusEnum;
 import com.antgroup.openspg.core.spgschema.model.type.RefSourceEnum;
 import com.antgroup.openspg.core.spgschema.service.type.model.ProjectOntologyRel;
-
 import java.util.Date;
-
 
 public class ProjectOntologyRelConvertor {
 
-    public static ProjectOntologyRelDO toDO(ProjectOntologyRel projectOntology) {
-        if (null == projectOntology) {
-            return null;
-        }
-
-        ProjectOntologyRelDO projectEntityDO = new ProjectOntologyRelDO();
-        projectEntityDO.setId(projectOntology.getId());
-        projectEntityDO.setGmtCreate(new Date());
-        projectEntityDO.setGmtModified(new Date());
-        projectEntityDO.setProjectId(projectOntology.getProjectId());
-        projectEntityDO.setEntityId(projectOntology.getResourceId());
-        projectEntityDO.setType(ProjectEntityTypeEnum.getType(projectOntology.getOntologyTypeEnum()));
-        projectEntityDO.setReferenced(projectOntology.getRefSourceEnum()
-            == null ? YesOrNoEnum.N.name() : YesOrNoEnum.Y.name());
-        projectEntityDO.setRefSource(
-            projectOntology.getRefSourceEnum() == null ? null : projectOntology
-                .getRefSourceEnum()
-                .name());
-        projectEntityDO.setVersion(projectOntology.getAlterVersion());
-        projectEntityDO.setVersionStatus(projectOntology.getAlterStatus().name());
-        return projectEntityDO;
+  public static ProjectOntologyRelDO toDO(ProjectOntologyRel projectOntology) {
+    if (null == projectOntology) {
+      return null;
     }
 
-    public static ProjectOntologyRel toModel(ProjectOntologyRelDO projectOntologyRelDO) {
-        if (null == projectOntologyRelDO) {
-            return null;
-        }
+    ProjectOntologyRelDO projectEntityDO = new ProjectOntologyRelDO();
+    projectEntityDO.setId(projectOntology.getId());
+    projectEntityDO.setGmtCreate(new Date());
+    projectEntityDO.setGmtModified(new Date());
+    projectEntityDO.setProjectId(projectOntology.getProjectId());
+    projectEntityDO.setEntityId(projectOntology.getResourceId());
+    projectEntityDO.setType(ProjectEntityTypeEnum.getType(projectOntology.getOntologyTypeEnum()));
+    projectEntityDO.setReferenced(
+        projectOntology.getRefSourceEnum() == null ? YesOrNoEnum.N.name() : YesOrNoEnum.Y.name());
+    projectEntityDO.setRefSource(
+        projectOntology.getRefSourceEnum() == null
+            ? null
+            : projectOntology.getRefSourceEnum().name());
+    projectEntityDO.setVersion(projectOntology.getAlterVersion());
+    projectEntityDO.setVersionStatus(projectOntology.getAlterStatus().name());
+    return projectEntityDO;
+  }
 
-        return new ProjectOntologyRel(
-            projectOntologyRelDO.getId(),
-            projectOntologyRelDO.getProjectId(),
-            projectOntologyRelDO.getEntityId(),
-            ProjectEntityTypeEnum.getOntologyType(projectOntologyRelDO.getType()),
-            projectOntologyRelDO.getVersion(),
-            AlterStatusEnum.toEnum(projectOntologyRelDO.getVersionStatus()),
-            getRefSource(projectOntologyRelDO.getReferenced(), projectOntologyRelDO.getRefSource()));
+  public static ProjectOntologyRel toModel(ProjectOntologyRelDO projectOntologyRelDO) {
+    if (null == projectOntologyRelDO) {
+      return null;
     }
 
-    private static RefSourceEnum getRefSource(String referenced, String refSource) {
-        boolean ref = YesOrNoEnum.isYes(referenced);
-        if (!ref) {
-            return null;
-        }
-        if (null == refSource) {
-            return RefSourceEnum.PROJECT;
-        }
-        return RefSourceEnum.toEnum(refSource);
+    return new ProjectOntologyRel(
+        projectOntologyRelDO.getId(),
+        projectOntologyRelDO.getProjectId(),
+        projectOntologyRelDO.getEntityId(),
+        ProjectEntityTypeEnum.getOntologyType(projectOntologyRelDO.getType()),
+        projectOntologyRelDO.getVersion(),
+        AlterStatusEnum.toEnum(projectOntologyRelDO.getVersionStatus()),
+        getRefSource(projectOntologyRelDO.getReferenced(), projectOntologyRelDO.getRefSource()));
+  }
+
+  private static RefSourceEnum getRefSource(String referenced, String refSource) {
+    boolean ref = YesOrNoEnum.isYes(referenced);
+    if (!ref) {
+      return null;
     }
+    if (null == refSource) {
+      return RefSourceEnum.PROJECT;
+    }
+    return RefSourceEnum.toEnum(refSource);
+  }
 }

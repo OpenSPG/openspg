@@ -21,83 +21,78 @@ import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.spgschema.model.type.WithBasicInfo;
 import com.antgroup.openspg.core.spgschema.model.type.WithSPGTypeEnum;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 public abstract class BaseAdvancedRecord extends BaseSPGRecord
     implements WithBasicInfo<SPGTypeIdentifier>, WithSPGTypeEnum {
 
-    public BaseAdvancedRecord(SPGRecordTypeEnum recordType) {
-        super(recordType);
+  public BaseAdvancedRecord(SPGRecordTypeEnum recordType) {
+    super(recordType);
+  }
+
+  public abstract BaseSPGType getSpgType();
+
+  public abstract String getId();
+
+  public abstract List<SPGPropertyRecord> getSpgProperties();
+
+  public abstract void addSpgProperties(SPGPropertyRecord record);
+
+  @Override
+  public SPGTypeEnum getSpgTypeEnum() {
+    return getSpgType().getSpgTypeEnum();
+  }
+
+  @Override
+  public BasicInfo<SPGTypeIdentifier> getBasicInfo() {
+    return getSpgType().getBasicInfo();
+  }
+
+  public SPGPropertyRecord getPropertyRecord(Property property) {
+    for (SPGPropertyRecord record : getSpgProperties()) {
+      if (record.getPropertyType().getName().equals(property.getName())) {
+        return record;
+      }
     }
+    return null;
+  }
 
-    public abstract BaseSPGType getSpgType();
+  /** 获取语义属性的记录 */
+  public List<SPGPropertyRecord> getSemanticPropertyRecords() {
+    return getSpgProperties().stream()
+        .filter(BasePropertyRecord::isSemanticProperty)
+        .collect(Collectors.toList());
+  }
 
-    public abstract String getId();
-
-    public abstract List<SPGPropertyRecord> getSpgProperties();
-
-    public abstract void addSpgProperties(SPGPropertyRecord record);
-
-    @Override
-    public SPGTypeEnum getSpgTypeEnum() {
-        return getSpgType().getSpgTypeEnum();
+  public void mergePropertyValue(SPGPropertyRecord otherRecord) {
+    boolean find = false;
+    for (SPGPropertyRecord existRecord : getSpgProperties()) {
+      if (otherRecord.getPropertyType().equals(existRecord.getPropertyType())) {
+        existRecord.getValue().merge(otherRecord.getValue());
+        find = true;
+      }
     }
-
-    @Override
-    public BasicInfo<SPGTypeIdentifier> getBasicInfo() {
-        return getSpgType().getBasicInfo();
+    if (!find) {
+      addSpgProperties(otherRecord);
     }
+  }
 
-    public SPGPropertyRecord getPropertyRecord(Property property) {
-        for (SPGPropertyRecord record : getSpgProperties()) {
-            if (record.getPropertyType().getName().equals(property.getName())) {
-                return record;
-            }
-        }
-        return null;
-    }
+  @Override
+  public String toString() {
+    String spgType = getSpgType().getName();
+    String id = getId();
+    Map<String, String> properties = getRawPropertyValueMap();
+    return String.format("%s{id=%s, properties=%s}", spgType, id, properties);
+  }
 
-    /**
-     * 获取语义属性的记录
-     */
-    public List<SPGPropertyRecord> getSemanticPropertyRecords() {
-        return getSpgProperties()
-            .stream()
-            .filter(BasePropertyRecord::isSemanticProperty)
-            .collect(Collectors.toList());
+  public SPGPropertyRecord getPredicateProperty(SystemPredicateEnum predicate) {
+    for (SPGPropertyRecord propertyRecord : getSpgProperties()) {
+      if (predicate.getName().equals(propertyRecord.getPropertyType().getName())) {
+        return propertyRecord;
+      }
     }
-
-    public void mergePropertyValue(SPGPropertyRecord otherRecord) {
-        boolean find = false;
-        for (SPGPropertyRecord existRecord : getSpgProperties()) {
-            if (otherRecord.getPropertyType().equals(existRecord.getPropertyType())) {
-                existRecord.getValue().merge(otherRecord.getValue());
-                find = true;
-            }
-        }
-        if (!find) {
-            addSpgProperties(otherRecord);
-        }
-    }
-
-    @Override
-    public String toString() {
-        String spgType = getSpgType().getName();
-        String id = getId();
-        Map<String, String> properties = getRawPropertyValueMap();
-        return String.format("%s{id=%s, properties=%s}", spgType, id, properties);
-    }
-
-    public SPGPropertyRecord getPredicateProperty(SystemPredicateEnum predicate) {
-        for (SPGPropertyRecord propertyRecord : getSpgProperties()) {
-            if (predicate.getName().equals(propertyRecord.getPropertyType().getName())) {
-                return propertyRecord;
-            }
-        }
-        return null;
-    }
+    return null;
+  }
 }

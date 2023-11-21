@@ -15,20 +15,14 @@ package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-/**
- * Data type enum.
- */
+/** Data type enum. */
 public enum TypeEnum {
 
-    /**
-     * Vertex
-     */
-    @JSONField(name = "VERTEX")
-    VERTEX,
+  /** Vertex */
+  @JSONField(name = "VERTEX")
+  VERTEX,
 
-    /**
-     * Edge
-     */
-    @JSONField(name = "EDGE")
-    EDGE;
+  /** Edge */
+  @JSONField(name = "EDGE")
+  EDGE;
 }

@@ -17,26 +17,26 @@ import com.antgroup.openspg.common.model.exception.OpenSPGException;
 
 public class ApiException extends OpenSPGException {
 
-    private ApiException(Throwable cause, String messagePattern, Object... args) {
-        super(cause, true, true, messagePattern, args);
-    }
+  private ApiException(Throwable cause, String messagePattern, Object... args) {
+    super(cause, true, true, messagePattern, args);
+  }
 
-    private ApiException(String messagePattern, Object... args) {
-        this(null, messagePattern, args);
-    }
+  private ApiException(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
+  }
 
-    public static ApiException withErrorMsg(String errorMsg) {
-        return new ApiException("request server with errorMsg: {}", errorMsg);
-    }
+  public static ApiException withErrorMsg(String errorMsg) {
+    return new ApiException("request server with errorMsg: {}", errorMsg);
+  }
 
-    public static ApiException notFound(String name) {
-        if (name == null) {
-            name = "";
-        }
-        return new ApiException("{} not found!", name);
+  public static ApiException notFound(String name) {
+    if (name == null) {
+      name = "";
     }
+    return new ApiException("{} not found!", name);
+  }
 
-    public static ApiException connectError(Throwable e) {
-        return new ApiException(e, "connect server error");
-    }
+  public static ApiException connectError(Throwable e) {
+    return new ApiException(e, "connect server error");
+  }
 }

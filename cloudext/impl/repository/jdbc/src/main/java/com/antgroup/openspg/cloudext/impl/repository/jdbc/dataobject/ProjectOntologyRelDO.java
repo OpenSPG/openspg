@@ -16,103 +16,103 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 import java.util.Date;
 
 public class ProjectOntologyRelDO {
-    private Long id;
+  private Long id;
 
-    private Date gmtCreate;
+  private Date gmtCreate;
 
-    private Date gmtModified;
+  private Date gmtModified;
 
-    private Long projectId;
+  private Long projectId;
 
-    private Long entityId;
+  private Long entityId;
 
-    private Integer version;
+  private Integer version;
 
-    private String versionStatus;
+  private String versionStatus;
 
-    private String referenced;
+  private String referenced;
 
-    private String type;
+  private String type;
 
-    private String refSource;
+  private String refSource;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
+  public Date getGmtCreate() {
+    return gmtCreate;
+  }
 
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
+  public void setGmtCreate(Date gmtCreate) {
+    this.gmtCreate = gmtCreate;
+  }
 
-    public Date getGmtModified() {
-        return gmtModified;
-    }
+  public Date getGmtModified() {
+    return gmtModified;
+  }
 
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
+  public void setGmtModified(Date gmtModified) {
+    this.gmtModified = gmtModified;
+  }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+  public void setProjectId(Long projectId) {
+    this.projectId = projectId;
+  }
 
-    public Long getEntityId() {
-        return entityId;
-    }
+  public Long getEntityId() {
+    return entityId;
+  }
 
-    public void setEntityId(Long entityId) {
-        this.entityId = entityId;
-    }
+  public void setEntityId(Long entityId) {
+    this.entityId = entityId;
+  }
 
-    public Integer getVersion() {
-        return version;
-    }
+  public Integer getVersion() {
+    return version;
+  }
 
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+  public void setVersion(Integer version) {
+    this.version = version;
+  }
 
-    public String getVersionStatus() {
-        return versionStatus;
-    }
+  public String getVersionStatus() {
+    return versionStatus;
+  }
 
-    public void setVersionStatus(String versionStatus) {
-        this.versionStatus = versionStatus == null ? null : versionStatus.trim();
-    }
+  public void setVersionStatus(String versionStatus) {
+    this.versionStatus = versionStatus == null ? null : versionStatus.trim();
+  }
 
-    public String getReferenced() {
-        return referenced;
-    }
+  public String getReferenced() {
+    return referenced;
+  }
 
-    public void setReferenced(String referenced) {
-        this.referenced = referenced == null ? null : referenced.trim();
-    }
+  public void setReferenced(String referenced) {
+    this.referenced = referenced == null ? null : referenced.trim();
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+  public void setType(String type) {
+    this.type = type == null ? null : type.trim();
+  }
 
-    public String getRefSource() {
-        return refSource;
-    }
+  public String getRefSource() {
+    return refSource;
+  }
 
-    public void setRefSource(String refSource) {
-        this.refSource = refSource == null ? null : refSource.trim();
-    }
+  public void setRefSource(String refSource) {
+    this.refSource = refSource == null ? null : refSource.trim();
+  }
 }

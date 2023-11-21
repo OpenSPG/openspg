@@ -17,35 +17,37 @@ import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyDO;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyDOExample;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyDOWithBLOBs;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface OntologyDOMapper {
-    long countByExample(OntologyDOExample example);
+  long countByExample(OntologyDOExample example);
 
-    int deleteByExample(OntologyDOExample example);
+  int deleteByExample(OntologyDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(OntologyDOWithBLOBs record);
+  int insert(OntologyDOWithBLOBs record);
 
-    int insertSelective(OntologyDOWithBLOBs record);
+  int insertSelective(OntologyDOWithBLOBs record);
 
-    List<OntologyDOWithBLOBs> selectByExampleWithBLOBs(OntologyDOExample example);
+  List<OntologyDOWithBLOBs> selectByExampleWithBLOBs(OntologyDOExample example);
 
-    List<OntologyDO> selectByExample(OntologyDOExample example);
+  List<OntologyDO> selectByExample(OntologyDOExample example);
 
-    OntologyDOWithBLOBs selectByPrimaryKey(Long id);
+  OntologyDOWithBLOBs selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") OntologyDOWithBLOBs record, @Param("example") OntologyDOExample example);
+  int updateByExampleSelective(
+      @Param("record") OntologyDOWithBLOBs record, @Param("example") OntologyDOExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") OntologyDOWithBLOBs record, @Param("example") OntologyDOExample example);
+  int updateByExampleWithBLOBs(
+      @Param("record") OntologyDOWithBLOBs record, @Param("example") OntologyDOExample example);
 
-    int updateByExample(@Param("record") OntologyDO record, @Param("example") OntologyDOExample example);
+  int updateByExample(
+      @Param("record") OntologyDO record, @Param("example") OntologyDOExample example);
 
-    int updateByPrimaryKeySelective(OntologyDOWithBLOBs record);
+  int updateByPrimaryKeySelective(OntologyDOWithBLOBs record);
 
-    int updateByPrimaryKeyWithBLOBs(OntologyDOWithBLOBs record);
+  int updateByPrimaryKeyWithBLOBs(OntologyDOWithBLOBs record);
 
-    int updateByPrimaryKey(OntologyDO record);
+  int updateByPrimaryKey(OntologyDO record);
 }

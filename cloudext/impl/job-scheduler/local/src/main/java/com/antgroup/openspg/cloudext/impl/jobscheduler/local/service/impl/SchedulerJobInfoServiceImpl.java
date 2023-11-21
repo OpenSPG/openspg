@@ -16,19 +16,16 @@ package com.antgroup.openspg.cloudext.impl.jobscheduler.local.service.impl;
 import com.antgroup.openspg.cloudext.impl.jobscheduler.local.repo.SchedulerJobInfoRepository;
 import com.antgroup.openspg.cloudext.impl.jobscheduler.local.service.SchedulerJobInfoService;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInfo;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class SchedulerJobInfoServiceImpl implements SchedulerJobInfoService {
 
-    @Autowired
-    private SchedulerJobInfoRepository jobInfoRepository;
+  @Autowired private SchedulerJobInfoRepository jobInfoRepository;
 
-    @Override
-    public String create(SchedulerJobInfo jobInfo) {
-        return jobInfoRepository.save(jobInfo);
-    }
+  @Override
+  public String create(SchedulerJobInfo jobInfo) {
+    return jobInfoRepository.save(jobInfo);
+  }
 }

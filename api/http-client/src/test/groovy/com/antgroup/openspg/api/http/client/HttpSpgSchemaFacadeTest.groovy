@@ -26,20 +26,20 @@ import spock.lang.Specification
 @Ignore
 class HttpSpgSchemaFacadeTest extends Specification {
 
-    static {
-        HttpClientBootstrap.init(new ConnectionInfo()
-                .setScheme("http").setHost("127.0.0.1")
-                .setPort("8887").setPrintLog(true)
-        )
-    }
+	static {
+		HttpClientBootstrap.init(new ConnectionInfo()
+				.setScheme("http").setHost("127.0.0.1")
+				.setPort("8887").setPrintLog(true)
+				)
+	}
 
-    def testQuerySpgType() {
-        expect:
-        SchemaFacade facade = new HttpSchemaFacade();
+	def testQuerySpgType() {
+		expect:
+		SchemaFacade facade = new HttpSchemaFacade();
 
-        def request = new SPGTypeRequest()
-        request.setName("FraudTest1.Cert")
-        def querySpgType = facade.querySPGType(request)
-        println querySpgType
-    }
+		def request = new SPGTypeRequest()
+		request.setName("FraudTest1.Cert")
+		def querySpgType = facade.querySPGType(request)
+		println querySpgType
+	}
 }

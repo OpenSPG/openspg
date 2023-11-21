@@ -16,47 +16,45 @@ package com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.operator.pr
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Python operator entity
- */
+/** Python operator entity */
 public class Vertex {
 
-    private String bizId;
-    private String vertexType;
-    private Map<String, String> props;
+  private String bizId;
+  private String vertexType;
+  private Map<String, String> props;
 
-    public Map<String, Object> toMap() {
-        Map<String, Object> map = new HashMap<>(3);
-        map.put("bizId", bizId);
-        map.put("vertexType", vertexType);
-        map.put("props", props);
-        return map;
-    }
+  public Map<String, Object> toMap() {
+    Map<String, Object> map = new HashMap<>(3);
+    map.put("bizId", bizId);
+    map.put("vertexType", vertexType);
+    map.put("props", props);
+    return map;
+  }
 
-    public String getBizId() {
-        return bizId;
-    }
+  public String getBizId() {
+    return bizId;
+  }
 
-    public Vertex setBizId(String bizId) {
-        this.bizId = bizId;
-        return this;
-    }
+  public Vertex setBizId(String bizId) {
+    this.bizId = bizId;
+    return this;
+  }
 
-    public String getVertexType() {
-        return vertexType;
-    }
+  public String getVertexType() {
+    return vertexType;
+  }
 
-    public Vertex setVertexType(String vertexType) {
-        this.vertexType = vertexType;
-        return this;
-    }
+  public Vertex setVertexType(String vertexType) {
+    this.vertexType = vertexType;
+    return this;
+  }
 
-    public Map<String, String> getProps() {
-        return props;
-    }
+  public Map<String, String> getProps() {
+    return props;
+  }
 
-    public Vertex setProps(Map<String, String> props) {
-        this.props = props;
-        return this;
-    }
+  public Vertex setProps(Map<String, String> props) {
+    this.props = props;
+    return this;
+  }
 }

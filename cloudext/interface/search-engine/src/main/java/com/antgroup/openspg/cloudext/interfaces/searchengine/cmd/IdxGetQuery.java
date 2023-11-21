@@ -14,21 +14,18 @@
 package com.antgroup.openspg.cloudext.interfaces.searchengine.cmd;
 
 import com.antgroup.openspg.common.model.base.BaseQuery;
-
-import lombok.Getter;
-
 import java.util.Set;
-
+import lombok.Getter;
 
 @Getter
 public class IdxGetQuery extends BaseQuery {
 
-    private final String idxName;
+  private final String idxName;
 
-    private final Set<String> docIds;
+  private final Set<String> docIds;
 
-    public IdxGetQuery(String idxName, Set<String> docIds) {
-        this.idxName = idxName;
-        this.docIds = docIds;
-    }
+  public IdxGetQuery(String idxName, Set<String> docIds) {
+    this.idxName = idxName;
+    this.docIds = docIds;
+  }
 }

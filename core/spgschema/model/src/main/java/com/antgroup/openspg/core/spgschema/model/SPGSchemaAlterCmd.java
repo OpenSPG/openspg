@@ -15,23 +15,19 @@ package com.antgroup.openspg.core.spgschema.model;
 
 import com.antgroup.openspg.common.model.base.BaseCmd;
 
-/**
- * Command to alter the SPG schema, including the set of SPG types to be altered.
- */
+/** Command to alter the SPG schema, including the set of SPG types to be altered. */
 public class SPGSchemaAlterCmd extends BaseCmd {
 
-    private static final long serialVersionUID = -4186195759403800416L;
+  private static final long serialVersionUID = -4186195759403800416L;
 
-    /**
-     * Details of SPG schema.
-     */
-    private final SPGSchema spgSchema;
+  /** Details of SPG schema. */
+  private final SPGSchema spgSchema;
 
-    public SPGSchemaAlterCmd(SPGSchema spgSchema) {
-        this.spgSchema = spgSchema;
-    }
+  public SPGSchemaAlterCmd(SPGSchema spgSchema) {
+    this.spgSchema = spgSchema;
+  }
 
-    public SPGSchema getSpgSchema() {
-        return spgSchema;
-    }
+  public SPGSchema getSpgSchema() {
+    return spgSchema;
+  }
 }

@@ -15,7 +15,4 @@ package com.antgroup.openspg.cloudext.interfaces.repository;
 
 import com.antgroup.openspg.common.util.cloudext.CloudExtClient;
 
-
-public interface RepositoryClient extends CloudExtClient {
-
-}
+public interface RepositoryClient extends CloudExtClient {}

@@ -16,13 +16,11 @@ package com.antgroup.openspg.cloudext.interfaces.jobscheduler;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.CallbackResult;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
-
 import java.util.Set;
-
 
 public interface SchedulerCallback {
 
-    Set<JobTypeEnum> accept();
+  Set<JobTypeEnum> accept();
 
-    CallbackResult polling(SchedulerJobInst jobInst);
+  CallbackResult polling(SchedulerJobInst jobInst);
 }

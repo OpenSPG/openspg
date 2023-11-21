@@ -22,75 +22,75 @@ import com.antgroup.openspg.common.model.base.BaseToString;
  */
 public class ApiResponse<T> extends BaseToString {
 
-    private T data;
-    private boolean success;
-    private String errorMsg;
-    private String remote;
-    private String traceId;
+  private T data;
+  private boolean success;
+  private String errorMsg;
+  private String remote;
+  private String traceId;
 
-    public T getData() {
-        if (success) {
-            return data;
-        } else {
-            throw ApiException.withErrorMsg(errorMsg);
-        }
+  public T getData() {
+    if (success) {
+      return data;
+    } else {
+      throw ApiException.withErrorMsg(errorMsg);
     }
+  }
 
-    public T getDataThrowsIfNull(String name) {
-        T result = getData();
-        if (result == null) {
-            throw ApiException.notFound(name);
-        }
-        return result;
+  public T getDataThrowsIfNull(String name) {
+    T result = getData();
+    if (result == null) {
+      throw ApiException.notFound(name);
     }
+    return result;
+  }
 
-    public void setData(T data) {
-        this.data = data;
-    }
+  public void setData(T data) {
+    this.data = data;
+  }
 
-    public boolean isSuccess() {
-        return success;
-    }
+  public boolean isSuccess() {
+    return success;
+  }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
+  public void setSuccess(boolean success) {
+    this.success = success;
+  }
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
+  public String getErrorMsg() {
+    return errorMsg;
+  }
 
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
+  public void setErrorMsg(String errorMsg) {
+    this.errorMsg = errorMsg;
+  }
 
-    public String getRemote() {
-        return remote;
-    }
+  public String getRemote() {
+    return remote;
+  }
 
-    public void setRemote(String remote) {
-        this.remote = remote;
-    }
+  public void setRemote(String remote) {
+    this.remote = remote;
+  }
 
-    public String getTraceId() {
-        return traceId;
-    }
+  public String getTraceId() {
+    return traceId;
+  }
 
-    public void setTraceId(String traceId) {
-        this.traceId = traceId;
-    }
+  public void setTraceId(String traceId) {
+    this.traceId = traceId;
+  }
 
-    public static <T> ApiResponse<T> success(T data) {
-        ApiResponse<T> apiResponse = new ApiResponse<>();
-        apiResponse.setSuccess(true);
-        apiResponse.setData(data);
-        return apiResponse;
-    }
+  public static <T> ApiResponse<T> success(T data) {
+    ApiResponse<T> apiResponse = new ApiResponse<>();
+    apiResponse.setSuccess(true);
+    apiResponse.setData(data);
+    return apiResponse;
+  }
 
-    public static <T> ApiResponse<T> failure(String errorMsg) {
-        ApiResponse<T> apiResponse = new ApiResponse<>();
-        apiResponse.setSuccess(false);
-        apiResponse.setErrorMsg(errorMsg);
-        return apiResponse;
-    }
+  public static <T> ApiResponse<T> failure(String errorMsg) {
+    ApiResponse<T> apiResponse = new ApiResponse<>();
+    apiResponse.setSuccess(false);
+    apiResponse.setErrorMsg(errorMsg);
+    return apiResponse;
+  }
 }

@@ -43,27 +43,36 @@ class PropertyAdvancedConfig(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'multi_version_config': 'MultiVersionConfig',
-        'mounted_concept_config': 'MountedConceptConfig',
-        'property_group': 'str',
-        'constraint': 'Constraint',
-        'sub_properties': 'list[SubProperty]',
-        'semantics': 'list[PredicateSemantic]',
-        'logical_rule': 'LogicalRule'
+        "multi_version_config": "MultiVersionConfig",
+        "mounted_concept_config": "MountedConceptConfig",
+        "property_group": "str",
+        "constraint": "Constraint",
+        "sub_properties": "list[SubProperty]",
+        "semantics": "list[PredicateSemantic]",
+        "logical_rule": "LogicalRule",
     }
 
     attribute_map = {
-        'multi_version_config': 'multiVersionConfig',
-        'mounted_concept_config': 'MountedConceptConfig',
-        'property_group': 'propertyGroup',
-        'constraint': 'constraint',
-        'sub_properties': 'subProperties',
-        'semantics': 'semantics',
-        'logical_rule': 'logicalRule'
+        "multi_version_config": "multiVersionConfig",
+        "mounted_concept_config": "MountedConceptConfig",
+        "property_group": "propertyGroup",
+        "constraint": "constraint",
+        "sub_properties": "subProperties",
+        "semantics": "semantics",
+        "logical_rule": "logicalRule",
     }
 
-    def __init__(self, multi_version_config=None, mounted_concept_config=None, property_group=None, constraint=None,
-                 sub_properties=None, semantics=None, logical_rule=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        multi_version_config=None,
+        mounted_concept_config=None,
+        property_group=None,
+        constraint=None,
+        sub_properties=None,
+        semantics=None,
+        logical_rule=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """PropertyAdvancedConfig - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -154,10 +163,14 @@ class PropertyAdvancedConfig(object):
         :type: str
         """
         allowed_values = ["TIME", "SUBJECT", "OBJECT", "LOC"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and property_group not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and property_group not in allowed_values
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `property_group` ({0}), must be one of {1}"  # noqa: E501
-                .format(property_group, allowed_values)
+                "Invalid value for `property_group` ({0}), must be one of {1}".format(  # noqa: E501
+                    property_group, allowed_values
+                )
             )
 
         self._property_group = property_group
@@ -253,18 +266,20 @@ class PropertyAdvancedConfig(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

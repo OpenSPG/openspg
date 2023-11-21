@@ -15,31 +15,25 @@ package com.antgroup.openspg.core.spgbuilder.model.pipeline;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
 
-/**
- * The connection relationship between nodes.
- */
+/** The connection relationship between nodes. */
 public class Edge extends BaseValObj {
 
-    /**
-     * The id of the starting node.
-     */
-    private final String from;
+  /** The id of the starting node. */
+  private final String from;
 
-    /**
-     * The id of the ending node.
-     */
-    private final String to;
+  /** The id of the ending node. */
+  private final String to;
 
-    public Edge(String from, String to) {
-        this.from = from;
-        this.to = to;
-    }
+  public Edge(String from, String to) {
+    this.from = from;
+    this.to = to;
+  }
 
-    public String getFrom() {
-        return from;
-    }
+  public String getFrom() {
+    return from;
+  }
 
-    public String getTo() {
-        return to;
-    }
+  public String getTo() {
+    return to;
+  }
 }

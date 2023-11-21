@@ -21,89 +21,76 @@ import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.spgschema.model.type.RefSourceEnum;
 
 /**
- * The definition and reference relationship between project and {@link BaseSPGType} or {@link Relation}
+ * The definition and reference relationship between project and {@link BaseSPGType} or {@link
+ * Relation}
  */
 public class ProjectOntologyRel extends BaseValObj {
 
-    private static final long serialVersionUID = -5632074481392217864L;
+  private static final long serialVersionUID = -5632074481392217864L;
 
-    /**
-     * The unique id
-     */
-    private final Long id;
+  /** The unique id */
+  private final Long id;
 
-    /**
-     * The project id
-     */
-    private final Long projectId;
+  /** The project id */
+  private final Long projectId;
 
-    /**
-     * The resource id, such as the unique id of entity type or relation type.
-     */
-    private final Long resourceId;
+  /** The resource id, such as the unique id of entity type or relation type. */
+  private final Long resourceId;
 
-    /**
-     * The resource type, such as entity type or relation type.
-     */
-    private final SPGOntologyEnum ontologyEnum;
+  /** The resource type, such as entity type or relation type. */
+  private final SPGOntologyEnum ontologyEnum;
 
-    /**
-     * The version id of current alternation.
-     */
-    private final Integer alterVersion;
+  /** The version id of current alternation. */
+  private final Integer alterVersion;
 
-    /**
-     * The status of current alternation.
-     */
-    private final AlterStatusEnum alterStatus;
+  /** The status of current alternation. */
+  private final AlterStatusEnum alterStatus;
 
-    /**
-     * The place if the resource is referenced from other project.
-     */
-    private final RefSourceEnum refSourceEnum;
+  /** The place if the resource is referenced from other project. */
+  private final RefSourceEnum refSourceEnum;
 
-    public ProjectOntologyRel(
-        Long id,
-        Long projectId,
-        Long resourceId,
-        SPGOntologyEnum ontologyEnum,
-        Integer alterVersion,
-        AlterStatusEnum alterStatus,
-        RefSourceEnum refSourceEnum) {
-        this.id = id;
-        this.projectId = projectId;
-        this.resourceId = resourceId;
-        this.ontologyEnum = ontologyEnum;
-        this.alterVersion = alterVersion;
-        this.alterStatus = alterStatus;
-        this.refSourceEnum = refSourceEnum;
-    }
+  public ProjectOntologyRel(
+      Long id,
+      Long projectId,
+      Long resourceId,
+      SPGOntologyEnum ontologyEnum,
+      Integer alterVersion,
+      AlterStatusEnum alterStatus,
+      RefSourceEnum refSourceEnum) {
+    this.id = id;
+    this.projectId = projectId;
+    this.resourceId = resourceId;
+    this.ontologyEnum = ontologyEnum;
+    this.alterVersion = alterVersion;
+    this.alterStatus = alterStatus;
+    this.refSourceEnum = refSourceEnum;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public Long getResourceId() {
-        return resourceId;
-    }
+  public Long getResourceId() {
+    return resourceId;
+  }
 
-    public SPGOntologyEnum getOntologyTypeEnum() {
-        return ontologyEnum;
-    }
+  public SPGOntologyEnum getOntologyTypeEnum() {
+    return ontologyEnum;
+  }
 
-    public Integer getAlterVersion() {
-        return alterVersion;
-    }
+  public Integer getAlterVersion() {
+    return alterVersion;
+  }
 
-    public AlterStatusEnum getAlterStatus() {
-        return alterStatus;
-    }
+  public AlterStatusEnum getAlterStatus() {
+    return alterStatus;
+  }
 
-    public RefSourceEnum getRefSourceEnum() {
-        return refSourceEnum;
-    }
+  public RefSourceEnum getRefSourceEnum() {
+    return refSourceEnum;
+  }
 }

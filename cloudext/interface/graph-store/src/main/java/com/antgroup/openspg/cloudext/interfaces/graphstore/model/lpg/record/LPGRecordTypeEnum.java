@@ -14,12 +14,10 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record;
 
 /**
- * <p>
- * Differentiates between {@link VertexRecord VertexRecord} and {@link EdgeRecord EdgeRecord} in the labeled property
- * graph<tt>(LPG)</tt>.
- * </P>
+ * Differentiates between {@link VertexRecord VertexRecord} and {@link EdgeRecord EdgeRecord} in the
+ * labeled property graph<tt>(LPG)</tt>.
  */
 public enum LPGRecordTypeEnum {
-    VERTEX,
-    EDGE,
+  VERTEX,
+  EDGE,
 }

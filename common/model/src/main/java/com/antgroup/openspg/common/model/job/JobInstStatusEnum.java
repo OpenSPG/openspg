@@ -14,25 +14,27 @@
 package com.antgroup.openspg.common.model.job;
 
 import com.google.common.collect.Sets;
-
 import java.util.Set;
 
-
 public enum JobInstStatusEnum {
-    INIT, QUEUE, RUNNING, CANCEL, FAILURE, SUCCESS,
-    ;
+  INIT,
+  QUEUE,
+  RUNNING,
+  CANCEL,
+  FAILURE,
+  SUCCESS,
+  ;
 
-    public final static Set<JobInstStatusEnum> FINISHED_STATUS =
-        Sets.newHashSet(CANCEL, FAILURE, SUCCESS);
+  public static final Set<JobInstStatusEnum> FINISHED_STATUS =
+      Sets.newHashSet(CANCEL, FAILURE, SUCCESS);
 
-    public final static Set<JobInstStatusEnum> RUNNING_STATUS =
-        Sets.newHashSet(RUNNING);
+  public static final Set<JobInstStatusEnum> RUNNING_STATUS = Sets.newHashSet(RUNNING);
 
-    public boolean isFinished() {
-        return FINISHED_STATUS.contains(this);
-    }
+  public boolean isFinished() {
+    return FINISHED_STATUS.contains(this);
+  }
 
-    public boolean isRunning() {
-        return RUNNING_STATUS.contains(this);
-    }
+  public boolean isRunning() {
+    return RUNNING_STATUS.contains(this);
+  }
 }

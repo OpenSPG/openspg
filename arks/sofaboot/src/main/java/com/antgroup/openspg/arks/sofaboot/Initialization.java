@@ -17,37 +17,34 @@ import com.antgroup.openspg.api.http.client.util.ConnectionInfo;
 import com.antgroup.openspg.api.http.client.util.HttpClientBootstrap;
 import com.antgroup.openspg.common.service.config.AppEnvConfig;
 import com.antgroup.openspg.common.service.spring.SpringContextAware;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class Initialization extends SpringContextAware {
 
-    @Autowired
-    private AppEnvConfig appEnvConfig;
+  @Autowired private AppEnvConfig appEnvConfig;
 
-    @Override
-    public void init() {
-        initHttpClientBootstrap();
-        initScheduler();
-    }
+  @Override
+  public void init() {
+    initHttpClientBootstrap();
+    initScheduler();
+  }
 
-    private void initHttpClientBootstrap() {
-        HttpClientBootstrap.init(
-            new ConnectionInfo(appEnvConfig.getSchemaUri())
-                .setConnectTimeout(60000)
-                .setReadTimeout(60000)
-        );
-    }
+  private void initHttpClientBootstrap() {
+    HttpClientBootstrap.init(
+        new ConnectionInfo(appEnvConfig.getSchemaUri())
+            .setConnectTimeout(60000)
+            .setReadTimeout(60000));
+  }
 
-    private void initScheduler() {
-        try {
-            Class.forName("com.antgroup.openspg.cloudext.interfaces."
-                + "jobscheduler.JobSchedulerClientDriverManager");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+  private void initScheduler() {
+    try {
+      Class.forName(
+          "com.antgroup.openspg.cloudext.interfaces."
+              + "jobscheduler.JobSchedulerClientDriverManager");
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
+  }
 }

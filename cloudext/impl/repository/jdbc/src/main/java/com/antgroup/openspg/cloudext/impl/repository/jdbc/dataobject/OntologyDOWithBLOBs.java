@@ -14,23 +14,23 @@
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 
 public class OntologyDOWithBLOBs extends OntologyDO {
-    private String operatorConfig;
+  private String operatorConfig;
 
-    private String config;
+  private String config;
 
-    public String getOperatorConfig() {
-        return operatorConfig;
-    }
+  public String getOperatorConfig() {
+    return operatorConfig;
+  }
 
-    public void setOperatorConfig(String operatorConfig) {
-        this.operatorConfig = operatorConfig == null ? null : operatorConfig.trim();
-    }
+  public void setOperatorConfig(String operatorConfig) {
+    this.operatorConfig = operatorConfig == null ? null : operatorConfig.trim();
+  }
 
-    public String getConfig() {
-        return config;
-    }
+  public String getConfig() {
+    return config;
+  }
 
-    public void setConfig(String config) {
-        this.config = config == null ? null : config.trim();
-    }
+  public void setConfig(String config) {
+    this.config = config == null ? null : config.trim();
+  }
 }

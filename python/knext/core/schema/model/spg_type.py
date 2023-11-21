@@ -32,9 +32,7 @@ from knext.core.schema.model.relation import Relation
 
 
 class EntityType(BaseSpgType):
-    """EntityType Model.
-
-    """
+    """EntityType Model."""
 
     spg_type_enum: SpgTypeEnum
     name: str
@@ -150,9 +148,7 @@ class EntityType(BaseSpgType):
 
 
 class ConceptType(BaseSpgType):
-    """ConceptType Model.
-
-    """
+    """ConceptType Model."""
 
     spg_type_enum: SpgTypeEnum
     name: str
@@ -285,9 +281,7 @@ class ConceptType(BaseSpgType):
 
 
 class EventType(BaseSpgType):
-    """EventType Model.
-
-    """
+    """EventType Model."""
 
     spg_type_enum: SpgTypeEnum
     name: str
@@ -361,9 +355,7 @@ class EventType(BaseSpgType):
 
 
 class BasicType(BaseSpgType):
-    """BasicType Model.
-
-    """
+    """BasicType Model."""
 
     Text = BaseSpgType(SpgTypeEnum.Basic, "Text")
     Integer = BaseSpgType(SpgTypeEnum.Basic, "Integer")
@@ -374,9 +366,7 @@ class BasicType(BaseSpgType):
 
 
 class StandardType(BaseSpgType):
-    """StandardType Model.
-
-    """
+    """StandardType Model."""
 
     spg_type_enum: SpgTypeEnum
     name: str

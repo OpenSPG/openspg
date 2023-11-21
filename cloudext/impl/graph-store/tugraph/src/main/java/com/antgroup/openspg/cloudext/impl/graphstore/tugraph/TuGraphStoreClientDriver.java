@@ -20,24 +20,21 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.impl.DefaultLPGTypeNa
 import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.antgroup.openspg.common.util.cloudext.CachedCloudExtClientDriver;
 
-
-public class TuGraphStoreClientDriver extends
-    CachedCloudExtClientDriver<GraphStoreClient, GraphStoreConnectionInfo>
+public class TuGraphStoreClientDriver
+    extends CachedCloudExtClientDriver<GraphStoreClient, GraphStoreConnectionInfo>
     implements GraphStoreClientDriver {
 
-    static {
-        GraphStoreClientDriverManager.registerDriver(new TuGraphStoreClientDriver());
-    }
+  static {
+    GraphStoreClientDriverManager.registerDriver(new TuGraphStoreClientDriver());
+  }
 
-    @Override
-    public String driverScheme() {
-        return "tugraph";
-    }
+  @Override
+  public String driverScheme() {
+    return "tugraph";
+  }
 
-    @Override
-    protected GraphStoreClient innerConnect(GraphStoreConnectionInfo connInfo) {
-        return new TuGraphStoreClient(
-            connInfo, new DefaultLPGTypeNameConvertor()
-        );
-    }
+  @Override
+  protected GraphStoreClient innerConnect(GraphStoreConnectionInfo connInfo) {
+    return new TuGraphStoreClient(connInfo, new DefaultLPGTypeNameConvertor());
+  }
 }

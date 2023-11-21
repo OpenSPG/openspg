@@ -25,16 +25,13 @@ def llm_infer(word, recall):
     Here is the implement of LLM inferring
     """
 
-    prompt_text = f'你作为一个语言专家，请在目标词里选出跟输入词意思最相近的一个词，如果没有意思相近的则输出null。\n要求：输出结果直接显示选中的目标词，不需要给出选择的任何理由。\n输入词：{word}。\n目标词：[{recall}]。'
-    param = {
-        "prompt": prompt_text,
-        "history": None
-    }
-    llm_response = requests.post('http://127.0.0.1:8888', json=param)
+    prompt_text = f"你作为一个语言专家，请在目标词里选出跟输入词意思最相近的一个词，如果没有意思相近的则输出null。\n要求：输出结果直接显示选中的目标词，不需要给出选择的任何理由。\n输入词：{word}。\n目标词：[{recall}]。"
+    param = {"prompt": prompt_text, "history": None}
+    llm_response = requests.post("http://127.0.0.1:8888", json=param)
     if llm_response.status_code == 200:
         content = llm_response.content
         if content.startswith("输出结果:"):
-            return content[content.index(":") + 1:].strip().rstrip("。")
+            return content[content.index(":") + 1 :].strip().rstrip("。")
     else:
         return "null"
 
@@ -74,5 +71,9 @@ class CompanyLinkerOperator(EntityLinkOp):
         # ----- Please enable the code below when LLM service is ready ------
         llm_result = llm_infer(company_name, recall_str)
         if len(llm_result) > 0 and llm_result != "null":
-            return [Vertex(biz_id=recall_dict[llm_result], vertex_type="SupplyChain.Company")]
+            return [
+                Vertex(
+                    biz_id=recall_dict[llm_result], vertex_type="SupplyChain.Company"
+                )
+            ]
         return []

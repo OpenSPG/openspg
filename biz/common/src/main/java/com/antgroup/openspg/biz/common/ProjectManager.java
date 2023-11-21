@@ -16,13 +16,11 @@ package com.antgroup.openspg.biz.common;
 import com.antgroup.openspg.api.facade.dto.common.request.ProjectCreateRequest;
 import com.antgroup.openspg.api.facade.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.common.model.project.Project;
-
 import java.util.List;
-
 
 public interface ProjectManager {
 
-    Project create(ProjectCreateRequest request);
+  Project create(ProjectCreateRequest request);
 
-    List<Project> query(ProjectQueryRequest request);
+  List<Project> query(ProjectQueryRequest request);
 }

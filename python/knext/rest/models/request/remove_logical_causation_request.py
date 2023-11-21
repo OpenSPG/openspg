@@ -43,23 +43,30 @@ class RemoveLogicalCausationRequest(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'subject_concept_type_name': 'str',
-        'subject_concept_name': 'str',
-        'predicate_name': 'str',
-        'object_concept_type_name': 'str',
-        'object_concept_name': 'str'
+        "subject_concept_type_name": "str",
+        "subject_concept_name": "str",
+        "predicate_name": "str",
+        "object_concept_type_name": "str",
+        "object_concept_name": "str",
     }
 
     attribute_map = {
-        'subject_concept_type_name': 'subjectConceptTypeName',
-        'subject_concept_name': 'subjectConceptName',
-        'predicate_name': 'predicateName',
-        'object_concept_type_name': 'objectConceptTypeName',
-        'object_concept_name': 'objectConceptName'
+        "subject_concept_type_name": "subjectConceptTypeName",
+        "subject_concept_name": "subjectConceptName",
+        "predicate_name": "predicateName",
+        "object_concept_type_name": "objectConceptTypeName",
+        "object_concept_name": "objectConceptName",
     }
 
-    def __init__(self, subject_concept_type_name=None, subject_concept_name=None, predicate_name=None,
-                 object_concept_type_name=None, object_concept_name=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        subject_concept_type_name=None,
+        subject_concept_name=None,
+        predicate_name=None,
+        object_concept_type_name=None,
+        object_concept_name=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """RemoveLogicalCausationRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -195,18 +202,20 @@ class RemoveLogicalCausationRequest(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

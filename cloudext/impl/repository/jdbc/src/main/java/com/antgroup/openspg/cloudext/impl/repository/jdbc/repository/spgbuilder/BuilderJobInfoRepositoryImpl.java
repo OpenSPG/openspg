@@ -21,49 +21,44 @@ import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgbuilder.
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInfo;
 import com.antgroup.openspg.core.spgbuilder.service.repo.BuilderJobInfoRepository;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
 
 @Repository
 public class BuilderJobInfoRepositoryImpl implements BuilderJobInfoRepository {
 
-    @Autowired
-    private SPGJobInfoDOMapper spgJobInfoDOMapper;
+  @Autowired private SPGJobInfoDOMapper spgJobInfoDOMapper;
 
-    @Override
-    public Long save(BuilderJobInfo jobInfo) {
-        SPGJobInfoDO jobInfoDO = BuilderJobInfoConvertor.toDO(jobInfo);
-        spgJobInfoDOMapper.insert(jobInfoDO);
-        return jobInfoDO.getId();
+  @Override
+  public Long save(BuilderJobInfo jobInfo) {
+    SPGJobInfoDO jobInfoDO = BuilderJobInfoConvertor.toDO(jobInfo);
+    spgJobInfoDOMapper.insert(jobInfoDO);
+    return jobInfoDO.getId();
+  }
+
+  @Override
+  public int updateExternalJobId(Long builderJobInfoId, String externalJobInfoId) {
+    SPGJobInfoDOExample example = new SPGJobInfoDOExample();
+    example.createCriteria().andIdEqualTo(builderJobInfoId);
+
+    SPGJobInfoDO jobInfoDO = new SPGJobInfoDO();
+    jobInfoDO.setExternalJobInfoId(externalJobInfoId);
+    return spgJobInfoDOMapper.updateByExampleSelective(jobInfoDO, example);
+  }
+
+  @Override
+  public List<BuilderJobInfo> query(BuilderJobInfoQuery query) {
+    SPGJobInfoDOExample example = new SPGJobInfoDOExample();
+    SPGJobInfoDOExample.Criteria criteria = example.createCriteria();
+    if (query.getBuildingJobInfoId() != null) {
+      criteria.andIdEqualTo(query.getBuildingJobInfoId());
     }
-
-    @Override
-    public int updateExternalJobId(Long builderJobInfoId, String externalJobInfoId) {
-        SPGJobInfoDOExample example = new SPGJobInfoDOExample();
-        example.createCriteria()
-            .andIdEqualTo(builderJobInfoId);
-
-        SPGJobInfoDO jobInfoDO = new SPGJobInfoDO();
-        jobInfoDO.setExternalJobInfoId(externalJobInfoId);
-        return spgJobInfoDOMapper.updateByExampleSelective(jobInfoDO, example);
+    if (query.getExternalJobInfoId() != null) {
+      criteria.andExternalJobInfoIdEqualTo(query.getExternalJobInfoId());
     }
-
-    @Override
-    public List<BuilderJobInfo> query(BuilderJobInfoQuery query) {
-        SPGJobInfoDOExample example = new SPGJobInfoDOExample();
-        SPGJobInfoDOExample.Criteria criteria = example.createCriteria();
-        if (query.getBuildingJobInfoId() != null) {
-            criteria.andIdEqualTo(query.getBuildingJobInfoId());
-        }
-        if (query.getExternalJobInfoId() != null) {
-            criteria.andExternalJobInfoIdEqualTo(query.getExternalJobInfoId());
-        }
-        example.setOrderByClause("id desc");
-        List<SPGJobInfoDO> spgJobInfoDOS = spgJobInfoDOMapper.selectByExampleWithBLOBs(example);
-        return CollectionsUtils.listMap(spgJobInfoDOS, BuilderJobInfoConvertor::toModel);
-    }
+    example.setOrderByClause("id desc");
+    List<SPGJobInfoDO> spgJobInfoDOS = spgJobInfoDOMapper.selectByExampleWithBLOBs(example);
+    return CollectionsUtils.listMap(spgJobInfoDOS, BuilderJobInfoConvertor::toModel);
+  }
 }

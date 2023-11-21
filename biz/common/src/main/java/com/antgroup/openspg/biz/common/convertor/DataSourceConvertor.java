@@ -21,28 +21,25 @@ import com.antgroup.openspg.common.model.datasource.DataSourceTypeEnum;
 import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
 import com.antgroup.openspg.common.model.datasource.DataSourceUsageTypeEnum;
 import com.antgroup.openspg.common.model.datasource.connection.ConnectionInfoFactory;
-
 import org.apache.commons.lang3.BooleanUtils;
 
 public class DataSourceConvertor {
 
-    public static DataSource convert(DataSourceCreateRequest request) {
-        DataSourceTypeEnum dataSourceType = DataSourceTypeEnum.valueOf(request.getType());
-        return new DataSource(
-            request.getName(),
-            dataSourceType,
-            request.getPhysicalInfo(),
-            ConnectionInfoFactory.from(request.getConnInfo(), dataSourceType)
-        );
-    }
+  public static DataSource convert(DataSourceCreateRequest request) {
+    DataSourceTypeEnum dataSourceType = DataSourceTypeEnum.valueOf(request.getType());
+    return new DataSource(
+        request.getName(),
+        dataSourceType,
+        request.getPhysicalInfo(),
+        ConnectionInfoFactory.from(request.getConnInfo(), dataSourceType));
+  }
 
-    public static DataSourceUsage convert(DataSourceUsageCreateRequest request) {
-        return new DataSourceUsage(
-            request.getDataSourceName(),
-            request.getMountObjectId(),
-            DataSourceMountObjectTypeEnum.valueOf(request.getMountObjectType()),
-            DataSourceUsageTypeEnum.valueOf(request.getUsageType()),
-            BooleanUtils.isTrue(request.getAsDefault())
-        );
-    }
+  public static DataSourceUsage convert(DataSourceUsageCreateRequest request) {
+    return new DataSourceUsage(
+        request.getDataSourceName(),
+        request.getMountObjectId(),
+        DataSourceMountObjectTypeEnum.valueOf(request.getMountObjectType()),
+        DataSourceUsageTypeEnum.valueOf(request.getUsageType()),
+        BooleanUtils.isTrue(request.getAsDefault()));
+  }
 }

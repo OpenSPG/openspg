@@ -27,19 +27,16 @@ import com.antgroup.openspg.core.spgschema.service.alter.check.SchemaCheckContex
 import com.antgroup.openspg.core.spgschema.service.alter.check.SchemaMap;
 import com.antgroup.openspg.core.spgschema.service.alter.model.SchemaAlterContext;
 import com.antgroup.openspg.core.spgschema.service.alter.stage.handler.BuiltInPropertyHandler;
-
 import com.antgroup.openspg.core.spgschema.service.type.SPGTypeService;
 import com.antgroup.openspg.core.spgschema.service.util.PropertyUtils;
-
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Build new schema stage, load online schema, build a new schema of project by merging alter draft.
@@ -47,108 +44,115 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PreProcessStage extends BaseAlterStage {
 
-    public PreProcessStage() {
-        super("pre-process-stage");
+  public PreProcessStage() {
+    super("pre-process-stage");
+  }
+
+  @Autowired private BuiltInPropertyHandler builtInPropertyHandler;
+  @Autowired private SPGTypeService spgTypeService;
+
+  @Override
+  public void execute(SchemaAlterContext context) {
+    SchemaAlterChecker checker = new SchemaAlterChecker();
+    SchemaCheckContext checkContext =
+        SchemaCheckContext.build(
+            context.getProject(), context.getReleasedSchema(), context.getAlterSchema());
+
+    this.completeInheritedProperty(checkContext);
+
+    checker.check(checkContext);
+
+    builtInPropertyHandler.handle(context);
+  }
+
+  private void completeInheritedProperty(SchemaCheckContext context) {
+    List<BaseSPGType> createSpgTypes =
+        context.getAlterTypes().stream()
+            .filter(WithAlterOperation::isCreate)
+            .collect(Collectors.toList());
+    if (createSpgTypes.isEmpty()) {
+      return;
     }
 
-    @Autowired
-    private BuiltInPropertyHandler builtInPropertyHandler;
-    @Autowired
-    private SPGTypeService spgTypeService;
+    SchemaMap onlineSchemaMap = context.getOnlineSchemaMap();
+    SchemaMap alterSchemaMap = context.getAlterSchemaMap();
+    Set<SPGTypeIdentifier> spreadStandardTypeIdentifiers =
+        this.getSpreadStandardTypeIdentifiers(context);
 
-    @Override
-    public void execute(SchemaAlterContext context) {
-        SchemaAlterChecker checker = new SchemaAlterChecker();
-        SchemaCheckContext checkContext = SchemaCheckContext.build(context.getProject(),
-            context.getReleasedSchema(), context.getAlterSchema());
+    SPGTypeIdentifier rootIdentifier =
+        SPGTypeIdentifier.parse(SchemaConstants.ROOT_TYPE_UNIQUE_NAME);
+    BaseSPGType rootType = spgTypeService.querySPGTypeByIdentifier(rootIdentifier);
 
-        this.completeInheritedProperty(checkContext);
+    for (BaseSPGType spgType : createSpgTypes) {
+      List<BaseSPGType> parentTypes = new ArrayList<>();
+      SPGTypeIdentifier parentTypeIdentifier =
+          spgType.getParentTypeInfo().getParentTypeIdentifier();
+      while (parentTypeIdentifier != null
+          && !SchemaConstants.ROOT_TYPE_UNIQUE_NAME.equals(parentTypeIdentifier.toString())) {
+        BaseSPGType parentType = alterSchemaMap.getSpgTypeMap().get(parentTypeIdentifier);
+        if (parentType == null) {
+          parentType = onlineSchemaMap.getSpgTypeMap().get(parentTypeIdentifier);
+        }
 
-        checker.check(checkContext);
+        if (null == parentType || parentType.isDelete()) {
+          throw SchemaException.spgTypeNotExist(parentTypeIdentifier.toString());
+        }
+        parentTypes.add(parentType);
 
-        builtInPropertyHandler.handle(context);
+        parentTypeIdentifier = parentType.getParentTypeInfo().getParentTypeIdentifier();
+      }
+      parentTypes.add(rootType);
+
+      this.addInheritedProperty(spgType, parentTypes, spreadStandardTypeIdentifiers);
+    }
+  }
+
+  private void addInheritedProperty(
+      BaseSPGType spgType,
+      List<BaseSPGType> parentTypes,
+      Set<SPGTypeIdentifier> spreadStandardTypeIdentifiers) {
+    for (BaseSPGType parentType : parentTypes) {
+      if (CollectionUtils.isEmpty(parentType.getProperties())) {
+        continue;
+      }
+
+      for (Property property : parentType.getProperties()) {
+        if (Boolean.TRUE.equals(property.getInherited())) {
+          continue;
+        }
+
+        Property newProp = PropertyUtils.inheritProperty(spgType.toRef(), property);
+        spgType.getProperties().add(newProp);
+
+        Relation relation =
+            PropertyUtils.generateSemanticRelation(property, spreadStandardTypeIdentifiers);
+        if (relation != null) {
+          spgType.getRelations().add(relation);
+        }
+      }
+    }
+  }
+
+  private Set<SPGTypeIdentifier> getSpreadStandardTypeIdentifiers(SchemaCheckContext context) {
+    Set<SPGTypeIdentifier> spreadStandardTypeIdentifiers = new HashSet<>();
+    for (BaseAdvancedType advancedType : context.getAlterTypes()) {
+      if (advancedType.isStandardType() && !advancedType.isDelete()) {
+        StandardType standardType = (StandardType) advancedType;
+        if (Boolean.TRUE.equals(standardType.getSpreadable())) {
+          spreadStandardTypeIdentifiers.add(standardType.getBaseSpgIdentifier());
+        }
+      }
     }
 
-    private void completeInheritedProperty(SchemaCheckContext context) {
-        List<BaseSPGType> createSpgTypes = context.getAlterTypes().stream()
-            .filter(WithAlterOperation::isCreate).collect(Collectors.toList());
-        if (createSpgTypes.isEmpty()) {
-            return;
+    for (BaseSPGType spgType : context.getOnlineTypes()) {
+      if (spgType.isStandardType()
+          && !spreadStandardTypeIdentifiers.contains(spgType.getBaseSpgIdentifier())) {
+        StandardType standardType = (StandardType) spgType;
+        if (Boolean.TRUE.equals(standardType.getSpreadable())) {
+          spreadStandardTypeIdentifiers.add(standardType.getBaseSpgIdentifier());
         }
-
-        SchemaMap onlineSchemaMap = context.getOnlineSchemaMap();
-        SchemaMap alterSchemaMap = context.getAlterSchemaMap();
-        Set<SPGTypeIdentifier> spreadStandardTypeIdentifiers = this.getSpreadStandardTypeIdentifiers(context);
-
-        SPGTypeIdentifier rootIdentifier = SPGTypeIdentifier.parse(SchemaConstants.ROOT_TYPE_UNIQUE_NAME);
-        BaseSPGType rootType = spgTypeService.querySPGTypeByIdentifier(rootIdentifier);
-
-        for (BaseSPGType spgType : createSpgTypes) {
-            List<BaseSPGType> parentTypes = new ArrayList<>();
-            SPGTypeIdentifier parentTypeIdentifier = spgType.getParentTypeInfo().getParentTypeIdentifier();
-            while (parentTypeIdentifier != null
-                && !SchemaConstants.ROOT_TYPE_UNIQUE_NAME.equals(parentTypeIdentifier.toString())) {
-                BaseSPGType parentType = alterSchemaMap.getSpgTypeMap().get(parentTypeIdentifier);
-                if (parentType == null) {
-                    parentType = onlineSchemaMap.getSpgTypeMap().get(parentTypeIdentifier);
-                }
-
-                if (null == parentType || parentType.isDelete()) {
-                    throw SchemaException.spgTypeNotExist(parentTypeIdentifier.toString());
-                }
-                parentTypes.add(parentType);
-
-                parentTypeIdentifier = parentType.getParentTypeInfo().getParentTypeIdentifier();
-            }
-            parentTypes.add(rootType);
-
-            this.addInheritedProperty(spgType, parentTypes, spreadStandardTypeIdentifiers);
-        }
+      }
     }
-
-    private void addInheritedProperty(BaseSPGType spgType, List<BaseSPGType> parentTypes,
-        Set<SPGTypeIdentifier> spreadStandardTypeIdentifiers) {
-        for (BaseSPGType parentType : parentTypes) {
-            if (CollectionUtils.isEmpty(parentType.getProperties())) {
-                continue;
-            }
-
-            for (Property property : parentType.getProperties()) {
-                if (Boolean.TRUE.equals(property.getInherited())) {
-                    continue;
-                }
-
-                Property newProp = PropertyUtils.inheritProperty(spgType.toRef(), property);
-                spgType.getProperties().add(newProp);
-
-                Relation relation = PropertyUtils.generateSemanticRelation(property, spreadStandardTypeIdentifiers);
-                if (relation != null) {
-                    spgType.getRelations().add(relation);
-                }
-            }
-        }
-    }
-
-    private Set<SPGTypeIdentifier> getSpreadStandardTypeIdentifiers(SchemaCheckContext context) {
-        Set<SPGTypeIdentifier> spreadStandardTypeIdentifiers = new HashSet<>();
-        for (BaseAdvancedType advancedType : context.getAlterTypes()) {
-            if (advancedType.isStandardType() && !advancedType.isDelete()) {
-                StandardType standardType = (StandardType) advancedType;
-                if (Boolean.TRUE.equals(standardType.getSpreadable())) {
-                    spreadStandardTypeIdentifiers.add(standardType.getBaseSpgIdentifier());
-                }
-            }
-        }
-
-        for (BaseSPGType spgType : context.getOnlineTypes()) {
-            if (spgType.isStandardType()
-                && !spreadStandardTypeIdentifiers.contains(spgType.getBaseSpgIdentifier())) {
-                StandardType standardType = (StandardType) spgType;
-                if (Boolean.TRUE.equals(standardType.getSpreadable())) {
-                    spreadStandardTypeIdentifiers.add(standardType.getBaseSpgIdentifier());
-                }
-            }
-        }
-        return spreadStandardTypeIdentifiers;
-    }
+    return spreadStandardTypeIdentifiers;
+  }
 }

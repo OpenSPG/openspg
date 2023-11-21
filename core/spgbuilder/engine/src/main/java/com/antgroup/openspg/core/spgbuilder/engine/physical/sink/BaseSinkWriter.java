@@ -15,45 +15,42 @@ package com.antgroup.openspg.core.spgbuilder.engine.physical.sink;
 
 import com.antgroup.openspg.core.spgbuilder.engine.physical.BasePhysicalNode;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
-
+import java.util.List;
 import lombok.Getter;
 
-import java.util.List;
-
 /**
- * Base class of Sink nodes, outputs the execution results of the physical execution plan to the specified storage, such
- * as graph storage, search engines, key-value stores, and so on.
+ * Base class of Sink nodes, outputs the execution results of the physical execution plan to the
+ * specified storage, such as graph storage, search engines, key-value stores, and so on.
  *
- * <p> This class inherits from {@link BasePhysicalNode},
- * but it also has its own writer method to implement data output.
+ * <p>This class inherits from {@link BasePhysicalNode}, but it also has its own writer method to
+ * implement data output.
  */
 @Getter
 public abstract class BaseSinkWriter<C> extends BasePhysicalNode {
 
-    /**
-     * The configuration of sink writer node.
-     *
-     * <p> Taking TuGraph and Elasticsearch as examples.
-     * <ul>
-     *     <li> TuGraph
-     *         - Including schema("tugraph"), graphName("default"), host("127.0.0.1:9090"), accessId, and accessKey.
-     *     </li>
-     *     <li> Elasticsearch
-     *         - Including schema("elasticsearch"), host("127.0.0.1"), scheme("http"), and port("9200").
-     *     </li>
-     * </ul>
-     */
-    protected final C config;
+  /**
+   * The configuration of sink writer node.
+   *
+   * <p>Taking TuGraph and Elasticsearch as examples.
+   *
+   * <ul>
+   *   <li>TuGraph - Including schema("tugraph"), graphName("default"), host("127.0.0.1:9090"),
+   *       accessId, and accessKey.
+   *   <li>Elasticsearch - Including schema("elasticsearch"), host("127.0.0.1"), scheme("http"), and
+   *       port("9200").
+   * </ul>
+   */
+  protected final C config;
 
-    public BaseSinkWriter(String id, String name, C config) {
-        super(id, name);
-        this.config = config;
-    }
+  public BaseSinkWriter(String id, String name, C config) {
+    super(id, name);
+    this.config = config;
+  }
 
-    /**
-     * Outputting the execution results of the physical execution plan to the specified storage.
-     *
-     * @param records: Data produced by upstream processing nodes.
-     */
-    public abstract void write(List<BaseRecord> records);
+  /**
+   * Outputting the execution results of the physical execution plan to the specified storage.
+   *
+   * @param records: Data produced by upstream processing nodes.
+   */
+  public abstract void write(List<BaseRecord> records);
 }

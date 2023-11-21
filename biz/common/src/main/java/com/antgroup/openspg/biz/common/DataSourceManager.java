@@ -19,40 +19,39 @@ import com.antgroup.openspg.api.facade.dto.common.request.DataSourceUsageCreateR
 import com.antgroup.openspg.api.facade.dto.common.request.DataSourceUsageQueryRequest;
 import com.antgroup.openspg.common.model.datasource.DataSource;
 import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
-
 import java.util.List;
 
 public interface DataSourceManager {
 
-    /**
-     * Create a data source.
-     *
-     * @param request Request for create data source
-     * @return DataSourceDTO
-     */
-    DataSource create(DataSourceCreateRequest request);
+  /**
+   * Create a data source.
+   *
+   * @param request Request for create data source
+   * @return DataSourceDTO
+   */
+  DataSource create(DataSourceCreateRequest request);
 
-    /**
-     * Query the data sources
-     *
-     * @param request
-     * @return
-     */
-    List<DataSource> query(DataSourceQueryRequest request);
+  /**
+   * Query the data sources
+   *
+   * @param request
+   * @return
+   */
+  List<DataSource> query(DataSourceQueryRequest request);
 
-    /**
-     * Mount the data source
-     *
-     * @param request Request
-     * @return The usage of data source
-     */
-    DataSourceUsage mount(DataSourceUsageCreateRequest request);
+  /**
+   * Mount the data source
+   *
+   * @param request Request
+   * @return The usage of data source
+   */
+  DataSourceUsage mount(DataSourceUsageCreateRequest request);
 
-    /**
-     * Query mounted data sources
-     *
-     * @param request
-     * @return
-     */
-    List<DataSourceUsage> query(DataSourceUsageQueryRequest request);
+  /**
+   * Query mounted data sources
+   *
+   * @param request
+   * @return
+   */
+  List<DataSourceUsage> query(DataSourceUsageQueryRequest request);
 }

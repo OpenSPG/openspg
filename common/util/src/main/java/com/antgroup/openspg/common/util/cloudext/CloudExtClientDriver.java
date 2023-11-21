@@ -13,17 +13,15 @@
 
 package com.antgroup.openspg.common.util.cloudext;
 
-
 import com.antgroup.openspg.common.model.datasource.connection.BaseConnectionInfo;
-
 
 public interface CloudExtClientDriver<C extends CloudExtClient, I extends BaseConnectionInfo> {
 
-    String driverScheme();
+  String driverScheme();
 
-    C connect(I connInfo);
+  C connect(I connInfo);
 
-    default boolean acceptsConfig(I connInfo) {
-        return driverScheme().equalsIgnoreCase(connInfo.getScheme());
-    }
+  default boolean acceptsConfig(I connInfo) {
+    return driverScheme().equalsIgnoreCase(connInfo.getScheme());
+  }
 }

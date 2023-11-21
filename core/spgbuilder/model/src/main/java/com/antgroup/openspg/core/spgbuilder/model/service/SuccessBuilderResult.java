@@ -13,30 +13,29 @@
 
 package com.antgroup.openspg.core.spgbuilder.model.service;
 
-
 public class SuccessBuilderResult extends BaseBuilderResult {
 
-    private final long totalCnt;
+  private final long totalCnt;
 
-    private final long errorCnt;
+  private final long errorCnt;
 
-    private final String errorTableFile;
+  private final String errorTableFile;
 
-    public SuccessBuilderResult(long totalCnt, long errorCnt, String errorTableFile) {
-        this.totalCnt = totalCnt;
-        this.errorCnt = errorCnt;
-        this.errorTableFile = errorTableFile;
-    }
+  public SuccessBuilderResult(long totalCnt, long errorCnt, String errorTableFile) {
+    this.totalCnt = totalCnt;
+    this.errorCnt = errorCnt;
+    this.errorTableFile = errorTableFile;
+  }
 
-    public long getTotalCnt() {
-        return totalCnt;
-    }
+  public long getTotalCnt() {
+    return totalCnt;
+  }
 
-    public long getErrorCnt() {
-        return errorCnt;
-    }
+  public long getErrorCnt() {
+    return errorCnt;
+  }
 
-    public String getErrorTableFile() {
-        return errorTableFile;
-    }
+  public String getErrorTableFile() {
+    return errorTableFile;
+  }
 }

@@ -17,36 +17,32 @@ import com.antgroup.openspg.cloudext.interfaces.objectstore.ObjectStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.cmd.ObjectStoreSaveCmd;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.model.ObjectStorePath;
 import com.antgroup.openspg.common.model.datasource.connection.ObjectStoreConnectionInfo;
-
+import java.io.File;
+import java.io.IOException;
 import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
-
-
 public class LocalObjectStoreClient implements ObjectStoreClient {
 
-    @Getter
-    private final ObjectStoreConnectionInfo connInfo;
-    private final String localRootDir;
+  @Getter private final ObjectStoreConnectionInfo connInfo;
+  private final String localRootDir;
 
-    public LocalObjectStoreClient(ObjectStoreConnectionInfo connInfo) {
-        this.connInfo = connInfo;
-        this.localRootDir = (String) connInfo.getNotNullParam("localDir");
+  public LocalObjectStoreClient(ObjectStoreConnectionInfo connInfo) {
+    this.connInfo = connInfo;
+    this.localRootDir = (String) connInfo.getNotNullParam("localDir");
+  }
+
+  @Override
+  public ObjectStorePath save(ObjectStoreSaveCmd cmd) {
+    ObjectStorePath path = cmd.getPath();
+    File file = new File("./" + localRootDir + "/" + path.getRelativePath());
+    try {
+      FileUtils.copyInputStreamToFile(cmd.getInputStream(), file);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
 
-    @Override
-    public ObjectStorePath save(ObjectStoreSaveCmd cmd) {
-        ObjectStorePath path = cmd.getPath();
-        File file = new File("./" + localRootDir + "/" + path.getRelativePath());
-        try {
-            FileUtils.copyInputStreamToFile(cmd.getInputStream(), file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        path.setAbsolutePath(file.getAbsolutePath());
-        return path;
-    }
+    path.setAbsolutePath(file.getAbsolutePath());
+    return path;
+  }
 }

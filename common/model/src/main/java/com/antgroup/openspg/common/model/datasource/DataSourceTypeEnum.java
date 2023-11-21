@@ -13,8 +13,12 @@
 
 package com.antgroup.openspg.common.model.datasource;
 
-
 public enum DataSourceTypeEnum {
-    GRAPH_STORE, SEARCH_ENGINE, OBJECT_STORE, JOB_SCHEDULER, COMPUTING, TABLE_STORE,
-    ;
+  GRAPH_STORE,
+  SEARCH_ENGINE,
+  OBJECT_STORE,
+  JOB_SCHEDULER,
+  COMPUTING,
+  TABLE_STORE,
+  ;
 }

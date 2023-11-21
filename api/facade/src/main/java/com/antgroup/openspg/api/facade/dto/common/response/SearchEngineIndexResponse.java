@@ -15,28 +15,27 @@ package com.antgroup.openspg.api.facade.dto.common.response;
 
 import com.antgroup.openspg.common.model.base.BaseResponse;
 
-
 public class SearchEngineIndexResponse extends BaseResponse {
 
-    private String connInfo;
+  private String connInfo;
 
-    private String indexName;
+  private String indexName;
 
-    public String getConnInfo() {
-        return connInfo;
-    }
+  public String getConnInfo() {
+    return connInfo;
+  }
 
-    public SearchEngineIndexResponse setConnInfo(String connInfo) {
-        this.connInfo = connInfo;
-        return this;
-    }
+  public SearchEngineIndexResponse setConnInfo(String connInfo) {
+    this.connInfo = connInfo;
+    return this;
+  }
 
-    public String getIndexName() {
-        return indexName;
-    }
+  public String getIndexName() {
+    return indexName;
+  }
 
-    public SearchEngineIndexResponse setIndexName(String indexName) {
-        this.indexName = indexName;
-        return this;
-    }
+  public SearchEngineIndexResponse setIndexName(String indexName) {
+    this.indexName = indexName;
+    return this;
+  }
 }

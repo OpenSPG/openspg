@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.util;
 
+import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.convertor.TuGraphRecordConvertor;
 import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.procedure.DeleteEdgesProcedure;
 import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.procedure.DeleteVerticesProcedure;
@@ -20,72 +21,75 @@ import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.procedure.ExtendedP
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
-
-import com.alibaba.fastjson.JSON;
 import com.antgroup.tugraph.TuGraphDbRpcClient;
+import java.util.List;
+import java.util.Map;
 import lgraph.Lgraph;
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.List;
-import java.util.Map;
-
-
 public class TuGraphRecordUtils {
 
-    public static void upsertVertexRecords(List<VertexRecord> vertexRecords,
-        TuGraphDbRpcClient client, String graphName, Double timeout) throws Exception {
+  public static void upsertVertexRecords(
+      List<VertexRecord> vertexRecords, TuGraphDbRpcClient client, String graphName, Double timeout)
+      throws Exception {
 
-        if (CollectionUtils.isEmpty(vertexRecords)) {
-            return;
-        }
+    if (CollectionUtils.isEmpty(vertexRecords)) {
+      return;
+    }
 
-        String vertexTypeName = vertexRecords.get(0).getVertexType();
+    String vertexTypeName = vertexRecords.get(0).getVertexType();
 
-        Map<String, Object> params = TuGraphRecordConvertor.toUpsertTuGraphVertices(
-            vertexTypeName, vertexRecords);
-        String cypher = ExtendedProcedure
-            .of(Lgraph.PluginRequest.PluginType.CPP, "upsertVertices", JSON.toJSONString(params))
+    Map<String, Object> params =
+        TuGraphRecordConvertor.toUpsertTuGraphVertices(vertexTypeName, vertexRecords);
+    String cypher =
+        ExtendedProcedure.of(
+                Lgraph.PluginRequest.PluginType.CPP, "upsertVertices", JSON.toJSONString(params))
             .getCypher();
-        client.callCypher(cypher, graphName, timeout);
+    client.callCypher(cypher, graphName, timeout);
+  }
+
+  public static void deleteVertexRecords(
+      List<VertexRecord> vertexRecords, TuGraphDbRpcClient client, String graphName, Double timeout)
+      throws Exception {
+
+    if (CollectionUtils.isEmpty(vertexRecords)) {
+      return;
     }
 
-    public static void deleteVertexRecords(List<VertexRecord> vertexRecords,
-        TuGraphDbRpcClient client, String graphName, Double timeout) throws Exception {
+    String vertexTypeName = vertexRecords.get(0).getVertexType();
 
-        if (CollectionUtils.isEmpty(vertexRecords)) {
-            return;
-        }
+    String cypher = DeleteVerticesProcedure.of(vertexTypeName, vertexRecords).getCypher();
+    client.callCypher(cypher, graphName, timeout);
+  }
 
-        String vertexTypeName = vertexRecords.get(0).getVertexType();
-
-        String cypher = DeleteVerticesProcedure.of(vertexTypeName, vertexRecords).getCypher();
-        client.callCypher(cypher, graphName, timeout);
+  public static void upsertEdgeRecords(
+      List<EdgeRecord> edgeRecords, TuGraphDbRpcClient client, String graphName, Double timeout)
+      throws Exception {
+    if (CollectionUtils.isEmpty(edgeRecords)) {
+      return;
     }
 
-    public static void upsertEdgeRecords(List<EdgeRecord> edgeRecords,
-        TuGraphDbRpcClient client, String graphName, Double timeout) throws Exception {
-        if (CollectionUtils.isEmpty(edgeRecords)) {
-            return;
-        }
+    EdgeTypeName edgeTypeName = edgeRecords.get(0).getEdgeType();
 
-        EdgeTypeName edgeTypeName = edgeRecords.get(0).getEdgeType();
-
-        Map<String, Object> params = TuGraphRecordConvertor.toUpsertTuGraphEdges(edgeTypeName, edgeRecords);
-        String cypher = ExtendedProcedure
-            .of(Lgraph.PluginRequest.PluginType.CPP, "upsertEdges", JSON.toJSONString(params))
+    Map<String, Object> params =
+        TuGraphRecordConvertor.toUpsertTuGraphEdges(edgeTypeName, edgeRecords);
+    String cypher =
+        ExtendedProcedure.of(
+                Lgraph.PluginRequest.PluginType.CPP, "upsertEdges", JSON.toJSONString(params))
             .getCypher();
-        client.callCypher(cypher, graphName, timeout);
+    client.callCypher(cypher, graphName, timeout);
+  }
+
+  public static void deleteEdgeRecords(
+      List<EdgeRecord> edgeRecords, TuGraphDbRpcClient client, String graphName, Double timeout)
+      throws Exception {
+    if (CollectionUtils.isEmpty(edgeRecords)) {
+      return;
     }
 
-    public static void deleteEdgeRecords(List<EdgeRecord> edgeRecords,
-        TuGraphDbRpcClient client, String graphName, Double timeout) throws Exception {
-        if (CollectionUtils.isEmpty(edgeRecords)) {
-            return;
-        }
+    EdgeTypeName edgeTypeName = edgeRecords.get(0).getEdgeType();
 
-        EdgeTypeName edgeTypeName = edgeRecords.get(0).getEdgeType();
-
-        String cypher = DeleteEdgesProcedure.of(edgeTypeName, edgeRecords).getCypher();
-        client.callCypher(cypher, graphName, timeout);
-    }
+    String cypher = DeleteEdgesProcedure.of(edgeTypeName, edgeRecords).getCypher();
+    client.callCypher(cypher, graphName, timeout);
+  }
 }

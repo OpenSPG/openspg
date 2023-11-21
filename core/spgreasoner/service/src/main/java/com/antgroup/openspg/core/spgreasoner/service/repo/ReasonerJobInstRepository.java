@@ -17,19 +17,17 @@ import com.antgroup.openspg.api.facade.dto.reasoner.request.ReasonerJobInstQuery
 import com.antgroup.openspg.core.spgreasoner.model.service.FailureReasonerResult;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInst;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerStatusWithProgress;
-
 import java.util.List;
-
 
 public interface ReasonerJobInstRepository {
 
-    Long save(ReasonerJobInst jobInst);
+  Long save(ReasonerJobInst jobInst);
 
-    int updateExternalJobId(Long reasonerJobInstId, String externalJobInstId);
+  int updateExternalJobId(Long reasonerJobInstId, String externalJobInstId);
 
-    List<ReasonerJobInst> query(ReasonerJobInstQuery query);
+  List<ReasonerJobInst> query(ReasonerJobInstQuery query);
 
-    int updateStatus(Long jobInstId, ReasonerStatusWithProgress process);
+  int updateStatus(Long jobInstId, ReasonerStatusWithProgress process);
 
-    int updateToFailure(Long jobInstId, FailureReasonerResult result);
+  int updateToFailure(Long jobInstId, FailureReasonerResult result);
 }

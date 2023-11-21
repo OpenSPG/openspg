@@ -13,42 +13,29 @@
 
 package com.antgroup.openspg.core.spgschema.service.semantic.model;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
-/**
- * Query object of concept semantic.
- */
+/** Query object of concept semantic. */
 @Getter
 @Setter
 @Accessors(chain = true)
 public class LogicalCausationQuery {
 
-    /**
-     * The list of subject type name
-     */
-    private List<String> subjectTypeNames;
+  /** The list of subject type name */
+  private List<String> subjectTypeNames;
 
-    /**
-     * The subject name.
-     */
-    private String subjectName;
+  /** The subject name. */
+  private String subjectName;
 
-    /**
-     * The list of object type name.
-     */
-    private List<String> objectTypeNames;
+  /** The list of object type name. */
+  private List<String> objectTypeNames;
 
-    /**
-     * The object name.
-     */
-    private String objectName;
+  /** The object name. */
+  private String objectName;
 
-    /**
-     * The predicate name.
-     */
-    private String predicateName;
+  /** The predicate name. */
+  private String predicateName;
 }

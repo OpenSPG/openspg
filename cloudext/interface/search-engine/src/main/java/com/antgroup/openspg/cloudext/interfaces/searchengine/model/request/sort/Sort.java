@@ -13,25 +13,24 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.sort;
 
-
 public class Sort {
 
-    private String name;
-    private SortType sortType;
+  private String name;
+  private SortType sortType;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public SortType getSortType() {
-        return sortType;
-    }
+  public SortType getSortType() {
+    return sortType;
+  }
 
-    public void setSortType(SortType sortType) {
-        this.sortType = sortType;
-    }
+  public void setSortType(SortType sortType) {
+    this.sortType = sortType;
+  }
 }

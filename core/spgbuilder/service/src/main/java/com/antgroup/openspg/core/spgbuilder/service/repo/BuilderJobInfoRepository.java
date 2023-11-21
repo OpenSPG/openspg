@@ -15,15 +15,13 @@ package com.antgroup.openspg.core.spgbuilder.service.repo;
 
 import com.antgroup.openspg.api.facade.dto.builder.request.BuilderJobInfoQuery;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInfo;
-
 import java.util.List;
-
 
 public interface BuilderJobInfoRepository {
 
-    Long save(BuilderJobInfo jobInfo);
+  Long save(BuilderJobInfo jobInfo);
 
-    int updateExternalJobId(Long builderJobInfoId, String externalJobInfoId);
+  int updateExternalJobId(Long builderJobInfoId, String externalJobInfoId);
 
-    List<BuilderJobInfo> query(BuilderJobInfoQuery query);
+  List<BuilderJobInfo> query(BuilderJobInfoQuery query);
 }

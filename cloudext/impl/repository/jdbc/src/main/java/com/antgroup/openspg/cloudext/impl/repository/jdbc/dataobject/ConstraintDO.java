@@ -16,163 +16,163 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 import java.util.Date;
 
 public class ConstraintDO {
-    private Long id;
+  private Long id;
 
-    private String name;
+  private String name;
 
-    private String nameZh;
+  private String nameZh;
 
-    private String isRequire;
+  private String isRequire;
 
-    private String upDownBoundary;
+  private String upDownBoundary;
 
-    private String maxValue;
+  private String maxValue;
 
-    private String minValue;
+  private String minValue;
 
-    private String valuePattern;
+  private String valuePattern;
 
-    private String description;
+  private String description;
 
-    private String descriptionZh;
+  private String descriptionZh;
 
-    private String isUnique;
+  private String isUnique;
 
-    private String isEnum;
+  private String isEnum;
 
-    private Date gmtCreate;
+  private Date gmtCreate;
 
-    private Date gmtModified;
+  private Date gmtModified;
 
-    private String isMultiValue;
+  private String isMultiValue;
 
-    private String enumValue;
+  private String enumValue;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+  public void setName(String name) {
+    this.name = name == null ? null : name.trim();
+  }
 
-    public String getNameZh() {
-        return nameZh;
-    }
+  public String getNameZh() {
+    return nameZh;
+  }
 
-    public void setNameZh(String nameZh) {
-        this.nameZh = nameZh == null ? null : nameZh.trim();
-    }
+  public void setNameZh(String nameZh) {
+    this.nameZh = nameZh == null ? null : nameZh.trim();
+  }
 
-    public String getIsRequire() {
-        return isRequire;
-    }
+  public String getIsRequire() {
+    return isRequire;
+  }
 
-    public void setIsRequire(String isRequire) {
-        this.isRequire = isRequire == null ? null : isRequire.trim();
-    }
+  public void setIsRequire(String isRequire) {
+    this.isRequire = isRequire == null ? null : isRequire.trim();
+  }
 
-    public String getUpDownBoundary() {
-        return upDownBoundary;
-    }
+  public String getUpDownBoundary() {
+    return upDownBoundary;
+  }
 
-    public void setUpDownBoundary(String upDownBoundary) {
-        this.upDownBoundary = upDownBoundary == null ? null : upDownBoundary.trim();
-    }
+  public void setUpDownBoundary(String upDownBoundary) {
+    this.upDownBoundary = upDownBoundary == null ? null : upDownBoundary.trim();
+  }
 
-    public String getMaxValue() {
-        return maxValue;
-    }
+  public String getMaxValue() {
+    return maxValue;
+  }
 
-    public void setMaxValue(String maxValue) {
-        this.maxValue = maxValue == null ? null : maxValue.trim();
-    }
+  public void setMaxValue(String maxValue) {
+    this.maxValue = maxValue == null ? null : maxValue.trim();
+  }
 
-    public String getMinValue() {
-        return minValue;
-    }
+  public String getMinValue() {
+    return minValue;
+  }
 
-    public void setMinValue(String minValue) {
-        this.minValue = minValue == null ? null : minValue.trim();
-    }
+  public void setMinValue(String minValue) {
+    this.minValue = minValue == null ? null : minValue.trim();
+  }
 
-    public String getValuePattern() {
-        return valuePattern;
-    }
+  public String getValuePattern() {
+    return valuePattern;
+  }
 
-    public void setValuePattern(String valuePattern) {
-        this.valuePattern = valuePattern == null ? null : valuePattern.trim();
-    }
+  public void setValuePattern(String valuePattern) {
+    this.valuePattern = valuePattern == null ? null : valuePattern.trim();
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
-    }
+  public void setDescription(String description) {
+    this.description = description == null ? null : description.trim();
+  }
 
-    public String getDescriptionZh() {
-        return descriptionZh;
-    }
+  public String getDescriptionZh() {
+    return descriptionZh;
+  }
 
-    public void setDescriptionZh(String descriptionZh) {
-        this.descriptionZh = descriptionZh == null ? null : descriptionZh.trim();
-    }
+  public void setDescriptionZh(String descriptionZh) {
+    this.descriptionZh = descriptionZh == null ? null : descriptionZh.trim();
+  }
 
-    public String getIsUnique() {
-        return isUnique;
-    }
+  public String getIsUnique() {
+    return isUnique;
+  }
 
-    public void setIsUnique(String isUnique) {
-        this.isUnique = isUnique == null ? null : isUnique.trim();
-    }
+  public void setIsUnique(String isUnique) {
+    this.isUnique = isUnique == null ? null : isUnique.trim();
+  }
 
-    public String getIsEnum() {
-        return isEnum;
-    }
+  public String getIsEnum() {
+    return isEnum;
+  }
 
-    public void setIsEnum(String isEnum) {
-        this.isEnum = isEnum == null ? null : isEnum.trim();
-    }
+  public void setIsEnum(String isEnum) {
+    this.isEnum = isEnum == null ? null : isEnum.trim();
+  }
 
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
+  public Date getGmtCreate() {
+    return gmtCreate;
+  }
 
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
+  public void setGmtCreate(Date gmtCreate) {
+    this.gmtCreate = gmtCreate;
+  }
 
-    public Date getGmtModified() {
-        return gmtModified;
-    }
+  public Date getGmtModified() {
+    return gmtModified;
+  }
 
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
+  public void setGmtModified(Date gmtModified) {
+    this.gmtModified = gmtModified;
+  }
 
-    public String getIsMultiValue() {
-        return isMultiValue;
-    }
+  public String getIsMultiValue() {
+    return isMultiValue;
+  }
 
-    public void setIsMultiValue(String isMultiValue) {
-        this.isMultiValue = isMultiValue == null ? null : isMultiValue.trim();
-    }
+  public void setIsMultiValue(String isMultiValue) {
+    this.isMultiValue = isMultiValue == null ? null : isMultiValue.trim();
+  }
 
-    public String getEnumValue() {
-        return enumValue;
-    }
+  public String getEnumValue() {
+    return enumValue;
+  }
 
-    public void setEnumValue(String enumValue) {
-        this.enumValue = enumValue == null ? null : enumValue.trim();
-    }
+  public void setEnumValue(String enumValue) {
+    this.enumValue = enumValue == null ? null : enumValue.trim();
+  }
 }

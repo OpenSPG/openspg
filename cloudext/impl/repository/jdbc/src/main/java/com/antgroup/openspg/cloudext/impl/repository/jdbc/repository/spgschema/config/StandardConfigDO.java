@@ -14,12 +14,10 @@
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.config;
 
 import com.antgroup.openspg.common.model.base.BaseToString;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Setter
 @Getter
@@ -27,5 +25,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StandardConfigDO extends BaseToString {
 
-    private Long propertyStandardEntityId;
+  private Long propertyStandardEntityId;
 }

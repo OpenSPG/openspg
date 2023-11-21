@@ -15,22 +15,18 @@ package com.antgroup.openspg.core.spgschema.service.alter.sync;
 
 import com.antgroup.openspg.common.service.datasource.DataSourceService;
 import com.antgroup.openspg.core.spgschema.model.SPGSchemaAlterCmd;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * The abstract class of schema writer.
- */
+/** The abstract class of schema writer. */
 public abstract class BaseSchemaSyncer {
 
-    @Autowired
-    protected DataSourceService dataSourceService;
+  @Autowired protected DataSourceService dataSourceService;
 
-    /**
-     * sync new schema of project into db.
-     *
-     * @param projectId     the context of deploy pipeline
-     * @param schemaEditCmd sync cmd
-     */
-    public abstract void syncSchema(Long projectId, SPGSchemaAlterCmd schemaEditCmd);
+  /**
+   * sync new schema of project into db.
+   *
+   * @param projectId the context of deploy pipeline
+   * @param schemaEditCmd sync cmd
+   */
+  public abstract void syncSchema(Long projectId, SPGSchemaAlterCmd schemaEditCmd);
 }

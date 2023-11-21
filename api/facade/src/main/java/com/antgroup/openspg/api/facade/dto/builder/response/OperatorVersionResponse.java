@@ -15,28 +15,27 @@ package com.antgroup.openspg.api.facade.dto.builder.response;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-
 public class OperatorVersionResponse extends BaseRequest {
 
-    private String operatorName;
+  private String operatorName;
 
-    private Integer latestVersion;
+  private Integer latestVersion;
 
-    public String getOperatorName() {
-        return operatorName;
-    }
+  public String getOperatorName() {
+    return operatorName;
+  }
 
-    public OperatorVersionResponse setOperatorName(String operatorName) {
-        this.operatorName = operatorName;
-        return this;
-    }
+  public OperatorVersionResponse setOperatorName(String operatorName) {
+    this.operatorName = operatorName;
+    return this;
+  }
 
-    public Integer getLatestVersion() {
-        return latestVersion;
-    }
+  public Integer getLatestVersion() {
+    return latestVersion;
+  }
 
-    public OperatorVersionResponse setLatestVersion(Integer latestVersion) {
-        this.latestVersion = latestVersion;
-        return this;
-    }
+  public OperatorVersionResponse setLatestVersion(Integer latestVersion) {
+    this.latestVersion = latestVersion;
+    return this;
+  }
 }

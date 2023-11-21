@@ -16,113 +16,113 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 import java.util.Date;
 
 public class LogicRuleDO {
-    private Long id;
+  private Long id;
 
-    private Date gmtCreate;
+  private Date gmtCreate;
 
-    private Date gmtModified;
+  private Date gmtModified;
 
-    private String name;
+  private String name;
 
-    private Integer versionId;
+  private Integer versionId;
 
-    private String status;
+  private String status;
 
-    private String userNo;
+  private String userNo;
 
-    private Byte isMaster;
+  private Byte isMaster;
 
-    private String ruleId;
+  private String ruleId;
 
-    private String effectScope;
+  private String effectScope;
 
-    private String expression;
+  private String expression;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
+  public Date getGmtCreate() {
+    return gmtCreate;
+  }
 
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
+  public void setGmtCreate(Date gmtCreate) {
+    this.gmtCreate = gmtCreate;
+  }
 
-    public Date getGmtModified() {
-        return gmtModified;
-    }
+  public Date getGmtModified() {
+    return gmtModified;
+  }
 
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
+  public void setGmtModified(Date gmtModified) {
+    this.gmtModified = gmtModified;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+  public void setName(String name) {
+    this.name = name == null ? null : name.trim();
+  }
 
-    public Integer getVersionId() {
-        return versionId;
-    }
+  public Integer getVersionId() {
+    return versionId;
+  }
 
-    public void setVersionId(Integer versionId) {
-        this.versionId = versionId;
-    }
+  public void setVersionId(Integer versionId) {
+    this.versionId = versionId;
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public String getStatus() {
+    return status;
+  }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
+  public void setStatus(String status) {
+    this.status = status == null ? null : status.trim();
+  }
 
-    public String getUserNo() {
-        return userNo;
-    }
+  public String getUserNo() {
+    return userNo;
+  }
 
-    public void setUserNo(String userNo) {
-        this.userNo = userNo == null ? null : userNo.trim();
-    }
+  public void setUserNo(String userNo) {
+    this.userNo = userNo == null ? null : userNo.trim();
+  }
 
-    public Byte getIsMaster() {
-        return isMaster;
-    }
+  public Byte getIsMaster() {
+    return isMaster;
+  }
 
-    public void setIsMaster(Byte isMaster) {
-        this.isMaster = isMaster;
-    }
+  public void setIsMaster(Byte isMaster) {
+    this.isMaster = isMaster;
+  }
 
-    public String getRuleId() {
-        return ruleId;
-    }
+  public String getRuleId() {
+    return ruleId;
+  }
 
-    public void setRuleId(String ruleId) {
-        this.ruleId = ruleId == null ? null : ruleId.trim();
-    }
+  public void setRuleId(String ruleId) {
+    this.ruleId = ruleId == null ? null : ruleId.trim();
+  }
 
-    public String getEffectScope() {
-        return effectScope;
-    }
+  public String getEffectScope() {
+    return effectScope;
+  }
 
-    public void setEffectScope(String effectScope) {
-        this.effectScope = effectScope == null ? null : effectScope.trim();
-    }
+  public void setEffectScope(String effectScope) {
+    this.effectScope = effectScope == null ? null : effectScope.trim();
+  }
 
-    public String getExpression() {
-        return expression;
-    }
+  public String getExpression() {
+    return expression;
+  }
 
-    public void setExpression(String expression) {
-        this.expression = expression == null ? null : expression.trim();
-    }
+  public void setExpression(String expression) {
+    this.expression = expression == null ? null : expression.trim();
+  }
 }

@@ -19,18 +19,16 @@ import com.antgroup.openspg.api.facade.dto.builder.response.OperatorCreateRespon
 import com.antgroup.openspg.api.facade.dto.builder.response.OperatorVersionResponse;
 import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorOverview;
 import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorVersion;
-
 import java.io.InputStream;
 import java.util.List;
 
-
 public interface OperatorManager {
 
-    OperatorCreateResponse create(OperatorCreateRequest request);
+  OperatorCreateResponse create(OperatorCreateRequest request);
 
-    OperatorVersionResponse addVersion(OperatorVersionRequest request, InputStream file);
+  OperatorVersionResponse addVersion(OperatorVersionRequest request, InputStream file);
 
-    List<OperatorOverview> listOverview(String name);
+  List<OperatorOverview> listOverview(String name);
 
-    List<OperatorVersion> listVersion(String name);
+  List<OperatorVersion> listVersion(String name);
 }

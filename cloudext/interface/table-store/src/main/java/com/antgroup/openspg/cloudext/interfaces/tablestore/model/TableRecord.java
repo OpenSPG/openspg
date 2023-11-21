@@ -14,14 +14,12 @@
 package com.antgroup.openspg.cloudext.interfaces.tablestore.model;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 
 @Getter
 @AllArgsConstructor
 public class TableRecord extends BaseValObj {
 
-    private final Object[] values;
+  private final Object[] values;
 }

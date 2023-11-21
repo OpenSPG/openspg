@@ -13,57 +13,43 @@
 
 package com.antgroup.openspg.core.spgschema.model.constraint;
 
-/**
- * The enum class of constraint item.
- */
+/** The enum class of constraint item. */
 public enum ConstraintTypeEnum {
-    /**
-     * nullable value constraint.
-     */
-    NOT_NULL(1),
+  /** nullable value constraint. */
+  NOT_NULL(1),
 
-    /**
-     * multi value constraint.
-     */
-    MULTI_VALUE(2),
+  /** multi value constraint. */
+  MULTI_VALUE(2),
 
-    /**
-     * regular constraint.
-     */
-    REGULAR(3),
+  /** regular constraint. */
+  REGULAR(3),
 
-    /**
-     * enum values constraint.
-     */
-    ENUM(4),
+  /** enum values constraint. */
+  ENUM(4),
 
-    /**
-     * number values constraint
-     */
-    RANGE(5),
+  /** number values constraint */
+  RANGE(5),
 
-    /**
-     * unique value constraint.
-     */
-    UNIQUE(6),
-    ;
+  /** unique value constraint. */
+  UNIQUE(6),
+  ;
 
-    private final int priority;
+  private final int priority;
 
-    ConstraintTypeEnum(int priority) {
-        this.priority = priority;
+  ConstraintTypeEnum(int priority) {
+    this.priority = priority;
+  }
+
+  public static ConstraintTypeEnum toEnum(String value) {
+    for (ConstraintTypeEnum item : ConstraintTypeEnum.values()) {
+      if (item.name().equalsIgnoreCase(value)) {
+        return item;
+      }
     }
+    throw new IllegalArgumentException("unknown type: " + value);
+  }
 
-    public static ConstraintTypeEnum toEnum(String value) {
-        for (ConstraintTypeEnum item : ConstraintTypeEnum.values()) {
-            if (item.name().equalsIgnoreCase(value)) {
-                return item;
-            }
-        }
-        throw new IllegalArgumentException("unknown type: " + value);
-    }
-
-    public int getPriority() {
-        return priority;
-    }
+  public int getPriority() {
+    return priority;
+  }
 }

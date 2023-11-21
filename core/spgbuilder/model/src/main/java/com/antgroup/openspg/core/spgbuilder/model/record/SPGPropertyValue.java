@@ -15,109 +15,103 @@ package com.antgroup.openspg.core.spgbuilder.model.record;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.spgschema.model.identifier.ConceptIdentifier;
-
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
+import org.apache.commons.lang3.StringUtils;
 
 public class SPGPropertyValue extends BaseValObj {
 
-    private final static String SEPARATOR = ",";
+  private static final String SEPARATOR = ",";
 
-    /**
-     * The standardized id value, including the link refers to the target entity id or concept mount id
-     */
-    private String ids;
+  /**
+   * The standardized id value, including the link refers to the target entity id or concept mount
+   * id
+   */
+  private String ids;
 
-    /**
-     * raw attribute value
-     */
-    private String raw;
+  /** raw attribute value */
+  private String raw;
 
-    /**
-     * Standardized attribute value
-     */
-    private Object std;
+  /** Standardized attribute value */
+  private Object std;
 
-    public SPGPropertyValue(String raw) {
-        this.raw = raw;
+  public SPGPropertyValue(String raw) {
+    this.raw = raw;
+  }
+
+  public List<String> getSplitIds() {
+    if (StringUtils.isBlank(ids)) {
+      return Collections.emptyList();
     }
+    return Arrays.asList(ids.split(SEPARATOR));
+  }
 
-    public List<String> getSplitIds() {
-        if (StringUtils.isBlank(ids)) {
-            return Collections.emptyList();
-        }
-        return Arrays.asList(ids.split(SEPARATOR));
-    }
+  public String getIds() {
+    return ids;
+  }
 
-    public String getIds() {
-        return ids;
-    }
+  public SPGPropertyValue setIds(String ids) {
+    this.ids = ids;
+    return this;
+  }
 
-    public SPGPropertyValue setIds(String ids) {
-        this.ids = ids;
-        return this;
-    }
+  public String getRaw() {
+    return raw;
+  }
 
-    public String getRaw() {
-        return raw;
-    }
+  public Object getStd() {
+    return std;
+  }
 
-    public Object getStd() {
-        return std;
-    }
+  public SPGPropertyValue setStd(Object std) {
+    this.std = std;
+    return this;
+  }
 
-    public SPGPropertyValue setStd(Object std) {
-        this.std = std;
-        return this;
+  public void merge(SPGPropertyValue otherValue) {
+    if (raw == null) {
+      raw = otherValue.getRaw();
+    } else {
+      raw = raw + "," + otherValue.getRaw();
     }
+  }
 
-    public void merge(SPGPropertyValue otherValue) {
-        if (raw == null) {
-            raw = otherValue.getRaw();
-        } else {
-            raw = raw + "," + otherValue.getRaw();
-        }
-    }
+  public boolean contains(ConceptIdentifier conceptName) {
+    return raw.contains(conceptName.getId());
+  }
 
-    public boolean contains(ConceptIdentifier conceptName) {
-        return raw.contains(conceptName.getId());
-    }
+  public Object getStdOrRawValue() {
+    return getStd() == null ? getRaw() : getStd();
+  }
 
-    public Object getStdOrRawValue() {
-        return getStd() == null ? getRaw() : getStd();
-    }
+  @Override
+  public String toString() {
+    final StringBuffer sb = new StringBuffer("SPGPropertyValue{");
+    sb.append("ids='").append(ids).append('\'');
+    sb.append(", raw='").append(raw).append('\'');
+    sb.append(", std=").append(std);
+    sb.append('}');
+    return sb.toString();
+  }
 
-    @Override
-    public String toString() {
-        final StringBuffer sb = new StringBuffer("SPGPropertyValue{");
-        sb.append("ids='").append(ids).append('\'');
-        sb.append(", raw='").append(raw).append('\'');
-        sb.append(", std=").append(std);
-        sb.append('}');
-        return sb.toString();
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (!(o instanceof SPGPropertyValue)) {
+      return false;
+    }
+    SPGPropertyValue that = (SPGPropertyValue) o;
+    return Objects.equals(getIds(), that.getIds())
+        && Objects.equals(getRaw(), that.getRaw())
+        && Objects.equals(getStd(), that.getStd());
+  }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SPGPropertyValue)) {
-            return false;
-        }
-        SPGPropertyValue that = (SPGPropertyValue) o;
-        return Objects.equals(getIds(), that.getIds()) &&
-            Objects.equals(getRaw(), that.getRaw()) &&
-            Objects.equals(getStd(), that.getStd());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getIds(), getRaw(), getStd());
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(getIds(), getRaw(), getStd());
+  }
 }

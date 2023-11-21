@@ -16,59 +16,56 @@ package com.antgroup.openspg.core.spgschema.service.semantic;
 import com.antgroup.openspg.core.spgschema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.spgschema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.spgschema.service.semantic.model.DslCheckResult;
-
 import java.util.List;
 
-/**
- * Semantic rule domain service, provide save、update、query、delete method of rule.
- */
+/** Semantic rule domain service, provide save、update、query、delete method of rule. */
 public interface LogicalRuleService {
 
-    /**
-     * add a new rule.
-     *
-     * @param rule rule info
-     * @return rule info
-     */
-    int create(LogicalRule rule);
+  /**
+   * add a new rule.
+   *
+   * @param rule rule info
+   * @return rule info
+   */
+  int create(LogicalRule rule);
 
-    /**
-     * Update rule detail.
-     *
-     * @param logicalRule rule info
-     * @return record count
-     */
-    int update(LogicalRule logicalRule);
+  /**
+   * Update rule detail.
+   *
+   * @param logicalRule rule info
+   * @return record count
+   */
+  int update(LogicalRule logicalRule);
 
-    /**
-     * Delete the logic rule by rule code.
-     *
-     * @param logicalRule rule info
-     * @return record count
-     */
-    int delete(LogicalRule logicalRule);
+  /**
+   * Delete the logic rule by rule code.
+   *
+   * @param logicalRule rule info
+   * @return record count
+   */
+  int delete(LogicalRule logicalRule);
 
-    /**
-     * Batch delete logic rule by rule code.
-     *
-     * @param ruleCodes list of rule code
-     * @return record count
-     */
-    int deleteByRuleId(List<RuleCode> ruleCodes);
+  /**
+   * Batch delete logic rule by rule code.
+   *
+   * @param ruleCodes list of rule code
+   * @return record count
+   */
+  int deleteByRuleId(List<RuleCode> ruleCodes);
 
-    /**
-     * Batch query logic rule by rule code.
-     *
-     * @param ruleCodes list of rule code
-     * @return list of logic rule
-     */
-    List<LogicalRule> queryByRuleCode(List<RuleCode> ruleCodes);
+  /**
+   * Batch query logic rule by rule code.
+   *
+   * @param ruleCodes list of rule code
+   * @return list of logic rule
+   */
+  List<LogicalRule> queryByRuleCode(List<RuleCode> ruleCodes);
 
-    /**
-     * Check if the dsl has syntax error.
-     *
-     * @param dsl the dsl content
-     * @return check result
-     */
-    DslCheckResult checkDslSyntax(String dsl);
+  /**
+   * Check if the dsl has syntax error.
+   *
+   * @param dsl the dsl content
+   * @return check result
+   */
+  DslCheckResult checkDslSyntax(String dsl);
 }

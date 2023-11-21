@@ -15,17 +15,16 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.ope
 
 import lombok.Getter;
 
-
 @Getter
 public class SetTtlOperation extends BaseSchemaAtomicOperation {
 
-    private final String propertyName;
+  private final String propertyName;
 
-    private final long ttl;
+  private final long ttl;
 
-    public SetTtlOperation(String propertyName, long ttl) {
-        super(SchemaAtomicOperationEnum.SET_TTL);
-        this.propertyName = propertyName;
-        this.ttl = ttl;
-    }
+  public SetTtlOperation(String propertyName, long ttl) {
+    super(SchemaAtomicOperationEnum.SET_TTL);
+    this.propertyName = propertyName;
+    this.ttl = ttl;
+  }
 }

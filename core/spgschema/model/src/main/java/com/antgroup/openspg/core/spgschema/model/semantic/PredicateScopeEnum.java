@@ -13,32 +13,24 @@
 
 package com.antgroup.openspg.core.spgschema.model.semantic;
 
-/**
- * Enumeration of predicate scopes
- */
+/** Enumeration of predicate scopes */
 public enum PredicateScopeEnum {
 
-    /**
-     * Defined on the concept.
-     */
-    CONCEPT,
+  /** Defined on the concept. */
+  CONCEPT,
 
-    /**
-     * Defined on the property.
-     */
-    PROPERTY,
+  /** Defined on the property. */
+  PROPERTY,
 
-    /**
-     * Defined on the relation.
-     */
-    RELATION;
+  /** Defined on the relation. */
+  RELATION;
 
-    public static PredicateScopeEnum toEnum(String val) {
-        for (PredicateScopeEnum scopeEnum : PredicateScopeEnum.values()) {
-            if (scopeEnum.name().equalsIgnoreCase(val)) {
-                return scopeEnum;
-            }
-        }
-        throw new IllegalArgumentException("unknown type: " + val);
+  public static PredicateScopeEnum toEnum(String val) {
+    for (PredicateScopeEnum scopeEnum : PredicateScopeEnum.values()) {
+      if (scopeEnum.name().equalsIgnoreCase(val)) {
+        return scopeEnum;
+      }
     }
+    throw new IllegalArgumentException("unknown type: " + val);
+  }
 }

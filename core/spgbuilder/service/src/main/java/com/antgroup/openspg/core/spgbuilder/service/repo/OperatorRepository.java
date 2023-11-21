@@ -15,27 +15,24 @@ package com.antgroup.openspg.core.spgbuilder.service.repo;
 
 import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorOverview;
 import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorVersion;
-
-import javax.annotation.Nullable;
-
 import java.util.List;
-
+import javax.annotation.Nullable;
 
 public interface OperatorRepository {
 
-    OperatorOverview query(Long overviewId);
+  OperatorOverview query(Long overviewId);
 
-    List<OperatorOverview> query(@Nullable String name);
+  List<OperatorOverview> query(@Nullable String name);
 
-    List<OperatorOverview> batchQuery(List<String> names);
+  List<OperatorOverview> batchQuery(List<String> names);
 
-    List<OperatorVersion> batchQuery(Long overviewId, List<Integer> versions);
+  List<OperatorVersion> batchQuery(Long overviewId, List<Integer> versions);
 
-    int save(OperatorOverview operatorOverview);
+  int save(OperatorOverview operatorOverview);
 
-    List<OperatorVersion> list(String name);
+  List<OperatorVersion> list(String name);
 
-    List<OperatorVersion> list(Long overviewId);
+  List<OperatorVersion> list(Long overviewId);
 
-    int save(OperatorVersion operatorVersion);
+  int save(OperatorVersion operatorVersion);
 }

@@ -31,9 +31,7 @@ class LocalClusterModeEnum(str, Enum):
 
 
 class Reasoner:
-    """SPG Reasoner Client.
-
-    """
+    """SPG Reasoner Client."""
 
     def __init__(self):
         self._client = rest.ReasonerApi()

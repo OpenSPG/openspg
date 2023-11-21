@@ -15,15 +15,13 @@ package com.antgroup.openspg.common.service.project;
 
 import com.antgroup.openspg.api.facade.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.common.model.project.Project;
-
 import java.util.List;
-
 
 public interface ProjectRepository {
 
-    Long save(Project project);
+  Long save(Project project);
 
-    Project queryById(Long projectId);
+  Project queryById(Long projectId);
 
-    List<Project> query(ProjectQueryRequest request);
+  List<Project> query(ProjectQueryRequest request);
 }

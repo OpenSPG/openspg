@@ -15,40 +15,37 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.str
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
-
-import lombok.Getter;
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import lombok.Getter;
+import org.apache.commons.collections4.CollectionUtils;
 
 @Getter
 public class GraphLPGRecordStruct extends BaseLPGRecordStruct {
 
-    private final List<VertexRecord> vertices;
+  private final List<VertexRecord> vertices;
 
-    private final List<EdgeRecord> edges;
+  private final List<EdgeRecord> edges;
 
-    public GraphLPGRecordStruct() {
-        this(new ArrayList<>(), new ArrayList<>());
-    }
+  public GraphLPGRecordStruct() {
+    this(new ArrayList<>(), new ArrayList<>());
+  }
 
-    public GraphLPGRecordStruct(List<VertexRecord> vertices, List<EdgeRecord> edges) {
-        super(LPGRecordStructEnum.GRAPH);
-        this.edges = edges;
-        this.vertices = vertices;
-    }
+  public GraphLPGRecordStruct(List<VertexRecord> vertices, List<EdgeRecord> edges) {
+    super(LPGRecordStructEnum.GRAPH);
+    this.edges = edges;
+    this.vertices = vertices;
+  }
 
-    public void addVertexRecord(VertexRecord vertexRecord) {
-        vertices.add(vertexRecord);
-    }
+  public void addVertexRecord(VertexRecord vertexRecord) {
+    vertices.add(vertexRecord);
+  }
 
-    public void addEdgeRecord(EdgeRecord edgeRecord) {
-        edges.add(edgeRecord);
-    }
+  public void addEdgeRecord(EdgeRecord edgeRecord) {
+    edges.add(edgeRecord);
+  }
 
-    public boolean isEmpty() {
-        return CollectionUtils.isEmpty(vertices) && CollectionUtils.isEmpty(edges);
-    }
+  public boolean isEmpty() {
+    return CollectionUtils.isEmpty(vertices) && CollectionUtils.isEmpty(edges);
+  }
 }

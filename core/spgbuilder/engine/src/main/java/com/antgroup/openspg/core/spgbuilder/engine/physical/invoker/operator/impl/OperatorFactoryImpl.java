@@ -18,39 +18,37 @@ import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.operator.Ope
 import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.core.spgschema.model.type.OperatorKey;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 public class OperatorFactoryImpl implements OperatorFactory {
 
-    private final OperatorFactory pythonOperatorFactory = new PythonOperatorFactory();
+  private final OperatorFactory pythonOperatorFactory = new PythonOperatorFactory();
 
-    private final Map<OperatorKey, OperatorFactory> operators = new ConcurrentHashMap<>();
+  private final Map<OperatorKey, OperatorFactory> operators = new ConcurrentHashMap<>();
 
-    @Override
-    public void init(RuntimeContext context) {
-        pythonOperatorFactory.init(context);
+  @Override
+  public void init(RuntimeContext context) {
+    pythonOperatorFactory.init(context);
+  }
+
+  @Override
+  public void register(OperatorConfig config) {
+    OperatorKey operatorKey = config.toKey();
+    if (LangTypeEnum.PYTHON.equals(config.getLangType())) {
+      pythonOperatorFactory.register(config);
+      operators.put(operatorKey, pythonOperatorFactory);
+      return;
     }
+    throw new IllegalArgumentException("illegal langType=" + config.getLangType());
+  }
 
-    @Override
-    public void register(OperatorConfig config) {
-        OperatorKey operatorKey = config.toKey();
-        if (LangTypeEnum.PYTHON.equals(config.getLangType())) {
-            pythonOperatorFactory.register(config);
-            operators.put(operatorKey, pythonOperatorFactory);
-            return;
-        }
-        throw new IllegalArgumentException("illegal langType=" + config.getLangType());
+  @Override
+  public Object invoke(OperatorKey key, Object... input) {
+    OperatorFactory operatorFactory = operators.get(key);
+    if (operatorFactory == null) {
+      throw new IllegalArgumentException("illegal key=" + key);
     }
-
-    @Override
-    public Object invoke(OperatorKey key, Object... input) {
-        OperatorFactory operatorFactory = operators.get(key);
-        if (operatorFactory == null) {
-            throw new IllegalArgumentException("illegal key=" + key);
-        }
-        return operatorFactory.invoke(key, input);
-    }
+    return operatorFactory.invoke(key, input);
+  }
 }

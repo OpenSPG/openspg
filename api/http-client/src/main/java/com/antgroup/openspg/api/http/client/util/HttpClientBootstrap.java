@@ -14,22 +14,20 @@
 package com.antgroup.openspg.api.http.client.util;
 
 import com.antgroup.openspg.api.http.client.forest.GsonConvertor;
-
 import com.dtflys.forest.Forest;
 import com.dtflys.forest.config.ForestConfiguration;
 
-
 public class HttpClientBootstrap {
 
-    public static void init(ConnectionInfo connInfo) {
-        ForestConfiguration config = Forest.config();
-        config.setVariableValue(HttpClientConstants.SCHEME, connInfo.getScheme());
-        config.setVariableValue(HttpClientConstants.HOST, connInfo.getHost());
-        config.setVariableValue(HttpClientConstants.PORT, connInfo.getPort());
-        config.setConnectTimeout(connInfo.getConnectTimeout());
-        config.setReadTimeout(connInfo.getReadTimeout());
-        config.setJsonConverter(new GsonConvertor());
-        config.setLogEnabled(false);
-        config.setBackendName("httpclient");
-    }
+  public static void init(ConnectionInfo connInfo) {
+    ForestConfiguration config = Forest.config();
+    config.setVariableValue(HttpClientConstants.SCHEME, connInfo.getScheme());
+    config.setVariableValue(HttpClientConstants.HOST, connInfo.getHost());
+    config.setVariableValue(HttpClientConstants.PORT, connInfo.getPort());
+    config.setConnectTimeout(connInfo.getConnectTimeout());
+    config.setReadTimeout(connInfo.getReadTimeout());
+    config.setJsonConverter(new GsonConvertor());
+    config.setLogEnabled(false);
+    config.setBackendName("httpclient");
+  }
 }

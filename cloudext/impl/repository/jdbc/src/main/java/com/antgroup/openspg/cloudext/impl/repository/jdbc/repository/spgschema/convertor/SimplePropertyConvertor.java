@@ -33,128 +33,151 @@ import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.spgschema.model.type.MultiVersionConfig;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.spgschema.service.predicate.model.SimpleProperty;
-
 import java.util.Date;
-
 
 public class SimplePropertyConvertor {
 
-    public static OntologyPropertyDO toNewDO(SimpleProperty simpleProperty) {
-        OntologyPropertyDO propertyRangeDO = new OntologyPropertyDO();
-        propertyRangeDO.setGmtCreate(new Date());
-        propertyRangeDO.setGmtModified(new Date());
-        propertyRangeDO.setId(simpleProperty.getAlterId());
-        propertyRangeDO.setOriginalId(simpleProperty.getUniqueId());
-        BasicInfo<PredicateIdentifier> basicInfo = simpleProperty.getBasicInfo();
-        propertyRangeDO.setPropertyName(basicInfo.getName().getName());
-        propertyRangeDO.setPropertyNameZh(basicInfo.getNameZh());
-        propertyRangeDO.setPropertyDesc(basicInfo.getDesc());
-        propertyRangeDO.setPropertyDescZh(basicInfo.getDesc());
-        propertyRangeDO.setDomainId(simpleProperty.getSubjectTypeId().getAlterId());
-        propertyRangeDO.setOriginalDomainId(simpleProperty.getSubjectTypeId().getUniqueId());
-        propertyRangeDO.setRangeId(simpleProperty.getObjectTypeId().getAlterId());
-        propertyRangeDO.setOriginalRangeId(simpleProperty.getObjectTypeId().getUniqueId());
-        propertyRangeDO.setStatus(ValidStatusEnum.VALID.getCode());
+  public static OntologyPropertyDO toNewDO(SimpleProperty simpleProperty) {
+    OntologyPropertyDO propertyRangeDO = new OntologyPropertyDO();
+    propertyRangeDO.setGmtCreate(new Date());
+    propertyRangeDO.setGmtModified(new Date());
+    propertyRangeDO.setId(simpleProperty.getAlterId());
+    propertyRangeDO.setOriginalId(simpleProperty.getUniqueId());
+    BasicInfo<PredicateIdentifier> basicInfo = simpleProperty.getBasicInfo();
+    propertyRangeDO.setPropertyName(basicInfo.getName().getName());
+    propertyRangeDO.setPropertyNameZh(basicInfo.getNameZh());
+    propertyRangeDO.setPropertyDesc(basicInfo.getDesc());
+    propertyRangeDO.setPropertyDescZh(basicInfo.getDesc());
+    propertyRangeDO.setDomainId(simpleProperty.getSubjectTypeId().getAlterId());
+    propertyRangeDO.setOriginalDomainId(simpleProperty.getSubjectTypeId().getUniqueId());
+    propertyRangeDO.setRangeId(simpleProperty.getObjectTypeId().getAlterId());
+    propertyRangeDO.setOriginalRangeId(simpleProperty.getObjectTypeId().getUniqueId());
+    propertyRangeDO.setStatus(ValidStatusEnum.VALID.getCode());
 
-        SPGOntologyEnum type = simpleProperty.getOntologyType();
-        switch (type) {
-            case PROPERTY:
-                propertyRangeDO.setMapType(MapTypeEnum.TYPE.name());
-                propertyRangeDO.setPropertyCategory(PropertyCategoryEnum.BASIC.name());
-                break;
-            case RELATION:
-                propertyRangeDO.setMapType(MapTypeEnum.TYPE.name());
-                propertyRangeDO.setPropertyCategory(PropertyCategoryEnum.ADVANCED.name());
-                break;
-            default:
-                throw new IllegalArgumentException("illegal type=" + type);
-        }
-
-        propertyRangeDO.setConstraintId(simpleProperty.getConstraintId() == null
-            ? 0L : simpleProperty.getConstraintId());
-        propertyRangeDO.setVersion(SchemaConstants.DEFAULT_ONTOLOGY_VERSION);
-        propertyRangeDO.setProjectId(simpleProperty.getProjectId());
-        propertyRangeDO.setVersionStatus(AlterStatusEnum.ONLINE.name());
-        propertyRangeDO.setMaskType(simpleProperty.getEncryptTypeEnum() == null
-            ? EncryptTypeEnum.NONE.getType() : simpleProperty.getEncryptTypeEnum().getType());
-        propertyRangeDO.setMultiverConfig(simpleProperty.getMultiVersionConfig() == null
-            ? null : JSON.serialize(simpleProperty.getMultiVersionConfig()));
-        propertyRangeDO.setStorePropertyName(basicInfo.getName().getName());
-        propertyRangeDO.setPropertySource(null);
-        propertyRangeDO.setTransformerId(0L);
-        propertyRangeDO.setPropertyConfig(ExtConfigConvertor.getExtConfig(simpleProperty));
-        return propertyRangeDO;
+    SPGOntologyEnum type = simpleProperty.getOntologyType();
+    switch (type) {
+      case PROPERTY:
+        propertyRangeDO.setMapType(MapTypeEnum.TYPE.name());
+        propertyRangeDO.setPropertyCategory(PropertyCategoryEnum.BASIC.name());
+        break;
+      case RELATION:
+        propertyRangeDO.setMapType(MapTypeEnum.TYPE.name());
+        propertyRangeDO.setPropertyCategory(PropertyCategoryEnum.ADVANCED.name());
+        break;
+      default:
+        throw new IllegalArgumentException("illegal type=" + type);
     }
 
-    public static OntologyPropertyDO toUpdateDO(SimpleProperty simpleProperty) {
-        OntologyPropertyDO propertyRangeDO = new OntologyPropertyDO();
-        propertyRangeDO.setGmtModified(new Date());
-        propertyRangeDO.setId(simpleProperty.getAlterId());
-        BasicInfo<PredicateIdentifier> basicInfo = simpleProperty.getBasicInfo();
-        propertyRangeDO.setPropertyNameZh(basicInfo.getNameZh());
-        propertyRangeDO.setPropertyDesc(basicInfo.getDesc());
-        propertyRangeDO.setPropertyDescZh(basicInfo.getDesc());
+    propertyRangeDO.setConstraintId(
+        simpleProperty.getConstraintId() == null ? 0L : simpleProperty.getConstraintId());
+    propertyRangeDO.setVersion(SchemaConstants.DEFAULT_ONTOLOGY_VERSION);
+    propertyRangeDO.setProjectId(simpleProperty.getProjectId());
+    propertyRangeDO.setVersionStatus(AlterStatusEnum.ONLINE.name());
+    propertyRangeDO.setMaskType(
+        simpleProperty.getEncryptTypeEnum() == null
+            ? EncryptTypeEnum.NONE.getType()
+            : simpleProperty.getEncryptTypeEnum().getType());
+    propertyRangeDO.setMultiverConfig(
+        simpleProperty.getMultiVersionConfig() == null
+            ? null
+            : JSON.serialize(simpleProperty.getMultiVersionConfig()));
+    propertyRangeDO.setStorePropertyName(basicInfo.getName().getName());
+    propertyRangeDO.setPropertySource(null);
+    propertyRangeDO.setTransformerId(0L);
+    propertyRangeDO.setPropertyConfig(ExtConfigConvertor.getExtConfig(simpleProperty));
+    return propertyRangeDO;
+  }
 
-        propertyRangeDO.setConstraintId(simpleProperty.getConstraintId() == null
-            ? 0L : simpleProperty.getConstraintId());
-        propertyRangeDO.setVersion(SchemaConstants.DEFAULT_ONTOLOGY_VERSION);
-        propertyRangeDO.setVersionStatus(AlterStatusEnum.ONLINE.name());
-        propertyRangeDO.setMaskType(simpleProperty.getEncryptTypeEnum() == null
-            ? EncryptTypeEnum.NONE.getType() : simpleProperty.getEncryptTypeEnum().getType());
-        propertyRangeDO.setMultiverConfig(simpleProperty.getMultiVersionConfig() == null
-            ? null : JSON.serialize(simpleProperty.getMultiVersionConfig()));
-        propertyRangeDO.setPropertyConfig(ExtConfigConvertor.getExtConfig(simpleProperty));
-        return propertyRangeDO;
-    }
+  public static OntologyPropertyDO toUpdateDO(SimpleProperty simpleProperty) {
+    OntologyPropertyDO propertyRangeDO = new OntologyPropertyDO();
+    propertyRangeDO.setGmtModified(new Date());
+    propertyRangeDO.setId(simpleProperty.getAlterId());
+    BasicInfo<PredicateIdentifier> basicInfo = simpleProperty.getBasicInfo();
+    propertyRangeDO.setPropertyNameZh(basicInfo.getNameZh());
+    propertyRangeDO.setPropertyDesc(basicInfo.getDesc());
+    propertyRangeDO.setPropertyDescZh(basicInfo.getDesc());
 
-    public static SimpleProperty toSimplePredicate(OntologyPropertyDO propertyRangeDO) {
-        BasicInfo<PredicateIdentifier> basicInfo = new BasicInfo<>(
+    propertyRangeDO.setConstraintId(
+        simpleProperty.getConstraintId() == null ? 0L : simpleProperty.getConstraintId());
+    propertyRangeDO.setVersion(SchemaConstants.DEFAULT_ONTOLOGY_VERSION);
+    propertyRangeDO.setVersionStatus(AlterStatusEnum.ONLINE.name());
+    propertyRangeDO.setMaskType(
+        simpleProperty.getEncryptTypeEnum() == null
+            ? EncryptTypeEnum.NONE.getType()
+            : simpleProperty.getEncryptTypeEnum().getType());
+    propertyRangeDO.setMultiverConfig(
+        simpleProperty.getMultiVersionConfig() == null
+            ? null
+            : JSON.serialize(simpleProperty.getMultiVersionConfig()));
+    propertyRangeDO.setPropertyConfig(ExtConfigConvertor.getExtConfig(simpleProperty));
+    return propertyRangeDO;
+  }
+
+  public static SimpleProperty toSimplePredicate(OntologyPropertyDO propertyRangeDO) {
+    BasicInfo<PredicateIdentifier> basicInfo =
+        new BasicInfo<>(
             new PredicateIdentifier(propertyRangeDO.getPropertyName()),
-            propertyRangeDO.getPropertyNameZh(), propertyRangeDO.getPropertyDesc());
-        SchemaExtInfo schemaExtInfo = JSON.deserialize(
-            propertyRangeDO.getPropertyConfig(), SchemaExtInfo.class);
-        if (schemaExtInfo == null) {
-            schemaExtInfo = new SchemaExtInfo();
-        }
+            propertyRangeDO.getPropertyNameZh(),
+            propertyRangeDO.getPropertyDesc());
+    SchemaExtInfo schemaExtInfo =
+        JSON.deserialize(propertyRangeDO.getPropertyConfig(), SchemaExtInfo.class);
+    if (schemaExtInfo == null) {
+      schemaExtInfo = new SchemaExtInfo();
+    }
 
-        MultiVersionConfig multiVersionConfig = JSON.deserialize(
-            propertyRangeDO.getMultiverConfig(),
-            MultiVersionConfig.class);
-        MountedConceptConfig mountedConceptConfig = ExtConfigConvertor.get(
+    MultiVersionConfig multiVersionConfig =
+        JSON.deserialize(propertyRangeDO.getMultiverConfig(), MultiVersionConfig.class);
+    MountedConceptConfig mountedConceptConfig =
+        ExtConfigConvertor.get(
             schemaExtInfo, SchemaConstants.MOUNT_CONCEPT_CONFIG_KEY, MountedConceptConfig.class);
 
-        EncryptTypeEnum encryptTypeEnum = EncryptTypeEnum.toEnum(propertyRangeDO.getMaskType());
-        PropertyGroupEnum propertyGroup = schemaExtInfo.getString(SchemaConstants.PROPERTY_GROUP_KEY) == null
-            ? null : PropertyGroupEnum.toEnum(schemaExtInfo.getString(SchemaConstants.PROPERTY_GROUP_KEY));
-        Long constraintId = propertyRangeDO.getConstraintId() != null && propertyRangeDO.getConstraintId() > 0L
-            ? propertyRangeDO.getConstraintId() : null;
-        String ruleId = schemaExtInfo.getString(SchemaConstants.PROPERTY_RULE_CONFIG_KEY);
-        RuleCode ruleCode = StringUtils.isBlank(ruleId) ? null : new RuleCode(ruleId);
-        String valueType = schemaExtInfo.getString(SchemaConstants.VALUE_TYPE_KEY);
+    EncryptTypeEnum encryptTypeEnum = EncryptTypeEnum.toEnum(propertyRangeDO.getMaskType());
+    PropertyGroupEnum propertyGroup =
+        schemaExtInfo.getString(SchemaConstants.PROPERTY_GROUP_KEY) == null
+            ? null
+            : PropertyGroupEnum.toEnum(schemaExtInfo.getString(SchemaConstants.PROPERTY_GROUP_KEY));
+    Long constraintId =
+        propertyRangeDO.getConstraintId() != null && propertyRangeDO.getConstraintId() > 0L
+            ? propertyRangeDO.getConstraintId()
+            : null;
+    String ruleId = schemaExtInfo.getString(SchemaConstants.PROPERTY_RULE_CONFIG_KEY);
+    RuleCode ruleCode = StringUtils.isBlank(ruleId) ? null : new RuleCode(ruleId);
+    String valueType = schemaExtInfo.getString(SchemaConstants.VALUE_TYPE_KEY);
 
-        SPGOntologyEnum ontologyEnum = null;
-        MapTypeEnum mapTypeEnum = MapTypeEnum.getEnum(propertyRangeDO.getMapType());
-        PropertyCategoryEnum propertyCategoryEnum = PropertyCategoryEnum.getEnum(propertyRangeDO.getPropertyCategory());
-        if (MapTypeEnum.TYPE.equals(mapTypeEnum)
-            && PropertyCategoryEnum.BASIC.equals(propertyCategoryEnum)) {
-            ontologyEnum = SPGOntologyEnum.PROPERTY;
-        } else if (MapTypeEnum.TYPE.equals(mapTypeEnum)
-            && PropertyCategoryEnum.ADVANCED.equals(propertyCategoryEnum)) {
-            ontologyEnum = SPGOntologyEnum.RELATION;
-        }
-
-        OntologyId subjectTypeId = new OntologyId(
-            propertyRangeDO.getOriginalDomainId(), propertyRangeDO.getDomainId());
-        OntologyId objectTypeId = new OntologyId(
-            propertyRangeDO.getOriginalRangeId(), propertyRangeDO.getRangeId());
-
-        SimpleProperty simpleProperty = new SimpleProperty(basicInfo, subjectTypeId, objectTypeId,
-            StringUtils.isBlank(valueType) ? null : SPGTypeEnum.toEnum(valueType), multiVersionConfig,
-            mountedConceptConfig, encryptTypeEnum, propertyGroup, constraintId, ruleCode, ontologyEnum);
-        simpleProperty.setProjectId(propertyRangeDO.getProjectId());
-        simpleProperty.setOntologyId(new OntologyId(
-            propertyRangeDO.getOriginalId(), propertyRangeDO.getId()));
-        simpleProperty.setExtInfo(schemaExtInfo);
-        return simpleProperty;
+    SPGOntologyEnum ontologyEnum = null;
+    MapTypeEnum mapTypeEnum = MapTypeEnum.getEnum(propertyRangeDO.getMapType());
+    PropertyCategoryEnum propertyCategoryEnum =
+        PropertyCategoryEnum.getEnum(propertyRangeDO.getPropertyCategory());
+    if (MapTypeEnum.TYPE.equals(mapTypeEnum)
+        && PropertyCategoryEnum.BASIC.equals(propertyCategoryEnum)) {
+      ontologyEnum = SPGOntologyEnum.PROPERTY;
+    } else if (MapTypeEnum.TYPE.equals(mapTypeEnum)
+        && PropertyCategoryEnum.ADVANCED.equals(propertyCategoryEnum)) {
+      ontologyEnum = SPGOntologyEnum.RELATION;
     }
+
+    OntologyId subjectTypeId =
+        new OntologyId(propertyRangeDO.getOriginalDomainId(), propertyRangeDO.getDomainId());
+    OntologyId objectTypeId =
+        new OntologyId(propertyRangeDO.getOriginalRangeId(), propertyRangeDO.getRangeId());
+
+    SimpleProperty simpleProperty =
+        new SimpleProperty(
+            basicInfo,
+            subjectTypeId,
+            objectTypeId,
+            StringUtils.isBlank(valueType) ? null : SPGTypeEnum.toEnum(valueType),
+            multiVersionConfig,
+            mountedConceptConfig,
+            encryptTypeEnum,
+            propertyGroup,
+            constraintId,
+            ruleCode,
+            ontologyEnum);
+    simpleProperty.setProjectId(propertyRangeDO.getProjectId());
+    simpleProperty.setOntologyId(
+        new OntologyId(propertyRangeDO.getOriginalId(), propertyRangeDO.getId()));
+    simpleProperty.setExtInfo(schemaExtInfo);
+    return simpleProperty;
+  }
 }

@@ -24,30 +24,29 @@ import com.antgroup.openspg.core.spgschema.model.semantic.SystemPredicateEnum;
 import com.antgroup.openspg.core.spgschema.model.type.ConceptList;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
 
-
 public class ConceptServiceImpl implements ConceptService {
 
-    private final ConceptFacade conceptFacade = new HttpConceptFacade();
+  private final ConceptFacade conceptFacade = new HttpConceptFacade();
 
-    @Override
-    public ConceptList query(BaseSPGRecord spgRecord) {
-        if (!(spgRecord instanceof BaseAdvancedRecord)) {
-            return null;
-        }
-
-        BaseAdvancedRecord advancedRecord = (BaseAdvancedRecord) spgRecord;
-        Property belongToProperty = advancedRecord.getSpgType()
-            .getPredicateProperty(SystemPredicateEnum.BELONG_TO);
-        if (belongToProperty == null) {
-            return null;
-        }
-
-        SPGTypeRef objectTypeRef = belongToProperty.getObjectTypeRef();
-        if (!objectTypeRef.isConceptType()) {
-            throw new IllegalStateException();
-        }
-        return conceptFacade.queryConcept(
-            new ConceptRequest().setConceptTypeName(objectTypeRef.getName())
-        ).getDataThrowsIfNull(objectTypeRef.getName());
+  @Override
+  public ConceptList query(BaseSPGRecord spgRecord) {
+    if (!(spgRecord instanceof BaseAdvancedRecord)) {
+      return null;
     }
+
+    BaseAdvancedRecord advancedRecord = (BaseAdvancedRecord) spgRecord;
+    Property belongToProperty =
+        advancedRecord.getSpgType().getPredicateProperty(SystemPredicateEnum.BELONG_TO);
+    if (belongToProperty == null) {
+      return null;
+    }
+
+    SPGTypeRef objectTypeRef = belongToProperty.getObjectTypeRef();
+    if (!objectTypeRef.isConceptType()) {
+      throw new IllegalStateException();
+    }
+    return conceptFacade
+        .queryConcept(new ConceptRequest().setConceptTypeName(objectTypeRef.getName()))
+        .getDataThrowsIfNull(objectTypeRef.getName());
+  }
 }

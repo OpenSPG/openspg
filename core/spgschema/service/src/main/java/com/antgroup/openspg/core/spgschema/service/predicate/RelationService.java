@@ -14,43 +14,43 @@
 package com.antgroup.openspg.core.spgschema.service.predicate;
 
 import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
-
 import java.util.List;
 
 /**
- * The domain method of the relational model provides methods for adding, modifying, deleting, and querying relations.
+ * The domain method of the relational model provides methods for adding, modifying, deleting, and
+ * querying relations.
  */
 public interface RelationService {
 
-    /**
-     * Create a new relation.
-     *
-     * @param relation relation type detail.
-     * @return record count
-     */
-    int create(Relation relation);
+  /**
+   * Create a new relation.
+   *
+   * @param relation relation type detail.
+   * @return record count
+   */
+  int create(Relation relation);
 
-    /**
-     * Update relation type.
-     *
-     * @param relation relation type detail
-     * @return record count
-     */
-    int update(Relation relation);
+  /**
+   * Update relation type.
+   *
+   * @param relation relation type detail
+   * @return record count
+   */
+  int update(Relation relation);
 
-    /**
-     * Delete a relation type.
-     *
-     * @param relation relation type detail
-     * @return record count
-     */
-    int delete(Relation relation);
+  /**
+   * Delete a relation type.
+   *
+   * @param relation relation type detail
+   * @return record count
+   */
+  int delete(Relation relation);
 
-    /**
-     * Query relation type by spg type id.
-     *
-     * @param subjectIds list of spg type id
-     * @return list of relation type
-     */
-    List<Relation> queryBySubjectId(List<Long> subjectIds);
+  /**
+   * Query relation type by spg type id.
+   *
+   * @param subjectIds list of spg type id
+   * @return list of relation type
+   */
+  List<Relation> queryBySubjectId(List<Long> subjectIds);
 }

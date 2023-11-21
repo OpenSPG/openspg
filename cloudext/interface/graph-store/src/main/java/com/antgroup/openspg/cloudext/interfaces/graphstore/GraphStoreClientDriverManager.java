@@ -16,43 +16,37 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore;
 import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.antgroup.openspg.common.model.exception.CloudExtException;
 import com.antgroup.openspg.common.util.DriverManagerUtils;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GraphStoreClientDriverManager {
 
-    private final static CopyOnWriteArrayList<GraphStoreClientDriver>
-        registeredDrivers = new CopyOnWriteArrayList<>();
+  private static final CopyOnWriteArrayList<GraphStoreClientDriver> registeredDrivers =
+      new CopyOnWriteArrayList<>();
 
-    private GraphStoreClientDriverManager() {
+  private GraphStoreClientDriverManager() {}
 
+  static {
+    DriverManagerUtils.loadDrivers("cloudext.graphstore.drivers", GraphStoreClientDriver.class);
+    log.info("graph-store DriverManager initialized");
+  }
+
+  public static synchronized void registerDriver(GraphStoreClientDriver driver) {
+    if (driver != null) {
+      registeredDrivers.addIfAbsent(driver);
+    } else {
+      throw new NullPointerException();
     }
+    log.info("registerDriver: {}", driver);
+  }
 
-    static {
-        DriverManagerUtils.loadDrivers(
-            "cloudext.graphstore.drivers", GraphStoreClientDriver.class);
-        log.info("graph-store DriverManager initialized");
+  public static GraphStoreClient getClient(GraphStoreConnectionInfo config) {
+    for (GraphStoreClientDriver driver : registeredDrivers) {
+      if (driver.acceptsConfig(config)) {
+        return driver.connect(config);
+      }
     }
-
-    public static synchronized void registerDriver(GraphStoreClientDriver driver) {
-        if (driver != null) {
-            registeredDrivers.addIfAbsent(driver);
-        } else {
-            throw new NullPointerException();
-        }
-        log.info("registerDriver: {}", driver);
-    }
-
-    public static GraphStoreClient getClient(GraphStoreConnectionInfo config) {
-        for (GraphStoreClientDriver driver : registeredDrivers) {
-            if (driver.acceptsConfig(config)) {
-                return driver.connect(config);
-            }
-        }
-        throw CloudExtException.driverNotExist(config);
-    }
+    throw CloudExtException.driverNotExist(config);
+  }
 }

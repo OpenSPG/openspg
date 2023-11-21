@@ -13,88 +13,59 @@
 
 package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.model;
 
-
-/**
- * Tugraph property type enum.
- */
+/** Tugraph property type enum. */
 public enum DataTypeEnum {
-    /**
-     * Int(8-bit)
-     */
-    INT8("int8"),
+  /** Int(8-bit) */
+  INT8("int8"),
 
-    /**
-     * Int(16-bit)
-     */
-    INT16("int16"),
+  /** Int(16-bit) */
+  INT16("int16"),
 
-    /**
-     * Int(32-bit)
-     */
-    INT32("int32"),
+  /** Int(32-bit) */
+  INT32("int32"),
 
-    /**
-     * Int(64-bit)
-     */
-    INT64("int64"),
+  /** Int(64-bit) */
+  INT64("int64"),
 
-    /**
-     * Float
-     */
-    FLOAT("float"),
+  /** Float */
+  FLOAT("float"),
 
-    /**
-     * Double
-     */
-    DOUBLE("double"),
+  /** Double */
+  DOUBLE("double"),
 
-    /**
-     * String
-     */
-    STRING("string"),
+  /** String */
+  STRING("string"),
 
-    /**
-     * Date
-     */
-    DATE("date"),
+  /** Date */
+  DATE("date"),
 
-    /**
-     * Date time
-     */
-    DATETIME("datetime"),
+  /** Date time */
+  DATETIME("datetime"),
 
-    /**
-     * Binary
-     */
-    BINARY("binary"),
+  /** Binary */
+  BINARY("binary"),
 
-    /**
-     * Boolean
-     */
-    BOOL("bool");
+  /** Boolean */
+  BOOL("bool");
 
-    /**
-     * The lowercase form
-     */
-    private String lowercaseForm;
+  /** The lowercase form */
+  private String lowercaseForm;
 
-    DataTypeEnum(String lowercaseForm) {
-        this.lowercaseForm = lowercaseForm;
+  DataTypeEnum(String lowercaseForm) {
+    this.lowercaseForm = lowercaseForm;
+  }
+
+  /** Parse tugraph property type. */
+  public static DataTypeEnum parse(String type) {
+    for (DataTypeEnum dataTypeEnum : DataTypeEnum.values()) {
+      if (dataTypeEnum.name().equalsIgnoreCase(type)) {
+        return dataTypeEnum;
+      }
     }
+    throw new RuntimeException("Parse tugraph data type failed, unexpected type=" + type);
+  }
 
-    /**
-     * Parse tugraph property type.
-     */
-    public static DataTypeEnum parse(String type) {
-        for (DataTypeEnum dataTypeEnum : DataTypeEnum.values()) {
-            if (dataTypeEnum.name().equalsIgnoreCase(type)) {
-                return dataTypeEnum;
-            }
-        }
-        throw new RuntimeException("Parse tugraph data type failed, unexpected type=" + type);
-    }
-
-    public String getLowercaseForm() {
-        return lowercaseForm;
-    }
+  public String getLowercaseForm() {
+    return lowercaseForm;
+  }
 }

@@ -22,7 +22,7 @@ import com.antgroup.openspg.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.biz.spgreasoner.ReasonerManager;
 import com.antgroup.openspg.core.spgreasoner.model.service.BaseReasonerReceipt;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInst;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,57 +31,53 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/public/v1/reasoner")
 public class ReasonerController extends BaseController {
 
-    @Autowired
-    private ReasonerManager reasonerManager;
+  @Autowired private ReasonerManager reasonerManager;
 
-    @RequestMapping(value = "/runDsl", method = RequestMethod.POST)
-    public ResponseEntity<Object> runDsl(@RequestBody ReasonerDslRunRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<BaseReasonerReceipt>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/runDsl", method = RequestMethod.POST)
+  public ResponseEntity<Object> runDsl(@RequestBody ReasonerDslRunRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<BaseReasonerReceipt>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public BaseReasonerReceipt action() {
-                return reasonerManager.runDsl(request);
-            }
+          @Override
+          public BaseReasonerReceipt action() {
+            return reasonerManager.runDsl(request);
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/submitJobInfo", method = RequestMethod.POST)
-    public ResponseEntity<Object> submitJobInfo(@RequestBody ReasonerJobSubmitRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<BaseReasonerReceipt>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/submitJobInfo", method = RequestMethod.POST)
+  public ResponseEntity<Object> submitJobInfo(@RequestBody ReasonerJobSubmitRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<BaseReasonerReceipt>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public BaseReasonerReceipt action() {
-                return reasonerManager.submitJob(request);
-            }
+          @Override
+          public BaseReasonerReceipt action() {
+            return reasonerManager.submitJob(request);
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/queryJobInst", method = RequestMethod.GET)
-    public ResponseEntity<Object> queryJobInst(
-        @RequestParam(required = false) Long jobInstId) {
-        return HttpBizTemplate.execute(new HttpBizCallback<List<ReasonerJobInst>>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/queryJobInst", method = RequestMethod.GET)
+  public ResponseEntity<Object> queryJobInst(@RequestParam(required = false) Long jobInstId) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<List<ReasonerJobInst>>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public List<ReasonerJobInst> action() {
-                ReasonerJobInstQuery query = new ReasonerJobInstQuery();
-                query.setReasonerJobInstId(jobInstId);
-                return reasonerManager.queryJobInst(query);
-            }
+          @Override
+          public List<ReasonerJobInst> action() {
+            ReasonerJobInstQuery query = new ReasonerJobInstQuery();
+            query.setReasonerJobInstId(jobInstId);
+            return reasonerManager.queryJobInst(query);
+          }
         });
-    }
+  }
 }

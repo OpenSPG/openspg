@@ -13,40 +13,38 @@
 
 package com.antgroup.openspg.common.service.spring;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 @Component
 public class SpringContextHolder implements ApplicationContextAware {
 
-    private static ApplicationContext applicationContext;
+  private static ApplicationContext applicationContext;
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        synchronized (this) {
-            if (SpringContextHolder.applicationContext == null) {
-                SpringContextHolder.applicationContext = applicationContext;
-            }
-        }
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    synchronized (this) {
+      if (SpringContextHolder.applicationContext == null) {
+        SpringContextHolder.applicationContext = applicationContext;
+      }
     }
+  }
 
-    public static <T> T getBean(Class<T> clazz) {
-        if (applicationContext != null) {
-            return applicationContext.getBean(clazz);
-        }
-        return null;
+  public static <T> T getBean(Class<T> clazz) {
+    if (applicationContext != null) {
+      return applicationContext.getBean(clazz);
     }
+    return null;
+  }
 
-    public static <T> List<T> getBeans(Class<T> clazz) {
-        if (applicationContext != null) {
-            return new ArrayList<>(applicationContext.getBeansOfType(clazz).values());
-        }
-        return null;
+  public static <T> List<T> getBeans(Class<T> clazz) {
+    if (applicationContext != null) {
+      return new ArrayList<>(applicationContext.getBeansOfType(clazz).values());
     }
+    return null;
+  }
 }

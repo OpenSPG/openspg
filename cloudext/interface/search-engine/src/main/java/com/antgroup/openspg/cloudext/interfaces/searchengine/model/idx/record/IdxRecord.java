@@ -14,24 +14,20 @@
 package com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Map;
-
 
 @Getter
 @AllArgsConstructor
 public class IdxRecord extends BaseValObj {
 
-    @Setter
-    private String idxName;
+  @Setter private String idxName;
 
-    private final String docId;
+  private final String docId;
 
-    private final double score;
+  private final double score;
 
-    private final Map<String, Object> fields;
+  private final Map<String, Object> fields;
 }

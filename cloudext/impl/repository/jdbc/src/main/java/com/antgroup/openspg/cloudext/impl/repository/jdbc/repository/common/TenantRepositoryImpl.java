@@ -21,35 +21,31 @@ import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.common.conv
 import com.antgroup.openspg.common.model.tenant.Tenant;
 import com.antgroup.openspg.common.service.tenant.TenantRepository;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-
 
 @Repository
 public class TenantRepositoryImpl implements TenantRepository {
 
-    @Autowired
-    private TenantDOMapper tenantDOMapper;
+  @Autowired private TenantDOMapper tenantDOMapper;
 
-    @Override
-    public int save(Tenant tenant) {
-        TenantDO tenantDO = TenantConvertor.toDO(tenant);
-        return tenantDOMapper.insert(tenantDO);
+  @Override
+  public int save(Tenant tenant) {
+    TenantDO tenantDO = TenantConvertor.toDO(tenant);
+    return tenantDOMapper.insert(tenantDO);
+  }
+
+  @Override
+  public List<Tenant> query(TenantQueryRequest request) {
+    TenantDOExample example = new TenantDOExample();
+
+    TenantDOExample.Criteria criteria = example.createCriteria();
+    if (request.getTenantId() != null) {
+      criteria.andIdEqualTo(request.getTenantId());
     }
 
-    @Override
-    public List<Tenant> query(TenantQueryRequest request) {
-        TenantDOExample example = new TenantDOExample();
-
-        TenantDOExample.Criteria criteria = example.createCriteria();
-        if (request.getTenantId() != null) {
-            criteria.andIdEqualTo(request.getTenantId());
-        }
-
-        List<TenantDO> tenantDOS = tenantDOMapper.selectByExample(example);
-        return CollectionsUtils.listMap(tenantDOS, TenantConvertor::toModel);
-    }
+    List<TenantDO> tenantDOS = tenantDOMapper.selectByExample(example);
+    return CollectionsUtils.listMap(tenantDOS, TenantConvertor::toModel);
+  }
 }

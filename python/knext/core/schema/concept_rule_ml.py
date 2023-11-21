@@ -82,7 +82,7 @@ class SPGConceptRuleMarkLang:
             if len(strip_rule) > 2:
                 if strip_rule.endswith("]]"):
                     self.rule_quote_open = False
-                    self.rule_text = strip_rule[2: len(strip_rule) - 2].lstrip()
+                    self.rule_text = strip_rule[2 : len(strip_rule) - 2].lstrip()
                 else:
                     self.rule_text = strip_rule[2].lstrip()
             else:

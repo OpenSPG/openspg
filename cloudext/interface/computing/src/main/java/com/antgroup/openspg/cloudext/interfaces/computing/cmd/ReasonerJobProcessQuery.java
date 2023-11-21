@@ -14,14 +14,12 @@
 package com.antgroup.openspg.cloudext.interfaces.computing.cmd;
 
 import com.antgroup.openspg.common.model.base.BaseQuery;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 
 @Getter
 @AllArgsConstructor
 public class ReasonerJobProcessQuery extends BaseQuery {
 
-    private final String computingJobInstId;
+  private final String computingJobInstId;
 }

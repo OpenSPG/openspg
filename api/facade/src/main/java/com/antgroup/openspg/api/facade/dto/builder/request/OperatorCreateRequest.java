@@ -16,36 +16,35 @@ package com.antgroup.openspg.api.facade.dto.builder.request;
 import com.antgroup.openspg.common.model.base.BaseRequest;
 import com.antgroup.openspg.core.spgschema.model.type.OperatorTypeEnum;
 
-
 public class OperatorCreateRequest extends BaseRequest {
 
-    private String name;
+  private String name;
 
-    private String desc;
+  private String desc;
 
-    private OperatorTypeEnum operatorType;
+  private OperatorTypeEnum operatorType;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getDesc() {
-        return desc;
-    }
+  public String getDesc() {
+    return desc;
+  }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+  public void setDesc(String desc) {
+    this.desc = desc;
+  }
 
-    public OperatorTypeEnum getOperatorType() {
-        return operatorType;
-    }
+  public OperatorTypeEnum getOperatorType() {
+    return operatorType;
+  }
 
-    public void setOperatorType(OperatorTypeEnum operatorType) {
-        this.operatorType = operatorType;
-    }
+  public void setOperatorType(OperatorTypeEnum operatorType) {
+    this.operatorType = operatorType;
+  }
 }

@@ -15,53 +15,50 @@ package com.antgroup.openspg.core.spgschema.service.semantic.repository;
 
 import com.antgroup.openspg.core.spgschema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.spgschema.model.semantic.RuleStatusEnum;
-
 import java.util.List;
 
-/**
- * The read-write interface for logic rule, provides save、update、delete and query method.
- */
+/** The read-write interface for logic rule, provides save、update、delete and query method. */
 public interface LogicalRuleRepository {
 
-    /**
-     * Save a logic rule to db.
-     *
-     * @param logicalRule logic rule object
-     * @return record count
-     */
-    int save(LogicalRule logicalRule);
+  /**
+   * Save a logic rule to db.
+   *
+   * @param logicalRule logic rule object
+   * @return record count
+   */
+  int save(LogicalRule logicalRule);
 
-    /**
-     * Update logic rule content.
-     *
-     * @param logicalRule logic rule object
-     * @return record count
-     */
-    int update(LogicalRule logicalRule);
+  /**
+   * Update logic rule content.
+   *
+   * @param logicalRule logic rule object
+   * @return record count
+   */
+  int update(LogicalRule logicalRule);
 
-    /**
-     * Delete logic rule by rule code.
-     *
-     * @param ruleCode rule code
-     * @return record count
-     */
-    int delete(String ruleCode);
+  /**
+   * Delete logic rule by rule code.
+   *
+   * @param ruleCode rule code
+   * @return record count
+   */
+  int delete(String ruleCode);
 
-    /**
-     * Batch delete rules by code and status.
-     *
-     * @param ruleCodes list of rule code
-     * @param status    rule status
-     * @return record count
-     */
-    int delete(List<String> ruleCodes, RuleStatusEnum status);
+  /**
+   * Batch delete rules by code and status.
+   *
+   * @param ruleCodes list of rule code
+   * @param status rule status
+   * @return record count
+   */
+  int delete(List<String> ruleCodes, RuleStatusEnum status);
 
-    /**
-     * Query logic rule by rule code.
-     *
-     * @param ruleCodes list of rule code
-     * @param isMaster  if only query master rule
-     * @return list of logic rule
-     */
-    List<LogicalRule> query(List<String> ruleCodes, Boolean isMaster);
+  /**
+   * Query logic rule by rule code.
+   *
+   * @param ruleCodes list of rule code
+   * @param isMaster if only query master rule
+   * @return list of logic rule
+   */
+  List<LogicalRule> query(List<String> ruleCodes, Boolean isMaster);
 }

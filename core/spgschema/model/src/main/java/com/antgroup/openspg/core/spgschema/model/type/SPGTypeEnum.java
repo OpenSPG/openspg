@@ -13,43 +13,31 @@
 
 package com.antgroup.openspg.core.spgschema.model.type;
 
-/**
- * Type category in SPG framework.
- */
+/** Type category in SPG framework. */
 public enum SPGTypeEnum {
 
-    /**
-     * @see BasicType
-     */
-    BASIC_TYPE,
+  /** @see BasicType */
+  BASIC_TYPE,
 
-    /**
-     * @see EntityType
-     */
-    ENTITY_TYPE,
+  /** @see EntityType */
+  ENTITY_TYPE,
 
-    /**
-     * @see ConceptType
-     */
-    CONCEPT_TYPE,
+  /** @see ConceptType */
+  CONCEPT_TYPE,
 
-    /**
-     * @see EventType
-     */
-    EVENT_TYPE,
+  /** @see EventType */
+  EVENT_TYPE,
 
-    /**
-     * @see StandardType
-     */
-    STANDARD_TYPE,
-    ;
+  /** @see StandardType */
+  STANDARD_TYPE,
+  ;
 
-    public static SPGTypeEnum toEnum(String spgType) {
-        for (SPGTypeEnum spgTypeEnum : SPGTypeEnum.values()) {
-            if (spgTypeEnum.name().equalsIgnoreCase(spgType)) {
-                return spgTypeEnum;
-            }
-        }
-        throw new IllegalArgumentException("illegal type=" + spgType);
+  public static SPGTypeEnum toEnum(String spgType) {
+    for (SPGTypeEnum spgTypeEnum : SPGTypeEnum.values()) {
+      if (spgTypeEnum.name().equalsIgnoreCase(spgType)) {
+        return spgTypeEnum;
+      }
     }
+    throw new IllegalArgumentException("illegal type=" + spgType);
+  }
 }

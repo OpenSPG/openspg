@@ -15,17 +15,15 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine.adapter.schema;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchemaAlterItem;
 import com.antgroup.openspg.core.spgschema.model.SPGSchema;
-
 import java.util.List;
-
 
 public interface SPGSchema2IdxService {
 
-    /**
-     * This method is used to generate {@link IdxSchemaAlterItem} by {@link SPGSchema}
-     *
-     * @param spgSchema the {@link SPGSchema}
-     * @return a list of {@link IdxSchemaAlterItem IdxSchemaAlterItem}
-     */
-    List<IdxSchemaAlterItem> generate(SPGSchema spgSchema);
+  /**
+   * This method is used to generate {@link IdxSchemaAlterItem} by {@link SPGSchema}
+   *
+   * @param spgSchema the {@link SPGSchema}
+   * @return a list of {@link IdxSchemaAlterItem IdxSchemaAlterItem}
+   */
+  List<IdxSchemaAlterItem> generate(SPGSchema spgSchema);
 }

@@ -13,6 +13,10 @@
 
 package com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.client;
 
+import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.HOST_VAR;
+import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.PORT_VAR;
+import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.SCHEME_VAR;
+
 import com.dtflys.forest.annotation.Address;
 import com.dtflys.forest.annotation.Delete;
 import com.dtflys.forest.annotation.Get;
@@ -20,37 +24,27 @@ import com.dtflys.forest.annotation.JSONBody;
 import com.dtflys.forest.annotation.Post;
 import com.dtflys.forest.annotation.Var;
 import com.dtflys.forest.http.ForestResponse;
-
 import java.util.Map;
 import java.util.Set;
-
-import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.HOST_VAR;
-import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.PORT_VAR;
-import static com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchConstants.SCHEME_VAR;
-
 
 @Address(scheme = SCHEME_VAR, host = HOST_VAR, port = PORT_VAR)
 public interface ElasticSearchRecordClient {
 
-    @Post(value = "/{idxName}/_doc/{docId}")
-    ForestResponse<String> upsert(
-        @Var("idxName") String idxName, @Var("docId") String docId,
-        @JSONBody Map<String, Object> fields
-    );
+  @Post(value = "/{idxName}/_doc/{docId}")
+  ForestResponse<String> upsert(
+      @Var("idxName") String idxName,
+      @Var("docId") String docId,
+      @JSONBody Map<String, Object> fields);
 
-    @Delete(value = "/{idxName}/_doc/{docId}")
-    ForestResponse<String> delete(
-        @Var("idxName") String idxName, @Var("docId") String docId
-    );
+  @Delete(value = "/{idxName}/_doc/{docId}")
+  ForestResponse<String> delete(@Var("idxName") String idxName, @Var("docId") String docId);
 
-    // 由于okhttp的backend对于get请求会丢弃body，这里换成httpclient
-    @Get(value = "/{idxName}/_mget")
-    ForestResponse<String> mGet(
-        @Var("idxName") String idxName, @JSONBody(name = "ids") Set<String> docIds
-    );
+  // 由于okhttp的backend对于get请求会丢弃body，这里换成httpclient
+  @Get(value = "/{idxName}/_mget")
+  ForestResponse<String> mGet(
+      @Var("idxName") String idxName, @JSONBody(name = "ids") Set<String> docIds);
 
-    @Get(value = "/{idxName}/_search")
-    ForestResponse<String> search(
-        @Var("idxName") String idxName, @JSONBody(name = "query") Object query
-    );
+  @Get(value = "/{idxName}/_search")
+  ForestResponse<String> search(
+      @Var("idxName") String idxName, @JSONBody(name = "query") Object query);
 }

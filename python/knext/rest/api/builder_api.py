@@ -28,10 +28,7 @@ import re  # noqa: F401
 import six
 
 from knext.rest.api_client import ApiClient
-from knext.rest.exceptions import (  # noqa: F401
-    ApiTypeError,
-    ApiValueError
-)
+from knext.rest.exceptions import ApiTypeError, ApiValueError  # noqa: F401
 
 
 class BuilderApi(object):
@@ -67,7 +64,7 @@ class BuilderApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.builder_query_job_inst_get_with_http_info(**kwargs)  # noqa: E501
 
     def builder_query_job_inst_get_with_http_info(self, **kwargs):  # noqa: E501
@@ -96,34 +93,37 @@ class BuilderApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'job_inst_id'
-        ]
+        all_params = ["job_inst_id"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method builder_query_job_inst_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'job_inst_id' in local_var_params and local_var_params['job_inst_id'] is not None:  # noqa: E501
-            query_params.append(('jobInstId', local_var_params['job_inst_id']))  # noqa: E501
+        if (
+            "job_inst_id" in local_var_params
+            and local_var_params["job_inst_id"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("jobInstId", local_var_params["job_inst_id"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -132,27 +132,32 @@ class BuilderApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/builder/queryJobInst', 'GET',
+            "/builder/queryJobInst",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[BuilderJobInst]',  # noqa: E501
+            response_type="list[BuilderJobInst]",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def builder_submit_job_info_post(self, **kwargs):  # noqa: E501
         """submit_job_info  # noqa: E501
@@ -175,7 +180,7 @@ class BuilderApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.builder_submit_job_info_post_with_http_info(**kwargs)  # noqa: E501
 
     def builder_submit_job_info_post_with_http_info(self, **kwargs):  # noqa: E501
@@ -204,26 +209,24 @@ class BuilderApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'builder_job_submit_request'
-        ]
+        all_params = ["builder_job_submit_request"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method builder_submit_job_info_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -237,34 +240,42 @@ class BuilderApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'builder_job_submit_request' in local_var_params:
-            body_params = local_var_params['builder_job_submit_request']
+        if "builder_job_submit_request" in local_var_params:
+            body_params = local_var_params["builder_job_submit_request"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/builder/submitJobInfo', 'POST',
+            "/builder/submitJobInfo",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='JobBuilderReceipt',  # noqa: E501
+            response_type="JobBuilderReceipt",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def search_engine_index_get(self, **kwargs):  # noqa: E501
         """search_engine  # noqa: E501
@@ -288,7 +299,7 @@ class BuilderApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.search_engine_index_get_with_http_info(**kwargs)  # noqa: E501
 
     def search_engine_index_get_with_http_info(self, **kwargs):  # noqa: E501
@@ -318,35 +329,34 @@ class BuilderApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'spg_type',
-            'search_engine_index_response'
-        ]
+        all_params = ["spg_type", "search_engine_index_response"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method search_engine_index_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'spg_type' in local_var_params and local_var_params['spg_type'] is not None:  # noqa: E501
-            query_params.append(('spgType', local_var_params['spg_type']))  # noqa: E501
+        if (
+            "spg_type" in local_var_params and local_var_params["spg_type"] is not None
+        ):  # noqa: E501
+            query_params.append(("spgType", local_var_params["spg_type"]))  # noqa: E501
 
         header_params = {}
 
@@ -354,31 +364,39 @@ class BuilderApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'search_engine_index_response' in local_var_params:
-            body_params = local_var_params['search_engine_index_response']
+        if "search_engine_index_response" in local_var_params:
+            body_params = local_var_params["search_engine_index_response"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/searchEngine/index', 'GET',
+            "/searchEngine/index",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='SearchEngineIndexResponse',  # noqa: E501
+            response_type="SearchEngineIndexResponse",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )

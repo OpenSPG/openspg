@@ -13,38 +13,36 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation;
 
-import lombok.Getter;
-
 import java.util.List;
-
+import lombok.Getter;
 
 @Getter
 public abstract class BaseLPGSchemaOperation {
 
-    private long gmtTimestamp = System.currentTimeMillis();
+  private long gmtTimestamp = System.currentTimeMillis();
 
-    private String operator;
+  private String operator;
 
-    protected final VertexEdgeTypeOperationEnum operationTypeEnum;
+  protected final VertexEdgeTypeOperationEnum operationTypeEnum;
 
-    protected final List<BaseSchemaAtomicOperation> atomicOperations;
+  protected final List<BaseSchemaAtomicOperation> atomicOperations;
 
-    protected BaseLPGSchemaOperation(
-        VertexEdgeTypeOperationEnum operationTypeEnum,
-        List<BaseSchemaAtomicOperation> atomicOperations) {
-        this.operationTypeEnum = operationTypeEnum;
-        this.atomicOperations = atomicOperations;
-    }
+  protected BaseLPGSchemaOperation(
+      VertexEdgeTypeOperationEnum operationTypeEnum,
+      List<BaseSchemaAtomicOperation> atomicOperations) {
+    this.operationTypeEnum = operationTypeEnum;
+    this.atomicOperations = atomicOperations;
+  }
 
-    public abstract void checkSchemaAtomicOperations();
+  public abstract void checkSchemaAtomicOperations();
 
-    public abstract String getTargetTypeName();
+  public abstract String getTargetTypeName();
 
-    public void setGmtTimestamp(long gmtTimestamp) {
-        this.gmtTimestamp = gmtTimestamp;
-    }
+  public void setGmtTimestamp(long gmtTimestamp) {
+    this.gmtTimestamp = gmtTimestamp;
+  }
 
-    public void setOperator(String operator) {
-        this.operator = operator;
-    }
+  public void setOperator(String operator) {
+    this.operator = operator;
+  }
 }

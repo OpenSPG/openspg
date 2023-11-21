@@ -15,24 +15,22 @@ package com.antgroup.openspg.core.spgbuilder.model.service;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
 
-
 public class BuilderProgress extends BaseValObj {
 
-    private final long processedCnt;
+  private final long processedCnt;
 
-    private final long errorCnt;
+  private final long errorCnt;
 
-    public BuilderProgress(
-        long processedCnt, long errorCnt) {
-        this.processedCnt = processedCnt;
-        this.errorCnt = errorCnt;
-    }
+  public BuilderProgress(long processedCnt, long errorCnt) {
+    this.processedCnt = processedCnt;
+    this.errorCnt = errorCnt;
+  }
 
-    public long getProcessedCnt() {
-        return processedCnt;
-    }
+  public long getProcessedCnt() {
+    return processedCnt;
+  }
 
-    public long getErrorCnt() {
-        return errorCnt;
-    }
+  public long getErrorCnt() {
+    return errorCnt;
+  }
 }

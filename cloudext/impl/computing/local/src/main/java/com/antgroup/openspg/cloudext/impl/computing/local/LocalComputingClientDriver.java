@@ -19,22 +19,21 @@ import com.antgroup.openspg.cloudext.interfaces.computing.ComputingClientDriverM
 import com.antgroup.openspg.common.model.datasource.connection.ComputingConnectionInfo;
 import com.antgroup.openspg.common.util.cloudext.CachedCloudExtClientDriver;
 
-
 public class LocalComputingClientDriver
     extends CachedCloudExtClientDriver<ComputingClient, ComputingConnectionInfo>
     implements ComputingClientDriver {
 
-    static {
-        ComputingClientDriverManager.registerDriver(new LocalComputingClientDriver());
-    }
+  static {
+    ComputingClientDriverManager.registerDriver(new LocalComputingClientDriver());
+  }
 
-    @Override
-    public String driverScheme() {
-        return "local";
-    }
+  @Override
+  public String driverScheme() {
+    return "local";
+  }
 
-    @Override
-    protected ComputingClient innerConnect(ComputingConnectionInfo connInfo) {
-        return new LocalComputingClient(connInfo);
-    }
+  @Override
+  protected ComputingClient innerConnect(ComputingConnectionInfo connInfo) {
+    return new LocalComputingClient(connInfo);
+  }
 }

@@ -18,17 +18,17 @@ import java.util.Date;
 
 public class DateTimeUtils {
 
-    public static final String YYYY_MM_DD1 = "yyyyMMdd";
-    public final static String YYYY_MM_DD2 = "yyyy-MM-dd";
+  public static final String YYYY_MM_DD1 = "yyyyMMdd";
+  public static final String YYYY_MM_DD2 = "yyyy-MM-dd";
 
-    public static final String YYYY_MM_DD_HH_MM1 = "yyyyMMddHHmm";
-    public final static String YYYY_MM_DD_HH_MM2 = "yyyy-MM-dd HH:mm";
+  public static final String YYYY_MM_DD_HH_MM1 = "yyyyMMddHHmm";
+  public static final String YYYY_MM_DD_HH_MM2 = "yyyy-MM-dd HH:mm";
 
-    public final static String YYYY_MM_DD_HH_MM_SS1 = "yyyy-MM-dd HH:mm:ss";
-    public final static String YYYY_MM_DD_HH_MM_SS2 = "yyyyMMddHHmmss";
+  public static final String YYYY_MM_DD_HH_MM_SS1 = "yyyy-MM-dd HH:mm:ss";
+  public static final String YYYY_MM_DD_HH_MM_SS2 = "yyyyMMddHHmmss";
 
-    public static String bizDateByNow() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(YYYY_MM_DD1);
-        return simpleDateFormat.format(new Date());
-    }
+  public static String bizDateByNow() {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(YYYY_MM_DD1);
+    return simpleDateFormat.format(new Date());
+  }
 }

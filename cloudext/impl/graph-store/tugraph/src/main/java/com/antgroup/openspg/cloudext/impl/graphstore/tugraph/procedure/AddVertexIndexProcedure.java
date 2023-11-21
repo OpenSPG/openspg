@@ -15,33 +15,32 @@ package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.procedure;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.CreateIndexOperation;
 
-
 public class AddVertexIndexProcedure extends BaseTuGraphProcedure {
 
-    /**
-     * The template of cypher
-     */
-    public static final String ADD_VERTEX_INDEX_CYPHER_TEMPLATE
-        = "CALL db.addIndex('${labelName}', '${fieldName}', ${isUnique})";
+  /** The template of cypher */
+  public static final String ADD_VERTEX_INDEX_CYPHER_TEMPLATE =
+      "CALL db.addIndex('${labelName}', '${fieldName}', ${isUnique})";
 
-    private final String labelName;
+  private final String labelName;
 
-    private final String fieldName;
+  private final String fieldName;
 
-    private final boolean isUnique;
+  private final boolean isUnique;
 
-    private AddVertexIndexProcedure(String cypherTemplate, String labelName, String fieldName, boolean isUnique) {
-        super(cypherTemplate);
-        this.labelName = labelName;
-        this.fieldName = fieldName;
-        this.isUnique = isUnique;
-    }
+  private AddVertexIndexProcedure(
+      String cypherTemplate, String labelName, String fieldName, boolean isUnique) {
+    super(cypherTemplate);
+    this.labelName = labelName;
+    this.fieldName = fieldName;
+    this.isUnique = isUnique;
+  }
 
-    public static AddVertexIndexProcedure of(String labelName, CreateIndexOperation createIndexOperation) {
-        return new AddVertexIndexProcedure(
-            ADD_VERTEX_INDEX_CYPHER_TEMPLATE,
-            labelName,
-            createIndexOperation.getPropertyName(),
-            createIndexOperation.getIsUnique());
-    }
+  public static AddVertexIndexProcedure of(
+      String labelName, CreateIndexOperation createIndexOperation) {
+    return new AddVertexIndexProcedure(
+        ADD_VERTEX_INDEX_CYPHER_TEMPLATE,
+        labelName,
+        createIndexOperation.getPropertyName(),
+        createIndexOperation.getIsUnique());
+  }
 }

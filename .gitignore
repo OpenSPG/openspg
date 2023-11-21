@@ -457,3 +457,4 @@ hs_err_pid*
 /python/knext/debug_operators/.
 !/lib/spgreasoner-local-0.0.1.jar
 /logs/
+**/spotless-index-file

@@ -15,14 +15,13 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.ope
 
 import lombok.Getter;
 
-
 @Getter
 public class UnsetTtlOperation extends BaseSchemaAtomicOperation {
 
-    private final String propertyName;
+  private final String propertyName;
 
-    public UnsetTtlOperation(String propertyName) {
-        super(SchemaAtomicOperationEnum.UNSET_TTL);
-        this.propertyName = propertyName;
-    }
+  public UnsetTtlOperation(String propertyName) {
+    super(SchemaAtomicOperationEnum.UNSET_TTL);
+    this.propertyName = propertyName;
+  }
 }

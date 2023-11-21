@@ -15,52 +15,43 @@ package com.antgroup.openspg.core.spgschema.model.semantic.meta;
 
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-
 import java.util.EnumSet;
 
 public class HypernymRelation extends BaseSemanticRelation {
 
-    private static final long serialVersionUID = -3412789693382375319L;
+  private static final long serialVersionUID = -3412789693382375319L;
 
-    enum HypernymPredicateEnum {
-        /**
-         * is-a
-         */
-        isA("是一个"),
+  enum HypernymPredicateEnum {
+    /** is-a */
+    isA("是一个"),
 
-        /**
-         * has-a
-         */
-        hasA("有一个"),
+    /** has-a */
+    hasA("有一个"),
 
-        /**
-         * locate-at
-         */
-        locateAt("位于");
+    /** locate-at */
+    locateAt("位于");
 
-        private final String nameZh;
+    private final String nameZh;
 
-        HypernymPredicateEnum(String nameZh) {
-            this.nameZh = nameZh;
-        }
-
-        public String getNameZh() {
-            return nameZh;
-        }
+    HypernymPredicateEnum(String nameZh) {
+      this.nameZh = nameZh;
     }
 
-    /**
-     * Accept concept type only
-     */
-    private final SPGTypeIdentifier conceptTypeIdentifier;
-
-    public HypernymRelation(SPGTypeIdentifier conceptTypeIdentifier) {
-        super(EnumSet.of(SPGTypeEnum.CONCEPT_TYPE), EnumSet.of(SPGTypeEnum.CONCEPT_TYPE));
-
-        this.conceptTypeIdentifier = conceptTypeIdentifier;
+    public String getNameZh() {
+      return nameZh;
     }
+  }
 
-    public SPGTypeIdentifier getConceptTypeIdentifier() {
-        return conceptTypeIdentifier;
-    }
+  /** Accept concept type only */
+  private final SPGTypeIdentifier conceptTypeIdentifier;
+
+  public HypernymRelation(SPGTypeIdentifier conceptTypeIdentifier) {
+    super(EnumSet.of(SPGTypeEnum.CONCEPT_TYPE), EnumSet.of(SPGTypeEnum.CONCEPT_TYPE));
+
+    this.conceptTypeIdentifier = conceptTypeIdentifier;
+  }
+
+  public SPGTypeIdentifier getConceptTypeIdentifier() {
+    return conceptTypeIdentifier;
+  }
 }

@@ -16,8 +16,7 @@ package com.antgroup.openspg.cloudext.interfaces.tablestore;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.cmd.TableFileCreateCmd;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClient;
 
-
 public interface TableStoreClient extends CloudExtClient {
 
-    TableFileHandler create(TableFileCreateCmd cmd);
+  TableFileHandler create(TableFileCreateCmd cmd);
 }

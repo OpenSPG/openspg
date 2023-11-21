@@ -18,47 +18,43 @@ import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
 import com.antgroup.openspg.core.spgschema.model.type.WithSPGTypeEnum;
 
+public class SPGSubPropertyRecord extends BasePropertyRecord implements WithSPGTypeEnum {
 
-public class SPGSubPropertyRecord extends BasePropertyRecord
-    implements WithSPGTypeEnum {
+  private final SubProperty subPropertyType;
 
-    private final SubProperty subPropertyType;
-
-    public SPGSubPropertyRecord(
-        SubProperty subPropertyType,
-        SPGPropertyValue value) {
-        super(value);
-        this.subPropertyType = subPropertyType;
-        if (!subPropertyType.getObjectTypeRef().isBasicType()) {
-            throw new IllegalStateException("object of subPropertyType must be basicType");
-        }
+  public SPGSubPropertyRecord(SubProperty subPropertyType, SPGPropertyValue value) {
+    super(value);
+    this.subPropertyType = subPropertyType;
+    if (!subPropertyType.getObjectTypeRef().isBasicType()) {
+      throw new IllegalStateException("object of subPropertyType must be basicType");
     }
+  }
 
-    public SubProperty getSubPropertyType() {
-        return subPropertyType;
-    }
+  public SubProperty getSubPropertyType() {
+    return subPropertyType;
+  }
 
-    @Override
-    public String getName() {
-        return subPropertyType.getName();
-    }
+  @Override
+  public String getName() {
+    return subPropertyType.getName();
+  }
 
-    public SPGPropertyValue getValue() {
-        return value;
-    }
+  public SPGPropertyValue getValue() {
+    return value;
+  }
 
-    @Override
-    public SPGTypeRef getObjectTypeRef() {
-        return getSubPropertyType().getObjectTypeRef();
-    }
+  @Override
+  public SPGTypeRef getObjectTypeRef() {
+    return getSubPropertyType().getObjectTypeRef();
+  }
 
-    @Override
-    public boolean isSemanticProperty() {
-        return false;
-    }
+  @Override
+  public boolean isSemanticProperty() {
+    return false;
+  }
 
-    @Override
-    public SPGTypeEnum getSpgTypeEnum() {
-        return getSubPropertyType().getObjectTypeRef().getSpgTypeEnum();
-    }
+  @Override
+  public SPGTypeEnum getSpgTypeEnum() {
+    return getSubPropertyType().getObjectTypeRef().getSpgTypeEnum();
+  }
 }

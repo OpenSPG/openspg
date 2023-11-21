@@ -16,25 +16,23 @@ package com.antgroup.openspg.api.facade.dto.schema.request;
 import com.antgroup.openspg.common.model.base.BaseRequest;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
 
-/**
- * Request to query built-in properties of a kind of spg type.
- */
+/** Request to query built-in properties of a kind of spg type. */
 public class BuiltInPropertyRequest extends BaseRequest {
 
-    private static final long serialVersionUID = 6324173881877135981L;
+  private static final long serialVersionUID = 6324173881877135981L;
 
-    /**
-     * The spg type that to query
-     *
-     * @see SPGTypeEnum
-     */
-    private SPGTypeEnum spgTypeEnum;
+  /**
+   * The spg type that to query
+   *
+   * @see SPGTypeEnum
+   */
+  private SPGTypeEnum spgTypeEnum;
 
-    public SPGTypeEnum getSpgTypeEnum() {
-        return spgTypeEnum;
-    }
+  public SPGTypeEnum getSpgTypeEnum() {
+    return spgTypeEnum;
+  }
 
-    public void setSpgTypeEnum(SPGTypeEnum spgTypeEnum) {
-        this.spgTypeEnum = spgTypeEnum;
-    }
+  public void setSpgTypeEnum(SPGTypeEnum spgTypeEnum) {
+    this.spgTypeEnum = spgTypeEnum;
+  }
 }

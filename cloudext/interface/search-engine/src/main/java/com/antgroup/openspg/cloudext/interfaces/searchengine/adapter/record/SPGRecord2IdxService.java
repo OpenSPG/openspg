@@ -17,17 +17,15 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.Id
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecordAlterItem;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordAlterItem;
-
 import java.util.List;
-
 
 public interface SPGRecord2IdxService {
 
-    /**
-     * This method is used to build {@link IdxRecordAlterItem} from {@link SPGRecordAlterItem}
-     *
-     * @param item the alter item of {@link BaseSPGRecord SPGRecord}
-     * @return the alter item of {@link IdxRecord IdxRecord}
-     */
-    List<IdxRecordAlterItem> build(SPGRecordAlterItem item);
+  /**
+   * This method is used to build {@link IdxRecordAlterItem} from {@link SPGRecordAlterItem}
+   *
+   * @param item the alter item of {@link BaseSPGRecord SPGRecord}
+   * @return the alter item of {@link IdxRecord IdxRecord}
+   */
+  List<IdxRecordAlterItem> build(SPGRecordAlterItem item);
 }

@@ -20,14 +20,13 @@ import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobSubmitC
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerStatusWithProgress;
 import com.antgroup.openspg.core.spgreasoner.model.service.TableReasonerReceipt;
 
-
 public interface LocalReasonerExecutor {
 
-    ReasonerStatusWithProgress query(ReasonerJobProcessQuery query);
+  ReasonerStatusWithProgress query(ReasonerJobProcessQuery query);
 
-    boolean canSubmit(ReasonerJobCanSubmitQuery query);
+  boolean canSubmit(ReasonerJobCanSubmitQuery query);
 
-    String submit(ReasonerJobSubmitCmd cmd);
+  String submit(ReasonerJobSubmitCmd cmd);
 
-    TableReasonerReceipt run(ReasonerJobRunCmd cmd);
+  TableReasonerReceipt run(ReasonerJobRunCmd cmd);
 }

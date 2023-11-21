@@ -15,8 +15,7 @@ package com.antgroup.openspg.cloudext.impl.jobscheduler.local.repo;
 
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInfo;
 
-
 public interface SchedulerJobInfoRepository {
 
-    String save(SchedulerJobInfo jobInfo);
+  String save(SchedulerJobInfo jobInfo);
 }

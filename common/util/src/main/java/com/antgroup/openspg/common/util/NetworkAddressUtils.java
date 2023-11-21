@@ -13,40 +13,37 @@
 
 package com.antgroup.openspg.common.util;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import lombok.extern.slf4j.Slf4j;
 
-/**
- * Created by john.qf on 2017/6/1.
- */
+/** Created by john.qf on 2017/6/1. */
 @Slf4j
 public class NetworkAddressUtils {
 
-    public final static String LOCAL_IP = getLocalIp();
+  public static final String LOCAL_IP = getLocalIp();
 
-    private static String getLocalIp() {
-        String localIp = null;
-        try {
-            Enumeration netInterfaces = NetworkInterface.getNetworkInterfaces();
-            InetAddress ip = null;
-            boolean find = false;
-            while (netInterfaces.hasMoreElements() && !find) {
-                NetworkInterface ni = (NetworkInterface) netInterfaces.nextElement();
-                Enumeration address = ni.getInetAddresses();
-                while (address.hasMoreElements()) {
-                    ip = (InetAddress) address.nextElement();
-                    if (!ip.isLoopbackAddress() && !ip.getHostAddress().contains(":")) {
-                        localIp = ip.getHostAddress();
-                    }
-                }
-            }
-        } catch (SocketException e) {
-            throw new RuntimeException(e);
+  private static String getLocalIp() {
+    String localIp = null;
+    try {
+      Enumeration netInterfaces = NetworkInterface.getNetworkInterfaces();
+      InetAddress ip = null;
+      boolean find = false;
+      while (netInterfaces.hasMoreElements() && !find) {
+        NetworkInterface ni = (NetworkInterface) netInterfaces.nextElement();
+        Enumeration address = ni.getInetAddresses();
+        while (address.hasMoreElements()) {
+          ip = (InetAddress) address.nextElement();
+          if (!ip.isLoopbackAddress() && !ip.getHostAddress().contains(":")) {
+            localIp = ip.getHostAddress();
+          }
         }
-        return localIp;
+      }
+    } catch (SocketException e) {
+      throw new RuntimeException(e);
     }
+    return localIp;
+  }
 }

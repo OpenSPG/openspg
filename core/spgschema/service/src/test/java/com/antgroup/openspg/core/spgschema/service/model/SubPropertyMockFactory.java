@@ -20,39 +20,35 @@ import com.antgroup.openspg.core.spgschema.model.predicate.PropertyRef;
 import com.antgroup.openspg.core.spgschema.model.predicate.SubProperty;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
-
 import com.google.common.collect.Lists;
-
 import java.util.List;
-
 
 public class SubPropertyMockFactory {
 
-    public static List<SubProperty> mock(PropertyRef propertyRef) {
-        return Lists.newArrayList(
-            mockText(propertyRef),
-            mockInteger(propertyRef),
-            mockFloat(propertyRef)
-        );
-    }
+  public static List<SubProperty> mock(PropertyRef propertyRef) {
+    return Lists.newArrayList(
+        mockText(propertyRef), mockInteger(propertyRef), mockFloat(propertyRef));
+  }
 
-    public static SubProperty mockSingle(String objectType, PropertyRef propertyRef) {
-        BasicInfo<PredicateIdentifier> basicInfo = new BasicInfo<>(
-            new PredicateIdentifier("sub_proper" + objectType), "子属性", "desc");
-        SPGTypeRef objectTypeRef = new SPGTypeRef(new BasicInfo<>(
-            SPGTypeIdentifier.parse(objectType), "name", "desc"), SPGTypeEnum.BASIC_TYPE);
-        return new SubProperty(basicInfo, propertyRef, objectTypeRef, null);
-    }
+  public static SubProperty mockSingle(String objectType, PropertyRef propertyRef) {
+    BasicInfo<PredicateIdentifier> basicInfo =
+        new BasicInfo<>(new PredicateIdentifier("sub_proper" + objectType), "子属性", "desc");
+    SPGTypeRef objectTypeRef =
+        new SPGTypeRef(
+            new BasicInfo<>(SPGTypeIdentifier.parse(objectType), "name", "desc"),
+            SPGTypeEnum.BASIC_TYPE);
+    return new SubProperty(basicInfo, propertyRef, objectTypeRef, null);
+  }
 
-    public static SubProperty mockText(PropertyRef propertyRef) {
-        return mockSingle("Text", propertyRef);
-    }
+  public static SubProperty mockText(PropertyRef propertyRef) {
+    return mockSingle("Text", propertyRef);
+  }
 
-    public static SubProperty mockInteger(PropertyRef propertyRef) {
-        return mockSingle("Integer", propertyRef);
-    }
+  public static SubProperty mockInteger(PropertyRef propertyRef) {
+    return mockSingle("Integer", propertyRef);
+  }
 
-    public static SubProperty mockFloat(PropertyRef propertyRef) {
-        return mockSingle("Float", propertyRef);
-    }
+  public static SubProperty mockFloat(PropertyRef propertyRef) {
+    return mockSingle("Float", propertyRef);
+  }
 }

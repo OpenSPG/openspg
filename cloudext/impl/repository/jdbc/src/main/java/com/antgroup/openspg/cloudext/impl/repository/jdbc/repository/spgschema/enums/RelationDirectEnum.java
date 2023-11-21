@@ -13,18 +13,16 @@
 
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums;
 
-
 public enum RelationDirectEnum {
+  DOUBLE,
 
-    DOUBLE,
+  SINGLE;
 
-    SINGLE;
+  public static String getDirect(boolean isDouble) {
+    return isDouble ? DOUBLE.name() : SINGLE.name();
+  }
 
-    public static String getDirect(boolean isDouble) {
-        return isDouble ? DOUBLE.name() : SINGLE.name();
-    }
-
-    public static boolean isDouble(String direct) {
-        return DOUBLE.name().equalsIgnoreCase(direct);
-    }
+  public static boolean isDouble(String direct) {
+    return DOUBLE.name().equalsIgnoreCase(direct);
+  }
 }

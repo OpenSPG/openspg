@@ -17,30 +17,28 @@ import com.antgroup.openspg.core.spgschema.model.BasicInfo;
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.predicate.Property;
 import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
-
 import java.util.List;
 
 /**
- * Class definition of the Entity.
- * <br>
- * <p>An entity refers to an objective instance that has significant business relevance, such as users, enterprises,
- * merchants, and so on. The entity type provides a definition for the specific type of entity, which typically includes
- * properties describing its characteristics and relations with other entities. When defining entity types, it is
- * essential to specify both the linking operator and the fusing operator.
- * </p>
+ * Class definition of the Entity. <br>
+ *
+ * <p>An entity refers to an objective instance that has significant business relevance, such as
+ * users, enterprises, merchants, and so on. The entity type provides a definition for the specific
+ * type of entity, which typically includes properties describing its characteristics and relations
+ * with other entities. When defining entity types, it is essential to specify both the linking
+ * operator and the fusing operator.
  */
 public class EntityType extends BaseAdvancedType {
 
-    private static final long serialVersionUID = 7548382967010252528L;
+  private static final long serialVersionUID = 7548382967010252528L;
 
-    public EntityType(
-        BasicInfo<SPGTypeIdentifier> basicInfo,
-        ParentTypeInfo parentTypeInfo,
-        List<Property> properties,
-        List<Relation> relations,
-        SPGTypeAdvancedConfig advancedConfig) {
-        super(basicInfo, parentTypeInfo, SPGTypeEnum.ENTITY_TYPE,
-            properties, relations, advancedConfig
-        );
-    }
+  public EntityType(
+      BasicInfo<SPGTypeIdentifier> basicInfo,
+      ParentTypeInfo parentTypeInfo,
+      List<Property> properties,
+      List<Relation> relations,
+      SPGTypeAdvancedConfig advancedConfig) {
+    super(
+        basicInfo, parentTypeInfo, SPGTypeEnum.ENTITY_TYPE, properties, relations, advancedConfig);
+  }
 }

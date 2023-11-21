@@ -15,43 +15,37 @@ package com.antgroup.openspg.api.facade.dto.schema.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-/**
- * Query concept instance
- */
+/** Query concept instance */
 public class ConceptRequest extends BaseRequest {
 
-    private static final long serialVersionUID = -6316872733250486132L;
+  private static final long serialVersionUID = -6316872733250486132L;
 
-    /**
-     * The unique name of meta concept
-     */
-    private String conceptTypeName;
+  /** The unique name of meta concept */
+  private String conceptTypeName;
 
-    /**
-     * The concept name
-     */
-    private String conceptName;
+  /** The concept name */
+  private String conceptName;
 
-    public String getConceptTypeName() {
-        return conceptTypeName;
-    }
+  public String getConceptTypeName() {
+    return conceptTypeName;
+  }
 
-    public ConceptRequest setConceptTypeName(String conceptTypeName) {
-        this.conceptTypeName = conceptTypeName;
-        return this;
-    }
+  public ConceptRequest setConceptTypeName(String conceptTypeName) {
+    this.conceptTypeName = conceptTypeName;
+    return this;
+  }
 
-    public String getConceptName() {
-        return conceptName;
-    }
+  public String getConceptName() {
+    return conceptName;
+  }
 
-    public ConceptRequest setConceptName(String conceptName) {
-        this.conceptName = conceptName;
-        return this;
-    }
+  public ConceptRequest setConceptName(String conceptName) {
+    this.conceptName = conceptName;
+    return this;
+  }
 
-    @Override
-    public String toString() {
-        return String.format("%s/%s", conceptTypeName, conceptName);
-    }
+  @Override
+  public String toString() {
+    return String.format("%s/%s", conceptTypeName, conceptName);
+  }
 }

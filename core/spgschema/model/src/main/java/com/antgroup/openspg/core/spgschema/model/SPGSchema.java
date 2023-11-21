@@ -16,37 +16,30 @@ package com.antgroup.openspg.core.spgschema.model;
 import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
-
 import java.util.List;
 import java.util.Set;
 
-/**
- * Details of SPG schema, contains all SPG types that altered.
- */
+/** Details of SPG schema, contains all SPG types that altered. */
 public class SPGSchema extends BaseValObj {
 
-    private static final long serialVersionUID = 9081538161078193619L;
+  private static final long serialVersionUID = 9081538161078193619L;
 
-    /**
-     * The list of SPG types that altered.
-     */
-    private final List<BaseSPGType> spgTypes;
+  /** The list of SPG types that altered. */
+  private final List<BaseSPGType> spgTypes;
 
-    /**
-     * The set of standard type's name which is spreadable.
-     */
-    private final Set<SPGTypeIdentifier> spreadStdTypeNames;
+  /** The set of standard type's name which is spreadable. */
+  private final Set<SPGTypeIdentifier> spreadStdTypeNames;
 
-    public SPGSchema(List<BaseSPGType> spgTypes, Set<SPGTypeIdentifier> spreadStdTypeNames) {
-        this.spgTypes = spgTypes;
-        this.spreadStdTypeNames = spreadStdTypeNames;
-    }
+  public SPGSchema(List<BaseSPGType> spgTypes, Set<SPGTypeIdentifier> spreadStdTypeNames) {
+    this.spgTypes = spgTypes;
+    this.spreadStdTypeNames = spreadStdTypeNames;
+  }
 
-    public List<BaseSPGType> getSpgTypes() {
-        return spgTypes;
-    }
+  public List<BaseSPGType> getSpgTypes() {
+    return spgTypes;
+  }
 
-    public Set<SPGTypeIdentifier> getSpreadStdTypeNames() {
-        return spreadStdTypeNames;
-    }
+  public Set<SPGTypeIdentifier> getSpreadStdTypeNames() {
+    return spreadStdTypeNames;
+  }
 }

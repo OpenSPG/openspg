@@ -13,14 +13,12 @@
 
 package com.antgroup.openspg.core.spgbuilder.engine.logical;
 
-
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.NodeTypeEnum;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.GraphStoreSinkNodeConfig;
 
-
 public class GraphStoreSinkNode extends BaseNode<GraphStoreSinkNodeConfig> {
 
-    public GraphStoreSinkNode(String id, String name, GraphStoreSinkNodeConfig nodeConfig) {
-        super(id, name, NodeTypeEnum.GRAPH_SINK, nodeConfig);
-    }
+  public GraphStoreSinkNode(String id, String name, GraphStoreSinkNodeConfig nodeConfig) {
+    super(id, name, NodeTypeEnum.GRAPH_SINK, nodeConfig);
+  }
 }

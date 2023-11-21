@@ -13,54 +13,48 @@
 
 package com.antgroup.openspg.core.spgbuilder.model.record;
 
-
 import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.spgschema.model.type.EntityType;
-
 import java.util.Collections;
 import java.util.List;
 
-
 public class EntityRecord extends BaseAdvancedRecord {
 
-    private final EntityType entityType;
+  private final EntityType entityType;
 
-    private final String bizId;
+  private final String bizId;
 
-    private final List<SPGPropertyRecord> properties;
+  private final List<SPGPropertyRecord> properties;
 
-    public EntityRecord(
-        EntityType entityType,
-        String bizId,
-        List<SPGPropertyRecord> properties) {
-        super(SPGRecordTypeEnum.ENTITY);
-        this.bizId = bizId;
-        this.entityType = entityType;
-        this.properties = properties;
-    }
+  public EntityRecord(EntityType entityType, String bizId, List<SPGPropertyRecord> properties) {
+    super(SPGRecordTypeEnum.ENTITY);
+    this.bizId = bizId;
+    this.entityType = entityType;
+    this.properties = properties;
+  }
 
-    @Override
-    public BaseSPGType getSpgType() {
-        return entityType;
-    }
+  @Override
+  public BaseSPGType getSpgType() {
+    return entityType;
+  }
 
-    @Override
-    public String getId() {
-        return bizId;
-    }
+  @Override
+  public String getId() {
+    return bizId;
+  }
 
-    @Override
-    public List<SPGPropertyRecord> getSpgProperties() {
-        return Collections.unmodifiableList(properties);
-    }
+  @Override
+  public List<SPGPropertyRecord> getSpgProperties() {
+    return Collections.unmodifiableList(properties);
+  }
 
-    @Override
-    public void addSpgProperties(SPGPropertyRecord record) {
-        properties.add(record);
-    }
+  @Override
+  public void addSpgProperties(SPGPropertyRecord record) {
+    properties.add(record);
+  }
 
-    @Override
-    public List<BasePropertyRecord> getProperties() {
-        return Collections.unmodifiableList(properties);
-    }
+  @Override
+  public List<BasePropertyRecord> getProperties() {
+    return Collections.unmodifiableList(properties);
+  }
 }

@@ -14,28 +14,23 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.cmd;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGTypeNameConvertor;
-
 import lombok.Getter;
-
 
 @Getter
 public class VertexLPGRecordQuery extends BaseLPGRecordQuery {
 
-    private final String vertexId;
-    private final String vertexName;
+  private final String vertexId;
+  private final String vertexName;
 
-    public VertexLPGRecordQuery(String vertexId, String vertexName) {
-        super(LpgRecordQueryType.VERTEX);
-        this.vertexId = vertexId;
-        this.vertexName = vertexName;
-    }
+  public VertexLPGRecordQuery(String vertexId, String vertexName) {
+    super(LpgRecordQueryType.VERTEX);
+    this.vertexId = vertexId;
+    this.vertexName = vertexName;
+  }
 
-    @Override
-    public String toScript(LPGTypeNameConvertor lpgTypeNameConvertor) {
-        String convertedVertexName = lpgTypeNameConvertor.convertVertexTypeName(vertexName);
-        return String.format(
-            "MATCH (s:%s) WHERE s.id='%s' RETURN s",
-            convertedVertexName, vertexId
-        );
-    }
+  @Override
+  public String toScript(LPGTypeNameConvertor lpgTypeNameConvertor) {
+    String convertedVertexName = lpgTypeNameConvertor.convertVertexTypeName(vertexName);
+    return String.format("MATCH (s:%s) WHERE s.id='%s' RETURN s", convertedVertexName, vertexId);
+  }
 }

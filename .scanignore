@@ -1,0 +1,3 @@
+initdb.sql
+mybatis-generator-config.xml
+application-default.properties

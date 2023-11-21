@@ -15,17 +15,15 @@ package com.antgroup.openspg.cloudext.impl.jobscheduler.local.service;
 
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
-
 import java.util.List;
-
 
 public interface SchedulerJobInstService {
 
-    String create(SchedulerJobInst jobInst);
+  String create(SchedulerJobInst jobInst);
 
-    List<SchedulerJobInst> queryRunningJobInsts();
+  List<SchedulerJobInst> queryRunningJobInsts();
 
-    List<SchedulerJobInst> queryToRunJobInsts();
+  List<SchedulerJobInst> queryToRunJobInsts();
 
-    void updateStatus(String jobInstId, JobInstStatusEnum status);
+  void updateStatus(String jobInstId, JobInstStatusEnum status);
 }

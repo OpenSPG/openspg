@@ -19,45 +19,41 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
 import com.antgroup.openspg.common.model.job.JobInfoStateEnum;
 import com.antgroup.openspg.core.spgreasoner.model.service.BaseReasonerContent;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInfo;
-
 import com.google.gson.reflect.TypeToken;
-
 import java.util.Map;
-
 
 public class ReasonerJobInfoConvertor {
 
-    public static SPGJobInfoDO toDO(ReasonerJobInfo reasonerJobInfo) {
-        SPGJobInfoDO jobInfoDO = new SPGJobInfoDO();
-        jobInfoDO.setId(reasonerJobInfo.getJobId());
-        jobInfoDO.setName(reasonerJobInfo.getJobName());
-        jobInfoDO.setType(JobTypeEnum.REASONING.name());
-        jobInfoDO.setProjectId(reasonerJobInfo.getProjectId());
-        jobInfoDO.setCron(reasonerJobInfo.getCron());
-        jobInfoDO.setStatus(reasonerJobInfo.getStatus().name());
-        jobInfoDO.setExtInfo(JSON.serialize(reasonerJobInfo.getParams()));
-        jobInfoDO.setContent(JSON.serialize(reasonerJobInfo.getContent()));
-        jobInfoDO.setExternalJobInfoId(reasonerJobInfo.getExternalJobInfoId());
-        return jobInfoDO;
+  public static SPGJobInfoDO toDO(ReasonerJobInfo reasonerJobInfo) {
+    SPGJobInfoDO jobInfoDO = new SPGJobInfoDO();
+    jobInfoDO.setId(reasonerJobInfo.getJobId());
+    jobInfoDO.setName(reasonerJobInfo.getJobName());
+    jobInfoDO.setType(JobTypeEnum.REASONING.name());
+    jobInfoDO.setProjectId(reasonerJobInfo.getProjectId());
+    jobInfoDO.setCron(reasonerJobInfo.getCron());
+    jobInfoDO.setStatus(reasonerJobInfo.getStatus().name());
+    jobInfoDO.setExtInfo(JSON.serialize(reasonerJobInfo.getParams()));
+    jobInfoDO.setContent(JSON.serialize(reasonerJobInfo.getContent()));
+    jobInfoDO.setExternalJobInfoId(reasonerJobInfo.getExternalJobInfoId());
+    return jobInfoDO;
+  }
+
+  public static ReasonerJobInfo toModel(SPGJobInfoDO jobInfoDO) {
+    if (jobInfoDO == null) {
+      return null;
+    }
+    if (!JobTypeEnum.REASONING.name().equals(jobInfoDO.getType())) {
+      return null;
     }
 
-    public static ReasonerJobInfo toModel(SPGJobInfoDO jobInfoDO) {
-        if (jobInfoDO == null) {
-            return null;
-        }
-        if (!JobTypeEnum.REASONING.name().equals(jobInfoDO.getType())) {
-            return null;
-        }
-
-        return new ReasonerJobInfo(
+    return new ReasonerJobInfo(
             jobInfoDO.getName(),
             jobInfoDO.getProjectId(),
             JSON.deserialize(jobInfoDO.getContent(), BaseReasonerContent.class),
             jobInfoDO.getCron(),
             JobInfoStateEnum.valueOf(jobInfoDO.getStatus()),
-            JSON.deserialize(jobInfoDO.getExtInfo(),
-                new TypeToken<Map<String, Object>>() {
-                }.getType())
-        ).setJobId(jobInfoDO.getId());
-    }
+            JSON.deserialize(
+                jobInfoDO.getExtInfo(), new TypeToken<Map<String, Object>>() {}.getType()))
+        .setJobId(jobInfoDO.getId());
+  }
 }

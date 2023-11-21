@@ -13,47 +13,36 @@
 
 package com.antgroup.openspg.core.spgbuilder.model.pipeline.config;
 
-
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.NodeTypeEnum;
-
 import java.util.List;
-
 
 public class CsvSourceNodeConfig extends BaseNodeConfig {
 
-    /**
-     * start row
-     */
-    private final int startRow;
+  /** start row */
+  private final int startRow;
 
-    /**
-     * fileUrl
-     */
-    private final String url;
+  /** fileUrl */
+  private final String url;
 
-    /**
-     * columns
-     */
-    private final List<String> columns;
+  /** columns */
+  private final List<String> columns;
 
-    public CsvSourceNodeConfig(
-        String url,
-        int startRow, List<String> columns) {
-        super(NodeTypeEnum.CSV_SOURCE);
-        this.url = url;
-        this.startRow = startRow;
-        this.columns = columns;
-    }
+  public CsvSourceNodeConfig(String url, int startRow, List<String> columns) {
+    super(NodeTypeEnum.CSV_SOURCE);
+    this.url = url;
+    this.startRow = startRow;
+    this.columns = columns;
+  }
 
-    public int getStartRow() {
-        return startRow;
-    }
+  public int getStartRow() {
+    return startRow;
+  }
 
-    public String getUrl() {
-        return url;
-    }
+  public String getUrl() {
+    return url;
+  }
 
-    public List<String> getColumns() {
-        return columns;
-    }
+  public List<String> getColumns() {
+    return columns;
+  }
 }

@@ -43,34 +43,45 @@ class ReasonerJobInst(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'job_id': 'int',
-        'project_id': 'int',
-        'start_time': 'str',
-        'end_time': 'str',
-        'log_info': 'str',
-        'progress': 'object',
-        'result': 'BaseReasonerResult',
-        'job_inst_id': 'int',
-        'status': 'str',
-        'external_job_inst_id': 'str'
+        "job_id": "int",
+        "project_id": "int",
+        "start_time": "str",
+        "end_time": "str",
+        "log_info": "str",
+        "progress": "object",
+        "result": "BaseReasonerResult",
+        "job_inst_id": "int",
+        "status": "str",
+        "external_job_inst_id": "str",
     }
 
     attribute_map = {
-        'job_id': 'jobId',
-        'project_id': 'projectId',
-        'start_time': 'startTime',
-        'end_time': 'endTime',
-        'log_info': 'logInfo',
-        'progress': 'progress',
-        'result': 'result',
-        'job_inst_id': 'jobInstId',
-        'status': 'status',
-        'external_job_inst_id': 'externalJobInstId'
+        "job_id": "jobId",
+        "project_id": "projectId",
+        "start_time": "startTime",
+        "end_time": "endTime",
+        "log_info": "logInfo",
+        "progress": "progress",
+        "result": "result",
+        "job_inst_id": "jobInstId",
+        "status": "status",
+        "external_job_inst_id": "externalJobInstId",
     }
 
-    def __init__(self, job_id=None, project_id=None, start_time=None, end_time=None, log_info=None, progress=None,
-                 result=None, job_inst_id=None, status=None, external_job_inst_id=None,
-                 local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        job_id=None,
+        project_id=None,
+        start_time=None,
+        end_time=None,
+        log_info=None,
+        progress=None,
+        result=None,
+        job_inst_id=None,
+        status=None,
+        external_job_inst_id=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """ReasonerJobInst - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -295,11 +306,22 @@ class ReasonerJobInst(object):
         :param status: The status of this ReasonerJobInst.  # noqa: E501
         :type: str
         """
-        allowed_values = ["INIT", "QUEUE", "RUNNING", "CANCEL", "FAILURE", "SUCCESS"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and status not in allowed_values:  # noqa: E501
+        allowed_values = [
+            "INIT",
+            "QUEUE",
+            "RUNNING",
+            "CANCEL",
+            "FAILURE",
+            "SUCCESS",
+        ]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and status not in allowed_values
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `status` ({0}), must be one of {1}"  # noqa: E501
-                .format(status, allowed_values)
+                "Invalid value for `status` ({0}), must be one of {1}".format(  # noqa: E501
+                    status, allowed_values
+                )
             )
 
         self._status = status
@@ -332,18 +354,20 @@ class ReasonerJobInst(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

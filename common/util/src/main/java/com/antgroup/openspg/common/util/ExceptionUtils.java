@@ -15,19 +15,20 @@ package com.antgroup.openspg.common.util;
 
 public class ExceptionUtils {
 
-    /**
-     * Throws the given {@code Throwable} in scenarios where the signatures do not allow you to throw an arbitrary
-     * Throwable. Errors and RuntimeExceptions are thrown directly, other exceptions are packed into runtime exceptions
-     *
-     * @param t The throwable to be thrown.
-     */
-    public static void rethrow(Throwable t) {
-        if (t instanceof Error) {
-            throw (Error) t;
-        } else if (t instanceof RuntimeException) {
-            throw (RuntimeException) t;
-        } else {
-            throw new RuntimeException(t);
-        }
+  /**
+   * Throws the given {@code Throwable} in scenarios where the signatures do not allow you to throw
+   * an arbitrary Throwable. Errors and RuntimeExceptions are thrown directly, other exceptions are
+   * packed into runtime exceptions
+   *
+   * @param t The throwable to be thrown.
+   */
+  public static void rethrow(Throwable t) {
+    if (t instanceof Error) {
+      throw (Error) t;
+    } else if (t instanceof RuntimeException) {
+      throw (RuntimeException) t;
+    } else {
+      throw new RuntimeException(t);
     }
+  }
 }

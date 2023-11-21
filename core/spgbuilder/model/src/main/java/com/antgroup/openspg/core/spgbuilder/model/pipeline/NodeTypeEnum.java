@@ -13,8 +13,11 @@
 
 package com.antgroup.openspg.core.spgbuilder.model.pipeline;
 
-
 public enum NodeTypeEnum {
-    CSV_SOURCE, MAPPING, EXTRACT, CHECK, GRAPH_SINK,
-    ;
+  CSV_SOURCE,
+  MAPPING,
+  EXTRACT,
+  CHECK,
+  GRAPH_SINK,
+  ;
 }

@@ -31,8 +31,9 @@ def get_re_prompt(template_path, spg_type) -> str:
     for k, v in spg_type.properties.items():
         if v.name in ["id", "description"]:
             continue
-        spo = "\"subject\":\"{}\",\"predicate\":\"{}\",\"object\":\"{}\"".format(spg_type.name_zh, v.name_zh,
-                                                                                 v.object_type_name_zh)
+        spo = '"subject":"{}","predicate":"{}","object":"{}"'.format(
+            spg_type.name_zh, v.name_zh, v.object_type_name_zh
+        )
         spo = "{" + spo + "}\n"
         schema_text = schema_text + spo
 
@@ -48,11 +49,15 @@ def get_ner_prompt(template_path, spg_type) -> str:
     """
     f = open(template_path, "r")
     prompt_template = json.load(f)
-    prompt = prompt_template["ner"].replace("${schema}", f'[{spg_type.name}:{spg_type.name_zh}]')
+    prompt = prompt_template["ner"].replace(
+        "${schema}", f"[{spg_type.name}:{spg_type.name_zh}]"
+    )
     return prompt
 
 
-def process(src_path: str, tgt_path: str, entity_type: str, template_path: str, task_type: str):
+def process(
+    src_path: str, tgt_path: str, entity_type: str, template_path: str, task_type: str
+):
     spg_type = get_schema(entity_type)
 
     writer = open(tgt_path, "w", encoding="utf-8")
@@ -60,21 +65,21 @@ def process(src_path: str, tgt_path: str, entity_type: str, template_path: str, 
         for line in reader:
             print(line)
             record = json.loads(line)
-            if task_type == 'RE':
+            if task_type == "RE":
                 prompt_template = get_re_prompt(template_path, spg_type)
                 instruct = prompt_template.replace("${input}", record["input"])
-            elif task_type == 'NER':
+            elif task_type == "NER":
                 prompt_template = get_ner_prompt(template_path, spg_type)
                 instruct = prompt_template.replace("${input}", record["input"])
             else:
                 raise KeyError
 
-            record = {'content': instruct, 'summary': record['output']}
+            record = {"content": instruct, "summary": record["output"]}
             writer.write(json.dumps(record, ensure_ascii=False) + "\n")
 
 
 if __name__ == "__main__":
-    '''
+    """
 
     python convert_util.py \
         --entity_type Medical.Disease \
@@ -83,14 +88,16 @@ if __name__ == "__main__":
         --tgt_path RE/processed.json \
         --template_path ../../../schema/prompt.json
 
-    '''
+    """
 
     parse = argparse.ArgumentParser()
     parse.add_argument("--entity_type", type=str)
-    parse.add_argument("--task_type", type=str, choices=['RE', 'NER'])
+    parse.add_argument("--task_type", type=str, choices=["RE", "NER"])
     parse.add_argument("--src_path", type=str, default="NER/sample.json")
     parse.add_argument("--tgt_path", type=str, default="NER/processed.json")
-    parse.add_argument("--template_path", type=str, default="../../../schema/prompt.json")
+    parse.add_argument(
+        "--template_path", type=str, default="../../../schema/prompt.json"
+    )
 
     options = parse.parse_args()
     options = vars(options)

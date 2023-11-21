@@ -14,7 +14,7 @@
 package com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query;
 
 public enum OperatorType {
-    OR,
-    AND,
-    NOT
+  OR,
+  AND,
+  NOT
 }

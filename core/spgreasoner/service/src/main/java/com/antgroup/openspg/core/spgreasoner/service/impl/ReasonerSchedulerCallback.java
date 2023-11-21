@@ -21,42 +21,37 @@ import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.core.spgreasoner.model.service.FailureReasonerResult;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInst;
 import com.antgroup.openspg.core.spgreasoner.service.ReasonerJobInstService;
-
 import com.google.common.collect.Sets;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
-
 
 @Slf4j
 @Service
 public class ReasonerSchedulerCallback implements SchedulerCallback {
 
-    @Autowired
-    private ReasonerJobInstService reasonerJobInstService;
+  @Autowired private ReasonerJobInstService reasonerJobInstService;
 
-    @Override
-    public Set<JobTypeEnum> accept() {
-        return Sets.newHashSet(JobTypeEnum.REASONING);
-    }
+  @Override
+  public Set<JobTypeEnum> accept() {
+    return Sets.newHashSet(JobTypeEnum.REASONING);
+  }
 
-    @Override
-    public CallbackResult polling(SchedulerJobInst jobInst) {
-        ReasonerJobInst reasonerJobInst = null;
-        try {
-            reasonerJobInst = reasonerJobInstService.pollingReasonerJob(jobInst);
-        } catch (Throwable e) {
-            log.warn("polling schedulerJobInstId={} for reasoner error", jobInst.getJobInstId(), e);
-            reasonerJobInst = reasonerJobInstService
-                .queryByExternalJobInstId(jobInst.getJobInstId());
-            FailureReasonerResult result = new FailureReasonerResult(e.getMessage());
-            if (reasonerJobInst != null) {
-                reasonerJobInstService.updateToFailure(reasonerJobInst.getJobInstId(), result);
-            }
-            return new CallbackResult(JobInstStatusEnum.FAILURE, result);
-        }
-        return new CallbackResult(reasonerJobInst.getStatus(), reasonerJobInst.getResult());
+  @Override
+  public CallbackResult polling(SchedulerJobInst jobInst) {
+    ReasonerJobInst reasonerJobInst = null;
+    try {
+      reasonerJobInst = reasonerJobInstService.pollingReasonerJob(jobInst);
+    } catch (Throwable e) {
+      log.warn("polling schedulerJobInstId={} for reasoner error", jobInst.getJobInstId(), e);
+      reasonerJobInst = reasonerJobInstService.queryByExternalJobInstId(jobInst.getJobInstId());
+      FailureReasonerResult result = new FailureReasonerResult(e.getMessage());
+      if (reasonerJobInst != null) {
+        reasonerJobInstService.updateToFailure(reasonerJobInst.getJobInstId(), result);
+      }
+      return new CallbackResult(JobInstStatusEnum.FAILURE, result);
     }
+    return new CallbackResult(reasonerJobInst.getStatus(), reasonerJobInst.getResult());
+  }
 }

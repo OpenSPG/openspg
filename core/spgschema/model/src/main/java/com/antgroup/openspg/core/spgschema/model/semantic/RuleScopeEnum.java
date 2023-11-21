@@ -13,28 +13,22 @@
 
 package com.antgroup.openspg.core.spgschema.model.semantic;
 
-/**
- * Enumeration of the rule usage stages
- */
+/** Enumeration of the rule usage stages */
 public enum RuleScopeEnum {
 
-    /**
-     * Knowledge processing stage
-     */
-    PROCESS,
+  /** Knowledge processing stage */
+  PROCESS,
 
-    /**
-     * Online query stage
-     */
-    QUERY;
+  /** Online query stage */
+  QUERY;
 
-    public static RuleScopeEnum toEnum(String val) {
-        for (RuleScopeEnum ruleScopeEnum : RuleScopeEnum.values()) {
-            if (ruleScopeEnum.name().equalsIgnoreCase(val)) {
-                return ruleScopeEnum;
-            }
-        }
-
-        throw new IllegalArgumentException("unknown type: " + val);
+  public static RuleScopeEnum toEnum(String val) {
+    for (RuleScopeEnum ruleScopeEnum : RuleScopeEnum.values()) {
+      if (ruleScopeEnum.name().equalsIgnoreCase(val)) {
+        return ruleScopeEnum;
+      }
     }
+
+    throw new IllegalArgumentException("unknown type: " + val);
+  }
 }

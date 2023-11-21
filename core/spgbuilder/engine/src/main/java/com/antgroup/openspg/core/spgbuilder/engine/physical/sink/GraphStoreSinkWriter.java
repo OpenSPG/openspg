@@ -32,106 +32,99 @@ import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.predicate.Property;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfig> {
 
-    private GraphStoreClient graphStoreClient;
+  private GraphStoreClient graphStoreClient;
 
-    private SearchEngineClient searchEngineClient;
+  private SearchEngineClient searchEngineClient;
 
-    private CheckProcessor checkProcessor;
+  private CheckProcessor checkProcessor;
 
-    private static final SPGTypeRef TEXT_REF = new SPGTypeRef(
-        new BasicInfo<>(SPGTypeIdentifier.parse("Text")),
-        SPGTypeEnum.BASIC_TYPE
-    );
+  private static final SPGTypeRef TEXT_REF =
+      new SPGTypeRef(new BasicInfo<>(SPGTypeIdentifier.parse("Text")), SPGTypeEnum.BASIC_TYPE);
 
-    public GraphStoreSinkWriter(String id, String name, GraphStoreSinkNodeConfig config) {
-        super(id, name, config);
+  public GraphStoreSinkWriter(String id, String name, GraphStoreSinkNodeConfig config) {
+    super(id, name, config);
+  }
+
+  @Override
+  public void doInit(RuntimeContext context) throws Exception {
+    if (context.getGraphStoreClient() != null) {
+      graphStoreClient = context.getGraphStoreClient();
+    } else {
+      graphStoreClient =
+          GraphStoreClientDriverManager.getClient(config.getGraphStoreConnectionInfo());
+    }
+    if (context.getSearchEngineClient() != null) {
+      searchEngineClient = context.getSearchEngineClient();
+    } else {
+      searchEngineClient =
+          SearchEngineClientDriverManager.getClient(config.getSearchEngineConnectionInfo());
+    }
+    checkProcessor = new CheckProcessor();
+    checkProcessor.init(context);
+  }
+
+  @Override
+  public void write(List<BaseRecord> records) {
+    if (RecordAlterOperationEnum.UPSERT == context.getOperation()) {
+      records = checkProcessor.process(records);
     }
 
-    @Override
-    public void doInit(RuntimeContext context) throws Exception {
-        if (context.getGraphStoreClient() != null) {
-            graphStoreClient = context.getGraphStoreClient();
-        } else {
-            graphStoreClient = GraphStoreClientDriverManager.getClient(config.getGraphStoreConnectionInfo());
-        }
-        if (context.getSearchEngineClient() != null) {
-            searchEngineClient = context.getSearchEngineClient();
-        } else {
-            searchEngineClient = SearchEngineClientDriverManager.getClient(config.getSearchEngineConnectionInfo());
-        }
-        checkProcessor = new CheckProcessor();
-        checkProcessor.init(context);
+    // replace standard property type which is of un-spreadable into text property type
+    records.forEach(record -> replaceUnSpreadableStandardProperty((BaseSPGRecord) record));
+
+    batchWriteToGraphStore(records);
+    if (context.isEnableSearchEngine()) {
+      batchWriteToSearchEngine(records);
     }
+  }
 
-    @Override
-    public void write(List<BaseRecord> records) {
-        if (RecordAlterOperationEnum.UPSERT == context.getOperation()) {
-            records = checkProcessor.process(records);
-        }
-
-        // replace standard property type which is of un-spreadable into text property type
-        records.forEach(
-            record -> replaceUnSpreadableStandardProperty((BaseSPGRecord) record)
-        );
-
-        batchWriteToGraphStore(records);
-        if (context.isEnableSearchEngine()) {
-            batchWriteToSearchEngine(records);
-        }
-    }
-
-    private void batchWriteToGraphStore(List<BaseRecord> records) {
-        List<SPGRecordAlterItem> items = records.stream()
+  private void batchWriteToGraphStore(List<BaseRecord> records) {
+    List<SPGRecordAlterItem> items =
+        records.stream()
             .sorted(BaseRecord.ADVANCED_RECORD_FIRST_COMPARATOR)
-            .map(record ->
-                new SPGRecordAlterItem(context.getOperation(), (BaseSPGRecord) record)
-            ).collect(Collectors.toList());
+            .map(record -> new SPGRecordAlterItem(context.getOperation(), (BaseSPGRecord) record))
+            .collect(Collectors.toList());
 
-        graphStoreClient.manipulateRecord(new SPGRecordManipulateCmd(items));
+    graphStoreClient.manipulateRecord(new SPGRecordManipulateCmd(items));
+  }
+
+  private void batchWriteToSearchEngine(List<BaseRecord> records) {
+    List<SPGRecordAlterItem> items =
+        records.stream()
+            .map(record -> new SPGRecordAlterItem(context.getOperation(), (BaseSPGRecord) record))
+            .collect(Collectors.toList());
+
+    searchEngineClient.manipulateRecord(new SPGRecordManipulateCmd(items));
+  }
+
+  private void replaceUnSpreadableStandardProperty(BaseSPGRecord record) {
+    if (SPGRecordTypeEnum.RELATION.equals(record.getRecordType())) {
+      return;
     }
 
-    private void batchWriteToSearchEngine(List<BaseRecord> records) {
-        List<SPGRecordAlterItem> items = records.stream()
-            .map(record ->
-                new SPGRecordAlterItem(context.getOperation(), (BaseSPGRecord) record)
-            ).collect(Collectors.toList());
-
-        searchEngineClient.manipulateRecord(new SPGRecordManipulateCmd(items));
-    }
-
-    private void replaceUnSpreadableStandardProperty(BaseSPGRecord record) {
-        if (SPGRecordTypeEnum.RELATION.equals(record.getRecordType())) {
-            return;
-        }
-
-        record.getProperties().forEach(
+    record
+        .getProperties()
+        .forEach(
             property -> {
-                if (!property.isSemanticProperty() || !property.getObjectTypeRef().isStandardType()) {
-                    return;
-                }
-                SPGTypeIdentifier spgTypeIdentifier = property.getObjectTypeRef().getBaseSpgIdentifier();
-                if (!context.getProjectSchema().getSpreadable(spgTypeIdentifier)) {
-                    Property propertyType = ((SPGPropertyRecord) property).getPropertyType();
-                    propertyType.setObjectTypeRef(TEXT_REF);
-                }
+              if (!property.isSemanticProperty() || !property.getObjectTypeRef().isStandardType()) {
+                return;
+              }
+              SPGTypeIdentifier spgTypeIdentifier =
+                  property.getObjectTypeRef().getBaseSpgIdentifier();
+              if (!context.getProjectSchema().getSpreadable(spgTypeIdentifier)) {
+                Property propertyType = ((SPGPropertyRecord) property).getPropertyType();
+                propertyType.setObjectTypeRef(TEXT_REF);
+              }
+            });
+  }
 
-            }
-        );
-    }
-
-    @Override
-    public void close() throws Exception {
-
-    }
+  @Override
+  public void close() throws Exception {}
 }
-

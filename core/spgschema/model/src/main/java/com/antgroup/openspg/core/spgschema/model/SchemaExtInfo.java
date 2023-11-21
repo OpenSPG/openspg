@@ -20,21 +20,22 @@ package com.antgroup.openspg.core.spgschema.model;
 import java.util.HashMap;
 
 /**
- * Ontology extension information, used to record additional information on spg types, properties, or relations.
+ * Ontology extension information, used to record additional information on spg types, properties,
+ * or relations.
  */
 public class SchemaExtInfo extends HashMap<String, Object> {
 
-    private static final long serialVersionUID = -897786189244210137L;
+  private static final long serialVersionUID = -897786189244210137L;
 
-    public Boolean getBoolean(String key) {
-        return containsKey(key) ? (Boolean) (get(key)) : false;
-    }
+  public Boolean getBoolean(String key) {
+    return containsKey(key) ? (Boolean) (get(key)) : false;
+  }
 
-    public String getString(String key) {
-        return containsKey(key) ? (String) get(key) : null;
-    }
+  public String getString(String key) {
+    return containsKey(key) ? (String) get(key) : null;
+  }
 
-    public Long getLong(String key) {
-        return containsKey(key) ? (Long) get(key) : null;
-    }
+  public Long getLong(String key) {
+    return containsKey(key) ? (Long) get(key) : null;
+  }
 }

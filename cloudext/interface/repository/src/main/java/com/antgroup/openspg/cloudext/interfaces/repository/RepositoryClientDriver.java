@@ -16,8 +16,5 @@ package com.antgroup.openspg.cloudext.interfaces.repository;
 import com.antgroup.openspg.common.model.datasource.connection.RepositoryConnectionInfo;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClientDriver;
 
-
 public interface RepositoryClientDriver
-    extends CloudExtClientDriver<RepositoryClient, RepositoryConnectionInfo> {
-
-}
+    extends CloudExtClientDriver<RepositoryClient, RepositoryConnectionInfo> {}

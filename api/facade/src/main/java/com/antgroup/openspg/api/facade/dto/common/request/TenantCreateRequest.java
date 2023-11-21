@@ -15,26 +15,25 @@ package com.antgroup.openspg.api.facade.dto.common.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-
 public class TenantCreateRequest extends BaseRequest {
 
-    private String name;
+  private String name;
 
-    private String desc;
+  private String desc;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getDesc() {
-        return desc;
-    }
+  public String getDesc() {
+    return desc;
+  }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+  public void setDesc(String desc) {
+    this.desc = desc;
+  }
 }

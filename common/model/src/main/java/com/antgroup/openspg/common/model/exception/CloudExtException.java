@@ -15,18 +15,17 @@ package com.antgroup.openspg.common.model.exception;
 
 import com.antgroup.openspg.common.model.datasource.connection.BaseConnectionInfo;
 
-
 public class CloudExtException extends OpenSPGException {
 
-    protected CloudExtException(Throwable cause, String messagePattern, Object... args) {
-        super(cause, true, true, messagePattern, args);
-    }
+  protected CloudExtException(Throwable cause, String messagePattern, Object... args) {
+    super(cause, true, true, messagePattern, args);
+  }
 
-    protected CloudExtException(String messagePattern, Object... args) {
-        this(null, messagePattern, args);
-    }
+  protected CloudExtException(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
+  }
 
-    public static CloudExtException driverNotExist(BaseConnectionInfo connInfo) {
-        return new CloudExtException("cannot find driver for {}", connInfo.getScheme());
-    }
+  public static CloudExtException driverNotExist(BaseConnectionInfo connInfo) {
+    return new CloudExtException("cannot find driver for {}", connInfo.getScheme());
+  }
 }

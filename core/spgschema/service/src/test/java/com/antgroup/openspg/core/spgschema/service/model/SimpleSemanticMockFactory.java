@@ -17,16 +17,16 @@ import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.spgschema.service.semantic.model.SimpleSemantic;
 
-
 public class SimpleSemanticMockFactory {
 
-    public static SimpleSemantic mockPredicateSemantic(Long subjectId, Long objectId) {
-        return new SimpleSemantic(SPGOntologyEnum.PROPERTY,
-            subjectId.toString(),
-            objectId.toString(),
-            new PredicateIdentifier("p"),
-            null,
-            null,
-            null);
-    }
+  public static SimpleSemantic mockPredicateSemantic(Long subjectId, Long objectId) {
+    return new SimpleSemantic(
+        SPGOntologyEnum.PROPERTY,
+        subjectId.toString(),
+        objectId.toString(),
+        new PredicateIdentifier("p"),
+        null,
+        null,
+        null);
+  }
 }

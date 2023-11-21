@@ -11,32 +11,30 @@
   ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
   ~ or implied.
   -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.antgroup.openspg</groupId>
+    <artifactId>openspg-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>openspg-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
-    </parent>
+  <artifactId>biz-spgschema</artifactId>
 
-    <artifactId>biz-spgschema</artifactId>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.antgroup.openspg</groupId>
-            <artifactId>core-spgschema-service</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.antgroup.openspg</groupId>
-            <artifactId>biz-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-        </dependency>
-    </dependencies>
+  <dependencies>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>core-spgschema-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>biz-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+    </dependency>
+  </dependencies>
 </project>

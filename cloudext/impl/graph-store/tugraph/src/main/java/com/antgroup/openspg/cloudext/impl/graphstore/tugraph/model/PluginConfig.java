@@ -18,51 +18,37 @@ import lgraph.Lgraph.LoadPluginRequest.CodeType;
 import lgraph.Lgraph.PluginRequest.PluginType;
 import lombok.Data;
 
-/**
- * Config of plugin.
- */
+/** Config of plugin. */
 @Data
 public class PluginConfig {
 
-    /**
-     * Type of plugin Either "CPP" or "PYTHON"
-     */
-    @JSONField(name = "type")
-    private PluginType type;
+  /** Type of plugin Either "CPP" or "PYTHON" */
+  @JSONField(name = "type")
+  private PluginType type;
 
-    /**
-     * Name of plugin
-     */
-    @JSONField(name = "name")
-    private String name;
+  /** Name of plugin */
+  @JSONField(name = "name")
+  private String name;
 
-    /**
-     * File name of plugin
-     */
-    @JSONField(name = "filePath")
-    private String filePath;
+  /** File name of plugin */
+  @JSONField(name = "filePath")
+  private String filePath;
 
-    /**
-     * Code type of plugin Such as: PY, SO, CPP, ZIP
-     */
-    @JSONField(name = "codeType")
-    private CodeType codeType;
+  /** Code type of plugin Such as: PY, SO, CPP, ZIP */
+  @JSONField(name = "codeType")
+  private CodeType codeType;
 
-    /**
-     * Description of plugin
-     */
-    @JSONField(name = "description")
-    private String description;
+  /** Description of plugin */
+  @JSONField(name = "description")
+  private String description;
 
-    /**
-     * Plugin is used for reading only If plugin used for modified data, the property value is 'false'
-     */
-    @JSONField(name = "readOnly")
-    private boolean readOnly;
+  /**
+   * Plugin is used for reading only If plugin used for modified data, the property value is 'false'
+   */
+  @JSONField(name = "readOnly")
+  private boolean readOnly;
 
-    /**
-     * Version of plugin Either "v1" or "v2"
-     */
-    @JSONField(name = "version")
-    private String version = "v1";
+  /** Version of plugin Either "v1" or "v2" */
+  @JSONField(name = "version")
+  private String version = "v1";
 }

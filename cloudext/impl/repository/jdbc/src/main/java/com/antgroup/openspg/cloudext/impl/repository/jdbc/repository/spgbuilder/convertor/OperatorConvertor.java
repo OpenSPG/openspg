@@ -20,52 +20,48 @@ import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorOverview;
 import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorVersion;
 import com.antgroup.openspg.core.spgschema.model.type.OperatorTypeEnum;
 
-
 public class OperatorConvertor {
 
-    public static OperatorOverview toModel(OperatorOverviewDO operatorOverviewDO) {
-        if (operatorOverviewDO == null) {
-            return null;
-        }
-        return new OperatorOverview(
-            operatorOverviewDO.getId(),
-            operatorOverviewDO.getName(),
-            operatorOverviewDO.getDescription(),
-            OperatorTypeEnum.valueOf(operatorOverviewDO.getType()),
-            LangTypeEnum.valueOf(operatorOverviewDO.getLang())
-        );
+  public static OperatorOverview toModel(OperatorOverviewDO operatorOverviewDO) {
+    if (operatorOverviewDO == null) {
+      return null;
+    }
+    return new OperatorOverview(
+        operatorOverviewDO.getId(),
+        operatorOverviewDO.getName(),
+        operatorOverviewDO.getDescription(),
+        OperatorTypeEnum.valueOf(operatorOverviewDO.getType()),
+        LangTypeEnum.valueOf(operatorOverviewDO.getLang()));
+  }
+
+  public static OperatorOverviewDO toDO(OperatorOverview operatorOverview) {
+    OperatorOverviewDO operatorOverviewDO = new OperatorOverviewDO();
+    operatorOverviewDO.setName(operatorOverview.getName());
+    operatorOverviewDO.setDescription(operatorOverview.getDesc());
+    operatorOverviewDO.setType(operatorOverview.getType().name());
+    operatorOverviewDO.setLang(operatorOverview.getLangType().name());
+    return operatorOverviewDO;
+  }
+
+  public static OperatorVersion toModel(OperatorVersionDO operatorVersionDO) {
+    if (operatorVersionDO == null) {
+      return null;
     }
 
-    public static OperatorOverviewDO toDO(OperatorOverview operatorOverview) {
-        OperatorOverviewDO operatorOverviewDO = new OperatorOverviewDO();
-        operatorOverviewDO.setName(operatorOverview.getName());
-        operatorOverviewDO.setDescription(operatorOverview.getDesc());
-        operatorOverviewDO.setType(operatorOverview.getType().name());
-        operatorOverviewDO.setLang(operatorOverview.getLangType().name());
-        return operatorOverviewDO;
-    }
+    return new OperatorVersion(
+        operatorVersionDO.getOverviewId(),
+        operatorVersionDO.getMainClass(),
+        operatorVersionDO.getJarAddress(),
+        operatorVersionDO.getVersion());
+  }
 
-    public static OperatorVersion toModel(OperatorVersionDO operatorVersionDO) {
-        if (operatorVersionDO == null) {
-            return null;
-        }
+  public static OperatorVersionDO toDO(OperatorVersion operatorVersion) {
+    OperatorVersionDO operatorVersionDO = new OperatorVersionDO();
 
-        return new OperatorVersion(
-            operatorVersionDO.getOverviewId(),
-            operatorVersionDO.getMainClass(),
-            operatorVersionDO.getJarAddress(),
-            operatorVersionDO.getVersion()
-        );
-    }
-
-    public static OperatorVersionDO toDO(OperatorVersion operatorVersion) {
-        OperatorVersionDO operatorVersionDO = new OperatorVersionDO();
-
-        operatorVersionDO.setOverviewId(operatorVersion.getOverviewId());
-        operatorVersionDO.setMainClass(operatorVersion.getMainClass());
-        operatorVersionDO.setJarAddress(operatorVersion.getFilePath());
-        operatorVersionDO.setVersion(operatorVersion.getVersion());
-        return operatorVersionDO;
-    }
-
+    operatorVersionDO.setOverviewId(operatorVersion.getOverviewId());
+    operatorVersionDO.setMainClass(operatorVersion.getMainClass());
+    operatorVersionDO.setJarAddress(operatorVersion.getFilePath());
+    operatorVersionDO.setVersion(operatorVersion.getVersion());
+    return operatorVersionDO;
+  }
 }

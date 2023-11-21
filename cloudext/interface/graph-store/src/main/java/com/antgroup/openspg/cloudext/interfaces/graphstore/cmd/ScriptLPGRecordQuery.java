@@ -14,22 +14,20 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.cmd;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGTypeNameConvertor;
-
 import lombok.Getter;
-
 
 @Getter
 public class ScriptLPGRecordQuery extends BaseLPGRecordQuery {
 
-    private final String script;
+  private final String script;
 
-    public ScriptLPGRecordQuery(String script) {
-        super(LpgRecordQueryType.SCRIPT);
-        this.script = script;
-    }
+  public ScriptLPGRecordQuery(String script) {
+    super(LpgRecordQueryType.SCRIPT);
+    this.script = script;
+  }
 
-    @Override
-    public String toScript(LPGTypeNameConvertor lpgTypeNameConvertor) {
-        return script;
-    }
+  @Override
+  public String toScript(LPGTypeNameConvertor lpgTypeNameConvertor) {
+    return script;
+  }
 }

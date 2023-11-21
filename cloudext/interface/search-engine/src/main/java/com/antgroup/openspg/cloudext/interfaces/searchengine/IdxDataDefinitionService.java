@@ -19,14 +19,11 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.cmd.IdxSchemaAlterCmd;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchema;
-
 import java.util.List;
-
 
 public interface IdxDataDefinitionService {
 
-    List<IdxSchema> querySchema();
+  List<IdxSchema> querySchema();
 
-    int alterSchema(IdxSchemaAlterCmd cmd);
-
+  int alterSchema(IdxSchemaAlterCmd cmd);
 }

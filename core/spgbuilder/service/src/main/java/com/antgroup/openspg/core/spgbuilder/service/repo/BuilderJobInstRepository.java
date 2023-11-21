@@ -16,23 +16,21 @@ package com.antgroup.openspg.core.spgbuilder.service.repo;
 import com.antgroup.openspg.api.facade.dto.builder.request.BuilderJobInstQuery;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInst;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderStatusWithProgress;
-
 import java.util.List;
-
 
 public interface BuilderJobInstRepository {
 
-    Long save(BuilderJobInst jobInst);
+  Long save(BuilderJobInst jobInst);
 
-    int updateExternalJobId(Long builderJobInstId, String externalJobInstId);
+  int updateExternalJobId(Long builderJobInstId, String externalJobInstId);
 
-    List<BuilderJobInst> query(BuilderJobInstQuery query);
+  List<BuilderJobInst> query(BuilderJobInstQuery query);
 
-    int start(Long jobInstId, BuilderStatusWithProgress progress);
+  int start(Long jobInstId, BuilderStatusWithProgress progress);
 
-    int running(Long jobInstId, BuilderStatusWithProgress progress);
+  int running(Long jobInstId, BuilderStatusWithProgress progress);
 
-    int finish(Long jobInstId, BuilderStatusWithProgress progress);
+  int finish(Long jobInstId, BuilderStatusWithProgress progress);
 
-    int queue(Long jobInstId, BuilderStatusWithProgress progress);
+  int queue(Long jobInstId, BuilderStatusWithProgress progress);
 }

@@ -18,20 +18,19 @@ import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClientDrive
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClientDriverManager;
 import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
 
-
 public class LocalTableStoreClientDriver implements TableStoreClientDriver {
 
-    static {
-        TableStoreClientDriverManager.registerDriver(new LocalTableStoreClientDriver());
-    }
+  static {
+    TableStoreClientDriverManager.registerDriver(new LocalTableStoreClientDriver());
+  }
 
-    @Override
-    public String driverScheme() {
-        return "local";
-    }
+  @Override
+  public String driverScheme() {
+    return "local";
+  }
 
-    @Override
-    public TableStoreClient connect(TableStoreConnectionInfo connInfo) {
-        return new LocalTableStoreClient(connInfo);
-    }
+  @Override
+  public TableStoreClient connect(TableStoreConnectionInfo connInfo) {
+    return new LocalTableStoreClient(connInfo);
+  }
 }

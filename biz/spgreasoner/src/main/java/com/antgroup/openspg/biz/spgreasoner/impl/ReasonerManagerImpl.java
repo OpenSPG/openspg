@@ -31,70 +31,66 @@ import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInst;
 import com.antgroup.openspg.core.spgreasoner.model.service.TableReasonerReceipt;
 import com.antgroup.openspg.core.spgreasoner.service.ReasonerJobInfoService;
 import com.antgroup.openspg.core.spgreasoner.service.ReasonerJobInstService;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 
 @Service
 public class ReasonerManagerImpl implements ReasonerManager {
 
-    @Autowired
-    private AppEnvConfig appEnvConfig;
+  @Autowired private AppEnvConfig appEnvConfig;
 
-    @Autowired
-    private ReasonerJobInfoService reasonerJobInfoService;
+  @Autowired private ReasonerJobInfoService reasonerJobInfoService;
 
-    @Autowired
-    private ReasonerJobInstService reasonerJobInstService;
+  @Autowired private ReasonerJobInstService reasonerJobInstService;
 
-    @Autowired
-    private DataSourceService dataSourceService;
+  @Autowired private DataSourceService dataSourceService;
 
-    @Override
-    public TableReasonerReceipt runDsl(ReasonerDslRunRequest request) {
-        ComputingClient computingClient = dataSourceService.buildSharedComputingClient();
-        return computingClient.run(new ReasonerJobRunCmd(
-                request.getProjectId(),
-                appEnvConfig.getSchemaUri(),
-                (GraphStoreConnectionInfo) dataSourceService.buildSharedKgStoreClient().getConnInfo(),
-                request.getContent()
-            )
-        );
-    }
+  @Override
+  public TableReasonerReceipt runDsl(ReasonerDslRunRequest request) {
+    ComputingClient computingClient = dataSourceService.buildSharedComputingClient();
+    return computingClient.run(
+        new ReasonerJobRunCmd(
+            request.getProjectId(),
+            appEnvConfig.getSchemaUri(),
+            (GraphStoreConnectionInfo) dataSourceService.buildSharedKgStoreClient().getConnInfo(),
+            request.getContent()));
+  }
 
-    @Override
-    public JobReasonerReceipt submitJob(ReasonerJobSubmitRequest request) {
-        ReasonerJobInfo reasonerJobInfo = new ReasonerJobInfo(
+  @Override
+  public JobReasonerReceipt submitJob(ReasonerJobSubmitRequest request) {
+    ReasonerJobInfo reasonerJobInfo =
+        new ReasonerJobInfo(
             request.getJobName(),
-            request.getProjectId(), request.getContent(),
-            request.getCron(), JobInfoStateEnum.ENABLE,
-            request.getParams()
-        );
+            request.getProjectId(),
+            request.getContent(),
+            request.getCron(),
+            JobInfoStateEnum.ENABLE,
+            request.getParams());
 
-        // create a reasoner job
-        Long reasonerJobInfoId = reasonerJobInfoService.create(reasonerJobInfo);
+    // create a reasoner job
+    Long reasonerJobInfoId = reasonerJobInfoService.create(reasonerJobInfo);
 
-        // if the cron expression is empty, create a reasoner job instance
-        Long reasonerJobInstId = null;
-        if (StringUtils.isBlank(request.getCron())) {
-            ReasonerJobInst reasonerJobInst = new ReasonerJobInst(
-                reasonerJobInfoId,
-                reasonerJobInfo.getProjectId(),
-                JobInstStatusEnum.INIT,
-                null, null, null,
-                null, null
-            );
-            reasonerJobInstId = reasonerJobInstService
-                .create(reasonerJobInfo, reasonerJobInst);
-        }
-        return new JobReasonerReceipt(reasonerJobInfoId, reasonerJobInstId);
+    // if the cron expression is empty, create a reasoner job instance
+    Long reasonerJobInstId = null;
+    if (StringUtils.isBlank(request.getCron())) {
+      ReasonerJobInst reasonerJobInst =
+          new ReasonerJobInst(
+              reasonerJobInfoId,
+              reasonerJobInfo.getProjectId(),
+              JobInstStatusEnum.INIT,
+              null,
+              null,
+              null,
+              null,
+              null);
+      reasonerJobInstId = reasonerJobInstService.create(reasonerJobInfo, reasonerJobInst);
     }
+    return new JobReasonerReceipt(reasonerJobInfoId, reasonerJobInstId);
+  }
 
-    @Override
-    public List<ReasonerJobInst> queryJobInst(ReasonerJobInstQuery query) {
-        return reasonerJobInstService.query(query);
-    }
+  @Override
+  public List<ReasonerJobInst> queryJobInst(ReasonerJobInstQuery query) {
+    return reasonerJobInstService.query(query);
+  }
 }

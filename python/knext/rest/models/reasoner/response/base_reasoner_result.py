@@ -47,8 +47,8 @@ class BaseReasonerResult(object):
     attribute_map = {}
 
     discriminator_value_class_map = {
-        'SUCCESS': 'SuccessReasonerResult',
-        'FAILURE': 'FailureReasonerResult'
+        "SUCCESS": "SuccessReasonerResult",
+        "FAILURE": "FailureReasonerResult",
     }
 
     def __init__(self, error_msg=None, local_vars_configuration=None):  # noqa: E501
@@ -86,11 +86,11 @@ class BaseReasonerResult(object):
 
     def get_real_child_model(self, data):
         """Returns the child model by discriminator"""
-        if 'errorMsg' in data:
-            real_child_model = self.discriminator_value_class_map.get('FAILURE')
+        if "errorMsg" in data:
+            real_child_model = self.discriminator_value_class_map.get("FAILURE")
             return real_child_model
-        if 'tableName' in data:
-            real_child_model = self.discriminator_value_class_map.get('SUCCESS')
+        if "tableName" in data:
+            real_child_model = self.discriminator_value_class_map.get("SUCCESS")
             return real_child_model
         return None
 
@@ -101,18 +101,20 @@ class BaseReasonerResult(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

@@ -15,41 +15,40 @@ package com.antgroup.openspg.common.service.datasource;
 
 import com.antgroup.openspg.api.facade.dto.common.request.DataSourceQueryRequest;
 import com.antgroup.openspg.common.model.datasource.DataSource;
-
 import java.util.List;
 import java.util.Map;
 
 public interface DataSourceRepository {
 
-    /**
-     * 创建数据源
-     *
-     * @param dataSource dataSource
-     * @return 创建条数
-     */
-    int save(DataSource dataSource);
+  /**
+   * 创建数据源
+   *
+   * @param dataSource dataSource
+   * @return 创建条数
+   */
+  int save(DataSource dataSource);
 
-    /**
-     * 根据数据源唯一名称获取数据源
-     *
-     * @param uniqueName 数据源唯一名称
-     * @return 数据源
-     */
-    DataSource get(String uniqueName);
+  /**
+   * 根据数据源唯一名称获取数据源
+   *
+   * @param uniqueName 数据源唯一名称
+   * @return 数据源
+   */
+  DataSource get(String uniqueName);
 
-    /**
-     * 查询数据源
-     *
-     * @param request
-     * @return
-     */
-    Map<String, DataSource> query(DataSourceQueryRequest request);
+  /**
+   * 查询数据源
+   *
+   * @param request
+   * @return
+   */
+  Map<String, DataSource> query(DataSourceQueryRequest request);
 
-    /**
-     * 批量获取数据源
-     *
-     * @param uniqueNames 数据源唯一名称
-     * @return 数据源
-     */
-    Map<String, DataSource> batchGet(List<String> uniqueNames);
+  /**
+   * 批量获取数据源
+   *
+   * @param uniqueNames 数据源唯一名称
+   * @return 数据源
+   */
+  Map<String, DataSource> batchGet(List<String> uniqueNames);
 }

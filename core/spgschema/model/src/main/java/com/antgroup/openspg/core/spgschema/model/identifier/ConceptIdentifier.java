@@ -13,84 +13,75 @@
 
 package com.antgroup.openspg.core.spgschema.model.identifier;
 
+import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Objects;
-
-/**
- * The identifier of concept, consists by id and name.
- */
+/** The identifier of concept, consists by id and name. */
 public class ConceptIdentifier extends BaseSPGIdentifier {
 
-    private static final long serialVersionUID = -6128518833361508382L;
+  private static final long serialVersionUID = -6128518833361508382L;
 
-    /**
-     * The seperator symbol between parent and child concept names.
-     */
-    public final static String SEPARATOR = "-";
+  /** The seperator symbol between parent and child concept names. */
+  public static final String SEPARATOR = "-";
 
-    /**
-     * Unique id of concept node.
-     */
-    private final String id;
+  /** Unique id of concept node. */
+  private final String id;
 
-    /**
-     * Unique name of concept node
-     */
-    private final String name;
+  /** Unique name of concept node */
+  private final String name;
 
-    public ConceptIdentifier(String id) {
-        super(SPGIdentifierTypeEnum.CONCEPT);
-        this.id = id;
-        this.name = genName(id);
+  public ConceptIdentifier(String id) {
+    super(SPGIdentifierTypeEnum.CONCEPT);
+    this.id = id;
+    this.name = genName(id);
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  private String genName(String id) {
+    String[] splits = id.split(SEPARATOR);
+    return splits[splits.length - 1];
+  }
+
+  public String getFatherId() {
+    String[] splits = id.split(SEPARATOR);
+    if (splits.length <= 1) {
+      return StringUtils.EMPTY;
+    } else {
+      StringBuilder stringBuilder = new StringBuilder();
+      for (int i = 0; i < splits.length - 2; i++) {
+        stringBuilder.append(splits[i]).append(SEPARATOR);
+      }
+      stringBuilder.append(splits[splits.length - 2]);
+      return stringBuilder.toString();
     }
+  }
 
-    public String getId() {
-        return id;
-    }
+  @Override
+  public String toString() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
+    if (!(o instanceof ConceptIdentifier)) {
+      return false;
+    }
+    ConceptIdentifier that = (ConceptIdentifier) o;
+    return Objects.equals(getId(), that.getId());
+  }
 
-    private String genName(String id) {
-        String[] splits = id.split(SEPARATOR);
-        return splits[splits.length - 1];
-    }
-
-    public String getFatherId() {
-        String[] splits = id.split(SEPARATOR);
-        if (splits.length <= 1) {
-            return StringUtils.EMPTY;
-        } else {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < splits.length - 2; i++) {
-                stringBuilder.append(splits[i]).append(SEPARATOR);
-            }
-            stringBuilder.append(splits[splits.length - 2]);
-            return stringBuilder.toString();
-        }
-    }
-
-    @Override
-    public String toString() {
-        return id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof ConceptIdentifier)) {
-            return false;
-        }
-        ConceptIdentifier that = (ConceptIdentifier) o;
-        return Objects.equals(getId(), that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(getId());
+  }
 }

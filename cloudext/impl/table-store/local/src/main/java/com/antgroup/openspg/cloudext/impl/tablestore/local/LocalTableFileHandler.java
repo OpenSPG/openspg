@@ -15,66 +15,61 @@ package com.antgroup.openspg.cloudext.impl.tablestore.local;
 
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableFileHandler;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.TableRecord;
-
 import com.opencsv.CSVWriter;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
-
 public class LocalTableFileHandler implements TableFileHandler {
 
-    private final CSVWriter csvWriter;
-    private final String tableName;
-    private final static int DEFAULT_BUFFER_SIZE = 1000;
-    private final Queue<String[]> buffer;
+  private final CSVWriter csvWriter;
+  private final String tableName;
+  private static final int DEFAULT_BUFFER_SIZE = 1000;
+  private final Queue<String[]> buffer;
 
-    public LocalTableFileHandler(CSVWriter csvWriter, String tableName) {
-        this.csvWriter = csvWriter;
-        this.tableName = tableName;
-        buffer = new ArrayBlockingQueue<>(DEFAULT_BUFFER_SIZE);
-    }
+  public LocalTableFileHandler(CSVWriter csvWriter, String tableName) {
+    this.csvWriter = csvWriter;
+    this.tableName = tableName;
+    buffer = new ArrayBlockingQueue<>(DEFAULT_BUFFER_SIZE);
+  }
 
-    @Override
-    public String getTableName() {
-        return tableName;
-    }
+  @Override
+  public String getTableName() {
+    return tableName;
+  }
 
-    @Override
-    public int write(TableRecord record) {
-        if (record.getValues() != null && record.getValues().length > 0) {
-            buffer.add(Arrays.stream(record.getValues())
-                .map(Object::toString)
-                .toArray(String[]::new));
-            if (buffer.size() == DEFAULT_BUFFER_SIZE) {
-                flushBuffer();
-            }
-            return 1;
-        }
-        return 0;
+  @Override
+  public int write(TableRecord record) {
+    if (record.getValues() != null && record.getValues().length > 0) {
+      buffer.add(Arrays.stream(record.getValues()).map(Object::toString).toArray(String[]::new));
+      if (buffer.size() == DEFAULT_BUFFER_SIZE) {
+        flushBuffer();
+      }
+      return 1;
     }
+    return 0;
+  }
 
-    @Override
-    public int batchWrite(List<TableRecord> records) {
-        for (TableRecord record : records) {
-            write(record);
-        }
-        return records.size();
+  @Override
+  public int batchWrite(List<TableRecord> records) {
+    for (TableRecord record : records) {
+      write(record);
     }
+    return records.size();
+  }
 
-    private synchronized void flushBuffer() {
-        while (!buffer.isEmpty()) {
-            csvWriter.writeNext(buffer.poll());
-        }
+  private synchronized void flushBuffer() {
+    while (!buffer.isEmpty()) {
+      csvWriter.writeNext(buffer.poll());
     }
+  }
 
-    @Override
-    public void close() throws Exception {
-        if (csvWriter != null) {
-            flushBuffer();
-            csvWriter.close();
-        }
+  @Override
+  public void close() throws Exception {
+    if (csvWriter != null) {
+      flushBuffer();
+      csvWriter.close();
     }
+  }
 }

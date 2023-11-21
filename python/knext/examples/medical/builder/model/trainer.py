@@ -88,17 +88,21 @@ def load_training_dataset(tokenizer, data_args, model_args, training_args):
 
 
 def load_data_collator(tokenizer, model, data_args):
-    label_pad_token_id = -100 if data_args.ignore_pad_token_for_loss else tokenizer.pad_token_id
+    label_pad_token_id = (
+        -100 if data_args.ignore_pad_token_for_loss else tokenizer.pad_token_id
+    )
     return DataCollatorForSeq2Seq(
         tokenizer,
         model=model,
         label_pad_token_id=label_pad_token_id,
         pad_to_multiple_of=None,
-        padding=False
+        padding=False,
     )
 
 
-def load_trainer(tokenizer, model, train_dataset, data_collator, data_args, training_args):
+def load_trainer(
+    tokenizer, model, train_dataset, data_collator, data_args, training_args
+):
     # Override the decoding parameters of Seq2SeqTrainer
     training_args.generation_max_length = (
         training_args.generation_max_length
@@ -106,7 +110,9 @@ def load_trainer(tokenizer, model, train_dataset, data_collator, data_args, trai
         else data_args.val_max_target_length
     )
     training_args.generation_num_beams = (
-        data_args.num_beams if data_args.num_beams is not None else training_args.generation_num_beams
+        data_args.num_beams
+        if data_args.num_beams is not None
+        else training_args.generation_num_beams
     )
 
     # Init PrefixTrainer
@@ -116,7 +122,9 @@ def load_trainer(tokenizer, model, train_dataset, data_collator, data_args, trai
         train_dataset=train_dataset,
         tokenizer=tokenizer,
         data_collator=data_collator,
-        compute_metrics=compute_metrics(tokenizer, data_args) if training_args.predict_with_generate else None,
+        compute_metrics=compute_metrics(tokenizer, data_args)
+        if training_args.predict_with_generate
+        else None,
     )
 
 
@@ -136,20 +144,34 @@ def preprocess(tokenizer, data_args):
             if examples[prompt_column][i] and examples[response_column][i]:
                 query, answer = examples[prompt_column][i], examples[response_column][i]
 
-                a_ids = tokenizer.encode(text=str(query), add_special_tokens=True, truncation=True,
-                                         max_length=data_args.max_source_length)
-                b_ids = tokenizer.encode(text=str(answer), add_special_tokens=False, truncation=True,
-                                         max_length=data_args.max_target_length)
+                a_ids = tokenizer.encode(
+                    text=str(query),
+                    add_special_tokens=True,
+                    truncation=True,
+                    max_length=data_args.max_source_length,
+                )
+                b_ids = tokenizer.encode(
+                    text=str(answer),
+                    add_special_tokens=False,
+                    truncation=True,
+                    max_length=data_args.max_target_length,
+                )
 
                 context_length = len(a_ids)
                 input_ids = a_ids + b_ids + [tokenizer.eos_token_id]
-                labels = [tokenizer.pad_token_id] * context_length + b_ids + [tokenizer.eos_token_id]
+                labels = (
+                    [tokenizer.pad_token_id] * context_length
+                    + b_ids
+                    + [tokenizer.eos_token_id]
+                )
 
                 pad_len = max_seq_length - len(input_ids)
                 input_ids = input_ids + [tokenizer.pad_token_id] * pad_len
                 labels = labels + [tokenizer.pad_token_id] * pad_len
                 if data_args.ignore_pad_token_for_loss:
-                    labels = [(l if l != tokenizer.pad_token_id else -100) for l in labels]
+                    labels = [
+                        (l if l != tokenizer.pad_token_id else -100) for l in labels
+                    ]
 
                 model_inputs["input_ids"].append(input_ids)
                 model_inputs["labels"].append(labels)
@@ -170,22 +192,21 @@ def compute_metrics(tokenizer, data_args):
             labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
         decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
-        score_dict = {
-            "rouge-1": [],
-            "rouge-2": [],
-            "rouge-l": [],
-            "bleu-4": []
-        }
+        score_dict = {"rouge-1": [], "rouge-2": [], "rouge-l": [], "bleu-4": []}
         for pred, label in zip(decoded_preds, decoded_labels):
             hypothesis = list(jieba.cut(pred))
             reference = list(jieba.cut(label))
             rouge = Rouge()
-            scores = rouge.get_scores(' '.join(hypothesis), ' '.join(reference))
+            scores = rouge.get_scores(" ".join(hypothesis), " ".join(reference))
             result = scores[0]
 
             for k, v in result.items():
                 score_dict[k].append(round(v["f"] * 100, 4))
-            bleu_score = sentence_bleu([list(label)], list(pred), smoothing_function=SmoothingFunction().method3)
+            bleu_score = sentence_bleu(
+                [list(label)],
+                list(pred),
+                smoothing_function=SmoothingFunction().method3,
+            )
             score_dict["bleu-4"].append(round(bleu_score * 100, 4))
 
         for k, v in score_dict.items():
@@ -197,30 +218,42 @@ def compute_metrics(tokenizer, data_args):
 
 def main():
     # Load parameters
-    parser = HfArgumentParser((ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments))
+    parser = HfArgumentParser(
+        (ModelArguments, DataTrainingArguments, Seq2SeqTrainingArguments)
+    )
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
     # Load config
-    config = AutoConfig.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
+    config = AutoConfig.from_pretrained(
+        model_args.model_name_or_path, trust_remote_code=True
+    )
     config.pre_seq_len = model_args.pre_seq_len
     config.prefix_projection = model_args.prefix_projection
 
     # Load tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(model_args.model_name_or_path, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(
+        model_args.model_name_or_path, trust_remote_code=True
+    )
 
     # Load model for P-tuning v2
-    model = AutoModel.from_pretrained(model_args.model_name_or_path, config=config, trust_remote_code=True)
+    model = AutoModel.from_pretrained(
+        model_args.model_name_or_path, config=config, trust_remote_code=True
+    )
     model = model.half()
     model.transformer.prefix_encoder.float()
 
     # Load training dataset
-    train_dataset = load_training_dataset(tokenizer, data_args, model_args, training_args)
+    train_dataset = load_training_dataset(
+        tokenizer, data_args, model_args, training_args
+    )
 
     # Load data collator
     data_collator = load_data_collator
 
     # Load trainer
-    trainer = load_trainer(tokenizer, model, train_dataset, data_collator, data_args, training_args)
+    trainer = load_trainer(
+        tokenizer, model, train_dataset, data_collator, data_args, training_args
+    )
 
     # Training
     checkpoint = None
@@ -236,7 +269,9 @@ def main():
     # Save metrics
     metrics = train_result.metrics
     max_train_samples = (
-        data_args.max_train_samples if data_args.max_train_samples is not None else len(train_dataset)
+        data_args.max_train_samples
+        if data_args.max_train_samples is not None
+        else len(train_dataset)
     )
     metrics["train_samples"] = min(max_train_samples, len(train_dataset))
     trainer.log_metrics("train", metrics)

@@ -15,63 +15,56 @@ package com.antgroup.openspg.core.spgschema.model.semantic.meta;
 
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-
 import java.util.EnumSet;
 
 public class CausalRelation extends BaseSemanticRelation {
 
-    private static final long serialVersionUID = -6748955479739907334L;
+  private static final long serialVersionUID = -6748955479739907334L;
 
-    enum CausalPredicateEnum {
-        /**
-         * Event propagation can be achieved through rules defined on predicates
-         */
-        leadTo("导致"),
-        ;
+  enum CausalPredicateEnum {
+    /** Event propagation can be achieved through rules defined on predicates */
+    leadTo("导致"),
+    ;
 
-        private final String nameZh;
+    private final String nameZh;
 
-        CausalPredicateEnum(String nameZh) {
-            this.nameZh = nameZh;
-        }
-
-        public String getNameZh() {
-            return nameZh;
-        }
+    CausalPredicateEnum(String nameZh) {
+      this.nameZh = nameZh;
     }
 
-    /**
-     * Accept concept type only
-     */
-    private final SPGTypeIdentifier subjectConceptTypeIdentifier;
-
-    /**
-     * Accept concept type only
-     */
-    private final SPGTypeIdentifier objectConceptTypeIdentifier;
-
-    private final CausalPredicateEnum predicate;
-
-    public CausalRelation(
-        SPGTypeIdentifier subjectConceptTypeIdentifier,
-        SPGTypeIdentifier objectConceptTypeIdentifier,
-        CausalPredicateEnum predicateEnum) {
-        super(EnumSet.of(SPGTypeEnum.CONCEPT_TYPE), EnumSet.of(SPGTypeEnum.CONCEPT_TYPE));
-
-        this.subjectConceptTypeIdentifier = subjectConceptTypeIdentifier;
-        this.objectConceptTypeIdentifier = objectConceptTypeIdentifier;
-        this.predicate = predicateEnum;
+    public String getNameZh() {
+      return nameZh;
     }
+  }
 
-    public SPGTypeIdentifier getSubjectConceptTypeIdentifier() {
-        return subjectConceptTypeIdentifier;
-    }
+  /** Accept concept type only */
+  private final SPGTypeIdentifier subjectConceptTypeIdentifier;
 
-    public SPGTypeIdentifier getObjectConceptTypeIdentifier() {
-        return objectConceptTypeIdentifier;
-    }
+  /** Accept concept type only */
+  private final SPGTypeIdentifier objectConceptTypeIdentifier;
 
-    public CausalPredicateEnum getPredicate() {
-        return predicate;
-    }
+  private final CausalPredicateEnum predicate;
+
+  public CausalRelation(
+      SPGTypeIdentifier subjectConceptTypeIdentifier,
+      SPGTypeIdentifier objectConceptTypeIdentifier,
+      CausalPredicateEnum predicateEnum) {
+    super(EnumSet.of(SPGTypeEnum.CONCEPT_TYPE), EnumSet.of(SPGTypeEnum.CONCEPT_TYPE));
+
+    this.subjectConceptTypeIdentifier = subjectConceptTypeIdentifier;
+    this.objectConceptTypeIdentifier = objectConceptTypeIdentifier;
+    this.predicate = predicateEnum;
+  }
+
+  public SPGTypeIdentifier getSubjectConceptTypeIdentifier() {
+    return subjectConceptTypeIdentifier;
+  }
+
+  public SPGTypeIdentifier getObjectConceptTypeIdentifier() {
+    return objectConceptTypeIdentifier;
+  }
+
+  public CausalPredicateEnum getPredicate() {
+    return predicate;
+  }
 }

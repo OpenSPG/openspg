@@ -13,7 +13,4 @@
 
 package com.antgroup.openspg.common.model.datasource.connection;
 
-
-public class JobSchedulerConnectionInfo extends BaseConnectionInfo {
-
-}
+public class JobSchedulerConnectionInfo extends BaseConnectionInfo {}

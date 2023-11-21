@@ -15,33 +15,25 @@ package com.antgroup.openspg.core.spgbuilder.engine.physical;
 
 import com.antgroup.openspg.api.facade.JSON;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
-
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.Map;
-
-/**
- * The transmission protocol used for basic data, with a format of key-value (KV).
- */
+/** The transmission protocol used for basic data, with a format of key-value (KV). */
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class BuilderRecord extends BaseRecord {
 
-    /**
-     * record id
-     */
-    private final String recordId;
+  /** record id */
+  private final String recordId;
 
-    /**
-     * Key-value representation of a single data record.
-     */
-    private final Map<String, String> props;
+  /** Key-value representation of a single data record. */
+  private final Map<String, String> props;
 
-    @Override
-    public String toString() {
-        return JSON.serialize(this);
-    }
+  @Override
+  public String toString() {
+    return JSON.serialize(this);
+  }
 }

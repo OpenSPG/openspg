@@ -15,16 +15,14 @@ package com.antgroup.openspg.cloudext.interfaces.tablestore.cmd;
 
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.ColumnMeta;
 import com.antgroup.openspg.common.model.base.BaseCmd;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 
 @Getter
 @AllArgsConstructor
 public class TableFileCreateCmd extends BaseCmd {
 
-    private final String name;
+  private final String name;
 
-    private final ColumnMeta[] columns;
+  private final ColumnMeta[] columns;
 }

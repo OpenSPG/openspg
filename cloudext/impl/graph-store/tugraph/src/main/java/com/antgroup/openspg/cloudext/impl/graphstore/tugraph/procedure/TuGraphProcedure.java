@@ -13,15 +13,13 @@
 
 package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.procedure;
 
-/**
- * TuGraph procedure.
- */
+/** TuGraph procedure. */
 public interface TuGraphProcedure {
 
-    /**
-     * Get cypher of this procedure
-     *
-     * @return
-     */
-    String getCypher() throws Exception;
+  /**
+   * Get cypher of this procedure
+   *
+   * @return
+   */
+  String getCypher() throws Exception;
 }

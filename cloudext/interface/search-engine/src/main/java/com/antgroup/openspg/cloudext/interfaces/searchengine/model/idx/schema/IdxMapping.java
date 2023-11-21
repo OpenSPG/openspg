@@ -14,16 +14,13 @@
 package com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.List;
-
 
 @Getter
 @AllArgsConstructor
 public class IdxMapping extends BaseValObj {
 
-    private final List<IdxField> idxFields;
+  private final List<IdxField> idxFields;
 }

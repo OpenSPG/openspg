@@ -15,17 +15,20 @@ package com.antgroup.openspg.core.spgschema.model;
 
 /**
  * RDF triple Class definition<br>
- * <p>In RDF framework, all knowledge is represented by triples in the format of <subject, predicate, object>.
- * There are the following usage scenarios of representing knowledge using triples:
+ *
+ * <p>In RDF framework, all knowledge is represented by triples in the format of <subject,
+ * predicate, object>. There are the following usage scenarios of representing knowledge using
+ * triples:
+ *
  * <ul>
- *     <li>Representing property: subject is generally an entity, concept or event. predicate is the name of
- *     property, object is literal constant or concept. For example, a knowledge such as the age of Jack is sixty
- *     years old，it can be represented by <Jack, age, 60>;</li>
- *     <li>Representing relation: the object is usually an entity, concept or event. For example, The founder
- *     of Alibaba is Jack Ma, it can be represented by: <Alibaba, funder, Jack>;</li>
+ *   <li>Representing property: subject is generally an entity, concept or event. predicate is the
+ *       name of property, object is literal constant or concept. For example, a knowledge such as
+ *       the age of Jack is sixty years old，it can be represented by <Jack, age, 60>;
+ *   <li>Representing relation: the object is usually an entity, concept or event. For example, The
+ *       founder of Alibaba is Jack Ma, it can be represented by: <Alibaba, funder, Jack>;
  * </ul>
  */
 public abstract class BaseSpoTriple extends BaseOntology {
 
-    private static final long serialVersionUID = 7245368292263515301L;
+  private static final long serialVersionUID = 7245368292263515301L;
 }

@@ -17,46 +17,39 @@ import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.BaseNodeConfig;
 
 /**
- * The node used to assemble the builder pipeline, which include the node ID, name, and node configuration.
+ * The node used to assemble the builder pipeline, which include the node ID, name, and node
+ * configuration.
  */
 public class Node extends BaseValObj {
 
-    /**
-     * The id of the node.
-     */
-    private final String id;
+  /** The id of the node. */
+  private final String id;
 
-    /**
-     * The name of the node.
-     */
-    private final String name;
+  /** The name of the node. */
+  private final String name;
 
-    /**
-     * The config of the node.
-     */
-    private final BaseNodeConfig nodeConfig;
+  /** The config of the node. */
+  private final BaseNodeConfig nodeConfig;
 
-    public Node(
-        String id, String name,
-        BaseNodeConfig nodeConfig) {
-        this.id = id;
-        this.name = name;
-        this.nodeConfig = nodeConfig;
-    }
+  public Node(String id, String name, BaseNodeConfig nodeConfig) {
+    this.id = id;
+    this.name = name;
+    this.nodeConfig = nodeConfig;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public BaseNodeConfig getNodeConfig() {
-        return nodeConfig;
-    }
+  public BaseNodeConfig getNodeConfig() {
+    return nodeConfig;
+  }
 
-    public NodeTypeEnum getType() {
-        return nodeConfig.getType();
-    }
+  public NodeTypeEnum getType() {
+    return nodeConfig.getType();
+  }
 }

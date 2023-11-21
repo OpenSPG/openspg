@@ -15,16 +15,15 @@ package com.antgroup.openspg.api.facade.dto.builder.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-
 public class OperatorVersionRequest extends BaseRequest {
 
-    private Long operatorId;
+  private Long operatorId;
 
-    public Long getOperatorId() {
-        return operatorId;
-    }
+  public Long getOperatorId() {
+    return operatorId;
+  }
 
-    public void setOperatorId(Long operatorId) {
-        this.operatorId = operatorId;
-    }
+  public void setOperatorId(Long operatorId) {
+    this.operatorId = operatorId;
+  }
 }

@@ -14,24 +14,21 @@
 package com.antgroup.openspg.common.service.lock.model;
 
 import com.antgroup.openspg.common.model.base.BaseModel;
-
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.Date;
-
 
 @Getter
 @AllArgsConstructor
 public class SysLock extends BaseModel {
 
-    private static final long serialVersionUID = -4474159076716878694L;
+  private static final long serialVersionUID = -4474159076716878694L;
 
-    private final Date gmtCreate;
+  private final Date gmtCreate;
 
-    private final Date gmtModified;
+  private final Date gmtModified;
 
-    private final String methodName;
+  private final String methodName;
 
-    private final String methodValue;
+  private final String methodValue;
 }

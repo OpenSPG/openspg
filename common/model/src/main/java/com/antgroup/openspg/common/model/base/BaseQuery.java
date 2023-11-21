@@ -13,9 +13,5 @@
 
 package com.antgroup.openspg.common.model.base;
 
-/**
- * Base class for query requests
- */
-public class BaseQuery extends BaseToString {
-
-}
+/** Base class for query requests */
+public class BaseQuery extends BaseToString {}

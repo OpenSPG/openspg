@@ -14,23 +14,23 @@
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 
 public class DataSourceDOWithBLOBs extends DataSourceDO {
-    private String connInfo;
+  private String connInfo;
 
-    private String physicalInfo;
+  private String physicalInfo;
 
-    public String getConnInfo() {
-        return connInfo;
-    }
+  public String getConnInfo() {
+    return connInfo;
+  }
 
-    public void setConnInfo(String connInfo) {
-        this.connInfo = connInfo == null ? null : connInfo.trim();
-    }
+  public void setConnInfo(String connInfo) {
+    this.connInfo = connInfo == null ? null : connInfo.trim();
+  }
 
-    public String getPhysicalInfo() {
-        return physicalInfo;
-    }
+  public String getPhysicalInfo() {
+    return physicalInfo;
+  }
 
-    public void setPhysicalInfo(String physicalInfo) {
-        this.physicalInfo = physicalInfo == null ? null : physicalInfo.trim();
-    }
+  public void setPhysicalInfo(String physicalInfo) {
+    this.physicalInfo = physicalInfo == null ? null : physicalInfo.trim();
+  }
 }

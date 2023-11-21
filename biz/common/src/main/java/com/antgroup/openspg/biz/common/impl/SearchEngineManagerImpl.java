@@ -20,27 +20,24 @@ import com.antgroup.openspg.biz.common.SearchEngineManager;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
 import com.antgroup.openspg.common.model.datasource.connection.SearchEngineConnectionInfo;
 import com.antgroup.openspg.common.service.datasource.DataSourceService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class SearchEngineManagerImpl implements SearchEngineManager {
 
-    @Autowired
-    private DataSourceService dataSourceService;
+  @Autowired private DataSourceService dataSourceService;
 
-    @Override
-    public SearchEngineIndexResponse queryIndex(SearchEngineIndexRequest request) {
-        SearchEngineClient searchEngineClient = dataSourceService
-            .buildSharedSearchEngineClient();
+  @Override
+  public SearchEngineIndexResponse queryIndex(SearchEngineIndexRequest request) {
+    SearchEngineClient searchEngineClient = dataSourceService.buildSharedSearchEngineClient();
 
-        String convertedIndexName = searchEngineClient.getIdxNameConvertor()
-            .convertIdxName(request.getSpgType());
-        SearchEngineConnectionInfo connInfo = (SearchEngineConnectionInfo) searchEngineClient.getConnInfo();
-        return new SearchEngineIndexResponse()
-            .setIndexName(convertedIndexName)
-            .setConnInfo(JSON.serialize(connInfo));
-    }
+    String convertedIndexName =
+        searchEngineClient.getIdxNameConvertor().convertIdxName(request.getSpgType());
+    SearchEngineConnectionInfo connInfo =
+        (SearchEngineConnectionInfo) searchEngineClient.getConnInfo();
+    return new SearchEngineIndexResponse()
+        .setIndexName(convertedIndexName)
+        .setConnInfo(JSON.serialize(connInfo));
+  }
 }

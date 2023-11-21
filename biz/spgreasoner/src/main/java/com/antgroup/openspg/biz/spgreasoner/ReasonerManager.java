@@ -19,15 +19,13 @@ import com.antgroup.openspg.api.facade.dto.reasoner.request.ReasonerJobSubmitReq
 import com.antgroup.openspg.core.spgreasoner.model.service.JobReasonerReceipt;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInst;
 import com.antgroup.openspg.core.spgreasoner.model.service.TableReasonerReceipt;
-
 import java.util.List;
-
 
 public interface ReasonerManager {
 
-    TableReasonerReceipt runDsl(ReasonerDslRunRequest request);
+  TableReasonerReceipt runDsl(ReasonerDslRunRequest request);
 
-    JobReasonerReceipt submitJob(ReasonerJobSubmitRequest request);
+  JobReasonerReceipt submitJob(ReasonerJobSubmitRequest request);
 
-    List<ReasonerJobInst> queryJobInst(ReasonerJobInstQuery query);
+  List<ReasonerJobInst> queryJobInst(ReasonerJobInstQuery query);
 }

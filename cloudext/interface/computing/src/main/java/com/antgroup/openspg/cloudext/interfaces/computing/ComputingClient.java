@@ -25,28 +25,27 @@ import com.antgroup.openspg.core.spgbuilder.model.service.BuilderStatusWithProgr
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerStatusWithProgress;
 import com.antgroup.openspg.core.spgreasoner.model.service.TableReasonerReceipt;
 
-
 public interface ComputingClient extends CloudExtClient {
 
-    /* ----------------------- *
-     |      Builder Job        |
-     * ----------------------- */
+  /* ----------------------- *
+  |      Builder Job        |
+  * ----------------------- */
 
-    BuilderStatusWithProgress query(BuilderJobProcessQuery query);
+  BuilderStatusWithProgress query(BuilderJobProcessQuery query);
 
-    boolean canSubmit(BuilderJobCanSubmitQuery query);
+  boolean canSubmit(BuilderJobCanSubmitQuery query);
 
-    String submit(BuilderJobSubmitCmd cmd);
+  String submit(BuilderJobSubmitCmd cmd);
 
-    /* ----------------------- *
-     |      Reasoner Job       |
-     * ----------------------- */
+  /* ----------------------- *
+  |      Reasoner Job       |
+  * ----------------------- */
 
-    ReasonerStatusWithProgress query(ReasonerJobProcessQuery query);
+  ReasonerStatusWithProgress query(ReasonerJobProcessQuery query);
 
-    boolean canSubmit(ReasonerJobCanSubmitQuery query);
+  boolean canSubmit(ReasonerJobCanSubmitQuery query);
 
-    String submit(ReasonerJobSubmitCmd cmd);
+  String submit(ReasonerJobSubmitCmd cmd);
 
-    TableReasonerReceipt run(ReasonerJobRunCmd cmd);
+  TableReasonerReceipt run(ReasonerJobRunCmd cmd);
 }

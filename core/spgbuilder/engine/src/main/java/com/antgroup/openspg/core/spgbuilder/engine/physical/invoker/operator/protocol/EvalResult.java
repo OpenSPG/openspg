@@ -22,42 +22,36 @@ import java.util.List;
  */
 public class EvalResult<T> {
 
-    /**
-     * data
-     */
-    private T data;
+  /** data */
+  private T data;
 
-    /**
-     * trace log
-     */
-    private List<String> traces;
+  /** trace log */
+  private List<String> traces;
 
-    /**
-     * error log
-     */
-    private List<String> errors;
+  /** error log */
+  private List<String> errors;
 
-    public T getData() {
-        return data;
-    }
+  public T getData() {
+    return data;
+  }
 
-    public void setData(T data) {
-        this.data = data;
-    }
+  public void setData(T data) {
+    this.data = data;
+  }
 
-    public List<String> getTraces() {
-        return traces;
-    }
+  public List<String> getTraces() {
+    return traces;
+  }
 
-    public void setTraces(List<String> traces) {
-        this.traces = traces;
-    }
+  public void setTraces(List<String> traces) {
+    this.traces = traces;
+  }
 
-    public List<String> getErrors() {
-        return errors;
-    }
+  public List<String> getErrors() {
+    return errors;
+  }
 
-    public void setErrors(List<String> errors) {
-        this.errors = errors;
-    }
+  public void setErrors(List<String> errors) {
+    this.errors = errors;
+  }
 }

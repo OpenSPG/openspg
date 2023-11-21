@@ -14,41 +14,39 @@
 package com.antgroup.openspg.common.service.lock;
 
 import com.antgroup.openspg.common.service.lock.model.SysLock;
-
 import java.util.List;
-
 
 public interface SysLockRepository {
 
-    /**
-     * Query lock by name.
-     *
-     * @return
-     */
-    List<SysLock> queryAllLock();
+  /**
+   * Query lock by name.
+   *
+   * @return
+   */
+  List<SysLock> queryAllLock();
 
-    /**
-     * Check if exist the lock.
-     *
-     * @param lockName
-     * @return
-     */
-    boolean exist(String lockName);
+  /**
+   * Check if exist the lock.
+   *
+   * @param lockName
+   * @return
+   */
+  boolean exist(String lockName);
 
-    /**
-     * Add lock
-     *
-     * @param lockName
-     * @param lockValue
-     * @return
-     */
-    boolean addLock(String lockName, String lockValue);
+  /**
+   * Add lock
+   *
+   * @param lockName
+   * @param lockValue
+   * @return
+   */
+  boolean addLock(String lockName, String lockValue);
 
-    /**
-     * remove lock
-     *
-     * @param lockName
-     * @return
-     */
-    boolean removeLock(String lockName);
+  /**
+   * remove lock
+   *
+   * @param lockName
+   * @return
+   */
+  boolean removeLock(String lockName);
 }

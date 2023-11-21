@@ -16,53 +16,53 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 import java.util.Date;
 
 public class SysLockDO {
-    private Long id;
+  private Long id;
 
-    private Date gmtCreate;
+  private Date gmtCreate;
 
-    private Date gmtModified;
+  private Date gmtModified;
 
-    private String methodName;
+  private String methodName;
 
-    private String methodValue;
+  private String methodValue;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
+  public Date getGmtCreate() {
+    return gmtCreate;
+  }
 
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
+  public void setGmtCreate(Date gmtCreate) {
+    this.gmtCreate = gmtCreate;
+  }
 
-    public Date getGmtModified() {
-        return gmtModified;
-    }
+  public Date getGmtModified() {
+    return gmtModified;
+  }
 
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
+  public void setGmtModified(Date gmtModified) {
+    this.gmtModified = gmtModified;
+  }
 
-    public String getMethodName() {
-        return methodName;
-    }
+  public String getMethodName() {
+    return methodName;
+  }
 
-    public void setMethodName(String methodName) {
-        this.methodName = methodName == null ? null : methodName.trim();
-    }
+  public void setMethodName(String methodName) {
+    this.methodName = methodName == null ? null : methodName.trim();
+  }
 
-    public String getMethodValue() {
-        return methodValue;
-    }
+  public String getMethodValue() {
+    return methodValue;
+  }
 
-    public void setMethodValue(String methodValue) {
-        this.methodValue = methodValue == null ? null : methodValue.trim();
-    }
+  public void setMethodValue(String methodValue) {
+    this.methodValue = methodValue == null ? null : methodValue.trim();
+  }
 }

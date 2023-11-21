@@ -20,61 +20,50 @@ import com.antgroup.openspg.core.spgbuilder.service.OperatorService;
 import com.antgroup.openspg.core.spgbuilder.service.impl.convertor.OperatorConvertor;
 import com.antgroup.openspg.core.spgbuilder.service.repo.OperatorRepository;
 import com.antgroup.openspg.core.spgschema.model.type.OperatorKey;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class OperatorServiceImpl implements OperatorService {
 
-    @Autowired
-    private OperatorRepository operatorRepository;
+  @Autowired private OperatorRepository operatorRepository;
 
-    @Override
-    public List<OperatorConfig> query(Collection<OperatorKey> keys) {
-        List<OperatorConfig> operatorConfigs = new ArrayList<>(keys.size());
-        if (keys.isEmpty()) {
-            return operatorConfigs;
-        }
-        Map<String, List<OperatorKey>> operatorName2Keys = keys.stream()
-            .collect(Collectors.groupingBy(
-                OperatorKey::getName
-            ));
-        Map<String, OperatorOverview> operatorOverviews = operatorRepository
-            .batchQuery(new ArrayList<>(operatorName2Keys.keySet()))
-            .stream()
-            .collect(
-                Collectors.toMap(
-                    OperatorOverview::getName,
-                    Function.identity()
-                )
-            );
-
-        for (Map.Entry<String, List<OperatorKey>> entry : operatorName2Keys.entrySet()) {
-            String operatorName = entry.getKey();
-            List<OperatorKey> operatorKeys = entry.getValue();
-            OperatorOverview overview = operatorOverviews.get(operatorName);
-            if (overview == null) {
-                continue;
-            }
-
-            List<Integer> versionIds = operatorKeys.stream()
-                .map(OperatorKey::getVersion)
-                .distinct()
-                .collect(Collectors.toList());
-            List<OperatorVersion> versions = operatorRepository.batchQuery(overview.getId(), versionIds);
-            for (OperatorVersion version : versions) {
-                operatorConfigs.add(OperatorConvertor.toOperatorConfig(overview, version));
-            }
-        }
-        return operatorConfigs;
+  @Override
+  public List<OperatorConfig> query(Collection<OperatorKey> keys) {
+    List<OperatorConfig> operatorConfigs = new ArrayList<>(keys.size());
+    if (keys.isEmpty()) {
+      return operatorConfigs;
     }
+    Map<String, List<OperatorKey>> operatorName2Keys =
+        keys.stream().collect(Collectors.groupingBy(OperatorKey::getName));
+    Map<String, OperatorOverview> operatorOverviews =
+        operatorRepository.batchQuery(new ArrayList<>(operatorName2Keys.keySet())).stream()
+            .collect(Collectors.toMap(OperatorOverview::getName, Function.identity()));
+
+    for (Map.Entry<String, List<OperatorKey>> entry : operatorName2Keys.entrySet()) {
+      String operatorName = entry.getKey();
+      List<OperatorKey> operatorKeys = entry.getValue();
+      OperatorOverview overview = operatorOverviews.get(operatorName);
+      if (overview == null) {
+        continue;
+      }
+
+      List<Integer> versionIds =
+          operatorKeys.stream()
+              .map(OperatorKey::getVersion)
+              .distinct()
+              .collect(Collectors.toList());
+      List<OperatorVersion> versions = operatorRepository.batchQuery(overview.getId(), versionIds);
+      for (OperatorVersion version : versions) {
+        operatorConfigs.add(OperatorConvertor.toOperatorConfig(overview, version));
+      }
+    }
+    return operatorConfigs;
+  }
 }

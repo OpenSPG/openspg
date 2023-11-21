@@ -23,7 +23,6 @@ import com.antgroup.openspg.core.spgschema.model.predicate.Property;
 import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
 import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.spgschema.model.type.ProjectSchema;
-
 import com.dtflys.forest.annotation.Address;
 import com.dtflys.forest.annotation.BodyType;
 import com.dtflys.forest.annotation.Get;
@@ -31,26 +30,27 @@ import com.dtflys.forest.annotation.JSONBody;
 import com.dtflys.forest.annotation.Post;
 import com.dtflys.forest.annotation.Query;
 import com.dtflys.forest.http.ForestResponse;
-
 import java.util.List;
 
-
 @BodyType(type = "json")
-@Address(scheme = HttpClientConstants.SCHEME_VAR, host = HttpClientConstants.HOST_VAR, port = HttpClientConstants.PORT_VAR)
+@Address(
+    scheme = HttpClientConstants.SCHEME_VAR,
+    host = HttpClientConstants.HOST_VAR,
+    port = HttpClientConstants.PORT_VAR)
 public interface SchemaForestClient {
 
-    @Post(value = "/public/v1/schema/alterSchema")
-    ForestResponse<Boolean> alterSchema(@JSONBody SchemaAlterRequest request);
+  @Post(value = "/public/v1/schema/alterSchema")
+  ForestResponse<Boolean> alterSchema(@JSONBody SchemaAlterRequest request);
 
-    @Get(value = "/public/v1/schema/querySpgType")
-    ForestResponse<BaseSPGType> querySpgType(@Query SPGTypeRequest request);
+  @Get(value = "/public/v1/schema/querySpgType")
+  ForestResponse<BaseSPGType> querySpgType(@Query SPGTypeRequest request);
 
-    @Get(value = "/public/v1/schema/queryProjectSchema")
-    ForestResponse<ProjectSchema> queryProjectSchema(@Query ProjectSchemaRequest request);
+  @Get(value = "/public/v1/schema/queryProjectSchema")
+  ForestResponse<ProjectSchema> queryProjectSchema(@Query ProjectSchemaRequest request);
 
-    @Get(value = "/public/v1/schema/queryRelation")
-    ForestResponse<Relation> queryRelation(@Query RelationRequest request);
+  @Get(value = "/public/v1/schema/queryRelation")
+  ForestResponse<Relation> queryRelation(@Query RelationRequest request);
 
-    @Get(value = "/public/v1/schema/queryBuiltInProperty")
-    ForestResponse<List<Property>> queryBuiltInProperty(@Query BuiltInPropertyRequest request);
+  @Get(value = "/public/v1/schema/queryBuiltInProperty")
+  ForestResponse<List<Property>> queryBuiltInProperty(@Query BuiltInPropertyRequest request);
 }

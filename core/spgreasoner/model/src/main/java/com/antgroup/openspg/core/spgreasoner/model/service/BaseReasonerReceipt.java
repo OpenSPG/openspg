@@ -15,24 +15,21 @@ package com.antgroup.openspg.core.spgreasoner.model.service;
 
 import com.antgroup.openspg.common.model.base.BaseToString;
 
-
 /**
  * Base class for reasoning receipts.
- * <p>
- * Contains the reasoning mode and the reasoning receipt type for the current reasoning instance
+ *
+ * <p>Contains the reasoning mode and the reasoning receipt type for the current reasoning instance
  */
 public abstract class BaseReasonerReceipt extends BaseToString {
 
-    /**
-     * the reasoning receipt type
-     */
-    private final ReasonerReceiptTypeEnum receiptType;
+  /** the reasoning receipt type */
+  private final ReasonerReceiptTypeEnum receiptType;
 
-    public BaseReasonerReceipt(ReasonerReceiptTypeEnum receiptType) {
-        this.receiptType = receiptType;
-    }
+  public BaseReasonerReceipt(ReasonerReceiptTypeEnum receiptType) {
+    this.receiptType = receiptType;
+  }
 
-    public ReasonerReceiptTypeEnum getReceiptType() {
-        return receiptType;
-    }
+  public ReasonerReceiptTypeEnum getReceiptType() {
+    return receiptType;
+  }
 }

@@ -15,46 +15,42 @@ package com.antgroup.openspg.core.spgschema.model.identifier;
 
 import java.util.Objects;
 
-/**
- * The identity of operator, consist by the name of the operator.
- */
+/** The identity of operator, consist by the name of the operator. */
 public class OperatorIdentifier extends BaseSPGIdentifier {
 
-    private static final long serialVersionUID = 7417123139682600501L;
+  private static final long serialVersionUID = 7417123139682600501L;
 
-    /**
-     * Unique name of operator
-     */
-    private final String name;
+  /** Unique name of operator */
+  private final String name;
 
-    public OperatorIdentifier(String name) {
-        super(SPGIdentifierTypeEnum.OPERATOR);
-        this.name = name;
+  public OperatorIdentifier(String name) {
+    super(SPGIdentifierTypeEnum.OPERATOR);
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  @Override
+  public String toString() {
+    return name;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public String getName() {
-        return name;
+    if (!(o instanceof OperatorIdentifier)) {
+      return false;
     }
+    OperatorIdentifier that = (OperatorIdentifier) o;
+    return Objects.equals(getName(), that.getName());
+  }
 
-    @Override
-    public String toString() {
-        return name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof OperatorIdentifier)) {
-            return false;
-        }
-        OperatorIdentifier that = (OperatorIdentifier) o;
-        return Objects.equals(getName(), that.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName());
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(getName());
+  }
 }

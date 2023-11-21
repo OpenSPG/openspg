@@ -16,19 +16,16 @@ package com.antgroup.openspg.common.service.project.impl;
 import com.antgroup.openspg.common.model.project.Project;
 import com.antgroup.openspg.common.service.project.ProjectRepository;
 import com.antgroup.openspg.common.service.project.ProjectService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
-    @Autowired
-    private ProjectRepository projectRepository;
+  @Autowired private ProjectRepository projectRepository;
 
-    @Override
-    public Project queryById(Long projectId) {
-        return projectRepository.queryById(projectId);
-    }
+  @Override
+  public Project queryById(Long projectId) {
+    return projectRepository.queryById(projectId);
+  }
 }

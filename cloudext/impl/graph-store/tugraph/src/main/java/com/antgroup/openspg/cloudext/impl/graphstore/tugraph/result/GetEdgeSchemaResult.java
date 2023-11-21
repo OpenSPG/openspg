@@ -13,22 +13,16 @@
 
 package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.result;
 
-import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.model.TuGraphEdgeType;
-
 import com.alibaba.fastjson.annotation.JSONField;
+import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.model.TuGraphEdgeType;
+import java.io.Serializable;
 import lombok.Data;
 
-import java.io.Serializable;
-
-/**
- * Result of getting edge schema
- */
+/** Result of getting edge schema */
 @Data
 public class GetEdgeSchemaResult implements Serializable {
 
-    /**
-     * Schema
-     */
-    @JSONField(name = "schema")
-    private TuGraphEdgeType schema;
+  /** Schema */
+  @JSONField(name = "schema")
+  private TuGraphEdgeType schema;
 }

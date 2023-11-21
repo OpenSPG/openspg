@@ -15,16 +15,15 @@ package com.antgroup.openspg.api.facade.dto.common.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-
 public class SearchEngineIndexRequest extends BaseRequest {
 
-    private String spgType;
+  private String spgType;
 
-    public String getSpgType() {
-        return spgType;
-    }
+  public String getSpgType() {
+    return spgType;
+  }
 
-    public void setSpgType(String spgType) {
-        this.spgType = spgType;
-    }
+  public void setSpgType(String spgType) {
+    this.spgType = spgType;
+  }
 }

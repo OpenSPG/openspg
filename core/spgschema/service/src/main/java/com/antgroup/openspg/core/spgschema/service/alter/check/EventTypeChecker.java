@@ -17,40 +17,39 @@ import com.antgroup.openspg.core.spgschema.model.predicate.Property;
 import com.antgroup.openspg.core.spgschema.model.predicate.PropertyGroupEnum;
 import com.antgroup.openspg.core.spgschema.model.type.BaseAdvancedType;
 import com.antgroup.openspg.core.spgschema.model.type.EventType;
-
 import org.apache.commons.collections4.CollectionUtils;
-
 
 public class EventTypeChecker extends BaseSpgTypeChecker {
 
-    @Override
-    public void checkAdvancedConfig(BaseAdvancedType advancedType, SchemaCheckContext context) {
-        EventType eventType = (EventType) advancedType;
-        String schemaTypeName = eventType.getName();
+  @Override
+  public void checkAdvancedConfig(BaseAdvancedType advancedType, SchemaCheckContext context) {
+    EventType eventType = (EventType) advancedType;
+    String schemaTypeName = eventType.getName();
 
-        OperatorChecker.check(schemaTypeName, eventType.getAdvancedConfig().getLinkOperator());
-        OperatorChecker.check(schemaTypeName, eventType.getAdvancedConfig().getFuseOperator());
-        OperatorChecker.check(schemaTypeName, eventType.getAdvancedConfig().getExtractOperator());
+    OperatorChecker.check(schemaTypeName, eventType.getAdvancedConfig().getLinkOperator());
+    OperatorChecker.check(schemaTypeName, eventType.getAdvancedConfig().getFuseOperator());
+    OperatorChecker.check(schemaTypeName, eventType.getAdvancedConfig().getExtractOperator());
 
-        if (!containSubjectProperty(advancedType)) {
-            throw new IllegalArgumentException(String.format(
-                "event type must contain %s property", PropertyGroupEnum.SUBJECT.name().toLowerCase())
-            );
-        }
+    if (!containSubjectProperty(advancedType)) {
+      throw new IllegalArgumentException(
+          String.format(
+              "event type must contain %s property",
+              PropertyGroupEnum.SUBJECT.name().toLowerCase()));
+    }
+  }
+
+  private boolean containSubjectProperty(BaseAdvancedType advancedType) {
+    if (CollectionUtils.isEmpty(advancedType.getProperties())) {
+      return false;
     }
 
-    private boolean containSubjectProperty(BaseAdvancedType advancedType) {
-        if (CollectionUtils.isEmpty(advancedType.getProperties())) {
-            return false;
-        }
-
-        boolean found = false;
-        for (Property property : advancedType.getProperties()) {
-            if (PropertyGroupEnum.SUBJECT.equals(property.getPropertyGroup())) {
-                found = true;
-                break;
-            }
-        }
-        return found;
+    boolean found = false;
+    for (Property property : advancedType.getProperties()) {
+      if (PropertyGroupEnum.SUBJECT.equals(property.getPropertyGroup())) {
+        found = true;
+        break;
+      }
     }
+    return found;
+  }
 }

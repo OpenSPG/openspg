@@ -14,76 +14,71 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.LPGProperty;
-
 import com.google.common.collect.Lists;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
-
 
 @Getter
 public class AlterVertexTypeOperation extends BaseAlterTypeOperation {
 
-    @Setter
-    private String vertexTypeName;
+  @Setter private String vertexTypeName;
 
-    public AlterVertexTypeOperation(String vertexTypeName) {
-        this(vertexTypeName, Lists.newArrayList());
-    }
+  public AlterVertexTypeOperation(String vertexTypeName) {
+    this(vertexTypeName, Lists.newArrayList());
+  }
 
-    public AlterVertexTypeOperation(
-        String vertexTypeName, List<BaseSchemaAtomicOperation> atomicOperations) {
-        super(VertexEdgeTypeOperationEnum.ALTER_VERTEX_TYPE, atomicOperations);
-        this.vertexTypeName = vertexTypeName;
-    }
+  public AlterVertexTypeOperation(
+      String vertexTypeName, List<BaseSchemaAtomicOperation> atomicOperations) {
+    super(VertexEdgeTypeOperationEnum.ALTER_VERTEX_TYPE, atomicOperations);
+    this.vertexTypeName = vertexTypeName;
+  }
 
-    @Override
-    public void addProperty(LPGProperty property) {
-        atomicOperations.add(new AddPropertyOperation(property));
-    }
+  @Override
+  public void addProperty(LPGProperty property) {
+    atomicOperations.add(new AddPropertyOperation(property));
+  }
 
-    @Override
-    public void createIndex(String propertyName) {
-        createIndex(propertyName);
-    }
+  @Override
+  public void createIndex(String propertyName) {
+    createIndex(propertyName);
+  }
 
-    @Override
-    public void createIndex(String propertyName, boolean isUnique) {
-        atomicOperations.add(new CreateIndexOperation(propertyName, isUnique));
-    }
+  @Override
+  public void createIndex(String propertyName, boolean isUnique) {
+    atomicOperations.add(new CreateIndexOperation(propertyName, isUnique));
+  }
 
-    @Override
-    public void createIndex(String propertyName, boolean isUnique, boolean isGlobal) {
-        atomicOperations.add(new CreateIndexOperation(propertyName, isUnique, isGlobal));
-    }
+  @Override
+  public void createIndex(String propertyName, boolean isUnique, boolean isGlobal) {
+    atomicOperations.add(new CreateIndexOperation(propertyName, isUnique, isGlobal));
+  }
 
-    @Override
-    public void setTTL(String propertyName, long ts) {
-        atomicOperations.add(new SetTtlOperation(propertyName, ts));
-    }
+  @Override
+  public void setTTL(String propertyName, long ts) {
+    atomicOperations.add(new SetTtlOperation(propertyName, ts));
+  }
 
-    @Override
-    public void dropProperty(String propertyName) {
-        atomicOperations.add(new DropPropertyOperation(propertyName));
-    }
+  @Override
+  public void dropProperty(String propertyName) {
+    atomicOperations.add(new DropPropertyOperation(propertyName));
+  }
 
-    @Override
-    public void dropIndex(String propertyName) {
-        atomicOperations.add(new DropIndexOperation(propertyName));
-    }
+  @Override
+  public void dropIndex(String propertyName) {
+    atomicOperations.add(new DropIndexOperation(propertyName));
+  }
 
-    @Override
-    public void unsetTTL(String propertyName) {
-        atomicOperations.add(new UnsetTtlOperation(propertyName));
-    }
+  @Override
+  public void unsetTTL(String propertyName) {
+    atomicOperations.add(new UnsetTtlOperation(propertyName));
+  }
 
-    @Override
-    public String getTargetTypeName() {
-        return this.vertexTypeName;
-    }
+  @Override
+  public String getTargetTypeName() {
+    return this.vertexTypeName;
+  }
 
-    @Override
-    public void checkSchemaAtomicOperations() {
-    }
+  @Override
+  public void checkSchemaAtomicOperations() {}
 }

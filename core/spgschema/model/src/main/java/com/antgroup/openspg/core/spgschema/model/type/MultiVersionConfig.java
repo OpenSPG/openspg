@@ -17,49 +17,44 @@ import com.antgroup.openspg.common.model.base.BaseValObj;
 
 /**
  * The configuration of data storing multi version<br>
- * <p>the properties or concept can be stored ont only one version data in knowledge warehouse, the configuration about
- * multi version usually include the following elements:：
+ *
+ * <p>the properties or concept can be stored ont only one version data in knowledge warehouse, the
+ * configuration about multi version usually include the following elements:：
+ *
  * <ul>
- *     <li>{@link MultiVersionConfig#pattern}: the pattern of data snapshot, such as yyyymmdd</li>
- *     <li>{@link MultiVersionConfig#maxVersion}: the maximum version that stored</li>
- *     <li>{@link MultiVersionConfig#ttl}: how many days that reserved</li>
+ *   <li>{@link MultiVersionConfig#pattern}: the pattern of data snapshot, such as yyyymmdd
+ *   <li>{@link MultiVersionConfig#maxVersion}: the maximum version that stored
+ *   <li>{@link MultiVersionConfig#ttl}: how many days that reserved
  * </ul>
- * </p>
  */
 public class MultiVersionConfig extends BaseValObj {
 
-    private static final long serialVersionUID = -4546449509123335007L;
+  private static final long serialVersionUID = -4546449509123335007L;
 
-    /**
-     * The pattern of data snapshot.
-     */
-    private final String pattern;
+  /** The pattern of data snapshot. */
+  private final String pattern;
 
-    /**
-     * The maximum of version kept in storage.
-     */
-    private final Integer maxVersion;
+  /** The maximum of version kept in storage. */
+  private final Integer maxVersion;
 
-    /**
-     * The days that data kept in storage, ttl=-1 means kept forever.
-     */
-    private final Integer ttl;
+  /** The days that data kept in storage, ttl=-1 means kept forever. */
+  private final Integer ttl;
 
-    public MultiVersionConfig(String pattern, Integer maxVersion, Integer ttl) {
-        this.pattern = pattern;
-        this.maxVersion = maxVersion;
-        this.ttl = ttl;
-    }
+  public MultiVersionConfig(String pattern, Integer maxVersion, Integer ttl) {
+    this.pattern = pattern;
+    this.maxVersion = maxVersion;
+    this.ttl = ttl;
+  }
 
-    public String getPattern() {
-        return pattern;
-    }
+  public String getPattern() {
+    return pattern;
+  }
 
-    public Integer getMaxVersion() {
-        return maxVersion;
-    }
+  public Integer getMaxVersion() {
+    return maxVersion;
+  }
 
-    public Integer getTtl() {
-        return ttl;
-    }
+  public Integer getTtl() {
+    return ttl;
+  }
 }

@@ -15,12 +15,11 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc;
 
 import java.util.regex.Pattern;
 
-
 public class SecurityUtils {
 
-    private final static Pattern PATTERN = Pattern.compile("[^a-zA-Z0-9_\\s+]");
+  private static final Pattern PATTERN = Pattern.compile("[^a-zA-Z0-9_\\s+]");
 
-    public static String trimSql4OrderBy(String orderBy) {
-        return PATTERN.matcher(orderBy).replaceAll("");
-    }
+  public static String trimSql4OrderBy(String orderBy) {
+    return PATTERN.matcher(orderBy).replaceAll("");
+  }
 }

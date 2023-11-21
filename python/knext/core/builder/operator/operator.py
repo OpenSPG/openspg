@@ -28,9 +28,7 @@ class OperatorTypeEnum(str, Enum):
 
 
 class Operator(object):
-    """SPG Operator Client.
-
-    """
+    """SPG Operator Client."""
 
     def __init__(
         self,

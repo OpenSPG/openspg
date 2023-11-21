@@ -15,28 +15,27 @@ package com.antgroup.openspg.api.facade.dto.common.response;
 
 import com.antgroup.openspg.common.model.base.BaseResponse;
 
-
 public class ObjectStoreResponse extends BaseResponse {
 
-    private String relativePath;
+  private String relativePath;
 
-    private String absolutePath;
+  private String absolutePath;
 
-    public String getRelativePath() {
-        return relativePath;
-    }
+  public String getRelativePath() {
+    return relativePath;
+  }
 
-    public ObjectStoreResponse setRelativePath(String relativePath) {
-        this.relativePath = relativePath;
-        return this;
-    }
+  public ObjectStoreResponse setRelativePath(String relativePath) {
+    this.relativePath = relativePath;
+    return this;
+  }
 
-    public String getAbsolutePath() {
-        return absolutePath;
-    }
+  public String getAbsolutePath() {
+    return absolutePath;
+  }
 
-    public ObjectStoreResponse setAbsolutePath(String absolutePath) {
-        this.absolutePath = absolutePath;
-        return this;
-    }
+  public ObjectStoreResponse setAbsolutePath(String absolutePath) {
+    this.absolutePath = absolutePath;
+    return this;
+  }
 }

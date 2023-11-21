@@ -19,25 +19,29 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface OperatorVersionDOMapper {
-    long countByExample(OperatorVersionDOExample example);
+  long countByExample(OperatorVersionDOExample example);
 
-    int deleteByExample(OperatorVersionDOExample example);
+  int deleteByExample(OperatorVersionDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(OperatorVersionDO record);
+  int insert(OperatorVersionDO record);
 
-    int insertSelective(OperatorVersionDO record);
+  int insertSelective(OperatorVersionDO record);
 
-    List<OperatorVersionDO> selectByExample(OperatorVersionDOExample example);
+  List<OperatorVersionDO> selectByExample(OperatorVersionDOExample example);
 
-    OperatorVersionDO selectByPrimaryKey(Long id);
+  OperatorVersionDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") OperatorVersionDO record, @Param("example") OperatorVersionDOExample example);
+  int updateByExampleSelective(
+      @Param("record") OperatorVersionDO record,
+      @Param("example") OperatorVersionDOExample example);
 
-    int updateByExample(@Param("record") OperatorVersionDO record, @Param("example") OperatorVersionDOExample example);
+  int updateByExample(
+      @Param("record") OperatorVersionDO record,
+      @Param("example") OperatorVersionDOExample example);
 
-    int updateByPrimaryKeySelective(OperatorVersionDO record);
+  int updateByPrimaryKeySelective(OperatorVersionDO record);
 
-    int updateByPrimaryKey(OperatorVersionDO record);
+  int updateByPrimaryKey(OperatorVersionDO record);
 }

@@ -14,63 +14,63 @@
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 
 public class ReleaseDOWithBLOBs extends ReleaseDO {
-    private String schemaView;
+  private String schemaView;
 
-    private String description;
+  private String description;
 
-    private String changeProcedureId;
+  private String changeProcedureId;
 
-    private String operationDetail;
+  private String operationDetail;
 
-    private String errorDetail;
+  private String errorDetail;
 
-    private String operationInfo;
+  private String operationInfo;
 
-    public String getSchemaView() {
-        return schemaView;
-    }
+  public String getSchemaView() {
+    return schemaView;
+  }
 
-    public void setSchemaView(String schemaView) {
-        this.schemaView = schemaView == null ? null : schemaView.trim();
-    }
+  public void setSchemaView(String schemaView) {
+    this.schemaView = schemaView == null ? null : schemaView.trim();
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
-    }
+  public void setDescription(String description) {
+    this.description = description == null ? null : description.trim();
+  }
 
-    public String getChangeProcedureId() {
-        return changeProcedureId;
-    }
+  public String getChangeProcedureId() {
+    return changeProcedureId;
+  }
 
-    public void setChangeProcedureId(String changeProcedureId) {
-        this.changeProcedureId = changeProcedureId == null ? null : changeProcedureId.trim();
-    }
+  public void setChangeProcedureId(String changeProcedureId) {
+    this.changeProcedureId = changeProcedureId == null ? null : changeProcedureId.trim();
+  }
 
-    public String getOperationDetail() {
-        return operationDetail;
-    }
+  public String getOperationDetail() {
+    return operationDetail;
+  }
 
-    public void setOperationDetail(String operationDetail) {
-        this.operationDetail = operationDetail == null ? null : operationDetail.trim();
-    }
+  public void setOperationDetail(String operationDetail) {
+    this.operationDetail = operationDetail == null ? null : operationDetail.trim();
+  }
 
-    public String getErrorDetail() {
-        return errorDetail;
-    }
+  public String getErrorDetail() {
+    return errorDetail;
+  }
 
-    public void setErrorDetail(String errorDetail) {
-        this.errorDetail = errorDetail == null ? null : errorDetail.trim();
-    }
+  public void setErrorDetail(String errorDetail) {
+    this.errorDetail = errorDetail == null ? null : errorDetail.trim();
+  }
 
-    public String getOperationInfo() {
-        return operationInfo;
-    }
+  public String getOperationInfo() {
+    return operationInfo;
+  }
 
-    public void setOperationInfo(String operationInfo) {
-        this.operationInfo = operationInfo == null ? null : operationInfo.trim();
-    }
+  public void setOperationInfo(String operationInfo) {
+    this.operationInfo = operationInfo == null ? null : operationInfo.trim();
+  }
 }

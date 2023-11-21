@@ -15,74 +15,47 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.
 
 import lombok.Data;
 
-
 @Data
 public class OperatorConfigDO {
 
-    private static final long serialVersionUID = -8961467524485610108L;
+  private static final long serialVersionUID = -8961467524485610108L;
 
-    /**
-     * The operator id.
-     */
-    private Long id;
+  /** The operator id. */
+  private Long id;
 
-    /**
-     * The operator name
-     */
-    private String name;
+  /** The operator name */
+  private String name;
 
-    /**
-     * The operator version.
-     */
-    private Integer version;
+  /** The operator version. */
+  private Integer version;
 
-    /**
-     * The operator url.
-     */
-    private String operatorUrl;
+  /** The operator url. */
+  private String operatorUrl;
 
-    /**
-     * The operator description.
-     */
-    private String description;
+  /** The operator description. */
+  private String description;
 
-    /**
-     * If the operator is very good.
-     */
-    private Integer iGood;
+  /** If the operator is very good. */
+  private Integer iGood;
 
-    /**
-     * The basic id of operator, multi version operators have same basic id.
-     */
-    private Long overviewId;
+  /** The basic id of operator, multi version operators have same basic id. */
+  private Long overviewId;
 
-    /**
-     * Operator type
-     **/
-    private String operatorType;
+  /** Operator type */
+  private String operatorType;
 
-    /**
-     * The parameters of operator
-     */
-    private String params;
+  /** The parameters of operator */
+  private String params;
 
-    /**
-     * The address of operator.
-     */
-    private String jarAddress;
+  /** The address of operator. */
+  private String jarAddress;
 
-    /**
-     * The script of operator, only is valid for python operator.
-     */
-    private String script;
+  /** The script of operator, only is valid for python operator. */
+  private String script;
 
-    /**
-     * The language of develop operator by.
-     */
-    private String lang;
+  /** The language of develop operator by. */
+  private String lang;
 
-    /**
-     * The main class of operator jar to execute.
-     */
-    private String mainClass;
+  /** The main class of operator jar to execute. */
+  private String mainClass;
 }

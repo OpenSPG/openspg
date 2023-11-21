@@ -19,115 +19,101 @@ import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
 
-/**
- * Simple semantic object, mapping data object
- */
+/** Simple semantic object, mapping data object */
 public class SimpleSemantic extends BaseValObj {
 
-    private static final long serialVersionUID = 3587557458744988394L;
+  private static final long serialVersionUID = 3587557458744988394L;
 
-    /**
-     * The unique id of subject.
-     */
-    private final String subjectId;
+  /** The unique id of subject. */
+  private final String subjectId;
 
-    /**
-     * The unique id of object.
-     */
-    private final String objectId;
+  /** The unique id of object. */
+  private final String objectId;
 
-    /**
-     * The predicate name.
-     */
-    private final PredicateIdentifier predicateIdentifier;
+  /** The predicate name. */
+  private final PredicateIdentifier predicateIdentifier;
 
-    /**
-     * The unique name of subject type.
-     */
-    private SPGTypeIdentifier subjectTypeIdentifier;
+  /** The unique name of subject type. */
+  private SPGTypeIdentifier subjectTypeIdentifier;
 
-    /**
-     * The unique name of object type.
-     */
-    private SPGTypeIdentifier objectTypeIdentifier;
+  /** The unique name of object type. */
+  private SPGTypeIdentifier objectTypeIdentifier;
 
-    /**
-     * Rule code of logic rule.
-     */
-    private RuleCode ruleCode;
+  /** Rule code of logic rule. */
+  private RuleCode ruleCode;
 
-    /**
-     * Ontology type.
-     */
-    private SPGOntologyEnum ontologyEnum;
+  /** Ontology type. */
+  private SPGOntologyEnum ontologyEnum;
 
-    public SimpleSemantic(
-        SPGOntologyEnum ontologyEnum, String subjectId,
-        String objectId, PredicateIdentifier predicateIdentifier) {
-        this.ontologyEnum = ontologyEnum;
-        this.subjectId = subjectId;
-        this.objectId = objectId;
-        this.predicateIdentifier = predicateIdentifier;
-    }
+  public SimpleSemantic(
+      SPGOntologyEnum ontologyEnum,
+      String subjectId,
+      String objectId,
+      PredicateIdentifier predicateIdentifier) {
+    this.ontologyEnum = ontologyEnum;
+    this.subjectId = subjectId;
+    this.objectId = objectId;
+    this.predicateIdentifier = predicateIdentifier;
+  }
 
-    public SimpleSemantic(
-        SPGOntologyEnum ontologyEnum,
-        String subjectId,
-        String objectId,
-        PredicateIdentifier predicateIdentifier,
-        SPGTypeIdentifier subjectTypeIdentifier,
-        SPGTypeIdentifier objectTypeIdentifier,
-        RuleCode ruleCode) {
-        this.ontologyEnum = ontologyEnum;
-        this.subjectId = subjectId;
-        this.objectId = objectId;
-        this.predicateIdentifier = predicateIdentifier;
-        this.subjectTypeIdentifier = subjectTypeIdentifier;
-        this.objectTypeIdentifier = objectTypeIdentifier;
-        this.ruleCode = ruleCode;
-    }
+  public SimpleSemantic(
+      SPGOntologyEnum ontologyEnum,
+      String subjectId,
+      String objectId,
+      PredicateIdentifier predicateIdentifier,
+      SPGTypeIdentifier subjectTypeIdentifier,
+      SPGTypeIdentifier objectTypeIdentifier,
+      RuleCode ruleCode) {
+    this.ontologyEnum = ontologyEnum;
+    this.subjectId = subjectId;
+    this.objectId = objectId;
+    this.predicateIdentifier = predicateIdentifier;
+    this.subjectTypeIdentifier = subjectTypeIdentifier;
+    this.objectTypeIdentifier = objectTypeIdentifier;
+    this.ruleCode = ruleCode;
+  }
 
-    public String getSubjectId() {
-        return subjectId;
-    }
+  public String getSubjectId() {
+    return subjectId;
+  }
 
-    public String getObjectId() {
-        return objectId;
-    }
+  public String getObjectId() {
+    return objectId;
+  }
 
-    public PredicateIdentifier getPredicateIdentifier() {
-        return predicateIdentifier;
-    }
+  public PredicateIdentifier getPredicateIdentifier() {
+    return predicateIdentifier;
+  }
 
-    public SPGTypeIdentifier getSubjectTypeIdentifier() {
-        return subjectTypeIdentifier;
-    }
+  public SPGTypeIdentifier getSubjectTypeIdentifier() {
+    return subjectTypeIdentifier;
+  }
 
-    public SPGTypeIdentifier getObjectTypeIdentifier() {
-        return objectTypeIdentifier;
-    }
+  public SPGTypeIdentifier getObjectTypeIdentifier() {
+    return objectTypeIdentifier;
+  }
 
-    public RuleCode getRuleCode() {
-        return ruleCode;
-    }
+  public RuleCode getRuleCode() {
+    return ruleCode;
+  }
 
-    public void setSubjectTypeIdentifier(SPGTypeIdentifier subjectTypeIdentifier) {
-        this.subjectTypeIdentifier = subjectTypeIdentifier;
-    }
+  public void setSubjectTypeIdentifier(SPGTypeIdentifier subjectTypeIdentifier) {
+    this.subjectTypeIdentifier = subjectTypeIdentifier;
+  }
 
-    public void setObjectTypeIdentifier(SPGTypeIdentifier objectTypeIdentifier) {
-        this.objectTypeIdentifier = objectTypeIdentifier;
-    }
+  public void setObjectTypeIdentifier(SPGTypeIdentifier objectTypeIdentifier) {
+    this.objectTypeIdentifier = objectTypeIdentifier;
+  }
 
-    public void setRuleCode(RuleCode ruleCode) {
-        this.ruleCode = ruleCode;
-    }
+  public void setRuleCode(RuleCode ruleCode) {
+    this.ruleCode = ruleCode;
+  }
 
-    public SPGOntologyEnum getOntologyType() {
-        return ontologyEnum;
-    }
+  public SPGOntologyEnum getOntologyType() {
+    return ontologyEnum;
+  }
 
-    public void setOntologyType(SPGOntologyEnum ontologyEnum) {
-        this.ontologyEnum = ontologyEnum;
-    }
+  public void setOntologyType(SPGOntologyEnum ontologyEnum) {
+    this.ontologyEnum = ontologyEnum;
+  }
 }

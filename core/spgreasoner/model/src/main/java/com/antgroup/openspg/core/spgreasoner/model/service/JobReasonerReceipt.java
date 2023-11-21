@@ -13,24 +13,23 @@
 
 package com.antgroup.openspg.core.spgreasoner.model.service;
 
-
 public class JobReasonerReceipt extends BaseReasonerReceipt {
 
-    private final Long reasonerJobInfoId;
+  private final Long reasonerJobInfoId;
 
-    private final Long reasonerJobInstId;
+  private final Long reasonerJobInstId;
 
-    public JobReasonerReceipt(Long reasonerJobInfoId, Long reasonerJobInstId) {
-        super(ReasonerReceiptTypeEnum.JOB);
-        this.reasonerJobInfoId = reasonerJobInfoId;
-        this.reasonerJobInstId = reasonerJobInstId;
-    }
+  public JobReasonerReceipt(Long reasonerJobInfoId, Long reasonerJobInstId) {
+    super(ReasonerReceiptTypeEnum.JOB);
+    this.reasonerJobInfoId = reasonerJobInfoId;
+    this.reasonerJobInstId = reasonerJobInstId;
+  }
 
-    public Long getReasonerJobInfoId() {
-        return reasonerJobInfoId;
-    }
+  public Long getReasonerJobInfoId() {
+    return reasonerJobInfoId;
+  }
 
-    public Long getReasonerJobInstId() {
-        return reasonerJobInstId;
-    }
+  public Long getReasonerJobInstId() {
+    return reasonerJobInstId;
+  }
 }

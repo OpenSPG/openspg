@@ -16,88 +16,80 @@ package com.antgroup.openspg.core.spgschema.model;
 import com.antgroup.openspg.common.model.UserInfo;
 import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.spgschema.model.identifier.BaseSPGIdentifier;
-
 import java.util.Objects;
 
 /**
- * The basic information of the ontology model, including a unique name, Chinese name, and description;
+ * The basic information of the ontology model, including a unique name, Chinese name, and
+ * description;
  */
 public class BasicInfo<N extends BaseSPGIdentifier> extends BaseValObj {
 
-    private static final long serialVersionUID = 5412142161259761200L;
+  private static final long serialVersionUID = 5412142161259761200L;
 
-    /**
-     * Unique name of spg type, property or relation.
-     */
-    private final N name;
+  /** Unique name of spg type, property or relation. */
+  private final N name;
 
-    /**
-     * Chinese name.
-     */
-    private String nameZh;
+  /** Chinese name. */
+  private String nameZh;
 
-    /**
-     * Description.
-     */
-    private String desc;
+  /** Description. */
+  private String desc;
 
-    /**
-     * Creator information.
-     */
-    private UserInfo creator;
+  /** Creator information. */
+  private UserInfo creator;
 
-    public BasicInfo(N name) {
-        this(name, null, null);
+  public BasicInfo(N name) {
+    this(name, null, null);
+  }
+
+  public BasicInfo(N name, String nameZh, String desc) {
+    this.name = name;
+    this.nameZh = nameZh;
+    this.desc = desc;
+  }
+
+  public N getName() {
+    return name;
+  }
+
+  public String getNameZh() {
+    return nameZh;
+  }
+
+  public String getDesc() {
+    return desc;
+  }
+
+  public UserInfo getCreator() {
+    return creator;
+  }
+
+  public void setCreator(UserInfo creator) {
+    this.creator = creator;
+  }
+
+  public void setNameZh(String nameZh) {
+    this.nameZh = nameZh;
+  }
+
+  public void setDesc(String desc) {
+    this.desc = desc;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public BasicInfo(N name, String nameZh, String desc) {
-        this.name = name;
-        this.nameZh = nameZh;
-        this.desc = desc;
+    if (!(o instanceof BasicInfo)) {
+      return false;
     }
+    BasicInfo<?> basicInfo = (BasicInfo<?>) o;
+    return Objects.equals(getName(), basicInfo.getName());
+  }
 
-    public N getName() {
-        return name;
-    }
-
-    public String getNameZh() {
-        return nameZh;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public UserInfo getCreator() {
-        return creator;
-    }
-
-    public void setCreator(UserInfo creator) {
-        this.creator = creator;
-    }
-
-    public void setNameZh(String nameZh) {
-        this.nameZh = nameZh;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof BasicInfo)) {
-            return false;
-        }
-        BasicInfo<?> basicInfo = (BasicInfo<?>) o;
-        return Objects.equals(getName(), basicInfo.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName());
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(getName());
+  }
 }

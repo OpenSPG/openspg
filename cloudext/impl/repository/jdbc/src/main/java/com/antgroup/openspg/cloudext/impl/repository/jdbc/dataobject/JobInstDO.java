@@ -16,103 +16,103 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject;
 import java.util.Date;
 
 public class JobInstDO {
-    private Long id;
+  private Long id;
 
-    private Date gmtCreate;
+  private Date gmtCreate;
 
-    private Date gmtModified;
+  private Date gmtModified;
 
-    private Long jobId;
+  private Long jobId;
 
-    private String type;
+  private String type;
 
-    private String status;
+  private String status;
 
-    private String host;
+  private String host;
 
-    private String traceId;
+  private String traceId;
 
-    private String idempotentId;
+  private String idempotentId;
 
-    private String result;
+  private String result;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Date getGmtCreate() {
-        return gmtCreate;
-    }
+  public Date getGmtCreate() {
+    return gmtCreate;
+  }
 
-    public void setGmtCreate(Date gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
+  public void setGmtCreate(Date gmtCreate) {
+    this.gmtCreate = gmtCreate;
+  }
 
-    public Date getGmtModified() {
-        return gmtModified;
-    }
+  public Date getGmtModified() {
+    return gmtModified;
+  }
 
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
-    }
+  public void setGmtModified(Date gmtModified) {
+    this.gmtModified = gmtModified;
+  }
 
-    public Long getJobId() {
-        return jobId;
-    }
+  public Long getJobId() {
+    return jobId;
+  }
 
-    public void setJobId(Long jobId) {
-        this.jobId = jobId;
-    }
+  public void setJobId(Long jobId) {
+    this.jobId = jobId;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public void setType(String type) {
-        this.type = type == null ? null : type.trim();
-    }
+  public void setType(String type) {
+    this.type = type == null ? null : type.trim();
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  public String getStatus() {
+    return status;
+  }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
+  public void setStatus(String status) {
+    this.status = status == null ? null : status.trim();
+  }
 
-    public String getHost() {
-        return host;
-    }
+  public String getHost() {
+    return host;
+  }
 
-    public void setHost(String host) {
-        this.host = host == null ? null : host.trim();
-    }
+  public void setHost(String host) {
+    this.host = host == null ? null : host.trim();
+  }
 
-    public String getTraceId() {
-        return traceId;
-    }
+  public String getTraceId() {
+    return traceId;
+  }
 
-    public void setTraceId(String traceId) {
-        this.traceId = traceId == null ? null : traceId.trim();
-    }
+  public void setTraceId(String traceId) {
+    this.traceId = traceId == null ? null : traceId.trim();
+  }
 
-    public String getIdempotentId() {
-        return idempotentId;
-    }
+  public String getIdempotentId() {
+    return idempotentId;
+  }
 
-    public void setIdempotentId(String idempotentId) {
-        this.idempotentId = idempotentId == null ? null : idempotentId.trim();
-    }
+  public void setIdempotentId(String idempotentId) {
+    this.idempotentId = idempotentId == null ? null : idempotentId.trim();
+  }
 
-    public String getResult() {
-        return result;
-    }
+  public String getResult() {
+    return result;
+  }
 
-    public void setResult(String result) {
-        this.result = result == null ? null : result.trim();
-    }
+  public void setResult(String result) {
+    this.result = result == null ? null : result.trim();
+  }
 }

@@ -18,12 +18,11 @@ import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobProcessQ
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobSubmitCmd;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderStatusWithProgress;
 
-
 public interface LocalBuilderExecutor {
 
-    BuilderStatusWithProgress query(BuilderJobProcessQuery query);
+  BuilderStatusWithProgress query(BuilderJobProcessQuery query);
 
-    boolean canSubmit(BuilderJobCanSubmitQuery query);
+  boolean canSubmit(BuilderJobCanSubmitQuery query);
 
-    String submit(BuilderJobSubmitCmd cmd);
+  String submit(BuilderJobSubmitCmd cmd);
 }

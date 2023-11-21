@@ -18,115 +18,97 @@ import com.antgroup.openspg.common.model.base.BaseModel;
 
 /**
  * The logic rule that defined on the property or relation<br>
+ *
  * <p>the logic rule usually contains the following core attributes：
+ *
  * <ul>
- *     <li>{@link LogicalRule#code}: unique id of logic rule</li>
- *     <li>{@link LogicalRule#version}: one rule can have multi versions</li>
- *     <li>{@link LogicalRule#status}: the status of the rule</li>
- *     <li>{@link LogicalRule#content}: the content of KGDSL</li>
+ *   <li>{@link LogicalRule#code}: unique id of logic rule
+ *   <li>{@link LogicalRule#version}: one rule can have multi versions
+ *   <li>{@link LogicalRule#status}: the status of the rule
+ *   <li>{@link LogicalRule#content}: the content of KGDSL
  * </ul>
- * </p>
  */
 public class LogicalRule extends BaseModel {
 
-    private static final long serialVersionUID = -1513161593222131407L;
+  private static final long serialVersionUID = -1513161593222131407L;
 
-    /**
-     * The unique id of the rule.
-     */
-    private RuleCode code;
+  /** The unique id of the rule. */
+  private RuleCode code;
 
-    /**
-     * The name of the rule.
-     */
-    private String name;
+  /** The name of the rule. */
+  private String name;
 
-    /**
-     * the version of the rule
-     */
-    private Integer version;
+  /** the version of the rule */
+  private Integer version;
 
-    /**
-     * If the version of rule is master.
-     */
-    private Boolean isMaster;
+  /** If the version of rule is master. */
+  private Boolean isMaster;
 
-    /**
-     * The status of rule.
-     */
-    private RuleStatusEnum status;
+  /** The status of rule. */
+  private RuleStatusEnum status;
 
-    /**
-     * The content of rule, usually is used by rule engine.
-     */
-    private String content;
+  /** The content of rule, usually is used by rule engine. */
+  private String content;
 
-    /**
-     * The userId
-     */
-    private UserInfo creator;
+  /** The userId */
+  private UserInfo creator;
 
-    public LogicalRule() {
+  public LogicalRule() {}
 
-    }
+  public LogicalRule(RuleCode ruleCode, String ruleName, String ruleContent) {
+    this(ruleCode, null, ruleName, null, null, ruleContent, null);
+  }
 
-    public LogicalRule(
-        RuleCode ruleCode,
-        String ruleName,
-        String ruleContent) {
-        this(ruleCode, null, ruleName, null, null, ruleContent, null);
-    }
+  public LogicalRule(
+      RuleCode ruleCode,
+      Integer version,
+      String ruleName,
+      Boolean isMaster,
+      RuleStatusEnum ruleStatus,
+      String ruleContent,
+      UserInfo creator) {
+    this.code = ruleCode;
+    this.version = version;
+    this.name = ruleName;
+    this.isMaster = isMaster;
+    this.status = ruleStatus;
+    this.content = ruleContent;
+    this.creator = creator;
+  }
 
-    public LogicalRule(
-        RuleCode ruleCode,
-        Integer version,
-        String ruleName,
-        Boolean isMaster,
-        RuleStatusEnum ruleStatus,
-        String ruleContent,
-        UserInfo creator) {
-        this.code = ruleCode;
-        this.version = version;
-        this.name = ruleName;
-        this.isMaster = isMaster;
-        this.status = ruleStatus;
-        this.content = ruleContent;
-        this.creator = creator;
-    }
+  public RuleCode getCode() {
+    return code;
+  }
 
-    public RuleCode getCode() {
-        return code;
-    }
+  public Integer getVersion() {
+    return version;
+  }
 
-    public Integer getVersion() {
-        return version;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public Boolean getMaster() {
+    return isMaster;
+  }
 
-    public Boolean getMaster() {
-        return isMaster;
-    }
+  public RuleStatusEnum getStatus() {
+    return status;
+  }
 
-    public RuleStatusEnum getStatus() {
-        return status;
-    }
+  public String getContent() {
+    return content;
+  }
 
-    public String getContent() {
-        return content;
-    }
+  public UserInfo getCreator() {
+    return creator;
+  }
 
-    public UserInfo getCreator() {
-        return creator;
-    }
+  public void setCode(RuleCode code) {
+    this.code = code;
+  }
 
-    public void setCode(RuleCode code) {
-        this.code = code;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
+  public void setContent(String content) {
+    this.content = content;
+  }
 }

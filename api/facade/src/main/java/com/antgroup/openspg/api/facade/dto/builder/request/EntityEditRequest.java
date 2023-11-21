@@ -13,7 +13,4 @@
 
 package com.antgroup.openspg.api.facade.dto.builder.request;
 
-
-public class EntityEditRequest extends BaseAdvancedEditRequest {
-
-}
+public class EntityEditRequest extends BaseAdvancedEditRequest {}

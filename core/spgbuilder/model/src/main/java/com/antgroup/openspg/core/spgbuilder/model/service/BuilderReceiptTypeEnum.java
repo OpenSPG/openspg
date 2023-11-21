@@ -14,6 +14,7 @@
 package com.antgroup.openspg.core.spgbuilder.model.service;
 
 public enum BuilderReceiptTypeEnum {
-    EMPTY, JOB,
-    ;
+  EMPTY,
+  JOB,
+  ;
 }

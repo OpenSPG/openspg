@@ -15,11 +15,9 @@ package com.antgroup.openspg.biz.common;
 
 import com.antgroup.openspg.api.facade.dto.common.request.ObjectStoreRequest;
 import com.antgroup.openspg.api.facade.dto.common.response.ObjectStoreResponse;
-
 import java.io.InputStream;
-
 
 public interface ObjectStoreManager {
 
-    ObjectStoreResponse objectStore(ObjectStoreRequest request, InputStream file);
+  ObjectStoreResponse objectStore(ObjectStoreRequest request, InputStream file);
 }

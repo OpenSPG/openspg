@@ -16,38 +16,36 @@ package com.antgroup.openspg.core.spgschema.service.alter.stage;
 import com.antgroup.openspg.core.spgschema.service.alter.model.SchemaAlterContext;
 
 /**
- * An abstract class in the schema change phase, representing a certain processing in the schema alter process. A
- * {@link com.alipay.sofa.ark.spi.pipeline} consists of multiple stages.
+ * An abstract class in the schema change phase, representing a certain processing in the schema
+ * alter process. A {@link com.alipay.sofa.ark.spi.pipeline} consists of multiple stages.
  */
 public abstract class BaseAlterStage {
 
-    /**
-     * The stage name
-     */
-    private final String name;
+  /** The stage name */
+  private final String name;
 
-    /**
-     * Create a stage
-     *
-     * @param name stage name
-     */
-    public BaseAlterStage(String name) {
-        this.name = name;
-    }
+  /**
+   * Create a stage
+   *
+   * @param name stage name
+   */
+  public BaseAlterStage(String name) {
+    this.name = name;
+  }
 
-    /**
-     * start to execute the stage.
-     *
-     * @param context the context of schema altering
-     */
-    public abstract void execute(SchemaAlterContext context);
+  /**
+   * start to execute the stage.
+   *
+   * @param context the context of schema altering
+   */
+  public abstract void execute(SchemaAlterContext context);
 
-    /**
-     * Get stage name
-     *
-     * @return stage name
-     */
-    public String getName() {
-        return name;
-    }
+  /**
+   * Get stage name
+   *
+   * @return stage name
+   */
+  public String getName() {
+    return name;
+  }
 }

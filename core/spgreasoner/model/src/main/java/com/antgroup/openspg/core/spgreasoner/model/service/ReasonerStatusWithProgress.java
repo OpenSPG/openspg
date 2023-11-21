@@ -16,37 +16,34 @@ package com.antgroup.openspg.core.spgreasoner.model.service;
 import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 
-
 public class ReasonerStatusWithProgress extends BaseValObj {
 
-    private final JobInstStatusEnum status;
+  private final JobInstStatusEnum status;
 
-    private final BaseReasonerResult result;
+  private final BaseReasonerResult result;
 
-    private final ReasonerProgress progress;
+  private final ReasonerProgress progress;
 
-    public ReasonerStatusWithProgress(JobInstStatusEnum status) {
-        this(status, null, null);
-    }
+  public ReasonerStatusWithProgress(JobInstStatusEnum status) {
+    this(status, null, null);
+  }
 
-    public ReasonerStatusWithProgress(
-        JobInstStatusEnum status,
-        BaseReasonerResult result,
-        ReasonerProgress progress) {
-        this.status = status;
-        this.result = result;
-        this.progress = progress;
-    }
+  public ReasonerStatusWithProgress(
+      JobInstStatusEnum status, BaseReasonerResult result, ReasonerProgress progress) {
+    this.status = status;
+    this.result = result;
+    this.progress = progress;
+  }
 
-    public JobInstStatusEnum getStatus() {
-        return status;
-    }
+  public JobInstStatusEnum getStatus() {
+    return status;
+  }
 
-    public BaseReasonerResult getResult() {
-        return result;
-    }
+  public BaseReasonerResult getResult() {
+    return result;
+  }
 
-    public ReasonerProgress getProgress() {
-        return progress;
-    }
+  public ReasonerProgress getProgress() {
+    return progress;
+  }
 }

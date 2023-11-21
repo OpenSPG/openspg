@@ -16,43 +16,37 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine;
 import com.antgroup.openspg.common.model.datasource.connection.SearchEngineConnectionInfo;
 import com.antgroup.openspg.common.model.exception.CloudExtException;
 import com.antgroup.openspg.common.util.DriverManagerUtils;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SearchEngineClientDriverManager {
 
-    private final static CopyOnWriteArrayList<SearchEngineClientDriver>
-        registeredDrivers = new CopyOnWriteArrayList<>();
+  private static final CopyOnWriteArrayList<SearchEngineClientDriver> registeredDrivers =
+      new CopyOnWriteArrayList<>();
 
-    private SearchEngineClientDriverManager() {
+  private SearchEngineClientDriverManager() {}
 
+  static {
+    DriverManagerUtils.loadDrivers("cloudext.searchengine.drivers", SearchEngineClientDriver.class);
+    log.info("search-engine DriverManager initialized");
+  }
+
+  public static synchronized void registerDriver(SearchEngineClientDriver driver) {
+    if (driver != null) {
+      registeredDrivers.addIfAbsent(driver);
+    } else {
+      throw new NullPointerException();
     }
+    log.info("registerDriver: {}", driver);
+  }
 
-    static {
-        DriverManagerUtils.loadDrivers(
-            "cloudext.searchengine.drivers", SearchEngineClientDriver.class);
-        log.info("search-engine DriverManager initialized");
+  public static SearchEngineClient getClient(SearchEngineConnectionInfo config) {
+    for (SearchEngineClientDriver driver : registeredDrivers) {
+      if (driver.acceptsConfig(config)) {
+        return driver.connect(config);
+      }
     }
-
-    public static synchronized void registerDriver(SearchEngineClientDriver driver) {
-        if (driver != null) {
-            registeredDrivers.addIfAbsent(driver);
-        } else {
-            throw new NullPointerException();
-        }
-        log.info("registerDriver: {}", driver);
-    }
-
-    public static SearchEngineClient getClient(SearchEngineConnectionInfo config) {
-        for (SearchEngineClientDriver driver : registeredDrivers) {
-            if (driver.acceptsConfig(config)) {
-                return driver.connect(config);
-            }
-        }
-        throw CloudExtException.driverNotExist(config);
-    }
+    throw CloudExtException.driverNotExist(config);
+  }
 }

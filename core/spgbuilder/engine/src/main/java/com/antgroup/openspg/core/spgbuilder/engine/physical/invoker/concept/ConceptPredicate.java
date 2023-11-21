@@ -16,13 +16,11 @@ package com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.concept;
 import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.core.spgschema.model.semantic.BaseConceptSemantic;
-
 import java.util.List;
-
 
 public interface ConceptPredicate<T extends BaseConceptSemantic> {
 
-    void init(RuntimeContext context);
+  void init(RuntimeContext context);
 
-    List<BaseSPGRecord> process(List<BaseSPGRecord> records, T conceptRule);
+  List<BaseSPGRecord> process(List<BaseSPGRecord> records, T conceptRule);
 }

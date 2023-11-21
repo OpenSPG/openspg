@@ -18,26 +18,24 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGR
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordAlterItem;
-
 import java.util.List;
-
 
 public class SPGTypeRecord2LPGStrategy extends BaseSPGRecord2LPGStrategy {
 
-    @Override
-    public List<LPGRecordAlterItem> translate(SPGRecordAlterItem item) {
+  @Override
+  public List<LPGRecordAlterItem> translate(SPGRecordAlterItem item) {
 
-        List<LPGRecordAlterItem> lpgRecordAlterItems = normalizeProperties(item);
+    List<LPGRecordAlterItem> lpgRecordAlterItems = normalizeProperties(item);
 
-        lpgRecordAlterItems.add(simplify(item));
+    lpgRecordAlterItems.add(simplify(item));
 
-        return lpgRecordAlterItems;
-    }
+    return lpgRecordAlterItems;
+  }
 
-    @Override
-    protected LPGRecordAlterItem simplify(SPGRecordAlterItem alterItem) {
-        BaseAdvancedRecord advancedRecord = (BaseAdvancedRecord) alterItem.getSpgRecord();
-        VertexRecord vertexRecord = VertexRecordConvertor.toVertexRecord(advancedRecord);
-        return new LPGRecordAlterItem(alterItem.getAlterOp(), vertexRecord);
-    }
+  @Override
+  protected LPGRecordAlterItem simplify(SPGRecordAlterItem alterItem) {
+    BaseAdvancedRecord advancedRecord = (BaseAdvancedRecord) alterItem.getSpgRecord();
+    VertexRecord vertexRecord = VertexRecordConvertor.toVertexRecord(advancedRecord);
+    return new LPGRecordAlterItem(alterItem.getAlterOp(), vertexRecord);
+  }
 }

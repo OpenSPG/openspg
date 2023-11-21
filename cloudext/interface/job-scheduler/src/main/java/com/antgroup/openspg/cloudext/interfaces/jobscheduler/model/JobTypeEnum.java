@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.cloudext.interfaces.jobscheduler.model;
 
-
 public enum JobTypeEnum {
-    BUILDING, REASONING,
-    ;
+  BUILDING,
+  REASONING,
+  ;
 }

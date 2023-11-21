@@ -19,24 +19,23 @@ import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordManipulateCmd;
 import com.antgroup.openspg.core.spgschema.model.SPGSchemaAlterCmd;
 import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
 
-
 public interface GraphStoreClient extends CloudExtClient {
 
-    /**
-     * Alter <tt>SPG</tt> schema.
-     *
-     * @param cmd command prompt of {@link BaseSPGType SPGType} alteration
-     * @return <code>true</code> if alteration is success, <code>false</code> otherwise.
-     */
-    boolean alterSchema(SPGSchemaAlterCmd cmd);
+  /**
+   * Alter <tt>SPG</tt> schema.
+   *
+   * @param cmd command prompt of {@link BaseSPGType SPGType} alteration
+   * @return <code>true</code> if alteration is success, <code>false</code> otherwise.
+   */
+  boolean alterSchema(SPGSchemaAlterCmd cmd);
 
-    /**
-     * Batch manipulate <tt>SPG</tt> records.
-     *
-     * @param cmd command prompt of {@link BaseSPGRecord SPGRecord} manipulation
-     * @return <code>true</code> if all manipulations are success, <code>false</code> otherwise.
-     */
-    boolean manipulateRecord(SPGRecordManipulateCmd cmd);
+  /**
+   * Batch manipulate <tt>SPG</tt> records.
+   *
+   * @param cmd command prompt of {@link BaseSPGRecord SPGRecord} manipulation
+   * @return <code>true</code> if all manipulations are success, <code>false</code> otherwise.
+   */
+  boolean manipulateRecord(SPGRecordManipulateCmd cmd);
 
-    void close() throws Exception;
+  void close() throws Exception;
 }

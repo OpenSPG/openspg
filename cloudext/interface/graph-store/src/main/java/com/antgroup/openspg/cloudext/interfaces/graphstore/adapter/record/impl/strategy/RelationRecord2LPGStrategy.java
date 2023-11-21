@@ -17,31 +17,26 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.c
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
 import com.antgroup.openspg.core.spgbuilder.model.record.RelationRecord;
 import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordAlterItem;
-
 import com.google.common.collect.Lists;
-
 import java.util.List;
 
 /**
- * <P>
- *     Strategy for translation from alter item of {@link RelationRecord} to {@link LPGRecordAlterItem}s.
- * </P>
+ * Strategy for translation from alter item of {@link RelationRecord} to {@link
+ * LPGRecordAlterItem}s.
  */
 public class RelationRecord2LPGStrategy extends BaseSPGRecord2LPGStrategy {
 
-    @Override
-    public List<LPGRecordAlterItem> translate(SPGRecordAlterItem item) {
-        return Lists.newArrayList(simplify(item));
-    }
+  @Override
+  public List<LPGRecordAlterItem> translate(SPGRecordAlterItem item) {
+    return Lists.newArrayList(simplify(item));
+  }
 
-    @Override
-    protected LPGRecordAlterItem simplify(SPGRecordAlterItem alterItem) {
+  @Override
+  protected LPGRecordAlterItem simplify(SPGRecordAlterItem alterItem) {
 
-        RelationRecord relationRecord = (RelationRecord) alterItem.getSpgRecord();
+    RelationRecord relationRecord = (RelationRecord) alterItem.getSpgRecord();
 
-        return new LPGRecordAlterItem(
-            alterItem.getAlterOp(),
-            EdgeRecordConvertor.toEdgeRecord(relationRecord)
-        );
-    }
+    return new LPGRecordAlterItem(
+        alterItem.getAlterOp(), EdgeRecordConvertor.toEdgeRecord(relationRecord));
+  }
 }

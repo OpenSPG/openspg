@@ -13,25 +13,23 @@
 
 package com.antgroup.openspg.common.service.lock;
 
-/**
- * This is interface of distribute lock
- */
+/** This is interface of distribute lock */
 public interface DistributeLockService {
 
-    /**
-     * Try to add lock
-     *
-     * @param key
-     * @param timeout
-     * @return true or false
-     */
-    boolean tryLock(String key, Long timeout);
+  /**
+   * Try to add lock
+   *
+   * @param key
+   * @param timeout
+   * @return true or false
+   */
+  boolean tryLock(String key, Long timeout);
 
-    /**
-     * Release lock
-     *
-     * @param key
-     * @return
-     */
-    boolean unlock(String key);
+  /**
+   * Release lock
+   *
+   * @param key
+   * @return
+   */
+  boolean unlock(String key);
 }

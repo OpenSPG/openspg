@@ -15,15 +15,13 @@ package com.antgroup.openspg.core.spgreasoner.service.repo;
 
 import com.antgroup.openspg.api.facade.dto.reasoner.request.ReasonerJobInfoQuery;
 import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInfo;
-
 import java.util.List;
-
 
 public interface ReasonerJobInfoRepository {
 
-    Long save(ReasonerJobInfo jobInfo);
+  Long save(ReasonerJobInfo jobInfo);
 
-    int updateExternalJobId(Long reasonerJobInfoId, String externalJobInfoId);
+  int updateExternalJobId(Long reasonerJobInfoId, String externalJobInfoId);
 
-    List<ReasonerJobInfo> query(ReasonerJobInfoQuery query);
+  List<ReasonerJobInfo> query(ReasonerJobInfoQuery query);
 }

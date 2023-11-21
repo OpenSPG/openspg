@@ -18,21 +18,18 @@ import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.JobInfoDO;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper.JobInfoDOMapper;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.scheduler.convertor.SchedulerJobInfoConvertor;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInfo;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 
 @Repository
 public class SchedulerJobInfoRepositoryImpl implements SchedulerJobInfoRepository {
 
-    @Autowired
-    private JobInfoDOMapper jobInfoDOMapper;
+  @Autowired private JobInfoDOMapper jobInfoDOMapper;
 
-    @Override
-    public String save(SchedulerJobInfo jobInfo) {
-        JobInfoDO jobInfoDO = SchedulerJobInfoConvertor.toDO(jobInfo);
-        jobInfoDOMapper.insert(jobInfoDO);
-        return String.valueOf(jobInfoDO.getId());
-    }
+  @Override
+  public String save(SchedulerJobInfo jobInfo) {
+    JobInfoDO jobInfoDO = SchedulerJobInfoConvertor.toDO(jobInfo);
+    jobInfoDOMapper.insert(jobInfoDO);
+    return String.valueOf(jobInfoDO.getId());
+  }
 }

@@ -20,31 +20,34 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface SPGJobInstDOMapper {
-    long countByExample(SPGJobInstDOExample example);
+  long countByExample(SPGJobInstDOExample example);
 
-    int deleteByExample(SPGJobInstDOExample example);
+  int deleteByExample(SPGJobInstDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(SPGJobInstDOWithBLOBs record);
+  int insert(SPGJobInstDOWithBLOBs record);
 
-    int insertSelective(SPGJobInstDOWithBLOBs record);
+  int insertSelective(SPGJobInstDOWithBLOBs record);
 
-    List<SPGJobInstDOWithBLOBs> selectByExampleWithBLOBs(SPGJobInstDOExample example);
+  List<SPGJobInstDOWithBLOBs> selectByExampleWithBLOBs(SPGJobInstDOExample example);
 
-    List<SPGJobInstDO> selectByExample(SPGJobInstDOExample example);
+  List<SPGJobInstDO> selectByExample(SPGJobInstDOExample example);
 
-    SPGJobInstDOWithBLOBs selectByPrimaryKey(Long id);
+  SPGJobInstDOWithBLOBs selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") SPGJobInstDOWithBLOBs record, @Param("example") SPGJobInstDOExample example);
+  int updateByExampleSelective(
+      @Param("record") SPGJobInstDOWithBLOBs record, @Param("example") SPGJobInstDOExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") SPGJobInstDOWithBLOBs record, @Param("example") SPGJobInstDOExample example);
+  int updateByExampleWithBLOBs(
+      @Param("record") SPGJobInstDOWithBLOBs record, @Param("example") SPGJobInstDOExample example);
 
-    int updateByExample(@Param("record") SPGJobInstDO record, @Param("example") SPGJobInstDOExample example);
+  int updateByExample(
+      @Param("record") SPGJobInstDO record, @Param("example") SPGJobInstDOExample example);
 
-    int updateByPrimaryKeySelective(SPGJobInstDOWithBLOBs record);
+  int updateByPrimaryKeySelective(SPGJobInstDOWithBLOBs record);
 
-    int updateByPrimaryKeyWithBLOBs(SPGJobInstDOWithBLOBs record);
+  int updateByPrimaryKeyWithBLOBs(SPGJobInstDOWithBLOBs record);
 
-    int updateByPrimaryKey(SPGJobInstDO record);
+  int updateByPrimaryKey(SPGJobInstDO record);
 }

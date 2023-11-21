@@ -15,21 +15,18 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * <p>
- * Represents one record alteration in <tt>LPG</tt>, which constants a {@link BaseLPGRecord LPGRecord} and a
- * {@link RecordAlterOperationEnum RecordAlterOperator}.
- * </p>
+ * Represents one record alteration in <tt>LPG</tt>, which constants a {@link BaseLPGRecord
+ * LPGRecord} and a {@link RecordAlterOperationEnum RecordAlterOperator}.
  */
 @Getter
 @AllArgsConstructor
 public class LPGRecordAlterItem extends BaseValObj {
 
-    private final RecordAlterOperationEnum alterOp;
+  private final RecordAlterOperationEnum alterOp;
 
-    private final BaseLPGRecord lpgRecord;
+  private final BaseLPGRecord lpgRecord;
 }

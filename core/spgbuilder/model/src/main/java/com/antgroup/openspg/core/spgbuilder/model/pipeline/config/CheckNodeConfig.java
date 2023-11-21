@@ -15,10 +15,9 @@ package com.antgroup.openspg.core.spgbuilder.model.pipeline.config;
 
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.NodeTypeEnum;
 
-
 public class CheckNodeConfig extends BaseNodeConfig {
 
-    public CheckNodeConfig() {
-        super(NodeTypeEnum.CHECK);
-    }
+  public CheckNodeConfig() {
+    super(NodeTypeEnum.CHECK);
+  }
 }

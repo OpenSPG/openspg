@@ -18,32 +18,32 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobI
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInfo;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInst;
 import com.antgroup.openspg.core.spgbuilder.model.service.FailureBuilderResult;
-
 import java.util.List;
-
 
 public interface BuilderJobInstService {
 
-    Long create(BuilderJobInfo builderJobInfo, BuilderJobInst builderJobInst);
+  Long create(BuilderJobInfo builderJobInfo, BuilderJobInst builderJobInst);
 
-    List<BuilderJobInst> query(BuilderJobInstQuery query);
+  List<BuilderJobInst> query(BuilderJobInstQuery query);
 
-    /* ----------------------- *
-     |      For Scheduler      |
-     * ----------------------- */
+  /* ----------------------- *
+  |      For Scheduler      |
+  * ----------------------- */
 
-    /**
-     * Triggered by the scheduling system to poll the status of the builder job, the main process includes:
-     * <p>
-     * 1. If the job is in the final state, return directly; 2. If the job is running, query the computing pool to
-     * determine whether the task is completed; 3. If the job is in waiting state, try to submit the task;
-     *
-     * @param jobInst scheduling job instance
-     * @return builder job instance
-     */
-    BuilderJobInst pollingBuilderJob(SchedulerJobInst jobInst);
+  /**
+   * Triggered by the scheduling system to poll the status of the builder job, the main process
+   * includes:
+   *
+   * <p>1. If the job is in the final state, return directly; 2. If the job is running, query the
+   * computing pool to determine whether the task is completed; 3. If the job is in waiting state,
+   * try to submit the task;
+   *
+   * @param jobInst scheduling job instance
+   * @return builder job instance
+   */
+  BuilderJobInst pollingBuilderJob(SchedulerJobInst jobInst);
 
-    BuilderJobInst queryByExternalJobInstId(String externalJobInstId);
+  BuilderJobInst queryByExternalJobInstId(String externalJobInstId);
 
-    int updateToFailure(Long jobInstId, FailureBuilderResult result);
+  int updateToFailure(Long jobInstId, FailureBuilderResult result);
 }

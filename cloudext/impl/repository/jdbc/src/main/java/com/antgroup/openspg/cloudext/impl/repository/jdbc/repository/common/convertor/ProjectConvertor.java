@@ -16,32 +16,30 @@ package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.common.con
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectDO;
 import com.antgroup.openspg.common.model.project.Project;
 
-
 public class ProjectConvertor {
 
-    public static ProjectDO toDO(Project project) {
-        ProjectDO projectInfoDO = new ProjectDO();
+  public static ProjectDO toDO(Project project) {
+    ProjectDO projectInfoDO = new ProjectDO();
 
-        projectInfoDO.setId(project.getId());
-        projectInfoDO.setName(project.getName());
-        projectInfoDO.setDescription(project.getDescription());
-        projectInfoDO.setStatus("VALID");
-        projectInfoDO.setBizDomainId(project.getTenantId());
-        projectInfoDO.setNamespace(project.getNamespace());
-        return projectInfoDO;
+    projectInfoDO.setId(project.getId());
+    projectInfoDO.setName(project.getName());
+    projectInfoDO.setDescription(project.getDescription());
+    projectInfoDO.setStatus("VALID");
+    projectInfoDO.setBizDomainId(project.getTenantId());
+    projectInfoDO.setNamespace(project.getNamespace());
+    return projectInfoDO;
+  }
+
+  public static Project toModel(ProjectDO projectInfoDO) {
+    if (null == projectInfoDO) {
+      return null;
     }
 
-    public static Project toModel(ProjectDO projectInfoDO) {
-        if (null == projectInfoDO) {
-            return null;
-        }
-
-        return new Project(
-            projectInfoDO.getId(),
-            projectInfoDO.getName(),
-            projectInfoDO.getDescription(),
-            projectInfoDO.getNamespace(),
-            projectInfoDO.getBizDomainId()
-        );
-    }
+    return new Project(
+        projectInfoDO.getId(),
+        projectInfoDO.getName(),
+        projectInfoDO.getDescription(),
+        projectInfoDO.getNamespace(),
+        projectInfoDO.getBizDomainId());
+  }
 }

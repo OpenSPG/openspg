@@ -19,31 +19,34 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface ConstraintDOMapper {
-    long countByExample(ConstraintDOExample example);
+  long countByExample(ConstraintDOExample example);
 
-    int deleteByExample(ConstraintDOExample example);
+  int deleteByExample(ConstraintDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(ConstraintDO record);
+  int insert(ConstraintDO record);
 
-    int insertSelective(ConstraintDO record);
+  int insertSelective(ConstraintDO record);
 
-    List<ConstraintDO> selectByExampleWithBLOBs(ConstraintDOExample example);
+  List<ConstraintDO> selectByExampleWithBLOBs(ConstraintDOExample example);
 
-    List<ConstraintDO> selectByExample(ConstraintDOExample example);
+  List<ConstraintDO> selectByExample(ConstraintDOExample example);
 
-    ConstraintDO selectByPrimaryKey(Long id);
+  ConstraintDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") ConstraintDO record, @Param("example") ConstraintDOExample example);
+  int updateByExampleSelective(
+      @Param("record") ConstraintDO record, @Param("example") ConstraintDOExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") ConstraintDO record, @Param("example") ConstraintDOExample example);
+  int updateByExampleWithBLOBs(
+      @Param("record") ConstraintDO record, @Param("example") ConstraintDOExample example);
 
-    int updateByExample(@Param("record") ConstraintDO record, @Param("example") ConstraintDOExample example);
+  int updateByExample(
+      @Param("record") ConstraintDO record, @Param("example") ConstraintDOExample example);
 
-    int updateByPrimaryKeySelective(ConstraintDO record);
+  int updateByPrimaryKeySelective(ConstraintDO record);
 
-    int updateByPrimaryKeyWithBLOBs(ConstraintDO record);
+  int updateByPrimaryKeyWithBLOBs(ConstraintDO record);
 
-    int updateByPrimaryKey(ConstraintDO record);
+  int updateByPrimaryKey(ConstraintDO record);
 }

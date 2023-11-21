@@ -15,46 +15,45 @@ package com.antgroup.openspg.api.facade.dto.common.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-
 public class DataSourceUsageQueryRequest extends BaseRequest {
 
-    private String dataSourceName;
+  private String dataSourceName;
 
-    private String usageType;
+  private String usageType;
 
-    private String mountObjectType;
+  private String mountObjectType;
 
-    private String mountObjectId;
+  private String mountObjectId;
 
-    public String getDataSourceName() {
-        return dataSourceName;
-    }
+  public String getDataSourceName() {
+    return dataSourceName;
+  }
 
-    public void setDataSourceName(String dataSourceName) {
-        this.dataSourceName = dataSourceName;
-    }
+  public void setDataSourceName(String dataSourceName) {
+    this.dataSourceName = dataSourceName;
+  }
 
-    public String getUsageType() {
-        return usageType;
-    }
+  public String getUsageType() {
+    return usageType;
+  }
 
-    public void setUsageType(String usageType) {
-        this.usageType = usageType;
-    }
+  public void setUsageType(String usageType) {
+    this.usageType = usageType;
+  }
 
-    public String getMountObjectType() {
-        return mountObjectType;
-    }
+  public String getMountObjectType() {
+    return mountObjectType;
+  }
 
-    public void setMountObjectType(String mountObjectType) {
-        this.mountObjectType = mountObjectType;
-    }
+  public void setMountObjectType(String mountObjectType) {
+    this.mountObjectType = mountObjectType;
+  }
 
-    public String getMountObjectId() {
-        return mountObjectId;
-    }
+  public String getMountObjectId() {
+    return mountObjectId;
+  }
 
-    public void setMountObjectId(String mountObjectId) {
-        this.mountObjectId = mountObjectId;
-    }
+  public void setMountObjectId(String mountObjectId) {
+    this.mountObjectId = mountObjectId;
+  }
 }

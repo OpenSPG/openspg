@@ -15,39 +15,40 @@ package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.procedure;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.CreateIndexOperation;
 
-
 public class AddEdgeIndexProcedure extends BaseTuGraphProcedure {
 
-    /**
-     * The template of cypher
-     */
-    public static final String ADD_EDGE_INDEX_CYPHER_TEMPLATE
-        = "CALL db.addEdgeIndex('${labelName}', '${fieldName}', ${isUnique}, ${isGlobal})";
+  /** The template of cypher */
+  public static final String ADD_EDGE_INDEX_CYPHER_TEMPLATE =
+      "CALL db.addEdgeIndex('${labelName}', '${fieldName}', ${isUnique}, ${isGlobal})";
 
-    private final String labelName;
+  private final String labelName;
 
-    private final String fieldName;
+  private final String fieldName;
 
-    private final boolean isUnique;
+  private final boolean isUnique;
 
-    private final boolean isGlobal;
+  private final boolean isGlobal;
 
-    private AddEdgeIndexProcedure(String cypherTemplate, String labelName, String fieldName,
-        boolean isUnique, boolean isGlobal) {
-        super(cypherTemplate);
-        this.labelName = labelName;
-        this.fieldName = fieldName;
-        this.isUnique = isUnique;
-        this.isGlobal = isGlobal;
-    }
+  private AddEdgeIndexProcedure(
+      String cypherTemplate,
+      String labelName,
+      String fieldName,
+      boolean isUnique,
+      boolean isGlobal) {
+    super(cypherTemplate);
+    this.labelName = labelName;
+    this.fieldName = fieldName;
+    this.isUnique = isUnique;
+    this.isGlobal = isGlobal;
+  }
 
-    public static AddEdgeIndexProcedure of(String labelName, CreateIndexOperation createIndexOperation) {
-        return new AddEdgeIndexProcedure(
-            ADD_EDGE_INDEX_CYPHER_TEMPLATE,
-            labelName,
-            createIndexOperation.getPropertyName(),
-            createIndexOperation.getIsUnique(),
-            createIndexOperation.getIsGlobal());
-    }
+  public static AddEdgeIndexProcedure of(
+      String labelName, CreateIndexOperation createIndexOperation) {
+    return new AddEdgeIndexProcedure(
+        ADD_EDGE_INDEX_CYPHER_TEMPLATE,
+        labelName,
+        createIndexOperation.getPropertyName(),
+        createIndexOperation.getIsUnique(),
+        createIndexOperation.getIsGlobal());
+  }
 }
-

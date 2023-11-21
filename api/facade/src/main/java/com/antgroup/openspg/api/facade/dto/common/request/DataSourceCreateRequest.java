@@ -17,53 +17,53 @@ import com.antgroup.openspg.common.model.base.BaseRequest;
 
 public class DataSourceCreateRequest extends BaseRequest {
 
-    private String name;
+  private String name;
 
-    private String desc;
+  private String desc;
 
-    private String type;
+  private String type;
 
-    private String connInfo;
+  private String connInfo;
 
-    private String physicalInfo;
+  private String physicalInfo;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getDesc() {
-        return desc;
-    }
+  public String getDesc() {
+    return desc;
+  }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+  public void setDesc(String desc) {
+    this.desc = desc;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public void setType(String type) {
-        this.type = type;
-    }
+  public void setType(String type) {
+    this.type = type;
+  }
 
-    public String getConnInfo() {
-        return connInfo;
-    }
+  public String getConnInfo() {
+    return connInfo;
+  }
 
-    public void setConnInfo(String connInfo) {
-        this.connInfo = connInfo;
-    }
+  public void setConnInfo(String connInfo) {
+    this.connInfo = connInfo;
+  }
 
-    public String getPhysicalInfo() {
-        return physicalInfo;
-    }
+  public String getPhysicalInfo() {
+    return physicalInfo;
+  }
 
-    public void setPhysicalInfo(String physicalInfo) {
-        this.physicalInfo = physicalInfo;
-    }
+  public void setPhysicalInfo(String physicalInfo) {
+    this.physicalInfo = physicalInfo;
+  }
 }

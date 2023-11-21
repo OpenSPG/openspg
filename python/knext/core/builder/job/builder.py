@@ -19,9 +19,7 @@ from knext.core.builder.job.model.builder_job import BuilderJob
 
 
 class Builder:
-    """SPG Builder Client.
-
-    """
+    """SPG Builder Client."""
 
     def __init__(self):
         self._client = rest.BuilderApi()
@@ -63,7 +61,9 @@ class Builder:
         while node.next:
             next_nodes = node.next
             nodes.extend([n._to_rest() for n in next_nodes])
-            edges.extend([rest.Edge(_from=pre.id, to=n.id) for n in next_nodes for pre in n.pre])
+            edges.extend(
+                [rest.Edge(_from=pre.id, to=n.id) for n in next_nodes for pre in n.pre]
+            )
             node = node.next[0]
         dag_config = rest.Pipeline(nodes=nodes, edges=edges)
         return dag_config

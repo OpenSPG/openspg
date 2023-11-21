@@ -15,44 +15,41 @@ package com.antgroup.openspg.core.spgschema.service.predicate;
 
 import com.antgroup.openspg.core.spgschema.model.predicate.SubProperty;
 import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
-
 import java.util.List;
 
-/**
- * Sub property domain method，provide save, update, delete, query method.
- */
+/** Sub property domain method，provide save, update, delete, query method. */
 public interface SubPropertyService {
 
-    /**
-     * Create a new sub property.
-     *
-     * @param subProperty sub property detail
-     * @return record count
-     */
-    int create(SubProperty subProperty);
+  /**
+   * Create a new sub property.
+   *
+   * @param subProperty sub property detail
+   * @return record count
+   */
+  int create(SubProperty subProperty);
 
-    /**
-     * Update sub property information.
-     *
-     * @param subProperty sub property detail
-     * @return record count
-     */
-    int update(SubProperty subProperty);
+  /**
+   * Update sub property information.
+   *
+   * @param subProperty sub property detail
+   * @return record count
+   */
+  int update(SubProperty subProperty);
 
-    /**
-     * Delete a sub property.
-     *
-     * @param subProperty sub property detail
-     * @return record count
-     */
-    int delete(SubProperty subProperty);
+  /**
+   * Delete a sub property.
+   *
+   * @param subProperty sub property detail
+   * @return record count
+   */
+  int delete(SubProperty subProperty);
 
-    /**
-     * Query sub property by property or relation id.
-     *
-     * @param subjectIds   list of property or relation id
-     * @param ontologyEnum ontology type
-     * @return list of sub property
-     */
-    List<SubProperty> queryBySubjectId(List<Long> subjectIds, SPGOntologyEnum ontologyEnum);
+  /**
+   * Query sub property by property or relation id.
+   *
+   * @param subjectIds list of property or relation id
+   * @param ontologyEnum ontology type
+   * @return list of sub property
+   */
+  List<SubProperty> queryBySubjectId(List<Long> subjectIds, SPGOntologyEnum ontologyEnum);
 }

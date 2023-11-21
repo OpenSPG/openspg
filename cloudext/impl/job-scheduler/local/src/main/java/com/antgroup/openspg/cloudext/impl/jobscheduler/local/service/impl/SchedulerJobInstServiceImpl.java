@@ -18,45 +18,43 @@ import com.antgroup.openspg.cloudext.impl.jobscheduler.local.repo.SchedulerJobIn
 import com.antgroup.openspg.cloudext.impl.jobscheduler.local.service.SchedulerJobInstService;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
-
 import com.google.common.collect.Sets;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 
 @Slf4j
 @Service
 public class SchedulerJobInstServiceImpl implements SchedulerJobInstService {
 
-    @Autowired
-    private SchedulerJobInstRepository schedulerJobInstRepository;
+  @Autowired private SchedulerJobInstRepository schedulerJobInstRepository;
 
-    @Override
-    public String create(SchedulerJobInst jobInst) {
-        return schedulerJobInstRepository.save(jobInst);
-    }
+  @Override
+  public String create(SchedulerJobInst jobInst) {
+    return schedulerJobInstRepository.save(jobInst);
+  }
 
-    @Override
-    public List<SchedulerJobInst> queryRunningJobInsts() {
-        SchedulerJobInstQuery jobInstQuery = new SchedulerJobInstQuery()
+  @Override
+  public List<SchedulerJobInst> queryRunningJobInsts() {
+    SchedulerJobInstQuery jobInstQuery =
+        new SchedulerJobInstQuery()
             .setStatus(Sets.newHashSet(JobInstStatusEnum.RUNNING_STATUS))
             .setOrderBy("id asc");
-        return schedulerJobInstRepository.query(jobInstQuery);
-    }
+    return schedulerJobInstRepository.query(jobInstQuery);
+  }
 
-    @Override
-    public List<SchedulerJobInst> queryToRunJobInsts() {
-        SchedulerJobInstQuery jobInstQuery = new SchedulerJobInstQuery()
+  @Override
+  public List<SchedulerJobInst> queryToRunJobInsts() {
+    SchedulerJobInstQuery jobInstQuery =
+        new SchedulerJobInstQuery()
             .setStatus(Sets.newHashSet(JobInstStatusEnum.QUEUE, JobInstStatusEnum.INIT))
             .setOrderBy("id asc");
-        return schedulerJobInstRepository.query(jobInstQuery);
-    }
+    return schedulerJobInstRepository.query(jobInstQuery);
+  }
 
-    @Override
-    public void updateStatus(String jobInstId, JobInstStatusEnum status) {
-        schedulerJobInstRepository.updateStatus(jobInstId, status);
-    }
+  @Override
+  public void updateStatus(String jobInstId, JobInstStatusEnum status) {
+    schedulerJobInstRepository.updateStatus(jobInstId, status);
+  }
 }

@@ -15,29 +15,28 @@ package com.antgroup.openspg.common.util.thread;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 public class SPGThread extends Thread {
 
-    public final static UncaughtExceptionHandler UncaughtExceptionHandler =
-        (t, e) -> handleException(t.getName(), e);
+  public static final UncaughtExceptionHandler UncaughtExceptionHandler =
+      (t, e) -> handleException(t.getName(), e);
 
-    public SPGThread(String threadName) {
-        this(threadName, null);
-    }
+  public SPGThread(String threadName) {
+    this(threadName, null);
+  }
 
-    public SPGThread(String threadName, Runnable target) {
-        super(target, threadName);
-        setUncaughtExceptionHandler(UncaughtExceptionHandler);
-    }
+  public SPGThread(String threadName, Runnable target) {
+    super(target, threadName);
+    setUncaughtExceptionHandler(UncaughtExceptionHandler);
+  }
 
-    /**
-     * This will be used by the uncaught exception handler and just log a warning message and return.
-     *
-     * @param thName - thread name
-     * @param e      - exception object
-     */
-    protected static void handleException(String thName, Throwable e) {
-        log.warn("Exception occurred from thread {}", thName, e);
-    }
+  /**
+   * This will be used by the uncaught exception handler and just log a warning message and return.
+   *
+   * @param thName - thread name
+   * @param e - exception object
+   */
+  protected static void handleException(String thName, Throwable e) {
+    log.warn("Exception occurred from thread {}", thName, e);
+  }
 }

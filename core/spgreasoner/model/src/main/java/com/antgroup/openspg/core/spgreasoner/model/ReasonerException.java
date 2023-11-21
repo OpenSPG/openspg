@@ -15,26 +15,26 @@ package com.antgroup.openspg.core.spgreasoner.model;
 
 import com.antgroup.openspg.common.model.exception.OpenSPGException;
 
-
 public class ReasonerException extends OpenSPGException {
 
-    private ReasonerException(Throwable cause, String messagePattern, Object... args) {
-        super(cause, true, true, messagePattern, args);
-    }
+  private ReasonerException(Throwable cause, String messagePattern, Object... args) {
+    super(cause, true, true, messagePattern, args);
+  }
 
-    private ReasonerException(String messagePattern, Object... args) {
-        this(null, messagePattern, args);
-    }
+  private ReasonerException(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
+  }
 
-    public static ReasonerException reasonerError(Throwable e) {
-        return new ReasonerException(e, e.getMessage());
-    }
+  public static ReasonerException reasonerError(Throwable e) {
+    return new ReasonerException(e, e.getMessage());
+  }
 
-    public static ReasonerException reasonerError(String errorMsg) {
-        return new ReasonerException(errorMsg);
-    }
+  public static ReasonerException reasonerError(String errorMsg) {
+    return new ReasonerException(errorMsg);
+  }
 
-    public static ReasonerException timeout(int minutes) {
-        return new ReasonerException("reasoner cannot finish in {} minutes, please submit reasoner job", minutes);
-    }
+  public static ReasonerException timeout(int minutes) {
+    return new ReasonerException(
+        "reasoner cannot finish in {} minutes, please submit reasoner job", minutes);
+  }
 }

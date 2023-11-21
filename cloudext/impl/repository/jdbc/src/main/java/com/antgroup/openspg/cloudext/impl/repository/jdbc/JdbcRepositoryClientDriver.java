@@ -18,22 +18,21 @@ import com.antgroup.openspg.cloudext.interfaces.repository.RepositoryClientDrive
 import com.antgroup.openspg.cloudext.interfaces.repository.RepositoryClientDriverManager;
 import com.antgroup.openspg.common.model.datasource.connection.RepositoryConnectionInfo;
 
-
 public class JdbcRepositoryClientDriver implements RepositoryClientDriver {
 
-    static {
-        RepositoryClientDriverManager.registerDriver(new JdbcRepositoryClientDriver());
-    }
+  static {
+    RepositoryClientDriverManager.registerDriver(new JdbcRepositoryClientDriver());
+  }
 
-    // todo 动态生成repo的bean
+  // todo 动态生成repo的bean
 
-    @Override
-    public String driverScheme() {
-        return "jdbc";
-    }
+  @Override
+  public String driverScheme() {
+    return "jdbc";
+  }
 
-    @Override
-    public RepositoryClient connect(RepositoryConnectionInfo connInfo) {
-        throw new IllegalArgumentException();
-    }
+  @Override
+  public RepositoryClient connect(RepositoryConnectionInfo connInfo) {
+    throw new IllegalArgumentException();
+  }
 }

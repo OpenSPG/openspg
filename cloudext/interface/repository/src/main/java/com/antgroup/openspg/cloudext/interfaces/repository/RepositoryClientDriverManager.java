@@ -16,43 +16,37 @@ package com.antgroup.openspg.cloudext.interfaces.repository;
 import com.antgroup.openspg.common.model.datasource.connection.RepositoryConnectionInfo;
 import com.antgroup.openspg.common.model.exception.CloudExtException;
 import com.antgroup.openspg.common.util.DriverManagerUtils;
-
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RepositoryClientDriverManager {
 
-    private final static CopyOnWriteArrayList<RepositoryClientDriver>
-        registeredDrivers = new CopyOnWriteArrayList<>();
+  private static final CopyOnWriteArrayList<RepositoryClientDriver> registeredDrivers =
+      new CopyOnWriteArrayList<>();
 
-    private RepositoryClientDriverManager() {
+  private RepositoryClientDriverManager() {}
 
+  static {
+    DriverManagerUtils.loadDrivers("cloudext.repository.drivers", RepositoryClientDriver.class);
+    log.info("repository DriverManager initialized");
+  }
+
+  public static synchronized void registerDriver(RepositoryClientDriver driver) {
+    if (driver != null) {
+      registeredDrivers.addIfAbsent(driver);
+    } else {
+      throw new NullPointerException();
     }
+    log.info("registerDriver: {}", driver);
+  }
 
-    static {
-        DriverManagerUtils.loadDrivers(
-            "cloudext.repository.drivers", RepositoryClientDriver.class);
-        log.info("repository DriverManager initialized");
+  public static RepositoryClient getClient(RepositoryConnectionInfo config) {
+    for (RepositoryClientDriver driver : registeredDrivers) {
+      if (driver.acceptsConfig(config)) {
+        return driver.connect(config);
+      }
     }
-
-    public static synchronized void registerDriver(RepositoryClientDriver driver) {
-        if (driver != null) {
-            registeredDrivers.addIfAbsent(driver);
-        } else {
-            throw new NullPointerException();
-        }
-        log.info("registerDriver: {}", driver);
-    }
-
-    public static RepositoryClient getClient(RepositoryConnectionInfo config) {
-        for (RepositoryClientDriver driver : registeredDrivers) {
-            if (driver.acceptsConfig(config)) {
-                return driver.connect(config);
-            }
-        }
-        throw CloudExtException.driverNotExist(config);
-    }
+    throw CloudExtException.driverNotExist(config);
+  }
 }

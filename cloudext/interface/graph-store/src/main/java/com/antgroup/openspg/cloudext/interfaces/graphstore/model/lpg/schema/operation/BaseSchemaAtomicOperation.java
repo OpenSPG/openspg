@@ -14,15 +14,12 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation;
 
 import com.antgroup.openspg.common.model.base.BaseToString;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 
 @AllArgsConstructor
 @Getter
 public abstract class BaseSchemaAtomicOperation extends BaseToString {
 
-    private final SchemaAtomicOperationEnum operationTypeEnum;
-
+  private final SchemaAtomicOperationEnum operationTypeEnum;
 }

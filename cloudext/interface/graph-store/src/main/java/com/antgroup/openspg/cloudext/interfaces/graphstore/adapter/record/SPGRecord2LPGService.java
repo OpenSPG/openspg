@@ -17,18 +17,15 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.Base
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordAlterItem;
-
 import java.util.List;
-
 
 public interface SPGRecord2LPGService {
 
-    /**
-     * This method is used to convert {@link SPGRecordAlterItem} into {@link LPGRecordAlterItem}
-     *
-     * @param item the alter item of {@link BaseSPGRecord SPGRecord}
-     * @return the alter item of {@link BaseLPGRecord LPGRecord}
-     */
-    List<LPGRecordAlterItem> convert(SPGRecordAlterItem item);
-
+  /**
+   * This method is used to convert {@link SPGRecordAlterItem} into {@link LPGRecordAlterItem}
+   *
+   * @param item the alter item of {@link BaseSPGRecord SPGRecord}
+   * @return the alter item of {@link BaseLPGRecord LPGRecord}
+   */
+  List<LPGRecordAlterItem> convert(SPGRecordAlterItem item);
 }

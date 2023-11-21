@@ -13,27 +13,24 @@
 
 package com.antgroup.openspg.core.spgbuilder.model.service;
 
-
 public class JobBuilderReceipt extends BaseBuilderReceipt {
 
-    private final Long buildingJobInfoId;
+  private final Long buildingJobInfoId;
 
-    /**
-     * 如果创建的是单次调度任务，该值也会填上
-     */
-    private final Long buildingJobInstId;
+  /** 如果创建的是单次调度任务，该值也会填上 */
+  private final Long buildingJobInstId;
 
-    public JobBuilderReceipt(Long buildingJobInfoId, Long buildingJobInstId) {
-        super(BuilderReceiptTypeEnum.JOB);
-        this.buildingJobInfoId = buildingJobInfoId;
-        this.buildingJobInstId = buildingJobInstId;
-    }
+  public JobBuilderReceipt(Long buildingJobInfoId, Long buildingJobInstId) {
+    super(BuilderReceiptTypeEnum.JOB);
+    this.buildingJobInfoId = buildingJobInfoId;
+    this.buildingJobInstId = buildingJobInstId;
+  }
 
-    public Long getBuildingJobInfoId() {
-        return buildingJobInfoId;
-    }
+  public Long getBuildingJobInfoId() {
+    return buildingJobInfoId;
+  }
 
-    public Long getBuildingJobInstId() {
-        return buildingJobInstId;
-    }
+  public Long getBuildingJobInstId() {
+    return buildingJobInstId;
+  }
 }

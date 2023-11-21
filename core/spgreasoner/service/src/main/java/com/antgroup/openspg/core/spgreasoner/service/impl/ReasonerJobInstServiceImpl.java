@@ -33,119 +33,111 @@ import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerStatusWithPro
 import com.antgroup.openspg.core.spgreasoner.service.ReasonerJobInfoService;
 import com.antgroup.openspg.core.spgreasoner.service.ReasonerJobInstService;
 import com.antgroup.openspg.core.spgreasoner.service.repo.ReasonerJobInstRepository;
-
+import java.util.HashMap;
+import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-
-
 @Service
 public class ReasonerJobInstServiceImpl implements ReasonerJobInstService {
 
-    @Autowired
-    private AppEnvConfig appEnvConfig;
+  @Autowired private AppEnvConfig appEnvConfig;
 
-    @Autowired
-    private ReasonerJobInstRepository reasonerJobInstRepository;
+  @Autowired private ReasonerJobInstRepository reasonerJobInstRepository;
 
-    @Autowired
-    private DataSourceService dataSourceService;
+  @Autowired private DataSourceService dataSourceService;
 
-    @Autowired
-    private ReasonerJobInfoService reasonerJobInfoService;
+  @Autowired private ReasonerJobInfoService reasonerJobInfoService;
 
-    @Override
-    public Long create(ReasonerJobInfo reasonerJobInfo, ReasonerJobInst reasonerJobInst) {
-        JobSchedulerClient jobSchedulerClient =
-            dataSourceService.buildSharedJobSchedulerClient();
-        Long buildingJobInstId = reasonerJobInstRepository.save(reasonerJobInst);
+  @Override
+  public Long create(ReasonerJobInfo reasonerJobInfo, ReasonerJobInst reasonerJobInst) {
+    JobSchedulerClient jobSchedulerClient = dataSourceService.buildSharedJobSchedulerClient();
+    Long buildingJobInstId = reasonerJobInstRepository.save(reasonerJobInst);
 
-        SchedulerJobInst schedulerJobInst = new SchedulerJobInst(
+    SchedulerJobInst schedulerJobInst =
+        new SchedulerJobInst(
             null,
             reasonerJobInfo.getExternalJobInfoId(),
             JobTypeEnum.REASONING.name(),
             reasonerJobInst.getStatus(),
             null,
-            String.valueOf(buildingJobInstId)
-        );
-        String schedulerJobInstId = jobSchedulerClient.createJobInst(schedulerJobInst);
+            String.valueOf(buildingJobInstId));
+    String schedulerJobInstId = jobSchedulerClient.createJobInst(schedulerJobInst);
 
-        reasonerJobInst.setExternalJobInstId(schedulerJobInstId);
-        reasonerJobInstRepository.updateExternalJobId(buildingJobInstId, schedulerJobInstId);
-        return buildingJobInstId;
+    reasonerJobInst.setExternalJobInstId(schedulerJobInstId);
+    reasonerJobInstRepository.updateExternalJobId(buildingJobInstId, schedulerJobInstId);
+    return buildingJobInstId;
+  }
+
+  @Override
+  public List<ReasonerJobInst> query(ReasonerJobInstQuery query) {
+    return reasonerJobInstRepository.query(query);
+  }
+
+  @Override
+  public ReasonerJobInst pollingReasonerJob(SchedulerJobInst jobInst) {
+    ComputingClient computingClient = dataSourceService.buildSharedComputingClient();
+
+    ReasonerJobInst reasonerJobInst = queryByExternalJobInstId(jobInst.getJobInstId());
+    if (reasonerJobInst.isFinished()) {
+      return reasonerJobInst;
+    } else if (reasonerJobInst.isRunning()) {
+      ReasonerStatusWithProgress progress =
+          computingClient.query(
+              new ReasonerJobProcessQuery(String.valueOf(reasonerJobInst.getJobInstId())));
+      if (progress == null) {
+        // if status is null, rerun it
+        progress = new ReasonerStatusWithProgress(JobInstStatusEnum.QUEUE);
+        reasonerJobInst.setProgress(progress);
+        reasonerJobInstRepository.updateStatus(reasonerJobInst.getJobInstId(), progress);
+        return reasonerJobInst;
+      } else if (progress.getStatus().isRunning()) {
+        reasonerJobInstRepository.updateStatus(reasonerJobInst.getJobInstId(), progress);
+        return reasonerJobInst;
+      } else if (progress.getStatus().isFinished()) {
+        reasonerJobInst.setProgress(progress);
+        reasonerJobInstRepository.updateStatus(reasonerJobInst.getJobInstId(), progress);
+        return reasonerJobInst;
+      }
     }
 
-    @Override
-    public List<ReasonerJobInst> query(ReasonerJobInstQuery query) {
-        return reasonerJobInstRepository.query(query);
+    // The task is not in finished or running status, try to submit the task
+    if (!computingClient.canSubmit(new ReasonerJobCanSubmitQuery())) {
+      return reasonerJobInst;
     }
 
-    @Override
-    public ReasonerJobInst pollingReasonerJob(SchedulerJobInst jobInst) {
-        ComputingClient computingClient = dataSourceService.buildSharedComputingClient();
-
-        ReasonerJobInst reasonerJobInst = queryByExternalJobInstId(jobInst.getJobInstId());
-        if (reasonerJobInst.isFinished()) {
-            return reasonerJobInst;
-        } else if (reasonerJobInst.isRunning()) {
-            ReasonerStatusWithProgress progress = computingClient.query(new ReasonerJobProcessQuery(
-                String.valueOf(reasonerJobInst.getJobInstId())
-            ));
-            if (progress == null) {
-                // if status is null, rerun it
-                progress = new ReasonerStatusWithProgress(JobInstStatusEnum.QUEUE);
-                reasonerJobInst.setProgress(progress);
-                reasonerJobInstRepository.updateStatus(reasonerJobInst.getJobInstId(), progress);
-                return reasonerJobInst;
-            } else if (progress.getStatus().isRunning()) {
-                reasonerJobInstRepository.updateStatus(reasonerJobInst.getJobInstId(), progress);
-                return reasonerJobInst;
-            } else if (progress.getStatus().isFinished()) {
-                reasonerJobInst.setProgress(progress);
-                reasonerJobInstRepository.updateStatus(reasonerJobInst.getJobInstId(), progress);
-                return reasonerJobInst;
-            }
-        }
-
-        // The task is not in finished or running status, try to submit the task
-        if (!computingClient.canSubmit(new ReasonerJobCanSubmitQuery())) {
-            return reasonerJobInst;
-        }
-
-        ReasonerJobInfo reasonerJobInfo = reasonerJobInfoService.queryById(reasonerJobInst.getJobId());
-        String submit = computingClient.submit(
+    ReasonerJobInfo reasonerJobInfo = reasonerJobInfoService.queryById(reasonerJobInst.getJobId());
+    String submit =
+        computingClient.submit(
             new ReasonerJobSubmitCmd(
                 reasonerJobInst,
                 reasonerJobInfo,
-                (GraphStoreConnectionInfo) dataSourceService.buildSharedKgStoreClient().getConnInfo(),
-                (TableStoreConnectionInfo) dataSourceService.buildSharedTableStoreClient().getConnInfo(),
+                (GraphStoreConnectionInfo)
+                    dataSourceService.buildSharedKgStoreClient().getConnInfo(),
+                (TableStoreConnectionInfo)
+                    dataSourceService.buildSharedTableStoreClient().getConnInfo(),
                 appEnvConfig.getSchemaUri(),
-                new HashMap<>(5)
-            )
-        );
-        if (submit != null) {
-            // The task is submitted successfully and the task is set to running status.
-            ReasonerStatusWithProgress progress = new ReasonerStatusWithProgress(
-                JobInstStatusEnum.RUNNING, null, null);
-            reasonerJobInstRepository.updateStatus(reasonerJobInst.getJobInstId(), progress);
-            return reasonerJobInst;
-        }
-        return reasonerJobInst;
+                new HashMap<>(5)));
+    if (submit != null) {
+      // The task is submitted successfully and the task is set to running status.
+      ReasonerStatusWithProgress progress =
+          new ReasonerStatusWithProgress(JobInstStatusEnum.RUNNING, null, null);
+      reasonerJobInstRepository.updateStatus(reasonerJobInst.getJobInstId(), progress);
+      return reasonerJobInst;
     }
+    return reasonerJobInst;
+  }
 
-    @Override
-    public ReasonerJobInst queryByExternalJobInstId(String externalJobInstId) {
-        ReasonerJobInstQuery query = new ReasonerJobInstQuery()
-            .setExternalJobInstId(externalJobInstId);
-        List<ReasonerJobInst> jobInsts = reasonerJobInstRepository.query(query);
-        return CollectionUtils.isNotEmpty(jobInsts) ? jobInsts.get(0) : null;
-    }
+  @Override
+  public ReasonerJobInst queryByExternalJobInstId(String externalJobInstId) {
+    ReasonerJobInstQuery query = new ReasonerJobInstQuery().setExternalJobInstId(externalJobInstId);
+    List<ReasonerJobInst> jobInsts = reasonerJobInstRepository.query(query);
+    return CollectionUtils.isNotEmpty(jobInsts) ? jobInsts.get(0) : null;
+  }
 
-    @Override
-    public int updateToFailure(Long jobInstId, FailureReasonerResult result) {
-        return reasonerJobInstRepository.updateToFailure(jobInstId, result);
-    }
+  @Override
+  public int updateToFailure(Long jobInstId, FailureReasonerResult result) {
+    return reasonerJobInstRepository.updateToFailure(jobInstId, result);
+  }
 }

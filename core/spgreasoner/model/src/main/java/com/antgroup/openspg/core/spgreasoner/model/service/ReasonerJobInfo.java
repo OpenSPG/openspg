@@ -15,82 +15,81 @@ package com.antgroup.openspg.core.spgreasoner.model.service;
 
 import com.antgroup.openspg.common.model.base.BaseModel;
 import com.antgroup.openspg.common.model.job.JobInfoStateEnum;
-
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class ReasonerJobInfo extends BaseModel {
 
-    private Long jobId;
+  private Long jobId;
 
-    private final String jobName;
+  private final String jobName;
 
-    private final Long projectId;
+  private final Long projectId;
 
-    private final BaseReasonerContent content;
+  private final BaseReasonerContent content;
 
-    private final String cron;
+  private final String cron;
 
-    private final JobInfoStateEnum status;
+  private final JobInfoStateEnum status;
 
-    private String externalJobInfoId;
+  private String externalJobInfoId;
 
-    private final Map<String, Object> params;
+  private final Map<String, Object> params;
 
-    public ReasonerJobInfo(String jobName,
-        Long projectId,
-        BaseReasonerContent content,
-        String cron,
-        JobInfoStateEnum status,
-        Map<String, Object> params) {
-        this.jobName = jobName;
-        this.projectId = projectId;
-        this.content = content;
-        this.cron = cron;
-        this.status = status;
-        this.params = params == null ? new HashMap<>(5) : params;
-    }
+  public ReasonerJobInfo(
+      String jobName,
+      Long projectId,
+      BaseReasonerContent content,
+      String cron,
+      JobInfoStateEnum status,
+      Map<String, Object> params) {
+    this.jobName = jobName;
+    this.projectId = projectId;
+    this.content = content;
+    this.cron = cron;
+    this.status = status;
+    this.params = params == null ? new HashMap<>(5) : params;
+  }
 
-    public Long getJobId() {
-        return jobId;
-    }
+  public Long getJobId() {
+    return jobId;
+  }
 
-    public ReasonerJobInfo setJobId(Long jobId) {
-        this.jobId = jobId;
-        return this;
-    }
+  public ReasonerJobInfo setJobId(Long jobId) {
+    this.jobId = jobId;
+    return this;
+  }
 
-    public String getJobName() {
-        return jobName;
-    }
+  public String getJobName() {
+    return jobName;
+  }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public BaseReasonerContent getContent() {
-        return content;
-    }
+  public BaseReasonerContent getContent() {
+    return content;
+  }
 
-    public String getCron() {
-        return cron;
-    }
+  public String getCron() {
+    return cron;
+  }
 
-    public JobInfoStateEnum getStatus() {
-        return status;
-    }
+  public JobInfoStateEnum getStatus() {
+    return status;
+  }
 
-    public String getExternalJobInfoId() {
-        return externalJobInfoId;
-    }
+  public String getExternalJobInfoId() {
+    return externalJobInfoId;
+  }
 
-    public ReasonerJobInfo setExternalJobInfoId(String externalJobInfoId) {
-        this.externalJobInfoId = externalJobInfoId;
-        return this;
-    }
+  public ReasonerJobInfo setExternalJobInfoId(String externalJobInfoId) {
+    this.externalJobInfoId = externalJobInfoId;
+    return this;
+  }
 
-    public Map<String, Object> getParams() {
-        return params;
-    }
+  public Map<String, Object> getParams() {
+    return params;
+  }
 }

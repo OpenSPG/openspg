@@ -15,34 +15,30 @@ package com.antgroup.openspg.core.spgbuilder.engine.physical.process;
 
 import com.antgroup.openspg.core.spgbuilder.engine.physical.BasePhysicalNode;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
-
+import java.util.List;
 import lombok.Getter;
 
-import java.util.List;
-
 /**
- * Base class of processing nodes, which further processes the data from the upstream nodes, such as knowledge
- * extraction, data mapping, operator execution, and so on. Currently, we support the knowledge extraction processor and
- * the mapping processor.
+ * Base class of processing nodes, which further processes the data from the upstream nodes, such as
+ * knowledge extraction, data mapping, operator execution, and so on. Currently, we support the
+ * knowledge extraction processor and the mapping processor.
  */
 @Getter
 public abstract class BaseProcessor<C> extends BasePhysicalNode {
 
-    /**
-     * The configuration of processor node.
-     */
-    protected final C config;
+  /** The configuration of processor node. */
+  protected final C config;
 
-    public BaseProcessor(String id, String name, C config) {
-        super(id, name);
-        this.config = config;
-    }
+  public BaseProcessor(String id, String name, C config) {
+    super(id, name);
+    this.config = config;
+  }
 
-    /**
-     * Process the input records and output the execution results to the downstream node.
-     *
-     * @param records : The output results from the upstream node.
-     * @return Collection of data that has been processed.
-     */
-    public abstract List<BaseRecord> process(List<BaseRecord> records);
+  /**
+   * Process the input records and output the execution results to the downstream node.
+   *
+   * @param records : The output results from the upstream node.
+   * @return Collection of data that has been processed.
+   */
+  public abstract List<BaseRecord> process(List<BaseRecord> records);
 }

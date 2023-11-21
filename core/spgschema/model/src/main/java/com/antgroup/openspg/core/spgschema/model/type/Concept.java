@@ -19,67 +19,66 @@ import com.antgroup.openspg.core.spgschema.model.semantic.BaseConceptSemantic;
 import com.antgroup.openspg.core.spgschema.model.semantic.DynamicTaxonomySemantic;
 import com.antgroup.openspg.core.spgschema.model.semantic.LogicalCausationSemantic;
 import com.antgroup.openspg.core.spgschema.model.semantic.SystemPredicateEnum;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * The abstraction of entity sets with similar features, is a general summary and description of entity cognition.
+ * The abstraction of entity sets with similar features, is a general summary and description of
+ * entity cognition.
  */
 public class Concept extends BaseValObj {
 
-    private static final long serialVersionUID = -8896309568664475638L;
+  private static final long serialVersionUID = -8896309568664475638L;
 
-    /**
-     * The unique name of concept.
-     */
-    private final ConceptIdentifier name;
+  /** The unique name of concept. */
+  private final ConceptIdentifier name;
 
-    /**
-     * The list of semantic defined on concept.
-     */
-    private final List<BaseConceptSemantic> semantics;
+  /** The list of semantic defined on concept. */
+  private final List<BaseConceptSemantic> semantics;
 
-    public Concept(ConceptIdentifier name, List<BaseConceptSemantic> semantics) {
-        this.name = name;
-        this.semantics = semantics;
-    }
+  public Concept(ConceptIdentifier name, List<BaseConceptSemantic> semantics) {
+    this.name = name;
+    this.semantics = semantics;
+  }
 
-    public ConceptIdentifier getName() {
-        return name;
-    }
+  public ConceptIdentifier getName() {
+    return name;
+  }
 
-    public List<BaseConceptSemantic> getSemantics() {
-        return semantics;
-    }
+  public List<BaseConceptSemantic> getSemantics() {
+    return semantics;
+  }
 
-    public List<DynamicTaxonomySemantic> getDynamicTaxonomySemantics() {
-        return semantics.stream()
-            .map(semantic -> {
-                if (!(semantic instanceof DynamicTaxonomySemantic)) {
-                    return null;
-                }
-                return (DynamicTaxonomySemantic) semantic;
+  public List<DynamicTaxonomySemantic> getDynamicTaxonomySemantics() {
+    return semantics.stream()
+        .map(
+            semantic -> {
+              if (!(semantic instanceof DynamicTaxonomySemantic)) {
+                return null;
+              }
+              return (DynamicTaxonomySemantic) semantic;
             })
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-    }
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
+  }
 
-    public List<LogicalCausationSemantic> getLogicalCausationSemantics() {
-        return semantics.stream()
-            .map(semantic -> {
-                if (!(semantic instanceof LogicalCausationSemantic)) {
-                    return null;
-                }
-                LogicalCausationSemantic relationSemantic = (LogicalCausationSemantic) semantic;
-                if (!SystemPredicateEnum.LEAD_TO.getName()
-                    .equals(relationSemantic.getPredicateIdentifier().getName())) {
-                    return null;
-                }
-                return relationSemantic;
+  public List<LogicalCausationSemantic> getLogicalCausationSemantics() {
+    return semantics.stream()
+        .map(
+            semantic -> {
+              if (!(semantic instanceof LogicalCausationSemantic)) {
+                return null;
+              }
+              LogicalCausationSemantic relationSemantic = (LogicalCausationSemantic) semantic;
+              if (!SystemPredicateEnum.LEAD_TO
+                  .getName()
+                  .equals(relationSemantic.getPredicateIdentifier().getName())) {
+                return null;
+              }
+              return relationSemantic;
             })
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-    }
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
+  }
 }

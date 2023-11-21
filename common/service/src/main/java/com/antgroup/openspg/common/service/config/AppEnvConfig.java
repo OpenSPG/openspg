@@ -13,57 +13,54 @@
 
 package com.antgroup.openspg.common.service.config;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.Serializable;
-import java.util.Arrays;
-
-/**
- * Application environment configuration
- */
+/** Application environment configuration */
 public class AppEnvConfig implements Serializable {
 
-    private String schemaUri;
+  private String schemaUri;
 
-    private Boolean enableSearchEngine;
-    private String builderOperatorPythonExec;
-    private String builderOperatorPythonPaths;
+  private Boolean enableSearchEngine;
+  private String builderOperatorPythonExec;
+  private String builderOperatorPythonPaths;
 
-    public String getSchemaUri() {
-        return schemaUri;
+  public String getSchemaUri() {
+    return schemaUri;
+  }
+
+  public void setSchemaUri(String schemaUri) {
+    this.schemaUri = schemaUri;
+  }
+
+  public boolean getEnableSearchEngine() {
+    return BooleanUtils.isTrue(enableSearchEngine);
+  }
+
+  public void setEnableSearchEngine(Boolean enableSearchEngine) {
+    this.enableSearchEngine = enableSearchEngine;
+  }
+
+  public String getBuilderOperatorPythonExec() {
+    return builderOperatorPythonExec;
+  }
+
+  public void setBuilderOperatorPythonExec(String builderOperatorPythonExec) {
+    this.builderOperatorPythonExec = builderOperatorPythonExec;
+  }
+
+  public String[] getBuilderOperatorPythonPaths() {
+    if (StringUtils.isBlank(builderOperatorPythonPaths)) {
+      return null;
     }
+    return Arrays.stream(builderOperatorPythonPaths.split(";"))
+        .filter(StringUtils::isNotBlank)
+        .toArray(String[]::new);
+  }
 
-    public void setSchemaUri(String schemaUri) {
-        this.schemaUri = schemaUri;
-    }
-
-    public boolean getEnableSearchEngine() {
-        return BooleanUtils.isTrue(enableSearchEngine);
-    }
-
-    public void setEnableSearchEngine(Boolean enableSearchEngine) {
-        this.enableSearchEngine = enableSearchEngine;
-    }
-
-    public String getBuilderOperatorPythonExec() {
-        return builderOperatorPythonExec;
-    }
-
-    public void setBuilderOperatorPythonExec(String builderOperatorPythonExec) {
-        this.builderOperatorPythonExec = builderOperatorPythonExec;
-    }
-
-    public String[] getBuilderOperatorPythonPaths() {
-        if (StringUtils.isBlank(builderOperatorPythonPaths)) {
-            return null;
-        }
-        return Arrays.stream(builderOperatorPythonPaths.split(";"))
-            .filter(StringUtils::isNotBlank)
-            .toArray(String[]::new);
-    }
-
-    public void setBuilderOperatorPythonPaths(String builderOperatorPythonPaths) {
-        this.builderOperatorPythonPaths = builderOperatorPythonPaths;
-    }
+  public void setBuilderOperatorPythonPaths(String builderOperatorPythonPaths) {
+    this.builderOperatorPythonPaths = builderOperatorPythonPaths;
+  }
 }

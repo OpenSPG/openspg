@@ -13,10 +13,8 @@
 
 package com.antgroup.openspg.common.model.base;
 
-/**
- * Base dto.
- */
+/** Base dto. */
 public abstract class BaseDTO extends BaseToString {
 
-    private static final long serialVersionUID = -7228517916276310895L;
+  private static final long serialVersionUID = -7228517916276310895L;
 }

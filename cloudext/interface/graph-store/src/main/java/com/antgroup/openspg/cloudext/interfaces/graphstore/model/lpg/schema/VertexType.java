@@ -13,60 +13,55 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
- * Represents type of vertex in <tt>LPG</tt>, and is distinguished by
- * {@link VertexType#vertexTypeName, vertexTypeName}.
+ * Represents type of vertex in <tt>LPG</tt>, and is distinguished by {@link
+ * VertexType#vertexTypeName, vertexTypeName}.
  */
 @Getter
 public class VertexType extends BaseLPGOntology {
 
-    public final static String ID = "id";
+  public static final String ID = "id";
 
-    @Setter
-    private String vertexTypeName;
+  @Setter private String vertexTypeName;
 
-    public VertexType(String vertexTypeName, List<LPGProperty> properties) {
-        this(vertexTypeName, properties.stream().collect(
-            Collectors.toMap(
-                LPGProperty::getName,
-                Function.identity()
-            ))
-        );
+  public VertexType(String vertexTypeName, List<LPGProperty> properties) {
+    this(
+        vertexTypeName,
+        properties.stream().collect(Collectors.toMap(LPGProperty::getName, Function.identity())));
+  }
+
+  public VertexType(String vertexTypeName, Map<String, LPGProperty> properties) {
+    super(LPGOntologyTypeEnum.VERTEX, properties);
+    this.vertexTypeName = vertexTypeName;
+  }
+
+  @Override
+  public String getTypeName() {
+    return vertexTypeName;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
     }
-
-    public VertexType(String vertexTypeName, Map<String, LPGProperty> properties) {
-        super(LPGOntologyTypeEnum.VERTEX, properties);
-        this.vertexTypeName = vertexTypeName;
+    if (!(o instanceof VertexType)) {
+      return false;
     }
+    VertexType that = (VertexType) o;
+    return Objects.equals(getVertexTypeName(), that.getVertexTypeName());
+  }
 
-    @Override
-    public String getTypeName() {
-        return vertexTypeName;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof VertexType)) {
-            return false;
-        }
-        VertexType that = (VertexType) o;
-        return Objects.equals(getVertexTypeName(), that.getVertexTypeName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getVertexTypeName());
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(getVertexTypeName());
+  }
 }

@@ -17,35 +17,37 @@ import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceD
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceDOExample;
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceDOWithBLOBs;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface DataSourceDOMapper {
-    long countByExample(DataSourceDOExample example);
+  long countByExample(DataSourceDOExample example);
 
-    int deleteByExample(DataSourceDOExample example);
+  int deleteByExample(DataSourceDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(DataSourceDOWithBLOBs record);
+  int insert(DataSourceDOWithBLOBs record);
 
-    int insertSelective(DataSourceDOWithBLOBs record);
+  int insertSelective(DataSourceDOWithBLOBs record);
 
-    List<DataSourceDOWithBLOBs> selectByExampleWithBLOBs(DataSourceDOExample example);
+  List<DataSourceDOWithBLOBs> selectByExampleWithBLOBs(DataSourceDOExample example);
 
-    List<DataSourceDO> selectByExample(DataSourceDOExample example);
+  List<DataSourceDO> selectByExample(DataSourceDOExample example);
 
-    DataSourceDOWithBLOBs selectByPrimaryKey(Long id);
+  DataSourceDOWithBLOBs selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") DataSourceDOWithBLOBs record, @Param("example") DataSourceDOExample example);
+  int updateByExampleSelective(
+      @Param("record") DataSourceDOWithBLOBs record, @Param("example") DataSourceDOExample example);
 
-    int updateByExampleWithBLOBs(@Param("record") DataSourceDOWithBLOBs record, @Param("example") DataSourceDOExample example);
+  int updateByExampleWithBLOBs(
+      @Param("record") DataSourceDOWithBLOBs record, @Param("example") DataSourceDOExample example);
 
-    int updateByExample(@Param("record") DataSourceDO record, @Param("example") DataSourceDOExample example);
+  int updateByExample(
+      @Param("record") DataSourceDO record, @Param("example") DataSourceDOExample example);
 
-    int updateByPrimaryKeySelective(DataSourceDOWithBLOBs record);
+  int updateByPrimaryKeySelective(DataSourceDOWithBLOBs record);
 
-    int updateByPrimaryKeyWithBLOBs(DataSourceDOWithBLOBs record);
+  int updateByPrimaryKeyWithBLOBs(DataSourceDOWithBLOBs record);
 
-    int updateByPrimaryKey(DataSourceDO record);
+  int updateByPrimaryKey(DataSourceDO record);
 }

@@ -13,14 +13,12 @@
 
 package com.antgroup.openspg.core.spgbuilder.engine.logical;
 
-
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.NodeTypeEnum;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.ExtractNodeConfig;
 
-
 public class ExtractNode extends BaseNode<ExtractNodeConfig> {
 
-    public ExtractNode(String id, String name, ExtractNodeConfig nodeConfig) {
-        super(id, name, NodeTypeEnum.EXTRACT, nodeConfig);
-    }
+  public ExtractNode(String id, String name, ExtractNodeConfig nodeConfig) {
+    super(id, name, NodeTypeEnum.EXTRACT, nodeConfig);
+  }
 }

@@ -14,45 +14,38 @@
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums;
 
 import com.google.common.collect.Lists;
-
 import java.util.List;
 
-/**
- * yes or no enum.
- */
+/** yes or no enum. */
 public enum YesOrNoEnum {
-    /**
-     * Yes
-     */
-    Y(Lists.newArrayList("YES", "Y")),
+  /** Yes */
+  Y(Lists.newArrayList("YES", "Y")),
 
-    /**
-     * No
-     */
-    N(Lists.newArrayList("YES", "Y"));
+  /** No */
+  N(Lists.newArrayList("YES", "Y"));
 
-    private final List<String> alias;
+  private final List<String> alias;
 
-    YesOrNoEnum(List<String> alias) {
-        this.alias = alias;
+  YesOrNoEnum(List<String> alias) {
+    this.alias = alias;
+  }
+
+  /**
+   * If the val is Y
+   *
+   * @param val
+   * @return
+   */
+  public static boolean isYes(String val) {
+    for (String alia : Y.getAlias()) {
+      if (alia.equalsIgnoreCase(val)) {
+        return true;
+      }
     }
+    return false;
+  }
 
-    /**
-     * If the val is Y
-     *
-     * @param val
-     * @return
-     */
-    public static boolean isYes(String val) {
-        for (String alia : Y.getAlias()) {
-            if (alia.equalsIgnoreCase(val)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public List<String> getAlias() {
-        return alias;
-    }
+  public List<String> getAlias() {
+    return alias;
+  }
 }

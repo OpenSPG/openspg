@@ -26,134 +26,112 @@ import com.antgroup.openspg.core.spgschema.model.type.MultiVersionConfig;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
 
 /**
- * Domain model of simple property, contains the unique id of spo triple, corresponding to the DO object in the
- * database.
+ * Domain model of simple property, contains the unique id of spo triple, corresponding to the DO
+ * object in the database.
  */
 public class SimpleProperty extends BaseSpoTriple {
 
-    private static final long serialVersionUID = -3094375554984263917L;
+  private static final long serialVersionUID = -3094375554984263917L;
 
-    /**
-     * Basic information.
-     */
-    private final BasicInfo<PredicateIdentifier> basicInfo;
+  /** Basic information. */
+  private final BasicInfo<PredicateIdentifier> basicInfo;
 
-    /**
-     * Unique id of subject type.
-     */
-    private final OntologyId subjectTypeId;
+  /** Unique id of subject type. */
+  private final OntologyId subjectTypeId;
 
-    /**
-     * Unique id of object type.
-     */
-    private final OntologyId objectTypeId;
+  /** Unique id of object type. */
+  private final OntologyId objectTypeId;
 
-    /**
-     * Type of object.
-     */
-    private final SPGTypeEnum objectTypeEnum;
+  /** Type of object. */
+  private final SPGTypeEnum objectTypeEnum;
 
-    /**
-     * The config of multi version
-     */
-    private final MultiVersionConfig multiVersionConfig;
+  /** The config of multi version */
+  private final MultiVersionConfig multiVersionConfig;
 
-    /**
-     * The config of mounted concept
-     */
-    private final MountedConceptConfig mountedConceptConfig;
+  /** The config of mounted concept */
+  private final MountedConceptConfig mountedConceptConfig;
 
-    /**
-     * The encrypt type.
-     */
-    private final EncryptTypeEnum encryptTypeEnum;
+  /** The encrypt type. */
+  private final EncryptTypeEnum encryptTypeEnum;
 
-    /**
-     * The group that property belongs to , since every event must have
-     */
-    private final PropertyGroupEnum propertyGroup;
+  /** The group that property belongs to , since every event must have */
+  private final PropertyGroupEnum propertyGroup;
 
-    /**
-     * The id of constraint defined on property.
-     */
-    private final Long constraintId;
+  /** The id of constraint defined on property. */
+  private final Long constraintId;
 
-    /**
-     * The logic rule defined on property.
-     */
-    private final RuleCode ruleCode;
+  /** The logic rule defined on property. */
+  private final RuleCode ruleCode;
 
-    /**
-     * Ontology type, property or relation.
-     */
-    private final SPGOntologyEnum ontologyEnum;
+  /** Ontology type, property or relation. */
+  private final SPGOntologyEnum ontologyEnum;
 
-    public SimpleProperty(
-        BasicInfo<PredicateIdentifier> basicInfo,
-        OntologyId subjectTypeId,
-        OntologyId objectTypeId,
-        SPGTypeEnum objectTypeEnum,
-        MultiVersionConfig multiVersionConfig,
-        MountedConceptConfig mountedConceptConfig,
-        EncryptTypeEnum encryptTypeEnum,
-        PropertyGroupEnum propertyGroup,
-        Long constraintId,
-        RuleCode ruleCode,
-        SPGOntologyEnum ontologyEnum) {
-        this.basicInfo = basicInfo;
-        this.subjectTypeId = subjectTypeId;
-        this.objectTypeId = objectTypeId;
-        this.objectTypeEnum = objectTypeEnum;
-        this.multiVersionConfig = multiVersionConfig;
-        this.mountedConceptConfig = mountedConceptConfig;
-        this.encryptTypeEnum = encryptTypeEnum;
-        this.propertyGroup = propertyGroup;
-        this.constraintId = constraintId;
-        this.ruleCode = ruleCode;
-        this.ontologyEnum = ontologyEnum;
-    }
+  public SimpleProperty(
+      BasicInfo<PredicateIdentifier> basicInfo,
+      OntologyId subjectTypeId,
+      OntologyId objectTypeId,
+      SPGTypeEnum objectTypeEnum,
+      MultiVersionConfig multiVersionConfig,
+      MountedConceptConfig mountedConceptConfig,
+      EncryptTypeEnum encryptTypeEnum,
+      PropertyGroupEnum propertyGroup,
+      Long constraintId,
+      RuleCode ruleCode,
+      SPGOntologyEnum ontologyEnum) {
+    this.basicInfo = basicInfo;
+    this.subjectTypeId = subjectTypeId;
+    this.objectTypeId = objectTypeId;
+    this.objectTypeEnum = objectTypeEnum;
+    this.multiVersionConfig = multiVersionConfig;
+    this.mountedConceptConfig = mountedConceptConfig;
+    this.encryptTypeEnum = encryptTypeEnum;
+    this.propertyGroup = propertyGroup;
+    this.constraintId = constraintId;
+    this.ruleCode = ruleCode;
+    this.ontologyEnum = ontologyEnum;
+  }
 
-    public BasicInfo<PredicateIdentifier> getBasicInfo() {
-        return basicInfo;
-    }
+  public BasicInfo<PredicateIdentifier> getBasicInfo() {
+    return basicInfo;
+  }
 
-    public OntologyId getSubjectTypeId() {
-        return subjectTypeId;
-    }
+  public OntologyId getSubjectTypeId() {
+    return subjectTypeId;
+  }
 
-    public OntologyId getObjectTypeId() {
-        return objectTypeId;
-    }
+  public OntologyId getObjectTypeId() {
+    return objectTypeId;
+  }
 
-    public MultiVersionConfig getMultiVersionConfig() {
-        return multiVersionConfig;
-    }
+  public MultiVersionConfig getMultiVersionConfig() {
+    return multiVersionConfig;
+  }
 
-    public MountedConceptConfig getMountedConceptConfig() {
-        return mountedConceptConfig;
-    }
+  public MountedConceptConfig getMountedConceptConfig() {
+    return mountedConceptConfig;
+  }
 
-    public EncryptTypeEnum getEncryptTypeEnum() {
-        return encryptTypeEnum;
-    }
+  public EncryptTypeEnum getEncryptTypeEnum() {
+    return encryptTypeEnum;
+  }
 
-    public PropertyGroupEnum getPropertyGroup() {
-        return propertyGroup;
-    }
+  public PropertyGroupEnum getPropertyGroup() {
+    return propertyGroup;
+  }
 
-    public Long getConstraintId() {
-        return constraintId;
-    }
+  public Long getConstraintId() {
+    return constraintId;
+  }
 
-    public RuleCode getRuleCode() {
-        return ruleCode;
-    }
+  public RuleCode getRuleCode() {
+    return ruleCode;
+  }
 
-    public SPGOntologyEnum getOntologyType() {
-        return ontologyEnum;
-    }
+  public SPGOntologyEnum getOntologyType() {
+    return ontologyEnum;
+  }
 
-    public SPGTypeEnum getObjectTypeEnum() {
-        return objectTypeEnum;
-    }
+  public SPGTypeEnum getObjectTypeEnum() {
+    return objectTypeEnum;
+  }
 }

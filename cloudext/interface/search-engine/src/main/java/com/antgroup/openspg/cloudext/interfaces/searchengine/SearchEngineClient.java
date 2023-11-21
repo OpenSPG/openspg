@@ -17,14 +17,13 @@ import com.antgroup.openspg.common.util.cloudext.CloudExtClient;
 import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordManipulateCmd;
 import com.antgroup.openspg.core.spgschema.model.SPGSchemaAlterCmd;
 
-
 public interface SearchEngineClient extends CloudExtClient, IdxDataQueryService {
 
-    int alterSchema(SPGSchemaAlterCmd cmd);
+  int alterSchema(SPGSchemaAlterCmd cmd);
 
-    int manipulateRecord(SPGRecordManipulateCmd cmd);
+  int manipulateRecord(SPGRecordManipulateCmd cmd);
 
-    void close() throws Exception;
+  void close() throws Exception;
 
-    IdxNameConvertor getIdxNameConvertor();
+  IdxNameConvertor getIdxNameConvertor();
 }

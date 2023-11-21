@@ -16,34 +16,32 @@ package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.model;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
-/**
- * Information of procedure.
- */
+/** Information of procedure. */
 @Data
 public class ProcedureInformation {
 
-    @JSONField(name = "plugin_description")
-    private PluginDescription pluginDescription;
+  @JSONField(name = "plugin_description")
+  private PluginDescription pluginDescription;
 
-    @Data
-    public static class PluginDescription {
+  @Data
+  public static class PluginDescription {
 
-        @JSONField(name = "name")
-        private String name;
+    @JSONField(name = "name")
+    private String name;
 
-        @JSONField(name = "description")
-        private String description;
+    @JSONField(name = "description")
+    private String description;
 
-        @JSONField(name = "read_only")
-        private Boolean readOnly;
+    @JSONField(name = "read_only")
+    private Boolean readOnly;
 
-        @JSONField(name = "signature")
-        private String signature;
+    @JSONField(name = "signature")
+    private String signature;
 
-        @JSONField(name = "type")
-        private String type;
+    @JSONField(name = "type")
+    private String type;
 
-        @JSONField(name = "version")
-        private String version;
-    }
+    @JSONField(name = "version")
+    private String version;
+  }
 }

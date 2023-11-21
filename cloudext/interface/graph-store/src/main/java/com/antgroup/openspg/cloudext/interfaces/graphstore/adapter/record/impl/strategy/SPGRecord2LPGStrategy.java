@@ -16,19 +16,17 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.
 import com.antgroup.openspg.cloudext.interfaces.graphstore.BaseLPGGraphStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
 import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordAlterItem;
-
 import java.util.List;
 
 public interface SPGRecord2LPGStrategy {
 
-    /**
-     * This method is used to translate {@link SPGRecordAlterItem} into {@link LPGRecordAlterItem}s.
-     *
-     * @param item the {@link SPGRecordAlterItem}
-     * @return the {@link LPGRecordAlterItem}s
-     */
-    List<LPGRecordAlterItem> translate(SPGRecordAlterItem item);
+  /**
+   * This method is used to translate {@link SPGRecordAlterItem} into {@link LPGRecordAlterItem}s.
+   *
+   * @param item the {@link SPGRecordAlterItem}
+   * @return the {@link LPGRecordAlterItem}s
+   */
+  List<LPGRecordAlterItem> translate(SPGRecordAlterItem item);
 
-    void setLpgGraphStoreClient(BaseLPGGraphStoreClient client);
-
+  void setLpgGraphStoreClient(BaseLPGGraphStoreClient client);
 }

@@ -15,7 +15,4 @@ package com.antgroup.openspg.core.spgreasoner.model.service;
 
 import com.antgroup.openspg.common.model.job.BaseJobRunResult;
 
-
-public class BaseReasonerResult extends BaseJobRunResult {
-
-}
+public class BaseReasonerResult extends BaseJobRunResult {}

@@ -13,42 +13,26 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation;
 
-
 public enum SchemaAtomicOperationEnum {
 
-    /**
-     * Add property of vertex or edge.
-     */
-    ADD_PROPERTY,
+  /** Add property of vertex or edge. */
+  ADD_PROPERTY,
 
-    /**
-     * Drop property of vertex or edge
-     */
-    DROP_PROPERTY,
+  /** Drop property of vertex or edge */
+  DROP_PROPERTY,
 
-    /**
-     * Create index in property
-     */
-    CREATE_INDEX,
+  /** Create index in property */
+  CREATE_INDEX,
 
-    /**
-     * Drop index in property
-     */
-    DROP_INDEX,
+  /** Drop index in property */
+  DROP_INDEX,
 
-    /**
-     * Set time-to-alive in vertex or edge
-     */
-    SET_TTL,
+  /** Set time-to-alive in vertex or edge */
+  SET_TTL,
 
-    /**
-     * Unset time-to-alive in vertex or edge
-     */
-    UNSET_TTL,
+  /** Unset time-to-alive in vertex or edge */
+  UNSET_TTL,
 
-    /**
-     * Empty operation
-     */
-    EMPTY
-
+  /** Empty operation */
+  EMPTY
 }

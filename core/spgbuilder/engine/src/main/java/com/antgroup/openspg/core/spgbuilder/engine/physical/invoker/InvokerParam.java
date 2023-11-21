@@ -16,21 +16,18 @@ package com.antgroup.openspg.core.spgbuilder.engine.physical.invoker;
 import com.antgroup.openspg.core.spgbuilder.engine.physical.process.BaseProcessor;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.io.Serializable;
 import java.util.Map;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public class InvokerParam implements Serializable {
 
-    private final BaseProcessor<?> processor;
+  private final BaseProcessor<?> processor;
 
-    private final BaseSPGRecord baseSpgRecord;
+  private final BaseSPGRecord baseSpgRecord;
 
-    private final Map<String, OperatorConfig> property2Operator;
+  private final Map<String, OperatorConfig> property2Operator;
 }

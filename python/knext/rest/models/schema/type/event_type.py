@@ -43,34 +43,45 @@ class EventType(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'basic_info': 'StandardTypeBasicInfo',
-        'parent_type_info': 'ParentTypeInfo',
-        'spg_type_enum': 'str',
-        'properties': 'list[Property]',
-        'relations': 'list[Relation]',
-        'advanced_config': 'SpgTypeAdvancedConfig',
-        'project_id': 'int',
-        'ontology_id': 'OntologyId',
-        'alter_operation': 'str',
-        'ext_info': 'object'
+        "basic_info": "StandardTypeBasicInfo",
+        "parent_type_info": "ParentTypeInfo",
+        "spg_type_enum": "str",
+        "properties": "list[Property]",
+        "relations": "list[Relation]",
+        "advanced_config": "SpgTypeAdvancedConfig",
+        "project_id": "int",
+        "ontology_id": "OntologyId",
+        "alter_operation": "str",
+        "ext_info": "object",
     }
 
     attribute_map = {
-        'basic_info': 'basicInfo',
-        'parent_type_info': 'parentTypeInfo',
-        'spg_type_enum': 'spgTypeEnum',
-        'properties': 'properties',
-        'relations': 'relations',
-        'advanced_config': 'advancedConfig',
-        'project_id': 'projectId',
-        'ontology_id': 'ontologyId',
-        'alter_operation': 'alterOperation',
-        'ext_info': 'extInfo'
+        "basic_info": "basicInfo",
+        "parent_type_info": "parentTypeInfo",
+        "spg_type_enum": "spgTypeEnum",
+        "properties": "properties",
+        "relations": "relations",
+        "advanced_config": "advancedConfig",
+        "project_id": "projectId",
+        "ontology_id": "ontologyId",
+        "alter_operation": "alterOperation",
+        "ext_info": "extInfo",
     }
 
-    def __init__(self, basic_info=None, parent_type_info=None, spg_type_enum='EVENT_TYPE', properties=None,
-                 relations=None, advanced_config=None, project_id=None, ontology_id=None, alter_operation=None,
-                 ext_info=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        basic_info=None,
+        parent_type_info=None,
+        spg_type_enum="EVENT_TYPE",
+        properties=None,
+        relations=None,
+        advanced_config=None,
+        project_id=None,
+        ontology_id=None,
+        alter_operation=None,
+        ext_info=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """EventType - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -168,13 +179,28 @@ class EventType(object):
         :param spg_type_enum: The spg_type_enum of this EventType.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and spg_type_enum is None:  # noqa: E501
-            raise ValueError("Invalid value for `spg_type_enum`, must not be `None`")  # noqa: E501
-        allowed_values = ["BASIC_TYPE", "ENTITY_TYPE", "CONCEPT_TYPE", "EVENT_TYPE", "STANDARD_TYPE"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and spg_type_enum not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and spg_type_enum is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `spg_type_enum` ({0}), must be one of {1}"  # noqa: E501
-                .format(spg_type_enum, allowed_values)
+                "Invalid value for `spg_type_enum`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = [
+            "BASIC_TYPE",
+            "ENTITY_TYPE",
+            "CONCEPT_TYPE",
+            "EVENT_TYPE",
+            "STANDARD_TYPE",
+        ]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and spg_type_enum not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `spg_type_enum` ({0}), must be one of {1}".format(  # noqa: E501
+                    spg_type_enum, allowed_values
+                )
             )
 
         self._spg_type_enum = spg_type_enum
@@ -303,10 +329,14 @@ class EventType(object):
         :type: str
         """
         allowed_values = ["CREATE", "UPDATE", "DELETE"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and alter_operation not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and alter_operation not in allowed_values
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `alter_operation` ({0}), must be one of {1}"  # noqa: E501
-                .format(alter_operation, allowed_values)
+                "Invalid value for `alter_operation` ({0}), must be one of {1}".format(  # noqa: E501
+                    alter_operation, allowed_values
+                )
             )
 
         self._alter_operation = alter_operation
@@ -339,18 +369,20 @@ class EventType(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

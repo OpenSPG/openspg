@@ -430,7 +430,7 @@ class SPGSchemaMarkLang:
                 not in self.parsing_register[RegisterUnit.Relation].sub_properties
             ), self.error_msg(
                 f'Property "{predicate_name}" is duplicated under the relation '
-                f'{self.parsing_register[RegisterUnit.Relation].name}'
+                f"{self.parsing_register[RegisterUnit.Relation].name}"
             )
         else:
             assert (
@@ -780,7 +780,8 @@ class SPGSchemaMarkLang:
         for prop in old:
             if not old_property.inherited and prop not in new:
                 assert inherited_type is None, self.error_msg(
-                    f'"{old_type_name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!')
+                    f'"{old_type_name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!'
+                )
 
                 old[prop].alter_operation = AlterOperationEnum.Delete
                 need_update = True
@@ -791,7 +792,8 @@ class SPGSchemaMarkLang:
         for prop, o in new.items():
             if prop not in old and not new_property.inherited:
                 assert inherited_type is None, self.error_msg(
-                    f'"{old_type_name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!')
+                    f'"{old_type_name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!'
+                )
 
                 old_property.add_sub_property(new[prop])
                 need_update = True
@@ -801,7 +803,8 @@ class SPGSchemaMarkLang:
 
             elif old[prop].object_type_name != new[prop].object_type_name:
                 assert inherited_type is None, self.error_msg(
-                    f'"{old_type_name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!')
+                    f'"{old_type_name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!'
+                )
                 assert not old_property.inherited, self.error_msg(
                     f"{old_type_name}] {old_property.name}.{prop} is inherited sub property, deny modify"
                 )
@@ -815,7 +818,8 @@ class SPGSchemaMarkLang:
 
             elif old[prop] != new[prop]:
                 assert inherited_type is None, self.error_msg(
-                    f'"{old_type_name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!')
+                    f'"{old_type_name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!'
+                )
                 assert not old_property.inherited, self.error_msg(
                     f"{old_type_name}] {old_property.name}.{prop} is inherited property, deny modify"
                 )
@@ -826,13 +830,11 @@ class SPGSchemaMarkLang:
                 print(f"Update property: [{old_type_name}] {old_property.name}.{prop}")
         return need_update
 
-
     def get_inherited_type(self, type_name):
         for spg_type in self.types:
             if self.types[spg_type].parent_type_name == type_name:
                 return spg_type
         return None
-
 
     def diff_and_sync(self, print_only):
         """
@@ -873,7 +875,8 @@ class SPGSchemaMarkLang:
                     inherited_type = self.get_inherited_type(new_type.name)
                     assert not inherited_type, self.error_msg(
                         f'"{inherited_type}" inherited {new_type.name}, prohibit type alteration. '
-                        f'If you still want to make change, please delete "{inherited_type}" first.')
+                        f'If you still want to make change, please delete "{inherited_type}" first.'
+                    )
 
                     session.delete_type(old_type)
                     session.create_type(new_type)
@@ -937,7 +940,8 @@ class SPGSchemaMarkLang:
                         and not o.inherited
                     ):
                         assert inherited_type is None, self.error_msg(
-                            f'"{new_type.name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!')
+                            f'"{new_type.name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!'
+                        )
 
                         old_type.add_property(new_type.properties[prop])
                         need_update = True
@@ -948,7 +952,8 @@ class SPGSchemaMarkLang:
                         != new_type.properties[prop].object_type_name
                     ):
                         assert inherited_type is None, self.error_msg(
-                            f'"{new_type.name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!')
+                            f'"{new_type.name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!'
+                        )
                         assert not old_type.properties[prop].inherited, self.error_msg(
                             f"{new_type.name}] {prop} is inherited property, deny modify"
                         )
@@ -978,7 +983,8 @@ class SPGSchemaMarkLang:
 
                     elif old_type.properties[prop] != new_type.properties[prop]:
                         assert inherited_type is None, self.error_msg(
-                            f'"{new_type.name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!')
+                            f'"{new_type.name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!'
+                        )
                         assert not old_type.properties[prop].inherited, self.error_msg(
                             f"{new_type.name}] {prop} is inherited property, deny modify"
                         )

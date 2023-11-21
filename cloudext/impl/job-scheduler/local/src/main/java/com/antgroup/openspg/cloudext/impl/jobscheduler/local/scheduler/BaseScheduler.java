@@ -16,9 +16,6 @@ package com.antgroup.openspg.cloudext.impl.jobscheduler.local.scheduler;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @Getter
-public abstract class BaseScheduler {
-
-}
+public abstract class BaseScheduler {}

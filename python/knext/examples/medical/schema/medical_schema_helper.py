@@ -14,6 +14,7 @@
 # PLEASE DO NOT MODIFY THIS FILE!!!
 #
 
+
 class Medical:
     def __init__(self):
         self.BodyPart = self.BodyPart()

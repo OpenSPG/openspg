@@ -14,42 +14,37 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema;
 
 import com.antgroup.openspg.common.model.base.BaseValObj;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
- * <p>
- * {@link EdgeTypeName EdgeTypeName} is the unique identifier of {@link EdgeType EdgeType}, and it consists of a triplet
- * of the start vertex's type <tt>(startVertexType)</tt>, edge type's label <tt>(edgeLabel)</tt> and the end vertex's
- * type <tt>(endVertexType)</tt>.
- * </P>
+ * {@link EdgeTypeName EdgeTypeName} is the unique identifier of {@link EdgeType EdgeType}, and it
+ * consists of a triplet of the start vertex's type <tt>(startVertexType)</tt>, edge type's label
+ * <tt>(edgeLabel)</tt> and the end vertex's type <tt>(endVertexType)</tt>.
  */
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class EdgeTypeName extends BaseValObj {
 
-    private final String startVertexType;
+  private final String startVertexType;
 
-    /**
-     * The label of edge type
-     */
-    private final String edgeLabel;
+  /** The label of edge type */
+  private final String edgeLabel;
 
-    private final String endVertexType;
+  private final String endVertexType;
 
-    public static EdgeTypeName parse(String edgeTypeName) {
-        String[] splits = edgeTypeName.split("_");
-        if (splits.length != 3) {
-            throw new IllegalArgumentException("illegal edgeTypeName=" + edgeTypeName);
-        }
-        return new EdgeTypeName(splits[0], splits[1], splits[2]);
+  public static EdgeTypeName parse(String edgeTypeName) {
+    String[] splits = edgeTypeName.split("_");
+    if (splits.length != 3) {
+      throw new IllegalArgumentException("illegal edgeTypeName=" + edgeTypeName);
     }
+    return new EdgeTypeName(splits[0], splits[1], splits[2]);
+  }
 
-    @Override
-    public String toString() {
-        return String.format("%s_%s_%s", startVertexType, edgeLabel, endVertexType);
-    }
+  @Override
+  public String toString() {
+    return String.format("%s_%s_%s", startVertexType, edgeLabel, endVertexType);
+  }
 }

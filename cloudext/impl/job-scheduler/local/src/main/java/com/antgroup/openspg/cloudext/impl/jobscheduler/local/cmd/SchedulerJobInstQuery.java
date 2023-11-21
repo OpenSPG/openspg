@@ -15,20 +15,17 @@ package com.antgroup.openspg.cloudext.impl.jobscheduler.local.cmd;
 
 import com.antgroup.openspg.common.model.base.BaseQuery;
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
-
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-
-import java.util.Set;
-
 
 @Setter
 @Getter
 @Accessors(chain = true)
 public class SchedulerJobInstQuery extends BaseQuery {
 
-    private Set<JobInstStatusEnum> status;
+  private Set<JobInstStatusEnum> status;
 
-    private String orderBy;
+  private String orderBy;
 }

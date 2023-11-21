@@ -20,14 +20,11 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.cmd.IdxGetQuery;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.SearchRequest;
-
 import java.util.List;
-
 
 public interface IdxDataQueryService {
 
-    List<IdxRecord> mGet(IdxGetQuery query);
+  List<IdxRecord> mGet(IdxGetQuery query);
 
-    List<IdxRecord> search(SearchRequest request);
-
+  List<IdxRecord> search(SearchRequest request);
 }

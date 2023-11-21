@@ -13,43 +13,31 @@
 
 package com.antgroup.openspg.core.spgschema.model.semantic;
 
-/**
- * Enumeration of ontology types
- */
+/** Enumeration of ontology types */
 public enum SPGOntologyEnum {
 
-    /**
-     * SPG type, such as EntityType, ConceptType, EventType etc.
-     */
-    TYPE,
+  /** SPG type, such as EntityType, ConceptType, EventType etc. */
+  TYPE,
 
-    /**
-     * Property in the type.
-     */
-    PROPERTY,
+  /** Property in the type. */
+  PROPERTY,
 
-    /**
-     * Relation in the type.
-     */
-    RELATION,
+  /** Relation in the type. */
+  RELATION,
 
-    /**
-     * SubProperty in the property or relation.
-     */
-    SUB_PROPERTY,
+  /** SubProperty in the property or relation. */
+  SUB_PROPERTY,
 
-    /**
-     * Concept instance.
-     */
-    CONCEPT;
+  /** Concept instance. */
+  CONCEPT;
 
-    public static SPGOntologyEnum toEnum(String val) {
-        for (SPGOntologyEnum resourceTypeEnum : SPGOntologyEnum.values()) {
-            if (resourceTypeEnum.name().equalsIgnoreCase(val)) {
-                return resourceTypeEnum;
-            }
-        }
-
-        throw new IllegalArgumentException("unknown type: " + val);
+  public static SPGOntologyEnum toEnum(String val) {
+    for (SPGOntologyEnum resourceTypeEnum : SPGOntologyEnum.values()) {
+      if (resourceTypeEnum.name().equalsIgnoreCase(val)) {
+        return resourceTypeEnum;
+      }
     }
+
+    throw new IllegalArgumentException("unknown type: " + val);
+  }
 }

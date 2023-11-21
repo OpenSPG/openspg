@@ -15,36 +15,31 @@ package com.antgroup.openspg.api.facade.dto.schema.request;
 
 import com.antgroup.openspg.common.model.base.BaseRequest;
 
-/**
- * Query schema type.
- */
+/** Query schema type. */
 public class SPGTypeRequest extends BaseRequest {
 
-    private static final long serialVersionUID = 7159265118550694524L;
+  private static final long serialVersionUID = 7159265118550694524L;
 
-    /**
-     * The unique name of entity to query.
-     */
-    private String name;
+  /** The unique name of entity to query. */
+  private String name;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public SPGTypeRequest setName(String name) {
-        this.name = name;
-        return this;
-    }
+  public SPGTypeRequest setName(String name) {
+    this.name = name;
+    return this;
+  }
 
-    public SPGTypeRequest() {
-    }
+  public SPGTypeRequest() {}
 
-    public SPGTypeRequest(String name) {
-        this.name = name;
-    }
+  public SPGTypeRequest(String name) {
+    this.name = name;
+  }
 
-    @Override
-    public String toString() {
-        return name;
-    }
+  @Override
+  public String toString() {
+    return name;
+  }
 }

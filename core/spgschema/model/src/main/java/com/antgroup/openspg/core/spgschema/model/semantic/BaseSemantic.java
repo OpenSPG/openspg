@@ -17,41 +17,45 @@ import com.antgroup.openspg.core.spgschema.model.BaseSpoTriple;
 
 /**
  * The semantics defined on ontology<br>
- * <p>There are not only properties or relations of portraits/facts between ontologies, but also semantic connections,
- * such as equivalence classes, parent-child classes, mutualOf or inverseOf relations, and so on. These semantic
- * relationships can be regarded as the consensus and axioms that exist in reality. Under the SPG framework, we define
- * ontology semantics ({@link BaseSemantic}) to describe these consensus semantics.<br>
+ *
+ * <p>There are not only properties or relations of portraits/facts between ontologies, but also
+ * semantic connections, such as equivalence classes, parent-child classes, mutualOf or inverseOf
+ * relations, and so on. These semantic relationships can be regarded as the consensus and axioms
+ * that exist in reality. Under the SPG framework, we define ontology semantics ({@link
+ * BaseSemantic}) to describe these consensus semantics.<br>
  * <br>
- * Ontology semantics can be divided into the following categories according to the different objects of action：
+ * Ontology semantics can be divided into the following categories according to the different
+ * objects of action：
+ *
  * <ul>
- *     <li>Represents the semantics between two schema types: such as inheritance semantics between two entity types, {@code <classA subClassOf classB>}</li>
- *     <li>Represents the semantics between two instances: for example, the same semantics of two instances, {@code <instanceA sameAs instanceB>}</li>
- *     <li>Represents the semantics between two properties: for example, property A is a standard property of property B，{@code <propertyA normalizedOf propertyB>}</li>
- *     <li>Represents the semantics between two relations: such as reciprocal semantics between two relations, {@code <relationA inverseOf relationB>}</li>
+ *   <li>Represents the semantics between two schema types: such as inheritance semantics between
+ *       two entity types, {@code <classA subClassOf classB>}
+ *   <li>Represents the semantics between two instances: for example, the same semantics of two
+ *       instances, {@code <instanceA sameAs instanceB>}
+ *   <li>Represents the semantics between two properties: for example, property A is a standard
+ *       property of property B，{@code <propertyA normalizedOf propertyB>}
+ *   <li>Represents the semantics between two relations: such as reciprocal semantics between two
+ *       relations, {@code <relationA inverseOf relationB>}
  * </ul>
- * </p>
  */
 public abstract class BaseSemantic extends BaseSpoTriple {
 
-    private static final long serialVersionUID = 1361012430866891880L;
+  private static final long serialVersionUID = 1361012430866891880L;
 
-    /**
-     * ontology type.
-     */
-    protected SPGOntologyEnum ontologyEnum;
+  /** ontology type. */
+  protected SPGOntologyEnum ontologyEnum;
 
-    public BaseSemantic() {
-    }
+  public BaseSemantic() {}
 
-    public BaseSemantic(SPGOntologyEnum ontologyEnum) {
-        this.ontologyEnum = ontologyEnum;
-    }
+  public BaseSemantic(SPGOntologyEnum ontologyEnum) {
+    this.ontologyEnum = ontologyEnum;
+  }
 
-    public SPGOntologyEnum getOntologyType() {
-        return ontologyEnum;
-    }
+  public SPGOntologyEnum getOntologyType() {
+    return ontologyEnum;
+  }
 
-    public void setOntologyType(SPGOntologyEnum ontologyEnum) {
-        this.ontologyEnum = ontologyEnum;
-    }
+  public void setOntologyType(SPGOntologyEnum ontologyEnum) {
+    this.ontologyEnum = ontologyEnum;
+  }
 }

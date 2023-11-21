@@ -15,24 +15,23 @@ package com.antgroup.openspg.common.model.exception;
 
 import com.antgroup.openspg.common.model.datasource.DataSourceUsageTypeEnum;
 
-
 public class DataSourceException extends OpenSPGException {
 
-    private DataSourceException(Throwable cause, String messagePattern, Object... args) {
-        super(cause, true, true, messagePattern, args);
-    }
+  private DataSourceException(Throwable cause, String messagePattern, Object... args) {
+    super(cause, true, true, messagePattern, args);
+  }
 
-    private DataSourceException(String messagePattern, Object... args) {
-        this(null, messagePattern, args);
-    }
+  private DataSourceException(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
+  }
 
-    public static DataSourceException dataSourceNotExist(String dataSourceName) {
-        return new DataSourceException("cannot find dataSource with name={}", dataSourceName);
-    }
+  public static DataSourceException dataSourceNotExist(String dataSourceName) {
+    return new DataSourceException("cannot find dataSource with name={}", dataSourceName);
+  }
 
-    public static DataSourceException noUsageForProject(
-        DataSourceUsageTypeEnum dataSourceUsageType, Long projectId) {
-        return new DataSourceException("there is no {} dataSource for project={}",
-            dataSourceUsageType, projectId);
-    }
+  public static DataSourceException noUsageForProject(
+      DataSourceUsageTypeEnum dataSourceUsageType, Long projectId) {
+    return new DataSourceException(
+        "there is no {} dataSource for project={}", dataSourceUsageType, projectId);
+  }
 }

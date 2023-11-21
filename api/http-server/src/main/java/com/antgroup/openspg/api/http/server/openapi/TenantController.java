@@ -20,7 +20,7 @@ import com.antgroup.openspg.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.biz.common.TenantManager;
 import com.antgroup.openspg.common.model.tenant.Tenant;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,43 +29,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
-
 @Controller
 @RequestMapping("/public/v1/tenant")
 public class TenantController extends BaseController {
 
-    @Autowired
-    private TenantManager tenantManager;
+  @Autowired private TenantManager tenantManager;
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Object> create(@RequestBody TenantCreateRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<Tenant>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(method = RequestMethod.POST)
+  public ResponseEntity<Object> create(@RequestBody TenantCreateRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<Tenant>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public Tenant action() {
-                return tenantManager.save(request);
-            }
+          @Override
+          public Tenant action() {
+            return tenantManager.save(request);
+          }
         });
-    }
+  }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Object> query(@RequestParam(required = false) Long tenantId) {
-        return HttpBizTemplate.execute(new HttpBizCallback<List<Tenant>>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(method = RequestMethod.GET)
+  public ResponseEntity<Object> query(@RequestParam(required = false) Long tenantId) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<List<Tenant>>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public List<Tenant> action() {
-                TenantQueryRequest request = new TenantQueryRequest();
-                request.setTenantId(tenantId);
-                return tenantManager.query(request);
-            }
+          @Override
+          public List<Tenant> action() {
+            TenantQueryRequest request = new TenantQueryRequest();
+            request.setTenantId(tenantId);
+            return tenantManager.query(request);
+          }
         });
-    }
+  }
 }

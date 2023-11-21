@@ -14,27 +14,27 @@
 package com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query;
 
 /**
- * This is the base class for conditional searches. It is the most fundamental query unit that defines the field to be
- * retrieved and their corresponding value.
+ * This is the base class for conditional searches. It is the most fundamental query unit that
+ * defines the field to be retrieved and their corresponding value.
  *
- * <p> MatchQuery, TermQuery, FuzzyQuery, and others all inherit from Query,
- * and their query assembly formats are based on key-value pairs, which are relatively simple.
+ * <p>MatchQuery, TermQuery, FuzzyQuery, and others all inherit from Query, and their query assembly
+ * formats are based on key-value pairs, which are relatively simple.
  */
 public class Query extends BaseQuery {
 
-    private String name;
-    private Object value;
+  private String name;
+  private Object value;
 
-    public Query(String name, Object value) {
-        this.name = name;
-        this.value = value;
-    }
+  public Query(String name, Object value) {
+    this.name = name;
+    this.value = value;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Object getValue() {
-        return value;
-    }
+  public Object getValue() {
+    return value;
+  }
 }

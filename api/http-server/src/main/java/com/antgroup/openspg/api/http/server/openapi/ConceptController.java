@@ -24,7 +24,6 @@ import com.antgroup.openspg.core.spgschema.model.semantic.request.DefineLogicalC
 import com.antgroup.openspg.core.spgschema.model.semantic.request.RemoveDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.spgschema.model.semantic.request.RemoveLogicalCausationRequest;
 import com.antgroup.openspg.core.spgschema.model.type.ConceptList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,111 +32,125 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 @Controller
 @RequestMapping("/public/v1/concept")
 public class ConceptController extends BaseController {
 
-    @Autowired
-    private ConceptManager conceptManager;
+  @Autowired private ConceptManager conceptManager;
 
-    @RequestMapping(value = "/queryConcept", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<Object> queryConcept(ConceptRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<ConceptList>() {
-            @Override
-            public void check() {
-                AssertUtils.assertParamObjectIsNotNull("request", request);
-                AssertUtils.assertParamObjectIsNotNull("conceptTypeName", request.getConceptTypeName());
-            }
+  @RequestMapping(value = "/queryConcept", method = RequestMethod.GET)
+  @ResponseBody
+  public ResponseEntity<Object> queryConcept(ConceptRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<ConceptList>() {
+          @Override
+          public void check() {
+            AssertUtils.assertParamObjectIsNotNull("request", request);
+            AssertUtils.assertParamObjectIsNotNull("conceptTypeName", request.getConceptTypeName());
+          }
 
-            @Override
-            public ConceptList action() {
-                return conceptManager.getConceptDetail(
-                    request.getConceptTypeName(), request.getConceptName()
-                );
-            }
+          @Override
+          public ConceptList action() {
+            return conceptManager.getConceptDetail(
+                request.getConceptTypeName(), request.getConceptName());
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/defineDynamicTaxonomy", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Object> defineDynamicTaxonomy(@RequestBody DefineDynamicTaxonomyRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<Boolean>() {
-            @Override
-            public void check() {
-                AssertUtils.assertParamObjectIsNotNull("request", request);
-                AssertUtils.assertParamObjectIsNotNull("conceptTypeName", request.getConceptTypeName());
-                AssertUtils.assertParamStringIsNotBlank("conceptName", request.getConceptName());
-            }
+  @RequestMapping(value = "/defineDynamicTaxonomy", method = RequestMethod.POST)
+  @ResponseBody
+  public ResponseEntity<Object> defineDynamicTaxonomy(
+      @RequestBody DefineDynamicTaxonomyRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<Boolean>() {
+          @Override
+          public void check() {
+            AssertUtils.assertParamObjectIsNotNull("request", request);
+            AssertUtils.assertParamObjectIsNotNull("conceptTypeName", request.getConceptTypeName());
+            AssertUtils.assertParamStringIsNotBlank("conceptName", request.getConceptName());
+          }
 
-            @Override
-            public Boolean action() {
-                conceptManager.defineDynamicTaxonomy(request);
-                return Boolean.TRUE;
-            }
+          @Override
+          public Boolean action() {
+            conceptManager.defineDynamicTaxonomy(request);
+            return Boolean.TRUE;
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/defineLogicalCausation", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Object> defineLogicalCausation(@RequestBody DefineLogicalCausationRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<Boolean>() {
-            @Override
-            public void check() {
-                AssertUtils.assertParamObjectIsNotNull("request", request);
-                AssertUtils.assertParamObjectIsNotNull("subjectConceptTypeName", request.getSubjectConceptTypeName());
-                AssertUtils.assertParamStringIsNotBlank("subjectConceptName", request.getSubjectConceptName());
-                AssertUtils.assertParamObjectIsNotNull("objectConceptTypeName", request.getObjectConceptTypeName());
-                AssertUtils.assertParamStringIsNotBlank("objectConceptName", request.getObjectConceptName());
-                AssertUtils.assertParamStringIsNotBlank("predicateName", request.getPredicateName());
-                AssertUtils.assertParamStringIsNotBlank("dslRule", request.getDsl());
-            }
+  @RequestMapping(value = "/defineLogicalCausation", method = RequestMethod.POST)
+  @ResponseBody
+  public ResponseEntity<Object> defineLogicalCausation(
+      @RequestBody DefineLogicalCausationRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<Boolean>() {
+          @Override
+          public void check() {
+            AssertUtils.assertParamObjectIsNotNull("request", request);
+            AssertUtils.assertParamObjectIsNotNull(
+                "subjectConceptTypeName", request.getSubjectConceptTypeName());
+            AssertUtils.assertParamStringIsNotBlank(
+                "subjectConceptName", request.getSubjectConceptName());
+            AssertUtils.assertParamObjectIsNotNull(
+                "objectConceptTypeName", request.getObjectConceptTypeName());
+            AssertUtils.assertParamStringIsNotBlank(
+                "objectConceptName", request.getObjectConceptName());
+            AssertUtils.assertParamStringIsNotBlank("predicateName", request.getPredicateName());
+            AssertUtils.assertParamStringIsNotBlank("dslRule", request.getDsl());
+          }
 
-            @Override
-            public Boolean action() {
-                conceptManager.defineLogicalCausation(request);
-                return Boolean.TRUE;
-            }
+          @Override
+          public Boolean action() {
+            conceptManager.defineLogicalCausation(request);
+            return Boolean.TRUE;
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/removeDynamicTaxonomy", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Object> removeDynamicTaxonomy(@RequestBody RemoveDynamicTaxonomyRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<Boolean>() {
-            @Override
-            public void check() {
-                AssertUtils.assertParamObjectIsNotNull("request", request);
-            }
+  @RequestMapping(value = "/removeDynamicTaxonomy", method = RequestMethod.POST)
+  @ResponseBody
+  public ResponseEntity<Object> removeDynamicTaxonomy(
+      @RequestBody RemoveDynamicTaxonomyRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<Boolean>() {
+          @Override
+          public void check() {
+            AssertUtils.assertParamObjectIsNotNull("request", request);
+          }
 
-            @Override
-            public Boolean action() {
-                conceptManager.removeDynamicTaxonomy(request);
-                return Boolean.TRUE;
-            }
+          @Override
+          public Boolean action() {
+            conceptManager.removeDynamicTaxonomy(request);
+            return Boolean.TRUE;
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/removeLogicalCausation", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Object> removeLogicalCausation(@RequestBody RemoveLogicalCausationRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<Boolean>() {
-            @Override
-            public void check() {
-                AssertUtils.assertParamObjectIsNotNull("request", request);
-                AssertUtils.assertParamObjectIsNotNull("subjectConceptTypeName", request.getSubjectConceptTypeName());
-                AssertUtils.assertParamStringIsNotBlank("subjectConceptName", request.getSubjectConceptName());
-                AssertUtils.assertParamObjectIsNotNull("objectConceptTypeName", request.getObjectConceptTypeName());
-                AssertUtils.assertParamStringIsNotBlank("objectConceptName", request.getObjectConceptName());
-                AssertUtils.assertParamStringIsNotBlank("predicateName", request.getPredicateName());
-            }
+  @RequestMapping(value = "/removeLogicalCausation", method = RequestMethod.POST)
+  @ResponseBody
+  public ResponseEntity<Object> removeLogicalCausation(
+      @RequestBody RemoveLogicalCausationRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<Boolean>() {
+          @Override
+          public void check() {
+            AssertUtils.assertParamObjectIsNotNull("request", request);
+            AssertUtils.assertParamObjectIsNotNull(
+                "subjectConceptTypeName", request.getSubjectConceptTypeName());
+            AssertUtils.assertParamStringIsNotBlank(
+                "subjectConceptName", request.getSubjectConceptName());
+            AssertUtils.assertParamObjectIsNotNull(
+                "objectConceptTypeName", request.getObjectConceptTypeName());
+            AssertUtils.assertParamStringIsNotBlank(
+                "objectConceptName", request.getObjectConceptName());
+            AssertUtils.assertParamStringIsNotBlank("predicateName", request.getPredicateName());
+          }
 
-            @Override
-            public Boolean action() {
-                conceptManager.removeLogicalCausation(request);
-                return Boolean.TRUE;
-            }
+          @Override
+          public Boolean action() {
+            conceptManager.removeLogicalCausation(request);
+            return Boolean.TRUE;
+          }
         });
-    }
+  }
 }

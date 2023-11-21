@@ -15,18 +15,17 @@ package com.antgroup.openspg.core.spgbuilder.model;
 
 import com.antgroup.openspg.common.model.exception.OpenSPGException;
 
-
 public class BuilderException extends OpenSPGException {
 
-    protected BuilderException(Throwable cause, String messagePattern, Object... args) {
-        super(cause, true, true, messagePattern, args);
-    }
+  protected BuilderException(Throwable cause, String messagePattern, Object... args) {
+    super(cause, true, true, messagePattern, args);
+  }
 
-    protected BuilderException(String messagePattern, Object... args) {
-        this(null, messagePattern, args);
-    }
+  protected BuilderException(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
+  }
 
-    public static BuilderException illegalMappingType(String type) {
-        return new BuilderException(new Exception(), "illegal mapping type={}", type);
-    }
+  public static BuilderException illegalMappingType(String type) {
+    return new BuilderException(new Exception(), "illegal mapping type={}", type);
+  }
 }

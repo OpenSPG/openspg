@@ -15,73 +15,72 @@ package com.antgroup.openspg.api.facade.dto.builder.request;
 
 import java.util.Map;
 
-
 public class RelationEditRequest extends BaseEditRequest {
 
-    private String sName;
-    private String relation;
-    private String oName;
+  private String sName;
+  private String relation;
+  private String oName;
 
-    private String srcId;
-    private String dstId;
+  private String srcId;
+  private String dstId;
 
-    private Map<String, String> properties;
+  private Map<String, String> properties;
 
-    public String getsName() {
-        return sName;
-    }
+  public String getsName() {
+    return sName;
+  }
 
-    public RelationEditRequest setsName(String sName) {
-        this.sName = sName;
-        return this;
-    }
+  public RelationEditRequest setsName(String sName) {
+    this.sName = sName;
+    return this;
+  }
 
-    public String getRelation() {
-        return relation;
-    }
+  public String getRelation() {
+    return relation;
+  }
 
-    public RelationEditRequest setRelation(String relation) {
-        this.relation = relation;
-        return this;
-    }
+  public RelationEditRequest setRelation(String relation) {
+    this.relation = relation;
+    return this;
+  }
 
-    public String getoName() {
-        return oName;
-    }
+  public String getoName() {
+    return oName;
+  }
 
-    public RelationEditRequest setoName(String oName) {
-        this.oName = oName;
-        return this;
-    }
+  public RelationEditRequest setoName(String oName) {
+    this.oName = oName;
+    return this;
+  }
 
-    public String getSrcId() {
-        return srcId;
-    }
+  public String getSrcId() {
+    return srcId;
+  }
 
-    public RelationEditRequest setSrcId(String srcId) {
-        this.srcId = srcId;
-        return this;
-    }
+  public RelationEditRequest setSrcId(String srcId) {
+    this.srcId = srcId;
+    return this;
+  }
 
-    public String getDstId() {
-        return dstId;
-    }
+  public String getDstId() {
+    return dstId;
+  }
 
-    public RelationEditRequest setDstId(String dstId) {
-        this.dstId = dstId;
-        return this;
-    }
+  public RelationEditRequest setDstId(String dstId) {
+    this.dstId = dstId;
+    return this;
+  }
 
-    public Map<String, String> getProperties() {
-        return properties;
-    }
+  public Map<String, String> getProperties() {
+    return properties;
+  }
 
-    public RelationEditRequest setProperties(Map<String, String> properties) {
-        this.properties = properties;
-        return this;
-    }
+  public RelationEditRequest setProperties(Map<String, String> properties) {
+    this.properties = properties;
+    return this;
+  }
 
-    public String getName() {
-        return String.format("(%s)->[%s]->(%s)", sName, relation, oName);
-    }
+  public String getName() {
+    return String.format("(%s)->[%s]->(%s)", sName, relation, oName);
+  }
 }

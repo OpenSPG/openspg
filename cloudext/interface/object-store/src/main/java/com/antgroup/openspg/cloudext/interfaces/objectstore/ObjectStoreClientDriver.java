@@ -16,8 +16,5 @@ package com.antgroup.openspg.cloudext.interfaces.objectstore;
 import com.antgroup.openspg.common.model.datasource.connection.ObjectStoreConnectionInfo;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClientDriver;
 
-
 public interface ObjectStoreClientDriver
-    extends CloudExtClientDriver<ObjectStoreClient, ObjectStoreConnectionInfo> {
-
-}
+    extends CloudExtClientDriver<ObjectStoreClient, ObjectStoreConnectionInfo> {}

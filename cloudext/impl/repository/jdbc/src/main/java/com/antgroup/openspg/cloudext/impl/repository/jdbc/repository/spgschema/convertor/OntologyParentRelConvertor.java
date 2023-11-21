@@ -22,10 +22,6 @@ import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.e
 import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums.YesOrNoEnum;
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.type.ParentTypeInfo;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,56 +29,57 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class OntologyParentRelConvertor {
 
-    public static OntologyParentRelDO toDO(ParentTypeInfo inheritInfo) {
-        if (null == inheritInfo) {
-            return null;
-        }
-
-        OntologyParentRelDO ontologyParentRelDO = new OntologyParentRelDO();
-        ontologyParentRelDO.setGmtCreate(new Date());
-        ontologyParentRelDO.setGmtModified(new Date());
-        ontologyParentRelDO.setEntityId(inheritInfo.getUniqueId());
-        ontologyParentRelDO.setStatus(ValidStatusEnum.VALID.getCode());
-        ontologyParentRelDO.setParentId(inheritInfo.getParentUniqueId());
-        ontologyParentRelDO.setPath(StringUtils.join(
-            inheritInfo.getInheritPath(),
-            Constants.INHERIT_PATH_SEP));
-        ontologyParentRelDO.setDeepInherit(YesOrNoEnum.N.name());
-        return ontologyParentRelDO;
+  public static OntologyParentRelDO toDO(ParentTypeInfo inheritInfo) {
+    if (null == inheritInfo) {
+      return null;
     }
 
-    public static List<ParentTypeInfo> toModel(
-        List<OntologyParentRelDO> ontologyParentRelDOS,
-        List<OntologyDOWithBLOBs> parentDOS) {
-        if (CollectionUtils.isEmpty(ontologyParentRelDOS) || CollectionUtils.isEmpty(parentDOS)) {
-            return Collections.emptyList();
-        }
+    OntologyParentRelDO ontologyParentRelDO = new OntologyParentRelDO();
+    ontologyParentRelDO.setGmtCreate(new Date());
+    ontologyParentRelDO.setGmtModified(new Date());
+    ontologyParentRelDO.setEntityId(inheritInfo.getUniqueId());
+    ontologyParentRelDO.setStatus(ValidStatusEnum.VALID.getCode());
+    ontologyParentRelDO.setParentId(inheritInfo.getParentUniqueId());
+    ontologyParentRelDO.setPath(
+        StringUtils.join(inheritInfo.getInheritPath(), Constants.INHERIT_PATH_SEP));
+    ontologyParentRelDO.setDeepInherit(YesOrNoEnum.N.name());
+    return ontologyParentRelDO;
+  }
 
-        List<ParentTypeInfo> parentTypeInfos = new ArrayList<>();
-        Map<Long, String> parentNameMap = parentDOS.stream().collect(Collectors
-            .toMap(
-                OntologyDO::getOriginalId,
-                (e -> new OntologyEntityName(e.getName()).getUniqueName())
-            ));
-        ontologyParentRelDOS.forEach(entityParentDO -> {
-            String[] inheritEntityIds = entityParentDO.getPath().split(Constants.INHERIT_PATH_SEP);
-            List<Long> inheritPath = Arrays
-                .stream(inheritEntityIds)
-                .map(Long::parseLong)
-                .collect(Collectors.toList());
-            SPGTypeIdentifier parentTypeIdentifier = parentNameMap.containsKey(entityParentDO.getParentId())
-                ? SPGTypeIdentifier.parse(parentNameMap.get(entityParentDO.getParentId())) : null;
-            parentTypeInfos.add(new ParentTypeInfo(
-                entityParentDO.getEntityId(),
-                entityParentDO.getParentId(),
-                parentTypeIdentifier,
-                inheritPath)
-            );
+  public static List<ParentTypeInfo> toModel(
+      List<OntologyParentRelDO> ontologyParentRelDOS, List<OntologyDOWithBLOBs> parentDOS) {
+    if (CollectionUtils.isEmpty(ontologyParentRelDOS) || CollectionUtils.isEmpty(parentDOS)) {
+      return Collections.emptyList();
+    }
+
+    List<ParentTypeInfo> parentTypeInfos = new ArrayList<>();
+    Map<Long, String> parentNameMap =
+        parentDOS.stream()
+            .collect(
+                Collectors.toMap(
+                    OntologyDO::getOriginalId,
+                    (e -> new OntologyEntityName(e.getName()).getUniqueName())));
+    ontologyParentRelDOS.forEach(
+        entityParentDO -> {
+          String[] inheritEntityIds = entityParentDO.getPath().split(Constants.INHERIT_PATH_SEP);
+          List<Long> inheritPath =
+              Arrays.stream(inheritEntityIds).map(Long::parseLong).collect(Collectors.toList());
+          SPGTypeIdentifier parentTypeIdentifier =
+              parentNameMap.containsKey(entityParentDO.getParentId())
+                  ? SPGTypeIdentifier.parse(parentNameMap.get(entityParentDO.getParentId()))
+                  : null;
+          parentTypeInfos.add(
+              new ParentTypeInfo(
+                  entityParentDO.getEntityId(),
+                  entityParentDO.getParentId(),
+                  parentTypeIdentifier,
+                  inheritPath));
         });
-        return parentTypeInfos;
-    }
+    return parentTypeInfos;
+  }
 }

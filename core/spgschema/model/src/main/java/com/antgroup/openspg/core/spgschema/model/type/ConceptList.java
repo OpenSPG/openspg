@@ -17,56 +17,54 @@ import com.antgroup.openspg.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.spgschema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.spgschema.model.semantic.DynamicTaxonomySemantic;
 import com.antgroup.openspg.core.spgschema.model.semantic.LogicalCausationSemantic;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ConceptList extends BaseValObj {
 
-    private final List<Concept> concepts;
+  private final List<Concept> concepts;
 
-    public ConceptList(List<Concept> concepts) {
-        this.concepts = concepts;
-    }
+  public ConceptList(List<Concept> concepts) {
+    this.concepts = concepts;
+  }
 
-    public List<Concept> getConcepts() {
-        return concepts;
-    }
+  public List<Concept> getConcepts() {
+    return concepts;
+  }
 
-    public List<DynamicTaxonomySemantic> getDynamicTaxonomyList() {
-        List<DynamicTaxonomySemantic> semantics = new ArrayList<>();
-        for (Concept concept : concepts) {
-            semantics.addAll(concept.getDynamicTaxonomySemantics());
-        }
-        return semantics;
+  public List<DynamicTaxonomySemantic> getDynamicTaxonomyList() {
+    List<DynamicTaxonomySemantic> semantics = new ArrayList<>();
+    for (Concept concept : concepts) {
+      semantics.addAll(concept.getDynamicTaxonomySemantics());
     }
+    return semantics;
+  }
 
-    public List<DynamicTaxonomySemantic> getDynamicTaxonomyList(ConceptIdentifier conceptName) {
-        List<DynamicTaxonomySemantic> semantics = new ArrayList<>();
-        for (Concept concept : concepts) {
-            if (concept.getName().equals(conceptName)) {
-                semantics.addAll(concept.getDynamicTaxonomySemantics());
-            }
-        }
-        return semantics;
+  public List<DynamicTaxonomySemantic> getDynamicTaxonomyList(ConceptIdentifier conceptName) {
+    List<DynamicTaxonomySemantic> semantics = new ArrayList<>();
+    for (Concept concept : concepts) {
+      if (concept.getName().equals(conceptName)) {
+        semantics.addAll(concept.getDynamicTaxonomySemantics());
+      }
     }
+    return semantics;
+  }
 
-    public List<LogicalCausationSemantic> getLogicalCausation() {
-        List<LogicalCausationSemantic> semantics = new ArrayList<>();
-        for (Concept concept : concepts) {
-            semantics.addAll(concept.getLogicalCausationSemantics());
-        }
-        return semantics;
+  public List<LogicalCausationSemantic> getLogicalCausation() {
+    List<LogicalCausationSemantic> semantics = new ArrayList<>();
+    for (Concept concept : concepts) {
+      semantics.addAll(concept.getLogicalCausationSemantics());
     }
+    return semantics;
+  }
 
-    public List<LogicalCausationSemantic> getLogicalCausation(ConceptIdentifier conceptName) {
-        List<LogicalCausationSemantic> semantics = new ArrayList<>();
-        for (Concept concept : concepts) {
-            if (concept.getName().equals(conceptName)) {
-                semantics.addAll(concept.getLogicalCausationSemantics());
-            }
-        }
-        return semantics;
+  public List<LogicalCausationSemantic> getLogicalCausation(ConceptIdentifier conceptName) {
+    List<LogicalCausationSemantic> semantics = new ArrayList<>();
+    for (Concept concept : concepts) {
+      if (concept.getName().equals(conceptName)) {
+        semantics.addAll(concept.getLogicalCausationSemantics());
+      }
     }
+    return semantics;
+  }
 }

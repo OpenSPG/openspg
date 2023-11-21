@@ -18,24 +18,22 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.JobSchedulerClientD
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.JobSchedulerClientDriverManager;
 import com.antgroup.openspg.common.model.datasource.connection.JobSchedulerConnectionInfo;
 
-
 public class LocalJobSchedulerClientDriver implements JobSchedulerClientDriver {
 
-    private final static JobSchedulerClient INSTANCE = new LocalJobSchedulerClient(
-        new JobSchedulerConnectionInfo().setScheme("local")
-    );
+  private static final JobSchedulerClient INSTANCE =
+      new LocalJobSchedulerClient(new JobSchedulerConnectionInfo().setScheme("local"));
 
-    static {
-        JobSchedulerClientDriverManager.registerDriver(new LocalJobSchedulerClientDriver());
-    }
+  static {
+    JobSchedulerClientDriverManager.registerDriver(new LocalJobSchedulerClientDriver());
+  }
 
-    @Override
-    public String driverScheme() {
-        return "local";
-    }
+  @Override
+  public String driverScheme() {
+    return "local";
+  }
 
-    @Override
-    public JobSchedulerClient connect(JobSchedulerConnectionInfo connInfo) {
-        return INSTANCE;
-    }
+  @Override
+  public JobSchedulerClient connect(JobSchedulerConnectionInfo connInfo) {
+    return INSTANCE;
+  }
 }

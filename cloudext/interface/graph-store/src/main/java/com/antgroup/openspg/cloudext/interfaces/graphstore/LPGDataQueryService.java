@@ -16,11 +16,8 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.BaseLPGRecordQuery;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.BaseLPGRecordStruct;
 
-/**
- * Provides data query service for <tt>LPG</tt>.
- */
+/** Provides data query service for <tt>LPG</tt>. */
 public interface LPGDataQueryService {
 
-    BaseLPGRecordStruct queryRecord(BaseLPGRecordQuery query);
-
+  BaseLPGRecordStruct queryRecord(BaseLPGRecordQuery query);
 }

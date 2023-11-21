@@ -16,39 +16,27 @@ package com.antgroup.openspg.cloudext.impl.graphstore.tugraph.model;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
-/**
- * Property of TuGraph.
- */
+/** Property of TuGraph. */
 @Data
 public class TuGraphProperty {
 
-    /**
-     * Name of property
-     */
-    @JSONField(name = "name")
-    private String name;
+  /** Name of property */
+  @JSONField(name = "name")
+  private String name;
 
-    /**
-     * Type of property value
-     */
-    @JSONField(name = "type")
-    private DataTypeEnum type;
+  /** Type of property value */
+  @JSONField(name = "type")
+  private DataTypeEnum type;
 
-    /**
-     * Is index
-     */
-    @JSONField(name = "index")
-    private Boolean index;
+  /** Is index */
+  @JSONField(name = "index")
+  private Boolean index;
 
-    /**
-     * Is optional
-     */
-    @JSONField(name = "optional")
-    private Boolean optional;
+  /** Is optional */
+  @JSONField(name = "optional")
+  private Boolean optional;
 
-    /**
-     * Is unique
-     */
-    @JSONField(name = "unique")
-    private Boolean unique;
+  /** Is unique */
+  @JSONField(name = "unique")
+  private Boolean unique;
 }

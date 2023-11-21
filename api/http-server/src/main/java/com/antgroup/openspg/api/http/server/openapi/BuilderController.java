@@ -21,7 +21,7 @@ import com.antgroup.openspg.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.biz.spgbuilder.BuilderManager;
 import com.antgroup.openspg.core.spgbuilder.model.service.BaseBuilderReceipt;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInst;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,43 +30,39 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 @Controller
 @RequestMapping("/public/v1/builder")
 public class BuilderController extends BaseController {
 
-    @Autowired
-    private BuilderManager builderManager;
+  @Autowired private BuilderManager builderManager;
 
-    @RequestMapping(value = "/submitJobInfo", method = RequestMethod.POST)
-    public ResponseEntity<Object> submitJobInfo(@RequestBody BuilderJobSubmitRequest request) {
-        return HttpBizTemplate.execute(new HttpBizCallback<BaseBuilderReceipt>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/submitJobInfo", method = RequestMethod.POST)
+  public ResponseEntity<Object> submitJobInfo(@RequestBody BuilderJobSubmitRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<BaseBuilderReceipt>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public BaseBuilderReceipt action() {
-                return builderManager.submitJobInfo(request);
-            }
+          @Override
+          public BaseBuilderReceipt action() {
+            return builderManager.submitJobInfo(request);
+          }
         });
-    }
+  }
 
-    @RequestMapping(value = "/queryJobInst", method = RequestMethod.GET)
-    public ResponseEntity<Object> queryJobInst(
-        @RequestParam(required = false) Long jobInstId) {
-        return HttpBizTemplate.execute(new HttpBizCallback<List<BuilderJobInst>>() {
-            @Override
-            public void check() {
-            }
+  @RequestMapping(value = "/queryJobInst", method = RequestMethod.GET)
+  public ResponseEntity<Object> queryJobInst(@RequestParam(required = false) Long jobInstId) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<List<BuilderJobInst>>() {
+          @Override
+          public void check() {}
 
-            @Override
-            public List<BuilderJobInst> action() {
-                BuilderJobInstQuery query = new BuilderJobInstQuery();
-                query.setBuildingJobInstId(jobInstId);
-                return builderManager.queryJobInst(query);
-            }
+          @Override
+          public List<BuilderJobInst> action() {
+            BuilderJobInstQuery query = new BuilderJobInstQuery();
+            query.setBuildingJobInstId(jobInstId);
+            return builderManager.queryJobInst(query);
+          }
         });
-    }
+  }
 }

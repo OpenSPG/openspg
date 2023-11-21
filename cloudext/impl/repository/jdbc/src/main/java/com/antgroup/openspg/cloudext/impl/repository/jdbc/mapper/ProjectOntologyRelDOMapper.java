@@ -19,25 +19,29 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface ProjectOntologyRelDOMapper {
-    long countByExample(ProjectOntologyRelDOExample example);
+  long countByExample(ProjectOntologyRelDOExample example);
 
-    int deleteByExample(ProjectOntologyRelDOExample example);
+  int deleteByExample(ProjectOntologyRelDOExample example);
 
-    int deleteByPrimaryKey(Long id);
+  int deleteByPrimaryKey(Long id);
 
-    int insert(ProjectOntologyRelDO record);
+  int insert(ProjectOntologyRelDO record);
 
-    int insertSelective(ProjectOntologyRelDO record);
+  int insertSelective(ProjectOntologyRelDO record);
 
-    List<ProjectOntologyRelDO> selectByExample(ProjectOntologyRelDOExample example);
+  List<ProjectOntologyRelDO> selectByExample(ProjectOntologyRelDOExample example);
 
-    ProjectOntologyRelDO selectByPrimaryKey(Long id);
+  ProjectOntologyRelDO selectByPrimaryKey(Long id);
 
-    int updateByExampleSelective(@Param("record") ProjectOntologyRelDO record, @Param("example") ProjectOntologyRelDOExample example);
+  int updateByExampleSelective(
+      @Param("record") ProjectOntologyRelDO record,
+      @Param("example") ProjectOntologyRelDOExample example);
 
-    int updateByExample(@Param("record") ProjectOntologyRelDO record, @Param("example") ProjectOntologyRelDOExample example);
+  int updateByExample(
+      @Param("record") ProjectOntologyRelDO record,
+      @Param("example") ProjectOntologyRelDOExample example);
 
-    int updateByPrimaryKeySelective(ProjectOntologyRelDO record);
+  int updateByPrimaryKeySelective(ProjectOntologyRelDO record);
 
-    int updateByPrimaryKey(ProjectOntologyRelDO record);
+  int updateByPrimaryKey(ProjectOntologyRelDO record);
 }

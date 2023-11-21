@@ -13,12 +13,10 @@
 
 package com.antgroup.openspg.core.spgschema.model.semantic;
 
-/**
- * The abstract class of semantics defined on a concept
- */
+/** The abstract class of semantics defined on a concept */
 public abstract class BaseConceptSemantic extends BaseSemantic {
 
-    public BaseConceptSemantic() {
-        super(SPGOntologyEnum.CONCEPT);
-    }
+  public BaseConceptSemantic() {
+    super(SPGOntologyEnum.CONCEPT);
+  }
 }

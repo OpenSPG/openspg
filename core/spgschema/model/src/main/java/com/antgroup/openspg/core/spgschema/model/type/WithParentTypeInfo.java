@@ -14,45 +14,42 @@
 package com.antgroup.openspg.core.spgschema.model.type;
 
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
-
 import java.util.List;
 
-/**
- * An interface provides some methods to get parent type info.
- */
+/** An interface provides some methods to get parent type info. */
 public interface WithParentTypeInfo {
 
-    /**
-     * Get parent type information
-     *
-     * @return info
-     */
-    ParentTypeInfo getParentTypeInfo();
+  /**
+   * Get parent type information
+   *
+   * @return info
+   */
+  ParentTypeInfo getParentTypeInfo();
 
-    /**
-     * Get numeric unique id of parent type
-     *
-     * @return id
-     */
-    default Long getParentUniqueId() {
-        return getParentTypeInfo() == null ? null : getParentTypeInfo().getParentUniqueId();
-    }
+  /**
+   * Get numeric unique id of parent type
+   *
+   * @return id
+   */
+  default Long getParentUniqueId() {
+    return getParentTypeInfo() == null ? null : getParentTypeInfo().getParentUniqueId();
+  }
 
-    /**
-     * Get identifier of parent type.
-     *
-     * @return identifier
-     */
-    default SPGTypeIdentifier getParentTypeName() {
-        return getParentTypeInfo() == null ? null : getParentTypeInfo().getParentTypeIdentifier();
-    }
+  /**
+   * Get identifier of parent type.
+   *
+   * @return identifier
+   */
+  default SPGTypeIdentifier getParentTypeName() {
+    return getParentTypeInfo() == null ? null : getParentTypeInfo().getParentTypeIdentifier();
+  }
 
-    /**
-     * Get inherit parent of type
-     *
-     * @return list of id
-     */
-    default List<Long> getInheritPath() {
-        return getParentTypeInfo() == null ? null : getParentTypeInfo().getInheritPath();
-    }
+  /**
+   * Get inherit parent of type
+   *
+   * @return list of id
+   */
+  default List<Long> getInheritPath() {
+    return getParentTypeInfo() == null ? null : getParentTypeInfo().getInheritPath();
+  }
 }

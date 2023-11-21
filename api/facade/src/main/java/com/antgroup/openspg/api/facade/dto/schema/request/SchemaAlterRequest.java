@@ -16,36 +16,30 @@ package com.antgroup.openspg.api.facade.dto.schema.request;
 import com.antgroup.openspg.common.model.base.BaseRequest;
 import com.antgroup.openspg.core.spgschema.model.alter.SchemaDraft;
 
-/**
- * Commit schema draft request.
- */
+/** Commit schema draft request. */
 public class SchemaAlterRequest extends BaseRequest {
 
-    private static final long serialVersionUID = 2100602183655382637L;
+  private static final long serialVersionUID = 2100602183655382637L;
 
-    /**
-     * The project id that alter schema.
-     */
-    private Long projectId;
+  /** The project id that alter schema. */
+  private Long projectId;
 
-    /**
-     * The schema draft content.
-     */
-    private SchemaDraft schemaDraft;
+  /** The schema draft content. */
+  private SchemaDraft schemaDraft;
 
-    public Long getProjectId() {
-        return projectId;
-    }
+  public Long getProjectId() {
+    return projectId;
+  }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+  public void setProjectId(Long projectId) {
+    this.projectId = projectId;
+  }
 
-    public SchemaDraft getSchemaDraft() {
-        return schemaDraft;
-    }
+  public SchemaDraft getSchemaDraft() {
+    return schemaDraft;
+  }
 
-    public void setSchemaDraft(SchemaDraft schemaDraft) {
-        this.schemaDraft = schemaDraft;
-    }
+  public void setSchemaDraft(SchemaDraft schemaDraft) {
+    this.schemaDraft = schemaDraft;
+  }
 }

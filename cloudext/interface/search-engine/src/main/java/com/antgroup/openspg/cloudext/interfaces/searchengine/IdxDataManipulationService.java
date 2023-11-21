@@ -19,9 +19,7 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.cmd.IdxRecordManipulateCmd;
 
-
 public interface IdxDataManipulationService {
 
-    int manipulateRecord(IdxRecordManipulateCmd cmd);
-
+  int manipulateRecord(IdxRecordManipulateCmd cmd);
 }

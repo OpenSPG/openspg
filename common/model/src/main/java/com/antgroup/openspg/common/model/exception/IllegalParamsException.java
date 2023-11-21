@@ -15,11 +15,11 @@ package com.antgroup.openspg.common.model.exception;
 
 public class IllegalParamsException extends OpenSPGException {
 
-    public IllegalParamsException(Throwable cause, String messagePattern, Object... args) {
-        super(cause, true, true, messagePattern, args);
-    }
+  public IllegalParamsException(Throwable cause, String messagePattern, Object... args) {
+    super(cause, true, true, messagePattern, args);
+  }
 
-    public IllegalParamsException(String messagePattern, Object... args) {
-        this(null, messagePattern, args);
-    }
+  public IllegalParamsException(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
+  }
 }

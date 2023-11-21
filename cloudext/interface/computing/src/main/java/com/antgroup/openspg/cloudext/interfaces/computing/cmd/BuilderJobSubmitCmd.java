@@ -18,26 +18,23 @@ import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.GraphStoreSink
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInfo;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInst;
 import com.antgroup.openspg.core.spgschema.model.type.ProjectSchema;
-
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.Map;
-
 
 @Getter
 @AllArgsConstructor
 public class BuilderJobSubmitCmd extends BaseCmd {
 
-    private final BuilderJobInst jobInst;
+  private final BuilderJobInst jobInst;
 
-    private final BuilderJobInfo jobInfo;
+  private final BuilderJobInfo jobInfo;
 
-    private final GraphStoreSinkNodeConfig sinkNodeConfig;
+  private final GraphStoreSinkNodeConfig sinkNodeConfig;
 
-    private final String schemaUrl;
+  private final String schemaUrl;
 
-    private final ProjectSchema projectSchema;
+  private final ProjectSchema projectSchema;
 
-    private final Map<String, Object> params;
+  private final Map<String, Object> params;
 }

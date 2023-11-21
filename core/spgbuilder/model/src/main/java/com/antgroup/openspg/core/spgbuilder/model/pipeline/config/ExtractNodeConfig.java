@@ -13,35 +13,28 @@
 
 package com.antgroup.openspg.core.spgbuilder.model.pipeline.config;
 
-
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.NodeTypeEnum;
-
 import java.util.List;
-
 
 public class ExtractNodeConfig extends BaseNodeConfig {
 
-    /**
-     * Columns of the node config.
-     */
-    private final List<String> outputFields;
+  /** Columns of the node config. */
+  private final List<String> outputFields;
 
-    /**
-     * OperatorConfig of the node.
-     */
-    private final OperatorConfig operatorConfig;
+  /** OperatorConfig of the node. */
+  private final OperatorConfig operatorConfig;
 
-    public ExtractNodeConfig(List<String> columns, OperatorConfig operatorConfig) {
-        super(NodeTypeEnum.EXTRACT);
-        this.outputFields = columns;
-        this.operatorConfig = operatorConfig;
-    }
+  public ExtractNodeConfig(List<String> columns, OperatorConfig operatorConfig) {
+    super(NodeTypeEnum.EXTRACT);
+    this.outputFields = columns;
+    this.operatorConfig = operatorConfig;
+  }
 
-    public List<String> getOutputFields() {
-        return outputFields;
-    }
+  public List<String> getOutputFields() {
+    return outputFields;
+  }
 
-    public OperatorConfig getOperatorConfig() {
-        return operatorConfig;
-    }
+  public OperatorConfig getOperatorConfig() {
+    return operatorConfig;
+  }
 }

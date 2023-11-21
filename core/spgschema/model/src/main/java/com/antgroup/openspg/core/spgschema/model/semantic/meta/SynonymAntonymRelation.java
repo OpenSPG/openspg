@@ -15,55 +15,49 @@ package com.antgroup.openspg.core.spgschema.model.semantic.meta;
 
 import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-
 import java.util.EnumSet;
 
 public class SynonymAntonymRelation extends BaseSemanticRelation {
 
-    private static final long serialVersionUID = -75107956026027535L;
+  private static final long serialVersionUID = -75107956026027535L;
 
-    enum SynonymAntonymPredicateEnum {
-        /**
-         * synonymy
-         */
-        synonym("同义"),
+  enum SynonymAntonymPredicateEnum {
+    /** synonymy */
+    synonym("同义"),
 
-        /**
-         * antonymy
-         */
-        antonym("反义"),
-        ;
+    /** antonymy */
+    antonym("反义"),
+    ;
 
-        private final String nameZh;
+    private final String nameZh;
 
-        SynonymAntonymPredicateEnum(String nameZh) {
-            this.nameZh = nameZh;
-        }
-
-        public String getNameZh() {
-            return nameZh;
-        }
+    SynonymAntonymPredicateEnum(String nameZh) {
+      this.nameZh = nameZh;
     }
 
-    /**
-     * Accept concept type only
-     */
-    private final SPGTypeIdentifier conceptTypeIdentifier;
-
-    private final SynonymAntonymPredicateEnum predicate;
-
-    public SynonymAntonymRelation(SPGTypeIdentifier conceptTypeIdentifier, SynonymAntonymPredicateEnum predicate) {
-        super(EnumSet.of(SPGTypeEnum.CONCEPT_TYPE), EnumSet.of(SPGTypeEnum.CONCEPT_TYPE));
-
-        this.conceptTypeIdentifier = conceptTypeIdentifier;
-        this.predicate = predicate;
+    public String getNameZh() {
+      return nameZh;
     }
+  }
 
-    public SPGTypeIdentifier getConceptTypeIdentifier() {
-        return conceptTypeIdentifier;
-    }
+  /** Accept concept type only */
+  private final SPGTypeIdentifier conceptTypeIdentifier;
 
-    public SynonymAntonymPredicateEnum getPredicate() {
-        return predicate;
-    }
+  private final SynonymAntonymPredicateEnum predicate;
+
+  public SynonymAntonymRelation(
+      SPGTypeIdentifier conceptTypeIdentifier, SynonymAntonymPredicateEnum predicate) {
+    super(EnumSet.of(SPGTypeEnum.CONCEPT_TYPE), EnumSet.of(SPGTypeEnum.CONCEPT_TYPE));
+
+    this.conceptTypeIdentifier = conceptTypeIdentifier;
+    this.predicate = predicate;
+  }
+
+  public SPGTypeIdentifier getConceptTypeIdentifier() {
+    return conceptTypeIdentifier;
+  }
+
+  public SynonymAntonymPredicateEnum getPredicate() {
+    return predicate;
+  }
 }

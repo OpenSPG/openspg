@@ -13,13 +13,12 @@
 
 package com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch;
 
-
 public class ElasticSearchConstants {
 
-    public static final String SCHEME = "elasticSearchScheme";
-    public static final String SCHEME_VAR = "{elasticSearchScheme}";
-    public static final String HOST = "elasticSearchHost";
-    public static final String HOST_VAR = "{elasticSearchHost}";
-    public static final String PORT = "elasticSearchPort";
-    public static final String PORT_VAR = "{elasticSearchPort}";
+  public static final String SCHEME = "elasticSearchScheme";
+  public static final String SCHEME_VAR = "{elasticSearchScheme}";
+  public static final String HOST = "elasticSearchHost";
+  public static final String HOST_VAR = "{elasticSearchHost}";
+  public static final String PORT = "elasticSearchPort";
+  public static final String PORT_VAR = "{elasticSearchPort}";
 }

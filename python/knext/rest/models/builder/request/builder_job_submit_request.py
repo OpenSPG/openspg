@@ -43,25 +43,33 @@ class BuilderJobSubmitRequest(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'job_name': 'str',
-        'project_id': 'int',
-        'pipeline': 'Pipeline',
-        'cron': 'str',
-        'idempotent_id': 'str',
-        'params': 'object'
+        "job_name": "str",
+        "project_id": "int",
+        "pipeline": "Pipeline",
+        "cron": "str",
+        "idempotent_id": "str",
+        "params": "object",
     }
 
     attribute_map = {
-        'job_name': 'jobName',
-        'project_id': 'projectId',
-        'pipeline': 'pipeline',
-        'cron': 'cron',
-        'idempotent_id': 'idempotentId',
-        'params': 'params'
+        "job_name": "jobName",
+        "project_id": "projectId",
+        "pipeline": "pipeline",
+        "cron": "cron",
+        "idempotent_id": "idempotentId",
+        "params": "params",
     }
 
-    def __init__(self, job_name=None, project_id=None, pipeline=None, cron=None, idempotent_id=None, params=None,
-                 local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        job_name=None,
+        project_id=None,
+        pipeline=None,
+        cron=None,
+        idempotent_id=None,
+        params=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """BuilderJobSubmitRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -170,10 +178,14 @@ class BuilderJobSubmitRequest(object):
         :type: str
         """
         allowed_values = ["SYNC", "ONCE", "CRON"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and cron not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and cron not in allowed_values
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `cron` ({0}), must be one of {1}"  # noqa: E501
-                .format(cron, allowed_values)
+                "Invalid value for `cron` ({0}), must be one of {1}".format(  # noqa: E501
+                    cron, allowed_values
+                )
             )
 
         self._cron = cron
@@ -197,10 +209,14 @@ class BuilderJobSubmitRequest(object):
         :type: str
         """
         allowed_values = ["LOCAL", "REMOTE"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and idempotent_id not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and idempotent_id not in allowed_values
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `idempotent_id` ({0}), must be one of {1}"  # noqa: E501
-                .format(idempotent_id, allowed_values)
+                "Invalid value for `idempotent_id` ({0}), must be one of {1}".format(  # noqa: E501
+                    idempotent_id, allowed_values
+                )
             )
 
         self._idempotent_id = idempotent_id
@@ -233,18 +249,20 @@ class BuilderJobSubmitRequest(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

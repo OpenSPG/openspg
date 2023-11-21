@@ -15,7 +15,4 @@ package com.antgroup.openspg.cloudext.interfaces.computing.cmd;
 
 import com.antgroup.openspg.common.model.base.BaseQuery;
 
-
-public class BuilderJobCanSubmitQuery extends BaseQuery {
-
-}
+public class BuilderJobCanSubmitQuery extends BaseQuery {}

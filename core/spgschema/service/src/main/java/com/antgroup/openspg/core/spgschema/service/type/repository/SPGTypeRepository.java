@@ -14,73 +14,73 @@
 package com.antgroup.openspg.core.spgschema.service.type.repository;
 
 import com.antgroup.openspg.core.spgschema.service.type.model.SimpleSPGType;
-
 import java.util.List;
 
 /**
- * The read-write interface for spg type, provides methods for adding, modifying, deleting, and querying spg types.
+ * The read-write interface for spg type, provides methods for adding, modifying, deleting, and
+ * querying spg types.
  */
 public interface SPGTypeRepository {
 
-    /**
-     * Add a spg type to the database.
-     *
-     * @param advancedType the spg type to add
-     * @return record count
-     */
-    int save(SimpleSPGType advancedType);
+  /**
+   * Add a spg type to the database.
+   *
+   * @param advancedType the spg type to add
+   * @return record count
+   */
+  int save(SimpleSPGType advancedType);
 
-    /**
-     * Update spg type information by unique id.
-     *
-     * @param advancedType the spg type to update
-     * @return record count
-     */
-    int update(SimpleSPGType advancedType);
+  /**
+   * Update spg type information by unique id.
+   *
+   * @param advancedType the spg type to update
+   * @return record count
+   */
+  int update(SimpleSPGType advancedType);
 
-    /**
-     * Delete the spg type in database which unique id is match.
-     *
-     * @param advancedType the spg type to delete
-     * @return record count
-     */
-    int delete(SimpleSPGType advancedType);
+  /**
+   * Delete the spg type in database which unique id is match.
+   *
+   * @param advancedType the spg type to delete
+   * @return record count
+   */
+  int delete(SimpleSPGType advancedType);
 
-    /**
-     * Query all spg type defined in the project.
-     *
-     * @param projectId unique id of project
-     * @return list of spg type
-     */
-    List<SimpleSPGType> queryByProject(Long projectId);
+  /**
+   * Query all spg type defined in the project.
+   *
+   * @param projectId unique id of project
+   * @return list of spg type
+   */
+  List<SimpleSPGType> queryByProject(Long projectId);
 
-    /**
-     * Query all BasicType in the database.
-     *
-     * @return list of BasicType
-     */
-    List<SimpleSPGType> queryAllBasicType();
+  /**
+   * Query all BasicType in the database.
+   *
+   * @return list of BasicType
+   */
+  List<SimpleSPGType> queryAllBasicType();
 
-    /**
-     * Query all StandardType in the database.
-     *
-     * @return list of StandardType
-     */
-    List<SimpleSPGType> queryAllStandardType();
+  /**
+   * Query all StandardType in the database.
+   *
+   * @return list of StandardType
+   */
+  List<SimpleSPGType> queryAllStandardType();
 
-    /**
-     * Batch query spg type by the unique id.
-     *
-     * @param uniqueIds list of unique id
-     * @return list of spg type
-     */
-    List<SimpleSPGType> queryByUniqueId(List<Long> uniqueIds);
+  /**
+   * Batch query spg type by the unique id.
+   *
+   * @param uniqueIds list of unique id
+   * @return list of spg type
+   */
+  List<SimpleSPGType> queryByUniqueId(List<Long> uniqueIds);
 
-    /**
-     * Query spg type by the unique name
-     *
-     * @param uniqueName unique name of spg type
-     * @return spg type object
-     */
-    SimpleSPGType queryByName(String uniqueName);
+  /**
+   * Query spg type by the unique name
+   *
+   * @param uniqueName unique name of spg type
+   * @return spg type object
+   */
+  SimpleSPGType queryByName(String uniqueName);
 }

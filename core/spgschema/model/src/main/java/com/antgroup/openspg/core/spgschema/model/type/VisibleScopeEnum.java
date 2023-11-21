@@ -13,38 +13,28 @@
 
 package com.antgroup.openspg.core.spgschema.model.type;
 
-/**
- * Enumeration of visible domains of the SPG type.
- */
+/** Enumeration of visible domains of the SPG type. */
 public enum VisibleScopeEnum {
 
-    /**
-     * It is visible to all project
-     */
-    PUBLIC,
+  /** It is visible to all project */
+  PUBLIC,
 
-    /**
-     * It is visible to current domain
-     */
-    DOMAIN,
+  /** It is visible to current domain */
+  DOMAIN,
 
-    /**
-     * It is visible to current project
-     */
-    PRIVATE,
+  /** It is visible to current project */
+  PRIVATE,
 
-    /**
-     * Can't be used for object.
-     */
-    INVISIBLE;
+  /** Can't be used for object. */
+  INVISIBLE;
 
-    public static VisibleScopeEnum toEnum(String value) {
-        for (VisibleScopeEnum visibleScopeEnum : VisibleScopeEnum.values()) {
-            if (visibleScopeEnum.name().equalsIgnoreCase(value)) {
-                return visibleScopeEnum;
-            }
-        }
-
-        return VisibleScopeEnum.PUBLIC;
+  public static VisibleScopeEnum toEnum(String value) {
+    for (VisibleScopeEnum visibleScopeEnum : VisibleScopeEnum.values()) {
+      if (visibleScopeEnum.name().equalsIgnoreCase(value)) {
+        return visibleScopeEnum;
+      }
     }
+
+    return VisibleScopeEnum.PUBLIC;
+  }
 }

@@ -12,22 +12,23 @@
 #  or implied.
 
 from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import SourceCsvComponent, SinkToKgComponent, EntityMappingComponent
+from knext.core.builder.job.model.component import (
+    SourceCsvComponent,
+    SinkToKgComponent,
+    EntityMappingComponent,
+)
 from schema.medical_schema_helper import Medical
 
 
 class BodyPart(BuilderJob):
-
     def build(self):
         source = SourceCsvComponent(
-            local_path="./builder/job/data/BodyPart.csv",
-            columns=["id"],
-            start_row=1
+            local_path="./builder/job/data/BodyPart.csv", columns=["id"], start_row=1
         )
 
-        mapping = EntityMappingComponent(
-            spg_type_name=Medical.BodyPart
-        ).add_field("id", Medical.BodyPart.id)
+        mapping = EntityMappingComponent(spg_type_name=Medical.BodyPart).add_field(
+            "id", Medical.BodyPart.id
+        )
 
         sink = SinkToKgComponent()
 

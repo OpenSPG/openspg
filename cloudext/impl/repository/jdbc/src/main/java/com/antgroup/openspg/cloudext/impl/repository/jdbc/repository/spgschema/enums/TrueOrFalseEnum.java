@@ -13,41 +13,35 @@
 
 package com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums;
 
-/**
- * True or false enum.
- */
+/** True or false enum. */
 public enum TrueOrFalseEnum {
-    /**
-     * TRUE
-     */
-    TRUE,
+  /** TRUE */
+  TRUE,
 
-    /**
-     * FALSE
-     */
-    FALSE;
+  /** FALSE */
+  FALSE;
 
-    /**
-     * If the value is true.
-     *
-     * @param val
-     * @return
-     */
-    public static boolean isTrue(String val) {
-        return TrueOrFalseEnum.TRUE.name().equalsIgnoreCase(val);
-    }
+  /**
+   * If the value is true.
+   *
+   * @param val
+   * @return
+   */
+  public static boolean isTrue(String val) {
+    return TrueOrFalseEnum.TRUE.name().equalsIgnoreCase(val);
+  }
 
-    /**
-     * If the value is 1.
-     *
-     * @param val
-     * @return
-     */
-    public static Boolean isOne(Integer val) {
-        return new Integer(1).equals(val);
-    }
+  /**
+   * If the value is 1.
+   *
+   * @param val
+   * @return
+   */
+  public static Boolean isOne(Integer val) {
+    return new Integer(1).equals(val);
+  }
 
-    public static TrueOrFalseEnum parse(boolean isTrue) {
-        return isTrue ? TRUE : FALSE;
-    }
+  public static TrueOrFalseEnum parse(boolean isTrue) {
+    return isTrue ? TRUE : FALSE;
+  }
 }

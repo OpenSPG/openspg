@@ -21,55 +21,50 @@ import com.antgroup.openspg.common.service.datasource.DataSourceService;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInfo;
 import com.antgroup.openspg.core.spgbuilder.service.BuilderJobInfoService;
 import com.antgroup.openspg.core.spgbuilder.service.repo.BuilderJobInfoRepository;
-
+import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-
 @Service
 public class BuilderJobInfoServiceImpl implements BuilderJobInfoService {
 
-    @Autowired
-    private DataSourceService dataSourceService;
+  @Autowired private DataSourceService dataSourceService;
 
-    @Autowired
-    private BuilderJobInfoRepository builderJobInfoRepository;
+  @Autowired private BuilderJobInfoRepository builderJobInfoRepository;
 
-    @Override
-    public Long create(BuilderJobInfo builderJobInfo) {
-        JobSchedulerClient jobSchedulerClient =
-            dataSourceService.buildSharedJobSchedulerClient();
-        Long builderJobInfoId = builderJobInfoRepository.save(builderJobInfo);
+  @Override
+  public Long create(BuilderJobInfo builderJobInfo) {
+    JobSchedulerClient jobSchedulerClient = dataSourceService.buildSharedJobSchedulerClient();
+    Long builderJobInfoId = builderJobInfoRepository.save(builderJobInfo);
 
-        SchedulerJobInfo schedulerJobInfo = new SchedulerJobInfo(
+    SchedulerJobInfo schedulerJobInfo =
+        new SchedulerJobInfo(
             null,
             builderJobInfo.getJobName(),
             JobTypeEnum.BUILDING.name(),
             builderJobInfo.getCron(),
             builderJobInfo.getStatus(),
-            String.valueOf(builderJobInfoId)
-        );
-        String schedulerJobInfoId = jobSchedulerClient.createJobInfo(schedulerJobInfo);
+            String.valueOf(builderJobInfoId));
+    String schedulerJobInfoId = jobSchedulerClient.createJobInfo(schedulerJobInfo);
 
-        builderJobInfo.setExternalJobInfoId(schedulerJobInfoId);
-        builderJobInfoRepository.updateExternalJobId(builderJobInfoId, schedulerJobInfoId);
-        return builderJobInfoId;
-    }
+    builderJobInfo.setExternalJobInfoId(schedulerJobInfoId);
+    builderJobInfoRepository.updateExternalJobId(builderJobInfoId, schedulerJobInfoId);
+    return builderJobInfoId;
+  }
 
-    @Override
-    public BuilderJobInfo queryById(Long jobId) {
-        List<BuilderJobInfo> builderJobInfos = query(new BuilderJobInfoQuery().setBuildingJobInfoId(jobId));
-        if (CollectionUtils.isNotEmpty(builderJobInfos)) {
-            return builderJobInfos.get(0);
-        }
-        return null;
+  @Override
+  public BuilderJobInfo queryById(Long jobId) {
+    List<BuilderJobInfo> builderJobInfos =
+        query(new BuilderJobInfoQuery().setBuildingJobInfoId(jobId));
+    if (CollectionUtils.isNotEmpty(builderJobInfos)) {
+      return builderJobInfos.get(0);
     }
+    return null;
+  }
 
-    @Override
-    public List<BuilderJobInfo> query(BuilderJobInfoQuery query) {
-        return builderJobInfoRepository.query(query);
-    }
+  @Override
+  public List<BuilderJobInfo> query(BuilderJobInfoQuery query) {
+    return builderJobInfoRepository.query(query);
+  }
 }

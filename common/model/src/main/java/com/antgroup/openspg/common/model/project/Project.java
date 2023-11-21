@@ -16,70 +16,57 @@ package com.antgroup.openspg.common.model.project;
 import com.antgroup.openspg.common.model.base.BaseModel;
 
 /**
- * Namespace unit for department manager self schema, the schema elements such as entityType or property between Project
- * is isolated.
+ * Namespace unit for department manager self schema, the schema elements such as entityType or
+ * property between Project is isolated.
  */
 public class Project extends BaseModel {
 
-    private static final long serialVersionUID = -3046737313733029469L;
+  private static final long serialVersionUID = -3046737313733029469L;
 
-    /**
-     * Unique id
-     */
-    private Long id;
+  /** Unique id */
+  private Long id;
 
-    /**
-     * English name
-     */
-    private final String name;
+  /** English name */
+  private final String name;
 
-    /**
-     * Detail description
-     */
-    private final String description;
+  /** Detail description */
+  private final String description;
 
-    /**
-     * The namespace that isolate entity from different project.
-     */
-    private final String namespace;
+  /** The namespace that isolate entity from different project. */
+  private final String namespace;
 
-    /**
-     * The tenant id that project belong to.
-     */
-    private final Long tenantId;
+  /** The tenant id that project belong to. */
+  private final Long tenantId;
 
-    public Project(
-        Long id, String name,
-        String description,
-        String namespace, Long tenantId) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.namespace = namespace;
-        this.tenantId = tenantId;
-    }
+  public Project(Long id, String name, String description, String namespace, Long tenantId) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.namespace = namespace;
+    this.tenantId = tenantId;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public Long getTenantId() {
-        return tenantId;
-    }
+  public Long getTenantId() {
+    return tenantId;
+  }
 
-    public String getNamespace() {
-        return namespace;
-    }
+  public String getNamespace() {
+    return namespace;
+  }
 }
