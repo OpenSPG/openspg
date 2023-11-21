@@ -16,8 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Check License Header
-        uses: apache/skywalking-eyes@v0.1.0
+        uses: apache/skywalking-eyes@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           log: info
+      - name: Check Dependencies' License
+        uses: apache/skywalking-eyes/dependency@main
