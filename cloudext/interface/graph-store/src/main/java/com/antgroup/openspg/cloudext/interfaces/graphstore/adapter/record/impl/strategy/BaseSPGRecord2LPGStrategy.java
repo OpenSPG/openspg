@@ -13,7 +13,12 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.strategy;
 
+import com.antgroup.openspg.builder.protocol.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.protocol.RecordAlterOperationEnum;
+import com.antgroup.openspg.builder.protocol.SPGPropertyRecord;
+import com.antgroup.openspg.builder.protocol.SPGRecordAlterItem;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.BaseLPGGraphStoreClient;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreException;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.EdgeRecordConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.VertexRecordConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.OneHopLPGRecordQuery;
@@ -21,12 +26,7 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.Direction;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.GraphLPGRecordStruct;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
-import com.antgroup.openspg.common.model.exception.GraphStoreException;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseAdvancedRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGPropertyRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordAlterItem;
-import com.antgroup.openspg.core.spgschema.model.type.WithSPGTypeEnum;
+import com.antgroup.openspg.server.schema.core.model.type.WithSPGTypeEnum;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

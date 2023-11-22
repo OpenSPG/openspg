@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore;
 
-import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
-import com.antgroup.openspg.common.model.exception.CloudExtException;
 import com.antgroup.openspg.common.util.DriverManagerUtils;
+import com.antgroup.openspg.common.util.cloudext.CloudExtException;
+import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
 

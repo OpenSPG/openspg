@@ -13,13 +13,14 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor;
 
+import com.antgroup.openspg.builder.protocol.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.protocol.RelationRecord;
+import com.antgroup.openspg.builder.protocol.SPGPropertyRecord;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreException;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
-import com.antgroup.openspg.common.model.exception.GraphStoreException;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseAdvancedRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.RelationRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGPropertyRecord;
-import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
+import com.antgroup.openspg.server.schema.core.model.predicate.Relation;
+import com.antgroup.openspg.server.schema.core.model.type.SPGTypeRef;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +50,9 @@ public class EdgeRecordConvertor {
    * {@link SPGPropertyRecord#getValue()}
    *
    * @param advancedRecord advanced record, such as {@link
-   *     com.antgroup.openspg.core.spgbuilder.model.record.EventRecord EventRecord}, {@link
-   *     com.antgroup.openspg.core.spgbuilder.model.record.EntityRecord EntityRecord} and {@link
-   *     com.antgroup.openspg.core.spgbuilder.model.record.ConceptRecord ConceptRecord}.
+   *     com.antgroup.openspg.builder.protocol.EventRecord EventRecord}, {@link
+   *     com.antgroup.openspg.builder.protocol.EntityRecord EntityRecord} and {@link
+   *     com.antgroup.openspg.builder.protocol.ConceptRecord ConceptRecord}.
    * @param spgPropertyRecord record of <tt>SPG</tt> property.
    * @return a list of {@link EdgeRecord}s
    */

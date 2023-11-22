@@ -18,11 +18,10 @@ import static com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.reco
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGTypeNameConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.LPGRecordStructEnum;
-import com.antgroup.openspg.common.model.base.BaseQuery;
 import lombok.Getter;
 
 @Getter
-public abstract class BaseLPGRecordQuery extends BaseQuery {
+public abstract class BaseLPGRecordQuery {
 
   @Getter
   public enum LpgRecordQueryType {

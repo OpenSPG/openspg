@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record;
 
+import com.antgroup.openspg.builder.protocol.BaseSPGRecord;
+import com.antgroup.openspg.builder.protocol.SPGRecordAlterItem;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.BaseLPGRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordAlterItem;
 import java.util.List;
 
 public interface SPGRecord2LPGService {

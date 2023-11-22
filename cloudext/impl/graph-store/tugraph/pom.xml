@@ -33,8 +33,8 @@
       <artifactId>tugraph-db-java-rpc-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.alipay.sofa.common</groupId>
-      <artifactId>sofa-common-tools</artifactId>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>api-facade</artifactId>
     </dependency>
   </dependencies>
 </project>

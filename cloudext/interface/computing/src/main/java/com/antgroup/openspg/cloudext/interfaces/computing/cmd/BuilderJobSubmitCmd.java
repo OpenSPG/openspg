@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.cloudext.interfaces.computing.cmd;
 
-import com.antgroup.openspg.common.model.base.BaseCmd;
 import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.GraphStoreSinkNodeConfig;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInfo;
 import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInst;
-import com.antgroup.openspg.core.spgschema.model.type.ProjectSchema;
+import com.antgroup.openspg.server.common.model.base.BaseCmd;
+import com.antgroup.openspg.server.schema.core.model.type.ProjectSchema;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

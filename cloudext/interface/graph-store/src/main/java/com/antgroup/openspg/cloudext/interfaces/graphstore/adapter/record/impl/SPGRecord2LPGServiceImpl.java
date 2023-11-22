@@ -13,16 +13,16 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl;
 
+import com.antgroup.openspg.builder.protocol.SPGRecordAlterItem;
+import com.antgroup.openspg.builder.protocol.SPGRecordTypeEnum;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.BaseLPGGraphStoreClient;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreException;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.SPGRecord2LPGService;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.strategy.ConceptRecord2LPGStrategy;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.strategy.RelationRecord2LPGStrategy;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.strategy.SPGRecord2LPGStrategy;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.strategy.SPGTypeRecord2LPGStrategy;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
-import com.antgroup.openspg.common.model.exception.GraphStoreException;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordAlterItem;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordTypeEnum;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

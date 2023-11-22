@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation;
 
-import com.antgroup.openspg.common.model.base.BaseToString;
+import com.antgroup.openspg.server.common.model.base.BaseToString;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

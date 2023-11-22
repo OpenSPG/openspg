@@ -30,7 +30,19 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg</groupId>
-      <artifactId>core-spgbuilder-model</artifactId>
+      <artifactId>builder-protocol</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>common-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>api-facade</artifactId>
     </dependency>
   </dependencies>
 </project>
