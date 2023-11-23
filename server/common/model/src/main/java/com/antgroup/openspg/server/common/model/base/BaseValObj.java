@@ -20,7 +20,8 @@ package com.antgroup.openspg.server.common.model.base;
  * BaseValObj inherit from BaseToString and provides a unified toString method for all subclasses.
  * Some basic methods can also be added to this class in the future.
  */
-public abstract class BaseValObj extends com.antgroup.openspg.server.common.model.base.BaseToString {
+public abstract class BaseValObj
+    extends com.antgroup.openspg.server.common.model.base.BaseToString {
 
   private static final long serialVersionUID = 2364139127352876887L;
 }

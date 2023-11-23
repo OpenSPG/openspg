@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.core.pipeline.config;
 
-import com.antgroup.openspg.builder.core.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.builder.core.pipeline.enums.MappingTypeEnum;
+import com.antgroup.openspg.builder.core.pipeline.enums.NodeTypeEnum;
 import java.util.List;
 import lombok.Getter;
 

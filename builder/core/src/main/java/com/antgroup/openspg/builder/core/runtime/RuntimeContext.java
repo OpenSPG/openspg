@@ -15,7 +15,6 @@ package com.antgroup.openspg.builder.core.runtime;
 
 import com.antgroup.openspg.builder.protocol.RecordAlterOperationEnum;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClient;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
 import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
 import com.antgroup.openspg.server.schema.core.model.type.ProjectSchema;
@@ -52,10 +51,6 @@ public class RuntimeContext implements Serializable {
 
   public GraphStoreClient getGraphStoreClient() {
     return (GraphStoreClient) params.get(GRAPH_STORE_CLIENT);
-  }
-
-  public SearchEngineClient getSearchEngineClient() {
-    return (SearchEngineClient) params.get(SEARCH_ENGINE_CLIENT);
   }
 
   public GraphStoreConnectionInfo getGraphStoreConnInfo() {

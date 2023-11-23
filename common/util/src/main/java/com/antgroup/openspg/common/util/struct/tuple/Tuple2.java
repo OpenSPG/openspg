@@ -11,14 +11,25 @@
  * or implied.
  */
 
-package com.antgroup.openspg.builder.core.compiler.logical;
+package com.antgroup.openspg.common.util.struct.tuple;
 
-import com.antgroup.openspg.builder.core.pipeline.config.MappingNodeConfig;
-import com.antgroup.openspg.builder.core.pipeline.enums.NodeTypeEnum;
+import lombok.EqualsAndHashCode;
 
-public class MappingNode extends BaseNode<MappingNodeConfig> {
+@EqualsAndHashCode
+public class Tuple2<T1, T2> {
 
-  public MappingNode(String id, String name, MappingNodeConfig nodeConfig) {
-    super(id, name, NodeTypeEnum.MAPPING, nodeConfig);
+  /** first element */
+  public final T1 first;
+
+  /** second element */
+  public final T2 second;
+
+  public Tuple2(T1 first, T2 second) {
+    this.first = first;
+    this.second = second;
+  }
+
+  public static <T1, T2> Tuple2<T1, T2> of(T1 first, T2 second) {
+    return new Tuple2<>(first, second);
   }
 }

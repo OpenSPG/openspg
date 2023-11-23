@@ -13,12 +13,11 @@
 
 package com.antgroup.openspg.builder.core.compiler.physical.invoker.concept.impl;
 
-import com.antgroup.openspg.api.facade.client.ConceptFacade;
-import com.antgroup.openspg.api.facade.dto.schema.request.ConceptRequest;
-import com.antgroup.openspg.api.http.client.HttpConceptFacade;
 import com.antgroup.openspg.builder.core.compiler.physical.invoker.concept.ConceptService;
-import com.antgroup.openspg.builder.core.runtime.record.BaseAdvancedRecord;
-import com.antgroup.openspg.builder.core.runtime.record.BaseSPGRecord;
+import com.antgroup.openspg.builder.protocol.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.protocol.BaseSPGRecord;
+import com.antgroup.openspg.server.api.facade.client.ConceptFacade;
+import com.antgroup.openspg.server.api.facade.dto.schema.ConceptRequest;
 import com.antgroup.openspg.server.schema.core.model.predicate.Property;
 import com.antgroup.openspg.server.schema.core.model.semantic.SystemPredicateEnum;
 import com.antgroup.openspg.server.schema.core.model.type.ConceptList;
@@ -26,7 +25,7 @@ import com.antgroup.openspg.server.schema.core.model.type.SPGTypeRef;
 
 public class ConceptServiceImpl implements ConceptService {
 
-  private final ConceptFacade conceptFacade = new HttpConceptFacade();
+  private final ConceptFacade conceptFacade = null;
 
   @Override
   public ConceptList query(BaseSPGRecord spgRecord) {

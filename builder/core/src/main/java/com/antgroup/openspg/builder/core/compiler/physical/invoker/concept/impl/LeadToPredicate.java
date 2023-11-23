@@ -13,22 +13,14 @@
 
 package com.antgroup.openspg.builder.core.compiler.physical.invoker.concept.impl;
 
-import com.antgroup.kg.reasoner.common.graph.vertex.IVertexId;
-import com.antgroup.kg.reasoner.graphstate.GraphState;
-import com.antgroup.kg.reasoner.local.KGReasonerLocalRunner;
-import com.antgroup.kg.reasoner.local.model.LocalReasonerResult;
-import com.antgroup.kg.reasoner.local.model.LocalReasonerTask;
-import com.antgroup.kg.reasoner.lube.catalog.Catalog;
-import com.antgroup.openspg.api.facade.client.SchemaFacade;
-import com.antgroup.openspg.api.http.client.HttpSchemaFacade;
 import com.antgroup.openspg.builder.core.compiler.physical.invoker.concept.ConceptPredicate;
 import com.antgroup.openspg.builder.core.compiler.physical.invoker.concept.ConceptService;
-import com.antgroup.openspg.builder.core.compiler.physical.invoker.concept.convertor.ReasonerResultConvertor;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.builder.core.runtime.record.BaseAdvancedRecord;
-import com.antgroup.openspg.builder.core.runtime.record.BaseSPGRecord;
-import com.antgroup.openspg.builder.core.runtime.record.SPGPropertyRecord;
-import com.antgroup.openspg.builder.core.runtime.record.SPGPropertyValue;
+import com.antgroup.openspg.builder.protocol.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.protocol.BaseSPGRecord;
+import com.antgroup.openspg.builder.protocol.SPGPropertyRecord;
+import com.antgroup.openspg.builder.protocol.SPGPropertyValue;
+import com.antgroup.openspg.server.api.facade.client.SchemaFacade;
 import com.antgroup.openspg.server.schema.core.model.semantic.DynamicTaxonomySemantic;
 import com.antgroup.openspg.server.schema.core.model.semantic.LogicalCausationSemantic;
 import com.antgroup.openspg.server.schema.core.model.semantic.SystemPredicateEnum;
@@ -37,15 +29,12 @@ import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
-import scala.Tuple2;
 
 public class LeadToPredicate implements ConceptPredicate<LogicalCausationSemantic> {
 
-  private final SchemaFacade spgSchemaFacade = new HttpSchemaFacade(true);
+  private final SchemaFacade spgSchemaFacade = null;
   private final ConceptService conceptService;
   private final BelongToPredicate belongToPredicate;
-  private Catalog catalog;
-  private GraphState<IVertexId> graphState;
 
   public LeadToPredicate(BelongToPredicate belongToPredicate, ConceptService conceptService) {
     this.belongToPredicate = belongToPredicate;
@@ -91,7 +80,7 @@ public class LeadToPredicate implements ConceptPredicate<LogicalCausationSemanti
 
     // 基于toPropagated开始本轮的事件传导
     for (BaseAdvancedRecord advancedRecord : toPropagated) {
-      List<BaseSPGRecord> leadToRecords = leadTo(advancedRecord, leadTo);
+      List<BaseSPGRecord> leadToRecords = new ArrayList<>();
       if (CollectionUtils.isEmpty(leadToRecords)) {
         continue;
       }
@@ -116,26 +105,5 @@ public class LeadToPredicate implements ConceptPredicate<LogicalCausationSemanti
         }
       }
     }
-  }
-
-  private List<BaseSPGRecord> leadTo(BaseAdvancedRecord record, LogicalCausationSemantic leadTo) {
-    LocalReasonerTask reasonerTask = new LocalReasonerTask();
-
-    reasonerTask.setCatalog(catalog);
-    reasonerTask.setGraphState(graphState);
-    reasonerTask.setDsl(leadTo.getLogicalRule().getContent());
-    reasonerTask.setStartIdList(Lists.newArrayList(Tuple2.apply(record.getId(), record.getName())));
-
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
-    LocalReasonerResult reasonerResult = runner.run(reasonerTask);
-    return ReasonerResultConvertor.toSpgRecords(reasonerResult, spgSchemaFacade);
-  }
-
-  public void setCatalog(Catalog catalog) {
-    this.catalog = catalog;
-  }
-
-  public void setGraphState(GraphState<IVertexId> graphState) {
-    this.graphState = graphState;
   }
 }

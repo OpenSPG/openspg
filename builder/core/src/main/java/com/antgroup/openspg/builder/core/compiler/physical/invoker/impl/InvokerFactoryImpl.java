@@ -23,10 +23,10 @@ import com.antgroup.openspg.builder.core.compiler.physical.process.BaseProcessor
 import com.antgroup.openspg.builder.core.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.builder.core.runtime.record.BaseAdvancedRecord;
-import com.antgroup.openspg.builder.core.runtime.record.BasePropertyRecord;
-import com.antgroup.openspg.builder.core.runtime.record.BaseRecord;
-import com.antgroup.openspg.builder.core.runtime.record.BaseSPGRecord;
+import com.antgroup.openspg.builder.protocol.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.protocol.BasePropertyRecord;
+import com.antgroup.openspg.builder.protocol.BaseRecord;
+import com.antgroup.openspg.builder.protocol.BaseSPGRecord;
 import java.util.ArrayList;
 import java.util.List;
 

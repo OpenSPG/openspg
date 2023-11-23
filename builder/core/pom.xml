@@ -21,6 +21,10 @@
       <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-interface-table-store</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.dropwizard.metrics</groupId>
       <artifactId>metrics-core</artifactId>
     </dependency>
@@ -41,8 +45,12 @@
       <artifactId>opencsv</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
-      <artifactId>cloudext-interface-table-store</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
     </dependency>
   </dependencies>
 </project>

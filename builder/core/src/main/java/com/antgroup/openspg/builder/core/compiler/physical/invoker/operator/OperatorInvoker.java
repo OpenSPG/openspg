@@ -16,7 +16,7 @@ package com.antgroup.openspg.builder.core.compiler.physical.invoker.operator;
 import com.antgroup.openspg.builder.core.compiler.physical.BuilderRecord;
 import com.antgroup.openspg.builder.core.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.builder.core.runtime.record.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.protocol.BaseAdvancedRecord;
 import java.util.List;
 import java.util.Map;
 

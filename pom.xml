@@ -28,11 +28,11 @@
   </licenses>
 
   <modules>
-    <module>builder/core</module>
-    <module>builder/launcher</module>
-    <module>builder/protocol</module>
     <module>common/util</module>
-
+    <module>builder/core</module>
+    <module>builder/protocol</module>
+    <module>builder/runner/flink</module>
+    <module>builder/runner/local</module>
     <module>cloudext/interface/graph-store</module>
     <module>cloudext/interface/object-store</module>
     <module>cloudext/interface/table-store</module>
@@ -46,7 +46,8 @@
   <properties>
     <dropwizard.metrics.version>4.2.9</dropwizard.metrics.version>
     <groovy.version>3.0.9</groovy.version>
-    <gson-version>2.10.1</gson-version>
+    <gson.version>2.10.1</gson.version>
+    <jackson.version>2.3.4</jackson.version>
     <java.version>1.8</java.version>
     <logback.version>1.2.11</logback.version>
     <spock.version>2.2-M1-groovy-3.0</spock.version>
@@ -153,12 +154,22 @@
       <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
-        <version>${gson-version}</version>
+        <version>${gson.version}</version>
       </dependency>
       <dependency>
         <groupId>org.danilopianini</groupId>
         <artifactId>gson-extras</artifactId>
         <version>1.2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>org.projectlombok</groupId>

@@ -16,17 +16,9 @@ package com.antgroup.openspg.builder.core.compiler.physical.sink;
 import com.antgroup.openspg.builder.core.compiler.physical.process.CheckProcessor;
 import com.antgroup.openspg.builder.core.pipeline.config.GraphStoreSinkNodeConfig;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.builder.core.runtime.record.BaseRecord;
-import com.antgroup.openspg.builder.core.runtime.record.BaseSPGRecord;
-import com.antgroup.openspg.builder.core.runtime.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.builder.core.runtime.record.SPGPropertyRecord;
-import com.antgroup.openspg.builder.core.runtime.record.SPGRecordAlterItem;
-import com.antgroup.openspg.builder.core.runtime.record.SPGRecordManipulateCmd;
-import com.antgroup.openspg.builder.core.runtime.record.SPGRecordTypeEnum;
+import com.antgroup.openspg.builder.protocol.*;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClientDriverManager;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
 import com.antgroup.openspg.server.schema.core.model.BasicInfo;
 import com.antgroup.openspg.server.schema.core.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.server.schema.core.model.predicate.Property;
@@ -40,8 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfig> {
 
   private GraphStoreClient graphStoreClient;
-
-  private SearchEngineClient searchEngineClient;
 
   private CheckProcessor checkProcessor;
 
@@ -60,12 +50,12 @@ public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfi
       graphStoreClient =
           GraphStoreClientDriverManager.getClient(config.getGraphStoreConnectionInfo());
     }
-    if (context.getSearchEngineClient() != null) {
-      searchEngineClient = context.getSearchEngineClient();
-    } else {
-      searchEngineClient =
-          SearchEngineClientDriverManager.getClient(config.getSearchEngineConnectionInfo());
-    }
+    //    if (context.getSearchEngineClient() != null) {
+    //      searchEngineClient = context.getSearchEngineClient();
+    //    } else {
+    //      searchEngineClient =
+    //          SearchEngineClientDriverManager.getClient(config.getSearchEngineConnectionInfo());
+    //    }
     checkProcessor = new CheckProcessor();
     checkProcessor.init(context);
   }
@@ -96,12 +86,13 @@ public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfi
   }
 
   private void batchWriteToSearchEngine(List<BaseRecord> records) {
-    List<SPGRecordAlterItem> items =
-        records.stream()
-            .map(record -> new SPGRecordAlterItem(context.getOperation(), (BaseSPGRecord) record))
-            .collect(Collectors.toList());
-
-    searchEngineClient.manipulateRecord(new SPGRecordManipulateCmd(items));
+    //    List<SPGRecordAlterItem> items =
+    //        records.stream()
+    //            .map(record -> new SPGRecordAlterItem(context.getOperation(), (BaseSPGRecord)
+    // record))
+    //            .collect(Collectors.toList());
+    //
+    //    searchEngineClient.manipulateRecord(new SPGRecordManipulateCmd(items));
   }
 
   private void replaceUnSpreadableStandardProperty(BaseSPGRecord record) {

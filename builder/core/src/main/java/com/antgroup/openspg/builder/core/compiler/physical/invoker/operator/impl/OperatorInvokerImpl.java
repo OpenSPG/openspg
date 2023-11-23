@@ -20,9 +20,9 @@ import com.antgroup.openspg.builder.core.compiler.physical.invoker.operator.prot
 import com.antgroup.openspg.builder.core.compiler.physical.invoker.operator.protocol.Vertex;
 import com.antgroup.openspg.builder.core.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.builder.core.runtime.record.BaseAdvancedRecord;
-import com.antgroup.openspg.builder.core.runtime.record.SPGPropertyRecord;
-import com.antgroup.openspg.builder.core.runtime.record.SPGRecordTypeEnum;
+import com.antgroup.openspg.builder.protocol.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.protocol.SPGPropertyRecord;
+import com.antgroup.openspg.builder.protocol.SPGRecordTypeEnum;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.schema.core.model.constraint.Constraint;
 import com.antgroup.openspg.server.schema.core.model.constraint.ConstraintTypeEnum;

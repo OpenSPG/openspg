@@ -28,14 +28,6 @@ import com.antgroup.openspg.builder.protocol.BaseSPGRecord;
 import com.antgroup.openspg.builder.protocol.SPGPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.EdgeRecordConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.VertexRecordConvertor;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.SearchRequest;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.BaseQuery;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.MatchQuery;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.OperatorType;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.QueryGroup;
 import com.antgroup.openspg.server.api.facade.client.SchemaFacade;
 import com.antgroup.openspg.server.api.facade.dto.schema.RelationRequest;
 import com.antgroup.openspg.server.api.facade.dto.schema.SPGTypeRequest;
@@ -80,7 +72,8 @@ public class MappingProcessor extends BaseProcessor<MappingNodeConfig> {
   private BaseSPGType spgType;
   private Relation relation;
   private InvokerFactory invokerFactory;
-  private SearchEngineClient searchEngineClient;
+
+  //  private SearchEngineClient searchEngineClient;
 
   public MappingProcessor(String id, String name, MappingNodeConfig config) {
     super(id, name, config);
@@ -89,8 +82,8 @@ public class MappingProcessor extends BaseProcessor<MappingNodeConfig> {
 
   @Override
   public void doInit(RuntimeContext context) {
-    searchEngineClient =
-        SearchEngineClientDriverManager.getClient(context.getSearchEngineConnectionInfo());
+    //    searchEngineClient =
+    //        SearchEngineClientDriverManager.getClient(context.getSearchEngineConnectionInfo());
     String schemaUrl = context.getSchemaUrl();
     if (StringUtils.isNotBlank(schemaUrl)) {
       //      HttpClientBootstrap.init(new ConnectionInfo(schemaUrl));
@@ -254,14 +247,14 @@ public class MappingProcessor extends BaseProcessor<MappingNodeConfig> {
   private String mount(SPGTypeEnum spgTypeEnum, String type, String value) {
     switch (spgTypeEnum) {
       case CONCEPT_TYPE:
-        String concept = recall(type, value, SPGTypeEnum.CONCEPT_TYPE);
+        String concept = "null";
         if (StringUtils.isBlank(concept)) {
           throw new BuilderRecordException(
               this, "spgType={}, value={} concept mount failed", type, value);
         }
         return concept;
       case ENTITY_TYPE:
-        String name = recall(type, value, SPGTypeEnum.ENTITY_TYPE);
+        String name = "null";
         if (StringUtils.isBlank(name)) {
           throw new BuilderRecordException(
               this, "spgType={}, value={} entity mount failed", type, value);
@@ -272,30 +265,30 @@ public class MappingProcessor extends BaseProcessor<MappingNodeConfig> {
     }
   }
 
-  private String recall(String type, String value, SPGTypeEnum spgTypeEnum) {
-    SearchRequest request = new SearchRequest();
-    request.setIndexName(searchEngineClient.getIdxNameConvertor().convertIdxName(type));
-    MatchQuery idQuery = new MatchQuery("id", value);
-    MatchQuery nameQuery = new MatchQuery("name", value);
-
-    List<BaseQuery> queries = new ArrayList<>(4);
-    queries.add(idQuery);
-    queries.add(nameQuery);
-    if (spgTypeEnum == SPGTypeEnum.CONCEPT_TYPE) {
-      queries.add(new MatchQuery("alias", value));
-      queries.add(new MatchQuery("stdId", value));
-    }
-    QueryGroup queryGroup = new QueryGroup(queries, OperatorType.OR);
-    request.setQuery(queryGroup);
-    request.setSize(50);
-    List<IdxRecord> lst = searchEngineClient.search(request);
-    if (CollectionUtils.isEmpty(lst)) {
-      return null;
-    }
-    IdxRecord record = lst.get(0);
-    if (!value.equals(record.getDocId()) && record.getScore() < 0.5) {
-      return null;
-    }
-    return record.getDocId();
-  }
+  //  private String recall(String type, String value, SPGTypeEnum spgTypeEnum) {
+  //    SearchRequest request = new SearchRequest();
+  //    request.setIndexName(searchEngineClient.getIdxNameConvertor().convertIdxName(type));
+  //    MatchQuery idQuery = new MatchQuery("id", value);
+  //    MatchQuery nameQuery = new MatchQuery("name", value);
+  //
+  //    List<BaseQuery> queries = new ArrayList<>(4);
+  //    queries.add(idQuery);
+  //    queries.add(nameQuery);
+  //    if (spgTypeEnum == SPGTypeEnum.CONCEPT_TYPE) {
+  //      queries.add(new MatchQuery("alias", value));
+  //      queries.add(new MatchQuery("stdId", value));
+  //    }
+  //    QueryGroup queryGroup = new QueryGroup(queries, OperatorType.OR);
+  //    request.setQuery(queryGroup);
+  //    request.setSize(50);
+  //    List<IdxRecord> lst = searchEngineClient.search(request);
+  //    if (CollectionUtils.isEmpty(lst)) {
+  //      return null;
+  //    }
+  //    IdxRecord record = lst.get(0);
+  //    if (!value.equals(record.getDocId()) && record.getScore() < 0.5) {
+  //      return null;
+  //    }
+  //    return record.getDocId();
+  //  }
 }

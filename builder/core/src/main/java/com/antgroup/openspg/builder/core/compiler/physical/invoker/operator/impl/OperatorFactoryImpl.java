@@ -16,7 +16,6 @@ package com.antgroup.openspg.builder.core.compiler.physical.invoker.operator.imp
 import com.antgroup.openspg.builder.core.compiler.physical.invoker.operator.OperatorFactory;
 import com.antgroup.openspg.builder.core.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.common.model.LangTypeEnum;
 import com.antgroup.openspg.server.schema.core.model.type.OperatorKey;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,12 +34,8 @@ public class OperatorFactoryImpl implements OperatorFactory {
   @Override
   public void register(OperatorConfig config) {
     OperatorKey operatorKey = config.toKey();
-    if (LangTypeEnum.PYTHON.equals(config.getLangType())) {
-      pythonOperatorFactory.register(config);
-      operators.put(operatorKey, pythonOperatorFactory);
-      return;
-    }
-    throw new IllegalArgumentException("illegal langType=" + config.getLangType());
+    pythonOperatorFactory.register(config);
+    operators.put(operatorKey, pythonOperatorFactory);
   }
 
   @Override

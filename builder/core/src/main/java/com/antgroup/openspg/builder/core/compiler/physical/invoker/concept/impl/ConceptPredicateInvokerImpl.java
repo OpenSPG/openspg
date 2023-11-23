@@ -13,16 +13,11 @@
 
 package com.antgroup.openspg.builder.core.compiler.physical.invoker.concept.impl;
 
-import com.antgroup.kg.reasoner.catalog.impl.KgSchemaConnectionInfo;
-import com.antgroup.kg.reasoner.common.graph.vertex.IVertexId;
-import com.antgroup.kg.reasoner.graphstate.GraphState;
-import com.antgroup.kg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.builder.core.compiler.physical.invoker.concept.ConceptPredicateInvoker;
 import com.antgroup.openspg.builder.core.compiler.physical.invoker.concept.ConceptService;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.builder.core.runtime.record.BaseAdvancedRecord;
-import com.antgroup.openspg.builder.core.runtime.record.BaseSPGRecord;
-import com.antgroup.openspg.core.spgreasoner.service.util.LocalRunnerUtils;
+import com.antgroup.openspg.builder.protocol.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.protocol.BaseSPGRecord;
 import com.antgroup.openspg.server.schema.core.model.semantic.DynamicTaxonomySemantic;
 import com.antgroup.openspg.server.schema.core.model.semantic.LogicalCausationSemantic;
 import com.antgroup.openspg.server.schema.core.model.type.ConceptList;
@@ -39,19 +34,19 @@ public class ConceptPredicateInvokerImpl implements ConceptPredicateInvoker {
   @Override
   public void init(RuntimeContext context) {
     this.context = context;
-    Catalog catalog =
-        LocalRunnerUtils.buildCatalog(
-            context.getProjectId(), new KgSchemaConnectionInfo(context.getSchemaUrl(), ""));
-    GraphState<IVertexId> graphState =
-        LocalRunnerUtils.buildGraphState(context.getGraphStoreConnInfo());
-
-    belongToPredicate = new BelongToPredicate();
-    belongToPredicate.setCatalog(catalog);
-    belongToPredicate.setGraphState(graphState);
+    //    Catalog catalog =
+    //        LocalRunnerUtils.buildCatalog(
+    //            context.getProjectId(), new KgSchemaConnectionInfo(context.getSchemaUrl(), ""));
+    //    GraphState<IVertexId> graphState =
+    //        LocalRunnerUtils.buildGraphState(context.getGraphStoreConnInfo());
+    //
+    //    belongToPredicate = new BelongToPredicate();
+    //    belongToPredicate.setCatalog(catalog);
+    //    belongToPredicate.setGraphState(graphState);
 
     leadToPredicate = new LeadToPredicate(belongToPredicate, conceptService);
-    leadToPredicate.setCatalog(catalog);
-    leadToPredicate.setGraphState(graphState);
+    //    leadToPredicate.setCatalog(catalog);
+    //    leadToPredicate.setGraphState(graphState);
   }
 
   @Override
