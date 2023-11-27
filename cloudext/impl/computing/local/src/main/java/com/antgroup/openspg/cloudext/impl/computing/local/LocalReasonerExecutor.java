@@ -17,8 +17,8 @@ import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobCanSubm
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobProcessQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobRunCmd;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobSubmitCmd;
-import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerStatusWithProgress;
-import com.antgroup.openspg.core.spgreasoner.model.service.TableReasonerReceipt;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerStatusWithProgress;
+import com.antgroup.openspg.server.core.reasoner.model.service.TableReasonerReceipt;
 
 public interface LocalReasonerExecutor {
 

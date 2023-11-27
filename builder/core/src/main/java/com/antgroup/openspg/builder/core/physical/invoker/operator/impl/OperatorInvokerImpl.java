@@ -13,20 +13,20 @@
 
 package com.antgroup.openspg.builder.core.physical.invoker.operator.impl;
 
+import com.antgroup.openspg.builder.core.physical.BuilderRecord;
+import com.antgroup.openspg.builder.core.physical.invoker.operator.OperatorFactory;
+import com.antgroup.openspg.builder.core.physical.invoker.operator.OperatorInvoker;
+import com.antgroup.openspg.builder.core.physical.invoker.operator.protocol.EvalResult;
+import com.antgroup.openspg.builder.core.physical.invoker.operator.protocol.Vertex;
+import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.BuilderRecord;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.operator.OperatorFactory;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.operator.OperatorInvoker;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.operator.protocol.EvalResult;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.operator.protocol.Vertex;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.OperatorConfig;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseAdvancedRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGPropertyRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordTypeEnum;
-import com.antgroup.openspg.core.spgschema.model.constraint.Constraint;
-import com.antgroup.openspg.core.spgschema.model.constraint.ConstraintTypeEnum;
-import com.antgroup.openspg.core.spgschema.model.type.OperatorKey;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.OperatorConfig;
+import com.antgroup.openspg.server.core.builder.model.record.BaseAdvancedRecord;
+import com.antgroup.openspg.server.core.builder.model.record.SPGPropertyRecord;
+import com.antgroup.openspg.server.core.builder.model.record.SPGRecordTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.constraint.Constraint;
+import com.antgroup.openspg.server.core.schema.model.constraint.ConstraintTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.type.OperatorKey;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;

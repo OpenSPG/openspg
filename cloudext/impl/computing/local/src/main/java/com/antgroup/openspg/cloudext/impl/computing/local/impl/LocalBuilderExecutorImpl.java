@@ -13,30 +13,30 @@
 
 package com.antgroup.openspg.cloudext.impl.computing.local.impl;
 
-import static com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext.GRAPH_STORE_CONN_INFO;
-import static com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext.SEARCH_ENGINE_CONN_INFO;
-import static com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext.TABLE_STORE_CONN_INFO;
+import static com.antgroup.openspg.builder.core.runtime.RuntimeContext.GRAPH_STORE_CONN_INFO;
+import static com.antgroup.openspg.builder.core.runtime.RuntimeContext.SEARCH_ENGINE_CONN_INFO;
+import static com.antgroup.openspg.builder.core.runtime.RuntimeContext.TABLE_STORE_CONN_INFO;
 
+import com.antgroup.openspg.builder.core.physical.PhysicalPlan;
+import com.antgroup.openspg.builder.core.runtime.BuilderMetric;
+import com.antgroup.openspg.builder.core.runtime.BuilderStat;
+import com.antgroup.openspg.builder.core.runtime.PipelineExecutor;
+import com.antgroup.openspg.builder.core.runtime.RecordCollector;
+import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.builder.core.runtime.impl.DefaultPipelineExecutor;
+import com.antgroup.openspg.builder.core.runtime.impl.DefaultRecordCollector;
 import com.antgroup.openspg.cloudext.impl.computing.local.LocalBuilderExecutor;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobCanSubmitQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobProcessQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobSubmitCmd;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.common.util.thread.ThreadUtils;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.PhysicalPlan;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.BuilderMetric;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.BuilderStat;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.PipelineExecutor;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.RecordCollector;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.impl.DefaultPipelineExecutor;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.impl.DefaultRecordCollector;
-import com.antgroup.openspg.core.spgbuilder.model.service.BaseBuilderResult;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInfo;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInst;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderProgress;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderStatusWithProgress;
-import com.antgroup.openspg.core.spgbuilder.model.service.SuccessBuilderResult;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.core.builder.model.service.BaseBuilderResult;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderProgress;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderStatusWithProgress;
+import com.antgroup.openspg.server.core.builder.model.service.SuccessBuilderResult;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

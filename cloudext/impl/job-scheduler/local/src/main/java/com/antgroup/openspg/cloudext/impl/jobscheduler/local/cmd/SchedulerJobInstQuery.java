@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.cloudext.impl.jobscheduler.local.cmd;
 
-import com.antgroup.openspg.common.model.base.BaseQuery;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.common.model.base.BaseQuery;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;

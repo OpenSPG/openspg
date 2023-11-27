@@ -14,7 +14,7 @@
 package com.antgroup.openspg.cloudext.impl.jobscheduler.local.service;
 
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import java.util.List;
 
 public interface SchedulerJobInstService {

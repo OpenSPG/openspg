@@ -16,8 +16,8 @@ package com.antgroup.openspg.cloudext.impl.computing.local;
 import com.antgroup.openspg.cloudext.interfaces.computing.ComputingClient;
 import com.antgroup.openspg.cloudext.interfaces.computing.ComputingClientDriver;
 import com.antgroup.openspg.cloudext.interfaces.computing.ComputingClientDriverManager;
-import com.antgroup.openspg.common.model.datasource.connection.ComputingConnectionInfo;
 import com.antgroup.openspg.common.util.cloudext.CachedCloudExtClientDriver;
+import com.antgroup.openspg.server.common.model.datasource.connection.ComputingConnectionInfo;
 
 public class LocalComputingClientDriver
     extends CachedCloudExtClientDriver<ComputingClient, ComputingConnectionInfo>

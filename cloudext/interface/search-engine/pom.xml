@@ -27,5 +27,9 @@
       <groupId>com.antgroup.openspg</groupId>
       <artifactId>common-util</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>common-model</artifactId>
+    </dependency>
   </dependencies>
 </project>

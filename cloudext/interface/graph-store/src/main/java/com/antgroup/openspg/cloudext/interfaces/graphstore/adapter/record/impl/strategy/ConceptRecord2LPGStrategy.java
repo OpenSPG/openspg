@@ -18,10 +18,10 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGP
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeType;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
-import com.antgroup.openspg.core.spgbuilder.model.record.ConceptRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordAlterItem;
-import com.antgroup.openspg.core.spgschema.model.identifier.ConceptIdentifier;
+import com.antgroup.openspg.server.core.builder.model.record.ConceptRecord;
+import com.antgroup.openspg.server.core.builder.model.record.RecordAlterOperationEnum;
+import com.antgroup.openspg.server.core.builder.model.record.SPGRecordAlterItem;
+import com.antgroup.openspg.server.core.schema.model.identifier.ConceptIdentifier;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;

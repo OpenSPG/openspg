@@ -30,9 +30,9 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.oper
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.DropEdgeTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.DropVertexTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.VertexEdgeTypeOperationEnum;
-import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordManipulateCmd;
-import com.antgroup.openspg.core.spgschema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.server.core.builder.model.record.RecordAlterOperationEnum;
+import com.antgroup.openspg.server.core.builder.model.record.SPGRecordManipulateCmd;
+import com.antgroup.openspg.server.core.schema.model.SPGSchemaAlterCmd;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record;
 
-import com.antgroup.openspg.common.model.base.BaseValObj;
-import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.server.core.builder.model.record.RecordAlterOperationEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

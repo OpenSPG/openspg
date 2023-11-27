@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema;
 
-import com.antgroup.openspg.common.model.base.BaseValObj;
-import com.antgroup.openspg.core.spgschema.model.type.BasicTypeEnum;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.server.core.schema.model.type.BasicTypeEnum;
 import java.util.Map;
 import java.util.Objects;
 import lombok.AllArgsConstructor;

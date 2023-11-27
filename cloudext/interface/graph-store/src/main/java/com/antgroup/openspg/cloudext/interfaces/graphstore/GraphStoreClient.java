@@ -14,10 +14,10 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore;
 
 import com.antgroup.openspg.common.util.cloudext.CloudExtClient;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordManipulateCmd;
-import com.antgroup.openspg.core.spgschema.model.SPGSchemaAlterCmd;
-import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
+import com.antgroup.openspg.server.core.builder.model.record.BaseSPGRecord;
+import com.antgroup.openspg.server.core.builder.model.record.SPGRecordManipulateCmd;
+import com.antgroup.openspg.server.core.schema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.server.core.schema.model.type.BaseSPGType;
 
 public interface GraphStoreClient extends CloudExtClient {
 

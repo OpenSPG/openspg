@@ -13,19 +13,19 @@
 
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.BuilderRecordException;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.CheckNodeConfig;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseAdvancedRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.RelationRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGPropertyRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordTypeEnum;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGSubPropertyRecord;
-import com.antgroup.openspg.core.spgschema.model.constraint.BaseConstraintItem;
-import com.antgroup.openspg.core.spgschema.model.constraint.MultiValConstraint;
-import com.antgroup.openspg.core.spgschema.model.predicate.Property;
-import com.antgroup.openspg.core.spgschema.model.predicate.SubProperty;
+import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.CheckNodeConfig;
+import com.antgroup.openspg.server.core.builder.model.record.BaseAdvancedRecord;
+import com.antgroup.openspg.server.core.builder.model.record.BaseRecord;
+import com.antgroup.openspg.server.core.builder.model.record.BaseSPGRecord;
+import com.antgroup.openspg.server.core.builder.model.record.RelationRecord;
+import com.antgroup.openspg.server.core.builder.model.record.SPGPropertyRecord;
+import com.antgroup.openspg.server.core.builder.model.record.SPGRecordTypeEnum;
+import com.antgroup.openspg.server.core.builder.model.record.SPGSubPropertyRecord;
+import com.antgroup.openspg.server.core.schema.model.constraint.BaseConstraintItem;
+import com.antgroup.openspg.server.core.schema.model.constraint.MultiValConstraint;
+import com.antgroup.openspg.server.core.schema.model.predicate.Property;
+import com.antgroup.openspg.server.core.schema.model.predicate.SubProperty;
 import java.util.List;
 
 public class CheckProcessor extends BaseProcessor<CheckNodeConfig> {

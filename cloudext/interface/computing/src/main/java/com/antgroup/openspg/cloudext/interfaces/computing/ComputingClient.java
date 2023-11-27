@@ -21,9 +21,9 @@ import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobProcess
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobRunCmd;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobSubmitCmd;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClient;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderStatusWithProgress;
-import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerStatusWithProgress;
-import com.antgroup.openspg.core.spgreasoner.model.service.TableReasonerReceipt;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerStatusWithProgress;
+import com.antgroup.openspg.server.core.reasoner.model.service.TableReasonerReceipt;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderStatusWithProgress;
 
 public interface ComputingClient extends CloudExtClient {
 

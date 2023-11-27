@@ -19,9 +19,9 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.Id
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxMapping;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchema;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchemaAlterItem;
-import com.antgroup.openspg.core.spgschema.model.SPGSchema;
-import com.antgroup.openspg.core.spgschema.model.alter.AlterOperationEnum;
-import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
+import com.antgroup.openspg.server.core.schema.model.SPGSchema;
+import com.antgroup.openspg.server.core.schema.model.alter.AlterOperationEnum;
+import com.antgroup.openspg.server.core.schema.model.type.BaseSPGType;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -13,11 +13,10 @@
 
 package com.antgroup.openspg.builder.core.physical;
 
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
+import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Base class of physical execution nodes, initializes the physical execution node based on the
@@ -99,7 +98,7 @@ public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
   }
 
   @Override
-  public int compareTo(@NotNull BasePhysicalNode o) {
+  public int compareTo(BasePhysicalNode o) {
     return o.getId().compareTo(this.id);
   }
 }

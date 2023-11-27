@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record;
 
-import com.antgroup.openspg.api.facade.ApiConstants;
+import com.antgroup.openspg.server.api.facade.ApiConstants;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.VertexType;
 import java.util.HashMap;
 import java.util.List;

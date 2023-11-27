@@ -13,16 +13,16 @@
 
 package com.antgroup.openspg.builder.core.physical.invoker.concept.impl;
 
-import com.antgroup.openspg.api.facade.client.ConceptFacade;
-import com.antgroup.openspg.api.facade.dto.schema.request.ConceptRequest;
-import com.antgroup.openspg.api.http.client.HttpConceptFacade;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.concept.ConceptService;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseAdvancedRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.core.spgschema.model.predicate.Property;
-import com.antgroup.openspg.core.spgschema.model.semantic.SystemPredicateEnum;
-import com.antgroup.openspg.core.spgschema.model.type.ConceptList;
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
+import com.antgroup.openspg.server.api.facade.client.ConceptFacade;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
+import com.antgroup.openspg.server.api.http.client.HttpConceptFacade;
+import com.antgroup.openspg.builder.core.physical.invoker.concept.ConceptService;
+import com.antgroup.openspg.server.core.builder.model.record.BaseAdvancedRecord;
+import com.antgroup.openspg.server.core.builder.model.record.BaseSPGRecord;
+import com.antgroup.openspg.server.core.schema.model.predicate.Property;
+import com.antgroup.openspg.server.core.schema.model.semantic.SystemPredicateEnum;
+import com.antgroup.openspg.server.core.schema.model.type.ConceptList;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeRef;
 
 public class ConceptServiceImpl implements ConceptService {
 

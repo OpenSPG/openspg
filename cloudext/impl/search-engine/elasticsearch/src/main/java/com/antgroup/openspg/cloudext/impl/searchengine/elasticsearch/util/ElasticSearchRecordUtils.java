@@ -22,7 +22,7 @@ import static com.antgroup.openspg.cloudext.interfaces.searchengine.constants.El
 import static com.antgroup.openspg.cloudext.interfaces.searchengine.constants.ElasticSearchConstants.ES_RESULT_HITS_KEY;
 
 import com.alibaba.fastjson.JSONObject;
-import com.antgroup.openspg.api.facade.JSON;
+import com.antgroup.openspg.server.api.facade.JSON;
 import com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.client.ElasticSearchRecordClient;
 import com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.model.EsDocs;
 import com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.model.EsHits;

@@ -13,21 +13,21 @@
 
 package com.antgroup.openspg.builder.core.runtime.impl;
 
+import com.antgroup.openspg.builder.core.logical.LogicalPlan;
+import com.antgroup.openspg.builder.core.physical.BasePhysicalNode;
+import com.antgroup.openspg.builder.core.physical.BuilderRecord;
+import com.antgroup.openspg.builder.core.physical.PhysicalPlan;
+import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
+import com.antgroup.openspg.builder.core.physical.sink.BaseSinkWriter;
+import com.antgroup.openspg.builder.core.physical.source.BaseSourceReader;
+import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
+import com.antgroup.openspg.builder.core.runtime.PipelineExecutor;
+import com.antgroup.openspg.builder.core.runtime.RecordCollector;
+import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
 import com.antgroup.openspg.common.util.thread.ThreadUtils;
-import com.antgroup.openspg.core.spgbuilder.engine.logical.LogicalPlan;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.BasePhysicalNode;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.BuilderRecord;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.PhysicalPlan;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.process.BaseProcessor;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.sink.BaseSinkWriter;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.source.BaseSourceReader;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.BuilderRecordException;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.PipelineExecutor;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.RecordCollector;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.Pipeline;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.EventRecord;
+import com.antgroup.openspg.server.core.builder.model.pipeline.Pipeline;
+import com.antgroup.openspg.server.core.builder.model.record.BaseRecord;
+import com.antgroup.openspg.server.core.builder.model.record.EventRecord;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import java.util.ArrayList;

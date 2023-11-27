@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.core.physical;
 
-import com.antgroup.openspg.api.facade.JSON;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
+import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.core.builder.model.record.BaseRecord;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

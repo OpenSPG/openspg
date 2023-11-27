@@ -13,8 +13,7 @@
 
 package com.antgroup.openspg.common.util;
 
-import com.antgroup.openspg.api.facade.JSON;
-import com.antgroup.openspg.server.common.util.StringUtils;
+import com.antgroup.openspg.server.api.facade.JSON;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.core.physical.source;
 
-import com.antgroup.openspg.core.spgbuilder.engine.physical.BasePhysicalNode;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
+import com.antgroup.openspg.builder.core.physical.BasePhysicalNode;
+import com.antgroup.openspg.server.core.builder.model.record.BaseRecord;
 import java.util.List;
 import lombok.Getter;
 

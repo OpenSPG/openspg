@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util;
 
-import com.antgroup.openspg.common.model.exception.GraphStoreException;
-import com.antgroup.openspg.core.spgschema.model.type.BasicTypeEnum;
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
+import com.antgroup.openspg.server.common.model.exception.GraphStoreException;
+import com.antgroup.openspg.server.core.schema.model.type.BasicTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeRef;
 
-/** Utils for {@link com.antgroup.openspg.core.spgschema.model.type.BaseSPGType SPGType}. */
+/** Utils for {@link com.antgroup.openspg.server.core.schema.model.type.BaseSPGType SPGType}. */
 public class SPGTypeUtils {
 
   /**

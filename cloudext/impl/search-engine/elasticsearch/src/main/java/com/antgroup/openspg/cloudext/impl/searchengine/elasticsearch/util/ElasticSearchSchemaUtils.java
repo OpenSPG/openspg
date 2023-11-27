@@ -21,7 +21,7 @@ import com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.model.EsMap
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxField;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxMapping;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchema;
-import com.antgroup.openspg.core.spgschema.model.type.BasicTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.type.BasicTypeEnum;
 import com.dtflys.forest.http.ForestResponse;
 import com.google.common.collect.Lists;
 import java.util.List;

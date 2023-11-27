@@ -13,20 +13,20 @@
 
 package com.antgroup.openspg.builder.core.physical.invoker.impl;
 
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.InvokerFactory;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.InvokerParam;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.concept.ConceptPredicateInvoker;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.concept.impl.ConceptPredicateInvokerImpl;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.operator.OperatorInvoker;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.operator.impl.OperatorInvokerImpl;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.process.BaseProcessor;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.BuilderRecordException;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.OperatorConfig;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseAdvancedRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.BasePropertyRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseSPGRecord;
+import com.antgroup.openspg.builder.core.physical.invoker.InvokerFactory;
+import com.antgroup.openspg.builder.core.physical.invoker.InvokerParam;
+import com.antgroup.openspg.builder.core.physical.invoker.concept.ConceptPredicateInvoker;
+import com.antgroup.openspg.builder.core.physical.invoker.concept.impl.ConceptPredicateInvokerImpl;
+import com.antgroup.openspg.builder.core.physical.invoker.operator.OperatorInvoker;
+import com.antgroup.openspg.builder.core.physical.invoker.operator.impl.OperatorInvokerImpl;
+import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
+import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
+import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.OperatorConfig;
+import com.antgroup.openspg.server.core.builder.model.record.BaseAdvancedRecord;
+import com.antgroup.openspg.server.core.builder.model.record.BasePropertyRecord;
+import com.antgroup.openspg.server.core.builder.model.record.BaseRecord;
+import com.antgroup.openspg.server.core.builder.model.record.BaseSPGRecord;
 import java.util.ArrayList;
 import java.util.List;
 

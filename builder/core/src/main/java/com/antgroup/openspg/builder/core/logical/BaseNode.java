@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.core.logical;
 
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.NodeTypeEnum;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.BaseNodeConfig;
+import com.antgroup.openspg.server.core.builder.model.pipeline.NodeTypeEnum;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.BaseNodeConfig;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 

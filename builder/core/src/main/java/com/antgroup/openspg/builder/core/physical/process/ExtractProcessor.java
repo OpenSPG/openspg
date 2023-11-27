@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.core.spgbuilder.engine.physical.BuilderRecord;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.operator.OperatorInvoker;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.invoker.operator.impl.OperatorInvokerImpl;
-import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.ExtractNodeConfig;
-import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
+import com.antgroup.openspg.builder.core.physical.BuilderRecord;
+import com.antgroup.openspg.builder.core.physical.invoker.operator.OperatorInvoker;
+import com.antgroup.openspg.builder.core.physical.invoker.operator.impl.OperatorInvokerImpl;
+import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.ExtractNodeConfig;
+import com.antgroup.openspg.server.core.builder.model.record.BaseRecord;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

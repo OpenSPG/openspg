@@ -13,17 +13,17 @@
 
 package com.antgroup.openspg.builder.core.physical;
 
-import com.antgroup.openspg.core.spgbuilder.engine.logical.BaseNode;
-import com.antgroup.openspg.core.spgbuilder.engine.logical.LogicalPlan;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.process.ExtractProcessor;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.process.MappingProcessor;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.sink.GraphStoreSinkWriter;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.source.BaseSourceReader;
-import com.antgroup.openspg.core.spgbuilder.engine.physical.source.CsvFileSourceReader;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.CsvSourceNodeConfig;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.ExtractNodeConfig;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.GraphStoreSinkNodeConfig;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.MappingNodeConfig;
+import com.antgroup.openspg.builder.core.logical.BaseNode;
+import com.antgroup.openspg.builder.core.logical.LogicalPlan;
+import com.antgroup.openspg.builder.core.physical.process.ExtractProcessor;
+import com.antgroup.openspg.builder.core.physical.process.MappingProcessor;
+import com.antgroup.openspg.builder.core.physical.sink.GraphStoreSinkWriter;
+import com.antgroup.openspg.builder.core.physical.source.BaseSourceReader;
+import com.antgroup.openspg.builder.core.physical.source.CsvFileSourceReader;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.CsvSourceNodeConfig;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.ExtractNodeConfig;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.MappingNodeConfig;
 import com.google.common.graph.Graph;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.ImmutableGraph;

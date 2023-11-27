@@ -13,13 +13,13 @@
 
 package com.antgroup.openspg.builder.core.logical;
 
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.Edge;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.Node;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.Pipeline;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.CsvSourceNodeConfig;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.ExtractNodeConfig;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.GraphStoreSinkNodeConfig;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.MappingNodeConfig;
+import com.antgroup.openspg.server.core.builder.model.pipeline.Edge;
+import com.antgroup.openspg.server.core.builder.model.pipeline.Node;
+import com.antgroup.openspg.server.core.builder.model.pipeline.Pipeline;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.CsvSourceNodeConfig;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.ExtractNodeConfig;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.MappingNodeConfig;
 import com.google.common.graph.Graph;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.ImmutableGraph;

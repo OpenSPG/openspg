@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.core.runtime;
 
-import com.antgroup.openspg.core.spgbuilder.engine.physical.PhysicalPlan;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.Pipeline;
+import com.antgroup.openspg.builder.core.physical.PhysicalPlan;
+import com.antgroup.openspg.server.core.builder.model.pipeline.Pipeline;
 
 public interface PipelineExecutor {
 

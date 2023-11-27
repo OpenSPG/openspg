@@ -17,7 +17,7 @@ import com.antgroup.openspg.cloudext.impl.jobscheduler.local.cmd.SchedulerJobIns
 import com.antgroup.openspg.cloudext.impl.jobscheduler.local.repo.SchedulerJobInstRepository;
 import com.antgroup.openspg.cloudext.impl.jobscheduler.local.service.SchedulerJobInstService;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import com.google.common.collect.Sets;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

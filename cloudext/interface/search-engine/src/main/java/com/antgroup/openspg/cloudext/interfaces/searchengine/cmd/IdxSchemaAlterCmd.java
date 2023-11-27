@@ -15,8 +15,8 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine.cmd;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchema;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchemaAlterItem;
-import com.antgroup.openspg.common.model.base.BaseCmd;
-import com.antgroup.openspg.core.spgschema.model.alter.AlterOperationEnum;
+import com.antgroup.openspg.server.common.model.base.BaseCmd;
+import com.antgroup.openspg.server.core.schema.model.alter.AlterOperationEnum;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;

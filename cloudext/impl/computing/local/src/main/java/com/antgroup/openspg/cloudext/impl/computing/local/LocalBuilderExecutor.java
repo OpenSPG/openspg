@@ -16,7 +16,7 @@ package com.antgroup.openspg.cloudext.impl.computing.local;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobCanSubmitQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobProcessQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobSubmitCmd;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderStatusWithProgress;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderStatusWithProgress;
 
 public interface LocalBuilderExecutor {
 

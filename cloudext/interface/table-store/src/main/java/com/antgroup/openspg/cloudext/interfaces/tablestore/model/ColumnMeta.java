@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.cloudext.interfaces.tablestore.model;
 
-import com.antgroup.openspg.common.model.base.BaseValObj;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
