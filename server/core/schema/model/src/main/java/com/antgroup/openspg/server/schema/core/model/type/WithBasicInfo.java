@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.schema.core.model.type;
 
-import com.antgroup.openspg.server.schema.core.model.BasicInfo;
-import com.antgroup.openspg.server.schema.core.model.identifier.BaseSPGIdentifier;
+import com.antgroup.openspg.core.spgschema.model.BasicInfo;
+import com.antgroup.openspg.core.spgschema.model.identifier.BaseSPGIdentifier;
 
 /** An interface provides some methods to get basic information of type. */
 public interface WithBasicInfo<N extends BaseSPGIdentifier> {

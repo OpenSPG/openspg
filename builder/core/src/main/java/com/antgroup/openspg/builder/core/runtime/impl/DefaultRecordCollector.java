@@ -13,16 +13,16 @@
 
 package com.antgroup.openspg.builder.core.runtime.impl;
 
-import com.antgroup.openspg.builder.core.compiler.physical.BuilderRecord;
-import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
-import com.antgroup.openspg.builder.core.runtime.RecordCollector;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableFileHandler;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.cmd.TableFileCreateCmd;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.ColumnMeta;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.TableRecord;
-import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
+import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
+import com.antgroup.openspg.core.spgbuilder.engine.physical.BuilderRecord;
+import com.antgroup.openspg.core.spgbuilder.engine.runtime.BuilderRecordException;
+import com.antgroup.openspg.core.spgbuilder.engine.runtime.RecordCollector;
 
 public class DefaultRecordCollector implements RecordCollector {
 

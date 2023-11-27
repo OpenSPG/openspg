@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.model.type;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.common.model.base.BaseValObj;
 import java.util.List;
 
 /**

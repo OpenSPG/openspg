@@ -14,7 +14,6 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.schema.impl;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.BaseLPGGraphStoreClient;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreException;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.schema.SPGSchema2LPGService;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.SPGTypeUtils;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.BaseLPGOntology;
@@ -36,16 +35,17 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.oper
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.DropVertexTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.SchemaAtomicOperationEnum;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.VertexEdgeTypeOperationEnum;
-import com.antgroup.openspg.server.schema.core.model.SPGSchema;
-import com.antgroup.openspg.server.schema.core.model.alter.AlterOperationEnum;
-import com.antgroup.openspg.server.schema.core.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.server.schema.core.model.predicate.Property;
-import com.antgroup.openspg.server.schema.core.model.predicate.SubProperty;
-import com.antgroup.openspg.server.schema.core.model.type.BaseSPGType;
-import com.antgroup.openspg.server.schema.core.model.type.BasicTypeEnum;
-import com.antgroup.openspg.server.schema.core.model.type.ParentTypeInfo;
-import com.antgroup.openspg.server.schema.core.model.type.SPGTypeRef;
-import com.antgroup.openspg.server.schema.core.model.type.StandardType;
+import com.antgroup.openspg.common.model.exception.GraphStoreException;
+import com.antgroup.openspg.core.spgschema.model.SPGSchema;
+import com.antgroup.openspg.core.spgschema.model.alter.AlterOperationEnum;
+import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.spgschema.model.predicate.Property;
+import com.antgroup.openspg.core.spgschema.model.predicate.SubProperty;
+import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.spgschema.model.type.BasicTypeEnum;
+import com.antgroup.openspg.core.spgschema.model.type.ParentTypeInfo;
+import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
+import com.antgroup.openspg.core.spgschema.model.type.StandardType;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;

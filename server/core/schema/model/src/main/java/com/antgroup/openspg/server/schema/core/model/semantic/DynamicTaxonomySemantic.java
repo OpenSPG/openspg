@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.schema.core.model.semantic;
 
-import com.antgroup.openspg.server.schema.core.model.identifier.ConceptIdentifier;
-import com.antgroup.openspg.server.schema.core.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.server.schema.core.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.spgschema.model.identifier.ConceptIdentifier;
+import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 
 /**
  * The taxonomic semantic between entity and concept. the predicate is fixed to be {@code

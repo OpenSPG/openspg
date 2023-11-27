@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.schema.core.model.predicate;
 
-import com.antgroup.openspg.server.schema.core.model.BasicInfo;
-import com.antgroup.openspg.server.schema.core.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.server.schema.core.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.server.schema.core.model.semantic.SystemPredicateEnum;
-import com.antgroup.openspg.server.schema.core.model.type.EntityType;
-import com.antgroup.openspg.server.schema.core.model.type.SPGTypeRef;
+import com.antgroup.openspg.core.spgschema.model.BasicInfo;
+import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.spgschema.model.semantic.SystemPredicateEnum;
+import com.antgroup.openspg.core.spgschema.model.type.EntityType;
+import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
 
 /**
  * Class definition of relation<br>

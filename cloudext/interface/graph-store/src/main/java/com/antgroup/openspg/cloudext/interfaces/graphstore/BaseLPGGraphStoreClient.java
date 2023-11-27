@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore;
 
-import com.antgroup.openspg.builder.protocol.RecordAlterOperationEnum;
-import com.antgroup.openspg.builder.protocol.SPGRecordManipulateCmd;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.SPGRecord2LPGService;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.SPGRecord2LPGServiceImpl;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.schema.SPGSchema2LPGService;
@@ -32,7 +30,9 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.oper
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.DropEdgeTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.DropVertexTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.VertexEdgeTypeOperationEnum;
-import com.antgroup.openspg.server.schema.core.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
+import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordManipulateCmd;
+import com.antgroup.openspg.core.spgschema.model.SPGSchemaAlterCmd;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

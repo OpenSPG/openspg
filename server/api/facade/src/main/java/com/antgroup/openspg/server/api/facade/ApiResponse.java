@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.facade;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
+import com.antgroup.openspg.common.model.base.BaseToString;
 
 /**
  * API response returned by API call.

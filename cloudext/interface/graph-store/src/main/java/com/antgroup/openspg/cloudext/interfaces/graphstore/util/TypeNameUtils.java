@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.util;
 
-import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreException;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGTypeNameConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.BaseLPGRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
@@ -27,6 +26,7 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.oper
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.CreateVertexTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.DropEdgeTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.DropVertexTypeOperation;
+import com.antgroup.openspg.common.model.exception.GraphStoreException;
 import java.util.List;
 
 public class TypeNameUtils {

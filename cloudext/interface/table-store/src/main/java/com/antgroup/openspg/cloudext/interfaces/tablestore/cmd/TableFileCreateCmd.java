@@ -14,7 +14,7 @@
 package com.antgroup.openspg.cloudext.interfaces.tablestore.cmd;
 
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.ColumnMeta;
-import com.antgroup.openspg.server.common.model.base.BaseCmd;
+import com.antgroup.openspg.common.model.base.BaseCmd;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

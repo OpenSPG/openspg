@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.common.model.base.BaseValObj;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

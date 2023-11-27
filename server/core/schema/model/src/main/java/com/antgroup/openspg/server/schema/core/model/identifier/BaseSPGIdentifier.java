@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.model.identifier;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.common.model.base.BaseValObj;
 
 /**
  * This base class of SPG identifier. Currently, there are two methods for SPG naming. The first is

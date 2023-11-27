@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.model.semantic;
 
-import com.antgroup.openspg.server.schema.core.model.BaseSpoTriple;
+import com.antgroup.openspg.core.spgschema.model.BaseSpoTriple;
 
 /**
  * The semantics defined on ontology<br>

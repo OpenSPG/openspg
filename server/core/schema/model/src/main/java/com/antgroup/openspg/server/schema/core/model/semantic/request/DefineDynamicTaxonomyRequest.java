@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.model.semantic.request;
 
-import com.antgroup.openspg.server.common.model.base.BaseRequest;
+import com.antgroup.openspg.common.model.base.BaseRequest;
 
 /** Request to define dynamic taxonomy */
 public class DefineDynamicTaxonomyRequest extends BaseRequest {

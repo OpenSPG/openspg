@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.schema.core.model;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
-import com.antgroup.openspg.server.schema.core.model.alter.AlterOperationEnum;
-import com.antgroup.openspg.server.schema.core.model.type.WithAlterOperation;
-import com.antgroup.openspg.server.schema.core.model.type.WithOntologyId;
+import com.antgroup.openspg.common.model.base.BaseToString;
+import com.antgroup.openspg.core.spgschema.model.alter.AlterOperationEnum;
+import com.antgroup.openspg.core.spgschema.model.type.WithAlterOperation;
+import com.antgroup.openspg.core.spgschema.model.type.WithOntologyId;
 
 /**
  * The abstract parent class of all ontology models<br>

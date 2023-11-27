@@ -12,7 +12,7 @@
   ~ or implied.
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.antgroup.openspg</groupId>
@@ -28,22 +28,22 @@
   </licenses>
 
   <modules>
-    <module>common/util</module>
     <module>builder/core</module>
-    <module>builder/protocol</module>
-    <module>builder/runner/flink</module>
-    <module>builder/runner/local</module>
+    <module>common/util</module>
     <module>cloudext/interface/graph-store</module>
     <module>cloudext/interface/object-store</module>
     <module>cloudext/interface/table-store</module>
     <module>cloudext/interface/computing</module>
+    <module>cloudext/interface/job-scheduler</module>
     <module>cloudext/impl/graph-store/tugraph</module>
     <module>cloudext/impl/object-store/local</module>
     <module>cloudext/impl/table-store/local</module>
     <module>cloudext/impl/computing/local</module>
+    <module>cloudext/impl/job-scheduler/local</module>
   </modules>
 
   <properties>
+    <kgreasoner-version>20231018-OPENSOURCE</kgreasoner-version>
     <dropwizard.metrics.version>4.2.9</dropwizard.metrics.version>
     <groovy.version>3.0.9</groovy.version>
     <gson.version>2.10.1</gson.version>
@@ -70,11 +70,6 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>builder-protocol</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
         <artifactId>cloudext-interface-graph-store</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -91,6 +86,11 @@
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
         <artifactId>cloudext-interface-computing</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg</groupId>
+        <artifactId>cloudext-interface-job-scheduler</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -114,13 +114,29 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.antgroup.openspg</groupId>
+        <artifactId>cloudext-impl-job-scheduler-local</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
         <artifactId>common-model</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>schema-core-model</artifactId>
+        <artifactId>core-builder-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>common-service</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>core-schema-model</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -129,7 +145,6 @@
         <version>${project.version}</version>
       </dependency>
       <!-- openspg end -->
-
       <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy-sql</artifactId>
@@ -302,7 +317,8 @@
         <version>3.1.2</version>
         <configuration>
           <argLine>@{argLine} -Xmx1024m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m
-            -Dfile.encoding=UTF-8</argLine>
+            -Dfile.encoding=UTF-8
+          </argLine>
           <includes>
             <include>**/*Test.groovy</include>
             <include>**/Test*.groovy</include>

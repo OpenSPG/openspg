@@ -13,6 +13,6 @@
 
 package com.antgroup.openspg.cloudext.interfaces.computing.cmd;
 
-import com.antgroup.openspg.server.common.model.base.BaseQuery;
+import com.antgroup.openspg.common.model.base.BaseQuery;
 
 public class ReasonerJobCanSubmitQuery extends BaseQuery {}

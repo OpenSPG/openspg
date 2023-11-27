@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.schema.core.model.semantic;
 
-import com.antgroup.openspg.server.common.model.UserInfo;
-import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.common.model.UserInfo;
+import com.antgroup.openspg.common.model.base.BaseModel;
 
 /**
  * The logic rule that defined on the property or relation<br>

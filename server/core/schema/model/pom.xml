@@ -9,7 +9,7 @@
     <relativePath>../../../pom.xml</relativePath>
   </parent>
 
-  <artifactId>schema-core-model</artifactId>
+  <artifactId>core-schema-model</artifactId>
 
   <dependencies>
     <dependency>

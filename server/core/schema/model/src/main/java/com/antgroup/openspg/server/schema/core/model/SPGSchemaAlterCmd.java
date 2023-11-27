@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.model;
 
-import com.antgroup.openspg.server.common.model.base.BaseCmd;
+import com.antgroup.openspg.common.model.base.BaseCmd;
 
 /** Command to alter the SPG schema, including the set of SPG types to be altered. */
 public class SPGSchemaAlterCmd extends BaseCmd {

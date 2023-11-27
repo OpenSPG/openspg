@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.model.type;
 
-import com.antgroup.openspg.server.schema.core.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 import java.util.List;
 
 /** An interface provides some methods to get parent type info. */

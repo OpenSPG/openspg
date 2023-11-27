@@ -18,7 +18,7 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>schema-core-model</artifactId>
+      <artifactId>core-schema-model</artifactId>
     </dependency>
   </dependencies>
 </project>

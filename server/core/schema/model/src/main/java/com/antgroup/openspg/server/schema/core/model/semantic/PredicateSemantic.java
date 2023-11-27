@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.schema.core.model.semantic;
 
-import com.antgroup.openspg.server.schema.core.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.server.schema.core.model.identifier.SPGTripleIdentifier;
-import com.antgroup.openspg.server.schema.core.model.predicate.PropertyRef;
+import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.core.spgschema.model.identifier.SPGTripleIdentifier;
+import com.antgroup.openspg.core.spgschema.model.predicate.PropertyRef;
 
 /** The semantics between properties or relations. */
 public class PredicateSemantic extends BaseSemantic {

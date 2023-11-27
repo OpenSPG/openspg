@@ -12,7 +12,7 @@
   ~ or implied.
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -35,14 +35,24 @@
   </licenses>
 
   <modules>
-    <module>core/schema/model</module>
-    <module>core/schema/service</module>
-    <module>arks/sofaboot</module>
-    <module>common/model</module>
-    <module>common/service</module>
+    <module>api/facade</module>
     <module>api/http-client</module>
     <module>api/http-server</module>
-    <module>api/facade</module>
+    <module>arks/sofaboot</module>
+    <module>biz/common</module>
+    <module>biz/builder</module>
+    <module>biz/reasoner</module>
+    <module>biz/schema</module>
+    <module>common/model</module>
+    <module>common/service</module>
+    <module>core/schema/model</module>
+    <module>core/schema/service</module>
+    <module>core/builder/model</module>
+    <module>core/builder/service</module>
+    <module>core/reasoner/model</module>
+    <module>core/reasoner/service</module>
+    <module>infra/dao</module>
+    <module>test</module>
   </modules>
 
   <properties>
@@ -63,6 +73,46 @@
       <!-- openspg-server start -->
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>api-facade</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>api-http-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>api-http-server</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>arks-sofaboot</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>biz-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>biz-builder</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>biz-reasoner</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>biz-schema</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
         <artifactId>common-model</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -73,17 +123,42 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>schema-core-model</artifactId>
+        <artifactId>core-schema-model</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>schema-core-service</artifactId>
+        <artifactId>core-schema-service</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>arks-sofaboot</artifactId>
+        <artifactId>core-builder-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>core-builder-service</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>core-reasoner-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>core-reasoner-service</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>infra-dao</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>test</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- openspg-server end -->
@@ -148,7 +223,8 @@
         <version>3.1.2</version>
         <configuration>
           <argLine>@{argLine} -Xmx1024m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m
-            -Dfile.encoding=UTF-8</argLine>
+            -Dfile.encoding=UTF-8
+          </argLine>
           <includes>
             <include>**/*Test.groovy</include>
             <include>**/Test*.groovy</include>

@@ -16,7 +16,7 @@ package com.antgroup.openspg.cloudext.impl.objectstore.local;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.ObjectStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.cmd.ObjectStoreSaveCmd;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.model.ObjectStorePath;
-import com.antgroup.openspg.server.common.model.datasource.connection.ObjectStoreConnectionInfo;
+import com.antgroup.openspg.common.model.datasource.connection.ObjectStoreConnectionInfo;
 import java.io.File;
 import java.io.IOException;
 import lombok.Getter;

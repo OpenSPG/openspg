@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.model.constraint;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
+import com.antgroup.openspg.common.model.base.BaseToString;
 
 /**
  * Abstract class of constraint item, describes one kind of condition that property value should be

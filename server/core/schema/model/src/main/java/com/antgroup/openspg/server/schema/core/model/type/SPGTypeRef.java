@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.schema.core.model.type;
 
-import com.antgroup.openspg.server.schema.core.model.BaseOntology;
-import com.antgroup.openspg.server.schema.core.model.BasicInfo;
-import com.antgroup.openspg.server.schema.core.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.spgschema.model.BaseOntology;
+import com.antgroup.openspg.core.spgschema.model.BasicInfo;
+import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
 
 /** Reference of the SPG type. */
 public class SPGTypeRef extends BaseOntology

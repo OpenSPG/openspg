@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.common.model.datasource.connection;
 
-import com.antgroup.openspg.server.common.model.datasource.DataSourceTypeEnum;
+import com.antgroup.openspg.common.model.datasource.DataSourceTypeEnum;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.model.type;
 
-import com.antgroup.openspg.server.schema.core.model.alter.AlterOperationEnum;
+import com.antgroup.openspg.core.spgschema.model.alter.AlterOperationEnum;
 
 /** An interface provides some methods to check and get altering operation. */
 public interface WithAlterOperation {

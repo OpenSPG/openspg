@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.schema.core.model.predicate;
 
-import com.antgroup.openspg.server.schema.core.model.BaseSpoTriple;
-import com.antgroup.openspg.server.schema.core.model.BasicInfo;
-import com.antgroup.openspg.server.schema.core.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.server.schema.core.model.type.BasicType;
-import com.antgroup.openspg.server.schema.core.model.type.SPGTypeRef;
-import com.antgroup.openspg.server.schema.core.model.type.WithBasicInfo;
+import com.antgroup.openspg.core.spgschema.model.BaseSpoTriple;
+import com.antgroup.openspg.core.spgschema.model.BasicInfo;
+import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.core.spgschema.model.type.BasicType;
+import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
+import com.antgroup.openspg.core.spgschema.model.type.WithBasicInfo;
 
 /**
  * Class definition of extended information of {@code Property} or {@code Relation} <br>

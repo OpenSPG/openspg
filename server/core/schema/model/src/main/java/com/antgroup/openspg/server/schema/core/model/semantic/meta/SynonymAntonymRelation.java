@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.schema.core.model.semantic.meta;
 
-import com.antgroup.openspg.server.schema.core.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.server.schema.core.model.type.SPGTypeEnum;
+import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
 import java.util.EnumSet;
 
 public class SynonymAntonymRelation extends BaseSemanticRelation {

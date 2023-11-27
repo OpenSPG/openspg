@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.model.semantic;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
+import com.antgroup.openspg.common.model.base.BaseToString;
 import java.util.Objects;
 import java.util.Random;
 

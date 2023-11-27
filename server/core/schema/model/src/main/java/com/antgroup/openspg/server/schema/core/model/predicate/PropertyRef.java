@@ -13,14 +13,14 @@
 
 package com.antgroup.openspg.server.schema.core.model.predicate;
 
-import com.antgroup.openspg.server.schema.core.model.BaseOntology;
-import com.antgroup.openspg.server.schema.core.model.BasicInfo;
-import com.antgroup.openspg.server.schema.core.model.OntologyId;
-import com.antgroup.openspg.server.schema.core.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.server.schema.core.model.identifier.SPGTripleIdentifier;
-import com.antgroup.openspg.server.schema.core.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.server.schema.core.model.type.SPGTypeRef;
-import com.antgroup.openspg.server.schema.core.model.type.WithBasicInfo;
+import com.antgroup.openspg.core.spgschema.model.BaseOntology;
+import com.antgroup.openspg.core.spgschema.model.BasicInfo;
+import com.antgroup.openspg.core.spgschema.model.OntologyId;
+import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.core.spgschema.model.identifier.SPGTripleIdentifier;
+import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
+import com.antgroup.openspg.core.spgschema.model.type.WithBasicInfo;
 
 /** Reference of the property or the relation. */
 public class PropertyRef extends BaseOntology implements WithBasicInfo<PredicateIdentifier> {

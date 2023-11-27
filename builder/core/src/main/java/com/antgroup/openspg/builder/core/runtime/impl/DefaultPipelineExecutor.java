@@ -13,20 +13,21 @@
 
 package com.antgroup.openspg.builder.core.runtime.impl;
 
-import com.antgroup.openspg.builder.core.compiler.logical.LogicalPlan;
-import com.antgroup.openspg.builder.core.compiler.physical.BasePhysicalNode;
-import com.antgroup.openspg.builder.core.compiler.physical.BuilderRecord;
-import com.antgroup.openspg.builder.core.compiler.physical.PhysicalPlan;
-import com.antgroup.openspg.builder.core.compiler.physical.process.BaseProcessor;
-import com.antgroup.openspg.builder.core.compiler.physical.sink.BaseSinkWriter;
-import com.antgroup.openspg.builder.core.compiler.physical.source.BaseSourceReader;
-import com.antgroup.openspg.builder.core.pipeline.Pipeline;
-import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
-import com.antgroup.openspg.builder.core.runtime.PipelineExecutor;
-import com.antgroup.openspg.builder.core.runtime.RecordCollector;
-import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.builder.protocol.BaseRecord;
-import com.antgroup.openspg.builder.protocol.EventRecord;
+import com.antgroup.openspg.common.util.thread.ThreadUtils;
+import com.antgroup.openspg.core.spgbuilder.engine.logical.LogicalPlan;
+import com.antgroup.openspg.core.spgbuilder.engine.physical.BasePhysicalNode;
+import com.antgroup.openspg.core.spgbuilder.engine.physical.BuilderRecord;
+import com.antgroup.openspg.core.spgbuilder.engine.physical.PhysicalPlan;
+import com.antgroup.openspg.core.spgbuilder.engine.physical.process.BaseProcessor;
+import com.antgroup.openspg.core.spgbuilder.engine.physical.sink.BaseSinkWriter;
+import com.antgroup.openspg.core.spgbuilder.engine.physical.source.BaseSourceReader;
+import com.antgroup.openspg.core.spgbuilder.engine.runtime.BuilderRecordException;
+import com.antgroup.openspg.core.spgbuilder.engine.runtime.PipelineExecutor;
+import com.antgroup.openspg.core.spgbuilder.engine.runtime.RecordCollector;
+import com.antgroup.openspg.core.spgbuilder.engine.runtime.RuntimeContext;
+import com.antgroup.openspg.core.spgbuilder.model.pipeline.Pipeline;
+import com.antgroup.openspg.core.spgbuilder.model.record.BaseRecord;
+import com.antgroup.openspg.core.spgbuilder.model.record.EventRecord;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
 import java.util.ArrayList;
@@ -127,7 +128,7 @@ public class DefaultPipelineExecutor implements PipelineExecutor {
       for (int i = 0; i < successors.size(); i++) {
         BasePhysicalNode successor = successors.get(i);
         if (successors.size() > 1 && i == successors.size() - 1) {
-          //          ThreadUtils.sleep(5000);
+          ThreadUtils.sleep(5000);
         }
         fireDag(successor, outputRecords, plan, curSinkNumber, anyEventRecord);
       }

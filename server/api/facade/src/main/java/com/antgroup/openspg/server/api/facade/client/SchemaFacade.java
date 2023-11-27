@@ -13,13 +13,16 @@
 
 package com.antgroup.openspg.server.api.facade.client;
 
-import com.antgroup.openspg.server.api.facade.ApiResponse;
-import com.antgroup.openspg.server.api.facade.dto.schema.*;
-import com.antgroup.openspg.server.api.facade.dto.schema.SchemaAlterRequest;
-import com.antgroup.openspg.server.schema.core.model.predicate.Property;
-import com.antgroup.openspg.server.schema.core.model.predicate.Relation;
-import com.antgroup.openspg.server.schema.core.model.type.BaseSPGType;
-import com.antgroup.openspg.server.schema.core.model.type.ProjectSchema;
+import com.antgroup.openspg.api.facade.ApiResponse;
+import com.antgroup.openspg.api.facade.dto.schema.request.BuiltInPropertyRequest;
+import com.antgroup.openspg.api.facade.dto.schema.request.ProjectSchemaRequest;
+import com.antgroup.openspg.api.facade.dto.schema.request.RelationRequest;
+import com.antgroup.openspg.api.facade.dto.schema.request.SPGTypeRequest;
+import com.antgroup.openspg.api.facade.dto.schema.request.SchemaAlterRequest;
+import com.antgroup.openspg.core.spgschema.model.predicate.Property;
+import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
+import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.spgschema.model.type.ProjectSchema;
 import java.util.List;
 
 /**

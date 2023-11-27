@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.model.type;
 
-import com.antgroup.openspg.server.schema.core.model.OntologyId;
+import com.antgroup.openspg.core.spgschema.model.OntologyId;
 
 /** An interface provides some methods to get id information of ontology. */
 public interface WithOntologyId {

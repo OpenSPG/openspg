@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.model;
 
-import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.common.model.exception.OpenSPGException;
 
 public class DslSyntaxError extends OpenSPGException {
 

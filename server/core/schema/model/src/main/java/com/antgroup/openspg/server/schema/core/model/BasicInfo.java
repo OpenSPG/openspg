@@ -13,8 +13,9 @@
 
 package com.antgroup.openspg.server.schema.core.model;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
-import com.antgroup.openspg.server.schema.core.model.identifier.BaseSPGIdentifier;
+import com.antgroup.openspg.common.model.UserInfo;
+import com.antgroup.openspg.common.model.base.BaseValObj;
+import com.antgroup.openspg.core.spgschema.model.identifier.BaseSPGIdentifier;
 import java.util.Objects;
 
 /**
@@ -33,6 +34,9 @@ public class BasicInfo<N extends BaseSPGIdentifier> extends BaseValObj {
 
   /** Description. */
   private String desc;
+
+  /** Creator information. */
+  private UserInfo creator;
 
   public BasicInfo(N name) {
     this(name, null, null);
@@ -54,6 +58,14 @@ public class BasicInfo<N extends BaseSPGIdentifier> extends BaseValObj {
 
   public String getDesc() {
     return desc;
+  }
+
+  public UserInfo getCreator() {
+    return creator;
+  }
+
+  public void setCreator(UserInfo creator) {
+    this.creator = creator;
   }
 
   public void setNameZh(String nameZh) {

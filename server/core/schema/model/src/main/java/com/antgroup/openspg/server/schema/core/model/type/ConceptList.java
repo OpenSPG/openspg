@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.schema.core.model.type;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
-import com.antgroup.openspg.server.schema.core.model.identifier.ConceptIdentifier;
-import com.antgroup.openspg.server.schema.core.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.server.schema.core.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.common.model.base.BaseValObj;
+import com.antgroup.openspg.core.spgschema.model.identifier.ConceptIdentifier;
+import com.antgroup.openspg.core.spgschema.model.semantic.DynamicTaxonomySemantic;
+import com.antgroup.openspg.core.spgschema.model.semantic.LogicalCausationSemantic;
 import java.util.ArrayList;
 import java.util.List;
 
