@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.facade.dto.reasoner.request;
 
-import com.antgroup.openspg.common.model.base.BaseQuery;
+import com.antgroup.openspg.server.common.model.base.BaseQuery;
 
 public class ReasonerJobInstQuery extends BaseQuery {
 

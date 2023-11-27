@@ -13,18 +13,18 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDOExample;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper.ProjectOntologyRelDOMapper;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.convertor.ProjectOntologyRelConvertor;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums.ProjectEntityTypeEnum;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums.YesOrNoEnum;
+import com.antgroup.openspg.server.infra.dao.dataobject.ProjectOntologyRelDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.ProjectOntologyRelDOExample;
+import com.antgroup.openspg.server.infra.dao.mapper.ProjectOntologyRelDOMapper;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.ProjectOntologyRelConvertor;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ProjectEntityTypeEnum;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.YesOrNoEnum;
 import com.antgroup.openspg.cloudext.interfaces.repository.sequence.SequenceRepository;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.core.spgschema.model.alter.AlterStatusEnum;
-import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.core.spgschema.service.type.model.ProjectOntologyRel;
-import com.antgroup.openspg.core.spgschema.service.type.repository.ProjectOntologyRelRepository;
+import com.antgroup.openspg.server.schema.core.service.type.model.ProjectOntologyRel;
+import com.antgroup.openspg.server.schema.core.service.type.repository.ProjectOntologyRelRepository;
+import com.antgroup.openspg.server.core.schema.model.alter.AlterStatusEnum;
+import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;

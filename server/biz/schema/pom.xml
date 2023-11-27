@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -11,5 +10,22 @@
   </parent>
 
   <artifactId>biz-schema</artifactId>
-
+  <dependencies>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>api-facade</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>common-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>core-schema-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+    </dependency>
+  </dependencies>
 </project>

@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.schema.core.service.semantic;
 
-import com.antgroup.openspg.core.spgschema.model.semantic.LogicalRule;
-import com.antgroup.openspg.core.spgschema.model.semantic.RuleCode;
-import com.antgroup.openspg.core.spgschema.service.semantic.model.DslCheckResult;
+import com.antgroup.openspg.server.schema.core.service.semantic.model.DslCheckResult;
+import com.antgroup.openspg.server.core.schema.model.semantic.LogicalRule;
+import com.antgroup.openspg.server.core.schema.model.semantic.RuleCode;
 import java.util.List;
 
 /** Semantic rule domain service, provide save、update、query、delete method of rule. */

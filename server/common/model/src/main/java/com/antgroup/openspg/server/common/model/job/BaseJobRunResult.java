@@ -13,6 +13,6 @@
 
 package com.antgroup.openspg.server.common.model.job;
 
-import com.antgroup.openspg.common.model.base.BaseToString;
+import com.antgroup.openspg.server.common.model.base.BaseToString;
 
 public abstract class BaseJobRunResult extends BaseToString {}

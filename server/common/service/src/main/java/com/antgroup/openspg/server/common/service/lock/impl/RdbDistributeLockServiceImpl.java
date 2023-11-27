@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.common.service.lock.impl;
 
-import com.antgroup.openspg.common.service.lock.DistributeLockService;
-import com.antgroup.openspg.common.service.lock.SysLockRepository;
-import com.antgroup.openspg.common.service.lock.model.SysLock;
+import com.antgroup.openspg.server.common.service.lock.DistributeLockService;
+import com.antgroup.openspg.server.common.service.lock.SysLockRepository;
+import com.antgroup.openspg.server.common.service.lock.model.SysLock;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

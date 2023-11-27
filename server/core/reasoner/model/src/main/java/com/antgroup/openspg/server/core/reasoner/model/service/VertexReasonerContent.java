@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.core.reasoner.model.service;
 
-import com.antgroup.openspg.core.spgreasoner.model.struct.StartingVertex;
+import com.antgroup.openspg.server.core.reasoner.model.struct.StartingVertex;
 import java.util.List;
 
 /**

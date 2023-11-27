@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.api.facade.dto.reasoner.request;
 
-import com.antgroup.openspg.common.model.base.BaseRequest;
-import com.antgroup.openspg.core.spgreasoner.model.service.BaseReasonerContent;
+import com.antgroup.openspg.server.common.model.base.BaseRequest;
+import com.antgroup.openspg.server.core.reasoner.model.service.BaseReasonerContent;
 import java.util.Map;
 
 public class ReasonerDslRunRequest extends BaseRequest {

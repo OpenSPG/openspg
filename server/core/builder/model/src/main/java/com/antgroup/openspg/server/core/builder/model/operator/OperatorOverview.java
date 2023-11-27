@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.core.builder.model.operator;
 
-import com.antgroup.openspg.common.model.LangTypeEnum;
-import com.antgroup.openspg.common.model.base.BaseModel;
-import com.antgroup.openspg.core.spgschema.model.type.OperatorTypeEnum;
+import com.antgroup.openspg.server.common.model.LangTypeEnum;
+import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.server.core.schema.model.type.OperatorTypeEnum;
 
 public class OperatorOverview extends BaseModel {
 

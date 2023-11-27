@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.service.alter.stage;
 
-import com.antgroup.openspg.core.spgschema.service.alter.model.SchemaAlterContext;
+import com.antgroup.openspg.server.schema.core.service.alter.model.SchemaAlterContext;
 
 /**
  * An abstract class in the schema change phase, representing a certain processing in the schema

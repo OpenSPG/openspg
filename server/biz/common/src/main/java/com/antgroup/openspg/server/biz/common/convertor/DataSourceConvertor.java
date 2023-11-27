@@ -13,14 +13,14 @@
 
 package com.antgroup.openspg.server.biz.common.convertor;
 
-import com.antgroup.openspg.api.facade.dto.common.request.DataSourceCreateRequest;
-import com.antgroup.openspg.api.facade.dto.common.request.DataSourceUsageCreateRequest;
-import com.antgroup.openspg.common.model.datasource.DataSource;
-import com.antgroup.openspg.common.model.datasource.DataSourceMountObjectTypeEnum;
-import com.antgroup.openspg.common.model.datasource.DataSourceTypeEnum;
-import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
-import com.antgroup.openspg.common.model.datasource.DataSourceUsageTypeEnum;
-import com.antgroup.openspg.common.model.datasource.connection.ConnectionInfoFactory;
+import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceCreateRequest;
+import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceUsageCreateRequest;
+import com.antgroup.openspg.server.common.model.datasource.DataSource;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceMountObjectTypeEnum;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceTypeEnum;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceUsage;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceUsageTypeEnum;
+import com.antgroup.openspg.server.common.model.datasource.connection.ConnectionInfoFactory;
 import org.apache.commons.lang3.BooleanUtils;
 
 public class DataSourceConvertor {

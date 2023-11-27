@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.infra.dao.mapper;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectOntologyRelDOExample;
+import com.antgroup.openspg.server.infra.dao.dataobject.ProjectOntologyRelDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.ProjectOntologyRelDOExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

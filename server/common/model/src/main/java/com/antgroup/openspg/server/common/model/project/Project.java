@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.common.model.project;
 
-import com.antgroup.openspg.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.base.BaseModel;
 
 /**
  * Namespace unit for department manager self schema, the schema elements such as entityType or

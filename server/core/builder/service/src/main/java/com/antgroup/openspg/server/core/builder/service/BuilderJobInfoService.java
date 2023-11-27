@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.core.builder.service;
 
-import com.antgroup.openspg.api.facade.dto.builder.request.BuilderJobInfoQuery;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInfo;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInfoQuery;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;
 import java.util.List;
 
 public interface BuilderJobInfoService {

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.common.model.datasource;
 
-import com.antgroup.openspg.common.model.base.BaseModel;
-import com.antgroup.openspg.common.model.datasource.connection.BaseConnectionInfo;
+import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.datasource.connection.BaseConnectionInfo;
 
 public class DataSource extends BaseModel {
 

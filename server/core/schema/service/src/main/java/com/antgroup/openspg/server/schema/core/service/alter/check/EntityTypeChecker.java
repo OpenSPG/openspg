@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.schema.core.service.alter.check;
 
-import com.antgroup.openspg.core.spgschema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.core.spgschema.model.type.EntityType;
+import com.antgroup.openspg.server.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.server.core.schema.model.type.EntityType;
 
 public class EntityTypeChecker extends BaseSpgTypeChecker {
 

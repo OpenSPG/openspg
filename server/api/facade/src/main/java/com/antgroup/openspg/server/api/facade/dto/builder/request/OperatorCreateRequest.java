@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.api.facade.dto.builder.request;
 
-import com.antgroup.openspg.common.model.base.BaseRequest;
-import com.antgroup.openspg.core.spgschema.model.type.OperatorTypeEnum;
+import com.antgroup.openspg.server.common.model.base.BaseRequest;
+import com.antgroup.openspg.server.core.schema.model.type.OperatorTypeEnum;
 
 public class OperatorCreateRequest extends BaseRequest {
 

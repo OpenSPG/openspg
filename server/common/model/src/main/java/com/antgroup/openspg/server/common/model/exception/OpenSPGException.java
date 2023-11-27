@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.common.model.exception;
 
-import com.antgroup.openspg.common.model.MessageFormatter;
+import com.antgroup.openspg.server.common.model.MessageFormatter;
 import org.apache.commons.lang3.StringUtils;
 
 /** This should be a superclass of exceptions arising from OpenSPG code. */

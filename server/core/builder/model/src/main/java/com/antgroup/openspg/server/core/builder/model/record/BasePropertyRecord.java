@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.core.builder.model.record;
 
-import com.antgroup.openspg.common.model.base.BaseValObj;
-import com.antgroup.openspg.core.spgschema.model.type.BasicTypeEnum;
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.server.core.schema.model.type.BasicTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeRef;
 
 public abstract class BasePropertyRecord extends BaseValObj {
 

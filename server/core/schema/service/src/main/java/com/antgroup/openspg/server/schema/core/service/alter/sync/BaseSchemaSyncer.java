@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.schema.core.service.alter.sync;
 
-import com.antgroup.openspg.common.service.datasource.DataSourceService;
-import com.antgroup.openspg.core.spgschema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
+import com.antgroup.openspg.server.core.schema.model.SPGSchemaAlterCmd;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** The abstract class of schema writer. */

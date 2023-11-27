@@ -13,20 +13,20 @@
 
 package com.antgroup.openspg.server.schema.core.service.type.model;
 
-import com.antgroup.openspg.core.spgschema.model.BaseOntology;
-import com.antgroup.openspg.core.spgschema.model.BasicInfo;
-import com.antgroup.openspg.core.spgschema.model.OntologyId;
-import com.antgroup.openspg.core.spgschema.model.SchemaExtInfo;
-import com.antgroup.openspg.core.spgschema.model.alter.AlterOperationEnum;
-import com.antgroup.openspg.core.spgschema.model.constraint.BaseConstraintItem;
-import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.core.spgschema.model.type.ConceptLayerConfig;
-import com.antgroup.openspg.core.spgschema.model.type.ConceptTaxonomicConfig;
-import com.antgroup.openspg.core.spgschema.model.type.MultiVersionConfig;
-import com.antgroup.openspg.core.spgschema.model.type.ParentTypeInfo;
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
-import com.antgroup.openspg.core.spgschema.model.type.VisibleScopeEnum;
+import com.antgroup.openspg.server.core.schema.model.BaseOntology;
+import com.antgroup.openspg.server.core.schema.model.BasicInfo;
+import com.antgroup.openspg.server.core.schema.model.OntologyId;
+import com.antgroup.openspg.server.core.schema.model.SchemaExtInfo;
+import com.antgroup.openspg.server.core.schema.model.alter.AlterOperationEnum;
+import com.antgroup.openspg.server.core.schema.model.constraint.BaseConstraintItem;
+import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.server.core.schema.model.type.ConceptLayerConfig;
+import com.antgroup.openspg.server.core.schema.model.type.ConceptTaxonomicConfig;
+import com.antgroup.openspg.server.core.schema.model.type.MultiVersionConfig;
+import com.antgroup.openspg.server.core.schema.model.type.ParentTypeInfo;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeRef;
+import com.antgroup.openspg.server.core.schema.model.type.VisibleScopeEnum;
 import java.util.List;
 
 /** Simple spg type without property types and relation types. */

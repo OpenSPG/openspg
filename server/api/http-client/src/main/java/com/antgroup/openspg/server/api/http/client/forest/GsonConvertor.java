@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.http.client.forest;
 
-import com.antgroup.openspg.api.facade.JSON;
+import com.antgroup.openspg.server.api.facade.JSON;
 import com.dtflys.forest.converter.ConvertOptions;
 import com.dtflys.forest.converter.json.ForestJsonConverter;
 import com.dtflys.forest.http.ForestRequest;

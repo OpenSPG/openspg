@@ -13,6 +13,6 @@
 
 package com.antgroup.openspg.server.core.builder.model.service;
 
-import com.antgroup.openspg.common.model.job.BaseJobRunResult;
+import com.antgroup.openspg.server.common.model.job.BaseJobRunResult;
 
 public abstract class BaseBuilderResult extends BaseJobRunResult {}

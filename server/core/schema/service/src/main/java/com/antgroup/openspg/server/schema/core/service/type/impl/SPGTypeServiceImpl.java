@@ -13,21 +13,21 @@
 
 package com.antgroup.openspg.server.schema.core.service.type.impl;
 
-import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.core.spgschema.model.predicate.Property;
-import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
-import com.antgroup.openspg.core.spgschema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
-import com.antgroup.openspg.core.spgschema.model.type.ProjectSchema;
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-import com.antgroup.openspg.core.spgschema.model.type.WithAlterOperation;
-import com.antgroup.openspg.core.spgschema.service.predicate.PropertyService;
-import com.antgroup.openspg.core.spgschema.service.predicate.RelationService;
-import com.antgroup.openspg.core.spgschema.service.type.SPGTypeService;
-import com.antgroup.openspg.core.spgschema.service.type.convertor.SPGTypeAssemble;
-import com.antgroup.openspg.core.spgschema.service.type.convertor.SPGTypeConvertor;
-import com.antgroup.openspg.core.spgschema.service.type.model.SimpleSPGType;
-import com.antgroup.openspg.core.spgschema.service.type.repository.SPGTypeRepository;
+import com.antgroup.openspg.server.schema.core.service.predicate.PropertyService;
+import com.antgroup.openspg.server.schema.core.service.predicate.RelationService;
+import com.antgroup.openspg.server.schema.core.service.type.SPGTypeService;
+import com.antgroup.openspg.server.schema.core.service.type.convertor.SPGTypeAssemble;
+import com.antgroup.openspg.server.schema.core.service.type.convertor.SPGTypeConvertor;
+import com.antgroup.openspg.server.schema.core.service.type.model.SimpleSPGType;
+import com.antgroup.openspg.server.schema.core.service.type.repository.SPGTypeRepository;
+import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.server.core.schema.model.predicate.Property;
+import com.antgroup.openspg.server.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.server.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.server.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.server.core.schema.model.type.ProjectSchema;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.type.WithAlterOperation;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;

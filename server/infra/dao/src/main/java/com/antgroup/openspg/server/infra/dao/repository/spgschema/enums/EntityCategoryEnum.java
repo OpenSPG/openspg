@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.enums;
 
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeEnum;
 
 public enum EntityCategoryEnum {
   BASIC,

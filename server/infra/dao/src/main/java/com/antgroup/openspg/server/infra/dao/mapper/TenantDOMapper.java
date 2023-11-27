@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.infra.dao.mapper;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.TenantDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.TenantDOExample;
+import com.antgroup.openspg.server.infra.dao.dataobject.TenantDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.TenantDOExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

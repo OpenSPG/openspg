@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.infra.dao.mapper;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SysLockDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SysLockDOExample;
+import com.antgroup.openspg.server.infra.dao.dataobject.SysLockDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.SysLockDOExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

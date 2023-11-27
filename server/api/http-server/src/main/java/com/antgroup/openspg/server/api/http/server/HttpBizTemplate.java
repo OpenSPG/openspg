@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.api.http.server;
 
-import com.antgroup.openspg.api.facade.ApiConstants;
-import com.antgroup.openspg.biz.common.util.BizThreadLocal;
-import com.antgroup.openspg.common.model.exception.IllegalParamsException;
-import com.antgroup.openspg.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.biz.common.util.BizThreadLocal;
 import com.antgroup.openspg.common.util.NetworkAddressUtils;
+import com.antgroup.openspg.server.api.facade.ApiConstants;
+import com.antgroup.openspg.server.common.model.exception.IllegalParamsException;
+import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.core.builder.model.record;
 
-import com.antgroup.openspg.core.spgschema.model.type.WithSPGTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.type.WithSPGTypeEnum;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

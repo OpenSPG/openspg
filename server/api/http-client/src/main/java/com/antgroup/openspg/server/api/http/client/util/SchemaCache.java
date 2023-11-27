@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.api.http.client.util;
 
-import com.antgroup.openspg.api.facade.ApiResponse;
-import com.antgroup.openspg.core.spgschema.model.SchemaException;
-import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
-import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
-import com.antgroup.openspg.core.spgschema.model.type.ConceptList;
-import com.antgroup.openspg.core.spgschema.model.type.ProjectSchema;
+import com.antgroup.openspg.server.api.facade.ApiResponse;
+import com.antgroup.openspg.server.core.schema.model.SchemaException;
+import com.antgroup.openspg.server.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.server.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.server.core.schema.model.type.ConceptList;
+import com.antgroup.openspg.server.core.schema.model.type.ProjectSchema;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import java.util.concurrent.ExecutionException;

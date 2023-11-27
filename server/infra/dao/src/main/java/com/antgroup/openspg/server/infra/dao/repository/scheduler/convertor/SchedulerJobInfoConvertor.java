@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.scheduler.convertor;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.JobInfoDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.JobInfoDO;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInfo;
-import com.antgroup.openspg.common.model.job.JobInfoStateEnum;
+import com.antgroup.openspg.server.common.model.job.JobInfoStateEnum;
 
 public class SchedulerJobInfoConvertor {
 

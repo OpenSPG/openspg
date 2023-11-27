@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.infra.dao.mapper;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SemanticDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SemanticDOExample;
+import com.antgroup.openspg.server.infra.dao.dataobject.SemanticDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.SemanticDOExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

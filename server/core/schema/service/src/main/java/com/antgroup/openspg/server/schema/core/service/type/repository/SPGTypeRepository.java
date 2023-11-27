@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.service.type.repository;
 
-import com.antgroup.openspg.core.spgschema.service.type.model.SimpleSPGType;
+import com.antgroup.openspg.server.schema.core.service.type.model.SimpleSPGType;
 import java.util.List;
 
 /**

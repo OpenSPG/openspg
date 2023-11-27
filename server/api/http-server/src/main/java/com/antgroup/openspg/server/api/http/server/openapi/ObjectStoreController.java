@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
-import com.antgroup.openspg.api.facade.dto.common.request.ObjectStoreRequest;
-import com.antgroup.openspg.api.facade.dto.common.response.ObjectStoreResponse;
-import com.antgroup.openspg.api.http.server.HttpBizCallback;
-import com.antgroup.openspg.api.http.server.HttpBizTemplate;
-import com.antgroup.openspg.biz.common.ObjectStoreManager;
+import com.antgroup.openspg.server.biz.common.ObjectStoreManager;
+import com.antgroup.openspg.server.api.facade.dto.common.request.ObjectStoreRequest;
+import com.antgroup.openspg.server.api.facade.dto.common.response.ObjectStoreResponse;
+import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
+import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import java.io.IOException;
 import java.io.InputStream;
 import org.springframework.beans.factory.annotation.Autowired;

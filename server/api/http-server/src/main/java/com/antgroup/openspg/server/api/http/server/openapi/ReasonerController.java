@@ -13,15 +13,15 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
-import com.antgroup.openspg.api.facade.dto.reasoner.request.ReasonerDslRunRequest;
-import com.antgroup.openspg.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
-import com.antgroup.openspg.api.facade.dto.reasoner.request.ReasonerJobSubmitRequest;
-import com.antgroup.openspg.api.http.server.BaseController;
-import com.antgroup.openspg.api.http.server.HttpBizCallback;
-import com.antgroup.openspg.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.biz.spgreasoner.ReasonerManager;
-import com.antgroup.openspg.core.spgreasoner.model.service.BaseReasonerReceipt;
-import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInst;
+import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerDslRunRequest;
+import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
+import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobSubmitRequest;
+import com.antgroup.openspg.server.api.http.server.BaseController;
+import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
+import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
+import com.antgroup.openspg.server.core.reasoner.model.service.BaseReasonerReceipt;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInst;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

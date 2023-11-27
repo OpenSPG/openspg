@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.test.sofaboot;
 
-import com.antgroup.openspg.api.http.client.util.ConnectionInfo;
-import com.antgroup.openspg.api.http.client.util.HttpClientBootstrap;
+import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo;
+import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;

@@ -14,7 +14,7 @@
 package com.antgroup.openspg.server.schema.core.service.alter.sync;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClient;
-import com.antgroup.openspg.core.spgschema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.server.core.schema.model.SPGSchemaAlterCmd;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

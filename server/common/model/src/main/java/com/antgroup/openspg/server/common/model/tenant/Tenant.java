@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.common.model.tenant;
 
-import com.antgroup.openspg.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.base.BaseModel;
 
 /** Tenant usually stands for a department, or a team, data in different tenant is isolated. */
 public class Tenant extends BaseModel {

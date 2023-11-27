@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.facade;
 
-import com.antgroup.openspg.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 
 public class ApiException extends OpenSPGException {
 

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.core.builder.model.operator;
 
-import com.antgroup.openspg.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.base.BaseModel;
 
 public class OperatorVersion extends BaseModel {
 

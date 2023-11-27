@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.core.reasoner.model.service;
 
-import com.antgroup.openspg.common.model.base.BaseModel;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import java.util.Date;
 
 public class ReasonerJobInst extends BaseModel {

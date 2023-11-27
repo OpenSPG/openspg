@@ -13,16 +13,16 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
-import com.antgroup.openspg.api.facade.dto.builder.request.OperatorCreateRequest;
-import com.antgroup.openspg.api.facade.dto.builder.request.OperatorVersionRequest;
-import com.antgroup.openspg.api.facade.dto.builder.response.OperatorCreateResponse;
-import com.antgroup.openspg.api.facade.dto.builder.response.OperatorVersionResponse;
-import com.antgroup.openspg.api.http.server.BaseController;
-import com.antgroup.openspg.api.http.server.HttpBizCallback;
-import com.antgroup.openspg.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.biz.spgbuilder.OperatorManager;
-import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorOverview;
-import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorVersion;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.OperatorCreateRequest;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.OperatorVersionRequest;
+import com.antgroup.openspg.server.api.facade.dto.builder.response.OperatorCreateResponse;
+import com.antgroup.openspg.server.api.facade.dto.builder.response.OperatorVersionResponse;
+import com.antgroup.openspg.server.api.http.server.BaseController;
+import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
+import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
+import com.antgroup.openspg.server.core.builder.model.operator.OperatorOverview;
+import com.antgroup.openspg.server.core.builder.model.operator.OperatorVersion;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;

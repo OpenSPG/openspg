@@ -13,19 +13,19 @@
 
 package com.antgroup.openspg.test.kgschema
 
-import com.antgroup.openspg.api.facade.ApiConstants
+import com.antgroup.openspg.server.api.facade.ApiConstants
 import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphConstants
 import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClient
 import com.antgroup.openspg.cloudext.interfaces.graphstore.impl.DefaultLPGTypeNameConvertor
-import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo
-import com.antgroup.openspg.core.spgschema.model.BasicInfo
-import com.antgroup.openspg.core.spgschema.model.SPGSchema
-import com.antgroup.openspg.core.spgschema.model.SPGSchemaAlterCmd
-import com.antgroup.openspg.core.spgschema.model.alter.AlterOperationEnum
-import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier
-import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier
-import com.antgroup.openspg.core.spgschema.model.predicate.*
-import com.antgroup.openspg.core.spgschema.model.type.*
+import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo
+import com.antgroup.openspg.server.core.schema.model.BasicInfo
+import com.antgroup.openspg.server.core.schema.model.SPGSchema
+import com.antgroup.openspg.server.core.schema.model.SPGSchemaAlterCmd
+import com.antgroup.openspg.server.core.schema.model.alter.AlterOperationEnum
+import com.antgroup.openspg.server.core.schema.model.identifier.PredicateIdentifier
+import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier
+import com.antgroup.openspg.server.core.schema.model.predicate.*
+import com.antgroup.openspg.server.core.schema.model.type.*
 import com.antgroup.tugraph.TuGraphDbRpcException
 import com.google.common.collect.Lists
 import com.google.common.collect.Sets

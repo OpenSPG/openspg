@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.core.builder.model.service;
 
-import com.antgroup.openspg.common.model.base.BaseModel;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import java.util.Date;
 
 public class BuilderJobInst extends BaseModel {

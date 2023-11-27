@@ -13,15 +13,15 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyDOWithBLOBs;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyParentRelDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.config.Constants;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.config.OntologyEntityName;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums.ValidStatusEnum;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums.YesOrNoEnum;
-import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.core.spgschema.model.type.ParentTypeInfo;
+import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDOWithBLOBs;
+import com.antgroup.openspg.server.infra.dao.dataobject.OntologyParentRelDO;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.config.Constants;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.config.OntologyEntityName;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ValidStatusEnum;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.YesOrNoEnum;
+import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.server.core.schema.model.type.ParentTypeInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

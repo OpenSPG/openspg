@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.http.server;
 
-import com.antgroup.openspg.api.facade.JSON;
+import com.antgroup.openspg.server.api.facade.JSON;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;

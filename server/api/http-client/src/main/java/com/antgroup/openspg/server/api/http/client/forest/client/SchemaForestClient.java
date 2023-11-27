@@ -13,16 +13,16 @@
 
 package com.antgroup.openspg.server.api.http.client.forest.client;
 
-import com.antgroup.openspg.api.facade.dto.schema.request.BuiltInPropertyRequest;
-import com.antgroup.openspg.api.facade.dto.schema.request.ProjectSchemaRequest;
-import com.antgroup.openspg.api.facade.dto.schema.request.RelationRequest;
-import com.antgroup.openspg.api.facade.dto.schema.request.SPGTypeRequest;
-import com.antgroup.openspg.api.facade.dto.schema.request.SchemaAlterRequest;
-import com.antgroup.openspg.api.http.client.util.HttpClientConstants;
-import com.antgroup.openspg.core.spgschema.model.predicate.Property;
-import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
-import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
-import com.antgroup.openspg.core.spgschema.model.type.ProjectSchema;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.BuiltInPropertyRequest;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.ProjectSchemaRequest;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.RelationRequest;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SPGTypeRequest;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SchemaAlterRequest;
+import com.antgroup.openspg.server.api.http.client.util.HttpClientConstants;
+import com.antgroup.openspg.server.core.schema.model.predicate.Property;
+import com.antgroup.openspg.server.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.server.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.server.core.schema.model.type.ProjectSchema;
 import com.dtflys.forest.annotation.Address;
 import com.dtflys.forest.annotation.BodyType;
 import com.dtflys.forest.annotation.Get;

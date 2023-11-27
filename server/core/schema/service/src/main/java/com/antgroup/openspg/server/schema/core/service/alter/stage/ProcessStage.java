@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.schema.core.service.alter.stage;
 
-import com.antgroup.openspg.core.spgschema.model.alter.AlterOperationEnum;
-import com.antgroup.openspg.core.spgschema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.core.spgschema.service.alter.model.SchemaAlterContext;
-import com.antgroup.openspg.core.spgschema.service.alter.stage.handler.OntologyIdHandler;
-import com.antgroup.openspg.core.spgschema.service.type.SPGTypeService;
+import com.antgroup.openspg.server.schema.core.service.alter.model.SchemaAlterContext;
+import com.antgroup.openspg.server.schema.core.service.alter.stage.handler.OntologyIdHandler;
+import com.antgroup.openspg.server.schema.core.service.type.SPGTypeService;
+import com.antgroup.openspg.server.core.schema.model.alter.AlterOperationEnum;
+import com.antgroup.openspg.server.core.schema.model.type.BaseAdvancedType;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

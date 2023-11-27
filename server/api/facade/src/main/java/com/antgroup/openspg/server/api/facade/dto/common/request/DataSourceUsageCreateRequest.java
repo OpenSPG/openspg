@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.facade.dto.common.request;
 
-import com.antgroup.openspg.common.model.base.BaseRequest;
+import com.antgroup.openspg.server.common.model.base.BaseRequest;
 
 public class DataSourceUsageCreateRequest extends BaseRequest {
 

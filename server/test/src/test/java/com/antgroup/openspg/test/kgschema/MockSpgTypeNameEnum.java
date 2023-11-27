@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.test.kgschema;
 
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeEnum;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.common.model.exception;
 
-import com.antgroup.openspg.common.model.datasource.connection.BaseConnectionInfo;
+import com.antgroup.openspg.server.common.model.datasource.connection.BaseConnectionInfo;
 
 public class CloudExtException extends OpenSPGException {
 

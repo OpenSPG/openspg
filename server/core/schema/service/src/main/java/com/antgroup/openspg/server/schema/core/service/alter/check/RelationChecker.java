@@ -15,9 +15,9 @@ package com.antgroup.openspg.server.schema.core.service.alter.check;
 
 import com.antgroup.kg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
-import com.antgroup.openspg.core.spgschema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.server.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.server.core.schema.model.type.BaseAdvancedType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

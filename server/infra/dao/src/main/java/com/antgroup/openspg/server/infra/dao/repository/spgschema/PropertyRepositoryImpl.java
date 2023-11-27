@@ -13,20 +13,20 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDOExample;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper.OntologyPropertyDOMapper;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.convertor.SimplePropertyConvertor;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums.MapTypeEnum;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums.PropertyCategoryEnum;
+import com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDOExample;
+import com.antgroup.openspg.server.infra.dao.mapper.OntologyPropertyDOMapper;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.SimplePropertyConvertor;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.MapTypeEnum;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.PropertyCategoryEnum;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.core.spgschema.model.alter.AlterStatusEnum;
-import com.antgroup.openspg.core.spgschema.model.predicate.PropertyRef;
-import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.core.spgschema.service.predicate.model.SimpleProperty;
-import com.antgroup.openspg.core.spgschema.service.predicate.repository.PropertyRepository;
-import com.antgroup.openspg.core.spgschema.service.type.model.SimpleSPGType;
-import com.antgroup.openspg.core.spgschema.service.type.repository.SPGTypeRepository;
+import com.antgroup.openspg.server.schema.core.service.predicate.model.SimpleProperty;
+import com.antgroup.openspg.server.schema.core.service.predicate.repository.PropertyRepository;
+import com.antgroup.openspg.server.schema.core.service.type.model.SimpleSPGType;
+import com.antgroup.openspg.server.schema.core.service.type.repository.SPGTypeRepository;
+import com.antgroup.openspg.server.core.schema.model.alter.AlterStatusEnum;
+import com.antgroup.openspg.server.core.schema.model.predicate.PropertyRef;
+import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;

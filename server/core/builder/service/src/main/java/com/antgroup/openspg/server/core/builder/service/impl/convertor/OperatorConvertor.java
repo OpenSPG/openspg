@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.core.builder.service.impl.convertor;
 
-import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorOverview;
-import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorVersion;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.OperatorConfig;
+import com.antgroup.openspg.server.core.builder.model.operator.OperatorOverview;
+import com.antgroup.openspg.server.core.builder.model.operator.OperatorVersion;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.OperatorConfig;
 
 public class OperatorConvertor {
 

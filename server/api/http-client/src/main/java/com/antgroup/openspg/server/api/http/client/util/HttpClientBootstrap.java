@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.http.client.util;
 
-import com.antgroup.openspg.api.http.client.forest.GsonConvertor;
+import com.antgroup.openspg.server.api.http.client.forest.GsonConvertor;
 import com.dtflys.forest.Forest;
 import com.dtflys.forest.config.ForestConfiguration;
 

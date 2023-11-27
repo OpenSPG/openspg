@@ -17,12 +17,12 @@
  */
 package com.antgroup.openspg.server.schema.core.service.alter.check;
 
-import com.antgroup.openspg.core.spgschema.model.SchemaConstants;
-import com.antgroup.openspg.core.spgschema.model.constraint.ConstraintTypeEnum;
-import com.antgroup.openspg.core.spgschema.model.predicate.Property;
-import com.antgroup.openspg.core.spgschema.model.predicate.SubProperty;
-import com.antgroup.openspg.core.spgschema.model.type.BasicType;
-import com.antgroup.openspg.core.spgschema.model.type.BasicType.TextBasicType;
+import com.antgroup.openspg.server.core.schema.model.SchemaConstants;
+import com.antgroup.openspg.server.core.schema.model.constraint.ConstraintTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.predicate.Property;
+import com.antgroup.openspg.server.core.schema.model.predicate.SubProperty;
+import com.antgroup.openspg.server.core.schema.model.type.BasicType;
+import com.antgroup.openspg.server.core.schema.model.type.BasicType.TextBasicType;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

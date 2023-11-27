@@ -13,13 +13,13 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SemanticDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.SemanticDO;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.core.spgschema.model.semantic.RuleCode;
-import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.core.spgschema.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.schema.core.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.core.schema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.server.core.schema.model.semantic.RuleCode;
+import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
 
 public class SimpleSemanticConvertor {
 

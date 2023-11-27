@@ -13,17 +13,17 @@
 
 package com.antgroup.openspg.server.biz.builder.impl;
 
-import com.antgroup.openspg.api.facade.dto.builder.request.BuilderJobInstQuery;
-import com.antgroup.openspg.api.facade.dto.builder.request.BuilderJobSubmitRequest;
 import com.antgroup.openspg.biz.spgbuilder.BuilderManager;
-import com.antgroup.openspg.common.model.job.JobInfoStateEnum;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInfo;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInst;
-import com.antgroup.openspg.core.spgbuilder.model.service.JobBuilderReceipt;
 import com.antgroup.openspg.core.spgbuilder.service.BuilderJobInfoService;
 import com.antgroup.openspg.core.spgbuilder.service.BuilderJobInstService;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInstQuery;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobSubmitRequest;
+import com.antgroup.openspg.server.common.model.job.JobInfoStateEnum;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
+import com.antgroup.openspg.server.core.builder.model.service.JobBuilderReceipt;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

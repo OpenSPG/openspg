@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.core.builder.model.record;
 
-import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
-import com.antgroup.openspg.core.spgschema.model.predicate.SubProperty;
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.server.core.schema.model.predicate.SubProperty;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeEnum;
 import java.util.Collections;
 import java.util.List;
 

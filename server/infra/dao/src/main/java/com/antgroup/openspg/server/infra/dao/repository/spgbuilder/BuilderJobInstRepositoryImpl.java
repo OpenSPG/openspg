@@ -13,16 +13,16 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgbuilder;
 
-import com.antgroup.openspg.api.facade.JSON;
-import com.antgroup.openspg.api.facade.dto.builder.request.BuilderJobInstQuery;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SPGJobInstDOExample;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SPGJobInstDOWithBLOBs;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper.SPGJobInstDOMapper;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgbuilder.convertor.BuilderJobInstConvertor;
+import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInstDOExample;
+import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInstDOWithBLOBs;
+import com.antgroup.openspg.server.infra.dao.mapper.SPGJobInstDOMapper;
+import com.antgroup.openspg.server.infra.dao.repository.spgbuilder.convertor.BuilderJobInstConvertor;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInst;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderStatusWithProgress;
 import com.antgroup.openspg.core.spgbuilder.service.repo.BuilderJobInstRepository;
+import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInstQuery;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderStatusWithProgress;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;

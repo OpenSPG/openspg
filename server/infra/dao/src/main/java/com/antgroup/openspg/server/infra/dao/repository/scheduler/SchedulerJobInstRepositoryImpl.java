@@ -15,13 +15,13 @@ package com.antgroup.openspg.server.infra.dao.repository.scheduler;
 
 import com.antgroup.openspg.cloudext.impl.jobscheduler.local.cmd.SchedulerJobInstQuery;
 import com.antgroup.openspg.cloudext.impl.jobscheduler.local.repo.SchedulerJobInstRepository;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.JobInstDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.JobInstDOExample;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper.JobInstDOMapper;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.scheduler.convertor.SchedulerJobInstConvertor;
+import com.antgroup.openspg.server.infra.dao.dataobject.JobInstDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.JobInstDOExample;
+import com.antgroup.openspg.server.infra.dao.mapper.JobInstDOMapper;
+import com.antgroup.openspg.server.infra.dao.repository.scheduler.convertor.SchedulerJobInstConvertor;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.common.util.CollectionsUtils;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

@@ -14,7 +14,7 @@
 package com.antgroup.openspg.server.infra.dao;
 
 import com.antgroup.openspg.cloudext.interfaces.repository.RepositoryClient;
-import com.antgroup.openspg.common.model.datasource.connection.BaseConnectionInfo;
+import com.antgroup.openspg.server.common.model.datasource.connection.BaseConnectionInfo;
 
 public class JdbcRepositoryClient implements RepositoryClient {
 

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.core.builder.model.pipeline;
 
-import com.antgroup.openspg.common.model.base.BaseValObj;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.config.BaseNodeConfig;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.server.core.builder.model.pipeline.config.BaseNodeConfig;
 
 /**
  * The node used to assemble the builder pipeline, which include the node ID, name, and node

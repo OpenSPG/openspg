@@ -13,19 +13,19 @@
 
 package com.antgroup.openspg.server.schema.core.service.predicate.impl;
 
-import com.antgroup.openspg.core.spgschema.model.constraint.Constraint;
-import com.antgroup.openspg.core.spgschema.model.predicate.PropertyRef;
-import com.antgroup.openspg.core.spgschema.model.predicate.SubProperty;
-import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.core.spgschema.service.predicate.SubPropertyService;
-import com.antgroup.openspg.core.spgschema.service.predicate.convertor.PredicateAssemble;
-import com.antgroup.openspg.core.spgschema.service.predicate.convertor.PredicateConvertor;
-import com.antgroup.openspg.core.spgschema.service.predicate.model.SimpleSubProperty;
-import com.antgroup.openspg.core.spgschema.service.predicate.repository.ConstraintRepository;
-import com.antgroup.openspg.core.spgschema.service.predicate.repository.PropertyRepository;
-import com.antgroup.openspg.core.spgschema.service.predicate.repository.SubPropertyRepository;
-import com.antgroup.openspg.core.spgschema.service.type.model.SimpleSPGType;
-import com.antgroup.openspg.core.spgschema.service.type.repository.SPGTypeRepository;
+import com.antgroup.openspg.server.schema.core.service.predicate.SubPropertyService;
+import com.antgroup.openspg.server.schema.core.service.predicate.convertor.PredicateAssemble;
+import com.antgroup.openspg.server.schema.core.service.predicate.convertor.PredicateConvertor;
+import com.antgroup.openspg.server.schema.core.service.predicate.model.SimpleSubProperty;
+import com.antgroup.openspg.server.schema.core.service.predicate.repository.ConstraintRepository;
+import com.antgroup.openspg.server.schema.core.service.predicate.repository.PropertyRepository;
+import com.antgroup.openspg.server.schema.core.service.predicate.repository.SubPropertyRepository;
+import com.antgroup.openspg.server.schema.core.service.type.model.SimpleSPGType;
+import com.antgroup.openspg.server.schema.core.service.type.repository.SPGTypeRepository;
+import com.antgroup.openspg.server.core.schema.model.constraint.Constraint;
+import com.antgroup.openspg.server.core.schema.model.predicate.PropertyRef;
+import com.antgroup.openspg.server.core.schema.model.predicate.SubProperty;
+import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;

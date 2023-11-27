@@ -13,14 +13,14 @@
 
 package com.antgroup.openspg.server.core.reasoner.service.impl;
 
-import com.antgroup.openspg.api.facade.dto.reasoner.request.ReasonerJobInfoQuery;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.JobSchedulerClient;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInfo;
-import com.antgroup.openspg.common.service.datasource.DataSourceService;
-import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInfo;
+import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
 import com.antgroup.openspg.core.spgreasoner.service.ReasonerJobInfoService;
 import com.antgroup.openspg.core.spgreasoner.service.repo.ReasonerJobInfoRepository;
+import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInfoQuery;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInfo;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
-import com.antgroup.openspg.api.http.server.BaseController;
+import com.antgroup.openspg.server.api.http.server.BaseController;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

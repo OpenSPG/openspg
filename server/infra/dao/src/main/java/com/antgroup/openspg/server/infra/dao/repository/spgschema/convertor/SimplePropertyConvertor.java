@@ -13,26 +13,26 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor;
 
-import com.antgroup.openspg.api.facade.JSON;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums.MapTypeEnum;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums.PropertyCategoryEnum;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.enums.ValidStatusEnum;
+import com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDO;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.MapTypeEnum;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.PropertyCategoryEnum;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ValidStatusEnum;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.core.spgschema.model.BasicInfo;
-import com.antgroup.openspg.core.spgschema.model.OntologyId;
-import com.antgroup.openspg.core.spgschema.model.SchemaConstants;
-import com.antgroup.openspg.core.spgschema.model.SchemaExtInfo;
-import com.antgroup.openspg.core.spgschema.model.alter.AlterStatusEnum;
-import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.core.spgschema.model.predicate.EncryptTypeEnum;
-import com.antgroup.openspg.core.spgschema.model.predicate.MountedConceptConfig;
-import com.antgroup.openspg.core.spgschema.model.predicate.PropertyGroupEnum;
-import com.antgroup.openspg.core.spgschema.model.semantic.RuleCode;
-import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.core.spgschema.model.type.MultiVersionConfig;
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-import com.antgroup.openspg.core.spgschema.service.predicate.model.SimpleProperty;
+import com.antgroup.openspg.server.schema.core.service.predicate.model.SimpleProperty;
+import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.core.schema.model.BasicInfo;
+import com.antgroup.openspg.server.core.schema.model.OntologyId;
+import com.antgroup.openspg.server.core.schema.model.SchemaConstants;
+import com.antgroup.openspg.server.core.schema.model.SchemaExtInfo;
+import com.antgroup.openspg.server.core.schema.model.alter.AlterStatusEnum;
+import com.antgroup.openspg.server.core.schema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.server.core.schema.model.predicate.EncryptTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.predicate.MountedConceptConfig;
+import com.antgroup.openspg.server.core.schema.model.predicate.PropertyGroupEnum;
+import com.antgroup.openspg.server.core.schema.model.semantic.RuleCode;
+import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.server.core.schema.model.type.MultiVersionConfig;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeEnum;
 import java.util.Date;
 
 public class SimplePropertyConvertor {

@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.server.core.reasoner.service.impl;
 
-import com.antgroup.openspg.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.ComputingClient;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobCanSubmitQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobProcessQuery;
@@ -21,18 +20,19 @@ import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobSubmitC
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.JobSchedulerClient;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
-import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
-import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
-import com.antgroup.openspg.common.service.config.AppEnvConfig;
-import com.antgroup.openspg.common.service.datasource.DataSourceService;
-import com.antgroup.openspg.core.spgreasoner.model.service.FailureReasonerResult;
-import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInfo;
-import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInst;
-import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerStatusWithProgress;
+import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
+import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
 import com.antgroup.openspg.core.spgreasoner.service.ReasonerJobInfoService;
 import com.antgroup.openspg.core.spgreasoner.service.ReasonerJobInstService;
 import com.antgroup.openspg.core.spgreasoner.service.repo.ReasonerJobInstRepository;
+import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
+import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
+import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.core.reasoner.model.service.FailureReasonerResult;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInfo;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInst;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerStatusWithProgress;
 import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;

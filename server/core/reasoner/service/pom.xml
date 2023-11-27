@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -11,6 +10,33 @@
   </parent>
 
   <artifactId>core-reasoner-service</artifactId>
-
-
+  <dependencies>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>api-facade</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>core-reasoner-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.kg.reasoner</groupId>
+      <artifactId>local</artifactId>
+      <version>${kgreasoner-version}</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../../../../reasoner/spgreasoner-local-0.0.1.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-compiler</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-reflect</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+    </dependency>
+  </dependencies>
 </project>

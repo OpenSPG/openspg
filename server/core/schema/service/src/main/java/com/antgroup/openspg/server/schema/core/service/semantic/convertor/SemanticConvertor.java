@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.schema.core.service.semantic.convertor;
 
-import com.antgroup.openspg.core.spgschema.model.SchemaException;
-import com.antgroup.openspg.core.spgschema.model.predicate.PropertyRef;
-import com.antgroup.openspg.core.spgschema.model.semantic.PredicateSemantic;
-import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.core.spgschema.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.schema.core.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.core.schema.model.SchemaException;
+import com.antgroup.openspg.server.core.schema.model.predicate.PropertyRef;
+import com.antgroup.openspg.server.core.schema.model.semantic.PredicateSemantic;
+import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

@@ -13,13 +13,13 @@
 
 package com.antgroup.openspg.server.api.facade.client;
 
-import com.antgroup.openspg.api.facade.ApiResponse;
-import com.antgroup.openspg.api.facade.dto.schema.request.ConceptRequest;
-import com.antgroup.openspg.core.spgschema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.spgschema.model.semantic.request.DefineLogicalCausationRequest;
-import com.antgroup.openspg.core.spgschema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.spgschema.model.semantic.request.RemoveLogicalCausationRequest;
-import com.antgroup.openspg.core.spgschema.model.type.ConceptList;
+import com.antgroup.openspg.server.api.facade.ApiResponse;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
+import com.antgroup.openspg.server.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
+import com.antgroup.openspg.server.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.server.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
+import com.antgroup.openspg.server.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.server.core.schema.model.type.ConceptList;
 
 /**
  * The interface to query concepts that defined under a concept type, also provides method to define

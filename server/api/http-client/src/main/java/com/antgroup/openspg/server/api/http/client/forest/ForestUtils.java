@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.api.http.client.forest;
 
-import com.antgroup.openspg.api.facade.ApiConstants;
-import com.antgroup.openspg.api.facade.ApiException;
-import com.antgroup.openspg.api.facade.ApiResponse;
+import com.antgroup.openspg.server.api.facade.ApiConstants;
+import com.antgroup.openspg.server.api.facade.ApiException;
+import com.antgroup.openspg.server.api.facade.ApiResponse;
 import com.dtflys.forest.Forest;
 import com.dtflys.forest.http.ForestResponse;
 import java.util.function.Function;

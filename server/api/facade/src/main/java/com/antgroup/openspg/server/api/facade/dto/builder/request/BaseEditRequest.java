@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.api.facade.dto.builder.request;
 
-import com.antgroup.openspg.common.model.base.BaseRequest;
-import com.antgroup.openspg.core.spgbuilder.model.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordTypeEnum;
+import com.antgroup.openspg.server.common.model.base.BaseRequest;
+import com.antgroup.openspg.server.core.builder.model.record.RecordAlterOperationEnum;
+import com.antgroup.openspg.server.core.builder.model.record.SPGRecordTypeEnum;
 
 public class BaseEditRequest extends BaseRequest {
 

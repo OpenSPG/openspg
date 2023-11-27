@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.schema.core.service.semantic.repository;
 
-import com.antgroup.openspg.core.spgschema.model.semantic.LogicalCausationSemantic;
-import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.core.spgschema.service.semantic.model.LogicalCausationQuery;
-import com.antgroup.openspg.core.spgschema.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.schema.core.service.semantic.model.LogicalCausationQuery;
+import com.antgroup.openspg.server.schema.core.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.core.schema.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
 import java.util.List;
 
 /**

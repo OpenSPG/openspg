@@ -13,15 +13,15 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.common;
 
-import com.antgroup.openspg.api.facade.dto.common.request.ProjectQueryRequest;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.ProjectDOExample;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper.ProjectDOMapper;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.common.convertor.ProjectConvertor;
-import com.antgroup.openspg.common.model.exception.ProjectException;
-import com.antgroup.openspg.common.model.project.Project;
-import com.antgroup.openspg.common.service.project.ProjectRepository;
 import com.antgroup.openspg.common.util.CollectionsUtils;
+import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
+import com.antgroup.openspg.server.common.model.exception.ProjectException;
+import com.antgroup.openspg.server.common.model.project.Project;
+import com.antgroup.openspg.server.common.service.project.ProjectRepository;
+import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDOExample;
+import com.antgroup.openspg.server.infra.dao.mapper.ProjectDOMapper;
+import com.antgroup.openspg.server.infra.dao.repository.common.convertor.ProjectConvertor;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

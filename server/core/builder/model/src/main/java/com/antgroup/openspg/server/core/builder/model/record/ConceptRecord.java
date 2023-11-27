@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.core.builder.model.record;
 
-import com.antgroup.openspg.core.spgschema.model.identifier.ConceptIdentifier;
-import com.antgroup.openspg.core.spgschema.model.predicate.Property;
-import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
-import com.antgroup.openspg.core.spgschema.model.type.ConceptType;
+import com.antgroup.openspg.server.core.schema.model.identifier.ConceptIdentifier;
+import com.antgroup.openspg.server.core.schema.model.predicate.Property;
+import com.antgroup.openspg.server.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.server.core.schema.model.type.ConceptType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

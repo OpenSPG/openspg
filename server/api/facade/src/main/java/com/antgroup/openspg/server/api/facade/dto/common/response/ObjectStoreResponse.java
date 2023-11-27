@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.facade.dto.common.response;
 
-import com.antgroup.openspg.common.model.base.BaseResponse;
+import com.antgroup.openspg.server.common.model.base.BaseResponse;
 
 public class ObjectStoreResponse extends BaseResponse {
 

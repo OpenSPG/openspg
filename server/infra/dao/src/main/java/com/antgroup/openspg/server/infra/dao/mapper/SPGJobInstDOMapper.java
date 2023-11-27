@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.infra.dao.mapper;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SPGJobInstDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SPGJobInstDOExample;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SPGJobInstDOWithBLOBs;
+import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInstDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInstDOExample;
+import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInstDOWithBLOBs;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.infra.dao.mapper;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OperatorVersionDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OperatorVersionDOExample;
+import com.antgroup.openspg.server.infra.dao.dataobject.OperatorVersionDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.OperatorVersionDOExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

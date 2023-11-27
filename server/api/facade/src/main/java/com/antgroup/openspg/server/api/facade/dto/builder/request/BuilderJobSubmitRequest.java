@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.api.facade.dto.builder.request;
 
-import com.antgroup.openspg.common.model.base.BaseRequest;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.Pipeline;
+import com.antgroup.openspg.server.common.model.base.BaseRequest;
+import com.antgroup.openspg.server.core.builder.model.pipeline.Pipeline;
 import java.util.Map;
 
 public class BuilderJobSubmitRequest extends BaseRequest {

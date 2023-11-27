@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.common.service.lock;
 
-import com.antgroup.openspg.common.service.lock.model.SysLock;
+import com.antgroup.openspg.server.common.service.lock.model.SysLock;
 import java.util.List;
 
 public interface SysLockRepository {

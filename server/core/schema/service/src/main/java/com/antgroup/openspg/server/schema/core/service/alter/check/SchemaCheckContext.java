@@ -13,21 +13,21 @@
 
 package com.antgroup.openspg.server.schema.core.service.alter.check;
 
-import com.antgroup.openspg.common.model.base.BaseToString;
-import com.antgroup.openspg.common.model.project.Project;
-import com.antgroup.openspg.core.spgschema.model.SchemaConstants;
-import com.antgroup.openspg.core.spgschema.model.identifier.SPGTripleIdentifier;
-import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.core.spgschema.model.predicate.Property;
-import com.antgroup.openspg.core.spgschema.model.predicate.Relation;
-import com.antgroup.openspg.core.spgschema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.core.spgschema.model.type.BaseSPGType;
-import com.antgroup.openspg.core.spgschema.model.type.ConceptType;
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeEnum;
-import com.antgroup.openspg.core.spgschema.model.type.SPGTypeRef;
-import com.antgroup.openspg.core.spgschema.model.type.StandardType;
-import com.antgroup.openspg.core.spgschema.model.type.WithBasicInfo;
-import com.antgroup.openspg.core.spgschema.service.util.PropertyUtils;
+import com.antgroup.openspg.server.schema.core.service.util.PropertyUtils;
+import com.antgroup.openspg.server.common.model.base.BaseToString;
+import com.antgroup.openspg.server.common.model.project.Project;
+import com.antgroup.openspg.server.core.schema.model.SchemaConstants;
+import com.antgroup.openspg.server.core.schema.model.identifier.SPGTripleIdentifier;
+import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.server.core.schema.model.predicate.Property;
+import com.antgroup.openspg.server.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.server.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.server.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.server.core.schema.model.type.ConceptType;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.server.core.schema.model.type.SPGTypeRef;
+import com.antgroup.openspg.server.core.schema.model.type.StandardType;
+import com.antgroup.openspg.server.core.schema.model.type.WithBasicInfo;
 import com.google.common.collect.Streams;
 import java.util.ArrayList;
 import java.util.List;

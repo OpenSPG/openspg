@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.core.reasoner.service.repo;
 
-import com.antgroup.openspg.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
-import com.antgroup.openspg.core.spgreasoner.model.service.FailureReasonerResult;
-import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerJobInst;
-import com.antgroup.openspg.core.spgreasoner.model.service.ReasonerStatusWithProgress;
+import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
+import com.antgroup.openspg.server.core.reasoner.model.service.FailureReasonerResult;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInst;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerStatusWithProgress;
 import java.util.List;
 
 public interface ReasonerJobInstRepository {

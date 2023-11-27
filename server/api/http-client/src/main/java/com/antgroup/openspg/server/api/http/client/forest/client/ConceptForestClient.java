@@ -13,13 +13,13 @@
 
 package com.antgroup.openspg.server.api.http.client.forest.client;
 
-import com.antgroup.openspg.api.facade.dto.schema.request.ConceptRequest;
-import com.antgroup.openspg.api.http.client.util.HttpClientConstants;
-import com.antgroup.openspg.core.spgschema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.spgschema.model.semantic.request.DefineLogicalCausationRequest;
-import com.antgroup.openspg.core.spgschema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.spgschema.model.semantic.request.RemoveLogicalCausationRequest;
-import com.antgroup.openspg.core.spgschema.model.type.ConceptList;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
+import com.antgroup.openspg.server.api.http.client.util.HttpClientConstants;
+import com.antgroup.openspg.server.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
+import com.antgroup.openspg.server.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.server.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
+import com.antgroup.openspg.server.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.server.core.schema.model.type.ConceptList;
 import com.dtflys.forest.annotation.Address;
 import com.dtflys.forest.annotation.BodyType;
 import com.dtflys.forest.annotation.Get;

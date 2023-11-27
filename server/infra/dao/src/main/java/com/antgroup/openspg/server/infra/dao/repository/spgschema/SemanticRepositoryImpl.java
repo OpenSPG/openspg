@@ -13,18 +13,18 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SemanticDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SemanticDOExample;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.mapper.SemanticDOMapper;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.repository.spgschema.convertor.SimpleSemanticConvertor;
+import com.antgroup.openspg.server.infra.dao.dataobject.SemanticDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.SemanticDOExample;
+import com.antgroup.openspg.server.infra.dao.mapper.SemanticDOMapper;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.SimpleSemanticConvertor;
 import com.antgroup.openspg.cloudext.interfaces.repository.sequence.SequenceRepository;
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.core.spgschema.model.semantic.LogicalCausationSemantic;
-import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.core.spgschema.service.semantic.model.LogicalCausationQuery;
-import com.antgroup.openspg.core.spgschema.service.semantic.model.SimpleSemantic;
-import com.antgroup.openspg.core.spgschema.service.semantic.repository.SemanticRepository;
+import com.antgroup.openspg.server.schema.core.service.semantic.model.LogicalCausationQuery;
+import com.antgroup.openspg.server.schema.core.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.schema.core.service.semantic.repository.SemanticRepository;
+import com.antgroup.openspg.server.core.schema.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;

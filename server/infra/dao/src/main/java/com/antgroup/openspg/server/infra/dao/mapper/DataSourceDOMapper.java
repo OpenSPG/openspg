@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.infra.dao.mapper;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceDOExample;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.DataSourceDOWithBLOBs;
+import com.antgroup.openspg.server.infra.dao.dataobject.DataSourceDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.DataSourceDOExample;
+import com.antgroup.openspg.server.infra.dao.dataobject.DataSourceDOWithBLOBs;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

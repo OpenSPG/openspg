@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.core.builder.model.pipeline.config;
 
-import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
-import com.antgroup.openspg.common.model.datasource.connection.SearchEngineConnectionInfo;
-import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.NodeTypeEnum;
+import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
+import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
+import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
+import com.antgroup.openspg.server.core.builder.model.pipeline.NodeTypeEnum;
 
 public class GraphStoreSinkNodeConfig extends BaseNodeConfig {
 

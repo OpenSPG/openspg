@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgbuilder.convertor;
 
-import com.antgroup.openspg.api.facade.JSON;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.SPGJobInfoDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInfoDO;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
-import com.antgroup.openspg.common.model.job.JobInfoStateEnum;
-import com.antgroup.openspg.core.spgbuilder.model.pipeline.Pipeline;
-import com.antgroup.openspg.core.spgbuilder.model.service.BuilderJobInfo;
+import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.common.model.job.JobInfoStateEnum;
+import com.antgroup.openspg.server.core.builder.model.pipeline.Pipeline;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;
 import com.google.gson.reflect.TypeToken;
 import java.util.Map;
 

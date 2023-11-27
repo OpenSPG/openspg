@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.service.predicate.repository;
 
-import com.antgroup.openspg.core.spgschema.model.constraint.Constraint;
+import com.antgroup.openspg.server.core.schema.model.constraint.Constraint;
 import java.util.List;
 
 /**

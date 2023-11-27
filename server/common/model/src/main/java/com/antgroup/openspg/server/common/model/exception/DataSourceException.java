@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.common.model.exception;
 
-import com.antgroup.openspg.common.model.datasource.DataSourceUsageTypeEnum;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceUsageTypeEnum;
 
 public class DataSourceException extends OpenSPGException {
 

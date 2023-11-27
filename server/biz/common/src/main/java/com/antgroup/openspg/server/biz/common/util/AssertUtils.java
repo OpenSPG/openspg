@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.biz.common.util;
 
-import com.antgroup.openspg.common.model.exception.IllegalParamsException;
+import com.antgroup.openspg.server.common.model.exception.IllegalParamsException;
 import java.util.Collection;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.infra.dao.mapper;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OntologyPropertyDOExample;
+import com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDOExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.infra.dao.mapper;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.LogicRuleDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.LogicRuleDOExample;
+import com.antgroup.openspg.server.infra.dao.dataobject.LogicRuleDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.LogicRuleDOExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

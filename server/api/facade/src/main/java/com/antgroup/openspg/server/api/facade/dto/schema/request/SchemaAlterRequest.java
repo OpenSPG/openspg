@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.api.facade.dto.schema.request;
 
-import com.antgroup.openspg.common.model.base.BaseRequest;
-import com.antgroup.openspg.core.spgschema.model.alter.SchemaDraft;
+import com.antgroup.openspg.server.common.model.base.BaseRequest;
+import com.antgroup.openspg.server.core.schema.model.alter.SchemaDraft;
 
 /** Commit schema draft request. */
 public class SchemaAlterRequest extends BaseRequest {

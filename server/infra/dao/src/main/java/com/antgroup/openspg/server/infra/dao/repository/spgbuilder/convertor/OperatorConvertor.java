@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgbuilder.convertor;
 
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OperatorOverviewDO;
-import com.antgroup.openspg.cloudext.impl.repository.jdbc.dataobject.OperatorVersionDO;
-import com.antgroup.openspg.common.model.LangTypeEnum;
-import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorOverview;
-import com.antgroup.openspg.core.spgbuilder.model.operator.OperatorVersion;
-import com.antgroup.openspg.core.spgschema.model.type.OperatorTypeEnum;
+import com.antgroup.openspg.server.infra.dao.dataobject.OperatorOverviewDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.OperatorVersionDO;
+import com.antgroup.openspg.server.common.model.LangTypeEnum;
+import com.antgroup.openspg.server.core.builder.model.operator.OperatorOverview;
+import com.antgroup.openspg.server.core.builder.model.operator.OperatorVersion;
+import com.antgroup.openspg.server.core.schema.model.type.OperatorTypeEnum;
 
 public class OperatorConvertor {
 

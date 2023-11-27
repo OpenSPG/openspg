@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.biz.common;
 
-import com.antgroup.openspg.api.facade.dto.common.request.ObjectStoreRequest;
-import com.antgroup.openspg.api.facade.dto.common.response.ObjectStoreResponse;
+import com.antgroup.openspg.server.api.facade.dto.common.request.ObjectStoreRequest;
+import com.antgroup.openspg.server.api.facade.dto.common.response.ObjectStoreResponse;
 import java.io.InputStream;
 
 public interface ObjectStoreManager {

@@ -13,14 +13,14 @@
 
 package com.antgroup.openspg.server.common.service.datasource.impl;
 
-import com.antgroup.openspg.common.model.datasource.DataSource;
-import com.antgroup.openspg.common.model.datasource.DataSourceMountObjectTypeEnum;
-import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
-import com.antgroup.openspg.common.model.datasource.DataSourceUsageTypeEnum;
-import com.antgroup.openspg.common.model.exception.DataSourceException;
-import com.antgroup.openspg.common.service.datasource.DataSourceRepository;
-import com.antgroup.openspg.common.service.datasource.DataSourceService;
-import com.antgroup.openspg.common.service.datasource.DataSourceUsageRepository;
+import com.antgroup.openspg.server.common.service.datasource.DataSourceRepository;
+import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
+import com.antgroup.openspg.server.common.service.datasource.DataSourceUsageRepository;
+import com.antgroup.openspg.server.common.model.datasource.DataSource;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceMountObjectTypeEnum;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceUsage;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceUsageTypeEnum;
+import com.antgroup.openspg.server.common.model.exception.DataSourceException;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;

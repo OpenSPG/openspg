@@ -13,14 +13,14 @@
 
 package com.antgroup.openspg.server.schema.core.service.semantic.impl;
 
-import com.antgroup.openspg.core.spgschema.model.predicate.PropertyRef;
-import com.antgroup.openspg.core.spgschema.model.semantic.PredicateSemantic;
-import com.antgroup.openspg.core.spgschema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.core.spgschema.service.predicate.repository.PropertyRepository;
-import com.antgroup.openspg.core.spgschema.service.semantic.SemanticService;
-import com.antgroup.openspg.core.spgschema.service.semantic.convertor.SemanticConvertor;
-import com.antgroup.openspg.core.spgschema.service.semantic.model.SimpleSemantic;
-import com.antgroup.openspg.core.spgschema.service.semantic.repository.SemanticRepository;
+import com.antgroup.openspg.server.schema.core.service.predicate.repository.PropertyRepository;
+import com.antgroup.openspg.server.schema.core.service.semantic.SemanticService;
+import com.antgroup.openspg.server.schema.core.service.semantic.convertor.SemanticConvertor;
+import com.antgroup.openspg.server.schema.core.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.schema.core.service.semantic.repository.SemanticRepository;
+import com.antgroup.openspg.server.core.schema.model.predicate.PropertyRef;
+import com.antgroup.openspg.server.core.schema.model.semantic.PredicateSemantic;
+import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.HashSet;
