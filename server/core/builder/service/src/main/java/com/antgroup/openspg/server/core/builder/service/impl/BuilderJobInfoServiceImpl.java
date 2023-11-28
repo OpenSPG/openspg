@@ -16,12 +16,13 @@ package com.antgroup.openspg.server.core.builder.service.impl;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.JobSchedulerClient;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInfo;
+import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobInfoQuery;
 import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
-import com.antgroup.openspg.core.spgbuilder.service.BuilderJobInfoService;
-import com.antgroup.openspg.core.spgbuilder.service.repo.BuilderJobInfoRepository;
-import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInfoQuery;
-import com.antgroup.openspg.builder.core.service.BuilderJobInfo;
 import java.util.List;
+
+import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;
+import com.antgroup.openspg.server.core.builder.service.BuilderJobInfoService;
+import com.antgroup.openspg.server.core.builder.service.repo.BuilderJobInfoRepository;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

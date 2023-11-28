@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor;
 
+import com.antgroup.openspg.schema.http.client.JSON;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDOWithBLOBs;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.config.ConstraintItemConfigDO;
@@ -25,7 +26,6 @@ import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.schema.core.service.type.model.OperatorConfig;
 import com.antgroup.openspg.server.schema.core.service.type.model.ProjectOntologyRel;
 import com.antgroup.openspg.server.schema.core.service.type.model.SimpleSPGType;
-import com.antgroup.openspg.server.api.facade.JSON;
 import com.antgroup.openspg.schema.model.BasicInfo;
 import com.antgroup.openspg.schema.model.OntologyId;
 import com.antgroup.openspg.schema.model.SchemaConstants;

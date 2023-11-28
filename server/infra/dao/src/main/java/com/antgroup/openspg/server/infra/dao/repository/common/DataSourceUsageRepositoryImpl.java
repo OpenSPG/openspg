@@ -19,7 +19,7 @@ import com.antgroup.openspg.server.infra.dao.mapper.DataSourceUsageDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.common.convertor.DataSourceUsageConvertor;
 import com.antgroup.openspg.server.common.service.datasource.DataSourceUsageRepository;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceUsageQueryRequest;
+import com.antgroup.openspg.server.api.http.client.dto.common.request.DataSourceUsageQueryRequest;
 import com.antgroup.openspg.common.model.datasource.DataSourceMountObjectTypeEnum;
 import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
 import com.antgroup.openspg.common.model.datasource.DataSourceUsageTypeEnum;

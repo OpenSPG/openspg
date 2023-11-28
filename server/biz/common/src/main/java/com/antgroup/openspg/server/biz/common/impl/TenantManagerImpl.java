@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.biz.common.impl;
 
+import com.antgroup.openspg.server.api.http.client.dto.common.request.TenantCreateRequest;
+import com.antgroup.openspg.server.api.http.client.dto.common.request.TenantQueryRequest;
 import com.antgroup.openspg.server.biz.common.TenantManager;
 import com.antgroup.openspg.server.common.service.tenant.TenantRepository;
-import com.antgroup.openspg.server.api.facade.dto.common.request.TenantCreateRequest;
-import com.antgroup.openspg.server.api.facade.dto.common.request.TenantQueryRequest;
 import com.antgroup.openspg.common.model.tenant.Tenant;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

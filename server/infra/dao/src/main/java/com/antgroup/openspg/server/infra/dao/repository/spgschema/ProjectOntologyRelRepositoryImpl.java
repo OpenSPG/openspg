@@ -13,13 +13,13 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema;
 
+import com.antgroup.openspg.server.common.service.SequenceRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.ProjectOntologyRelDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.ProjectOntologyRelDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.ProjectOntologyRelDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.ProjectOntologyRelConvertor;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ProjectEntityTypeEnum;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.YesOrNoEnum;
-import com.antgroup.openspg.cloudext.interfaces.repository.sequence.SequenceRepository;
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.server.schema.core.service.type.model.ProjectOntologyRel;
 import com.antgroup.openspg.server.schema.core.service.type.repository.ProjectOntologyRelRepository;

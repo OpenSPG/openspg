@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema;
 
+import com.antgroup.openspg.server.common.service.SequenceRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.LogicRuleDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.LogicRuleDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.LogicRuleDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.LogicalRuleConvertor;
-import com.antgroup.openspg.cloudext.interfaces.repository.sequence.SequenceRepository;
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.server.schema.core.service.semantic.repository.LogicalRuleRepository;
 import com.antgroup.openspg.schema.model.semantic.LogicalRule;

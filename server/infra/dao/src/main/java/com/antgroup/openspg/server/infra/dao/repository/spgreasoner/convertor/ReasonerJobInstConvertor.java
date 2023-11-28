@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgreasoner.convertor;
 
+import com.antgroup.openspg.schema.http.client.JSON;
 import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInstDOWithBLOBs;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
-import com.antgroup.openspg.server.api.facade.JSON;
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.server.core.reasoner.model.service.BaseReasonerResult;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInst;

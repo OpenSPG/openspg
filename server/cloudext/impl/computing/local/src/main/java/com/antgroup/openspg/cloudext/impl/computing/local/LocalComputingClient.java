@@ -23,10 +23,10 @@ import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobCanSubm
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobProcessQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobRunCmd;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobSubmitCmd;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderStatusWithProgress;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerStatusWithProgress;
 import com.antgroup.openspg.server.core.reasoner.model.service.TableReasonerReceipt;
 import com.antgroup.openspg.common.model.datasource.connection.ComputingConnectionInfo;
-import com.antgroup.openspg.builder.core.service.BuilderStatusWithProgress;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

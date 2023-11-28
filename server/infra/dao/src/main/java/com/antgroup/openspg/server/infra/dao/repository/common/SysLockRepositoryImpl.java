@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.common;
 
+import com.antgroup.openspg.server.common.service.SequenceRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.SysLockDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.SysLockDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.SysLockDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.common.convertor.SysLockConvertor;
-import com.antgroup.openspg.cloudext.interfaces.repository.sequence.SequenceRepository;
 import com.antgroup.openspg.server.common.service.lock.SysLockRepository;
 import com.antgroup.openspg.server.common.service.lock.model.SysLock;
 import com.antgroup.openspg.common.util.CollectionsUtils;

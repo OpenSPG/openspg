@@ -17,6 +17,34 @@
       <artifactId>common-model</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>api-http-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-interface-graph-store</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-interface-object-store</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-interface-search-engine</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>cloudext-interface-job-scheduler</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>cloudext-interface-computing</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-interface-table-store</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
     </dependency>
@@ -27,6 +55,14 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
     </dependency>
   </dependencies>
 </project>

@@ -18,7 +18,7 @@ import com.antgroup.openspg.server.infra.dao.dataobject.DataSourceDOWithBLOBs;
 import com.antgroup.openspg.server.infra.dao.mapper.DataSourceDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.common.convertor.DataSourceConvertor;
 import com.antgroup.openspg.server.common.service.datasource.DataSourceRepository;
-import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceQueryRequest;
+import com.antgroup.openspg.server.api.http.client.dto.common.request.DataSourceQueryRequest;
 import com.antgroup.openspg.common.model.datasource.DataSource;
 import java.util.List;
 import java.util.Map;

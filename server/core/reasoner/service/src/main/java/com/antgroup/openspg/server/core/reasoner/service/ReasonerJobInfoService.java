@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.core.reasoner.service;
 
-import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInfoQuery;
+import com.antgroup.openspg.server.api.http.client.dto.reasoner.request.ReasonerJobInfoQuery;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInfo;
 import java.util.List;
 

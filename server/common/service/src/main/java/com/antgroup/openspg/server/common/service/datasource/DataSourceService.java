@@ -64,12 +64,12 @@ public interface DataSourceService {
         (SearchEngineConnectionInfo) searchEngine.getConnectionInfo());
   }
 
-//  default JobSchedulerClient buildSharedJobSchedulerClient() {
-//    DataSource scheduler =
-//        getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.JOB_SCHEDULER);
-//    return JobSchedulerClientDriverManager.getClient(
-//        (JobSchedulerConnectionInfo) scheduler.getConnectionInfo());
-//  }
+  default JobSchedulerClient buildSharedJobSchedulerClient() {
+    DataSource scheduler =
+        getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.JOB_SCHEDULER);
+    return JobSchedulerClientDriverManager.getClient(
+        (JobSchedulerConnectionInfo) scheduler.getConnectionInfo());
+  }
 
   default ComputingClient buildSharedComputingClient() {
     DataSource computing = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.COMPUTING);

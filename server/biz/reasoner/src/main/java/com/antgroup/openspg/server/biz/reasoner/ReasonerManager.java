@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.biz.reasoner;
 
-import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerDslRunRequest;
-import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
-import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobSubmitRequest;
+import com.antgroup.openspg.server.api.http.client.dto.reasoner.request.ReasonerDslRunRequest;
+import com.antgroup.openspg.server.api.http.client.dto.reasoner.request.ReasonerJobInstQuery;
+import com.antgroup.openspg.server.api.http.client.dto.reasoner.request.ReasonerJobSubmitRequest;
 import com.antgroup.openspg.server.core.reasoner.model.service.JobReasonerReceipt;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInst;
 import com.antgroup.openspg.server.core.reasoner.model.service.TableReasonerReceipt;

@@ -13,9 +13,10 @@
 
 package com.antgroup.openspg.server.api.http.server;
 
-import com.antgroup.openspg.server.api.facade.JSON;
 import java.util.Collections;
 import java.util.List;
+
+import com.antgroup.openspg.schema.http.client.JSON;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;

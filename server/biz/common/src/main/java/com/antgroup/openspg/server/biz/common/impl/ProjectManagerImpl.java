@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.biz.common.impl;
 
-import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectCreateRequest;
-import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
+import com.antgroup.openspg.server.api.http.client.dto.common.request.ProjectCreateRequest;
+import com.antgroup.openspg.server.api.http.client.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.server.biz.common.ProjectManager;
 import com.antgroup.openspg.common.model.project.Project;
 import com.antgroup.openspg.server.common.service.project.ProjectRepository;

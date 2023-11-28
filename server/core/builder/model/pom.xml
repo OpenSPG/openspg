@@ -21,7 +21,7 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg</groupId>
-      <artifactId>builder-core</artifactId>
+      <artifactId>builder-model</artifactId>
     </dependency>
   </dependencies>
 </project>

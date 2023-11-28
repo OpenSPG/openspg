@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.biz.builder;
 
-import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInstQuery;
-import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobSubmitRequest;
-import com.antgroup.openspg.builder.core.service.BuilderJobInst;
-import com.antgroup.openspg.builder.core.service.BuilderReceiptTypeEnum;
-import com.antgroup.openspg.builder.core.service.JobBuilderReceipt;
+import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobInstQuery;
+import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobSubmitRequest;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderReceiptTypeEnum;
+import com.antgroup.openspg.server.core.builder.model.service.JobBuilderReceipt;
 import java.util.List;
 
 public interface BuilderManager {

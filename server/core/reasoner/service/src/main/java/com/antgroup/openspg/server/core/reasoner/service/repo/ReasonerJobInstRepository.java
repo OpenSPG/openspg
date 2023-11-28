@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.core.reasoner.service.repo;
 
-import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
+import com.antgroup.openspg.server.api.http.client.dto.reasoner.request.ReasonerJobInstQuery;
 import com.antgroup.openspg.server.core.reasoner.model.service.FailureReasonerResult;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInst;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerStatusWithProgress;

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.biz.common.convertor;
 
-import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceCreateRequest;
-import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceUsageCreateRequest;
+import com.antgroup.openspg.server.api.http.client.dto.common.request.DataSourceCreateRequest;
+import com.antgroup.openspg.server.api.http.client.dto.common.request.DataSourceUsageCreateRequest;
 import com.antgroup.openspg.common.model.datasource.DataSource;
 import com.antgroup.openspg.common.model.datasource.DataSourceMountObjectTypeEnum;
 import com.antgroup.openspg.common.model.datasource.DataSourceTypeEnum;

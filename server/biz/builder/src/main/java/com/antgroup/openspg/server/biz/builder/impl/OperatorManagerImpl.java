@@ -13,19 +13,19 @@
 
 package com.antgroup.openspg.server.biz.builder.impl;
 
-import com.antgroup.openspg.biz.spgbuilder.OperatorManager;
+import com.antgroup.openspg.builder.core.operator.OperatorOverview;
+import com.antgroup.openspg.builder.core.operator.OperatorVersion;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.ObjectStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.cmd.ObjectStoreSaveCmd;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.model.ObjectStorePath;
-import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
-import com.antgroup.openspg.core.spgbuilder.service.repo.OperatorRepository;
-import com.antgroup.openspg.server.api.facade.dto.builder.request.OperatorCreateRequest;
-import com.antgroup.openspg.server.api.facade.dto.builder.request.OperatorVersionRequest;
-import com.antgroup.openspg.server.api.facade.dto.builder.response.OperatorCreateResponse;
-import com.antgroup.openspg.server.api.facade.dto.builder.response.OperatorVersionResponse;
 import com.antgroup.openspg.common.model.LangTypeEnum;
-import com.antgroup.openspg.builder.core.operator.OperatorOverview;
-import com.antgroup.openspg.builder.core.operator.OperatorVersion;
+import com.antgroup.openspg.server.api.http.client.dto.builder.request.OperatorCreateRequest;
+import com.antgroup.openspg.server.api.http.client.dto.builder.request.OperatorVersionRequest;
+import com.antgroup.openspg.server.api.http.client.dto.builder.response.OperatorCreateResponse;
+import com.antgroup.openspg.server.api.http.client.dto.builder.response.OperatorVersionResponse;
+import com.antgroup.openspg.server.biz.builder.OperatorManager;
+import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
+import com.antgroup.openspg.server.core.builder.service.repo.OperatorRepository;
 import java.io.InputStream;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;

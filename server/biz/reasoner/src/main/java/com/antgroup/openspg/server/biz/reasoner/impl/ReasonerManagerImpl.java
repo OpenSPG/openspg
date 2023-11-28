@@ -13,24 +13,24 @@
 
 package com.antgroup.openspg.server.biz.reasoner.impl;
 
-import com.antgroup.openspg.biz.spgreasoner.ReasonerManager;
 import com.antgroup.openspg.cloudext.interfaces.computing.ComputingClient;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobRunCmd;
-import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
-import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
-import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.core.spgreasoner.service.ReasonerJobInfoService;
-import com.antgroup.openspg.core.spgreasoner.service.ReasonerJobInstService;
-import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerDslRunRequest;
-import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
-import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobSubmitRequest;
 import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.antgroup.openspg.common.model.job.JobInfoStateEnum;
 import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.server.api.http.client.dto.reasoner.request.ReasonerDslRunRequest;
+import com.antgroup.openspg.server.api.http.client.dto.reasoner.request.ReasonerJobInstQuery;
+import com.antgroup.openspg.server.api.http.client.dto.reasoner.request.ReasonerJobSubmitRequest;
+import com.antgroup.openspg.server.biz.reasoner.ReasonerManager;
+import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
+import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
 import com.antgroup.openspg.server.core.reasoner.model.service.JobReasonerReceipt;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInfo;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInst;
 import com.antgroup.openspg.server.core.reasoner.model.service.TableReasonerReceipt;
+import com.antgroup.openspg.server.core.reasoner.service.ReasonerJobInfoService;
+import com.antgroup.openspg.server.core.reasoner.service.ReasonerJobInstService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

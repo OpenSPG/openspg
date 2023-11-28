@@ -13,12 +13,8 @@
 
 package com.antgroup.openspg.server.biz.schema.impl;
 
-import com.antgroup.openspg.server.biz.common.util.AssertUtils;
-import com.antgroup.openspg.server.biz.schema.ConceptManager;
-import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.server.schema.core.service.concept.ConceptSemanticService;
-import com.antgroup.openspg.server.schema.core.service.semantic.model.LogicalCausationQuery;
 import com.antgroup.openspg.common.model.UserInfo;
+import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.schema.model.SchemaConstants;
 import com.antgroup.openspg.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.schema.model.identifier.PredicateIdentifier;
@@ -34,6 +30,10 @@ import com.antgroup.openspg.schema.model.semantic.request.RemoveDynamicTaxonomyR
 import com.antgroup.openspg.schema.model.semantic.request.RemoveLogicalCausationRequest;
 import com.antgroup.openspg.schema.model.type.Concept;
 import com.antgroup.openspg.schema.model.type.ConceptList;
+import com.antgroup.openspg.server.biz.common.util.AssertUtils;
+import com.antgroup.openspg.server.biz.schema.ConceptManager;
+import com.antgroup.openspg.server.schema.core.service.concept.ConceptSemanticService;
+import com.antgroup.openspg.server.schema.core.service.semantic.model.LogicalCausationQuery;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.HashMap;

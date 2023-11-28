@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgbuilder;
 
+import com.antgroup.openspg.server.core.builder.service.repo.OperatorRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.OperatorOverviewDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.OperatorOverviewDOExample;
 import com.antgroup.openspg.server.infra.dao.dataobject.OperatorVersionDO;
@@ -21,7 +22,6 @@ import com.antgroup.openspg.server.infra.dao.mapper.OperatorOverviewDOMapper;
 import com.antgroup.openspg.server.infra.dao.mapper.OperatorVersionDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgbuilder.convertor.OperatorConvertor;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.core.spgbuilder.service.repo.OperatorRepository;
 import com.antgroup.openspg.builder.core.operator.OperatorOverview;
 import com.antgroup.openspg.builder.core.operator.OperatorVersion;
 import java.util.ArrayList;

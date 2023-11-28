@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgreasoner.convertor;
 
-import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInfoDO;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
-import com.antgroup.openspg.server.api.facade.JSON;
 import com.antgroup.openspg.common.model.job.JobInfoStateEnum;
+import com.antgroup.openspg.schema.http.client.JSON;
 import com.antgroup.openspg.server.core.reasoner.model.service.BaseReasonerContent;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInfo;
+import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInfoDO;
 import com.google.gson.reflect.TypeToken;
 import java.util.Map;
 

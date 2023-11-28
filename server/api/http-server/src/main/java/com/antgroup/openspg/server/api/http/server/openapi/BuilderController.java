@@ -13,15 +13,16 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
-import com.antgroup.openspg.biz.spgbuilder.BuilderManager;
-import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInstQuery;
-import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobSubmitRequest;
+import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobInstQuery;
+import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobSubmitRequest;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
-import com.antgroup.openspg.builder.core.service.BaseBuilderReceipt;
-import com.antgroup.openspg.builder.core.service.BuilderJobInst;
 import java.util.List;
+
+import com.antgroup.openspg.server.biz.builder.BuilderManager;
+import com.antgroup.openspg.server.core.builder.model.service.BaseBuilderReceipt;
+import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
