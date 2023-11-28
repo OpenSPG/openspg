@@ -39,5 +39,64 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-tx</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.github.lukehutch</groupId>
+      <artifactId>fast-classpath-scanner</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.lukehutch</groupId>
+      <artifactId>fast-classpath-scanner</artifactId>
+    </dependency>
+    <!-- geo start -->
+    <dependency>
+      <groupId>com.google.geometry</groupId>
+      <artifactId>s2-geometry</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-swing</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.geotools</groupId>
+      <artifactId>gt-epsg-hsql</artifactId>
+    </dependency>
+    <!-- geo end -->
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>QLExpress</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.typelevel</groupId>
+      <artifactId>cats-core_${scala.binary.version}</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-impl-object-store-local</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-impl-table-store-local</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>cloudext-impl-job-scheduler-local</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>cloudext-impl-computing-local</artifactId>
+    </dependency>
   </dependencies>
 </project>

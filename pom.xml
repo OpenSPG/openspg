@@ -46,6 +46,9 @@
   </modules>
 
   <properties>
+    <antlr4.version>4.8</antlr4.version>
+    <google.s2.version>2.0.0</google.s2.version>
+    <geotools.version>27.0</geotools.version>
     <dropwizard.metrics.version>4.2.9</dropwizard.metrics.version>
     <groovy.version>3.0.9</groovy.version>
     <gson.version>2.10.1</gson.version>
@@ -265,6 +268,49 @@
         <groupId>com.alibaba</groupId>
         <artifactId>fastjson</artifactId>
         <version>1.2.69_noneautotype</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.lukehutch</groupId>
+        <artifactId>fast-classpath-scanner</artifactId>
+        <version>2.7.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.typelevel</groupId>
+        <artifactId>cats-core_${scala.binary.version}</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+      <!-- geo start -->
+      <dependency>
+        <groupId>com.google.geometry</groupId>
+        <artifactId>s2-geometry</artifactId>
+        <version>${google.s2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-swing</artifactId>
+        <version>${geotools.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-epsg-hsql</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <!-- geo end -->
+      <dependency>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-runtime</artifactId>
+        <version>${antlr4.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>QLExpress</artifactId>
+        <version>3.3.2</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
