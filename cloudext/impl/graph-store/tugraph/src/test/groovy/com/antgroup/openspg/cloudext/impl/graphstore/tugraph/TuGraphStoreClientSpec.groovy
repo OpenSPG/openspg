@@ -14,7 +14,6 @@
 
 package com.antgroup.openspg.cloudext.impl.graphstore.tugraph
 
-import com.antgroup.openspg.api.facade.ApiConstants
 import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.ScriptLPGRecordQuery
 import com.antgroup.openspg.cloudext.interfaces.graphstore.impl.DefaultLPGTypeNameConvertor
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord
@@ -26,9 +25,10 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.LPGP
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.VertexType
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.CreateEdgeTypeOperation
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.CreateVertexTypeOperation
-import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo
+import com.antgroup.openspg.server.api.facade.ApiConstants
+import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo
 import com.antgroup.openspg.common.util.CollectionsUtils
-import com.antgroup.openspg.core.spgschema.model.type.BasicTypeEnum
+import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum
 import com.google.common.collect.Lists
 import com.google.common.collect.Sets
 import spock.lang.Specification
@@ -36,7 +36,6 @@ import spock.lang.Specification
 import java.util.stream.Collectors
 
 /**
- *  *
  * @see https://tugraph-db.readthedocs.io/zh_CN/latest/3.quick-start/1.preparation.html#id5
  */
 class TuGraphStoreClientSpec extends Specification {

@@ -20,7 +20,7 @@ class ClassLoader:
         from pemja import findClass
 
         searchEngineConnectionInfo = findClass(
-            "com.antgroup.openspg.common.model.datasource.connection.SearchEngineConnectionInfo"
+            "com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo"
         )
         global_class["SearchEngineConnectionInfo"] = searchEngineConnectionInfo
 
@@ -37,7 +37,7 @@ def SearchEngineConnectionInfo(scheme: str, params: Dict[str, str]):
     from pemja import findClass
 
     searchEngineConnectionInfo = findClass(
-        "com.antgroup.openspg.common.model.datasource.connection.SearchEngineConnectionInfo"
+        "com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo"
     )
     search_connect_info = searchEngineConnectionInfo()
     search_connect_info.setScheme(scheme)

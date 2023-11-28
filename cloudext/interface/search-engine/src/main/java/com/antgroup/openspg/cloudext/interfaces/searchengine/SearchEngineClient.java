@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine;
 
+import com.antgroup.openspg.builder.model.record.SPGRecordManipulateCmd;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClient;
-import com.antgroup.openspg.core.spgbuilder.model.record.SPGRecordManipulateCmd;
-import com.antgroup.openspg.core.spgschema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
 
 public interface SearchEngineClient extends CloudExtClient, IdxDataQueryService {
 

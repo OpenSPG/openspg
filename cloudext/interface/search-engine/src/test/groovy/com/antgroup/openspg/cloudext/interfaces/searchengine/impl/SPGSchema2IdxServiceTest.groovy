@@ -20,16 +20,22 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.adapter.schema.impl
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxMapping
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchema
 import com.antgroup.openspg.common.util.StringUtils
-import com.antgroup.openspg.core.spgschema.model.BasicInfo
-import com.antgroup.openspg.core.spgschema.model.SPGSchema
-import com.antgroup.openspg.core.spgschema.model.alter.AlterOperationEnum
-import com.antgroup.openspg.core.spgschema.model.identifier.PredicateIdentifier
-import com.antgroup.openspg.core.spgschema.model.identifier.SPGTypeIdentifier
-import com.antgroup.openspg.core.spgschema.model.predicate.Property
-import com.antgroup.openspg.core.spgschema.model.predicate.PropertyAdvancedConfig
-import com.antgroup.openspg.core.spgschema.model.type.*
+import com.antgroup.openspg.core.schema.model.BasicInfo
+import com.antgroup.openspg.core.schema.model.SPGSchema
+import com.antgroup.openspg.core.schema.model.alter.AlterOperationEnum
+import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier
+import com.antgroup.openspg.core.schema.model.predicate.Property
+import com.antgroup.openspg.core.schema.model.predicate.PropertyAdvancedConfig
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType
+import com.antgroup.openspg.core.schema.model.type.EntityType
+import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo
+import com.antgroup.openspg.core.schema.model.type.SPGTypeAdvancedConfig
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum
+import com.antgroup.openspg.core.schema.model.type.SPGTypeRef
+import com.antgroup.openspg.schema.model.type.*
 import com.google.common.collect.Lists
-import org.assertj.core.util.Sets
+import com.google.common.collect.Sets
 import spock.lang.Specification
 
 class SPGSchema2IdxServiceTest extends Specification {

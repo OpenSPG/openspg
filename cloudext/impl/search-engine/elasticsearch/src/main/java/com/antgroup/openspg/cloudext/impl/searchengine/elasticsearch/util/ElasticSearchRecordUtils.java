@@ -22,7 +22,6 @@ import static com.antgroup.openspg.cloudext.interfaces.searchengine.constants.El
 import static com.antgroup.openspg.cloudext.interfaces.searchengine.constants.ElasticSearchConstants.ES_RESULT_HITS_KEY;
 
 import com.alibaba.fastjson.JSONObject;
-import com.antgroup.openspg.api.facade.JSON;
 import com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.client.ElasticSearchRecordClient;
 import com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.model.EsDocs;
 import com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.model.EsHits;
@@ -33,6 +32,7 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.QueryGroup;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.TermQuery;
 import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.server.api.facade.JSON;
 import com.dtflys.forest.http.ForestResponse;
 import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;

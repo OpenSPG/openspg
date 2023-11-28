@@ -15,13 +15,6 @@
      xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>sofaboot-dependencies</artifactId>
-    <version>3.17.0</version>
-    <relativePath/>
-  </parent>
-
   <groupId>com.antgroup.openspg</groupId>
   <artifactId>openspg-parent</artifactId>
   <version>0.0.1-SNAPSHOT</version>
@@ -35,121 +28,75 @@
   </licenses>
 
   <modules>
+    <module>builder/model</module>
+    <module>builder/core</module>
     <module>common/util</module>
-    <module>common/model</module>
-    <module>common/service</module>
-    <module>core/spgbuilder/model</module>
-    <module>core/spgbuilder/engine</module>
-    <module>core/spgbuilder/service</module>
-    <module>core/spgreasoner/model</module>
-    <module>core/spgreasoner/service</module>
-    <module>core/spgschema/model</module>
-    <module>core/spgschema/service</module>
-    <module>biz/common</module>
-    <module>biz/spgbuilder</module>
-    <module>biz/spgreasoner</module>
-    <module>biz/spgschema</module>
-    <module>api/facade</module>
-    <module>api/http-server</module>
-    <module>api/http-client</module>
-    <module>cloudext/interface/repository</module>
+    <module>server</module>
     <module>cloudext/interface/graph-store</module>
-    <module>cloudext/interface/search-engine</module>
     <module>cloudext/interface/object-store</module>
     <module>cloudext/interface/table-store</module>
-    <module>cloudext/interface/job-scheduler</module>
-    <module>cloudext/interface/computing</module>
-    <module>cloudext/impl/repository/jdbc</module>
-    <module>cloudext/impl/search-engine/elasticsearch</module>
+    <module>cloudext/interface/search-engine</module>
     <module>cloudext/impl/graph-store/tugraph</module>
     <module>cloudext/impl/object-store/local</module>
     <module>cloudext/impl/table-store/local</module>
-    <module>cloudext/impl/job-scheduler/local</module>
-    <module>cloudext/impl/computing/local</module>
-    <module>arks/sofaboot</module>
-    <module>test</module>
+    <module>cloudext/impl/search-engine/elasticsearch</module>
   </modules>
 
   <properties>
     <antlr4.version>4.8</antlr4.version>
     <dropwizard.metrics.version>4.2.9</dropwizard.metrics.version>
-    <elasticsearch.client.version>8.9.2</elasticsearch.client.version>
     <geotools.version>27.0</geotools.version>
     <google.s2.version>2.0.0</google.s2.version>
     <groovy.version>3.0.9</groovy.version>
-    <gson-version>2.10.1</gson-version>
-    <isSkipIntegrationTest>false</isSkipIntegrationTest>
-    <isSkipUnitTest>false</isSkipUnitTest>
+    <gson.version>2.10.1</gson.version>
+    <jackson.version>2.13.4</jackson.version>
     <java.version>1.8</java.version>
     <json4s.version>4.0.6</json4s.version>
     <kgreasoner-version>20231018-OPENSOURCE</kgreasoner-version>
-    <kgstate-version>0.1.22_20230626</kgstate-version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <logback.version>1.2.11</logback.version>
     <scala.binary.version>2.11</scala.binary.version>
     <scala.version>2.11.12</scala.version>
     <spock.version>2.2-M1-groovy-3.0</spock.version>
     <spotless.version>2.30.0</spotless.version>
-    <springdoc.version>1.7.0</springdoc.version>
     <tugraph.client.version>1.4.1</tugraph.client.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      <!-- openspg -->
+      <!-- openspg start -->
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>common-util</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.server</groupId>
         <artifactId>common-model</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>common-service</artifactId>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>core-schema-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>api-facade</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>api-http-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>core-spgschema-model</artifactId>
+        <artifactId>builder-model</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>core-spgschema-service</artifactId>
+        <artifactId>builder-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>core-spgbuilder-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>core-spgbuilder-engine</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>core-spgbuilder-service</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>core-spgbuilder-python-executor</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>core-spgreasoner-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>core-spgreasoner-service</artifactId>
+        <artifactId>common-util</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -174,32 +121,7 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-interface-repository</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-interface-job-scheduler</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-interface-computing</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-impl-repository-jdbc</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
         <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -214,92 +136,91 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-impl-job-scheduler-local</artifactId>
+        <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-impl-computing-local</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>test</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>arks-sofaboot</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>biz-common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>biz-spgbuilder</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>biz-spgreasoner</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>biz-spgschema</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>api-facade</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>api-http-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>api-http-server</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <!-- /openspg -->
+      <!-- openspg end -->
 
       <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <version>5.1.30</version>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>30.1-jre</version>
       </dependency>
       <dependency>
-        <groupId>org.mybatis</groupId>
-        <artifactId>mybatis</artifactId>
-        <version>3.5.2</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-collections4</artifactId>
+        <version>4.4</version>
       </dependency>
       <dependency>
-        <groupId>org.mybatis.generator</groupId>
-        <artifactId>mybatis-generator-core</artifactId>
-        <version>1.3.7</version>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.11</version>
       </dependency>
       <dependency>
-        <groupId>com.github.pagehelper</groupId>
-        <artifactId>pagehelper</artifactId>
-        <version>4.1.6</version>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>${gson.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.mybatis</groupId>
-        <artifactId>mybatis-spring</artifactId>
-        <version>2.0.2</version>
+        <groupId>org.danilopianini</groupId>
+        <artifactId>gson-extras</artifactId>
+        <version>1.2.0</version>
       </dependency>
       <dependency>
-        <groupId>org.springframework.retry</groupId>
-        <artifactId>spring-retry</artifactId>
-        <version>1.2.4.RELEASE</version>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson.version}</version>
       </dependency>
-      <!-- db end -->
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.12</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.7</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.13</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-text</artifactId>
+        <version>1.10.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-configuration2</artifactId>
+        <version>2.7</version>
+      </dependency>
+      <dependency>
+        <groupId>io.dropwizard.metrics</groupId>
+        <artifactId>metrics-core</artifactId>
+        <version>${dropwizard.metrics.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.tugraph</groupId>
+        <artifactId>tugraph-db-java-rpc-client</artifactId>
+        <version>${tugraph.client.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.opencsv</groupId>
+        <artifactId>opencsv</artifactId>
+        <version>4.6</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>pemja</artifactId>
+        <version>0.3.0</version>
+      </dependency>
 
       <dependency>
         <groupId>org.json4s</groupId>
@@ -342,99 +263,14 @@
         <version>2.0.1.Final</version>
       </dependency>
       <dependency>
-        <groupId>io.dropwizard.metrics</groupId>
-        <artifactId>metrics-core</artifactId>
-        <version>${dropwizard.metrics.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.dropwizard.metrics</groupId>
-        <artifactId>metrics-servlets</artifactId>
-        <version>${dropwizard.metrics.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>6.0.9.Final</version>
-      </dependency>
-      <dependency>
-        <groupId>org.glassfish</groupId>
-        <artifactId>javax.el</artifactId>
-        <version>3.0.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok</artifactId>
-        <version>1.18.12</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-collections4</artifactId>
-        <version>4.4</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-lang3</artifactId>
-        <version>3.11</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>2.7</version>
+        <groupId>com.dtflys.forest</groupId>
+        <artifactId>forest-core</artifactId>
+        <version>1.5.33</version>
       </dependency>
       <dependency>
         <groupId>com.alibaba</groupId>
         <artifactId>fastjson</artifactId>
         <version>1.2.69_noneautotype</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.code.gson</groupId>
-        <artifactId>gson</artifactId>
-        <version>${gson-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.danilopianini</groupId>
-        <artifactId>gson-extras</artifactId>
-        <version>1.2.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>30.1-jre</version>
-      </dependency>
-      <dependency>
-        <groupId>com.lmax</groupId>
-        <artifactId>disruptor</artifactId>
-        <version>3.4.2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jgrapht</groupId>
-        <artifactId>jgrapht-core</artifactId>
-        <version>0.9.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.github.rholder</groupId>
-        <artifactId>guava-retrying</artifactId>
-        <version>2.0.0</version>
-      </dependency>
-      <dependency>
-        <groupId>args4j</groupId>
-        <artifactId>args4j</artifactId>
-        <version>2.33</version>
-      </dependency>
-      <dependency>
-        <groupId>net.sourceforge.javacsv</groupId>
-        <artifactId>javacsv</artifactId>
-        <version>2.0</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-codec</groupId>
-        <artifactId>commons-codec</artifactId>
-        <version>1.13</version>
-      </dependency>
-      <dependency>
-        <groupId>com.opencsv</groupId>
-        <artifactId>opencsv</artifactId>
-        <version>4.6</version>
       </dependency>
       <dependency>
         <groupId>io.github.lukehutch</groupId>
@@ -474,102 +310,24 @@
         <artifactId>QLExpress</artifactId>
         <version>3.3.2</version>
       </dependency>
-      <dependency>
-        <groupId>com.alibaba</groupId>
-        <artifactId>pemja</artifactId>
-        <version>0.3.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.dtflys.forest</groupId>
-        <artifactId>forest-core</artifactId>
-        <version>1.5.33</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-ui</artifactId>
-        <version>${springdoc.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-collections</groupId>
-        <artifactId>commons-collections</artifactId>
-        <version>3.2.2</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-text</artifactId>
-        <version>1.10.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-configuration2</artifactId>
-        <version>2.7</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.tugraph</groupId>
-        <artifactId>tugraph-db-java-rpc-client</artifactId>
-        <version>${tugraph.client.version}</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.junit.vintage</groupId>
-          <artifactId>junit-vintage-engine</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.logging.log4j</groupId>
-          <artifactId>log4j-to-slf4j</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.vaadin.external.google</groupId>
-          <artifactId>android-json</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.junit.jupiter</groupId>
-          <artifactId>junit-jupiter</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>${logback.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback.version}</version>
     </dependency>
     <dependency>
       <groupId>org.spockframework</groupId>
       <artifactId>spock-core</artifactId>
       <version>${spock.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.spockframework</groupId>
-      <artifactId>spock-spring</artifactId>
-      <version>${spock.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.bytebuddy</groupId>
-      <artifactId>byte-buddy</artifactId>
-      <version>1.12.7</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.objenesis</groupId>
-      <artifactId>objenesis</artifactId>
-      <version>3.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-core</artifactId>
-      <version>2.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <version>2.1.210</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -579,14 +337,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-collections4</artifactId>
-      <version>4.3</version>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>3.2.5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -702,7 +461,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>

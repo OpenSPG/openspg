@@ -32,9 +32,5 @@
       <groupId>com.antgroup.tugraph</groupId>
       <artifactId>tugraph-db-java-rpc-client</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.alipay.sofa.common</groupId>
-      <artifactId>sofa-common-tools</artifactId>
-    </dependency>
   </dependencies>
 </project>

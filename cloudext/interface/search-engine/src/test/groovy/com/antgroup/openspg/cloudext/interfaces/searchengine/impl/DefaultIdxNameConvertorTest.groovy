@@ -16,22 +16,20 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine.impl
 
 import spock.lang.Specification
 
-/**
- *  */
 class DefaultIdxNameConvertorTest extends Specification {
 
-	static def convert = new DefaultIdxNameConvertor()
+    static def convert = new DefaultIdxNameConvertor()
 
-	def "testConvertIdxName"() {
-		expect:
-		converted == convert.convertIdxName(idxName)
-		def restored = convert.restoreIdxName(converted)
-		idxName == restored
+    def "testConvertIdxName"() {
+        expect:
+        converted == convert.convertIdxName(idxName)
+        def restored = convert.restoreIdxName(converted)
+        idxName == restored
 
-		where:
-		idxName          || converted
-		"FraudTest1.App" || "\$fraud\$test1-\$app"
-		"FraudTest1.APP" || "\$fraud\$test1-\$a\$p\$p"
-		"ALIPAY.APP"     || "\$a\$l\$i\$p\$a\$y-\$a\$p\$p"
-	}
+        where:
+        idxName          || converted
+        "FraudTest1.App" || "\$fraud\$test1-\$app"
+        "FraudTest1.APP" || "\$fraud\$test1-\$a\$p\$p"
+        "ALIPAY.APP"     || "\$a\$l\$i\$p\$a\$y-\$a\$p\$p"
+    }
 }

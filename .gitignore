@@ -455,6 +455,6 @@ hs_err_pid*
 
 # knext operators directory for debug
 /python/knext/debug_operators/.
-!/lib/spgreasoner-local-0.0.1.jar
+!/server/lib/spgreasoner-local-0.0.1.jar
 /logs/
 **/spotless-index-file

@@ -30,7 +30,7 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg</groupId>
-      <artifactId>core-spgbuilder-model</artifactId>
+      <artifactId>builder-model</artifactId>
     </dependency>
   </dependencies>
 </project>

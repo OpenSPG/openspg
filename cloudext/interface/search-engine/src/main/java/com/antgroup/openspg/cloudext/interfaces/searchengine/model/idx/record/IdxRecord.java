@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record;
 
-import com.antgroup.openspg.common.model.base.BaseValObj;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

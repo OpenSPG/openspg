@@ -16,7 +16,7 @@ package com.antgroup.openspg.cloudext.impl.objectstore.local;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.ObjectStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.ObjectStoreClientDriver;
 import com.antgroup.openspg.cloudext.interfaces.objectstore.ObjectStoreClientDriverManager;
-import com.antgroup.openspg.common.model.datasource.connection.ObjectStoreConnectionInfo;
+import com.antgroup.openspg.server.common.model.datasource.connection.ObjectStoreConnectionInfo;
 
 public class LocalObjectStoreClientDriver implements ObjectStoreClientDriver {
 
