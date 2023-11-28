@@ -16,10 +16,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>sofaboot-dependencies</artifactId>
-    <version>3.17.0</version>
-    <relativePath/>
+    <groupId>com.antgroup.openspg</groupId>
+    <artifactId>openspg-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>com.antgroup.openspg.server</groupId>
@@ -57,18 +57,15 @@
   </modules>
 
   <properties>
-    <java.version>1.8</java.version>
-    <spotless.version>2.30.0</spotless.version>
     <springdoc.version>1.7.0</springdoc.version>
-    <kgreasoner-version>20231018-OPENSOURCE</kgreasoner-version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>openspg-parent</artifactId>
-        <version>${project.version}</version>
+        <groupId>com.alipay.sofa</groupId>
+        <artifactId>sofaboot-dependencies</artifactId>
+        <version>3.17.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -170,26 +167,6 @@
         <version>${project.version}</version>
       </dependency>
       <!-- openspg-server end -->
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>common-util</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>common-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>schema-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>builder-core</artifactId>
-        <version>${project.version}</version>
-      </dependency>
 
       <dependency>
         <groupId>mysql</groupId>
@@ -221,185 +198,6 @@
         <artifactId>springdoc-openapi-ui</artifactId>
         <version>${springdoc.version}</version>
       </dependency>
-      <dependency>
-        <groupId>com.alibaba</groupId>
-        <artifactId>fastjson</artifactId>
-        <version>1.2.69_noneautotype</version>
-      </dependency>
-      <dependency>
-        <groupId>com.dtflys.forest</groupId>
-        <artifactId>forest-core</artifactId>
-        <version>1.5.33</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <repositories>
-    <repository>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>central</id>
-      <name>Maven Repository</name>
-      <url>https://repo.maven.apache.org/maven2</url>
-    </repository>
-    <repository>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>osgeo</id>
-      <name>OSGeo Repository</name>
-      <url>https://repo.osgeo.org/repository/release/</url>
-    </repository>
-  </repositories>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.gmavenplus</groupId>
-        <artifactId>gmavenplus-plugin</artifactId>
-        <version>1.9.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>addSources</goal>
-              <goal>addTestSources</goal>
-              <goal>compile</goal>
-              <goal>compileTests</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.1.2</version>
-        <configuration>
-          <argLine>@{argLine} -Xmx1024m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m
-            -Dfile.encoding=UTF-8
-          </argLine>
-          <includes>
-            <include>**/*Test.groovy</include>
-            <include>**/Test*.groovy</include>
-            <include>**/*Test.java</include>
-            <include>**/Test*.java</include>
-          </includes>
-          <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.11</version>
-        <executions>
-          <execution>
-            <id>prepare-agent</id>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report</id>
-            <goals>
-              <goal>report</goal>
-            </goals>
-            <phase>test</phase>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <attach>true</attach>
-        </configuration>
-        <executions>
-          <execution>
-            <id>create-source-jar</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-              <goal>test-jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!--      <plugin>-->
-      <!--        <groupId>com.diffplug.spotless</groupId>-->
-      <!--        <artifactId>spotless-maven-plugin</artifactId>-->
-      <!--        <version>${spotless.version}</version>-->
-      <!--        <configuration>-->
-      <!--          <upToDateChecking>-->
-      <!--            <enabled>true</enabled>-->
-      <!--            <indexFile>${project.basedir}/spotless-index-file</indexFile>-->
-      <!--          </upToDateChecking>-->
-      <!--          <java>-->
-      <!--            <googleJavaFormat>-->
-      <!--              <version>1.7</version>-->
-      <!--              <style>GOOGLE</style>-->
-      <!--            </googleJavaFormat>-->
-      <!--          </java>-->
-      <!--          <markdown>-->
-      <!--            <includes>-->
-      <!--              <include>**/*.md</include>-->
-      <!--            </includes>-->
-      <!--            <flexmark/>-->
-      <!--          </markdown>-->
-      <!--          <pom>-->
-      <!--            <includes>-->
-      <!--              <include>pom.xml</include>-->
-      <!--            </includes>-->
-      <!--            <sortPom>-->
-      <!--              <encoding>UTF-8</encoding>-->
-      <!--              <keepBlankLines>true</keepBlankLines>-->
-      <!--              <nrOfIndentSpace>2</nrOfIndentSpace>-->
-      <!--              <indentBlankLines>false</indentBlankLines>-->
-      <!--              <indentSchemaLocation>true</indentSchemaLocation>-->
-      <!--              <expandEmptyElements>false</expandEmptyElements>-->
-      <!--              <sortProperties>true</sortProperties>-->
-      <!--            </sortPom>-->
-      <!--          </pom>-->
-      <!--          <python>-->
-      <!--            <includes>-->
-      <!--              <include>**/*.py</include>-->
-      <!--            </includes>-->
-      <!--            <black/>-->
-      <!--          </python>-->
-      <!--          <yaml>-->
-      <!--            <includes>-->
-      <!--              <include>**/*.yaml</include>-->
-      <!--              <include>**/*.yml</include>-->
-      <!--            </includes>-->
-      <!--          </yaml>-->
-      <!--        </configuration>-->
-      <!--        <executions>-->
-      <!--          <execution>-->
-      <!--            <id>format</id>-->
-      <!--            <goals>-->
-      <!--              <goal>check</goal>-->
-      <!--              <goal>apply</goal>-->
-      <!--            </goals>-->
-      <!--            <phase>process-sources</phase>-->
-      <!--          </execution>-->
-      <!--        </executions>-->
-      <!--      </plugin>-->
-    </plugins>
-  </build>
 </project>
