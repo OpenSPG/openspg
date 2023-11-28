@@ -15,7 +15,7 @@ package com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.model;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxField;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxMapping;
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.common.model.base.BaseValObj;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.service.semantic.model;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
+import com.antgroup.openspg.common.model.base.BaseToString;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -14,10 +14,10 @@
 package com.antgroup.openspg.server.infra.dao.repository.common.convertor;
 
 import com.antgroup.openspg.server.infra.dao.dataobject.DataSourceDOWithBLOBs;
-import com.antgroup.openspg.server.common.model.datasource.DataSource;
-import com.antgroup.openspg.server.common.model.datasource.DataSourceTypeEnum;
-import com.antgroup.openspg.server.common.model.datasource.connection.BaseConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.ConnectionInfoFactory;
+import com.antgroup.openspg.common.model.datasource.DataSource;
+import com.antgroup.openspg.common.model.datasource.DataSourceTypeEnum;
+import com.antgroup.openspg.common.model.datasource.connection.BaseConnectionInfo;
+import com.antgroup.openspg.common.model.datasource.connection.ConnectionInfoFactory;
 
 public class DataSourceConvertor {
 

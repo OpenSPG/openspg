@@ -14,8 +14,8 @@
 package com.antgroup.openspg.builder.core.physical.invoker.concept;
 
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.server.core.builder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.server.core.schema.model.semantic.BaseConceptSemantic;
+import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
+import com.antgroup.openspg.schema.model.semantic.BaseConceptSemantic;
 import java.util.List;
 
 public interface ConceptPredicate<T extends BaseConceptSemantic> {

@@ -14,13 +14,13 @@
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor;
 
 import com.alibaba.fastjson.JSON;
-import com.antgroup.openspg.server.core.schema.model.BasicInfo;
-import com.antgroup.openspg.server.core.schema.model.OntologyId;
-import com.antgroup.openspg.server.core.schema.model.SchemaConstants;
-import com.antgroup.openspg.server.core.schema.model.alter.AlterStatusEnum;
-import com.antgroup.openspg.server.core.schema.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.server.core.schema.model.predicate.EncryptTypeEnum;
-import com.antgroup.openspg.server.core.schema.model.type.MultiVersionConfig;
+import com.antgroup.openspg.schema.model.BasicInfo;
+import com.antgroup.openspg.schema.model.OntologyId;
+import com.antgroup.openspg.schema.model.SchemaConstants;
+import com.antgroup.openspg.schema.model.alter.AlterStatusEnum;
+import com.antgroup.openspg.schema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.schema.model.predicate.EncryptTypeEnum;
+import com.antgroup.openspg.schema.model.type.MultiVersionConfig;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDO;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.MapTypeEnum;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.PropertyCategoryEnum;

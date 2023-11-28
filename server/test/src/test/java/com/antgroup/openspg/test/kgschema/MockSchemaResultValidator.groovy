@@ -15,18 +15,15 @@
 package com.antgroup.openspg.test.kgschema
 
 import com.antgroup.openspg.common.util.StringUtils
-import com.antgroup.openspg.server.core.schema.model.constraint.RegularConstraint
-import com.antgroup.openspg.server.core.schema.model.identifier.PredicateIdentifier
-import com.antgroup.openspg.server.core.schema.model.identifier.SPGTripleIdentifier
-import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier
-import com.antgroup.openspg.server.core.schema.model.predicate.Property
-import com.antgroup.openspg.server.core.schema.model.predicate.Relation
-import com.antgroup.openspg.server.core.schema.model.type.*
+import com.antgroup.openspg.schema.model.constraint.RegularConstraint
+import com.antgroup.openspg.schema.model.identifier.PredicateIdentifier
+import com.antgroup.openspg.schema.model.identifier.SPGTripleIdentifier
+import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier
+import com.antgroup.openspg.schema.model.predicate.Property
+import com.antgroup.openspg.schema.model.predicate.Relation
 
 import java.util.function.Function
 import java.util.stream.Collectors
-
-import static org.junit.jupiter.api.Assertions.*
 
 class MockSchemaResultValidator {
 

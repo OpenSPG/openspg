@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.core.builder.model.service;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.common.model.base.BaseValObj;
 
 public class BuilderProgress extends BaseValObj {
 

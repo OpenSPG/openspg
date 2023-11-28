@@ -13,13 +13,13 @@
 
 package com.antgroup.openspg.server.schema.core.service.alter.check;
 
-import com.antgroup.openspg.server.core.schema.model.BasicInfo;
-import com.antgroup.openspg.server.core.schema.model.SchemaConstants;
-import com.antgroup.openspg.server.core.schema.model.SchemaException;
-import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.server.core.schema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.server.core.schema.model.type.BaseSPGType;
-import com.antgroup.openspg.server.core.schema.model.type.StandardType;
+import com.antgroup.openspg.schema.model.BasicInfo;
+import com.antgroup.openspg.schema.model.SchemaConstants;
+import com.antgroup.openspg.schema.model.SchemaException;
+import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.schema.model.type.StandardType;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;

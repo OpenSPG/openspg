@@ -21,7 +21,7 @@ import com.antgroup.openspg.server.infra.dao.mapper.JobInstDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.scheduler.convertor.SchedulerJobInstConvertor;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

@@ -12,12 +12,8 @@
   <artifactId>common-util</artifactId>
   <dependencies>
     <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
+      <groupId>com.antgroup.openspg</groupId>
       <artifactId>common-model</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>api-facade</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
@@ -26,6 +22,14 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>schema-http-client</artifactId>
     </dependency>
   </dependencies>
 </project>

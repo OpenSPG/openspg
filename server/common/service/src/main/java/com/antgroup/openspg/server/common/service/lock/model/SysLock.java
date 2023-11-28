@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.common.service.lock.model;
 
-import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.common.model.base.BaseModel;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

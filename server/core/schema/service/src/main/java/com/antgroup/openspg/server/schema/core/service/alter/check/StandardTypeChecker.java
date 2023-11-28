@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.schema.core.service.alter.check;
 
-import com.antgroup.openspg.server.core.schema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.server.core.schema.model.type.StandardType;
+import com.antgroup.openspg.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.schema.model.type.StandardType;
 
 /**
  * Standard type object structure checker, checks that each attribute value of the object meets

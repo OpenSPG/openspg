@@ -15,11 +15,11 @@ package com.antgroup.openspg.server.schema.core.service.type.convertor;
 
 import com.antgroup.openspg.server.schema.core.service.type.model.SimpleSPGType;
 import com.antgroup.openspg.server.schema.core.service.util.PropertyUtils;
-import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.server.core.schema.model.predicate.Property;
-import com.antgroup.openspg.server.core.schema.model.predicate.Relation;
-import com.antgroup.openspg.server.core.schema.model.type.BaseSPGType;
-import com.antgroup.openspg.server.core.schema.model.type.SPGTypeRef;
+import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.schema.model.predicate.Property;
+import com.antgroup.openspg.schema.model.predicate.Relation;
+import com.antgroup.openspg.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.schema.model.type.SPGTypeRef;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

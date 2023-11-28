@@ -19,7 +19,7 @@ import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
 import com.antgroup.openspg.server.api.facade.JSON;
 import com.antgroup.openspg.server.api.facade.dto.common.request.SearchEngineIndexRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.response.SearchEngineIndexResponse;
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
+import com.antgroup.openspg.common.model.datasource.connection.SearchEngineConnectionInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

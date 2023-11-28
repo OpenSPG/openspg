@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.core.logical;
 
-import com.antgroup.openspg.server.core.builder.model.pipeline.NodeTypeEnum;
-import com.antgroup.openspg.server.core.builder.model.pipeline.config.MappingNodeConfig;
+import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
+import com.antgroup.openspg.builder.model.pipeline.config.MappingNodeConfig;
 
 public class MappingNode extends BaseNode<MappingNodeConfig> {
 

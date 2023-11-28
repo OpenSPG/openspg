@@ -16,7 +16,7 @@ package com.antgroup.openspg.server.infra.dao;
 import com.antgroup.openspg.cloudext.interfaces.repository.RepositoryClient;
 import com.antgroup.openspg.cloudext.interfaces.repository.RepositoryClientDriver;
 import com.antgroup.openspg.cloudext.interfaces.repository.RepositoryClientDriverManager;
-import com.antgroup.openspg.server.common.model.datasource.connection.RepositoryConnectionInfo;
+import com.antgroup.openspg.common.model.datasource.connection.RepositoryConnectionInfo;
 
 public class JdbcRepositoryClientDriver implements RepositoryClientDriver {
 

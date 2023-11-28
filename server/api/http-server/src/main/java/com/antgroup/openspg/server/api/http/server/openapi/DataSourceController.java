@@ -21,8 +21,8 @@ import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceUsage
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
-import com.antgroup.openspg.server.common.model.datasource.DataSource;
-import com.antgroup.openspg.server.common.model.datasource.DataSourceUsage;
+import com.antgroup.openspg.common.model.datasource.DataSource;
+import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

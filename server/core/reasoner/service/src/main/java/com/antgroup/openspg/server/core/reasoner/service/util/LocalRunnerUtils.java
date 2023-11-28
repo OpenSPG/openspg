@@ -19,7 +19,7 @@ import com.antgroup.kg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.kg.reasoner.graphstate.GraphState;
 import com.antgroup.kg.reasoner.graphstate.impl.CloudExtGraphState;
 import com.antgroup.kg.reasoner.lube.catalog.Catalog;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
+import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;

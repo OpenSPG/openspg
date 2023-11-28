@@ -15,8 +15,8 @@ package com.antgroup.openspg.server.infra.dao.repository.common;
 
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
-import com.antgroup.openspg.server.common.model.exception.ProjectException;
-import com.antgroup.openspg.server.common.model.project.Project;
+import com.antgroup.openspg.common.model.exception.ProjectException;
+import com.antgroup.openspg.common.model.project.Project;
 import com.antgroup.openspg.server.common.service.project.ProjectRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDOExample;

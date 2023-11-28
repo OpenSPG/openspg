@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.biz.schema;
 
-import com.antgroup.openspg.server.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.server.core.schema.model.semantic.request.DefineLogicalCausationRequest;
-import com.antgroup.openspg.server.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.server.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
-import com.antgroup.openspg.server.core.schema.model.type.ConceptList;
+import com.antgroup.openspg.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
+import com.antgroup.openspg.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
+import com.antgroup.openspg.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.schema.model.type.ConceptList;
 
 /** Provide method to manage concept */
 public interface ConceptManager {

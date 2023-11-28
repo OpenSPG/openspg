@@ -14,7 +14,7 @@
 package com.antgroup.openspg.server.infra.dao.repository.common.convertor;
 
 import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDO;
-import com.antgroup.openspg.server.common.model.project.Project;
+import com.antgroup.openspg.common.model.project.Project;
 
 public class ProjectConvertor {
 

@@ -28,18 +28,20 @@
   </licenses>
 
   <modules>
+    <module>builder/model</module>
     <module>builder/core</module>
     <module>common/util</module>
+    <module>common/model</module>
+    <module>schema/model</module>
+    <module>schema/http-client</module>
     <module>cloudext/interface/graph-store</module>
     <module>cloudext/interface/object-store</module>
     <module>cloudext/interface/table-store</module>
-    <module>cloudext/interface/computing</module>
-    <module>cloudext/interface/job-scheduler</module>
+    <module>cloudext/interface/search-engine</module>
     <module>cloudext/impl/graph-store/tugraph</module>
     <module>cloudext/impl/object-store/local</module>
     <module>cloudext/impl/table-store/local</module>
-    <module>cloudext/impl/computing/local</module>
-    <module>cloudext/impl/job-scheduler/local</module>
+    <module>cloudext/impl/search-engine/elasticsearch</module>
   </modules>
 
   <properties>
@@ -62,12 +64,32 @@
       <!-- openspg start -->
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>common-util</artifactId>
+        <artifactId>builder-model</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
         <artifactId>builder-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg</groupId>
+        <artifactId>common-util</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg</groupId>
+        <artifactId>common-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg</groupId>
+        <artifactId>schema-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg</groupId>
+        <artifactId>schema-http-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -92,16 +114,6 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-interface-computing</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-interface-job-scheduler</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
         <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -117,62 +129,11 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-impl-computing-local</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-impl-job-scheduler-local</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
         <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
         <version>${project.version}</version>
       </dependency>
-
-      <dependency>
-        <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>common-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>core-builder-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>api-http-client</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>common-service</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>core-schema-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>api-facade</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>core-reasoner-service</artifactId>
-        <version>${project.version}</version>
-      </dependency>
       <!-- openspg end -->
-      <dependency>
-        <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy-sql</artifactId>
-        <version>${groovy.version}</version>
-        <scope>test</scope>
-      </dependency>
+
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
@@ -294,6 +255,16 @@
         <artifactId>validation-api</artifactId>
         <version>2.0.1.Final</version>
       </dependency>
+      <dependency>
+        <groupId>com.dtflys.forest</groupId>
+        <artifactId>forest-core</artifactId>
+        <version>1.5.33</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>1.2.69_noneautotype</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -315,9 +286,27 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.spockframework</groupId>
-      <artifactId>spock-spring</artifactId>
-      <version>${spock.version}</version>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-sql</artifactId>
+      <version>${groovy.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>3.2.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.7.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

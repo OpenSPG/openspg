@@ -12,10 +12,6 @@
   <artifactId>api-http-client</artifactId>
   <dependencies>
     <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>api-facade</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.dtflys.forest</groupId>
       <artifactId>forest-core</artifactId>
     </dependency>

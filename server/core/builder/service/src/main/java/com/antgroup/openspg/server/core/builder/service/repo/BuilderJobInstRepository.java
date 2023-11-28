@@ -14,8 +14,8 @@
 package com.antgroup.openspg.server.core.builder.service.repo;
 
 import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInstQuery;
-import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
-import com.antgroup.openspg.server.core.builder.model.service.BuilderStatusWithProgress;
+import com.antgroup.openspg.builder.core.service.BuilderJobInst;
+import com.antgroup.openspg.builder.core.service.BuilderStatusWithProgress;
 import java.util.List;
 
 public interface BuilderJobInstRepository {

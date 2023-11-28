@@ -15,8 +15,8 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.EdgeRecordConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
-import com.antgroup.openspg.server.core.builder.model.record.RelationRecord;
-import com.antgroup.openspg.server.core.builder.model.record.SPGRecordAlterItem;
+import com.antgroup.openspg.builder.model.record.RelationRecord;
+import com.antgroup.openspg.builder.model.record.SPGRecordAlterItem;
 import com.google.common.collect.Lists;
 import java.util.List;
 

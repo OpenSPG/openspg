@@ -14,8 +14,8 @@
 package com.antgroup.openspg.builder.core.physical.invoker;
 
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
-import com.antgroup.openspg.server.core.builder.model.pipeline.config.OperatorConfig;
-import com.antgroup.openspg.server.core.builder.model.record.BaseSPGRecord;
+import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
+import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import java.io.Serializable;
 import java.util.Map;
 import lombok.AllArgsConstructor;

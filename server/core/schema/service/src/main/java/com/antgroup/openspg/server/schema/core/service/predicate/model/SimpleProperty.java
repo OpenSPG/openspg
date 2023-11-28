@@ -13,17 +13,17 @@
 
 package com.antgroup.openspg.server.schema.core.service.predicate.model;
 
-import com.antgroup.openspg.server.core.schema.model.BaseSpoTriple;
-import com.antgroup.openspg.server.core.schema.model.BasicInfo;
-import com.antgroup.openspg.server.core.schema.model.OntologyId;
-import com.antgroup.openspg.server.core.schema.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.server.core.schema.model.predicate.EncryptTypeEnum;
-import com.antgroup.openspg.server.core.schema.model.predicate.MountedConceptConfig;
-import com.antgroup.openspg.server.core.schema.model.predicate.PropertyGroupEnum;
-import com.antgroup.openspg.server.core.schema.model.semantic.RuleCode;
-import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.server.core.schema.model.type.MultiVersionConfig;
-import com.antgroup.openspg.server.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.schema.model.BaseSpoTriple;
+import com.antgroup.openspg.schema.model.BasicInfo;
+import com.antgroup.openspg.schema.model.OntologyId;
+import com.antgroup.openspg.schema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.schema.model.predicate.EncryptTypeEnum;
+import com.antgroup.openspg.schema.model.predicate.MountedConceptConfig;
+import com.antgroup.openspg.schema.model.predicate.PropertyGroupEnum;
+import com.antgroup.openspg.schema.model.semantic.RuleCode;
+import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.schema.model.type.MultiVersionConfig;
+import com.antgroup.openspg.schema.model.type.SPGTypeEnum;
 
 /**
  * Domain model of simple property, contains the unique id of spo triple, corresponding to the DO

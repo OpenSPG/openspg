@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.core.reasoner.model;
 
-import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.common.model.exception.OpenSPGException;
 
 public class ReasonerException extends OpenSPGException {
 

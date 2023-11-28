@@ -17,7 +17,7 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriver;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.impl.DefaultIdxNameConvertor;
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
+import com.antgroup.openspg.common.model.datasource.connection.SearchEngineConnectionInfo;
 
 public class ElasticSearchEngineClientDriver implements SearchEngineClientDriver {
 

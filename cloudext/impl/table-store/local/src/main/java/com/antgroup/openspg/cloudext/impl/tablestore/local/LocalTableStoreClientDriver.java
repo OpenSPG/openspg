@@ -16,7 +16,7 @@ package com.antgroup.openspg.cloudext.impl.tablestore.local;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClientDriver;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClientDriverManager;
-import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
+import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
 
 public class LocalTableStoreClientDriver implements TableStoreClientDriver {
 

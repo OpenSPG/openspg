@@ -20,8 +20,8 @@ import com.antgroup.openspg.server.infra.dao.repository.spgschema.config.Constan
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.config.OntologyEntityName;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ValidStatusEnum;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.YesOrNoEnum;
-import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.server.core.schema.model.type.ParentTypeInfo;
+import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.schema.model.type.ParentTypeInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

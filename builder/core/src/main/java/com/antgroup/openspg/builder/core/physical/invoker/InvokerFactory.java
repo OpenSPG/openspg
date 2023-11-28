@@ -14,8 +14,8 @@
 package com.antgroup.openspg.builder.core.physical.invoker;
 
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.server.core.builder.model.pipeline.config.OperatorConfig;
-import com.antgroup.openspg.server.core.builder.model.record.BaseRecord;
+import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
+import com.antgroup.openspg.builder.model.record.BaseRecord;
 import java.util.List;
 
 public interface InvokerFactory {

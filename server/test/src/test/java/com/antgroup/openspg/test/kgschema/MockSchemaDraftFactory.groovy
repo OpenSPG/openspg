@@ -15,18 +15,15 @@
 package com.antgroup.openspg.test.kgschema
 
 import com.antgroup.openspg.common.util.StringUtils
-import com.antgroup.openspg.server.core.schema.model.BasicInfo
-import com.antgroup.openspg.server.core.schema.model.alter.AlterOperationEnum
-import com.antgroup.openspg.server.core.schema.model.alter.SchemaDraft
-import com.antgroup.openspg.server.core.schema.model.constraint.*
-import com.antgroup.openspg.server.core.schema.model.identifier.PredicateIdentifier
-import com.antgroup.openspg.server.core.schema.model.identifier.SPGTripleIdentifier
-import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier
-import com.antgroup.openspg.server.core.schema.model.predicate.*
-import com.antgroup.openspg.server.core.schema.model.semantic.LogicalRule
-import com.antgroup.openspg.server.core.schema.model.semantic.PredicateSemantic
-import com.antgroup.openspg.server.core.schema.model.semantic.SystemPredicateEnum
-import com.antgroup.openspg.server.core.schema.model.type.*
+import com.antgroup.openspg.schema.model.BasicInfo
+import com.antgroup.openspg.schema.model.alter.AlterOperationEnum
+import com.antgroup.openspg.schema.model.alter.SchemaDraft
+import com.antgroup.openspg.schema.model.identifier.PredicateIdentifier
+import com.antgroup.openspg.schema.model.identifier.SPGTripleIdentifier
+import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier
+import com.antgroup.openspg.schema.model.semantic.LogicalRule
+import com.antgroup.openspg.schema.model.semantic.PredicateSemantic
+import com.antgroup.openspg.schema.model.semantic.SystemPredicateEnum
 import com.google.common.collect.Lists
 
 import java.util.stream.Collectors

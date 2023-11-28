@@ -14,12 +14,12 @@
 package com.antgroup.openspg.server.schema.core.service.concept.convertor;
 
 import com.antgroup.openspg.server.schema.core.service.semantic.model.SimpleSemantic;
-import com.antgroup.openspg.server.core.schema.model.identifier.ConceptIdentifier;
-import com.antgroup.openspg.server.core.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.server.core.schema.model.semantic.LogicalCausationSemantic;
-import com.antgroup.openspg.server.core.schema.model.semantic.LogicalRule;
-import com.antgroup.openspg.server.core.schema.model.semantic.RuleCode;
-import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.schema.model.identifier.ConceptIdentifier;
+import com.antgroup.openspg.schema.model.semantic.DynamicTaxonomySemantic;
+import com.antgroup.openspg.schema.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.schema.model.semantic.LogicalRule;
+import com.antgroup.openspg.schema.model.semantic.RuleCode;
+import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

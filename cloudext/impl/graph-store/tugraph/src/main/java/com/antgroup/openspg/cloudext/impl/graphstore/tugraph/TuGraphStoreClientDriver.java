@@ -18,7 +18,7 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClientDrive
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.impl.DefaultLPGTypeNameConvertor;
 import com.antgroup.openspg.common.util.cloudext.CachedCloudExtClientDriver;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
+import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
 
 public class TuGraphStoreClientDriver
     extends CachedCloudExtClientDriver<GraphStoreClient, GraphStoreConnectionInfo>

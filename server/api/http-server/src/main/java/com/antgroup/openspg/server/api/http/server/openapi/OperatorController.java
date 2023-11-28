@@ -21,8 +21,8 @@ import com.antgroup.openspg.server.api.facade.dto.builder.response.OperatorVersi
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
-import com.antgroup.openspg.server.core.builder.model.operator.OperatorOverview;
-import com.antgroup.openspg.server.core.builder.model.operator.OperatorVersion;
+import com.antgroup.openspg.builder.core.operator.OperatorOverview;
+import com.antgroup.openspg.builder.core.operator.OperatorVersion;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;

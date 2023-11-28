@@ -20,8 +20,8 @@ import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.Logi
 import com.antgroup.openspg.cloudext.interfaces.repository.sequence.SequenceRepository;
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.server.schema.core.service.semantic.repository.LogicalRuleRepository;
-import com.antgroup.openspg.server.core.schema.model.semantic.LogicalRule;
-import com.antgroup.openspg.server.core.schema.model.semantic.RuleStatusEnum;
+import com.antgroup.openspg.schema.model.semantic.LogicalRule;
+import com.antgroup.openspg.schema.model.semantic.RuleStatusEnum;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

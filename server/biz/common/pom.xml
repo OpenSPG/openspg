@@ -12,10 +12,6 @@
   <artifactId>biz-common</artifactId>
   <dependencies>
     <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>api-facade</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.alipay.sofa</groupId>
       <artifactId>tracer-sofa-boot-starter</artifactId>
     </dependency>

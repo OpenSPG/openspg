@@ -21,7 +21,7 @@ import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.core.spgreasoner.service.repo.ReasonerJobInstRepository;
 import com.antgroup.openspg.server.api.facade.JSON;
 import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
-import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.server.core.reasoner.model.service.FailureReasonerResult;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInst;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerStatusWithProgress;

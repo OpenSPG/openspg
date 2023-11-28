@@ -15,7 +15,6 @@
 package com.antgroup.openspg.test.kgschema
 
 import com.antgroup.openspg.server.api.facade.ApiResponse
-import com.antgroup.openspg.server.api.facade.dto.schema.request.*
 import com.antgroup.openspg.server.api.http.client.HttpConceptFacade
 import com.antgroup.openspg.server.api.http.client.HttpSchemaFacade
 import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo
@@ -23,17 +22,17 @@ import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap
 import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClient
 import com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchEngineClient
 import com.antgroup.openspg.server.common.service.datasource.DataSourceService
-import com.antgroup.openspg.server.core.schema.model.alter.SchemaDraft
-import com.antgroup.openspg.server.core.schema.model.predicate.Property
-import com.antgroup.openspg.server.core.schema.model.predicate.Relation
-import com.antgroup.openspg.server.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest
-import com.antgroup.openspg.server.core.schema.model.semantic.request.DefineLogicalCausationRequest
-import com.antgroup.openspg.server.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest
-import com.antgroup.openspg.server.core.schema.model.semantic.request.RemoveLogicalCausationRequest
-import com.antgroup.openspg.server.core.schema.model.type.BaseSPGType
-import com.antgroup.openspg.server.core.schema.model.type.ConceptList
-import com.antgroup.openspg.server.core.schema.model.type.ProjectSchema
-import com.antgroup.openspg.server.core.schema.model.type.SPGTypeEnum
+import com.antgroup.openspg.schema.model.alter.SchemaDraft
+import com.antgroup.openspg.schema.model.predicate.Property
+import com.antgroup.openspg.schema.model.predicate.Relation
+import com.antgroup.openspg.schema.model.semantic.request.DefineDynamicTaxonomyRequest
+import com.antgroup.openspg.schema.model.semantic.request.DefineLogicalCausationRequest
+import com.antgroup.openspg.schema.model.semantic.request.RemoveDynamicTaxonomyRequest
+import com.antgroup.openspg.schema.model.semantic.request.RemoveLogicalCausationRequest
+import com.antgroup.openspg.schema.model.type.BaseSPGType
+import com.antgroup.openspg.schema.model.type.ConceptList
+import com.antgroup.openspg.schema.model.type.ProjectSchema
+import com.antgroup.openspg.schema.model.type.SPGTypeEnum
 import com.antgroup.openspg.test.sofaboot.SofaBootTestApplication
 import org.mockito.Mockito
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase

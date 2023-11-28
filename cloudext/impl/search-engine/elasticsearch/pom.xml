@@ -28,5 +28,9 @@
       <groupId>com.antgroup.openspg</groupId>
       <artifactId>cloudext-interface-search-engine</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+    </dependency>
   </dependencies>
 </project>

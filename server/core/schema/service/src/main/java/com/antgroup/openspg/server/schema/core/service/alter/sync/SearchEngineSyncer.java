@@ -15,7 +15,7 @@ package com.antgroup.openspg.server.schema.core.service.alter.sync;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
 import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
-import com.antgroup.openspg.server.core.schema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.schema.model.SPGSchemaAlterCmd;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class SearchEngineSyncer extends BaseSchemaSyncer {

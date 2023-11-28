@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.schema.core.service.semantic.model;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
-import com.antgroup.openspg.server.core.schema.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.server.core.schema.model.semantic.RuleCode;
-import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.common.model.base.BaseValObj;
+import com.antgroup.openspg.schema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.schema.model.semantic.RuleCode;
+import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
 
 /** Simple semantic object, mapping data object */
 public class SimpleSemantic extends BaseValObj {

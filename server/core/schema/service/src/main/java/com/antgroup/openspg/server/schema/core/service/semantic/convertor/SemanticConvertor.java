@@ -14,10 +14,10 @@
 package com.antgroup.openspg.server.schema.core.service.semantic.convertor;
 
 import com.antgroup.openspg.server.schema.core.service.semantic.model.SimpleSemantic;
-import com.antgroup.openspg.server.core.schema.model.SchemaException;
-import com.antgroup.openspg.server.core.schema.model.predicate.PropertyRef;
-import com.antgroup.openspg.server.core.schema.model.semantic.PredicateSemantic;
-import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.schema.model.SchemaException;
+import com.antgroup.openspg.schema.model.predicate.PropertyRef;
+import com.antgroup.openspg.schema.model.semantic.PredicateSemantic;
+import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

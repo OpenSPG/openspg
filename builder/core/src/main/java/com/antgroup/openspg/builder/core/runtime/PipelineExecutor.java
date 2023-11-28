@@ -14,7 +14,7 @@
 package com.antgroup.openspg.builder.core.runtime;
 
 import com.antgroup.openspg.builder.core.physical.PhysicalPlan;
-import com.antgroup.openspg.server.core.builder.model.pipeline.Pipeline;
+import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 
 public interface PipelineExecutor {
 

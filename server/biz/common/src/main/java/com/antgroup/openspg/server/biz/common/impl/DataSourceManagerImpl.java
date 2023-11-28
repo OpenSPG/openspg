@@ -22,8 +22,8 @@ import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceCreat
 import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceQueryRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceUsageCreateRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceUsageQueryRequest;
-import com.antgroup.openspg.server.common.model.datasource.DataSource;
-import com.antgroup.openspg.server.common.model.datasource.DataSourceUsage;
+import com.antgroup.openspg.common.model.datasource.DataSource;
+import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

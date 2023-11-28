@@ -19,7 +19,7 @@ import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryReq
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
-import com.antgroup.openspg.server.common.model.project.Project;
+import com.antgroup.openspg.common.model.project.Project;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

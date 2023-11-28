@@ -13,20 +13,20 @@
 
 package com.antgroup.openspg.server.biz.schema.impl;
 
-import com.antgroup.openspg.server.api.facade.dto.schema.request.SchemaAlterRequest;
+import com.antgroup.openspg.schema.http.client.request.SchemaAlterRequest;
 import com.antgroup.openspg.server.biz.schema.SchemaManager;
-import com.antgroup.openspg.server.common.model.exception.LockException;
-import com.antgroup.openspg.server.common.model.exception.ProjectException;
-import com.antgroup.openspg.server.common.model.project.Project;
+import com.antgroup.openspg.common.model.exception.LockException;
+import com.antgroup.openspg.common.model.exception.ProjectException;
+import com.antgroup.openspg.common.model.project.Project;
 import com.antgroup.openspg.server.common.service.lock.DistributeLockService;
 import com.antgroup.openspg.server.common.service.project.ProjectService;
-import com.antgroup.openspg.server.core.schema.model.SchemaException;
-import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.server.core.schema.model.predicate.Property;
-import com.antgroup.openspg.server.core.schema.model.type.BaseSPGType;
-import com.antgroup.openspg.server.core.schema.model.type.ProjectSchema;
-import com.antgroup.openspg.server.core.schema.model.type.SPGTypeEnum;
-import com.antgroup.openspg.server.core.schema.model.type.SPGTypeRef;
+import com.antgroup.openspg.schema.model.SchemaException;
+import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.schema.model.predicate.Property;
+import com.antgroup.openspg.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.schema.model.type.ProjectSchema;
+import com.antgroup.openspg.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.server.schema.core.service.alter.SchemaAlterPipeline;
 import com.antgroup.openspg.server.schema.core.service.alter.model.SchemaAlterContext;
 import com.antgroup.openspg.server.schema.core.service.type.SPGTypeService;

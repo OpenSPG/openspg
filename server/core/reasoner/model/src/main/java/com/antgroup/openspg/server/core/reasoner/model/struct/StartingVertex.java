@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.core.reasoner.model.struct;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
+import com.antgroup.openspg.common.model.base.BaseToString;
 import java.util.Set;
 
 public class StartingVertex extends BaseToString {

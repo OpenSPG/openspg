@@ -20,7 +20,7 @@ import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
 import com.antgroup.openspg.core.spgbuilder.service.BuilderJobInfoService;
 import com.antgroup.openspg.core.spgbuilder.service.repo.BuilderJobInfoRepository;
 import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInfoQuery;
-import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;
+import com.antgroup.openspg.builder.core.service.BuilderJobInfo;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

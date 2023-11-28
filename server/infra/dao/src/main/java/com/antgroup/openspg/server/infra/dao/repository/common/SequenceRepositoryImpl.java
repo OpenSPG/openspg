@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.common;
 
-import com.antgroup.openspg.cloudext.interfaces.repository.sequence.SequenceRepository;
+import com.antgroup.openspg.server.common.service.SequenceRepository;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Repository;

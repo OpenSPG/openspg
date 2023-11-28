@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.core.reasoner.model.service;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
+import com.antgroup.openspg.common.model.base.BaseToString;
 
 /**
  * The base class of reasoning content, subclasses can inherit this base class to enrich the

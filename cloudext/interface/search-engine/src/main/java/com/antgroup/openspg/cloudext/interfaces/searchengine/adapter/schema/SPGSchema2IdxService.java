@@ -14,7 +14,7 @@
 package com.antgroup.openspg.cloudext.interfaces.searchengine.adapter.schema;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchemaAlterItem;
-import com.antgroup.openspg.server.core.schema.model.SPGSchema;
+import com.antgroup.openspg.schema.model.SPGSchema;
 import java.util.List;
 
 public interface SPGSchema2IdxService {

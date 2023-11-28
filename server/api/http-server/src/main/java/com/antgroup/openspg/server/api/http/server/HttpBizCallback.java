@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.http.server;
 
-import com.antgroup.openspg.server.common.model.exception.IllegalParamsException;
+import com.antgroup.openspg.common.model.exception.IllegalParamsException;
 import org.springframework.http.ResponseEntity;
 
 public interface HttpBizCallback<T> {

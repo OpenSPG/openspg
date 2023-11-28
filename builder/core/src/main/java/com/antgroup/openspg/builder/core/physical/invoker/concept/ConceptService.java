@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.core.physical.invoker.concept;
 
-import com.antgroup.openspg.server.core.builder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.server.core.schema.model.type.ConceptList;
+import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
+import com.antgroup.openspg.schema.model.type.ConceptList;
 
 public interface ConceptService {
 

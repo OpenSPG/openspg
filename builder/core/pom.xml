@@ -12,8 +12,8 @@
   <artifactId>builder-core</artifactId>
   <dependencies>
     <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>api-http-client</artifactId>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>schema-http-client</artifactId>
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg</groupId>
@@ -24,23 +24,15 @@
       <artifactId>cloudext-interface-search-engine</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>core-reasoner-service</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.antgroup.kg.reasoner</groupId>
       <artifactId>local</artifactId>
       <version>${kgreasoner-version}</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/../../reasoner/spgreasoner-local-0.0.1.jar</systemPath>
+      <systemPath>${project.basedir}/../../server/lib/spgreasoner-local-0.0.1.jar</systemPath>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>core-schema-model</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>core-builder-model</artifactId>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>schema-model</artifactId>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
@@ -73,6 +65,10 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
     </dependency>
   </dependencies>
 </project>

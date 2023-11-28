@@ -22,7 +22,7 @@ import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClientDrive
 import com.antgroup.openspg.cloudext.interfaces.tablestore.cmd.TableFileCreateCmd;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.ColumnMeta;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.TableRecord;
-import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
+import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
 
 public class DefaultRecordCollector implements RecordCollector {
 

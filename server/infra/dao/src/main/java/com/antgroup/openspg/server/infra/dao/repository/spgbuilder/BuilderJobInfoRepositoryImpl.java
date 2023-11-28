@@ -20,7 +20,7 @@ import com.antgroup.openspg.server.infra.dao.repository.spgbuilder.convertor.Bui
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.core.spgbuilder.service.repo.BuilderJobInfoRepository;
 import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInfoQuery;
-import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;
+import com.antgroup.openspg.builder.core.service.BuilderJobInfo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

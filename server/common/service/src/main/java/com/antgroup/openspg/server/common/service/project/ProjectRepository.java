@@ -14,7 +14,7 @@
 package com.antgroup.openspg.server.common.service.project;
 
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
-import com.antgroup.openspg.server.common.model.project.Project;
+import com.antgroup.openspg.common.model.project.Project;
 import java.util.List;
 
 public interface ProjectRepository {

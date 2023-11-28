@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.common.service.project;
 
-import com.antgroup.openspg.server.common.model.project.Project;
+import com.antgroup.openspg.common.model.project.Project;
 
 /**
  * The domain interface of the project model provides management methods for adding, modifying,

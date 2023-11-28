@@ -23,9 +23,9 @@ import com.antgroup.openspg.server.api.facade.dto.builder.request.OperatorCreate
 import com.antgroup.openspg.server.api.facade.dto.builder.request.OperatorVersionRequest;
 import com.antgroup.openspg.server.api.facade.dto.builder.response.OperatorCreateResponse;
 import com.antgroup.openspg.server.api.facade.dto.builder.response.OperatorVersionResponse;
-import com.antgroup.openspg.server.common.model.LangTypeEnum;
-import com.antgroup.openspg.server.core.builder.model.operator.OperatorOverview;
-import com.antgroup.openspg.server.core.builder.model.operator.OperatorVersion;
+import com.antgroup.openspg.common.model.LangTypeEnum;
+import com.antgroup.openspg.builder.core.operator.OperatorOverview;
+import com.antgroup.openspg.builder.core.operator.OperatorVersion;
 import java.io.InputStream;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;

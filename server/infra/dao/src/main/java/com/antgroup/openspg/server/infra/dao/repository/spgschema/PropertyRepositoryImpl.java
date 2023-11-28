@@ -24,9 +24,9 @@ import com.antgroup.openspg.server.schema.core.service.predicate.model.SimplePro
 import com.antgroup.openspg.server.schema.core.service.predicate.repository.PropertyRepository;
 import com.antgroup.openspg.server.schema.core.service.type.model.SimpleSPGType;
 import com.antgroup.openspg.server.schema.core.service.type.repository.SPGTypeRepository;
-import com.antgroup.openspg.server.core.schema.model.alter.AlterStatusEnum;
-import com.antgroup.openspg.server.core.schema.model.predicate.PropertyRef;
-import com.antgroup.openspg.server.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.schema.model.alter.AlterStatusEnum;
+import com.antgroup.openspg.schema.model.predicate.PropertyRef;
+import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;

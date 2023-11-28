@@ -14,7 +14,7 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
 import com.antgroup.openspg.builder.core.physical.BasePhysicalNode;
-import com.antgroup.openspg.server.core.builder.model.record.BaseRecord;
+import com.antgroup.openspg.builder.model.record.BaseRecord;
 import java.util.List;
 import lombok.Getter;
 

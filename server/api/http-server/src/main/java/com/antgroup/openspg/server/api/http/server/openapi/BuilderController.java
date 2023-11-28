@@ -19,8 +19,8 @@ import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobSubm
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
-import com.antgroup.openspg.server.core.builder.model.service.BaseBuilderReceipt;
-import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
+import com.antgroup.openspg.builder.core.service.BaseBuilderReceipt;
+import com.antgroup.openspg.builder.core.service.BuilderJobInst;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

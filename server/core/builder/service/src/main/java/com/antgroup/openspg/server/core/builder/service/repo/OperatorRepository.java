@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.core.builder.service.repo;
 
-import com.antgroup.openspg.server.core.builder.model.operator.OperatorOverview;
-import com.antgroup.openspg.server.core.builder.model.operator.OperatorVersion;
+import com.antgroup.openspg.builder.core.operator.OperatorOverview;
+import com.antgroup.openspg.builder.core.operator.OperatorVersion;
 import java.util.List;
 import javax.annotation.Nullable;
 

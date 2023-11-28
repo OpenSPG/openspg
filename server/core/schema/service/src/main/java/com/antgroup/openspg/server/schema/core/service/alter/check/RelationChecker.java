@@ -13,11 +13,9 @@
 
 package com.antgroup.openspg.server.schema.core.service.alter.check;
 
-import com.antgroup.kg.reasoner.lube.catalog.Catalog;
-import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.server.core.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.server.core.schema.model.predicate.Relation;
-import com.antgroup.openspg.server.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.schema.model.predicate.Relation;
+import com.antgroup.openspg.schema.model.type.BaseAdvancedType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -55,16 +53,16 @@ public class RelationChecker extends PropertyChecker {
   }
 
   private void checkLogicalRelation(List<Relation> ruleRelations, SchemaCheckContext context) {
-    Catalog catalog = this.buildCatalog(context);
-
-    ruleRelations.forEach(
-        relation -> {
-          String dsl = relation.getLogicalRule().getContent();
-          if (StringUtils.isBlank(dsl)) {
-            return;
-          }
-          this.checkDSL(dsl, catalog);
-        });
+//    Catalog catalog = this.buildCatalog(context);
+//
+//    ruleRelations.forEach(
+//        relation -> {
+//          String dsl = relation.getLogicalRule().getContent();
+//          if (StringUtils.isBlank(dsl)) {
+//            return;
+//          }
+//          this.checkDSL(dsl, catalog);
+//        });
   }
 
   private void checkRelationNameDuplicated(List<Relation> relations) {

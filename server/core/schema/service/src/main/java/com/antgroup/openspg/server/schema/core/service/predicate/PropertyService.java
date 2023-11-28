@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.schema.core.service.predicate;
 
-import com.antgroup.openspg.server.core.schema.model.predicate.Property;
+import com.antgroup.openspg.schema.model.predicate.Property;
 import java.util.List;
 
 /** Property domain service, provide method to save/update/query/delete property. */

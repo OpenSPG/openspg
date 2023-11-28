@@ -25,14 +25,9 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClientDriverManager;
-import com.antgroup.openspg.server.common.model.datasource.DataSource;
-import com.antgroup.openspg.server.common.model.datasource.DataSourceUsageTypeEnum;
-import com.antgroup.openspg.server.common.model.datasource.connection.ComputingConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.JobSchedulerConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.ObjectStoreConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
+import com.antgroup.openspg.common.model.datasource.DataSource;
+import com.antgroup.openspg.common.model.datasource.DataSourceUsageTypeEnum;
+import com.antgroup.openspg.common.model.datasource.connection.*;
 
 public interface DataSourceService {
 
@@ -69,12 +64,12 @@ public interface DataSourceService {
         (SearchEngineConnectionInfo) searchEngine.getConnectionInfo());
   }
 
-  default JobSchedulerClient buildSharedJobSchedulerClient() {
-    DataSource scheduler =
-        getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.JOB_SCHEDULER);
-    return JobSchedulerClientDriverManager.getClient(
-        (JobSchedulerConnectionInfo) scheduler.getConnectionInfo());
-  }
+//  default JobSchedulerClient buildSharedJobSchedulerClient() {
+//    DataSource scheduler =
+//        getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.JOB_SCHEDULER);
+//    return JobSchedulerClientDriverManager.getClient(
+//        (JobSchedulerConnectionInfo) scheduler.getConnectionInfo());
+//  }
 
   default ComputingClient buildSharedComputingClient() {
     DataSource computing = getFirstDataSource(SHARED_PROJECT_ID, DataSourceUsageTypeEnum.COMPUTING);

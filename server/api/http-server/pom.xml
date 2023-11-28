@@ -14,10 +14,6 @@
   <dependencies>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>api-facade</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>biz-schema</artifactId>
     </dependency>
     <dependency>

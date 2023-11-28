@@ -25,8 +25,8 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.cmd.IdxRecordManipu
 import com.antgroup.openspg.cloudext.interfaces.searchengine.cmd.IdxSchemaAlterCmd;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecordAlterItem;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchemaAlterItem;
-import com.antgroup.openspg.server.core.builder.model.record.SPGRecordManipulateCmd;
-import com.antgroup.openspg.server.core.schema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.builder.model.record.SPGRecordManipulateCmd;
+import com.antgroup.openspg.schema.model.SPGSchemaAlterCmd;
 import java.util.List;
 import java.util.stream.Collectors;
 

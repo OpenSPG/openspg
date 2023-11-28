@@ -13,10 +13,6 @@
   <dependencies>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>api-facade</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>core-reasoner-model</artifactId>
     </dependency>
     <dependency>
@@ -24,7 +20,7 @@
       <artifactId>local</artifactId>
       <version>${kgreasoner-version}</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/../../../../reasoner/spgreasoner-local-0.0.1.jar</systemPath>
+      <systemPath>${project.basedir}/../../../lib/spgreasoner-local-0.0.1.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
