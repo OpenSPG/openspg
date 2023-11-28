@@ -28,27 +28,34 @@
   </licenses>
 
   <modules>
+    <module>builder/model</module>
     <module>builder/core</module>
-    <module>builder/launcher</module>
-    <module>builder/protocol</module>
     <module>common/util</module>
-
+    <module>server</module>
     <module>cloudext/interface/graph-store</module>
     <module>cloudext/interface/object-store</module>
     <module>cloudext/interface/table-store</module>
-    <module>cloudext/interface/computing</module>
+    <module>cloudext/interface/search-engine</module>
     <module>cloudext/impl/graph-store/tugraph</module>
     <module>cloudext/impl/object-store/local</module>
     <module>cloudext/impl/table-store/local</module>
-    <module>cloudext/impl/computing/local</module>
+    <module>cloudext/impl/search-engine/elasticsearch</module>
   </modules>
 
   <properties>
+    <antlr4.version>4.8</antlr4.version>
     <dropwizard.metrics.version>4.2.9</dropwizard.metrics.version>
+    <geotools.version>27.0</geotools.version>
+    <google.s2.version>2.0.0</google.s2.version>
     <groovy.version>3.0.9</groovy.version>
-    <gson-version>2.10.1</gson-version>
+    <gson.version>2.10.1</gson.version>
+    <jackson.version>2.13.4</jackson.version>
     <java.version>1.8</java.version>
+    <json4s.version>4.0.6</json4s.version>
+    <kgreasoner-version>20231018-OPENSOURCE</kgreasoner-version>
     <logback.version>1.2.11</logback.version>
+    <scala.binary.version>2.11</scala.binary.version>
+    <scala.version>2.11.12</scala.version>
     <spock.version>2.2-M1-groovy-3.0</spock.version>
     <spotless.version>2.30.0</spotless.version>
     <tugraph.client.version>1.4.1</tugraph.client.version>
@@ -58,8 +65,28 @@
     <dependencies>
       <!-- openspg start -->
       <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>common-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>core-schema-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>api-facade</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>api-http-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>common-util</artifactId>
+        <artifactId>builder-model</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -69,12 +96,17 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>builder-protocol</artifactId>
+        <artifactId>common-util</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
         <artifactId>cloudext-interface-graph-store</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg</groupId>
+        <artifactId>cloudext-interface-search-engine</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -85,11 +117,6 @@
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
         <artifactId>cloudext-interface-table-store</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-interface-computing</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -109,32 +136,11 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg</groupId>
-        <artifactId>cloudext-impl-computing-local</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>common-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>schema-core-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>api-facade</artifactId>
+        <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- openspg end -->
 
-      <dependency>
-        <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy-sql</artifactId>
-        <version>${groovy.version}</version>
-        <scope>test</scope>
-      </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
@@ -153,12 +159,22 @@
       <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
-        <version>${gson-version}</version>
+        <version>${gson.version}</version>
       </dependency>
       <dependency>
         <groupId>org.danilopianini</groupId>
         <artifactId>gson-extras</artifactId>
         <version>1.2.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>org.projectlombok</groupId>
@@ -205,6 +221,95 @@
         <artifactId>pemja</artifactId>
         <version>0.3.0</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.json4s</groupId>
+        <artifactId>json4s-jackson_${scala.binary.version}</artifactId>
+        <version>${json4s.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.json4s</groupId>
+        <artifactId>json4s-ext_${scala.binary.version}</artifactId>
+        <version>${json4s.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.scala-lang</groupId>
+        <artifactId>scala-compiler</artifactId>
+        <version>${scala.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.scala-lang</groupId>
+        <artifactId>scala-reflect</artifactId>
+        <version>${scala.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.scala-lang</groupId>
+        <artifactId>scala-library</artifactId>
+        <version>${scala.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.typelevel</groupId>
+        <artifactId>cats-core_${scala.binary.version}</artifactId>
+        <version>2.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>jakarta.servlet.jsp</groupId>
+        <artifactId>jakarta.servlet.jsp-api</artifactId>
+        <version>2.3.5</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>2.0.1.Final</version>
+      </dependency>
+      <dependency>
+        <groupId>com.dtflys.forest</groupId>
+        <artifactId>forest-core</artifactId>
+        <version>1.5.33</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>1.2.69_noneautotype</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.lukehutch</groupId>
+        <artifactId>fast-classpath-scanner</artifactId>
+        <version>2.7.4</version>
+      </dependency>
+      <!-- geo start -->
+      <dependency>
+        <groupId>com.google.geometry</groupId>
+        <artifactId>s2-geometry</artifactId>
+        <version>${google.s2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-swing</artifactId>
+        <version>${geotools.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.geotools</groupId>
+        <artifactId>gt-epsg-hsql</artifactId>
+        <version>${geotools.version}</version>
+      </dependency>
+      <!-- geo end -->
+      <dependency>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-runtime</artifactId>
+        <version>${antlr4.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>QLExpress</artifactId>
+        <version>3.3.2</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -226,9 +331,27 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.spockframework</groupId>
-      <artifactId>spock-spring</artifactId>
-      <version>${spock.version}</version>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-sql</artifactId>
+      <version>${groovy.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>cglib</groupId>
+      <artifactId>cglib-nodep</artifactId>
+      <version>3.2.5</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.7.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -338,7 +461,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>

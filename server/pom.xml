@@ -16,10 +16,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.alipay.sofa</groupId>
-    <artifactId>sofaboot-dependencies</artifactId>
-    <version>3.17.0</version>
-    <relativePath/>
+    <groupId>com.antgroup.openspg</groupId>
+    <artifactId>openspg-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>com.antgroup.openspg.server</groupId>
@@ -35,27 +35,40 @@
   </licenses>
 
   <modules>
-    <module>core/schema/model</module>
-    <module>core/schema/service</module>
-    <module>arks/sofaboot</module>
-    <module>common/model</module>
-    <module>common/service</module>
+    <module>api/facade</module>
     <module>api/http-client</module>
     <module>api/http-server</module>
-    <module>api/facade</module>
+    <module>arks/sofaboot</module>
+    <module>biz/common</module>
+    <module>biz/builder</module>
+    <module>biz/reasoner</module>
+    <module>biz/schema</module>
+    <module>cloudext/interface/job-scheduler</module>
+    <module>cloudext/interface/computing</module>
+    <module>cloudext/impl/job-scheduler/local</module>
+    <module>cloudext/impl/computing/local</module>
+    <module>common/model</module>
+    <module>common/service</module>
+    <module>core/schema/model</module>
+    <module>core/schema/service</module>
+    <module>core/builder/model</module>
+    <module>core/builder/service</module>
+    <module>core/reasoner/model</module>
+    <module>core/reasoner/service</module>
+    <module>infra/dao</module>
+    <module>test</module>
   </modules>
 
   <properties>
-    <java.version>1.8</java.version>
-    <spotless.version>2.30.0</spotless.version>
+    <springdoc.version>1.7.0</springdoc.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>openspg-parent</artifactId>
-        <version>${project.version}</version>
+        <groupId>com.alipay.sofa</groupId>
+        <artifactId>sofaboot-dependencies</artifactId>
+        <version>3.17.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -63,7 +76,62 @@
       <!-- openspg-server start -->
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>common-model</artifactId>
+        <artifactId>api-facade</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>api-http-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>api-http-server</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>arks-sofaboot</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>biz-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>biz-builder</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>biz-reasoner</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>biz-schema</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>cloudext-interface-job-scheduler</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>cloudext-interface-computing</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>cloudext-impl-job-scheduler-local</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>cloudext-impl-computing-local</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -73,188 +141,71 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>schema-core-model</artifactId>
+        <artifactId>core-schema-service</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>schema-core-service</artifactId>
+        <artifactId>core-builder-model</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>arks-sofaboot</artifactId>
+        <artifactId>core-builder-service</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>core-reasoner-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>core-reasoner-service</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>infra-dao</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>test</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- openspg-server end -->
+
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.30</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mybatis</groupId>
+        <artifactId>mybatis</artifactId>
+        <version>3.5.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mybatis.generator</groupId>
+        <artifactId>mybatis-generator-core</artifactId>
+        <version>1.3.7</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.pagehelper</groupId>
+        <artifactId>pagehelper</artifactId>
+        <version>4.1.6</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mybatis</groupId>
+        <artifactId>mybatis-spring</artifactId>
+        <version>2.0.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-ui</artifactId>
+        <version>${springdoc.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
-
-  <repositories>
-    <repository>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>central</id>
-      <name>Maven Repository</name>
-      <url>https://repo.maven.apache.org/maven2</url>
-    </repository>
-    <repository>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>osgeo</id>
-      <name>OSGeo Repository</name>
-      <url>https://repo.osgeo.org/repository/release/</url>
-    </repository>
-  </repositories>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.gmavenplus</groupId>
-        <artifactId>gmavenplus-plugin</artifactId>
-        <version>1.9.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>addSources</goal>
-              <goal>addTestSources</goal>
-              <goal>compile</goal>
-              <goal>compileTests</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.1.2</version>
-        <configuration>
-          <argLine>@{argLine} -Xmx1024m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m
-            -Dfile.encoding=UTF-8</argLine>
-          <includes>
-            <include>**/*Test.groovy</include>
-            <include>**/Test*.groovy</include>
-            <include>**/*Test.java</include>
-            <include>**/Test*.java</include>
-          </includes>
-          <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.11</version>
-        <executions>
-          <execution>
-            <id>prepare-agent</id>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>report</id>
-            <goals>
-              <goal>report</goal>
-            </goals>
-            <phase>test</phase>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.3.0</version>
-        <configuration>
-          <attach>true</attach>
-        </configuration>
-        <executions>
-          <execution>
-            <id>create-source-jar</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-              <goal>test-jar-no-fork</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-        <version>${spotless.version}</version>
-        <configuration>
-          <upToDateChecking>
-            <enabled>true</enabled>
-            <indexFile>${project.basedir}/spotless-index-file</indexFile>
-          </upToDateChecking>
-          <java>
-            <googleJavaFormat>
-              <version>1.7</version>
-              <style>GOOGLE</style>
-            </googleJavaFormat>
-          </java>
-          <markdown>
-            <includes>
-              <include>**/*.md</include>
-            </includes>
-            <flexmark/>
-          </markdown>
-          <pom>
-            <includes>
-              <include>pom.xml</include>
-            </includes>
-            <sortPom>
-              <encoding>UTF-8</encoding>
-              <keepBlankLines>true</keepBlankLines>
-              <nrOfIndentSpace>2</nrOfIndentSpace>
-              <indentBlankLines>false</indentBlankLines>
-              <indentSchemaLocation>true</indentSchemaLocation>
-              <expandEmptyElements>false</expandEmptyElements>
-              <sortProperties>true</sortProperties>
-            </sortPom>
-          </pom>
-          <python>
-            <includes>
-              <include>**/*.py</include>
-            </includes>
-            <black/>
-          </python>
-          <yaml>
-            <includes>
-              <include>**/*.yaml</include>
-              <include>**/*.yml</include>
-            </includes>
-          </yaml>
-        </configuration>
-        <executions>
-          <execution>
-            <id>format</id>
-            <goals>
-              <goal>check</goal>
-              <goal>apply</goal>
-            </goals>
-            <phase>process-sources</phase>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>

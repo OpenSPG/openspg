@@ -16,11 +16,12 @@ package com.antgroup.openspg.server.common.model.base;
 /**
  * Top-level parent class for domain model value objects.
  *
- * <p>Similar to the {@link BaseModel} class,All domain model value objects inherit from BaseValObj.
- * BaseValObj inherit from BaseToString and provides a unified toString method for all subclasses.
- * Some basic methods can also be added to this class in the future.
+ * <p>Similar to the {@link com.antgroup.openspg.server.common.model.base.BaseModel} class,All
+ * domain model value objects inherit from BaseValObj. BaseValObj inherit from BaseToString and
+ * provides a unified toString method for all subclasses. Some basic methods can also be added to
+ * this class in the future.
  */
-public abstract class BaseValObj extends com.antgroup.openspg.server.common.model.base.BaseToString {
+public abstract class BaseValObj extends BaseToString {
 
   private static final long serialVersionUID = 2364139127352876887L;
 }

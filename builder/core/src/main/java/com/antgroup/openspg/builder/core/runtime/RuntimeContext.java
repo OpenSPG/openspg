@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.builder.core.runtime;
 
-import com.antgroup.openspg.builder.protocol.RecordAlterOperationEnum;
+import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
+import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
-import com.antgroup.openspg.server.schema.core.model.type.ProjectSchema;
 import java.io.Serializable;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -67,12 +67,10 @@ public class RuntimeContext implements Serializable {
   }
 
   public boolean isEnableLeadTo() {
-    return false;
-    //    return (boolean) params.getOrDefault(BuilderJobInfo.LEAD_TO, Boolean.FALSE);
+    return (boolean) params.getOrDefault("leadTo", Boolean.FALSE);
   }
 
   public boolean isEnableSearchEngine() {
-    return false;
-    //    return (boolean) params.getOrDefault(BuilderJobInfo.SEARCH_ENGINE, Boolean.FALSE);
+    return (boolean) params.getOrDefault("searchEngine", Boolean.FALSE);
   }
 }

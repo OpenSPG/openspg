@@ -13,10 +13,11 @@
 
 package com.antgroup.openspg.builder.core.runtime;
 
-import com.antgroup.openspg.builder.core.compiler.physical.PhysicalPlan;
-import com.antgroup.openspg.builder.core.pipeline.Pipeline;
+import com.antgroup.openspg.builder.core.physical.PhysicalPlan;
+import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 
 public interface PipelineExecutor {
+
   /**
    * Transform the logical execution plan into a physical execution plan.
    *

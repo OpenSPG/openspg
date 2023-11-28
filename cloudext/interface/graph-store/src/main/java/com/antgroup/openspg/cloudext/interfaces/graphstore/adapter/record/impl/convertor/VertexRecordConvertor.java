@@ -13,20 +13,30 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor;
 
-import com.antgroup.openspg.builder.protocol.*;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreException;
+import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.model.record.ConceptRecord;
+import com.antgroup.openspg.builder.model.record.EntityRecord;
+import com.antgroup.openspg.builder.model.record.EventRecord;
+import com.antgroup.openspg.builder.model.record.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.StandardRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
-import com.antgroup.openspg.server.schema.core.model.identifier.ConceptIdentifier;
-import com.antgroup.openspg.server.schema.core.model.type.BaseSPGType;
-import com.antgroup.openspg.server.schema.core.model.type.ConceptType;
-import com.antgroup.openspg.server.schema.core.model.type.EntityType;
-import com.antgroup.openspg.server.schema.core.model.type.EventType;
-import com.antgroup.openspg.server.schema.core.model.type.StandardType;
+import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.type.ConceptType;
+import com.antgroup.openspg.core.schema.model.type.EntityType;
+import com.antgroup.openspg.core.schema.model.type.EventType;
+import com.antgroup.openspg.core.schema.model.type.StandardType;
+import com.antgroup.openspg.server.common.model.exception.GraphStoreException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Convertor for {@link VertexRecord} and {@link BaseAdvancedRecord AdvancedRecord}s. <strong>NOTE:
+ * </strong> {@link BaseAdvancedRecord AdvancedRecord} includes {@link ConceptRecord}, {@link
+ * EntityRecord}, {@link EventRecord}, {@link StandardRecord}.
+ */
 public class VertexRecordConvertor {
 
   public static VertexRecord toVertexRecord(BaseAdvancedRecord advancedRecord) {

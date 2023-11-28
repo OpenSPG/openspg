@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record;
 
-import com.antgroup.openspg.builder.protocol.RecordAlterOperationEnum;
+import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

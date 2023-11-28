@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.core.runtime;
 
-import com.antgroup.openspg.builder.core.compiler.physical.BuilderRecord;
+import com.antgroup.openspg.builder.core.physical.BuilderRecord;
 
 public interface RecordCollector {
 

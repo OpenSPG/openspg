@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.core.runtime.impl;
 
-import com.antgroup.openspg.builder.core.compiler.physical.BuilderRecord;
+import com.antgroup.openspg.builder.core.physical.BuilderRecord;
 import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
 import com.antgroup.openspg.builder.core.runtime.RecordCollector;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableFileHandler;

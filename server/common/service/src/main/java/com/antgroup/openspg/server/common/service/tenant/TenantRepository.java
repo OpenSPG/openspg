@@ -13,9 +13,13 @@
 
 package com.antgroup.openspg.server.common.service.tenant;
 
+import com.antgroup.openspg.server.api.facade.dto.common.request.TenantQueryRequest;
 import com.antgroup.openspg.server.common.model.tenant.Tenant;
+import java.util.List;
 
 public interface TenantRepository {
 
   int save(Tenant tenant);
+
+  List<Tenant> query(TenantQueryRequest request);
 }

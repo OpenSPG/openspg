@@ -32,9 +32,5 @@
       <groupId>com.antgroup.tugraph</groupId>
       <artifactId>tugraph-db-java-rpc-client</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>api-facade</artifactId>
-    </dependency>
   </dependencies>
 </project>

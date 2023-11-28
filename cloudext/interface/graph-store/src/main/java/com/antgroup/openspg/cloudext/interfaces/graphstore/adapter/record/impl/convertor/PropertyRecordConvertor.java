@@ -13,14 +13,14 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor;
 
-import com.antgroup.openspg.builder.protocol.BasePropertyRecord;
-import com.antgroup.openspg.builder.protocol.SPGPropertyRecord;
-import com.antgroup.openspg.builder.protocol.SPGPropertyValue;
-import com.antgroup.openspg.builder.protocol.SPGSubPropertyRecord;
+import com.antgroup.openspg.builder.model.record.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.SPGPropertyValue;
+import com.antgroup.openspg.builder.model.record.SPGSubPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGPropertyRecord;
-import com.antgroup.openspg.server.schema.core.model.predicate.Property;
-import com.antgroup.openspg.server.schema.core.model.predicate.SubProperty;
-import com.antgroup.openspg.server.schema.core.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
