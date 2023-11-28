@@ -4,13 +4,13 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 
-OpenSPG is a knowledge graph engine developed by Ant Group in collaboration with OpenKG, based on the SPG (Semantic-enhanced Programmable Graph) framework, which is a summary of Ant Group's years of experience in constructing and applying diverse domain knowledge graphs in the financial sector.
+OpenSPG is a knowledge graph engine developed by Ant Group in collaboration with OpenKG, based on the SPG (Semantic-enhanced Programmable Graph) framework, which is a summary of Ant Group's years of experience in constructing and applying diverse domain knowledge graphs in the financial scenarios.
 
 ![OpenSPG Architecture](https://mdn.alipayobjects.com/huamei_xgb3qj/afts/img/A*DmdvRKo5pyYAAAAAAAAAAAAADtmcAQ/original)
 
 # SPG Background
 
-SPG (Semantic-enhanced Programmable Graph): semantic-enhanced programmable framework is a set of semantic representation framework based on attribute graph precipitated by Ant Knowledge Graph platform after years of supporting business in the financial field. It creatively integrates LPG structural and RDF semantic, which overcomes the problem that RDF/OWL semantic complexity cannot be industrially landed, and fully inherits the advantages of LPG structural simplicity and compatibility with big data system. The framework defines and represents knowledge semantics from three aspects. First, SPG explicitly defines the formal representation and programmable framework of "knowledge", so that it can be defined, programmed, understood and processed by machines. Secondly, SPG achieves compatibility and progressive advancement between knowledge levels, supporting the construction of knowledge graphs and the continuous iterative evolution of incomplete data states in industrial-level scenarios. Finally, SPG serves as an effective bridge between big data and AI technology systems, facilitating the efficient transformation of massive data into knowledge-based insights. By doing so, it enhances the value and application potential of the data. With the SPG framework, we can construct and manage graph data more efficiently, and at the same time, we can better support business requirements and application scenarios. Since SPG framework has good scalability and flexibility, new business scenarios can quickly build their domain models and solutions by extending the domain knowledge model and developing new
+SPG (Semantic-enhanced Programmable Graph): semantic-enhanced programmable framework is a set of semantic representation framework based on property graph precipitated by Ant Knowledge Graph platform after years of supporting business in the financial field. It creatively integrates LPG structural and RDF semantic, which overcomes the problem that RDF/OWL semantic complexity cannot be industrially landed, and fully inherits the advantages of LPG structural simplicity and compatibility with big data system. The framework defines and represents knowledge semantics from three aspects. First, SPG explicitly defines the formal representation and programmable framework of "knowledge", so that it can be defined, programmed, understood and processed by machines. Secondly, SPG achieves compatibility and progressive advancement between knowledge levels, supporting the construction of knowledge graphs and the continuous iterative evolution of incomplete data states in industrial-level scenarios. Finally, SPG serves as an effective bridge between big data and AI technology systems, facilitating the efficient transformation of massive data into knowledge-based insights. By doing so, it enhances the value and application potential of the data. With the SPG framework, we can construct and manage graph data more efficiently, and at the same time, we can better support business requirements and application scenarios. Since SPG framework has good scalability and flexibility, new business scenarios can quickly build their domain models and solutions by extending the domain knowledge model and developing new
 operators.
 
 For a detailed introduction to SPG, please refer to **the [《SPG White Paper》](https://spg.openkg.cn/ "SPG White Paper") jointly released by Ant Group and OpenKG**.
@@ -22,7 +22,7 @@ OpenSPG is an open engine for knowledge graph designed and implemented on the ba
 OpenSPG Core Capabilities:
 
 * SPG-Schema semantic modeling
-  * Schema framework responsible for semantic enhancement of attribute graphs, such as subject models, evolutionary models, predicate models, etc.
+  * Schema framework responsible for semantic enhancement of property graphs, such as subject models, evolutionary models, predicate models, etc.
 * SPG-Builder knowledge construction
   * Supports the construction of both structured and unstructured knowledge.
   * Compatible and articulated with big data architecture, provides a knowledge construction operator framework to realize the conversion from data to knowledge.
