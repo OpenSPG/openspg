@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.core.schema.service.predicate.model;
 
-import com.antgroup.openspg.schema.model.BaseSpoTriple;
-import com.antgroup.openspg.schema.model.BasicInfo;
-import com.antgroup.openspg.schema.model.OntologyId;
-import com.antgroup.openspg.schema.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.schema.model.predicate.EncryptTypeEnum;
-import com.antgroup.openspg.schema.model.type.MultiVersionConfig;
+import com.antgroup.openspg.core.schema.model.BaseSpoTriple;
+import com.antgroup.openspg.core.schema.model.BasicInfo;
+import com.antgroup.openspg.core.schema.model.OntologyId;
+import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.core.schema.model.predicate.EncryptTypeEnum;
+import com.antgroup.openspg.core.schema.model.type.MultiVersionConfig;
 
 /**
  * Domain model of simple sub property, contains the unique id of spo triple, corresponding to the

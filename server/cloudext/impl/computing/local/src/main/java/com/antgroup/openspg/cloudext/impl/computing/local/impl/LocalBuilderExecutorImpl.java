@@ -29,7 +29,7 @@ import com.antgroup.openspg.cloudext.impl.computing.local.LocalBuilderExecutor;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobCanSubmitQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobProcessQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobSubmitCmd;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.common.util.thread.ThreadUtils;
 import com.antgroup.openspg.server.core.builder.model.service.BaseBuilderResult;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.core.schema.service.semantic;
 
-import com.antgroup.openspg.schema.model.semantic.PredicateSemantic;
-import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.semantic.PredicateSemantic;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import java.util.List;
 
 /**

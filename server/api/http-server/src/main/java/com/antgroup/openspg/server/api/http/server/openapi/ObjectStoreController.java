@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
-import com.antgroup.openspg.server.api.http.client.dto.common.request.ObjectStoreRequest;
-import com.antgroup.openspg.server.api.http.client.dto.common.response.ObjectStoreResponse;
+import com.antgroup.openspg.server.api.facade.dto.common.request.ObjectStoreRequest;
+import com.antgroup.openspg.server.api.facade.dto.common.response.ObjectStoreResponse;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.server.biz.common.ObjectStoreManager;

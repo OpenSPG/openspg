@@ -15,7 +15,7 @@ package com.antgroup.openspg.builder.core.physical.invoker.operator;
 
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
-import com.antgroup.openspg.schema.model.type.OperatorKey;
+import com.antgroup.openspg.core.schema.model.type.OperatorKey;
 
 public interface OperatorFactory {
 

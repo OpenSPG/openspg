@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.core.schema.service.type;
 
-import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.schema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.schema.model.type.BaseSPGType;
-import com.antgroup.openspg.schema.model.type.ProjectSchema;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import java.util.List;
 import java.util.Set;
 

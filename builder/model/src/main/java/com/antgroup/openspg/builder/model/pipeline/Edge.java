@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.model.pipeline;
 
-import com.antgroup.openspg.common.model.base.BaseValObj;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
 
 /** The connection relationship between nodes. */
 public class Edge extends BaseValObj {

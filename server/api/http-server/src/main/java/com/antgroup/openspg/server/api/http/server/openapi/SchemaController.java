@@ -13,26 +13,22 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
-import com.antgroup.openspg.schema.http.client.request.BuiltInPropertyRequest;
-import com.antgroup.openspg.schema.http.client.request.ProjectSchemaRequest;
-import com.antgroup.openspg.schema.http.client.request.RelationRequest;
-import com.antgroup.openspg.schema.http.client.request.SPGTypeRequest;
-import com.antgroup.openspg.schema.http.client.request.SchemaAlterRequest;
+import com.antgroup.openspg.core.schema.model.SchemaExtInfo;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
+import com.antgroup.openspg.core.schema.model.semantic.PredicateSemantic;
+import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo;
+import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeAdvancedConfig;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.*;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.server.biz.common.util.AssertUtils;
 import com.antgroup.openspg.server.biz.schema.SchemaManager;
-import com.antgroup.openspg.schema.model.SchemaExtInfo;
-import com.antgroup.openspg.schema.model.predicate.Property;
-import com.antgroup.openspg.schema.model.predicate.Relation;
-import com.antgroup.openspg.schema.model.predicate.SubProperty;
-import com.antgroup.openspg.schema.model.semantic.PredicateSemantic;
-import com.antgroup.openspg.schema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.schema.model.type.BaseSPGType;
-import com.antgroup.openspg.schema.model.type.ParentTypeInfo;
-import com.antgroup.openspg.schema.model.type.ProjectSchema;
-import com.antgroup.openspg.schema.model.type.SPGTypeAdvancedConfig;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -15,8 +15,8 @@ package com.antgroup.openspg.server.infra.dao.repository.spgschema;
 
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.server.common.service.SequenceRepository;
-import com.antgroup.openspg.schema.model.alter.AlterStatusEnum;
-import com.antgroup.openspg.schema.model.type.ParentTypeInfo;
+import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
+import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDOExample;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDOWithBLOBs;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyParentRelDO;

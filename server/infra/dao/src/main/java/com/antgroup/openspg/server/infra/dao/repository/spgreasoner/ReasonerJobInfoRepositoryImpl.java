@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgreasoner;
 
-import com.antgroup.openspg.server.api.http.client.dto.reasoner.request.ReasonerJobInfoQuery;
+import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInfoQuery;
 import com.antgroup.openspg.server.core.reasoner.service.repo.ReasonerJobInfoRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInfoDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInfoDOExample;

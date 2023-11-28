@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.core.schema.service.predicate;
 
-import com.antgroup.openspg.schema.model.predicate.SubProperty;
-import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import java.util.List;
 
 /** Sub property domain method，provide save, update, delete, query method. */

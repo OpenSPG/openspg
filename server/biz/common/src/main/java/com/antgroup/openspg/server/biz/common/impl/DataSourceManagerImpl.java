@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.biz.common.impl;
 
-import com.antgroup.openspg.common.model.datasource.DataSource;
-import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
-import com.antgroup.openspg.server.api.http.client.dto.common.request.DataSourceCreateRequest;
-import com.antgroup.openspg.server.api.http.client.dto.common.request.DataSourceQueryRequest;
-import com.antgroup.openspg.server.api.http.client.dto.common.request.DataSourceUsageCreateRequest;
-import com.antgroup.openspg.server.api.http.client.dto.common.request.DataSourceUsageQueryRequest;
+import com.antgroup.openspg.server.common.model.datasource.DataSource;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceUsage;
+import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceCreateRequest;
+import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceQueryRequest;
+import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceUsageCreateRequest;
+import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceUsageQueryRequest;
 import com.antgroup.openspg.server.biz.common.DataSourceManager;
 import com.antgroup.openspg.server.biz.common.convertor.DataSourceConvertor;
 import com.antgroup.openspg.server.common.service.datasource.DataSourceRepository;

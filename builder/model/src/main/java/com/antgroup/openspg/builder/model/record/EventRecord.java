@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.model.record;
 
-import com.antgroup.openspg.schema.model.type.BaseSPGType;
-import com.antgroup.openspg.schema.model.type.EventType;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.type.EventType;
 import java.util.Collections;
 import java.util.List;
 

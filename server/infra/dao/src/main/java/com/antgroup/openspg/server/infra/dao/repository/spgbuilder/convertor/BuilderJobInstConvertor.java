@@ -14,8 +14,8 @@
 package com.antgroup.openspg.server.infra.dao.repository.spgbuilder.convertor;
 
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
-import com.antgroup.openspg.schema.http.client.JSON;
+import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.server.core.builder.model.service.BaseBuilderResult;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderProgress;

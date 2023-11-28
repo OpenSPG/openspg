@@ -13,14 +13,14 @@
 
 package com.antgroup.openspg.builder.model.record;
 
-import com.antgroup.openspg.schema.model.BasicInfo;
-import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.schema.model.predicate.Property;
-import com.antgroup.openspg.schema.model.semantic.SystemPredicateEnum;
-import com.antgroup.openspg.schema.model.type.BaseSPGType;
-import com.antgroup.openspg.schema.model.type.SPGTypeEnum;
-import com.antgroup.openspg.schema.model.type.WithBasicInfo;
-import com.antgroup.openspg.schema.model.type.WithSPGTypeEnum;
+import com.antgroup.openspg.core.schema.model.BasicInfo;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.semantic.SystemPredicateEnum;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.core.schema.model.type.WithBasicInfo;
+import com.antgroup.openspg.core.schema.model.type.WithSPGTypeEnum;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

@@ -14,7 +14,7 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.VertexType;
-import com.antgroup.openspg.common.model.api.ApiConstants;
+import com.antgroup.openspg.server.common.model.api.ApiConstants;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

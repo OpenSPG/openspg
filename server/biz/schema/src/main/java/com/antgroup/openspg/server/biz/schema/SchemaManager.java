@@ -13,12 +13,11 @@
 
 package com.antgroup.openspg.server.biz.schema;
 
-// import com.antgroup.openspg.schema.http.client.request.SchemaAlterRequest;
-import com.antgroup.openspg.schema.http.client.request.SchemaAlterRequest;
-import com.antgroup.openspg.schema.model.predicate.Property;
-import com.antgroup.openspg.schema.model.type.BaseSPGType;
-import com.antgroup.openspg.schema.model.type.ProjectSchema;
-import com.antgroup.openspg.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SchemaAlterRequest;
 import java.util.List;
 
 /** Provide methods to manager project's schema information. */

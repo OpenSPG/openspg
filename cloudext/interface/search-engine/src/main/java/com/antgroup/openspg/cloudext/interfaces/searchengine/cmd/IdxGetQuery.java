@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine.cmd;
 
-import com.antgroup.openspg.common.model.base.BaseQuery;
+import com.antgroup.openspg.server.common.model.base.BaseQuery;
 import java.util.Set;
 import lombok.Getter;
 

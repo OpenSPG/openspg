@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.check;
 
-import com.antgroup.openspg.schema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;

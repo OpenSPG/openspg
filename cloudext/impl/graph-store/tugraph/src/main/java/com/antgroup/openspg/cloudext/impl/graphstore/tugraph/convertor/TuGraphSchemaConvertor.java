@@ -24,7 +24,7 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.Edge
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.LPGProperty;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.VertexType;
-import com.antgroup.openspg.schema.model.type.BasicTypeEnum;
+import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Objects;

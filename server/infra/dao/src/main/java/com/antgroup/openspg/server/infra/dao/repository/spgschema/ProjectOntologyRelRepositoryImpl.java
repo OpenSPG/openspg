@@ -23,8 +23,8 @@ import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.YesOrNoE
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.server.core.schema.service.type.model.ProjectOntologyRel;
 import com.antgroup.openspg.server.core.schema.service.type.repository.ProjectOntologyRelRepository;
-import com.antgroup.openspg.schema.model.alter.AlterStatusEnum;
-import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;

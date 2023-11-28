@@ -14,7 +14,7 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.schema;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.BaseLPGSchemaOperation;
-import com.antgroup.openspg.schema.model.SPGSchema;
+import com.antgroup.openspg.core.schema.model.SPGSchema;
 import java.util.List;
 
 public interface SPGSchema2LPGService {

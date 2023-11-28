@@ -18,10 +18,10 @@ import com.antgroup.openspg.server.core.schema.service.alter.sync.BaseSchemaSync
 import com.antgroup.openspg.server.core.schema.service.alter.sync.SchemaStorageEnum;
 import com.antgroup.openspg.server.core.schema.service.alter.sync.SchemaSyncerFactory;
 import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
-import com.antgroup.openspg.schema.model.SPGSchema;
-import com.antgroup.openspg.schema.model.SPGSchemaAlterCmd;
-import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.SPGSchema;
+import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Set;

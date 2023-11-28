@@ -24,7 +24,7 @@ import com.antgroup.openspg.builder.core.physical.invoker.concept.convertor.Reas
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.schema.model.semantic.DynamicTaxonomySemantic;
+import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
 import com.google.common.collect.Lists;
 import java.util.List;
 import scala.Tuple2;

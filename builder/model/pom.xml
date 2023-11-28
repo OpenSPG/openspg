@@ -13,8 +13,8 @@
   <artifactId>builder-model</artifactId>
   <dependencies>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
-      <artifactId>schema-model</artifactId>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>core-schema-model</artifactId>
     </dependency>
   </dependencies>
 </project>

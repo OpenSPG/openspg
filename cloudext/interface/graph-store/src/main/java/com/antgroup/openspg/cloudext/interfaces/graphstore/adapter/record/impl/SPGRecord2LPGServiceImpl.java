@@ -20,7 +20,7 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.s
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.strategy.SPGRecord2LPGStrategy;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.strategy.SPGTypeRecord2LPGStrategy;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
-import com.antgroup.openspg.common.model.exception.GraphStoreException;
+import com.antgroup.openspg.server.common.model.exception.GraphStoreException;
 import com.antgroup.openspg.builder.model.record.SPGRecordAlterItem;
 import com.antgroup.openspg.builder.model.record.SPGRecordTypeEnum;
 import java.util.HashMap;

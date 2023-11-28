@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.api.http.server;
 
-import com.antgroup.openspg.common.model.api.ApiConstants;
-import com.antgroup.openspg.common.model.exception.IllegalParamsException;
-import com.antgroup.openspg.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.common.model.api.ApiConstants;
+import com.antgroup.openspg.server.common.model.exception.IllegalParamsException;
+import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.common.util.NetworkAddressUtils;
 import com.antgroup.openspg.server.biz.common.util.BizThreadLocal;
 import lombok.extern.slf4j.Slf4j;

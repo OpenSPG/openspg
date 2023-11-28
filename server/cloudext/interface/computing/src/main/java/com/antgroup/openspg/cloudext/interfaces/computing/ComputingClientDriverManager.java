@@ -14,8 +14,8 @@
 package com.antgroup.openspg.cloudext.interfaces.computing;
 
 import com.antgroup.openspg.common.util.DriverManagerUtils;
-import com.antgroup.openspg.common.model.datasource.connection.ComputingConnectionInfo;
-import com.antgroup.openspg.common.model.exception.CloudExtException;
+import com.antgroup.openspg.server.common.model.datasource.connection.ComputingConnectionInfo;
+import com.antgroup.openspg.server.common.model.exception.CloudExtException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
 

@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.check;
 
-import com.antgroup.openspg.schema.model.predicate.Property;
-import com.antgroup.openspg.schema.model.predicate.PropertyGroupEnum;
-import com.antgroup.openspg.schema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.schema.model.type.EventType;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.predicate.PropertyGroupEnum;
+import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.core.schema.model.type.EventType;
 import org.apache.commons.collections4.CollectionUtils;
 
 public class EventTypeChecker extends BaseSpgTypeChecker {

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.common.util.cloudext;
 
-import com.antgroup.openspg.common.model.datasource.connection.BaseConnectionInfo;
+import com.antgroup.openspg.server.common.model.datasource.connection.BaseConnectionInfo;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.builder.model.record;
 
-import com.antgroup.openspg.schema.model.predicate.Property;
-import com.antgroup.openspg.schema.model.type.SPGTypeEnum;
-import com.antgroup.openspg.schema.model.type.SPGTypeRef;
-import com.antgroup.openspg.schema.model.type.WithSPGTypeEnum;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
+import com.antgroup.openspg.core.schema.model.type.WithSPGTypeEnum;
 
 public class SPGPropertyRecord extends BasePropertyRecord implements WithSPGTypeEnum {
 

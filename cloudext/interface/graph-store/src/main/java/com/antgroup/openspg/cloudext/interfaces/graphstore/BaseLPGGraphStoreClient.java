@@ -32,7 +32,7 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.oper
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.DropEdgeTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.DropVertexTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.VertexEdgeTypeOperationEnum;
-import com.antgroup.openspg.schema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

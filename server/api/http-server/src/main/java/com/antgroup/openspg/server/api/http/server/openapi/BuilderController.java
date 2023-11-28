@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
-import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobInstQuery;
-import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobSubmitRequest;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInstQuery;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobSubmitRequest;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;

@@ -35,6 +35,7 @@
   </licenses>
 
   <modules>
+    <module>api/facade</module>
     <module>api/http-client</module>
     <module>api/http-server</module>
     <module>arks/sofaboot</module>
@@ -46,7 +47,9 @@
     <module>cloudext/interface/computing</module>
     <module>cloudext/impl/job-scheduler/local</module>
     <module>cloudext/impl/computing/local</module>
+    <module>common/model</module>
     <module>common/service</module>
+    <module>core/schema/model</module>
     <module>core/schema/service</module>
     <module>core/builder/model</module>
     <module>core/builder/service</module>
@@ -71,6 +74,11 @@
       </dependency>
 
       <!-- openspg-server start -->
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>api-facade</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
         <artifactId>api-http-client</artifactId>

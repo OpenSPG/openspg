@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.builder.model.pipeline.config;
 
-import com.antgroup.openspg.common.model.LangTypeEnum;
-import com.antgroup.openspg.common.model.base.BaseValObj;
-import com.antgroup.openspg.schema.model.type.OperatorKey;
-import com.antgroup.openspg.schema.model.type.OperatorTypeEnum;
+import com.antgroup.openspg.server.common.model.LangTypeEnum;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.core.schema.model.type.OperatorKey;
+import com.antgroup.openspg.core.schema.model.type.OperatorTypeEnum;
 import java.util.Map;
 
 /** Operator related configuration, including name, version, operator address, entry class, etc. */

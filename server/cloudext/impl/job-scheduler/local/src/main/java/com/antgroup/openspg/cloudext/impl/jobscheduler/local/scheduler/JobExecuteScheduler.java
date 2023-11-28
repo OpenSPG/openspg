@@ -20,7 +20,7 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
 import com.antgroup.openspg.common.util.thread.SPGThread;
 import com.antgroup.openspg.common.util.thread.ThreadUtils;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

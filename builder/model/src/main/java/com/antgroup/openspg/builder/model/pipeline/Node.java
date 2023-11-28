@@ -14,7 +14,7 @@
 package com.antgroup.openspg.builder.model.pipeline;
 
 import com.antgroup.openspg.builder.model.pipeline.config.BaseNodeConfig;
-import com.antgroup.openspg.common.model.base.BaseValObj;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
 
 /**
  * The node used to assemble the builder pipeline, which include the node ID, name, and node

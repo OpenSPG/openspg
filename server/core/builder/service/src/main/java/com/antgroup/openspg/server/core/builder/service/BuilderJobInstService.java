@@ -14,7 +14,7 @@
 package com.antgroup.openspg.server.core.builder.service;
 
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
-import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobInstQuery;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInstQuery;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
 import com.antgroup.openspg.server.core.builder.model.service.FailureBuilderResult;

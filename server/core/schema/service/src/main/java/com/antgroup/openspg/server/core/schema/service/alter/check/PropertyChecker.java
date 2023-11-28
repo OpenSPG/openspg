@@ -18,14 +18,14 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.check;
 
-import com.antgroup.openspg.schema.model.SchemaConstants;
-import com.antgroup.openspg.schema.model.constraint.ConstraintTypeEnum;
-import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.schema.model.predicate.Property;
-import com.antgroup.openspg.schema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.schema.model.type.BasicType;
-import com.antgroup.openspg.schema.model.type.BasicType.TextBasicType;
-import com.antgroup.openspg.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.core.schema.model.SchemaConstants;
+import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.core.schema.model.type.BasicType;
+import com.antgroup.openspg.core.schema.model.type.BasicType.TextBasicType;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
 
 import java.util.ArrayList;

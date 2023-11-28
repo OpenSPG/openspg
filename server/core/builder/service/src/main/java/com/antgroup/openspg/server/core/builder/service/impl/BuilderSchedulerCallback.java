@@ -17,7 +17,7 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.SchedulerCallback;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.CallbackResult;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
 import com.antgroup.openspg.server.core.builder.model.service.FailureBuilderResult;
 import com.antgroup.openspg.server.core.builder.service.BuilderJobInstService;

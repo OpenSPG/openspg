@@ -45,9 +45,9 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.oper
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.DropVertexTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.SchemaAtomicOperationEnum;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.util.TypeNameUtils;
-import com.antgroup.openspg.common.model.api.ApiConstants;
-import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
-import com.antgroup.openspg.schema.model.type.BasicTypeEnum;
+import com.antgroup.openspg.server.common.model.api.ApiConstants;
+import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
+import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum;
 import com.antgroup.tugraph.TuGraphDbRpcClient;
 import java.io.InputStream;
 import java.nio.file.Files;

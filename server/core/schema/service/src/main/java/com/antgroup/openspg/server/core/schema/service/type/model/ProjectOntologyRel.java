@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.core.schema.service.type.model;
 
-import com.antgroup.openspg.common.model.base.BaseValObj;
-import com.antgroup.openspg.schema.model.alter.AlterStatusEnum;
-import com.antgroup.openspg.schema.model.predicate.Relation;
-import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.schema.model.type.BaseSPGType;
-import com.antgroup.openspg.schema.model.type.RefSourceEnum;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
+import com.antgroup.openspg.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.type.RefSourceEnum;
 
 /**
  * The definition and reference relationship between project and {@link BaseSPGType} or {@link

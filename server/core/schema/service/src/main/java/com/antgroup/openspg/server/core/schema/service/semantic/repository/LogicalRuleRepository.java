@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.core.schema.service.semantic.repository;
 
-import com.antgroup.openspg.schema.model.semantic.LogicalRule;
-import com.antgroup.openspg.schema.model.semantic.RuleStatusEnum;
+import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
+import com.antgroup.openspg.core.schema.model.semantic.RuleStatusEnum;
 import java.util.List;
 
 /** The read-write interface for logic rule, provides save、update、delete and query method. */

@@ -21,7 +21,7 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGP
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeType;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
-import com.antgroup.openspg.schema.model.identifier.ConceptIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;

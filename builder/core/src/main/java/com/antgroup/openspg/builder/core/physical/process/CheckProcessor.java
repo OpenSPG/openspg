@@ -22,10 +22,10 @@ import com.antgroup.openspg.builder.model.record.RelationRecord;
 import com.antgroup.openspg.builder.model.record.SPGPropertyRecord;
 import com.antgroup.openspg.builder.model.record.SPGRecordTypeEnum;
 import com.antgroup.openspg.builder.model.record.SPGSubPropertyRecord;
-import com.antgroup.openspg.schema.model.constraint.BaseConstraintItem;
-import com.antgroup.openspg.schema.model.constraint.MultiValConstraint;
-import com.antgroup.openspg.schema.model.predicate.Property;
-import com.antgroup.openspg.schema.model.predicate.SubProperty;
+import com.antgroup.openspg.core.schema.model.constraint.BaseConstraintItem;
+import com.antgroup.openspg.core.schema.model.constraint.MultiValConstraint;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
 import java.util.List;
 
 public class CheckProcessor extends BaseProcessor<CheckNodeConfig> {

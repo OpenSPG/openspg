@@ -32,5 +32,9 @@
       <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.dtflys.forest</groupId>
+      <artifactId>forest-core</artifactId>
+    </dependency>
   </dependencies>
 </project>

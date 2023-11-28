@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema;
 
-import com.antgroup.openspg.common.model.base.BaseValObj;
-import com.antgroup.openspg.schema.model.type.BasicTypeEnum;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

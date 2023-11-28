@@ -14,10 +14,10 @@
 package com.antgroup.openspg.server.core.schema.service.concept;
 
 import com.antgroup.openspg.server.core.schema.service.semantic.model.LogicalCausationQuery;
-import com.antgroup.openspg.schema.model.identifier.ConceptIdentifier;
-import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.schema.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
+import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
 import java.util.List;
 
 /**

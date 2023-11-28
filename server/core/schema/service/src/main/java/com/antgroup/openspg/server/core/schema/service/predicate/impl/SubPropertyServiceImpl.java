@@ -22,10 +22,10 @@ import com.antgroup.openspg.server.core.schema.service.predicate.repository.Prop
 import com.antgroup.openspg.server.core.schema.service.predicate.repository.SubPropertyRepository;
 import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
 import com.antgroup.openspg.server.core.schema.service.type.repository.SPGTypeRepository;
-import com.antgroup.openspg.schema.model.constraint.Constraint;
-import com.antgroup.openspg.schema.model.predicate.PropertyRef;
-import com.antgroup.openspg.schema.model.predicate.SubProperty;
-import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.constraint.Constraint;
+import com.antgroup.openspg.core.schema.model.predicate.PropertyRef;
+import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;

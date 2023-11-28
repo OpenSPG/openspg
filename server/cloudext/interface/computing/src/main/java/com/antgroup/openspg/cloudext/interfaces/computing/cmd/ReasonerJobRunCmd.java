@@ -14,8 +14,8 @@
 package com.antgroup.openspg.cloudext.interfaces.computing.cmd;
 
 import com.antgroup.openspg.server.core.reasoner.model.service.BaseReasonerContent;
-import com.antgroup.openspg.common.model.base.BaseCmd;
-import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
+import com.antgroup.openspg.server.common.model.base.BaseCmd;
+import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.enums;
 
-import com.antgroup.openspg.schema.model.constraint.RangeConstraint;
+import com.antgroup.openspg.core.schema.model.constraint.RangeConstraint;
 import org.apache.commons.lang3.StringUtils;
 
 public enum ConstraintRangeEnum {

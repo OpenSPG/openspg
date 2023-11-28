@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.core.schema.service.predicate;
 
-import com.antgroup.openspg.schema.model.predicate.Relation;
+import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import java.util.List;
 
 /**

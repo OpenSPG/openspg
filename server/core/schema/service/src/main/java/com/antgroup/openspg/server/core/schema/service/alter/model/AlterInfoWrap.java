@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.model;
 
-import com.antgroup.openspg.schema.model.identifier.SPGTripleIdentifier;
-import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.schema.model.predicate.Property;
-import com.antgroup.openspg.schema.model.predicate.Relation;
-import com.antgroup.openspg.schema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTripleIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;

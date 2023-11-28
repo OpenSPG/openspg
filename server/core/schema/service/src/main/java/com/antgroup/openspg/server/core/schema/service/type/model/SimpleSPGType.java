@@ -13,20 +13,20 @@
 
 package com.antgroup.openspg.server.core.schema.service.type.model;
 
-import com.antgroup.openspg.schema.model.BaseOntology;
-import com.antgroup.openspg.schema.model.BasicInfo;
-import com.antgroup.openspg.schema.model.OntologyId;
-import com.antgroup.openspg.schema.model.SchemaExtInfo;
-import com.antgroup.openspg.schema.model.alter.AlterOperationEnum;
-import com.antgroup.openspg.schema.model.constraint.BaseConstraintItem;
-import com.antgroup.openspg.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.schema.model.type.ConceptLayerConfig;
-import com.antgroup.openspg.schema.model.type.ConceptTaxonomicConfig;
-import com.antgroup.openspg.schema.model.type.MultiVersionConfig;
-import com.antgroup.openspg.schema.model.type.ParentTypeInfo;
-import com.antgroup.openspg.schema.model.type.SPGTypeEnum;
-import com.antgroup.openspg.schema.model.type.SPGTypeRef;
-import com.antgroup.openspg.schema.model.type.VisibleScopeEnum;
+import com.antgroup.openspg.core.schema.model.BaseOntology;
+import com.antgroup.openspg.core.schema.model.BasicInfo;
+import com.antgroup.openspg.core.schema.model.OntologyId;
+import com.antgroup.openspg.core.schema.model.SchemaExtInfo;
+import com.antgroup.openspg.core.schema.model.alter.AlterOperationEnum;
+import com.antgroup.openspg.core.schema.model.constraint.BaseConstraintItem;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.type.ConceptLayerConfig;
+import com.antgroup.openspg.core.schema.model.type.ConceptTaxonomicConfig;
+import com.antgroup.openspg.core.schema.model.type.MultiVersionConfig;
+import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
+import com.antgroup.openspg.core.schema.model.type.VisibleScopeEnum;
 import java.util.List;
 
 /** Simple spg type without property types and relation types. */

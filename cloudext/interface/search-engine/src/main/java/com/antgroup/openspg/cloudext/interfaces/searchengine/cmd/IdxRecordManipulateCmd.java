@@ -15,7 +15,7 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine.cmd;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecordAlterItem;
-import com.antgroup.openspg.common.model.base.BaseCmd;
+import com.antgroup.openspg.server.common.model.base.BaseCmd;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
 import java.util.List;
 import java.util.Map;

@@ -21,7 +21,7 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.SchedulerCallback;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInfo;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
-import com.antgroup.openspg.common.model.datasource.connection.JobSchedulerConnectionInfo;
+import com.antgroup.openspg.server.common.model.datasource.connection.JobSchedulerConnectionInfo;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;

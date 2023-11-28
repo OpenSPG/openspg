@@ -13,10 +13,11 @@
 
 package com.antgroup.openspg.server.common.service.datasource;
 
-import com.antgroup.openspg.common.model.datasource.DataSourceMountObjectTypeEnum;
-import com.antgroup.openspg.common.model.datasource.DataSourceUsage;
-import com.antgroup.openspg.common.model.datasource.DataSourceUsageTypeEnum;
-import com.antgroup.openspg.server.api.http.client.dto.common.request.DataSourceUsageQueryRequest;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceMountObjectTypeEnum;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceUsage;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceUsageTypeEnum;
+import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceUsageQueryRequest;
+
 import java.util.List;
 
 public interface DataSourceUsageRepository {

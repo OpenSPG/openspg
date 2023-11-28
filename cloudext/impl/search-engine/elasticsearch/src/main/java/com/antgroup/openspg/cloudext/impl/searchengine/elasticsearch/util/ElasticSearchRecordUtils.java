@@ -32,7 +32,7 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.QueryGroup;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.TermQuery;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.schema.http.client.JSON;
+import com.antgroup.openspg.server.api.facade.JSON;
 import com.dtflys.forest.http.ForestResponse;
 import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;

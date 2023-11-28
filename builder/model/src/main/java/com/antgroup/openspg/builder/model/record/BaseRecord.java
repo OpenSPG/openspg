@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.model.record;
 
-import com.antgroup.openspg.common.model.base.BaseValObj;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.Comparator;
 
 public abstract class BaseRecord extends BaseValObj {

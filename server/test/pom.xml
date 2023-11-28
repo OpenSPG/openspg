@@ -11,10 +11,6 @@
   <artifactId>test</artifactId>
   <dependencies>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
-      <artifactId>schema-http-client</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
     </dependency>
@@ -25,6 +21,16 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>api-http-client</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

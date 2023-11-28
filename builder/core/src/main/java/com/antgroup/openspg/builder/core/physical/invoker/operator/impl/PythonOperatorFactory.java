@@ -17,7 +17,7 @@ import com.antgroup.openspg.builder.core.physical.invoker.operator.OperatorFacto
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
 import com.antgroup.openspg.common.util.Md5Utils;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
-import com.antgroup.openspg.schema.model.type.OperatorKey;
+import com.antgroup.openspg.core.schema.model.type.OperatorKey;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.model;
 
-import com.antgroup.openspg.common.model.base.BaseValObj;
-import com.antgroup.openspg.common.model.project.Project;
-import com.antgroup.openspg.schema.model.alter.AlterOperationEnum;
-import com.antgroup.openspg.schema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.antgroup.openspg.server.common.model.project.Project;
+import com.antgroup.openspg.core.schema.model.alter.AlterOperationEnum;
+import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;

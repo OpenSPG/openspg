@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
-import com.antgroup.openspg.server.api.http.client.dto.builder.request.OperatorCreateRequest;
-import com.antgroup.openspg.server.api.http.client.dto.builder.request.OperatorVersionRequest;
-import com.antgroup.openspg.server.api.http.client.dto.builder.response.OperatorCreateResponse;
-import com.antgroup.openspg.server.api.http.client.dto.builder.response.OperatorVersionResponse;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.OperatorCreateRequest;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.OperatorVersionRequest;
+import com.antgroup.openspg.server.api.facade.dto.builder.response.OperatorCreateResponse;
+import com.antgroup.openspg.server.api.facade.dto.builder.response.OperatorVersionResponse;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.enums;
 
-import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 
 public enum ProjectEntityTypeEnum {
   ENTITY_TYPE,

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.check;
 
-import com.antgroup.openspg.schema.model.constraint.Constraint;
-import com.antgroup.openspg.schema.model.constraint.ConstraintTypeEnum;
+import com.antgroup.openspg.core.schema.model.constraint.Constraint;
+import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
 
 public class CommonChecker {
 

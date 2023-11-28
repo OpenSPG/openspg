@@ -14,7 +14,7 @@
 package com.antgroup.openspg.cloudext.interfaces.objectstore.cmd;
 
 import com.antgroup.openspg.cloudext.interfaces.objectstore.model.ObjectStorePath;
-import com.antgroup.openspg.common.model.base.BaseCmd;
+import com.antgroup.openspg.server.common.model.base.BaseCmd;
 import java.io.InputStream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

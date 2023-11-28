@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.arks.sofaboot;
 
-import com.antgroup.openspg.schema.http.client.ConnectionInfo;
-import com.antgroup.openspg.schema.http.client.HttpClientBootstrap;
+import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo;
+import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap;
 import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
 import com.antgroup.openspg.server.common.service.spring.SpringContextAware;
 import org.springframework.beans.factory.annotation.Autowired;

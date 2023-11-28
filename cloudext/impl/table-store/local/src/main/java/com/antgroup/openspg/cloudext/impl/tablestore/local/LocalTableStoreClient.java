@@ -17,7 +17,7 @@ import com.antgroup.openspg.cloudext.interfaces.tablestore.TableFileHandler;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.cmd.TableFileCreateCmd;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.ColumnMeta;
-import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
+import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
 import com.antgroup.openspg.common.util.tuple.Tuple2;
 import com.opencsv.CSVWriter;
 import java.io.File;

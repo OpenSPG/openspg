@@ -15,8 +15,8 @@ package com.antgroup.openspg.server.core.schema.service.semantic.repository;
 
 import com.antgroup.openspg.server.core.schema.service.semantic.model.LogicalCausationQuery;
 import com.antgroup.openspg.server.core.schema.service.semantic.model.SimpleSemantic;
-import com.antgroup.openspg.schema.model.semantic.LogicalCausationSemantic;
-import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import java.util.List;
 
 /**

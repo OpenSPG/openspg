@@ -13,7 +13,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
+      <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>common-model</artifactId>
     </dependency>
     <dependency>

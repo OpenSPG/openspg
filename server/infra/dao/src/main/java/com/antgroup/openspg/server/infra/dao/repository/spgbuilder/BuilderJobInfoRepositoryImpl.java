@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgbuilder;
 
-import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobInfoQuery;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInfoQuery;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;
 import com.antgroup.openspg.server.core.builder.service.repo.BuilderJobInfoRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInfoDO;

@@ -17,8 +17,8 @@ import com.antgroup.openspg.server.infra.dao.dataobject.ProjectOntologyRelDO;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ProjectEntityTypeEnum;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.YesOrNoEnum;
 import com.antgroup.openspg.server.core.schema.service.type.model.ProjectOntologyRel;
-import com.antgroup.openspg.schema.model.alter.AlterStatusEnum;
-import com.antgroup.openspg.schema.model.type.RefSourceEnum;
+import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
+import com.antgroup.openspg.core.schema.model.type.RefSourceEnum;
 import java.util.Date;
 
 public class ProjectOntologyRelConvertor {

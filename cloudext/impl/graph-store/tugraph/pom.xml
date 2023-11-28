@@ -29,10 +29,6 @@
       <artifactId>cloudext-interface-graph-store</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
-      <artifactId>common-model</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.antgroup.tugraph</groupId>
       <artifactId>tugraph-db-java-rpc-client</artifactId>
     </dependency>

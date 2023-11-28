@@ -25,9 +25,9 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClientDriverManager;
-import com.antgroup.openspg.common.model.datasource.DataSource;
-import com.antgroup.openspg.common.model.datasource.DataSourceUsageTypeEnum;
-import com.antgroup.openspg.common.model.datasource.connection.*;
+import com.antgroup.openspg.server.common.model.datasource.DataSource;
+import com.antgroup.openspg.server.common.model.datasource.DataSourceUsageTypeEnum;
+import com.antgroup.openspg.server.common.model.datasource.connection.*;
 
 public interface DataSourceService {
 

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgbuilder;
 
-import com.antgroup.openspg.schema.http.client.JSON;
-import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobInstQuery;
+import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInstQuery;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderStatusWithProgress;
 import com.antgroup.openspg.server.core.builder.service.repo.BuilderJobInstRepository;

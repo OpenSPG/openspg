@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.core.schema.service.type.model;
 
-import com.antgroup.openspg.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.List;

@@ -15,16 +15,16 @@ package com.antgroup.openspg.server.core.schema.service.predicate.convertor;
 
 import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleProperty;
 import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleSubProperty;
-import com.antgroup.openspg.schema.model.OntologyId;
-import com.antgroup.openspg.schema.model.predicate.EncryptTypeEnum;
-import com.antgroup.openspg.schema.model.predicate.MountedConceptConfig;
-import com.antgroup.openspg.schema.model.predicate.Property;
-import com.antgroup.openspg.schema.model.predicate.PropertyGroupEnum;
-import com.antgroup.openspg.schema.model.predicate.Relation;
-import com.antgroup.openspg.schema.model.predicate.SubProperty;
-import com.antgroup.openspg.schema.model.semantic.RuleCode;
-import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.schema.model.type.MultiVersionConfig;
+import com.antgroup.openspg.core.schema.model.OntologyId;
+import com.antgroup.openspg.core.schema.model.predicate.EncryptTypeEnum;
+import com.antgroup.openspg.core.schema.model.predicate.MountedConceptConfig;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.predicate.PropertyGroupEnum;
+import com.antgroup.openspg.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
+import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.type.MultiVersionConfig;
 
 public class PredicateConvertor {
 

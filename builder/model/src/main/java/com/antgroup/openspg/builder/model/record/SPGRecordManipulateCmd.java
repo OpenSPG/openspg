@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.model.record;
 
-import com.antgroup.openspg.common.model.base.BaseCmd;
+import com.antgroup.openspg.server.common.model.base.BaseCmd;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;

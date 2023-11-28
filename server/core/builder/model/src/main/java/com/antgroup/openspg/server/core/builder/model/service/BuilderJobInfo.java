@@ -15,8 +15,8 @@ package com.antgroup.openspg.server.core.builder.model.service;
 
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.common.model.base.BaseModel;
-import com.antgroup.openspg.common.model.job.JobInfoStateEnum;
+import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.job.JobInfoStateEnum;
 import java.util.HashMap;
 import java.util.Map;
 

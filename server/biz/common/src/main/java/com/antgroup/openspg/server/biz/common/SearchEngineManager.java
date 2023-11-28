@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.biz.common;
 
-import com.antgroup.openspg.server.api.http.client.dto.common.request.SearchEngineIndexRequest;
-import com.antgroup.openspg.server.api.http.client.dto.common.response.SearchEngineIndexResponse;
+import com.antgroup.openspg.server.api.facade.dto.common.request.SearchEngineIndexRequest;
+import com.antgroup.openspg.server.api.facade.dto.common.response.SearchEngineIndexResponse;
 
 public interface SearchEngineManager {
 

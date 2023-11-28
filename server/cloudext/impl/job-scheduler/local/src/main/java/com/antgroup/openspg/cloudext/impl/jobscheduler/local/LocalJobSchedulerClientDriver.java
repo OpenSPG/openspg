@@ -16,7 +16,7 @@ package com.antgroup.openspg.cloudext.impl.jobscheduler.local;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.JobSchedulerClient;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.JobSchedulerClientDriver;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.JobSchedulerClientDriverManager;
-import com.antgroup.openspg.common.model.datasource.connection.JobSchedulerConnectionInfo;
+import com.antgroup.openspg.server.common.model.datasource.connection.JobSchedulerConnectionInfo;
 
 public class LocalJobSchedulerClientDriver implements JobSchedulerClientDriver {
 

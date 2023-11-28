@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.biz.builder.impl;
 
-import com.antgroup.openspg.common.model.job.JobInfoStateEnum;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.common.model.job.JobInfoStateEnum;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 
-import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobInstQuery;
-import com.antgroup.openspg.server.api.http.client.dto.builder.request.BuilderJobSubmitRequest;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInstQuery;
+import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobSubmitRequest;
 import com.antgroup.openspg.server.biz.builder.BuilderManager;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;

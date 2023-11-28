@@ -20,10 +20,10 @@ import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobSubmitC
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.JobSchedulerClient;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.JobTypeEnum;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
-import com.antgroup.openspg.common.model.datasource.connection.GraphStoreConnectionInfo;
-import com.antgroup.openspg.common.model.datasource.connection.TableStoreConnectionInfo;
-import com.antgroup.openspg.common.model.job.JobInstStatusEnum;
-import com.antgroup.openspg.server.api.http.client.dto.reasoner.request.ReasonerJobInstQuery;
+import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
+import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
+import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
 import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
 import com.antgroup.openspg.server.core.reasoner.model.service.FailureReasonerResult;

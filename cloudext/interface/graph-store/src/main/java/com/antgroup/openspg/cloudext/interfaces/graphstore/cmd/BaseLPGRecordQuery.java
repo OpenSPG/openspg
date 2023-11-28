@@ -18,7 +18,7 @@ import static com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.reco
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGTypeNameConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.LPGRecordStructEnum;
-import com.antgroup.openspg.common.model.base.BaseQuery;
+import com.antgroup.openspg.server.common.model.base.BaseQuery;
 import lombok.Getter;
 
 @Getter

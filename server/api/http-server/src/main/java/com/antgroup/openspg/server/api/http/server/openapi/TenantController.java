@@ -14,12 +14,12 @@
 package com.antgroup.openspg.server.api.http.server.openapi;
 
 import com.antgroup.openspg.server.biz.common.TenantManager;
-import com.antgroup.openspg.server.api.http.client.dto.common.request.TenantCreateRequest;
-import com.antgroup.openspg.server.api.http.client.dto.common.request.TenantQueryRequest;
+import com.antgroup.openspg.server.api.facade.dto.common.request.TenantCreateRequest;
+import com.antgroup.openspg.server.api.facade.dto.common.request.TenantQueryRequest;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
-import com.antgroup.openspg.common.model.tenant.Tenant;
+import com.antgroup.openspg.server.common.model.tenant.Tenant;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -26,8 +26,8 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.cmd.IdxSchemaAlterC
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchema;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.SearchRequest;
-import com.antgroup.openspg.common.model.api.ApiConstants;
-import com.antgroup.openspg.common.model.datasource.connection.SearchEngineConnectionInfo;
+import com.antgroup.openspg.server.common.model.api.ApiConstants;
+import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
 import com.dtflys.forest.Forest;
 import com.dtflys.forest.config.ForestConfiguration;
 import java.util.List;
