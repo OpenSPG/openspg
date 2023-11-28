@@ -25,14 +25,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>cloudext-interface-computing</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg</groupId>
-      <artifactId>cloudext-interface-table-store</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.antgroup.openspg</groupId>
       <artifactId>builder-core</artifactId>
     </dependency>
@@ -41,19 +33,19 @@
       <artifactId>core-builder-model</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>cloudext-interface-computing</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-interface-table-store</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.antgroup.kg.reasoner</groupId>
       <artifactId>local</artifactId>
       <version>${kgreasoner-version}</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/../../../../lib/spgreasoner-local-0.0.1.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-configuration2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.dropwizard.metrics</groupId>
-      <artifactId>metrics-core</artifactId>
     </dependency>
   </dependencies>
 </project>
