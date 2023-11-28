@@ -13,21 +13,21 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema;
 
+import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.server.core.schema.service.type.model.ProjectOntologyRel;
+import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
+import com.antgroup.openspg.server.core.schema.service.type.repository.OntologyParentRelRepository;
+import com.antgroup.openspg.server.core.schema.service.type.repository.ProjectOntologyRelRepository;
+import com.antgroup.openspg.server.core.schema.service.type.repository.SPGTypeRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDOExample;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDOWithBLOBs;
 import com.antgroup.openspg.server.infra.dao.mapper.OntologyDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.OntologyConvertor;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.EntityCategoryEnum;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ValidStatusEnum;
-import com.antgroup.openspg.server.core.schema.service.type.model.ProjectOntologyRel;
-import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
-import com.antgroup.openspg.server.core.schema.service.type.repository.OntologyParentRelRepository;
-import com.antgroup.openspg.server.core.schema.service.type.repository.ProjectOntologyRelRepository;
-import com.antgroup.openspg.server.core.schema.service.type.repository.SPGTypeRepository;
-import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
-import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo;
-import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.core.schema.model.constraint;
 
-import com.antgroup.openspg.server.common.model.base.BaseModel;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.server.common.model.base.BaseModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

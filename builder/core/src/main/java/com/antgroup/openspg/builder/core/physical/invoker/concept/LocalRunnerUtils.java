@@ -28,19 +28,18 @@ import java.util.Map;
 public class LocalRunnerUtils {
 
   public static Catalog buildCatalog(Long projectId, KgSchemaConnectionInfo connInfo) {
-    //    Catalog catalog = new OpenKgCatalog(projectId, connInfo, null);
-    //    catalog.init();
-    //    return catalog;
-    return null;
+    Catalog catalog = new OpenKgCatalog(projectId, connInfo, null);
+    catalog.init();
+    return catalog;
   }
 
   public static GraphState<IVertexId> buildGraphState(GraphStoreConnectionInfo connInfo) {
     CloudExtGraphState cloudExtGraphState = new CloudExtGraphState();
 
-//    Map<String, Object> params = new HashMap<>();
-//    params.put("cloudext.graphstore.schema", connInfo.getScheme());
-//    params.putAll(connInfo.getParams());
-//    cloudExtGraphState.init((Map) Collections.unmodifiableMap(params));
+    Map<String, Object> params = new HashMap<>();
+    params.put("cloudext.graphstore.schema", connInfo.getScheme());
+    params.putAll(connInfo.getParams());
+    cloudExtGraphState.init((Map) Collections.unmodifiableMap(params));
     return cloudExtGraphState;
   }
 }

@@ -13,10 +13,6 @@
 
 package com.antgroup.openspg.server.core.schema.service.predicate.convertor;
 
-import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleProperty;
-import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleSubProperty;
-import com.antgroup.openspg.server.core.schema.service.type.convertor.SPGTypeConvertor;
-import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
 import com.antgroup.openspg.core.schema.model.SchemaException;
 import com.antgroup.openspg.core.schema.model.constraint.Constraint;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
@@ -29,6 +25,10 @@ import com.antgroup.openspg.core.schema.model.semantic.PredicateSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.schema.model.type.BasicType;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
+import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleProperty;
+import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleSubProperty;
+import com.antgroup.openspg.server.core.schema.service.type.convertor.SPGTypeConvertor;
+import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

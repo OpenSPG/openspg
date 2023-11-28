@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.core.schema.model.type;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.server.common.model.base.BaseToString;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

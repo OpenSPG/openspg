@@ -18,20 +18,23 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.check;
 
+import com.antgroup.kg.reasoner.catalog.impl.OpenKgCatalog;
+import com.antgroup.kg.reasoner.lube.block.Block;
+import com.antgroup.kg.reasoner.lube.catalog.Catalog;
+import com.antgroup.kg.reasoner.lube.logical.planning.LogicalPlannerContext;
+import com.antgroup.kg.reasoner.lube.logical.validate.Validator;
+import com.antgroup.kg.reasoner.lube.parser.ParserInterface;
+import com.antgroup.kg.reasoner.parser.KgDslParser;
+import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.core.schema.model.DslSyntaxError;
 import com.antgroup.openspg.core.schema.model.SchemaConstants;
 import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
-import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
-import com.antgroup.openspg.core.schema.model.type.BasicType;
+import com.antgroup.openspg.core.schema.model.type.*;
 import com.antgroup.openspg.core.schema.model.type.BasicType.TextBasicType;
-import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -152,38 +155,37 @@ public class PropertyChecker {
   }
 
   private void checkLogicalProperty(List<Property> logicalProperties, SchemaCheckContext context) {
-    //    Catalog catalog = this.buildCatalog(context);
-    //
-    //    logicalProperties.forEach(
-    //        property -> {
-    //          String dsl = property.getLogicalRule().getContent();
-    //          if (StringUtils.isBlank(dsl)) {
-    //            return;
-    //          }
-    //          this.checkDSL(dsl, catalog);
-    //        });
+    Catalog catalog = this.buildCatalog(context);
+
+    logicalProperties.forEach(
+        property -> {
+          String dsl = property.getLogicalRule().getContent();
+          if (StringUtils.isBlank(dsl)) {
+            return;
+          }
+          this.checkDSL(dsl, catalog);
+        });
   }
 
-  //  protected Catalog buildCatalog(SchemaCheckContext context) {
-  //    List<BaseSPGType> spgTypes = context.getMergedSchema();
-  //    ProjectSchema projectSchema = new ProjectSchema(spgTypes);
-  //    Catalog catalog = new OpenKgCatalog(context.getProjectId(), null, projectSchema);
-  //    catalog.init();
-  //    return catalog;
-  //    return null;
-  //  }
+  protected Catalog buildCatalog(SchemaCheckContext context) {
+    List<BaseSPGType> spgTypes = context.getMergedSchema();
+    ProjectSchema projectSchema = new ProjectSchema(spgTypes);
+    Catalog catalog = new OpenKgCatalog(context.getProjectId(), null, projectSchema);
+    catalog.init();
+    return catalog;
+  }
 
-  //  protected void checkDSL(String dsl, Catalog catalog) {
-  //    try {
-  //      ParserInterface parser = new KgDslParser();
-  //      Block block = parser.parse(dsl);
-  //      LogicalPlannerContext context = new LogicalPlannerContext(catalog, parser, new
-  // HashMap<>());
-  //      Validator.validate(parser, block, context);
-  //    } catch (Exception e) {
-  //      throw DslSyntaxError.dslSyntaxError(e);
-  //    }
-  //  }
+  protected void checkDSL(String dsl, Catalog catalog) {
+    try {
+      ParserInterface parser = new KgDslParser();
+      Block block = parser.parse(dsl);
+      LogicalPlannerContext context =
+          new LogicalPlannerContext(catalog, parser, new scala.collection.immutable.HashMap<>());
+      Validator.validate(parser, block, context);
+    } catch (Exception e) {
+      throw DslSyntaxError.dslSyntaxError(e);
+    }
+  }
 
   protected void checkBuiltInProperty(SPGTypeEnum spgTypeEnum, Property property) {
     if (property.getAlterOperation() == null) {

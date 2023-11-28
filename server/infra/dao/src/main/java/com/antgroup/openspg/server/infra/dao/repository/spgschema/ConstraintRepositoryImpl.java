@@ -13,14 +13,14 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema;
 
+import com.antgroup.openspg.common.util.CollectionsUtils;
+import com.antgroup.openspg.core.schema.model.constraint.Constraint;
 import com.antgroup.openspg.server.common.service.SequenceRepository;
+import com.antgroup.openspg.server.core.schema.service.predicate.repository.ConstraintRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.ConstraintDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.ConstraintDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.ConstraintDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.ConstraintDOConvertor;
-import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.core.schema.service.predicate.repository.ConstraintRepository;
-import com.antgroup.openspg.core.schema.model.constraint.Constraint;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;

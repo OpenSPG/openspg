@@ -13,14 +13,14 @@
 
 package com.antgroup.openspg.server.api.http.client;
 
-import com.antgroup.openspg.server.api.facade.ApiResponse;
-import com.antgroup.openspg.server.api.facade.client.ConceptFacade;
-import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
+import com.antgroup.openspg.server.api.facade.ApiResponse;
+import com.antgroup.openspg.server.api.facade.client.ConceptFacade;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
 import com.antgroup.openspg.server.api.http.client.forest.ForestUtils;
 import com.antgroup.openspg.server.api.http.client.forest.client.ConceptForestClient;
 

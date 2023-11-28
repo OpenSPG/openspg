@@ -13,17 +13,17 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
-import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
-import com.antgroup.openspg.server.biz.common.util.AssertUtils;
-import com.antgroup.openspg.server.biz.schema.ConceptManager;
-import com.antgroup.openspg.server.api.http.server.BaseController;
-import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
-import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
+import com.antgroup.openspg.server.api.http.server.BaseController;
+import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
+import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
+import com.antgroup.openspg.server.biz.common.util.AssertUtils;
+import com.antgroup.openspg.server.biz.schema.ConceptManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

@@ -13,13 +13,6 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.stage;
 
-import com.antgroup.openspg.server.core.schema.service.alter.check.SchemaAlterChecker;
-import com.antgroup.openspg.server.core.schema.service.alter.check.SchemaCheckContext;
-import com.antgroup.openspg.server.core.schema.service.alter.check.SchemaMap;
-import com.antgroup.openspg.server.core.schema.service.alter.model.SchemaAlterContext;
-import com.antgroup.openspg.server.core.schema.service.alter.stage.handler.BuiltInPropertyHandler;
-import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
-import com.antgroup.openspg.server.core.schema.service.util.PropertyUtils;
 import com.antgroup.openspg.core.schema.model.SchemaConstants;
 import com.antgroup.openspg.core.schema.model.SchemaException;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
@@ -29,6 +22,13 @@ import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.StandardType;
 import com.antgroup.openspg.core.schema.model.type.WithAlterOperation;
+import com.antgroup.openspg.server.core.schema.service.alter.check.SchemaAlterChecker;
+import com.antgroup.openspg.server.core.schema.service.alter.check.SchemaCheckContext;
+import com.antgroup.openspg.server.core.schema.service.alter.check.SchemaMap;
+import com.antgroup.openspg.server.core.schema.service.alter.model.SchemaAlterContext;
+import com.antgroup.openspg.server.core.schema.service.alter.stage.handler.BuiltInPropertyHandler;
+import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
+import com.antgroup.openspg.server.core.schema.service.util.PropertyUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

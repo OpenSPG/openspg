@@ -14,8 +14,8 @@
 package com.antgroup.openspg.core.schema.model.type;
 
 import com.antgroup.openspg.core.schema.model.BasicInfo;
-import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import java.util.List;
 

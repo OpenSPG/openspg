@@ -15,7 +15,6 @@ package com.antgroup.openspg.server.api.facade;
 
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.config.*;
-import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.core.schema.model.constraint.BaseConstraintItem;
 import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
 import com.antgroup.openspg.core.schema.model.constraint.EnumConstraint;
@@ -44,6 +43,7 @@ import com.antgroup.openspg.core.schema.model.type.EntityType;
 import com.antgroup.openspg.core.schema.model.type.EventType;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.StandardType;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.server.core.builder.model.service.BaseBuilderResult;
 import com.antgroup.openspg.server.core.builder.model.service.FailureBuilderResult;
 import com.antgroup.openspg.server.core.builder.model.service.SuccessBuilderResult;

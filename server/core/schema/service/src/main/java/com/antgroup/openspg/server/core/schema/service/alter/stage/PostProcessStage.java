@@ -13,15 +13,15 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.stage;
 
+import com.antgroup.openspg.core.schema.model.SPGSchema;
+import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.server.core.schema.service.alter.model.SchemaAlterContext;
 import com.antgroup.openspg.server.core.schema.service.alter.sync.BaseSchemaSyncer;
 import com.antgroup.openspg.server.core.schema.service.alter.sync.SchemaStorageEnum;
 import com.antgroup.openspg.server.core.schema.service.alter.sync.SchemaSyncerFactory;
 import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
-import com.antgroup.openspg.core.schema.model.SPGSchema;
-import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
-import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Set;

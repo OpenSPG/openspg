@@ -14,7 +14,6 @@
 package com.antgroup.openspg.server.common.model.exception;
 
 import com.antgroup.openspg.server.common.model.datasource.DataSourceUsageTypeEnum;
-import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 
 public class DataSourceException extends OpenSPGException {
 

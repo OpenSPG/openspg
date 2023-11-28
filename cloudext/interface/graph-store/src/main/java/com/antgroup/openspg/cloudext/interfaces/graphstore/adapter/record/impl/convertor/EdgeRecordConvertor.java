@@ -13,13 +13,13 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor;
 
-import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
-import com.antgroup.openspg.server.common.model.exception.GraphStoreException;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.RelationRecord;
 import com.antgroup.openspg.builder.model.record.SPGPropertyRecord;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.server.common.model.exception.GraphStoreException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

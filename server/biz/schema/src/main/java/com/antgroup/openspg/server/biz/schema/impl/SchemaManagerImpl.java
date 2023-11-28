@@ -13,13 +13,6 @@
 
 package com.antgroup.openspg.server.biz.schema.impl;
 
-import com.antgroup.openspg.server.api.facade.dto.schema.request.SchemaAlterRequest;
-import com.antgroup.openspg.server.biz.schema.SchemaManager;
-import com.antgroup.openspg.server.common.model.exception.LockException;
-import com.antgroup.openspg.server.common.model.exception.ProjectException;
-import com.antgroup.openspg.server.common.model.project.Project;
-import com.antgroup.openspg.server.common.service.lock.DistributeLockService;
-import com.antgroup.openspg.server.common.service.project.ProjectService;
 import com.antgroup.openspg.core.schema.model.SchemaException;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
@@ -27,6 +20,13 @@ import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SchemaAlterRequest;
+import com.antgroup.openspg.server.biz.schema.SchemaManager;
+import com.antgroup.openspg.server.common.model.exception.LockException;
+import com.antgroup.openspg.server.common.model.exception.ProjectException;
+import com.antgroup.openspg.server.common.model.project.Project;
+import com.antgroup.openspg.server.common.service.lock.DistributeLockService;
+import com.antgroup.openspg.server.common.service.project.ProjectService;
 import com.antgroup.openspg.server.core.schema.service.alter.SchemaAlterPipeline;
 import com.antgroup.openspg.server.core.schema.service.alter.model.SchemaAlterContext;
 import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;

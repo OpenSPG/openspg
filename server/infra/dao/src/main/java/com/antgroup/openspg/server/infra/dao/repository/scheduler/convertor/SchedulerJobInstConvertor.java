@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.scheduler.convertor;
 
-import com.antgroup.openspg.server.infra.dao.dataobject.JobInstDO;
 import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInst;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.infra.dao.dataobject.JobInstDO;
 
 public class SchedulerJobInstConvertor {
 

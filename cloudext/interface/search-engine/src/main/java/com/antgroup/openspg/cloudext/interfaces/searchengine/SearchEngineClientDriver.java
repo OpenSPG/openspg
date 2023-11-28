@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine;
 
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClientDriver;
+import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
 
 public interface SearchEngineClientDriver
     extends CloudExtClientDriver<SearchEngineClient, SearchEngineConnectionInfo> {}

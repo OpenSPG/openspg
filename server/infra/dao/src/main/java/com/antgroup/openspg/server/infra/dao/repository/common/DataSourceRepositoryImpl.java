@@ -13,13 +13,13 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.common;
 
+import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceQueryRequest;
+import com.antgroup.openspg.server.common.model.datasource.DataSource;
+import com.antgroup.openspg.server.common.service.datasource.DataSourceRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.DataSourceDOExample;
 import com.antgroup.openspg.server.infra.dao.dataobject.DataSourceDOWithBLOBs;
 import com.antgroup.openspg.server.infra.dao.mapper.DataSourceDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.common.convertor.DataSourceConvertor;
-import com.antgroup.openspg.server.common.service.datasource.DataSourceRepository;
-import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceQueryRequest;
-import com.antgroup.openspg.server.common.model.datasource.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;

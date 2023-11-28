@@ -29,10 +29,10 @@ import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClientDrive
 import com.antgroup.openspg.cloudext.interfaces.tablestore.cmd.TableFileCreateCmd;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.ColumnMeta;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.TableRecord;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
-import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.common.util.thread.ThreadUtils;
+import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.server.core.reasoner.model.ReasonerException;
 import com.antgroup.openspg.server.core.reasoner.model.service.BaseReasonerContent;
 import com.antgroup.openspg.server.core.reasoner.model.service.BaseReasonerResult;

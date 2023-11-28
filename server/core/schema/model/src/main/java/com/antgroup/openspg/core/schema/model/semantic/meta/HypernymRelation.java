@@ -13,9 +13,8 @@
 
 package com.antgroup.openspg.core.schema.model.semantic.meta;
 
-import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
-
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import java.util.EnumSet;
 
 public class HypernymRelation extends BaseSemanticRelation {

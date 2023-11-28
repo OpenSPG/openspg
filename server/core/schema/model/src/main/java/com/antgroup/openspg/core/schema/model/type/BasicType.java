@@ -15,7 +15,6 @@ package com.antgroup.openspg.core.schema.model.type;
 
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
-
 import java.util.ArrayList;
 
 /**

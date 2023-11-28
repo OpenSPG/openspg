@@ -15,9 +15,9 @@ package com.antgroup.openspg.builder.core.physical.source;
 
 import com.antgroup.openspg.builder.core.physical.BuilderRecord;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.builder.model.pipeline.config.CsvSourceNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
+import com.antgroup.openspg.common.util.StringUtils;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import java.io.FileReader;

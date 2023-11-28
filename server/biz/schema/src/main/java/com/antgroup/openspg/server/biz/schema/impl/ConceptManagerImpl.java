@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.server.biz.schema.impl;
 
-import com.antgroup.openspg.server.common.model.UserInfo;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.SchemaConstants;
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
@@ -32,6 +31,7 @@ import com.antgroup.openspg.core.schema.model.type.Concept;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.biz.common.util.AssertUtils;
 import com.antgroup.openspg.server.biz.schema.ConceptManager;
+import com.antgroup.openspg.server.common.model.UserInfo;
 import com.antgroup.openspg.server.core.schema.service.concept.ConceptSemanticService;
 import com.antgroup.openspg.server.core.schema.service.semantic.model.LogicalCausationQuery;
 import com.google.common.collect.Lists;

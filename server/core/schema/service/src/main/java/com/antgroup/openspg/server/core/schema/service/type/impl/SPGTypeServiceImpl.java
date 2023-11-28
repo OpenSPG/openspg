@@ -13,13 +13,6 @@
 
 package com.antgroup.openspg.server.core.schema.service.type.impl;
 
-import com.antgroup.openspg.server.core.schema.service.predicate.PropertyService;
-import com.antgroup.openspg.server.core.schema.service.predicate.RelationService;
-import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
-import com.antgroup.openspg.server.core.schema.service.type.convertor.SPGTypeAssemble;
-import com.antgroup.openspg.server.core.schema.service.type.convertor.SPGTypeConvertor;
-import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
-import com.antgroup.openspg.server.core.schema.service.type.repository.SPGTypeRepository;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
@@ -28,6 +21,13 @@ import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.WithAlterOperation;
+import com.antgroup.openspg.server.core.schema.service.predicate.PropertyService;
+import com.antgroup.openspg.server.core.schema.service.predicate.RelationService;
+import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
+import com.antgroup.openspg.server.core.schema.service.type.convertor.SPGTypeAssemble;
+import com.antgroup.openspg.server.core.schema.service.type.convertor.SPGTypeConvertor;
+import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
+import com.antgroup.openspg.server.core.schema.service.type.repository.SPGTypeRepository;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;

@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.common.model.exception;
 
-import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
-
 public class LockException extends OpenSPGException {
 
   private LockException(Throwable cause, String messagePattern, Object... args) {

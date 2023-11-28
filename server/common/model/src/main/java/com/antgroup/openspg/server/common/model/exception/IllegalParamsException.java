@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.common.model.exception;
 
-import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
-
 public class IllegalParamsException extends OpenSPGException {
 
   public IllegalParamsException(Throwable cause, String messagePattern, Object... args) {

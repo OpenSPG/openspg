@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.common.model.base;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
-
 /**
  * Top-level parent class for domain models.
  *

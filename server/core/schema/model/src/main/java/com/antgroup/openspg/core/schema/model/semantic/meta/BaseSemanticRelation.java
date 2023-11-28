@@ -13,9 +13,8 @@
 
 package com.antgroup.openspg.core.schema.model.semantic.meta;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
-
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.EnumSet;
 
 public class BaseSemanticRelation extends BaseValObj {

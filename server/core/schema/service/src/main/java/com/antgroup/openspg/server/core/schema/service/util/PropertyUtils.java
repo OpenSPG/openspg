@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.server.core.schema.service.util;
 
-import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.SchemaConstants;
 import com.antgroup.openspg.core.schema.model.constraint.BaseConstraintItem;
@@ -31,6 +30,7 @@ import com.antgroup.openspg.core.schema.model.semantic.PredicateSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
+import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
 import com.google.common.collect.Lists;
 import java.util.Set;
 import java.util.stream.Collectors;

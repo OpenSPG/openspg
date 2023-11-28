@@ -15,11 +15,11 @@ package com.antgroup.openspg.core.schema.model.predicate;
 
 import com.antgroup.openspg.core.schema.model.BaseSpoTriple;
 import com.antgroup.openspg.core.schema.model.BasicInfo;
+import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTripleIdentifier;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.core.schema.model.type.WithBasicInfo;
-import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
-import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 
 /**
  * Class definition of property<br>

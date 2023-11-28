@@ -14,8 +14,6 @@
 package com.antgroup.openspg.server.common.model.datasource;
 
 import com.antgroup.openspg.server.common.model.base.BaseModel;
-import com.antgroup.openspg.server.common.model.datasource.DataSourceMountObjectTypeEnum;
-import com.antgroup.openspg.server.common.model.datasource.DataSourceUsageTypeEnum;
 
 public class DataSourceUsage extends BaseModel {
 

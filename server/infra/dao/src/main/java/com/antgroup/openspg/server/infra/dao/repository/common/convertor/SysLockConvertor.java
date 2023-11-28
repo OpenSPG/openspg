@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.common.convertor;
 
-import com.antgroup.openspg.server.infra.dao.dataobject.SysLockDO;
 import com.antgroup.openspg.server.common.service.lock.model.SysLock;
+import com.antgroup.openspg.server.infra.dao.dataobject.SysLockDO;
 
 public class SysLockConvertor {
 

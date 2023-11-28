@@ -13,11 +13,6 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.stage.handler;
 
-import com.antgroup.openspg.server.core.schema.service.alter.SchemaAlterUtils;
-import com.antgroup.openspg.server.core.schema.service.alter.model.SchemaAlterContext;
-import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
-import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
-import com.antgroup.openspg.server.core.schema.service.util.PropertyUtils;
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.SchemaConstants;
 import com.antgroup.openspg.core.schema.model.SchemaException;
@@ -31,6 +26,11 @@ import com.antgroup.openspg.core.schema.model.semantic.SystemPredicateEnum;
 import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ConceptType;
+import com.antgroup.openspg.server.core.schema.service.alter.SchemaAlterUtils;
+import com.antgroup.openspg.server.core.schema.service.alter.model.SchemaAlterContext;
+import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
+import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
+import com.antgroup.openspg.server.core.schema.service.util.PropertyUtils;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

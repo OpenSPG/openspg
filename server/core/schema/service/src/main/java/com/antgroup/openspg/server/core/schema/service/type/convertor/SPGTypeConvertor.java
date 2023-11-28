@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.core.schema.service.type.convertor;
 
-import com.antgroup.openspg.server.core.schema.service.type.model.OperatorConfig;
-import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
@@ -25,6 +23,8 @@ import com.antgroup.openspg.core.schema.model.type.EventType;
 import com.antgroup.openspg.core.schema.model.type.OperatorTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeAdvancedConfig;
 import com.antgroup.openspg.core.schema.model.type.StandardType;
+import com.antgroup.openspg.server.core.schema.service.type.model.OperatorConfig;
+import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

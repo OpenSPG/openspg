@@ -14,7 +14,6 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
-
 import java.util.List;
 
 public class CsvSourceNodeConfig extends BaseNodeConfig {

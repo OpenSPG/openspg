@@ -13,15 +13,13 @@
 
 package com.antgroup.openspg.server.common.model.base;
 
-import com.antgroup.openspg.server.common.model.base.BaseModel;
-import com.antgroup.openspg.server.common.model.base.BaseToString;
-
 /**
  * Top-level parent class for domain model value objects.
  *
- * <p>Similar to the {@link BaseModel} class,All domain model value objects inherit from BaseValObj.
- * BaseValObj inherit from BaseToString and provides a unified toString method for all subclasses.
- * Some basic methods can also be added to this class in the future.
+ * <p>Similar to the {@link com.antgroup.openspg.server.common.model.base.BaseModel} class,All
+ * domain model value objects inherit from BaseValObj. BaseValObj inherit from BaseToString and
+ * provides a unified toString method for all subclasses. Some basic methods can also be added to
+ * this class in the future.
  */
 public abstract class BaseValObj extends BaseToString {
 

@@ -13,14 +13,14 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgreasoner;
 
+import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInfoQuery;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInfo;
 import com.antgroup.openspg.server.core.reasoner.service.repo.ReasonerJobInfoRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInfoDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInfoDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.SPGJobInfoDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgreasoner.convertor.ReasonerJobInfoConvertor;
-import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInfo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

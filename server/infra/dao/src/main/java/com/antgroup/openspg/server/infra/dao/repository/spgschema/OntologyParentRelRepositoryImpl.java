@@ -14,9 +14,10 @@
 package com.antgroup.openspg.server.infra.dao.repository.spgschema;
 
 import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.common.service.SequenceRepository;
 import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
 import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo;
+import com.antgroup.openspg.server.common.service.SequenceRepository;
+import com.antgroup.openspg.server.core.schema.service.type.repository.OntologyParentRelRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDOExample;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDOWithBLOBs;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyParentRelDO;
@@ -25,7 +26,6 @@ import com.antgroup.openspg.server.infra.dao.mapper.OntologyDOMapper;
 import com.antgroup.openspg.server.infra.dao.mapper.OntologyParentRelDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.OntologyParentRelConvertor;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ValidStatusEnum;
-import com.antgroup.openspg.server.core.schema.service.type.repository.OntologyParentRelRepository;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;

@@ -13,7 +13,5 @@
 
 package com.antgroup.openspg.server.common.model.base;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
-
 /** Base class for CMD requests */
 public abstract class BaseCmd extends BaseToString {}

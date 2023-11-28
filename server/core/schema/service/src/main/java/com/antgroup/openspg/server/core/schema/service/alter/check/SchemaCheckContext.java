@@ -13,9 +13,6 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.check;
 
-import com.antgroup.openspg.server.core.schema.service.util.PropertyUtils;
-import com.antgroup.openspg.server.common.model.base.BaseToString;
-import com.antgroup.openspg.server.common.model.project.Project;
 import com.antgroup.openspg.core.schema.model.SchemaConstants;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTripleIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
@@ -28,6 +25,9 @@ import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.core.schema.model.type.StandardType;
 import com.antgroup.openspg.core.schema.model.type.WithBasicInfo;
+import com.antgroup.openspg.server.common.model.base.BaseToString;
+import com.antgroup.openspg.server.common.model.project.Project;
+import com.antgroup.openspg.server.core.schema.service.util.PropertyUtils;
 import com.google.common.collect.Streams;
 import java.util.ArrayList;
 import java.util.List;

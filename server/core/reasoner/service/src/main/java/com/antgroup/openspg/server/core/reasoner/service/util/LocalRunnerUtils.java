@@ -14,6 +14,7 @@
 package com.antgroup.openspg.server.core.reasoner.service.util;
 
 import com.antgroup.kg.reasoner.catalog.impl.KgSchemaConnectionInfo;
+import com.antgroup.kg.reasoner.catalog.impl.OpenKgCatalog;
 import com.antgroup.kg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.kg.reasoner.graphstate.GraphState;
 import com.antgroup.kg.reasoner.graphstate.impl.CloudExtGraphState;
@@ -27,10 +28,9 @@ import java.util.Map;
 public class LocalRunnerUtils {
 
   public static Catalog buildCatalog(Long projectId, KgSchemaConnectionInfo connInfo) {
-//    Catalog catalog = new OpenKgCatalog(projectId, connInfo, null);
-//    catalog.init();
-//    return catalog;
-    return null;
+    Catalog catalog = new OpenKgCatalog(projectId, connInfo, null);
+    catalog.init();
+    return catalog;
   }
 
   public static GraphState<IVertexId> buildGraphState(GraphStoreConnectionInfo connInfo) {

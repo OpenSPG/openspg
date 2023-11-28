@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.core.schema.model;
 
+import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
 import com.antgroup.openspg.server.common.model.UserInfo;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
-import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
 import java.util.Objects;
 
 /**

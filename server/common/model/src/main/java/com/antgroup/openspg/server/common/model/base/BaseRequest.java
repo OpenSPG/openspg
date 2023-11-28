@@ -13,6 +13,4 @@
 
 package com.antgroup.openspg.server.common.model.base;
 
-import com.antgroup.openspg.server.common.model.base.BaseDTO;
-
 public class BaseRequest extends BaseDTO {}

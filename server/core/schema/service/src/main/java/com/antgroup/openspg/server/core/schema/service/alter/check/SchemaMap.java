@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.check;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTripleIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.server.common.model.base.BaseToString;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;

@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.core.schema.model.predicate;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.constraint.Constraint;
+import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.PredicateSemantic;
 import com.antgroup.openspg.core.schema.model.type.MultiVersionConfig;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgbuilder.convertor;
 
-import com.antgroup.openspg.server.infra.dao.dataobject.OperatorOverviewDO;
-import com.antgroup.openspg.server.infra.dao.dataobject.OperatorVersionDO;
-import com.antgroup.openspg.server.common.model.LangTypeEnum;
 import com.antgroup.openspg.builder.core.operator.OperatorOverview;
 import com.antgroup.openspg.builder.core.operator.OperatorVersion;
 import com.antgroup.openspg.core.schema.model.type.OperatorTypeEnum;
+import com.antgroup.openspg.server.common.model.LangTypeEnum;
+import com.antgroup.openspg.server.infra.dao.dataobject.OperatorOverviewDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.OperatorVersionDO;
 
 public class OperatorConvertor {
 

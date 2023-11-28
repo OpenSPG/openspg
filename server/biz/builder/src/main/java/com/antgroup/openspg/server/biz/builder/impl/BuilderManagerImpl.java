@@ -13,23 +13,21 @@
 
 package com.antgroup.openspg.server.biz.builder.impl;
 
-import com.antgroup.openspg.server.common.model.job.JobInfoStateEnum;
-import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
-
 import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobInstQuery;
 import com.antgroup.openspg.server.api.facade.dto.builder.request.BuilderJobSubmitRequest;
 import com.antgroup.openspg.server.biz.builder.BuilderManager;
+import com.antgroup.openspg.server.common.model.job.JobInfoStateEnum;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInfo;
 import com.antgroup.openspg.server.core.builder.model.service.BuilderJobInst;
 import com.antgroup.openspg.server.core.builder.model.service.JobBuilderReceipt;
 import com.antgroup.openspg.server.core.builder.service.BuilderJobInfoService;
 import com.antgroup.openspg.server.core.builder.service.BuilderJobInstService;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class BuilderManagerImpl implements BuilderManager {

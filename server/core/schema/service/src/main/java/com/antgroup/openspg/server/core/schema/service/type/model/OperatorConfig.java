@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.core.schema.service.type.model;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.schema.model.type.OperatorKey;
 import com.antgroup.openspg.core.schema.model.type.OperatorTypeEnum;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
 
 /**
  * The operator config of a spg type, for example, an EntityType will have a linking operator and a

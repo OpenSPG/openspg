@@ -14,9 +14,6 @@
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor;
 
 import com.alibaba.fastjson.JSON;
-import com.antgroup.openspg.server.infra.dao.dataobject.ConstraintDO;
-import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ConstraintRangeEnum;
-import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.YesOrNoEnum;
 import com.antgroup.openspg.core.schema.model.constraint.BaseConstraintItem;
 import com.antgroup.openspg.core.schema.model.constraint.Constraint;
 import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
@@ -26,6 +23,9 @@ import com.antgroup.openspg.core.schema.model.constraint.NotNullConstraint;
 import com.antgroup.openspg.core.schema.model.constraint.RangeConstraint;
 import com.antgroup.openspg.core.schema.model.constraint.RegularConstraint;
 import com.antgroup.openspg.core.schema.model.constraint.UniqueConstraint;
+import com.antgroup.openspg.server.infra.dao.dataobject.ConstraintDO;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ConstraintRangeEnum;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.YesOrNoEnum;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;

@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.common.convertor;
 
-import com.antgroup.openspg.server.infra.dao.dataobject.DataSourceUsageDO;
 import com.antgroup.openspg.server.common.model.datasource.DataSourceMountObjectTypeEnum;
 import com.antgroup.openspg.server.common.model.datasource.DataSourceUsage;
 import com.antgroup.openspg.server.common.model.datasource.DataSourceUsageTypeEnum;
+import com.antgroup.openspg.server.infra.dao.dataobject.DataSourceUsageDO;
 
 public class DataSourceUsageConvertor {
 

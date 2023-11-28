@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.server.common.service.project.impl;
 
+import com.antgroup.openspg.server.common.model.project.Project;
 import com.antgroup.openspg.server.common.service.project.ProjectRepository;
 import com.antgroup.openspg.server.common.service.project.ProjectService;
-import com.antgroup.openspg.server.common.model.project.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.common.convertor;
 
-import com.antgroup.openspg.server.infra.dao.dataobject.TenantDO;
 import com.antgroup.openspg.server.common.model.tenant.Tenant;
+import com.antgroup.openspg.server.infra.dao.dataobject.TenantDO;
 
 public class TenantConvertor {
 

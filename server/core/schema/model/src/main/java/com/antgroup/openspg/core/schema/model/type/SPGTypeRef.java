@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.core.schema.model.type;
 
-import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.BaseOntology;
+import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 
 /** Reference of the SPG type. */

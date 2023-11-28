@@ -13,19 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor;
 
-import com.antgroup.openspg.server.api.facade.JSON;
-import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDO;
-import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDOWithBLOBs;
-import com.antgroup.openspg.server.infra.dao.repository.spgschema.config.ConstraintItemConfigDO;
-import com.antgroup.openspg.server.infra.dao.repository.spgschema.config.OntologyEntityName;
-import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.EntityCategoryEnum;
-import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.LayerEnum;
-import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.TrueOrFalseEnum;
-import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ValidStatusEnum;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.server.core.schema.service.type.model.OperatorConfig;
-import com.antgroup.openspg.server.core.schema.service.type.model.ProjectOntologyRel;
-import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.OntologyId;
 import com.antgroup.openspg.core.schema.model.SchemaConstants;
@@ -39,6 +27,18 @@ import com.antgroup.openspg.core.schema.model.type.MultiVersionConfig;
 import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.VisibleScopeEnum;
+import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.core.schema.service.type.model.OperatorConfig;
+import com.antgroup.openspg.server.core.schema.service.type.model.ProjectOntologyRel;
+import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
+import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDO;
+import com.antgroup.openspg.server.infra.dao.dataobject.OntologyDOWithBLOBs;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.config.ConstraintItemConfigDO;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.config.OntologyEntityName;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.EntityCategoryEnum;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.LayerEnum;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.TrueOrFalseEnum;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ValidStatusEnum;
 import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.Date;

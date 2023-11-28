@@ -16,9 +16,9 @@ package com.antgroup.openspg.core.schema.model.predicate;
 import com.antgroup.openspg.core.schema.model.BaseSpoTriple;
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.core.schema.model.type.BasicType;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.core.schema.model.type.WithBasicInfo;
-import com.antgroup.openspg.core.schema.model.type.BasicType;
 
 /**
  * Class definition of extended information of {@code Property} or {@code Relation} <br>

@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine.adapter.record;
 
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecordAlterItem;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.builder.model.record.SPGRecordAlterItem;
+import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
+import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecordAlterItem;
 import java.util.List;
 
 public interface SPGRecord2IdxService {

@@ -14,7 +14,6 @@
 package com.antgroup.openspg.core.schema.model.type;
 
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
-
 import java.util.List;
 
 /** An interface provides some methods to get parent type info. */

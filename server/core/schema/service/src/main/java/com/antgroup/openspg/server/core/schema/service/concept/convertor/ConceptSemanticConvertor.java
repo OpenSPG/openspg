@@ -13,13 +13,13 @@
 
 package com.antgroup.openspg.server.core.schema.service.concept.convertor;
 
-import com.antgroup.openspg.server.core.schema.service.semantic.model.SimpleSemantic;
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.server.core.schema.service.semantic.model.SimpleSemantic;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +31,7 @@ import org.apache.commons.collections4.CollectionUtils;
 public class ConceptSemanticConvertor {
 
   public static List<DynamicTaxonomySemantic> convertList(
-          List<SimpleSemantic> simpleSemanticList, List<LogicalRule> logicalRuleList) {
+      List<SimpleSemantic> simpleSemanticList, List<LogicalRule> logicalRuleList) {
     if (CollectionUtils.isEmpty(simpleSemanticList)) {
       return Collections.emptyList();
     }

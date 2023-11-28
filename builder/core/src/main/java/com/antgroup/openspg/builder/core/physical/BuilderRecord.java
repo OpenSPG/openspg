@@ -14,9 +14,8 @@
 package com.antgroup.openspg.builder.core.physical;
 
 import com.antgroup.openspg.builder.model.record.BaseRecord;
-import java.util.Map;
-
 import com.antgroup.openspg.server.api.facade.JSON;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

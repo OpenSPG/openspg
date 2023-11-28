@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.stage.handler;
 
-import com.antgroup.openspg.server.common.service.SequenceRepository;
 import com.antgroup.openspg.core.schema.model.OntologyId;
 import com.antgroup.openspg.core.schema.model.SchemaConstants;
 import com.antgroup.openspg.core.schema.model.SchemaException;
@@ -28,6 +27,7 @@ import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.server.common.service.SequenceRepository;
 import com.antgroup.openspg.server.core.schema.service.alter.SchemaAlterUtils;
 import com.antgroup.openspg.server.core.schema.service.alter.model.AlterInfoWrap;
 import com.antgroup.openspg.server.core.schema.service.alter.model.SchemaAlterContext;

@@ -13,15 +13,15 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema;
 
+import com.antgroup.openspg.common.util.CollectionsUtils;
+import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
+import com.antgroup.openspg.core.schema.model.semantic.RuleStatusEnum;
 import com.antgroup.openspg.server.common.service.SequenceRepository;
+import com.antgroup.openspg.server.core.schema.service.semantic.repository.LogicalRuleRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.LogicRuleDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.LogicRuleDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.LogicRuleDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.LogicalRuleConvertor;
-import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.core.schema.service.semantic.repository.LogicalRuleRepository;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
-import com.antgroup.openspg.core.schema.model.semantic.RuleStatusEnum;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

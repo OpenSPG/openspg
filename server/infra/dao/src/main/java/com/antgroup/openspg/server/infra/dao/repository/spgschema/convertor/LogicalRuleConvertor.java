@@ -13,12 +13,12 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor;
 
-import com.antgroup.openspg.server.infra.dao.dataobject.LogicRuleDO;
-import com.antgroup.openspg.server.common.model.UserInfo;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.schema.model.semantic.RuleScopeEnum;
 import com.antgroup.openspg.core.schema.model.semantic.RuleStatusEnum;
+import com.antgroup.openspg.server.common.model.UserInfo;
+import com.antgroup.openspg.server.infra.dao.dataobject.LogicRuleDO;
 
 public class LogicalRuleConvertor {
 

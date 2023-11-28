@@ -35,7 +35,6 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.oper
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.DropVertexTypeOperation;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.SchemaAtomicOperationEnum;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.VertexEdgeTypeOperationEnum;
-import com.antgroup.openspg.server.common.model.exception.GraphStoreException;
 import com.antgroup.openspg.core.schema.model.SPGSchema;
 import com.antgroup.openspg.core.schema.model.alter.AlterOperationEnum;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
@@ -46,6 +45,7 @@ import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.core.schema.model.type.StandardType;
+import com.antgroup.openspg.server.common.model.exception.GraphStoreException;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;

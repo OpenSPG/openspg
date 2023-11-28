@@ -13,9 +13,8 @@
 
 package com.antgroup.openspg.server.common.service.datasource;
 
-import com.antgroup.openspg.server.common.model.datasource.DataSource;
 import com.antgroup.openspg.server.api.facade.dto.common.request.DataSourceQueryRequest;
-
+import com.antgroup.openspg.server.common.model.datasource.DataSource;
 import java.util.List;
 import java.util.Map;
 

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.model.record;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

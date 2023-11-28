@@ -15,10 +15,10 @@ package com.antgroup.openspg.core.schema.model.predicate;
 
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.schema.model.semantic.SystemPredicateEnum;
 import com.antgroup.openspg.core.schema.model.type.EntityType;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
-import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 
 /**
  * Class definition of relation<br>

@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.common.model.exception;
 
-import com.antgroup.openspg.server.common.model.exception.CloudExtException;
-
 public class GraphStoreException extends CloudExtException {
 
   private GraphStoreException(Throwable cause, String messagePattern, Object... args) {

@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.server.core.schema.service.predicate.repository;
 
-import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleSubProperty;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleSubProperty;
 import java.util.List;
 
 /**

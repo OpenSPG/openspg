@@ -19,10 +19,9 @@ import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobI
 import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInfoQuery;
 import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInfo;
-import java.util.List;
-
 import com.antgroup.openspg.server.core.reasoner.service.ReasonerJobInfoService;
 import com.antgroup.openspg.server.core.reasoner.service.repo.ReasonerJobInfoRepository;
+import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

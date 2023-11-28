@@ -14,7 +14,6 @@
 package com.antgroup.openspg.server.common.model.datasource;
 
 import com.antgroup.openspg.server.common.model.base.BaseModel;
-import com.antgroup.openspg.server.common.model.datasource.DataSourceTypeEnum;
 import com.antgroup.openspg.server.common.model.datasource.connection.BaseConnectionInfo;
 
 public class DataSource extends BaseModel {

@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor;
 
+import com.antgroup.openspg.core.schema.model.SchemaConstants;
+import com.antgroup.openspg.core.schema.model.SchemaExtInfo;
 import com.antgroup.openspg.server.api.facade.JSON;
 import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleProperty;
 import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
-import com.antgroup.openspg.core.schema.model.SchemaConstants;
-import com.antgroup.openspg.core.schema.model.SchemaExtInfo;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 

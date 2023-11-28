@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.core.schema.model.type;
 
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
 
 /**
  * Configuration of taxon concepts<br>

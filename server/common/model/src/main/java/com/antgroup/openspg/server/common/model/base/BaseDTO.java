@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.common.model.base;
 
-import com.antgroup.openspg.server.common.model.base.BaseToString;
-
 /** Base dto. */
 public abstract class BaseDTO extends BaseToString {
 

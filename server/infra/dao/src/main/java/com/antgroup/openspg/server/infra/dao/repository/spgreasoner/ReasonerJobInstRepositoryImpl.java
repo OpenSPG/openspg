@@ -13,18 +13,18 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgreasoner;
 
+import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.server.api.facade.JSON;
 import com.antgroup.openspg.server.api.facade.dto.reasoner.request.ReasonerJobInstQuery;
+import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
+import com.antgroup.openspg.server.core.reasoner.model.service.FailureReasonerResult;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInst;
+import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerStatusWithProgress;
 import com.antgroup.openspg.server.core.reasoner.service.repo.ReasonerJobInstRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInstDOExample;
 import com.antgroup.openspg.server.infra.dao.dataobject.SPGJobInstDOWithBLOBs;
 import com.antgroup.openspg.server.infra.dao.mapper.SPGJobInstDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgreasoner.convertor.ReasonerJobInstConvertor;
-import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
-import com.antgroup.openspg.server.core.reasoner.model.service.FailureReasonerResult;
-import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerJobInst;
-import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerStatusWithProgress;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

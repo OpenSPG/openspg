@@ -13,17 +13,17 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema;
 
+import com.antgroup.openspg.common.util.CollectionsUtils;
+import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleSubProperty;
+import com.antgroup.openspg.server.core.schema.service.predicate.repository.SubPropertyRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.OntologyPropertyDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.SimpleSubPropertyConvertor;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.MapTypeEnum;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.PropertyCategoryEnum;
-import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleSubProperty;
-import com.antgroup.openspg.server.core.schema.service.predicate.repository.SubPropertyRepository;
-import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
-import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;

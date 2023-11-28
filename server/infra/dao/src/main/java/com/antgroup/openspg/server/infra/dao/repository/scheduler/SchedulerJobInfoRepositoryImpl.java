@@ -14,10 +14,10 @@
 package com.antgroup.openspg.server.infra.dao.repository.scheduler;
 
 import com.antgroup.openspg.cloudext.impl.jobscheduler.local.repo.SchedulerJobInfoRepository;
+import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInfo;
 import com.antgroup.openspg.server.infra.dao.dataobject.JobInfoDO;
 import com.antgroup.openspg.server.infra.dao.mapper.JobInfoDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.scheduler.convertor.SchedulerJobInfoConvertor;
-import com.antgroup.openspg.cloudext.interfaces.jobscheduler.model.SchedulerJobInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

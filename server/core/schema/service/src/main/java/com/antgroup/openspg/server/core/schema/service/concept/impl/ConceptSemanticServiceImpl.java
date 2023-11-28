@@ -13,13 +13,6 @@
 
 package com.antgroup.openspg.server.core.schema.service.concept.impl;
 
-import com.antgroup.openspg.server.core.schema.service.concept.ConceptSemanticService;
-import com.antgroup.openspg.server.core.schema.service.concept.convertor.ConceptSemanticConvertor;
-import com.antgroup.openspg.server.core.schema.service.semantic.LogicalRuleService;
-import com.antgroup.openspg.server.core.schema.service.semantic.model.LogicalCausationQuery;
-import com.antgroup.openspg.server.core.schema.service.semantic.model.SimpleSemantic;
-import com.antgroup.openspg.server.core.schema.service.semantic.repository.SemanticRepository;
-import com.antgroup.openspg.server.core.schema.service.predicate.repository.PropertyRepository;
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
@@ -28,6 +21,13 @@ import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.schema.model.semantic.SystemPredicateEnum;
+import com.antgroup.openspg.server.core.schema.service.concept.ConceptSemanticService;
+import com.antgroup.openspg.server.core.schema.service.concept.convertor.ConceptSemanticConvertor;
+import com.antgroup.openspg.server.core.schema.service.predicate.repository.PropertyRepository;
+import com.antgroup.openspg.server.core.schema.service.semantic.LogicalRuleService;
+import com.antgroup.openspg.server.core.schema.service.semantic.model.LogicalCausationQuery;
+import com.antgroup.openspg.server.core.schema.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.core.schema.service.semantic.repository.SemanticRepository;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;

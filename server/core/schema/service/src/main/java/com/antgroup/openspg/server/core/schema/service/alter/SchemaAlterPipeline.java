@@ -15,7 +15,6 @@ package com.antgroup.openspg.server.core.schema.service.alter;
 
 import com.antgroup.openspg.server.core.schema.service.alter.model.SchemaAlterContext;
 import com.antgroup.openspg.server.core.schema.service.alter.stage.BaseAlterStage;
-
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 

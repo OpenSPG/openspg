@@ -15,10 +15,9 @@ package com.antgroup.openspg.core.schema.model.predicate;
 
 import com.antgroup.openspg.core.schema.model.constraint.Constraint;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
+import com.antgroup.openspg.core.schema.model.semantic.PredicateSemantic;
 import com.antgroup.openspg.core.schema.model.type.MultiVersionConfig;
 import com.antgroup.openspg.core.schema.model.type.WithBasicInfo;
-import com.antgroup.openspg.core.schema.model.semantic.PredicateSemantic;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

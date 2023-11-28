@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor;
 
-import com.antgroup.openspg.server.infra.dao.repository.spgschema.config.ConstraintItemConfigDO;
-import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ConstraintEnum;
 import com.antgroup.openspg.core.schema.model.constraint.BaseConstraintItem;
 import com.antgroup.openspg.core.schema.model.constraint.EnumConstraint;
 import com.antgroup.openspg.core.schema.model.constraint.MultiValConstraint;
@@ -22,6 +20,8 @@ import com.antgroup.openspg.core.schema.model.constraint.NotNullConstraint;
 import com.antgroup.openspg.core.schema.model.constraint.RangeConstraint;
 import com.antgroup.openspg.core.schema.model.constraint.RegularConstraint;
 import com.antgroup.openspg.core.schema.model.constraint.UniqueConstraint;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.config.ConstraintItemConfigDO;
+import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ConstraintEnum;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;

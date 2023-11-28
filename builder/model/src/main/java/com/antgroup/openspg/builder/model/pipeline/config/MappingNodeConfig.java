@@ -14,8 +14,8 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
-import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import com.antgroup.openspg.builder.model.pipeline.enums.MappingTypeEnum;
+import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.List;
 
 public class MappingNodeConfig extends BaseNodeConfig {
