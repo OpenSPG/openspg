@@ -19,7 +19,7 @@ import com.antgroup.openspg.server.infra.dao.dataobject.ConstraintDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.ConstraintDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.ConstraintDOConvertor;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.schema.core.service.predicate.repository.ConstraintRepository;
+import com.antgroup.openspg.server.core.schema.service.predicate.repository.ConstraintRepository;
 import com.antgroup.openspg.schema.model.constraint.Constraint;
 import java.util.Collections;
 import java.util.Date;

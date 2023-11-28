@@ -20,8 +20,8 @@ import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.Simp
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.MapTypeEnum;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.PropertyCategoryEnum;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.schema.core.service.predicate.model.SimpleSubProperty;
-import com.antgroup.openspg.server.schema.core.service.predicate.repository.SubPropertyRepository;
+import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleSubProperty;
+import com.antgroup.openspg.server.core.schema.service.predicate.repository.SubPropertyRepository;
 import com.antgroup.openspg.schema.model.alter.AlterStatusEnum;
 import com.antgroup.openspg.schema.model.semantic.SPGOntologyEnum;
 import java.util.Collections;

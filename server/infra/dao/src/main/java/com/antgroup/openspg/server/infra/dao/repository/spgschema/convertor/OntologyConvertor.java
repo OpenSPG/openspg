@@ -23,9 +23,9 @@ import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.LayerEnu
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.TrueOrFalseEnum;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ValidStatusEnum;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.server.schema.core.service.type.model.OperatorConfig;
-import com.antgroup.openspg.server.schema.core.service.type.model.ProjectOntologyRel;
-import com.antgroup.openspg.server.schema.core.service.type.model.SimpleSPGType;
+import com.antgroup.openspg.server.core.schema.service.type.model.OperatorConfig;
+import com.antgroup.openspg.server.core.schema.service.type.model.ProjectOntologyRel;
+import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
 import com.antgroup.openspg.schema.model.BasicInfo;
 import com.antgroup.openspg.schema.model.OntologyId;
 import com.antgroup.openspg.schema.model.SchemaConstants;

@@ -19,7 +19,7 @@ import com.antgroup.openspg.server.infra.dao.dataobject.LogicRuleDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.LogicRuleDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.LogicalRuleConvertor;
 import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.schema.core.service.semantic.repository.LogicalRuleRepository;
+import com.antgroup.openspg.server.core.schema.service.semantic.repository.LogicalRuleRepository;
 import com.antgroup.openspg.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.schema.model.semantic.RuleStatusEnum;
 import java.util.Date;

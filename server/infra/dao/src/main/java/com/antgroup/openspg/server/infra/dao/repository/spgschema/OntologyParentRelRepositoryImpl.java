@@ -25,7 +25,7 @@ import com.antgroup.openspg.server.infra.dao.mapper.OntologyDOMapper;
 import com.antgroup.openspg.server.infra.dao.mapper.OntologyParentRelDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.convertor.OntologyParentRelConvertor;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ValidStatusEnum;
-import com.antgroup.openspg.server.schema.core.service.type.repository.OntologyParentRelRepository;
+import com.antgroup.openspg.server.core.schema.service.type.repository.OntologyParentRelRepository;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;

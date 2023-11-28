@@ -25,7 +25,7 @@ import com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDO;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.MapTypeEnum;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.PropertyCategoryEnum;
 import com.antgroup.openspg.server.infra.dao.repository.spgschema.enums.ValidStatusEnum;
-import com.antgroup.openspg.server.schema.core.service.predicate.model.SimpleSubProperty;
+import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleSubProperty;
 import java.util.Date;
 
 public class SimpleSubPropertyConvertor {
