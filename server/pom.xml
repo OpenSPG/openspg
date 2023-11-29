@@ -53,6 +53,8 @@
     <module>core/schema/service</module>
     <module>core/builder/model</module>
     <module>core/builder/service</module>
+    <module>core/scheduler/model</module>
+    <module>core/scheduler/service</module>
     <module>core/reasoner/model</module>
     <module>core/reasoner/service</module>
     <module>infra/dao</module>
@@ -152,6 +154,16 @@
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
         <artifactId>core-builder-service</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>core-scheduler-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>core-scheduler-service</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
