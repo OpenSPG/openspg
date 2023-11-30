@@ -6,7 +6,6 @@ package com.antgroup.openspg.server.core.scheduler.service.translate;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 
 /**
  * Translator Factory
@@ -14,7 +13,6 @@ import org.springframework.context.ApplicationContext;
  * @author yangjin
  * @Title: TranslatorFactory.java
  * @Description:
- * @date 2022/3/11 16:39
  */
 public class TranslatorFactory {
 

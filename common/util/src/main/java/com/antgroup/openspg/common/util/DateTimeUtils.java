@@ -28,7 +28,21 @@ public class DateTimeUtils {
   public static final String YYYY_MM_DD_HH_MM_SS2 = "yyyyMMddHHmmss";
 
   public static String bizDateByNow() {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(YYYY_MM_DD1);
-    return simpleDateFormat.format(new Date());
+    return getDate2Str(YYYY_MM_DD1, new Date());
+  }
+
+  public static String getDate2LongStr(Date date) {
+    if (date == null) {
+      return "";
+    }
+    return getDate2Str(YYYY_MM_DD_HH_MM_SS1, date);
+  }
+
+  public static String getDate2Str(String format, Date date) {
+    if (date == null) {
+      return "";
+    }
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+    return simpleDateFormat.format(date);
   }
 }
