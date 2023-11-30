@@ -56,11 +56,6 @@ public class SchedulerTask extends BaseModel {
     private String status;
 
     /**
-     * project id
-     */
-    private Long projectId;
-
-    /**
      * SchedulerJob Id
      */
     private Long jobId;
@@ -192,14 +187,6 @@ public class SchedulerTask extends BaseModel {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
     }
 
     public Long getJobId() {
