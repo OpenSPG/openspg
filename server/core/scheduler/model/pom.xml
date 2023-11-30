@@ -11,6 +11,9 @@
 
   <artifactId>core-scheduler-model</artifactId>
   <dependencies>
-
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>common-model</artifactId>
+    </dependency>
   </dependencies>
 </project>
