@@ -1,7 +1,7 @@
 /**
  * Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved.
  */
-package com.antgroup.openspg.server.core.scheduler.service.metadata.impl;
+package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
 import java.util.Date;
 import java.util.List;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @version : SchedulerInstanceServiceImpl.java, v 0.1 2023年11月30日 14:10 yangjin Exp $
  */
 @Service
-public class SchedulerInstanceServiceImpl implements SchedulerInstanceService {
+public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceService {
 
     @Override
     public int insert(SchedulerInstance record) {

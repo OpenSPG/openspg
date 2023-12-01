@@ -13,11 +13,13 @@ import com.antgroup.openspg.server.core.scheduler.service.handler.SchedulerHandl
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author yangjin
  * @version : QuartzSchedulerHandler.java, v 0.1 2023年11月30日 19:05 yangjin Exp $
  */
+@Service
 public class LocalSchedulerHandler implements SchedulerHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocalSchedulerHandler.class);
