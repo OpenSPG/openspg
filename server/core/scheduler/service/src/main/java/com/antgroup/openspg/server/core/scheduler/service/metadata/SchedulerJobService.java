@@ -20,7 +20,7 @@ public interface SchedulerJobService {
      * @param record
      * @return
      */
-    int insert(SchedulerJob record);
+    Long insert(SchedulerJob record);
 
     /**
      * delete By Id
@@ -44,7 +44,7 @@ public interface SchedulerJobService {
      * @param record
      * @return
      */
-    int update(SchedulerJob record);
+    Long update(SchedulerJob record);
 
     /**
      * get By Id
@@ -68,7 +68,7 @@ public interface SchedulerJobService {
      * @param record
      * @return
      */
-    int getCount(SchedulerJob record);
+    Long getCount(SchedulerJob record);
 
     /**
      * get By Id List

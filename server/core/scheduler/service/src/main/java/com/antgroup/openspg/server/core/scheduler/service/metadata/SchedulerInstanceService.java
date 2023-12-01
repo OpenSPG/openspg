@@ -22,7 +22,7 @@ public interface SchedulerInstanceService {
      * @param record
      * @return
      */
-    int insert(SchedulerInstance record);
+    Long insert(SchedulerInstance record);
 
     /**
      * delete By Id
@@ -54,7 +54,7 @@ public interface SchedulerInstanceService {
      * @param record
      * @return
      */
-    int update(SchedulerInstance record);
+    Long update(SchedulerInstance record);
 
     /**
      * get By Id
@@ -86,7 +86,7 @@ public interface SchedulerInstanceService {
      * @param record
      * @return
      */
-    int getCount(SchedulerInstance record);
+    Long getCount(SchedulerInstance record);
 
     /**
      * get By id List

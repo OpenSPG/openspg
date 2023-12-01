@@ -69,7 +69,7 @@ public interface SchedulerTaskService {
      * @param record
      * @return
      */
-    int getCount(SchedulerTask record);
+    Long getCount(SchedulerTask record);
 
     /**
      * get By Id List

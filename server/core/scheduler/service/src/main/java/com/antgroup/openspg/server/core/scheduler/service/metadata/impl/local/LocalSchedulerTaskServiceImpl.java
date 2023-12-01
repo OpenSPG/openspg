@@ -112,7 +112,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
             if (StringUtils.isNotBlank(record.getTaskStatus()) && record.getTaskStatus().equals(task.getTaskStatus())) {
                 flag = true;
             }
-            if (StringUtils.isNotBlank(record.getExtension()) && StringUtils.isNotBlank(task.getExtension()) && task.getTitle().contains(
+            if (StringUtils.isNotBlank(record.getExtension()) && StringUtils.isNotBlank(task.getExtension()) && task.getExtension().contains(
                     record.getExtension())) {
                 flag = true;
             }
@@ -130,8 +130,8 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
     }
 
     @Override
-    public int getCount(SchedulerTask record) {
-        return 0;
+    public Long getCount(SchedulerTask record) {
+        return query(record).getTotal();
     }
 
     @Override
