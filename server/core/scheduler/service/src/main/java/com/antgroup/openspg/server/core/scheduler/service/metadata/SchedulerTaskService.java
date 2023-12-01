@@ -20,7 +20,7 @@ public interface SchedulerTaskService {
      * @param record
      * @return
      */
-    int insert(SchedulerTask record);
+    Long insert(SchedulerTask record);
 
     /**
      * delete Task By Id
@@ -41,7 +41,7 @@ public interface SchedulerTaskService {
      * @param record
      * @return
      */
-    int update(SchedulerTask record);
+    Long update(SchedulerTask record);
 
     /**
      * insert Or Update，id is null to Update
