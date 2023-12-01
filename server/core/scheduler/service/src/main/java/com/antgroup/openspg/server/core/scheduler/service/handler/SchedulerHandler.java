@@ -3,8 +3,6 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.handler;
 
-import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
-
 /**
  * @author yangjin
  * @version : SchedulerHandler.java, v 0.1 2023年11月30日 18:33 yangjin Exp $
@@ -12,11 +10,11 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstanc
 public interface SchedulerHandler {
 
     /**
-     * scheduler timer entrance
+     * scheduler timer entrance. execute Instances
      *
      * @return
      */
-    void scheduler();
+    void executeInstances();
 
     /**
      * scheduler generate Instances timer
