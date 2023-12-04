@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import com.antgroup.openspg.common.util.CommonUtils;
-import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
@@ -21,6 +20,7 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -117,55 +117,43 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
         List<SchedulerInstance> instanceList = Lists.newArrayList();
         page.setData(instanceList);
         for (Long key : instances.keySet()) {
-            boolean flag = false;
             SchedulerInstance instance = instances.get(key);
-            if (record.getId() != null && record.getId().equals(instance.getId())) {
-                flag = true;
-            }
-            if (record.getProjectId() != null && record.getProjectId().equals(instance.getProjectId())) {
-                flag = true;
-            }
-            if (record.getJobId() != null && record.getJobId().equals(instance.getJobId())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getUniqueId()) && record.getUniqueId().equals(instance.getUniqueId())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getCreateUser()) && record.getCreateUser().equals(instance.getCreateUser())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getType()) && record.getType().equals(instance.getType())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getStatus()) && record.getStatus().equals(instance.getStatus())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getLifeCycle()) && record.getLifeCycle().equals(instance.getLifeCycle())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getMergeMode()) && record.getMergeMode().equals(instance.getMergeMode())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getEnv()) && record.getEnv().equals(instance.getEnv())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getVersion()) && record.getVersion().equals(instance.getVersion())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getConfig()) && StringUtils.isNotBlank(instance.getConfig()) && instance.getConfig().contains(
-                    record.getConfig())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getWorkflowConfig()) && StringUtils.isNotBlank(instance.getWorkflowConfig())
-                    && instance.getWorkflowConfig().contains(record.getWorkflowConfig())) {
-                flag = true;
+            if (!CommonUtils.equals(instance.getId(), record.getId())
+                    || !CommonUtils.equals(instance.getProjectId(), record.getProjectId())
+                    || !CommonUtils.equals(instance.getJobId(), record.getJobId())
+                    || !CommonUtils.equals(instance.getUniqueId(), record.getUniqueId())
+                    || !CommonUtils.equals(instance.getCreateUser(), record.getCreateUser())
+                    || !CommonUtils.equals(instance.getType(), record.getType())
+                    || !CommonUtils.equals(instance.getStatus(), record.getStatus())
+                    || !CommonUtils.equals(instance.getLifeCycle(), record.getLifeCycle())
+                    || !CommonUtils.equals(instance.getMergeMode(), record.getMergeMode())
+                    || !CommonUtils.equals(instance.getEnv(), record.getEnv())
+                    || !CommonUtils.equals(instance.getVersion(), record.getVersion())
+                    || !CommonUtils.contains(instance.getConfig(), record.getConfig())
+                    || !CommonUtils.contains(instance.getWorkflowConfig(), record.getWorkflowConfig())) {
+                continue;
             }
 
-            if (flag) {
-                SchedulerInstance target = new SchedulerInstance();
-                BeanUtils.copyProperties(instance, target);
-                instanceList.add(target);
+            String keyword = record.getKeyword();
+            if (!CommonUtils.contains(instance.getUniqueId(), keyword) || !CommonUtils.contains(instance.getCreateUser(), keyword)) {
+                continue;
             }
+            if (!CommonUtils.after(instance.getSchedulerDate(), record.getStartSchedulerDate())
+                    || !CommonUtils.before(instance.getSchedulerDate(), record.getEndSchedulerDate())
+                    || !CommonUtils.after(instance.getGmtCreate(), record.getStartCreateTime())
+                    || !CommonUtils.before(instance.getGmtCreate(), record.getEndCreateTime())
+                    || !CommonUtils.after(instance.getFinishTime(), record.getStartFinishTime())
+                    || !CommonUtils.before(instance.getFinishTime(), record.getEndFinishTime())) {
+                continue;
+            }
+            if (CollectionUtils.isNotEmpty(record.getTypes()) && !record.getTypes().contains(instance.getType())) {
+                continue;
+            }
+
+            SchedulerInstance target = new SchedulerInstance();
+            BeanUtils.copyProperties(instance, target);
+            instanceList.add(target);
+
         }
         page.setPageNo(1);
         page.setPageSize(instanceList.size());

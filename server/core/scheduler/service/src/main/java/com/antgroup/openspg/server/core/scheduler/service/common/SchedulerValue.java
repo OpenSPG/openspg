@@ -31,6 +31,9 @@ public class SchedulerValue {
     @Value("${scheduler.generate.instances.unit:}")
     private String generateInstancesUnit;
 
+    @Value("${scheduler.execute.max.day:}")
+    private String executeMaxDay;
+
     public String getHandlerType() {
         return handlerType;
     }
@@ -61,5 +64,12 @@ public class SchedulerValue {
             return null;
         }
         return TimeUnit.valueOf(generateInstancesUnit);
+    }
+
+    public Integer getExecuteMaxDay() {
+        if (StringUtils.isBlank(executeMaxDay)) {
+            return 10;
+        }
+        return Integer.valueOf(executeMaxDay);
     }
 }

@@ -13,8 +13,11 @@
 
 package com.antgroup.openspg.common.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class DateTimeUtils {
 
@@ -45,4 +48,22 @@ public class DateTimeUtils {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
     return simpleDateFormat.format(date);
   }
+
+  public static Date getStr2Date(String format, String dateStr) {
+    if (StringUtils.isBlank(dateStr)) {
+      return null;
+    }
+    Date date = null;
+    if (dateStr.length() == format.length()) {
+      try {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+        date = simpleDateFormat.parse(dateStr);
+      } catch (ParseException var4) {
+        return null;
+      }
+    }
+
+    return date;
+  }
+
 }

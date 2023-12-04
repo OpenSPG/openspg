@@ -91,9 +91,9 @@ public class SchedulerInstance extends BaseModel {
     private String lifeCycle;
 
     /**
-     * scheduler Date yyyyMMddHHmmss
+     * scheduler Date
      */
-    private String schedulerDate;
+    private Date schedulerDate;
 
     /**
      * external Instance Id
@@ -245,11 +245,11 @@ public class SchedulerInstance extends BaseModel {
         this.lifeCycle = lifeCycle;
     }
 
-    public String getSchedulerDate() {
+    public Date getSchedulerDate() {
         return schedulerDate;
     }
 
-    public void setSchedulerDate(String schedulerDate) {
+    public void setSchedulerDate(Date schedulerDate) {
         this.schedulerDate = schedulerDate;
     }
 

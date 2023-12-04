@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.antgroup.openspg.common.util.CommonUtils;
-import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -79,44 +79,31 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
         List<SchedulerJob> jobList = Lists.newArrayList();
         page.setData(jobList);
         for (Long key : jobs.keySet()) {
-            boolean flag = false;
             SchedulerJob job = jobs.get(key);
-            if (record.getId() != null && record.getId().equals(job.getId())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getCreateUserName()) && record.getCreateUserName().equals(job.getCreateUserName())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getType()) && record.getType().equals(job.getType())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getLifeCycle()) && record.getLifeCycle().equals(job.getLifeCycle())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getStatus()) && record.getStatus().equals(job.getStatus())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getMergeMode()) && record.getMergeMode().equals(job.getMergeMode())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getName()) && StringUtils.isNotBlank(job.getName()) && job.getName().contains(
-                    record.getName())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getConfig()) && StringUtils.isNotBlank(job.getConfig()) && job.getConfig().contains(
-                    record.getConfig())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getExtension()) && StringUtils.isNotBlank(job.getExtension()) && job.getExtension().contains(
-                    record.getExtension())) {
-                flag = true;
+            if (!CommonUtils.equals(job.getId(), record.getId())
+                    || !CommonUtils.equals(job.getCreateUserName(), record.getCreateUserName())
+                    || !CommonUtils.equals(job.getType(), record.getType())
+                    || !CommonUtils.equals(job.getLifeCycle(), record.getLifeCycle())
+                    || !CommonUtils.equals(job.getStatus(), record.getStatus())
+                    || !CommonUtils.equals(job.getMergeMode(), record.getMergeMode())
+                    || !CommonUtils.contains(job.getName(), record.getName())
+                    || !CommonUtils.contains(job.getConfig(), record.getConfig())
+                    || !CommonUtils.contains(job.getExtension(), record.getExtension())) {
+                continue;
             }
 
-            if (flag) {
-                SchedulerJob target = new SchedulerJob();
-                BeanUtils.copyProperties(job, target);
-                jobList.add(target);
+            String keyword = record.getKeyword();
+            if (!CommonUtils.contains(job.getName(), keyword) || !CommonUtils.contains(job.getCreateUserName(), keyword)) {
+                continue;
             }
+            if (CollectionUtils.isNotEmpty(record.getTypes()) && !record.getTypes().contains(job.getType())) {
+                continue;
+            }
+
+            SchedulerJob target = new SchedulerJob();
+            BeanUtils.copyProperties(job, target);
+            jobList.add(target);
+
         }
         page.setPageNo(1);
         page.setPageSize(jobList.size());

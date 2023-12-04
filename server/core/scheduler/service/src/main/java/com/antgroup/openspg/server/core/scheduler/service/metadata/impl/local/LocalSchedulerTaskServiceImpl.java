@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.antgroup.openspg.common.util.CommonUtils;
-import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
@@ -89,40 +88,28 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
         List<SchedulerTask> taskList = Lists.newArrayList();
         page.setData(taskList);
         for (Long key : tasks.keySet()) {
-            boolean flag = false;
             SchedulerTask task = tasks.get(key);
-            if (record.getId() != null && record.getId().equals(task.getId())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getCreateUser()) && record.getCreateUser().equals(task.getCreateUser())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getType()) && record.getType().equals(task.getType())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getTitle()) && StringUtils.isNotBlank(task.getTitle()) && task.getTitle().contains(
-                    record.getTitle())) {
-                flag = true;
-            }
-            if (record.getJobId() != null && record.getJobId().equals(task.getJobId())) {
-                flag = true;
-            }
-            if (record.getInstanceId() != null && record.getInstanceId().equals(task.getInstanceId())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getTaskStatus()) && record.getTaskStatus().equals(task.getTaskStatus())) {
-                flag = true;
-            }
-            if (StringUtils.isNotBlank(record.getExtension()) && StringUtils.isNotBlank(task.getExtension()) && task.getExtension().contains(
-                    record.getExtension())) {
-                flag = true;
+
+            if (!CommonUtils.equals(task.getId(), record.getId())
+                    || !CommonUtils.equals(task.getCreateUser(), record.getCreateUser())
+                    || !CommonUtils.equals(task.getType(), record.getType())
+                    || !CommonUtils.contains(task.getTitle(), record.getTitle())
+                    || !CommonUtils.equals(task.getJobId(), record.getJobId())
+                    || !CommonUtils.equals(task.getInstanceId(), record.getInstanceId())
+                    || !CommonUtils.equals(task.getTaskStatus(), record.getTaskStatus())
+                    || !CommonUtils.contains(task.getExtension(), record.getExtension())) {
+                continue;
             }
 
-            if (flag) {
-                SchedulerTask target = new SchedulerTask();
-                BeanUtils.copyProperties(task, target);
-                taskList.add(target);
+            if (!CommonUtils.after(task.getGmtCreate(), record.getStartCreateTime())
+                    || !CommonUtils.before(task.getGmtCreate(), record.getEndCreateTime())) {
+                continue;
             }
+
+            SchedulerTask target = new SchedulerTask();
+            BeanUtils.copyProperties(task, target);
+            taskList.add(target);
+
         }
         page.setPageNo(1);
         page.setPageSize(taskList.size());
