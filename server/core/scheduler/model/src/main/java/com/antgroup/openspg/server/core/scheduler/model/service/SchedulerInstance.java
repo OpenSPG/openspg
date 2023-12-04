@@ -23,7 +23,7 @@ public class SchedulerInstance extends BaseModel {
     /**
      * instance id = jobId+yyyyMMddHHmmss
      */
-    private String instanceId;
+    private String uniqueId;
 
     /**
      * project id
@@ -133,12 +133,12 @@ public class SchedulerInstance extends BaseModel {
         this.id = id;
     }
 
-    public String getInstanceId() {
-        return instanceId;
+    public String getUniqueId() {
+        return uniqueId;
     }
 
-    public void setInstanceId(String instanceId) {
-        this.instanceId = instanceId;
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     public Long getProjectId() {

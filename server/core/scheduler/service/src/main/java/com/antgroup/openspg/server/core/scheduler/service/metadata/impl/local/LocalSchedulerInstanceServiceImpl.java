@@ -7,14 +7,20 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import com.antgroup.openspg.common.util.CommonUtils;
+import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
+import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
+import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
+import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,6 +31,9 @@ import org.springframework.stereotype.Service;
 public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceService {
 
     private static ConcurrentHashMap<Long, SchedulerInstance> instances = new ConcurrentHashMap<>();
+
+    @Autowired
+    SchedulerTaskService schedulerTaskService;
 
     @Override
     public Long insert(SchedulerInstance record) {
@@ -91,7 +100,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     public SchedulerInstance getByInstanceId(String instanceId) {
         for (Long key : instances.keySet()) {
             SchedulerInstance instance = instances.get(key);
-            if (instanceId.equals(instance.getInstanceId())) {
+            if (instanceId.equals(instance.getUniqueId())) {
                 SchedulerInstance target = new SchedulerInstance();
                 BeanUtils.copyProperties(instance, target);
                 return target;
@@ -102,7 +111,64 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
 
     @Override
     public Page<List<SchedulerInstance>> query(SchedulerInstance record) {
-        return null;
+        Page<List<SchedulerInstance>> page = new Page<>();
+        List<SchedulerInstance> instanceList = Lists.newArrayList();
+        page.setData(instanceList);
+        for (Long key : instances.keySet()) {
+            boolean flag = false;
+            SchedulerInstance instance = instances.get(key);
+            if (record.getId() != null && record.getId().equals(instance.getId())) {
+                flag = true;
+            }
+            if (record.getProjectId() != null && record.getProjectId().equals(instance.getProjectId())) {
+                flag = true;
+            }
+            if (record.getJobId() != null && record.getJobId().equals(instance.getJobId())) {
+                flag = true;
+            }
+            if (StringUtils.isNotBlank(record.getUniqueId()) && record.getUniqueId().equals(instance.getUniqueId())) {
+                flag = true;
+            }
+            if (StringUtils.isNotBlank(record.getCreateUser()) && record.getCreateUser().equals(instance.getCreateUser())) {
+                flag = true;
+            }
+            if (StringUtils.isNotBlank(record.getType()) && record.getType().equals(instance.getType())) {
+                flag = true;
+            }
+            if (StringUtils.isNotBlank(record.getStatus()) && record.getStatus().equals(instance.getStatus())) {
+                flag = true;
+            }
+            if (StringUtils.isNotBlank(record.getLifeCycle()) && record.getLifeCycle().equals(instance.getLifeCycle())) {
+                flag = true;
+            }
+            if (StringUtils.isNotBlank(record.getMergeMode()) && record.getMergeMode().equals(instance.getMergeMode())) {
+                flag = true;
+            }
+            if (StringUtils.isNotBlank(record.getEnv()) && record.getEnv().equals(instance.getEnv())) {
+                flag = true;
+            }
+            if (StringUtils.isNotBlank(record.getVersion()) && record.getVersion().equals(instance.getVersion())) {
+                flag = true;
+            }
+            if (StringUtils.isNotBlank(record.getConfig()) && StringUtils.isNotBlank(instance.getConfig()) && instance.getConfig().contains(
+                    record.getConfig())) {
+                flag = true;
+            }
+            if (StringUtils.isNotBlank(record.getWorkflowConfig()) && StringUtils.isNotBlank(instance.getWorkflowConfig())
+                    && instance.getWorkflowConfig().contains(record.getWorkflowConfig())) {
+                flag = true;
+            }
+
+            if (flag) {
+                SchedulerInstance target = new SchedulerInstance();
+                BeanUtils.copyProperties(instance, target);
+                instanceList.add(target);
+            }
+        }
+        page.setPageNo(1);
+        page.setPageSize(instanceList.size());
+        page.setTotal(Long.valueOf(instanceList.size()));
+        return page;
     }
 
     @Override
@@ -124,11 +190,21 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
 
     @Override
     public List<SchedulerInstance> getNotFinishInstance(SchedulerInstance record) {
-        return null;
+        List<SchedulerInstance> instanceList = query(record).getData();
+        instanceList = instanceList.stream().filter(s -> !InstanceStatus.isFinish(s.getStatus())).collect(Collectors.toList());
+        return instanceList;
     }
 
     @Override
     public List<SchedulerInstance> getInstanceByTask(String taskType, TaskStatus status, Date startFinishTime, Date endFinishTime) {
-        return null;
+        SchedulerTask schedulerTask = new SchedulerTask();
+        schedulerTask.setType(taskType);
+        schedulerTask.setStatus(status.name());
+        List<SchedulerTask> tasks = schedulerTaskService.query(schedulerTask).getData();
+        List<Long> ids = tasks.stream().filter(
+                task -> task.getFinishTime().after(startFinishTime) && task.getFinishTime().before(endFinishTime)).map(
+                SchedulerTask::getInstanceId).collect(Collectors.toList());
+        List<SchedulerInstance> instanceList = getByIds(ids);
+        return instanceList;
     }
 }
