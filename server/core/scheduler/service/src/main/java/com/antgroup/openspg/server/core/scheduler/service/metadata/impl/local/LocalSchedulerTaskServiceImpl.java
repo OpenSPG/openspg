@@ -12,6 +12,7 @@ import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.google.common.collect.Lists;
@@ -83,7 +84,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
     }
 
     @Override
-    public Page<List<SchedulerTask>> query(SchedulerTask record) {
+    public Page<List<SchedulerTask>> query(SchedulerTaskQuery record) {
         Page<List<SchedulerTask>> page = new Page<>();
         List<SchedulerTask> taskList = Lists.newArrayList();
         page.setData(taskList);
@@ -130,7 +131,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
     }
 
     @Override
-    public Long getCount(SchedulerTask record) {
+    public Long getCount(SchedulerTaskQuery record) {
         return query(record).getTotal();
     }
 

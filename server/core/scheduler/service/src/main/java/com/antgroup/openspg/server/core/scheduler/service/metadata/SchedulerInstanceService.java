@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 
 /**
@@ -78,7 +79,7 @@ public interface SchedulerInstanceService {
      * @param record
      * @return
      */
-    Page<List<SchedulerInstance>> query(SchedulerInstance record);
+    Page<List<SchedulerInstance>> query(SchedulerInstanceQuery record);
 
     /**
      * get Count By Condition
@@ -86,7 +87,7 @@ public interface SchedulerInstanceService {
      * @param record
      * @return
      */
-    Long getCount(SchedulerInstance record);
+    Long getCount(SchedulerInstanceQuery record);
 
     /**
      * get By id List
@@ -102,7 +103,7 @@ public interface SchedulerInstanceService {
      * @param record
      * @return
      */
-    List<SchedulerInstance> getNotFinishInstance(SchedulerInstance record);
+    List<SchedulerInstance> getNotFinishInstance(SchedulerInstanceQuery record);
 
     /**
      * get Instance By task type,status,time

@@ -14,6 +14,8 @@ import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
@@ -110,7 +112,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     }
 
     @Override
-    public Page<List<SchedulerInstance>> query(SchedulerInstance record) {
+    public Page<List<SchedulerInstance>> query(SchedulerInstanceQuery record) {
         Page<List<SchedulerInstance>> page = new Page<>();
         List<SchedulerInstance> instanceList = Lists.newArrayList();
         page.setData(instanceList);
@@ -172,7 +174,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     }
 
     @Override
-    public Long getCount(SchedulerInstance record) {
+    public Long getCount(SchedulerInstanceQuery record) {
         return query(record).getTotal();
     }
 
@@ -189,7 +191,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     }
 
     @Override
-    public List<SchedulerInstance> getNotFinishInstance(SchedulerInstance record) {
+    public List<SchedulerInstance> getNotFinishInstance(SchedulerInstanceQuery record) {
         List<SchedulerInstance> instanceList = query(record).getData();
         instanceList = instanceList.stream().filter(s -> !InstanceStatus.isFinish(s.getStatus())).collect(Collectors.toList());
         return instanceList;
@@ -197,7 +199,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
 
     @Override
     public List<SchedulerInstance> getInstanceByTask(String taskType, TaskStatus status, Date startFinishTime, Date endFinishTime) {
-        SchedulerTask schedulerTask = new SchedulerTask();
+        SchedulerTaskQuery schedulerTask = new SchedulerTaskQuery();
         schedulerTask.setType(taskType);
         schedulerTask.setStatus(status.name());
         List<SchedulerTask> tasks = schedulerTaskService.query(schedulerTask).getData();

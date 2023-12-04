@@ -6,6 +6,7 @@ package com.antgroup.openspg.server.core.scheduler.service.metadata;
 import java.util.List;
 
 import com.antgroup.openspg.server.common.model.base.Page;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 
 /**
@@ -60,7 +61,7 @@ public interface SchedulerJobService {
      * @param record
      * @return
      */
-    Page<List<SchedulerJob>> query(SchedulerJob record);
+    Page<List<SchedulerJob>> query(SchedulerJobQuery record);
 
     /**
      * get Count By Condition
@@ -68,7 +69,7 @@ public interface SchedulerJobService {
      * @param record
      * @return
      */
-    Long getCount(SchedulerJob record);
+    Long getCount(SchedulerJobQuery record);
 
     /**
      * get By Id List

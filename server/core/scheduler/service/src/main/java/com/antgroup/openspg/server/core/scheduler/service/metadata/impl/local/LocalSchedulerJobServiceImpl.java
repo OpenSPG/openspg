@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.google.common.collect.Lists;
@@ -73,7 +74,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
     }
 
     @Override
-    public Page<List<SchedulerJob>> query(SchedulerJob record) {
+    public Page<List<SchedulerJob>> query(SchedulerJobQuery record) {
         Page<List<SchedulerJob>> page = new Page<>();
         List<SchedulerJob> jobList = Lists.newArrayList();
         page.setData(jobList);
@@ -124,7 +125,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
     }
 
     @Override
-    public Long getCount(SchedulerJob record) {
+    public Long getCount(SchedulerJobQuery record) {
         return query(record).getTotal();
     }
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 
 /**
@@ -62,14 +63,14 @@ public interface SchedulerTaskService {
      * @param record
      * @return
      */
-    Page<List<SchedulerTask>> query(SchedulerTask record);
+    Page<List<SchedulerTask>> query(SchedulerTaskQuery record);
 
     /**
      * get Count By Condition
      * @param record
      * @return
      */
-    Long getCount(SchedulerTask record);
+    Long getCount(SchedulerTaskQuery record);
 
     /**
      * get By Id List
