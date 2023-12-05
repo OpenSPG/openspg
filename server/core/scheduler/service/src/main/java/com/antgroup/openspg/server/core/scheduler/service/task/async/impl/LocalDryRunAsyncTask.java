@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author yangjin
  * @version : LocalAsyncTask.java, v 0.1 2023年12月05日 14:24 yangjin Exp $
  */
-@Component("localDryRun")
+@Component("localDryRunTask")
 public class LocalDryRunAsyncTask extends JobAsyncTaskTemplate {
 
     @Override

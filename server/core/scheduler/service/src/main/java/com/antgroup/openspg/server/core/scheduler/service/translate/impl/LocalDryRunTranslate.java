@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author yangjin
  * @version : localDryRunTranslate.java, v 0.1 2023年12月05日 14:33 yangjin Exp $
  */
-@Component("localDryRunTranslate")
+@Component("localDryRun")
 public class LocalDryRunTranslate implements Translate<SchedulerJob> {
 
     @Override
@@ -32,15 +32,15 @@ public class LocalDryRunTranslate implements Translate<SchedulerJob> {
         WorkflowDag.Node preCheck = new WorkflowDag.Node();
         preCheck.setId("1000001");
         preCheck.setName("前置校验");
-        preCheck.setType("preCheck");
+        preCheck.setType("preCheckTask");
         preCheck.setX(250L);
         preCheck.setY(280L);
         nodes.add(preCheck);
 
         WorkflowDag.Node localDryRun = new WorkflowDag.Node();
         localDryRun.setId("2000001");
-        localDryRun.setName("本地构建");
-        localDryRun.setType("localDryRun");
+        localDryRun.setName("本地执行");
+        localDryRun.setType("localDryRunTask");
         localDryRun.setX(500L);
         localDryRun.setY(280L);
         nodes.add(localDryRun);
