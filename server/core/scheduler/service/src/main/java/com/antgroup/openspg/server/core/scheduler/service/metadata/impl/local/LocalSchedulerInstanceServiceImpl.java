@@ -105,7 +105,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     }
 
     @Override
-    public SchedulerInstance getByInstanceId(String instanceId) {
+    public SchedulerInstance getByUniqueId(String instanceId) {
         for (Long key : instances.keySet()) {
             SchedulerInstance instance = instances.get(key);
             if (instanceId.equals(instance.getUniqueId())) {

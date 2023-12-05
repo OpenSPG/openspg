@@ -15,9 +15,11 @@ package com.antgroup.openspg.common.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 
 public class DateTimeUtils {
 
@@ -64,6 +66,14 @@ public class DateTimeUtils {
     }
 
     return date;
+  }
+
+  public static Date add(Date date, int calendarField, int amount) {
+    Validate.notNull(date, "The date must not be null", new Object[0]);
+    Calendar c = Calendar.getInstance();
+    c.setTime(date);
+    c.add(calendarField, amount);
+    return c.getTime();
   }
 
 }

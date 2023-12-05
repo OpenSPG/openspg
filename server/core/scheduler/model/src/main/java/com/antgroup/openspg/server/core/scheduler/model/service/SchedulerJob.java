@@ -84,7 +84,7 @@ public class SchedulerJob  extends BaseModel {
     /**
      * Scheduler interval
      */
-    private Long schedulerInterval;
+    private Integer schedulerInterval;
 
     /**
      * Upstream dependent Job
@@ -220,11 +220,11 @@ public class SchedulerJob  extends BaseModel {
         this.schedulerUnit = schedulerUnit;
     }
 
-    public Long getSchedulerInterval() {
+    public Integer getSchedulerInterval() {
         return schedulerInterval;
     }
 
-    public void setSchedulerInterval(Long schedulerInterval) {
+    public void setSchedulerInterval(Integer schedulerInterval) {
         this.schedulerInterval = schedulerInterval;
     }
 

@@ -71,7 +71,7 @@ public interface SchedulerInstanceService {
      * @param instanceId
      * @return
      */
-    SchedulerInstance getByInstanceId(String instanceId);
+    SchedulerInstance getByUniqueId(String instanceId);
 
     /**
      * query By Condition，query all if pageNo is null
