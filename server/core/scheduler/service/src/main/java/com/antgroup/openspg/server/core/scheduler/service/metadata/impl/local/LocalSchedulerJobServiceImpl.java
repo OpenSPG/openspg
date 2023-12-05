@@ -59,6 +59,12 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
     public Long update(SchedulerJob record) {
         Long id = record.getId();
         SchedulerJob oldRecord = jobs.get(id);
+        if (oldRecord == null) {
+            throw new RuntimeException("not find id:" + id);
+        }
+        if (!oldRecord.getGmtModified().equals(record.getGmtModified())) {
+            return 0L;
+        }
         record = CommonUtils.merge(oldRecord, record);
         record.setGmtModified(new Date());
         jobs.put(id, record);

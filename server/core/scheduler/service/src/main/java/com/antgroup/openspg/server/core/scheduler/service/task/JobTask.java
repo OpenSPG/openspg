@@ -10,6 +10,12 @@ import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
  * @Description:
  */
 public interface JobTask {
+    /**
+     * execute Entry
+     *
+     * @param context
+     */
+    void executeEntry(JobTaskContext context);
 
     /**
      * process task

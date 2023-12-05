@@ -6,6 +6,9 @@ package com.antgroup.openspg.common.util;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.Closeable;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -50,6 +53,76 @@ public class CommonUtils {
             LOGGER.error("merge bean exception", e);
         }
         return dest;
+    }
+
+    /**
+     * Exception to String
+     *
+     * @param e
+     * @return
+     */
+    public static String getExceptionToString(Throwable e) {
+        if (e == null) {
+            return "";
+        }
+        StringWriter stringWriter = null;
+        PrintWriter printWriter = null;
+        try {
+            stringWriter = new StringWriter();
+            printWriter = new PrintWriter(stringWriter);
+            e.printStackTrace(printWriter);
+        } finally {
+            close(stringWriter);
+            close(printWriter);
+        }
+        return stringWriter.toString();
+    }
+
+    /**
+     * close Closeable
+     *
+     * @param closeable
+     */
+    public static void close(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (Exception e) {
+                LOGGER.error("Unable to close ", e);
+            }
+        }
+    }
+
+    /**
+     * Limit remark
+     *
+     * @param oldRemark
+     * @param appendRemark
+     * @return
+     */
+    public static String setRemarkLimit(String oldRemark, StringBuffer appendRemark) {
+        return subStringToLength(appendRemark.append(oldRemark), 100000, "...");
+    }
+
+    /**
+     * sub String To Length
+     *
+     * @param str
+     * @param length
+     * @param fill
+     * @return
+     */
+    public static String subStringToLength(StringBuffer str, Integer length, String fill) {
+        if (str == null) {
+            return "";
+        }
+        if (length == null || length >= str.length()) {
+            return str.toString();
+        }
+        if (fill == null) {
+            return str.substring(0, length - 3) + "...";
+        }
+        return str.substring(0, length - fill.length()) + fill;
     }
 
     /**

@@ -5,7 +5,12 @@ package com.antgroup.openspg.server.core.scheduler.model.service;
 
 import java.util.Date;
 
+import com.antgroup.openspg.common.util.DateTimeUtils;
+import com.antgroup.openspg.common.util.IpUtils;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
+import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author yangjin
@@ -124,6 +129,42 @@ public class SchedulerTask extends BaseModel {
      * output
      */
     private String output;
+
+    /**
+     * node id
+     */
+    private String nodeId;
+
+    public SchedulerTask() {
+
+    }
+
+    /**
+     * constructor
+     *
+     * @param createUser
+     * @param instanceId
+     * @param status
+     * @param node
+     */
+    public SchedulerTask(String createUser, Long instanceId, TaskStatus status, WorkflowDag.Node node) {
+        this.createUser = createUser;
+        this.updateUser = createUser;
+        this.type = node.getType();
+        if (StringUtils.isNotBlank(node.getName())) {
+            this.title = node.getName();
+        } else {
+            this.title = node.getType();
+        }
+        this.status = status.name();
+        this.nodeId = node.getId();
+        this.instanceId = instanceId;
+        this.executeNum = 0;
+        this.beginTime = new Date();
+        StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
+        log.append("(").append(IpUtils.IP_LIST).append(")：").append("新建流程，当前等待前置节点执行完成.....").append(System.getProperty("line.separator"));
+        this.remark = log.toString();
+    }
 
     public Long getId() {
         return id;
@@ -299,5 +340,13 @@ public class SchedulerTask extends BaseModel {
 
     public void setOutput(String output) {
         this.output = output;
+    }
+
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
     }
 }

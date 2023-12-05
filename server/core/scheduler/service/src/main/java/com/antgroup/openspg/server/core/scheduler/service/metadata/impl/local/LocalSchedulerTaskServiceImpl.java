@@ -59,6 +59,12 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
     public Long update(SchedulerTask record) {
         Long id = record.getId();
         SchedulerTask oldRecord = tasks.get(id);
+        if (oldRecord == null) {
+            throw new RuntimeException("not find id:" + id);
+        }
+        if (!oldRecord.getGmtModified().equals(record.getGmtModified())) {
+            return 0L;
+        }
         record = CommonUtils.merge(oldRecord, record);
         record.setGmtModified(new Date());
         tasks.put(id, record);
@@ -213,7 +219,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
             throw new RuntimeException(String.format("not find task id:%s", id));
         }
         if (oldRecord.getLockTime() != null) {
-            throw new RuntimeException(String.format("lockTime is not nulls id:%s lockTime:%", id, oldRecord.getLockTime()));
+            return 0;
         }
         oldRecord.setGmtModified(new Date());
         oldRecord.setLockTime(new Date());

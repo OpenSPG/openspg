@@ -84,6 +84,12 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     public Long update(SchedulerInstance record) {
         Long id = record.getId();
         SchedulerInstance oldInstance = instances.get(id);
+        if (oldInstance == null) {
+            throw new RuntimeException("not find id:" + id);
+        }
+        if (!oldInstance.getGmtModified().equals(record.getGmtModified())) {
+            return 0L;
+        }
         record = CommonUtils.merge(oldInstance, record);
         record.setGmtModified(new Date());
         instances.put(id, record);

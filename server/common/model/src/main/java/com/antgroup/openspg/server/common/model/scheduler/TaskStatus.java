@@ -63,6 +63,10 @@ public enum TaskStatus {
                 || TaskStatus.SET_FINISH.equals(status);
     }
 
+    public static boolean isFinish(String status) {
+        return isFinish(getByName(status));
+    }
+
     /**
      * status is Running
      *
@@ -71,5 +75,9 @@ public enum TaskStatus {
      */
     public static boolean isRunning(TaskStatus status) {
         return TaskStatus.RUNNING.equals(status) || TaskStatus.ERROR.equals(status);
+    }
+
+    public static boolean isRunning(String status) {
+        return isRunning(getByName(status));
     }
 }
