@@ -77,14 +77,9 @@ public class SchedulerJob  extends BaseModel {
     private String status;
 
     /**
-     * Scheduler Unit, minute,hour,day,week,month
+     * Scheduler Cron expression default:0 0 0 * * ?
      */
-    private String schedulerUnit;
-
-    /**
-     * Scheduler interval
-     */
-    private Integer schedulerInterval;
+    private String schedulerCron;
 
     /**
      * Upstream dependent Job
@@ -212,20 +207,12 @@ public class SchedulerJob  extends BaseModel {
         this.status = status;
     }
 
-    public String getSchedulerUnit() {
-        return schedulerUnit;
+    public String getSchedulerCron() {
+        return schedulerCron;
     }
 
-    public void setSchedulerUnit(String schedulerUnit) {
-        this.schedulerUnit = schedulerUnit;
-    }
-
-    public Integer getSchedulerInterval() {
-        return schedulerInterval;
-    }
-
-    public void setSchedulerInterval(Integer schedulerInterval) {
-        this.schedulerInterval = schedulerInterval;
+    public void setSchedulerCron(String schedulerCron) {
+        this.schedulerCron = schedulerCron;
     }
 
     public Long getPreJobId() {

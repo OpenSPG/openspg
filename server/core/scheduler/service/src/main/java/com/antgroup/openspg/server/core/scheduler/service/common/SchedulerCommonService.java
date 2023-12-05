@@ -4,6 +4,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.common;
 
 import java.util.Date;
+import java.util.List;
 
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
@@ -39,7 +40,7 @@ public interface SchedulerCommonService {
      * @param job
      * @return
      */
-    SchedulerInstance generatePeriodInstance(SchedulerJob job);
+    List<SchedulerInstance> generatePeriodInstance(SchedulerJob job);
 
     /**
      * generate RealTime Instance

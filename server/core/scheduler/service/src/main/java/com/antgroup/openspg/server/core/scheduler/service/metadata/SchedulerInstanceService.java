@@ -42,6 +42,14 @@ public interface SchedulerInstanceService {
     int deleteByJobId(Long jobId);
 
     /**
+     * get Max UniqueId By JobId
+     *
+     * @param jobId
+     * @return
+     */
+    String getMaxUniqueIdByJobId(Long jobId);
+
+    /**
      * delete By Id List
      *
      * @param ids

@@ -39,6 +39,13 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
 
     @Override
     public Long insert(SchedulerInstance record) {
+        String uniqueId = record.getUniqueId();
+        for (Long id : instances.keySet()) {
+            SchedulerInstance instance = instances.get(id);
+            if (uniqueId.equals(instance.getUniqueId())) {
+                throw new RuntimeException(String.format("uniqueId:%s already existed", uniqueId));
+            }
+        }
         Long max = instances.keySet().stream().max(Comparator.comparing(x -> x)).orElse(null);
         Long id = ++max;
         record.setId(id);
@@ -66,6 +73,19 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
             instances.remove(id);
         }
         return instanceList.size();
+    }
+
+    @Override
+    public String getMaxUniqueIdByJobId(Long jobId) {
+        Long max = 0L;
+        for (Long key : instances.keySet()) {
+            SchedulerInstance instance = instances.get(key);
+            if (jobId.equals(instance.getJobId())) {
+                Long uniqueId = Long.valueOf(instance.getUniqueId());
+                max = (uniqueId > max) ? uniqueId : max;
+            }
+        }
+        return max.toString();
     }
 
     @Override

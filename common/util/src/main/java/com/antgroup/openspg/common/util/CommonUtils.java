@@ -9,8 +9,13 @@ import java.beans.PropertyDescriptor;
 import java.io.Closeable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,6 +128,75 @@ public class CommonUtils {
             return str.substring(0, length - 3) + "...";
         }
         return str.substring(0, length - fill.length()) + fill;
+    }
+
+    /**
+     * get Cron Execution Dates By Today
+     *
+     * @param cron
+     * @return
+     */
+    public static List<Date> getCronExecutionDatesByToday(String cron) {
+        CronExpression expression = null;
+        try {
+            expression = new CronExpression(cron);
+        } catch (ParseException e) {
+            new RuntimeException("Cron ParseException", e);
+        }
+        List<Date> dates = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        Date today = new Date();
+        calendar.setTime(today);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        Date startDate = calendar.getTime();
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date endDate = calendar.getTime();
+
+        if (expression.isSatisfiedBy(startDate)) {
+            dates.add(startDate);
+        }
+        Date nextDate = expression.getNextValidTimeAfter(startDate);
+
+        while (nextDate != null && nextDate.before(endDate)) {
+            dates.add(nextDate);
+            nextDate = expression.getNextValidTimeAfter(nextDate);
+        }
+
+        return dates;
+    }
+
+    /**
+     * get Previous ValidTime
+     *
+     * @param cron
+     * @param specifiedTime
+     * @return
+     */
+    public static Date getPreviousValidTime(String cron, Date specifiedTime) {
+        CronExpression expression = null;
+        try {
+            expression = new CronExpression(cron);
+        } catch (ParseException e) {
+            new RuntimeException("Cron ParseException", e);
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(specifiedTime);
+
+        Date endDate = expression.getNextValidTimeAfter(expression.getNextValidTimeAfter(specifiedTime));
+        Long time = 2 * specifiedTime.getTime() - endDate.getTime();
+
+        Date start = new Date(time);
+        Date nextDate = expression.getNextValidTimeAfter(start);
+        Date preDate = nextDate;
+        while (nextDate != null && nextDate.before(specifiedTime)) {
+            preDate = nextDate;
+            nextDate = expression.getNextValidTimeAfter(nextDate);
+        }
+        return preDate;
     }
 
     /**

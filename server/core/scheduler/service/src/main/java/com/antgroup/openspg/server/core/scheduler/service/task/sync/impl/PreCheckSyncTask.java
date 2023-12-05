@@ -3,13 +3,14 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.task.sync.impl;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
-import com.antgroup.openspg.server.common.model.scheduler.JobCycle;
+import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
 import com.antgroup.openspg.server.common.model.scheduler.MergeMode;
-import com.antgroup.openspg.server.common.model.scheduler.SchedulerUnit;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
@@ -48,7 +49,14 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
         if (days > SCHEDULER_MAX_DAYS) {
             context.addTraceLog("前置校验已超过%s天未通过。超过%s天后任务将不会调度", days, lastDays);
         }
-        if (JobCycle.REAL_TIME.name().equals(instance.getLifeCycle())) {
+        Date schedulerDate = instance.getSchedulerDate();
+        Date now = new Date();
+        if (now.before(schedulerDate)) {
+            context.addTraceLog("实例未到执行时间！开始调度日期：%s", DateTimeUtils.getDate2LongStr(schedulerDate));
+            return TaskStatus.RUNNING;
+        }
+
+        if (LifeCycle.REAL_TIME.name().equals(instance.getLifeCycle())) {
             return processBySkip(context);
         }
 
@@ -78,10 +86,8 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
         context.addTraceLog("当前任务依赖上次实例完成，需检查上次实例是否执行完成");
         SchedulerInstance instance = context.getInstance();
         SchedulerJob job = context.getJob();
-
-        SchedulerUnit schedulerUnit = SchedulerUnit.valueOf(job.getSchedulerUnit());
         String preSchedulerDate = DateTimeUtils.getDate2LongStr(
-                DateTimeUtils.add(instance.getSchedulerDate(), schedulerUnit.getCalendarField(), -job.getSchedulerInterval()));
+                CommonUtils.getPreviousValidTime(job.getSchedulerCron(), instance.getSchedulerDate()));
         String preUniqueId = instance.getJobId() + preSchedulerDate;
         SchedulerInstance preInstance = schedulerInstanceService.getByUniqueId(preUniqueId);
 

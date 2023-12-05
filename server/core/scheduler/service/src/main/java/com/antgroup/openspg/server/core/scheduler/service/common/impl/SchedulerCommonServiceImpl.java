@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.antgroup.openspg.common.util.CommonUtils;
+import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
@@ -21,6 +23,7 @@ import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTask
 import com.antgroup.openspg.server.core.scheduler.service.task.JobTask;
 import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskContext;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.JobAsyncTask;
+import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -99,17 +102,40 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
     @Override
     public SchedulerInstance generateOnceInstance(SchedulerJob job) {
-        return null;
+        Date schedulerDate = new Date();
+        String uniqueId = job.getId().toString() + System.currentTimeMillis();
+        return generateInstance(job, uniqueId, schedulerDate);
+    }
+
+    public static void main(String[] args) {
+        String cronExpression = "0 0 * * * ?";
+
+        List<Date> executionDates = CommonUtils.getCronExecutionDatesByToday(cronExpression);
+
+        for (Date date : executionDates) {
+            System.out.println(DateTimeUtils.getDate2LongStr(date));
+        }
+
+        System.out.println(CommonUtils.getPreviousValidTime(cronExpression, new Date()));
     }
 
     @Override
-    public SchedulerInstance generatePeriodInstance(SchedulerJob job) {
-        return null;
+    public List<SchedulerInstance> generatePeriodInstance(SchedulerJob job) {
+        List<SchedulerInstance> instances = Lists.newArrayList();
+        List<Date> executionDates = CommonUtils.getCronExecutionDatesByToday(job.getSchedulerCron());
+        for (Date schedulerDate : executionDates) {
+            String uniqueId = job.getId().toString() + DateTimeUtils.getDate2Str(DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, schedulerDate);
+            SchedulerInstance instance = generateInstance(job, uniqueId, schedulerDate);
+            instances.add(instance);
+        }
+        return instances;
     }
 
     @Override
     public SchedulerInstance generateRealTimeInstance(SchedulerJob job) {
-        return null;
+        Date schedulerDate = new Date();
+        String uniqueId = job.getId().toString() + System.currentTimeMillis();
+        return generateInstance(job, uniqueId, schedulerDate);
     }
 
     @Override

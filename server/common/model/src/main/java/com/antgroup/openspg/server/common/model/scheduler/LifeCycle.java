@@ -1,13 +1,13 @@
 package com.antgroup.openspg.server.common.model.scheduler;
 
 /**
- * Job Cycle
+ * Life Cycle
  *
  * @author yangjin
- * @Title: JobCycle.java
+ * @Title: LifeCycle.java
  * @Description:
  */
-public enum JobCycle {
+public enum LifeCycle {
 
     /**
      * period
