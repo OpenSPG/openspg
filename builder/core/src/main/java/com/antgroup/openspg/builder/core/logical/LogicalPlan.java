@@ -36,7 +36,7 @@ import org.apache.commons.collections4.CollectionUtils;
 public class LogicalPlan implements Serializable {
 
   /** DAG (Directed Acyclic Graph) of the logical execution plan. */
-  private final Graph<BaseNode<?>> dag;
+  private final Graph<BaseLogicalNode<?>> dag;
 
   /**
    * Converting the user-defined pipeline configuration into a logical execution plan.
@@ -45,11 +45,11 @@ public class LogicalPlan implements Serializable {
    * @return Logical execution plan.
    */
   public static LogicalPlan parse(Pipeline pipeline) {
-    ImmutableGraph.Builder<BaseNode<?>> immutable =
+    ImmutableGraph.Builder<BaseLogicalNode<?>> immutable =
         GraphBuilder.directed().allowsSelfLoops(false).immutable();
-    Map<String, BaseNode<?>> visited = new HashMap<>(pipeline.getNodes().size());
+    Map<String, BaseLogicalNode<?>> visited = new HashMap<>(pipeline.getNodes().size());
     for (Node node : pipeline.getNodes()) {
-      BaseNode<?> baseNode = parse(node);
+      BaseLogicalNode<?> baseNode = parse(node);
 
       if (visited.containsKey(node.getId())) {
         throw new IllegalArgumentException("pipeline config is error");
@@ -60,8 +60,8 @@ public class LogicalPlan implements Serializable {
     }
 
     for (Edge edge : pipeline.getEdges()) {
-      BaseNode<?> fromNode = visited.get(edge.getFrom());
-      BaseNode<?> toNode = visited.get(edge.getTo());
+      BaseLogicalNode<?> fromNode = visited.get(edge.getFrom());
+      BaseLogicalNode<?> toNode = visited.get(edge.getTo());
       if (fromNode == null || toNode == null) {
         throw new IllegalArgumentException("pipeline config is error");
       }
@@ -76,7 +76,7 @@ public class LogicalPlan implements Serializable {
    * @param node Node config.
    * @return Instantiated node.
    */
-  private static BaseNode<?> parse(Node node) {
+  private static BaseLogicalNode<?> parse(Node node) {
     switch (node.getType()) {
       case CSV_SOURCE:
         return new CsvSourceNode(
@@ -95,17 +95,27 @@ public class LogicalPlan implements Serializable {
     }
   }
 
-  public Set<BaseNode<?>> startNodes() {
+  public Set<BaseLogicalNode<?>> startNodes() {
     return dag.nodes().stream()
         .filter(node -> CollectionUtils.isEmpty(dag.predecessors(node)))
         .collect(Collectors.toSet());
   }
 
-  public Set<BaseNode<?>> successors(BaseNode<?> cur) {
+  public Set<BaseLogicalNode<?>> endNodes() {
+    return dag.nodes().stream()
+        .filter(node -> CollectionUtils.isEmpty(dag.successors(node)))
+        .collect(Collectors.toSet());
+  }
+
+  public Set<BaseLogicalNode<?>> successors(BaseLogicalNode<?> cur) {
     return dag.successors(cur);
   }
 
   public int size() {
     return dag.nodes().size();
+  }
+
+  public LogicalPlan removeSourceAndSink() {
+    return null;
   }
 }

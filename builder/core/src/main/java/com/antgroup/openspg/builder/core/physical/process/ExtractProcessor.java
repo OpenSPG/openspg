@@ -13,7 +13,8 @@
 
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.core.physical.BuilderRecord;
+import com.antgroup.openspg.builder.core.BuilderException;
+import com.antgroup.openspg.builder.model.record.BuilderRecord;
 import com.antgroup.openspg.builder.core.physical.invoker.operator.OperatorInvoker;
 import com.antgroup.openspg.builder.core.physical.invoker.operator.impl.OperatorInvokerImpl;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
@@ -52,7 +53,7 @@ public class ExtractProcessor extends BaseProcessor<ExtractNodeConfig> {
   }
 
   @Override
-  public void doInit(RuntimeContext context) throws Exception {
+  public void doInit(RuntimeContext context) throws BuilderException {
     this.operatorInvoker = new OperatorInvokerImpl();
     this.operatorInvoker.init(context);
     this.operatorInvoker.register(config.getOperatorConfig());

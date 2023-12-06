@@ -15,7 +15,9 @@ package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
 import java.util.List;
+import lombok.Getter;
 
+@Getter
 public class CsvSourceNodeConfig extends BaseNodeConfig {
 
   /** start row */
@@ -32,17 +34,5 @@ public class CsvSourceNodeConfig extends BaseNodeConfig {
     this.url = url;
     this.startRow = startRow;
     this.columns = columns;
-  }
-
-  public int getStartRow() {
-    return startRow;
-  }
-
-  public String getUrl() {
-    return url;
-  }
-
-  public List<String> getColumns() {
-    return columns;
   }
 }

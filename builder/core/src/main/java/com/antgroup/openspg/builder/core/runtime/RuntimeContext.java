@@ -14,11 +14,7 @@
 package com.antgroup.openspg.builder.core.runtime;
 
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClient;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
 import java.io.Serializable;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -28,49 +24,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class RuntimeContext implements Serializable {
 
-  public static final String GRAPH_STORE_CONN_INFO = "graphStoreConnInfo";
-  public static final String SEARCH_ENGINE_CONN_INFO = "searchEngineConnInfo";
-  public static final String TABLE_STORE_CONN_INFO = "tableStoreConnInfo";
-  public static final String GRAPH_STORE_CLIENT = "graphStoreClient";
-  public static final String SEARCH_ENGINE_CLIENT = "searchEngineClient";
-
   private final long projectId;
-  private final String schemaUrl;
-  private final String builderJobName;
-  private final long builderJobInstId;
-
-  private final RecordAlterOperationEnum operation;
-  private final int splitId;
-  private final int parallelism;
-  private final int batchSize;
   private final ProjectSchema projectSchema;
+  private final RecordAlterOperationEnum operation;
 
   private final Map<String, Object> params;
-
-  private final BuilderMetric metrics;
-  private final RecordCollector recordCollector;
-
-  public GraphStoreClient getGraphStoreClient() {
-    return (GraphStoreClient) params.get(GRAPH_STORE_CLIENT);
-  }
-
-  public SearchEngineClient getSearchEngineClient() {
-    return (SearchEngineClient) params.get(SEARCH_ENGINE_CLIENT);
-  }
-
-  public GraphStoreConnectionInfo getGraphStoreConnInfo() {
-    return (GraphStoreConnectionInfo) params.get(GRAPH_STORE_CONN_INFO);
-  }
-
-  public SearchEngineConnectionInfo getSearchEngineConnectionInfo() {
-    return (SearchEngineConnectionInfo) params.get(SEARCH_ENGINE_CONN_INFO);
-  }
-
-  public boolean isEnableLeadTo() {
-    return (boolean) params.getOrDefault("leadTo", Boolean.FALSE);
-  }
-
-  public boolean isEnableSearchEngine() {
-    return (boolean) params.getOrDefault("searchEngine", Boolean.FALSE);
-  }
 }

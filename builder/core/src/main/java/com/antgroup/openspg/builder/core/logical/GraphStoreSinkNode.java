@@ -16,7 +16,7 @@ package com.antgroup.openspg.builder.core.logical;
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
 
-public class GraphStoreSinkNode extends BaseNode<GraphStoreSinkNodeConfig> {
+public class GraphStoreSinkNode extends BaseLogicalNode<GraphStoreSinkNodeConfig> {
 
   public GraphStoreSinkNode(String id, String name, GraphStoreSinkNodeConfig nodeConfig) {
     super(id, name, NodeTypeEnum.GRAPH_SINK, nodeConfig);

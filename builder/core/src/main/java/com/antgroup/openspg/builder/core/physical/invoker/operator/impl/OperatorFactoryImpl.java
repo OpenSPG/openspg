@@ -13,9 +13,8 @@
 
 package com.antgroup.openspg.builder.core.physical.invoker.operator.impl;
 
-import com.antgroup.openspg.builder.core.physical.invoker.operator.OperatorFactory;
+import com.antgroup.openspg.builder.core.physical.operator.PythonOperatorFactory;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.core.schema.model.type.OperatorKey;
 import com.antgroup.openspg.server.common.model.LangTypeEnum;
 import java.util.Map;

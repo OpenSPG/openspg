@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.server.core.builder.service;
 
-import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.core.schema.model.type.OperatorKey;
 import java.util.Collection;
 import java.util.List;

@@ -16,7 +16,7 @@ package com.antgroup.openspg.builder.core.logical;
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.config.ExtractNodeConfig;
 
-public class ExtractNode extends BaseNode<ExtractNodeConfig> {
+public class ExtractNode extends BaseLogicalNode<ExtractNodeConfig> {
 
   public ExtractNode(String id, String name, ExtractNodeConfig nodeConfig) {
     super(id, name, NodeTypeEnum.EXTRACT, nodeConfig);

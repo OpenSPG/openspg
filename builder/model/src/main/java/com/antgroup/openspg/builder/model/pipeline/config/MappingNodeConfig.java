@@ -14,19 +14,19 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
-import com.antgroup.openspg.builder.model.pipeline.enums.MappingTypeEnum;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.List;
+import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 public class MappingNodeConfig extends BaseNodeConfig {
 
-  /** The mapping target type of the node, including SPG entity or relation. */
-  private final String spgName;
+  /** 映射的元素，可能是一个或者多个实体类型，也可能是一个或者多个关系，也可能是一个子图 */
+  private final String elements;
 
-  /** The mapping types of the node. */
-  private final MappingTypeEnum mappingType;
-
-  /** The field configurations used for data filtering in mapping nodes. */
+  /** 映射过滤器，在映射前将某些元素根据filter条件过滤 */
   private final List<MappingFilter> mappingFilters;
 
   /** The schema information for attributes, primarily consisting of operator information. */
@@ -38,103 +38,64 @@ public class MappingNodeConfig extends BaseNodeConfig {
    */
   private final List<MappingConfig> mappingConfigs;
 
+  private final transient SubgraphPattern elementsPattern;
+  private final transient Map<String, List<MappingFilter>> mappingFiltersById;
+  private final transient Map<String, List<MappingSchema>> mappingSchemasById;
+  private final transient Map<String, List<MappingConfig>> mappingConfigsById;
+
   public MappingNodeConfig(
-      String spgName,
-      MappingTypeEnum mappingType,
+      String elements,
       List<MappingFilter> mappingFilters,
       List<MappingSchema> mappingSchemas,
       List<MappingConfig> mappingConfigs) {
     super(NodeTypeEnum.MAPPING);
-    this.spgName = spgName;
-    this.mappingType = mappingType;
+    this.elements = elements;
+    this.elementsPattern = parseElementsPattern(elements);
     this.mappingFilters = mappingFilters;
     this.mappingSchemas = mappingSchemas;
     this.mappingConfigs = mappingConfigs;
   }
 
-  public String getSpgName() {
-    return spgName;
+  public SubgraphPattern parseElementsPattern(String elements) {
+    return null;
   }
 
-  public MappingTypeEnum getMappingType() {
-    return mappingType;
-  }
-
-  public List<MappingFilter> getMappingFilters() {
-    return mappingFilters;
-  }
-
-  public List<MappingSchema> getMappingSchemas() {
-    return mappingSchemas;
-  }
-
-  public List<MappingConfig> getMappingConfigs() {
-    return mappingConfigs;
-  }
-
+  @Getter
+  @AllArgsConstructor
   public static class MappingFilter extends BaseValObj {
+    /** spg类型或者关系 */
+    private final String identifier;
 
     /** The field name used for data filtering on upstream nodes. */
     private final String columnName;
 
     /** The field value used for data filtering on upstream nodes. */
     private final String columnValue;
-
-    public MappingFilter(String columnName, String columnValue) {
-      this.columnName = columnName;
-      this.columnValue = columnValue;
-    }
-
-    public String getColumnName() {
-      return columnName;
-    }
-
-    public String getColumnValue() {
-      return columnValue;
-    }
   }
 
+  @Getter
+  @AllArgsConstructor
   public static class MappingSchema extends BaseValObj {
+    /** spg类型或者关系 */
+    private final String identifier;
 
     /** Schema field name with operator information. */
-    private final String name;
+    private final String propertyName;
 
-    /** Operator configuration for property. */
-    private final OperatorConfig operatorConfig;
-
-    public MappingSchema(String name, OperatorConfig operatorConfig) {
-      this.name = name;
-      this.operatorConfig = operatorConfig;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public OperatorConfig getOperatorConfig() {
-      return operatorConfig;
-    }
+    /** 属性挂载策略配置，如果有多个策略则按照顺序返回第一个挂载成功的 */
+    private final List<PropertyMounterConfig> propertyMounterConfigs;
   }
 
+  @Getter
+  @AllArgsConstructor
   public static class MappingConfig extends BaseValObj {
+    /** spg类型或者关系 */
+    private final String identifier;
 
     /** Raw field name. */
     private final String source;
 
     /** The list of schema fields corresponding to the raw field. */
     private final List<String> target;
-
-    public MappingConfig(String source, List<String> target) {
-      this.source = source;
-      this.target = target;
-    }
-
-    public String getSource() {
-      return source;
-    }
-
-    public List<String> getTarget() {
-      return target;
-    }
   }
 }

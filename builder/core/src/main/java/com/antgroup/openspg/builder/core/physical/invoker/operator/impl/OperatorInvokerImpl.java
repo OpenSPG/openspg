@@ -13,15 +13,13 @@
 
 package com.antgroup.openspg.builder.core.physical.invoker.operator.impl;
 
-import com.antgroup.openspg.builder.core.physical.BuilderRecord;
-import com.antgroup.openspg.builder.core.physical.invoker.operator.OperatorFactory;
+import com.antgroup.openspg.builder.model.record.BuilderRecord;
 import com.antgroup.openspg.builder.core.physical.invoker.operator.OperatorInvoker;
 import com.antgroup.openspg.builder.core.physical.invoker.operator.protocol.EvalResult;
 import com.antgroup.openspg.builder.core.physical.invoker.operator.protocol.Vertex;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
-import com.antgroup.openspg.builder.model.record.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.builder.model.record.SPGRecordTypeEnum;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.constraint.Constraint;
@@ -148,7 +146,7 @@ public class OperatorInvokerImpl implements OperatorInvoker {
 
   private List<String> rawValues(SPGPropertyRecord propertyRecord) {
     List<String> rawValues = null;
-    Constraint constraint = propertyRecord.getPropertyType().getConstraint();
+    Constraint constraint = propertyRecord.getProperty().getConstraint();
     String rawValue = propertyRecord.getValue().getRaw();
     if (constraint != null
         && constraint.contains(ConstraintTypeEnum.MULTI_VALUE)

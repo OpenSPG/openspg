@@ -15,6 +15,8 @@ package com.antgroup.openspg.core.schema.model.type;
 
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.server.common.model.base.BaseToString;
+import lombok.Getter;
+
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -25,7 +27,7 @@ public class ProjectSchema extends BaseToString {
   private static final long serialVersionUID = 6290975442808465802L;
 
   /** List of SPG types that defined in the project. */
-  private final List<BaseSPGType> spgTypes;
+  @Getter private final List<BaseSPGType> spgTypes;
 
   /**
    * A map contains all the SPG types that defined in the project. the key is the name of the type,
@@ -35,10 +37,6 @@ public class ProjectSchema extends BaseToString {
 
   public ProjectSchema(List<BaseSPGType> spgTypes) {
     this.spgTypes = spgTypes;
-  }
-
-  public List<BaseSPGType> getSpgTypes() {
-    return spgTypes;
   }
 
   /**

@@ -15,7 +15,9 @@ package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
 import java.util.List;
+import lombok.Getter;
 
+@Getter
 public class ExtractNodeConfig extends BaseNodeConfig {
 
   /** Columns of the node config. */
@@ -28,13 +30,5 @@ public class ExtractNodeConfig extends BaseNodeConfig {
     super(NodeTypeEnum.EXTRACT);
     this.outputFields = columns;
     this.operatorConfig = operatorConfig;
-  }
-
-  public List<String> getOutputFields() {
-    return outputFields;
-  }
-
-  public OperatorConfig getOperatorConfig() {
-    return operatorConfig;
   }
 }

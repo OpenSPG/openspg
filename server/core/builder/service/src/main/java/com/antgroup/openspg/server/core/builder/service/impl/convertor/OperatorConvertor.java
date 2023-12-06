@@ -15,7 +15,6 @@ package com.antgroup.openspg.server.core.builder.service.impl.convertor;
 
 import com.antgroup.openspg.builder.core.operator.OperatorOverview;
 import com.antgroup.openspg.builder.core.operator.OperatorVersion;
-import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
 
 public class OperatorConvertor {
 

@@ -13,21 +13,21 @@
 
 package com.antgroup.openspg.builder.model.record;
 
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
 import com.antgroup.openspg.core.schema.model.type.WithSPGTypeEnum;
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 public abstract class BaseSPGRecord extends BaseRecord implements WithSPGTypeEnum {
 
   private final SPGRecordTypeEnum recordType;
 
   protected BaseSPGRecord(SPGRecordTypeEnum recordType) {
     this.recordType = recordType;
-  }
-
-  public SPGRecordTypeEnum getRecordType() {
-    return recordType;
   }
 
   public abstract List<BasePropertyRecord> getProperties();

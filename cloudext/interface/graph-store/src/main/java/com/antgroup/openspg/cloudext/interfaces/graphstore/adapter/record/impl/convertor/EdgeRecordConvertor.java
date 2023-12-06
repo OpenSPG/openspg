@@ -15,7 +15,7 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.
 
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.RelationRecord;
-import com.antgroup.openspg.builder.model.record.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
@@ -63,7 +63,7 @@ public class EdgeRecordConvertor {
     String srcType = advancedRecord.getName();
     String srcId = advancedRecord.getId();
     String edgeName = spgPropertyRecord.getName();
-    String dstType = spgPropertyRecord.getPropertyType().getObjectTypeRef().getName();
+    String dstType = spgPropertyRecord.getProperty().getObjectTypeRef().getName();
     List<String> dstIdList = spgPropertyRecord.getValue().getSplitIds();
     return dstIdList.stream()
         .map(

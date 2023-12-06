@@ -22,9 +22,8 @@ import com.antgroup.openspg.builder.core.physical.invoker.operator.impl.Operator
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
 import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
-import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
-import com.antgroup.openspg.builder.model.record.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import java.util.ArrayList;

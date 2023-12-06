@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor;
 
-import com.antgroup.openspg.builder.model.record.BasePropertyRecord;
-import com.antgroup.openspg.builder.model.record.SPGPropertyRecord;
-import com.antgroup.openspg.builder.model.record.SPGPropertyValue;
-import com.antgroup.openspg.builder.model.record.SPGSubPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyValue;
+import com.antgroup.openspg.builder.model.record.property.SPGSubPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGPropertyRecord;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.predicate.SubProperty;

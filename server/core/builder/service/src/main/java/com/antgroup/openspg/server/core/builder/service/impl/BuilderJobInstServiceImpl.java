@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.server.core.builder.service.impl;
 
-import com.antgroup.openspg.builder.core.physical.invoker.operator.impl.PythonOperatorFactory;
 import com.antgroup.openspg.builder.model.pipeline.Node;
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;

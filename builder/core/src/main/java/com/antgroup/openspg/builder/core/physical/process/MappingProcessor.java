@@ -14,47 +14,20 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
 import com.antgroup.openspg.builder.core.BuilderException;
-import com.antgroup.openspg.builder.core.physical.BuilderRecord;
-import com.antgroup.openspg.builder.core.physical.invoker.InvokerFactory;
-import com.antgroup.openspg.builder.core.physical.invoker.InvokerParam;
-import com.antgroup.openspg.builder.core.physical.invoker.impl.InvokerFactoryImpl;
-import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.builder.core.semantic.PropertyMounter;
+import com.antgroup.openspg.builder.core.semantic.PropertyMounterFactory;
 import com.antgroup.openspg.builder.model.pipeline.config.MappingNodeConfig;
-import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.builder.model.record.SPGPropertyRecord;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.EdgeRecordConvertor;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.VertexRecordConvertor;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.SearchRequest;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.BaseQuery;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.MatchQuery;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.OperatorType;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.QueryGroup;
-import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.core.schema.model.constraint.Constraint;
-import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
-import com.antgroup.openspg.core.schema.model.predicate.Relation;
-import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
-import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
-import com.antgroup.openspg.server.api.facade.client.SchemaFacade;
-import com.antgroup.openspg.server.api.facade.dto.schema.request.RelationRequest;
-import com.antgroup.openspg.server.api.facade.dto.schema.request.SPGTypeRequest;
-import com.antgroup.openspg.server.api.http.client.HttpSchemaFacade;
-import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo;
-import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap;
+import com.antgroup.openspg.builder.model.record.BuilderRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import lombok.Setter;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -78,56 +51,49 @@ import org.apache.commons.collections4.MapUtils;
 @Slf4j
 public class MappingProcessor extends BaseProcessor<MappingNodeConfig> {
 
-  private final Map<String, OperatorConfig> property2Operator = new HashMap<>();
-  @Setter private SchemaFacade schemaFacade;
-  private BaseSPGType spgType;
-  private Relation relation;
-  private InvokerFactory invokerFactory;
-  private SearchEngineClient searchEngineClient;
+  private final Map<String, Map<String, List<PropertyMounter>>> propertyMounters = new HashMap<>();
 
   public MappingProcessor(String id, String name, MappingNodeConfig config) {
     super(id, name, config);
-    schemaFacade = new HttpSchemaFacade(true);
   }
 
   @Override
-  public void doInit(RuntimeContext context) {
-    searchEngineClient =
-        SearchEngineClientDriverManager.getClient(context.getSearchEngineConnectionInfo());
-    String schemaUrl = context.getSchemaUrl();
-    if (StringUtils.isNotBlank(schemaUrl)) {
-      HttpClientBootstrap.init(new ConnectionInfo(schemaUrl));
-    }
-    loadSchema();
-
-    invokerFactory = new InvokerFactoryImpl();
-    invokerFactory.init(context);
-    loadOperator();
+  public void doInit(RuntimeContext context) throws BuilderException {
+    loadPropertyMounter();
   }
 
   @Override
   public List<BaseRecord> process(List<BaseRecord> records) {
     List<BaseRecord> resultRecords = new ArrayList<>();
-    for (BaseRecord baseRecord : records) {
-      BuilderRecord record = (BuilderRecord) baseRecord;
-      Map<String, String> properties = record.getProps();
-      if (MapUtils.isEmpty(properties) || isFiltered(properties)) {
-        continue;
-      }
 
-      Map<String, String> mappingResult = mapping(properties);
-      BaseSPGRecord baseSpgRecord = toSpgRecord(mappingResult);
-      if (baseSpgRecord == null) {
-        continue;
-      }
+    // 按照子图元素顺序进行处理，避免有些情况下o还没写入，先写入p
+    // 然而有些图存储，比如tugraph不支持悬空边导致p无法写入
+    for (String element : config.getElementsPattern().elementOrdered()) {
+      List<BaseRecord> leftRecords = new ArrayList<>(records.size());
+      for (BaseRecord baseRecord : records) {
+        BuilderRecord record = (BuilderRecord) baseRecord;
+        if (!element.equals(record.getIdentifier())) {
+          leftRecords.add(record);
+          continue;
+        }
 
-      List<BaseRecord> invokedRecords =
-          invokerFactory.invoke(new InvokerParam(this, baseSpgRecord, property2Operator));
+        // 判断当前record是否被过滤
+        if (isFiltered(record)) {
+          continue;
+        }
 
-      if (context.isEnableSearchEngine()) {
-        propertyMount(invokedRecords);
+        // 字段映射并转化为BaseSPGRecord
+        BuilderRecord mappingRecord = mapping(record);
+        BaseSPGRecord baseSPGRecord = toSpgRecord(mappingRecord);
+        if (baseSPGRecord == null) {
+          continue;
+        }
+
+        // 根据配置的策略执行属性挂载
+        BaseSPGRecord propertyMountedRecord = propertyMount(baseSPGRecord);
+        resultRecords.add(propertyMountedRecord);
       }
-      resultRecords.addAll(invokedRecords);
+      records = leftRecords;
     }
     return resultRecords;
   }
@@ -135,46 +101,48 @@ public class MappingProcessor extends BaseProcessor<MappingNodeConfig> {
   @Override
   public void close() {}
 
-  private void loadSchema() {
-    switch (config.getMappingType()) {
-      case SPG_TYPE:
-        spgType =
-            schemaFacade
-                .querySPGType(new SPGTypeRequest().setName(config.getSpgName()))
-                .getDataThrowsIfNull(config.getSpgName());
-        break;
-      case RELATION:
-        relation =
-            schemaFacade
-                .queryRelation(RelationRequest.parse(config.getSpgName()))
-                .getDataThrowsIfNull(config.getSpgName());
-        break;
-      default:
-        throw BuilderException.illegalMappingType(config.getMappingType().toString());
-    }
-  }
-
-  private void loadOperator() {
-    if (CollectionUtils.isEmpty(config.getMappingSchemas())) {
+  private void loadPropertyMounter() {
+    if (MapUtils.isEmpty(config.getMappingSchemasById())) {
       return;
     }
-    for (MappingNodeConfig.MappingSchema mappingSchema : config.getMappingSchemas()) {
-      OperatorConfig operatorConfig = mappingSchema.getOperatorConfig();
-      property2Operator.put(mappingSchema.getName(), mappingSchema.getOperatorConfig());
-      invokerFactory.register(operatorConfig);
+
+    for (Map.Entry<String, List<MappingNodeConfig.MappingSchema>> entry :
+        config.getMappingSchemasById().entrySet()) {
+      String identifier = entry.getKey();
+      List<MappingNodeConfig.MappingSchema> mappingSchemas = entry.getValue();
+
+      Map<String, List<PropertyMounter>> mounters = propertyMounters.get(identifier);
+      if (mounters == null) {
+        mounters = new HashMap<>(mappingSchemas.size());
+      }
+
+      for (MappingNodeConfig.MappingSchema mappingSchema : mappingSchemas) {
+        List<PropertyMounter> propertyMounters =
+            mappingSchema.getPropertyMounterConfigs().stream()
+                .map(PropertyMounterFactory::getPropertyMounter)
+                .collect(Collectors.toList());
+        mounters.put(mappingSchema.getPropertyName(), propertyMounters);
+      }
+      propertyMounters.put(identifier, mounters);
     }
   }
 
-  private boolean isFiltered(Map<String, String> properties) {
-    if (CollectionUtils.isEmpty(config.getMappingFilters())) {
+  private boolean isFiltered(BuilderRecord record) {
+    if (MapUtils.isEmpty(config.getMappingFiltersById())) {
       return false;
     }
 
-    for (MappingNodeConfig.MappingFilter mappingFilter : config.getMappingFilters()) {
+    List<MappingNodeConfig.MappingFilter> mappingFilters =
+        config.getMappingFiltersById().get(record.getIdentifier());
+    if (CollectionUtils.isEmpty(mappingFilters)) {
+      return false;
+    }
+
+    for (MappingNodeConfig.MappingFilter mappingFilter : mappingFilters) {
       String columnName = mappingFilter.getColumnName();
       String columnValue = mappingFilter.getColumnValue();
 
-      String propertyValue = properties.get(columnName);
+      String propertyValue = record.getPropValue(columnName);
       if (columnValue.equals(propertyValue)) {
         return false;
       }
@@ -182,123 +150,68 @@ public class MappingProcessor extends BaseProcessor<MappingNodeConfig> {
     return true;
   }
 
-  private Map<String, String> mapping(Map<String, String> properties) {
-    Map<String, String> results = new HashMap<>();
+  private BuilderRecord mapping(BuilderRecord record) {
+    Map<String, String> newProps = new HashMap<>(record.getProps().size());
 
-    for (MappingNodeConfig.MappingConfig mappingConfig : config.getMappingConfigs()) {
+    List<MappingNodeConfig.MappingConfig> mappingConfigs =
+        config.getMappingConfigsById().get(record.getIdentifier());
+
+    for (MappingNodeConfig.MappingConfig mappingConfig : mappingConfigs) {
       String source = mappingConfig.getSource();
       List<String> targets = mappingConfig.getTarget();
 
-      String sourceValue = properties.get(source);
+      String sourceValue = record.getPropValue(source);
       for (String target : targets) {
-        results.put(target, sourceValue);
+        newProps.put(target, sourceValue);
       }
     }
-    return results;
+    return record.withNewProps(newProps);
   }
 
-  private BaseSPGRecord toSpgRecord(Map<String, String> mappingResult) {
-    switch (config.getMappingType()) {
-      case SPG_TYPE:
-        String bizId = mappingResult.get("id");
-        if (StringUtils.isBlank(bizId)) {
-          return null;
-        }
-        return VertexRecordConvertor.toAdvancedRecord(spgType, bizId, mappingResult);
-      case RELATION:
-        String srcId = mappingResult.get("srcId");
-        String dstId = mappingResult.get("dstId");
-        if (StringUtils.isBlank(srcId) || StringUtils.isBlank(dstId)) {
-          return null;
-        }
-        return EdgeRecordConvertor.toRelationRecord(relation, srcId, dstId, mappingResult);
-      default:
-        throw BuilderException.illegalMappingType(config.getMappingType().toString());
+  private BaseSPGRecord toSpgRecord(BuilderRecord record) {
+    return null;
+    //    switch (config.getMappingType()) {
+    //      case SPG_TYPE:
+    //        String bizId = mappingResult.get("id");
+    //        if (StringUtils.isBlank(bizId)) {
+    //          return null;
+    //        }
+    //        return VertexRecordConvertor.toAdvancedRecord(spgType, bizId, mappingResult);
+    //      case RELATION:
+    //        String srcId = mappingResult.get("srcId");
+    //        String dstId = mappingResult.get("dstId");
+    //        if (StringUtils.isBlank(srcId) || StringUtils.isBlank(dstId)) {
+    //          return null;
+    //        }
+    //        return EdgeRecordConvertor.toRelationRecord(relation, srcId, dstId, mappingResult);
+    //      default:
+    //        throw BuilderException.illegalMappingType(config.getMappingType().toString());
+    //    }
+  }
+
+  private BaseSPGRecord propertyMount(BaseSPGRecord record) {
+    if (!(record instanceof BaseAdvancedRecord)) {
+      return record;
     }
-  }
 
-  private void propertyMount(List<BaseRecord> records) {
-    for (BaseRecord record : records) {
-      if (!(record instanceof BaseAdvancedRecord)) {
+    BaseAdvancedRecord advancedRecord = (BaseAdvancedRecord) record;
+    String identifier = advancedRecord.getName();
+
+    Map<String, List<PropertyMounter>> propertyMounters = this.propertyMounters.get(identifier);
+    if (MapUtils.isEmpty(propertyMounters)) {
+      return record;
+    }
+
+    for (SPGPropertyRecord propertyRecord : advancedRecord.getSpgProperties()) {
+      if (!propertyRecord.getProperty().getObjectTypeRef().isAdvancedType()) {
         continue;
       }
-      BaseAdvancedRecord advancedRecord = (BaseAdvancedRecord) record;
-      for (SPGPropertyRecord prop : advancedRecord.getSpgProperties()) {
-        if (prop.getSpgTypeEnum() != SPGTypeEnum.CONCEPT_TYPE
-            && prop.getSpgTypeEnum() != SPGTypeEnum.ENTITY_TYPE) {
-          continue;
+      for (PropertyMounter propertyMounter : propertyMounters.get(propertyRecord.getName())) {
+        if (propertyMounter.propertyMount(propertyRecord)) {
+          break;
         }
-        Set<String> mountedValues = new HashSet<>();
-        String mountedValue = null;
-        Constraint constraint = prop.getPropertyType().getConstraint();
-        if (constraint != null && constraint.contains(ConstraintTypeEnum.MULTI_VALUE)) {
-          for (String singleId : prop.getValue().getSplitIds()) {
-            mountedValue =
-                mount(prop.getSpgTypeEnum(), prop.getObjectTypeRef().getName(), singleId);
-            mountedValues.add(mountedValue);
-          }
-        } else {
-          mountedValue =
-              mount(
-                  prop.getSpgTypeEnum(),
-                  prop.getObjectTypeRef().getName(),
-                  prop.getValue().getIds());
-          mountedValues.add(mountedValue);
-        }
-        String mountedValueStr = String.join(",", mountedValues);
-        if (prop.getSpgTypeEnum() == SPGTypeEnum.CONCEPT_TYPE) {
-          prop.getValue().setStd(mountedValueStr);
-        }
-        prop.getValue().setIds(mountedValueStr);
       }
     }
-  }
-
-  private String mount(SPGTypeEnum spgTypeEnum, String type, String value) {
-    switch (spgTypeEnum) {
-      case CONCEPT_TYPE:
-        String concept = recall(type, value, SPGTypeEnum.CONCEPT_TYPE);
-        if (StringUtils.isBlank(concept)) {
-          throw new BuilderRecordException(
-              this, "spgType={}, value={} concept mount failed", type, value);
-        }
-        return concept;
-      case ENTITY_TYPE:
-        String name = recall(type, value, SPGTypeEnum.ENTITY_TYPE);
-        if (StringUtils.isBlank(name)) {
-          throw new BuilderRecordException(
-              this, "spgType={}, value={} entity mount failed", type, value);
-        }
-        return name;
-      default:
-        throw new IllegalArgumentException("illegal spgType=" + spgTypeEnum);
-    }
-  }
-
-  private String recall(String type, String value, SPGTypeEnum spgTypeEnum) {
-    SearchRequest request = new SearchRequest();
-    request.setIndexName(searchEngineClient.getIdxNameConvertor().convertIdxName(type));
-    MatchQuery idQuery = new MatchQuery("id", value);
-    MatchQuery nameQuery = new MatchQuery("name", value);
-
-    List<BaseQuery> queries = new ArrayList<>(4);
-    queries.add(idQuery);
-    queries.add(nameQuery);
-    if (spgTypeEnum == SPGTypeEnum.CONCEPT_TYPE) {
-      queries.add(new MatchQuery("alias", value));
-      queries.add(new MatchQuery("stdId", value));
-    }
-    QueryGroup queryGroup = new QueryGroup(queries, OperatorType.OR);
-    request.setQuery(queryGroup);
-    request.setSize(50);
-    List<IdxRecord> lst = searchEngineClient.search(request);
-    if (CollectionUtils.isEmpty(lst)) {
-      return null;
-    }
-    IdxRecord record = lst.get(0);
-    if (!value.equals(record.getDocId()) && record.getScore() < 0.5) {
-      return null;
-    }
-    return record.getDocId();
+    return record;
   }
 }

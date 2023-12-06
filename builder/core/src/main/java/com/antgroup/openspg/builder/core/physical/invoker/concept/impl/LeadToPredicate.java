@@ -25,8 +25,8 @@ import com.antgroup.openspg.builder.core.physical.invoker.concept.convertor.Reas
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.builder.model.record.SPGPropertyRecord;
-import com.antgroup.openspg.builder.model.record.SPGPropertyValue;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyValue;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.SystemPredicateEnum;

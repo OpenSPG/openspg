@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.builder.core.physical;
 
+import com.antgroup.openspg.builder.core.BuilderException;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
@@ -64,7 +65,7 @@ public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
     this.name = name;
   }
 
-  public void init(RuntimeContext context) throws Exception {
+  public void init(RuntimeContext context) throws BuilderException {
     this.context = context;
     if (!isInitialized) {
       synchronized (this) {
@@ -76,7 +77,7 @@ public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
     }
   }
 
-  public void doInit(RuntimeContext context) throws Exception {}
+  public void doInit(RuntimeContext context) throws BuilderException {}
 
   public abstract void close() throws Exception;
 

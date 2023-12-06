@@ -15,7 +15,7 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.
 
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.builder.model.record.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.builder.model.record.SPGRecordAlterItem;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.BaseLPGGraphStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.EdgeRecordConvertor;
@@ -99,7 +99,7 @@ public abstract class BaseSPGRecord2LPGStrategy implements SPGRecord2LPGStrategy
                                 new EdgeTypeName(
                                     advancedRecord.getName(),
                                     p.getName(),
-                                    p.getPropertyType().getObjectTypeRef().getName()))
+                                    p.getProperty().getObjectTypeRef().getName()))
                         .collect(Collectors.toSet()),
                     Direction.OUT));
     return recordStruct.getEdges().stream()

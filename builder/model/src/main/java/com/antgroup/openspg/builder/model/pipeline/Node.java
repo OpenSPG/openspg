@@ -15,11 +15,15 @@ package com.antgroup.openspg.builder.model.pipeline;
 
 import com.antgroup.openspg.builder.model.pipeline.config.BaseNodeConfig;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * The node used to assemble the builder pipeline, which include the node ID, name, and node
  * configuration.
  */
+@Getter
+@AllArgsConstructor
 public class Node extends BaseValObj {
 
   /** The id of the node. */
@@ -30,24 +34,6 @@ public class Node extends BaseValObj {
 
   /** The config of the node. */
   private final BaseNodeConfig nodeConfig;
-
-  public Node(String id, String name, BaseNodeConfig nodeConfig) {
-    this.id = id;
-    this.name = name;
-    this.nodeConfig = nodeConfig;
-  }
-
-  public String getId() {
-    return id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public BaseNodeConfig getNodeConfig() {
-    return nodeConfig;
-  }
 
   public NodeTypeEnum getType() {
     return nodeConfig.getType();
