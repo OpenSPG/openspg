@@ -43,13 +43,23 @@ public enum TaskStatus {
      * @param name
      * @return
      */
-    public static TaskStatus getByName(String name) {
+    public static TaskStatus getByName(String name, TaskStatus defaultValue) {
         for (TaskStatus workflowStatus : TaskStatus.values()) {
             if (workflowStatus.name().equalsIgnoreCase(name)) {
                 return workflowStatus;
             }
         }
-        return null;
+        return defaultValue;
+    }
+
+    /**
+     * get by name
+     *
+     * @param name
+     * @return
+     */
+    public static TaskStatus getByName(String name) {
+        return getByName(name, null);
     }
 
     /**

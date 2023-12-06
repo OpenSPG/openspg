@@ -87,7 +87,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
         for (Long key : jobs.keySet()) {
             SchedulerJob job = jobs.get(key);
             if (!CommonUtils.equals(job.getId(), record.getId())
-                    || !CommonUtils.equals(job.getCreateUserName(), record.getCreateUserName())
+                    || !CommonUtils.equals(job.getCreateUser(), record.getCreateUser())
                     || !CommonUtils.equals(job.getType(), record.getType())
                     || !CommonUtils.equals(job.getLifeCycle(), record.getLifeCycle())
                     || !CommonUtils.equals(job.getStatus(), record.getStatus())
@@ -99,7 +99,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
             }
 
             String keyword = record.getKeyword();
-            if (!CommonUtils.contains(job.getName(), keyword) || !CommonUtils.contains(job.getCreateUserName(), keyword)) {
+            if (!CommonUtils.contains(job.getName(), keyword) || !CommonUtils.contains(job.getCreateUser(), keyword)) {
                 continue;
             }
             if (CollectionUtils.isNotEmpty(record.getTypes()) && !record.getTypes().contains(job.getType())) {

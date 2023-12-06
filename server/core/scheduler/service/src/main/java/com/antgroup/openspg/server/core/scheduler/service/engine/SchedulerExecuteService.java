@@ -10,8 +10,14 @@ package com.antgroup.openspg.server.core.scheduler.service.engine;
 public interface SchedulerExecuteService {
 
     /**
-     * execute Instances
+     * execute all Instances
      */
     void executeInstances();
+
+    /**
+     * execute Instance by id
+     * @param id
+     */
+    void executeInstance(Long id);
 
 }

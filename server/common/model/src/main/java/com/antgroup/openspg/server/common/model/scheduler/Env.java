@@ -57,4 +57,29 @@ public enum Env {
     public void setValue(String value) {
         this.value = value;
     }
+
+    /**
+     * get by name
+     *
+     * @param name
+     * @return
+     */
+    public static Env getByName(String name, Env defaultValue) {
+        for (Env value : Env.values()) {
+            if (value.name().equalsIgnoreCase(name)) {
+                return value;
+            }
+        }
+        return defaultValue;
+    }
+
+    /**
+     * get by name
+     *
+     * @param name
+     * @return
+     */
+    public static Env getByName(String name) {
+        return getByName(name, null);
+    }
 }

@@ -38,6 +38,13 @@ public interface SchedulerTaskService {
     int deleteByIds(List<Long> ids);
 
     /**
+     * delete By jobId
+     * @param jobId
+     * @return
+     */
+    int deleteByJobId(Long jobId);
+
+    /**
      * update By Id
      * @param record
      * @return

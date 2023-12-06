@@ -15,6 +15,7 @@ import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
 import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -31,6 +32,7 @@ import com.antgroup.openspg.server.core.scheduler.service.translate.TranslatorFa
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,23 +109,25 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
         });
     }
 
+    private void checkInstanceRunning(SchedulerJob job) {
+        SchedulerInstanceQuery query = new SchedulerInstanceQuery();
+        query.setJobId(job.getId());
+        query.setStartCreateTime(DateUtils.addDays(new Date(), -1));
+        query.setEndCreateTime(new Date());
+        List<SchedulerInstance> instances = schedulerInstanceService.query(query).getData();
+        instances.stream().forEach(instance -> {
+            if (!InstanceStatus.isFinish(instance.getStatus())) {
+                throw new RuntimeException(String.format("Running instances exist within 24H uniqueId:%", instance.getUniqueId()));
+            }
+        });
+    }
+
     @Override
     public SchedulerInstance generateOnceInstance(SchedulerJob job) {
+        checkInstanceRunning(job);
         Date schedulerDate = new Date();
         String uniqueId = job.getId().toString() + System.currentTimeMillis();
         return generateInstance(job, uniqueId, schedulerDate);
-    }
-
-    public static void main(String[] args) {
-        String cronExpression = "0 0 * * * ?";
-
-        List<Date> executionDates = CommonUtils.getCronExecutionDatesByToday(cronExpression);
-
-        for (Date date : executionDates) {
-            System.out.println(DateTimeUtils.getDate2LongStr(date));
-        }
-
-        System.out.println(CommonUtils.getPreviousValidTime(cronExpression, new Date()));
     }
 
     @Override
@@ -133,6 +137,9 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
         for (Date schedulerDate : executionDates) {
             String uniqueId = job.getId().toString() + DateTimeUtils.getDate2Str(DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, schedulerDate);
             SchedulerInstance instance = generateInstance(job, uniqueId, schedulerDate);
+            if (instance == null) {
+                continue;
+            }
             instances.add(instance);
         }
         return instances;
@@ -140,6 +147,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
     @Override
     public SchedulerInstance generateRealTimeInstance(SchedulerJob job) {
+        checkInstanceRunning(job);
         Date schedulerDate = new Date();
         String uniqueId = job.getId().toString() + System.currentTimeMillis();
         return generateInstance(job, uniqueId, schedulerDate);
@@ -150,7 +158,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
         SchedulerInstance existInstance = schedulerInstanceService.getByUniqueId(uniqueId);
         if (existInstance != null) {
             LOGGER.info(String.format("generateInstance uniqueId exist jobId:%s uniqueId:%s", job.getId(), uniqueId));
-            return existInstance;
+            return null;
         }
 
         LOGGER.info(String.format("generateInstance start jobId:%s uniqueId:%s", job.getId(), uniqueId));
@@ -161,8 +169,8 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
         instance.setType(job.getType());
         instance.setStatus(InstanceStatus.WAITING.name());
         instance.setProgress(0L);
-        instance.setCreateUser(job.getCreateUserNo());
-        instance.setModifyUser(job.getCreateUserNo());
+        instance.setCreateUser(job.getCreateUser());
+        instance.setModifyUser(job.getCreateUser());
         instance.setGmtCreate(new Date());
         instance.setGmtModified(new Date());
         instance.setBeginRunningTime(new Date());
@@ -183,6 +191,12 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
             TaskStatus status = CollectionUtils.isEmpty(workflowDag.getPreNodes(node.getId())) ? TaskStatus.RUNNING : TaskStatus.WAIT;
             schedulerTaskService.insert(new SchedulerTask(instance.getCreateUser(), instance.getId(), status, node));
         });
+
+        SchedulerJob updateJob = new SchedulerJob();
+        updateJob.setId(job.getId());
+        updateJob.setLastExecuteTime(schedulerDate);
+        schedulerJobService.update(updateJob);
+
         return instance;
     }
 }

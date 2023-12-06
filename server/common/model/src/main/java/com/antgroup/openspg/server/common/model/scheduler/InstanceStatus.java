@@ -48,4 +48,29 @@ public enum InstanceStatus {
                 || InstanceStatus.SET_FINISH.name().equalsIgnoreCase(status) || InstanceStatus.ALL_DONE.name().equalsIgnoreCase(status)
                 || InstanceStatus.SKIP.name().equalsIgnoreCase(status);
     }
+
+    /**
+     * get by name
+     *
+     * @param name
+     * @return
+     */
+    public static InstanceStatus getByName(String name, InstanceStatus defaultValue) {
+        for (InstanceStatus value : InstanceStatus.values()) {
+            if (value.name().equalsIgnoreCase(name)) {
+                return value;
+            }
+        }
+        return defaultValue;
+    }
+
+    /**
+     * get by name
+     *
+     * @param name
+     * @return
+     */
+    public static InstanceStatus getByName(String name) {
+        return getByName(name, null);
+    }
 }

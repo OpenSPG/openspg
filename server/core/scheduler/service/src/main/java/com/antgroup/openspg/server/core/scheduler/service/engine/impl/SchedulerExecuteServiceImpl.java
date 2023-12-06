@@ -81,13 +81,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
         for (SchedulerInstance instance : allInstance) {
             String type = instance.getType();
             ThreadPoolExecutor executor = getInstanceExecutor(type);
-            Runnable instanceRunnable = () -> {
-                try {
-                    executeInstance(instance.getId());
-                } catch (Exception e) {
-                    LOGGER.error(String.format("process instance error id:%s", instance.getUniqueId()), e);
-                }
-            };
+            Runnable instanceRunnable = () -> executeInstance(instance.getId());
             LOGGER.info(String.format("instanceExecutor active:%s task:%s completed:%s remaining:%s", executor.getActiveCount(),
                     executor.getTaskCount(), executor.getCompletedTaskCount(), executor.getQueue().remainingCapacity()));
             executor.execute(instanceRunnable);
@@ -95,17 +89,22 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
         }
     }
 
+    @Override
     public void executeInstance(Long id) {
-        List<SchedulerTask> tasks = schedulerTaskService.queryBaseColumnByInstanceId(id);
-        List<SchedulerTask> processTasks = tasks.stream()
-                .filter(s -> TaskStatus.isFinish(s.getStatus()))
-                .collect(Collectors.toList());
-        if (processTasks.size() == tasks.size()) {
-            SchedulerInstance instance = schedulerInstanceService.getById(id);
-            schedulerCommonService.setInstanceFinish(instance, InstanceStatus.FINISH, TaskStatus.FINISH);
-            return;
+        try {
+            List<SchedulerTask> tasks = schedulerTaskService.queryBaseColumnByInstanceId(id);
+            List<SchedulerTask> processTasks = tasks.stream()
+                    .filter(s -> TaskStatus.isFinish(s.getStatus()))
+                    .collect(Collectors.toList());
+            if (processTasks.size() == tasks.size()) {
+                SchedulerInstance instance = schedulerInstanceService.getById(id);
+                schedulerCommonService.setInstanceFinish(instance, InstanceStatus.FINISH, TaskStatus.FINISH);
+                return;
+            }
+            executeInstance(id, tasks);
+        } catch (Exception e) {
+            LOGGER.error(String.format("execute instance error id:%s", id), e);
         }
-        executeInstance(id, tasks);
     }
 
     public void executeInstance(Long id, List<SchedulerTask> tasks) {
@@ -122,22 +121,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
         String type = instance.getType();
         ThreadPoolExecutor executor = getTaskExecutor(type);
         processList.forEach(task -> {
-            Runnable taskRunnable = () -> {
-                long start = System.currentTimeMillis();
-                try {
-                    executeTask(instance, task);
-                } catch (Exception e) {
-                    LOGGER.error(String.format("process task error task:%s", task.getId()), e);
-                } finally {
-                    Long time = System.currentTimeMillis() - start;
-                    METRIC_LOGGER.info(
-                            String.format("|process|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s", instance.getProjectId(),
-                                    instance.getJobId(), instance.getUniqueId(), instance.getSchedulerDate(),
-                                    task.getType(), task.getTitle(), task.getUpdateUser(),
-                                    task.getExecuteNum(), task.getBeginTime().getTime(),
-                                    task.getStatus(), time));
-                }
-            };
+            Runnable taskRunnable = () -> executeTask(instance, task);
             LOGGER.info(String.format("taskExecutor active:%s task:%s completed:%s remaining:%s", executor.getActiveCount(),
                     executor.getTaskCount(), executor.getCompletedTaskCount(), executor.getQueue().remainingCapacity()));
             executor.execute(taskRunnable);
@@ -145,23 +129,37 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     }
 
     public void executeTask(SchedulerInstance instance, SchedulerTask task) {
-        SchedulerJob job = schedulerJobService.getById(instance.getJobId());
-        JobTaskContext context = new JobTaskContext(job, instance, task);
-        String type = task.getType();
-        if (StringUtils.isBlank(type)) {
-            LOGGER.error(String.format("task type is null uniqueId:%s taskId:%s", instance.getUniqueId(), task.getId()));
-            return;
-        }
-        type = type.split(SchedulerConstant.UNDERLINE_SEPARATOR)[0];
 
-        JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
-        if (jobTask == null) {
-            LOGGER.error(String.format("get jobTask bean error uniqueId:%s taskId:%s", instance.getUniqueId(), task.getId()));
-            return;
-        }
-        jobTask.executeEntry(context);
+        long start = System.currentTimeMillis();
+        try {
+            SchedulerJob job = schedulerJobService.getById(instance.getJobId());
+            JobTaskContext context = new JobTaskContext(job, instance, task);
+            String type = task.getType();
+            if (StringUtils.isBlank(type)) {
+                LOGGER.error(String.format("task type is null uniqueId:%s taskId:%s", instance.getUniqueId(), task.getId()));
+                return;
+            }
+            type = type.split(SchedulerConstant.UNDERLINE_SEPARATOR)[0];
 
-        executeNextTask(context);
+            JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
+            if (jobTask == null) {
+                LOGGER.error(String.format("get jobTask bean error uniqueId:%s taskId:%s", instance.getUniqueId(), task.getId()));
+                return;
+            }
+            jobTask.executeEntry(context);
+
+            executeNextTask(context);
+        } catch (Exception e) {
+            LOGGER.error(String.format("process task error task:%s", task.getId()), e);
+        } finally {
+            Long time = System.currentTimeMillis() - start;
+            METRIC_LOGGER.info(
+                    String.format("|process|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s", instance.getProjectId(),
+                            instance.getJobId(), instance.getUniqueId(), instance.getSchedulerDate(),
+                            task.getType(), task.getTitle(), task.getUpdateUser(),
+                            task.getExecuteNum(), task.getBeginTime().getTime(),
+                            task.getStatus(), time));
+        }
     }
 
     public void executeNextTask(JobTaskContext context) {

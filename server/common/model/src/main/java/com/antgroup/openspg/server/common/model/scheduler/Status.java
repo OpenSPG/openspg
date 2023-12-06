@@ -15,5 +15,30 @@ public enum Status {
     /**
      * offline
      */
-    OFFLINE,
+    OFFLINE;
+
+    /**
+     * get by name
+     *
+     * @param name
+     * @return
+     */
+    public static Status getByName(String name, Status defaultValue) {
+        for (Status value : Status.values()) {
+            if (value.name().equalsIgnoreCase(name)) {
+                return value;
+            }
+        }
+        return defaultValue;
+    }
+
+    /**
+     * get by name
+     *
+     * @param name
+     * @return
+     */
+    public static Status getByName(String name) {
+        return getByName(name, null);
+    }
 }

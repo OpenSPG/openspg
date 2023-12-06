@@ -19,4 +19,9 @@ public class SchedulerConstant {
      * instance default version
      */
     public static final String INSTANCE_DEFAULT_VERSION = "V3";
+
+    /**
+     * job default version
+     */
+    public static final String JOB_DEFAULT_VERSION = "V3";
 }

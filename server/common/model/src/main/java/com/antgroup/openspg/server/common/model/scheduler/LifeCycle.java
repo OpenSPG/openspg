@@ -22,5 +22,30 @@ public enum LifeCycle {
     /**
      * realtime
      */
-    REAL_TIME
+    REAL_TIME;
+
+    /**
+     * get by name
+     *
+     * @param name
+     * @return
+     */
+    public static LifeCycle getByName(String name, LifeCycle defaultValue) {
+        for (LifeCycle value : LifeCycle.values()) {
+            if (value.name().equalsIgnoreCase(name)) {
+                return value;
+            }
+        }
+        return defaultValue;
+    }
+
+    /**
+     * get by name
+     *
+     * @param name
+     * @return
+     */
+    public static LifeCycle getByName(String name) {
+        return getByName(name, null);
+    }
 }

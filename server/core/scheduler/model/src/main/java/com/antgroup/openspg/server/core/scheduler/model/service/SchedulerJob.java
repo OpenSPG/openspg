@@ -22,19 +22,14 @@ public class SchedulerJob  extends BaseModel {
     private Long id;
 
     /**
-     * createUser No
+     * createUser
      */
-    private String createUserNo;
+    private String createUser;
 
     /**
-     * createUser Name
+     * modifyUser
      */
-    private String createUserName;
-
-    /**
-     * modifyUser No
-     */
-    private String modifyUserNo;
+    private String modifyUser;
 
     /**
      * modifyUser Name
@@ -119,36 +114,20 @@ public class SchedulerJob  extends BaseModel {
         this.id = id;
     }
 
-    public String getCreateUserNo() {
-        return createUserNo;
+    public String getCreateUser() {
+        return createUser;
     }
 
-    public void setCreateUserNo(String createUserNo) {
-        this.createUserNo = createUserNo;
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
     }
 
-    public String getCreateUserName() {
-        return createUserName;
+    public String getModifyUser() {
+        return modifyUser;
     }
 
-    public void setCreateUserName(String createUserName) {
-        this.createUserName = createUserName;
-    }
-
-    public String getModifyUserNo() {
-        return modifyUserNo;
-    }
-
-    public void setModifyUserNo(String modifyUserNo) {
-        this.modifyUserNo = modifyUserNo;
-    }
-
-    public String getModifyUserName() {
-        return modifyUserName;
-    }
-
-    public void setModifyUserName(String modifyUserName) {
-        this.modifyUserName = modifyUserName;
+    public void setModifyUser(String modifyUser) {
+        this.modifyUser = modifyUser;
     }
 
     public Date getGmtCreate() {

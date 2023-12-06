@@ -56,6 +56,21 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
     }
 
     @Override
+    public int deleteByJobId(Long jobId) {
+        List<Long> ids = Lists.newArrayList();
+        for (Long key : tasks.keySet()) {
+            SchedulerTask task = tasks.get(key);
+            if (jobId.equals(task.getJobId())) {
+                ids.add(task.getId());
+            }
+        }
+        for (Long id : ids) {
+            tasks.remove(id);
+        }
+        return ids.size();
+    }
+
+    @Override
     public Long update(SchedulerTask record) {
         Long id = record.getId();
         SchedulerTask oldRecord = tasks.get(id);
