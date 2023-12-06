@@ -36,11 +36,13 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author yangjin
  * @version : SchedulerCommonServiceImpl.java, v 0.1 2023年12月04日 16:44 yangjin Exp $
  */
+@Service
 public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerCommonServiceImpl.class);

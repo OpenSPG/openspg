@@ -60,6 +60,10 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
             return processBySkip(context);
         }
 
+        if (LifeCycle.ONCE.name().equals(instance.getLifeCycle())) {
+            return processBySnapshot(context);
+        }
+
         if (MergeMode.SNAPSHOT.name().equals(instance.getMergeMode())) {
             return processBySnapshot(context);
         } else {

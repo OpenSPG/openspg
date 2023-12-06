@@ -65,32 +65,8 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     @Override
     public SchedulerJob submitJob(SchedulerJob job) {
-        Assert.notNull(job, "job not null");
-        Assert.notNull(job.getProjectId(), "ProjectId not null");
-        Assert.hasText(job.getName(), "Name not null");
-        Assert.hasText(job.getCreateUser(), "CreateUser not null");
-        Assert.hasText(job.getLifeCycle(), "LifeCycle not null");
-        Assert.notNull(LifeCycle.getByName(job.getLifeCycle()), String.format("LifeCycle:%s not in enum", job.getLifeCycle()));
-        Assert.hasText(job.getType(), "Type not null");
-        Assert.hasText(job.getSchedulerCron(), "SchedulerCron not null");
-        try {
-            new CronExpression(job.getSchedulerCron());
-        } catch (ParseException e) {
-            new RuntimeException(String.format("Cron(%s) ParseException:%s", job.getSchedulerCron(), e.getMessage()));
-        }
-        job.setGmtModified(new Date());
-        if (job.getId() == null) {
-            job.setGmtCreate(new Date());
-        }
-        if (job.getMergeMode() == null) {
-            job.setMergeMode(MergeMode.MERGE.name());
-        }
-        Assert.notNull(MergeMode.getByName(job.getMergeMode()), String.format("MergeMode:%s not in enum", job.getMergeMode()));
-
-        job.setStatus(Status.ONLINE.name());
-        job.setVersion(SchedulerConstant.JOB_DEFAULT_VERSION + SchedulerConstant.UNDERLINE_SEPARATOR + DateTimeUtils.getDate2Str(
-                DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, new Date()));
-
+        setJobPropertyDefaultValue(job);
+        checkJobPropertyValidity(job);
         Long id = job.getId();
         if (id == null || id < 0) {
             schedulerJobService.insert(job);
@@ -99,6 +75,38 @@ public class SchedulerServiceImpl implements SchedulerService {
         }
         this.executeJob(job.getId());
         return job;
+    }
+
+    private void setJobPropertyDefaultValue(SchedulerJob job) {
+        job.setGmtModified(new Date());
+        if (job.getId() == null) {
+            job.setGmtCreate(new Date());
+        }
+        if (job.getMergeMode() == null) {
+            job.setMergeMode(MergeMode.MERGE.name());
+        }
+        job.setStatus(Status.ONLINE.name());
+        job.setVersion(SchedulerConstant.JOB_DEFAULT_VERSION + SchedulerConstant.UNDERLINE_SEPARATOR + DateTimeUtils.getDate2Str(
+                DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, new Date()));
+    }
+
+    private void checkJobPropertyValidity(SchedulerJob job) {
+        Assert.notNull(job, "job not null");
+        Assert.notNull(job.getProjectId(), "ProjectId not null");
+        Assert.hasText(job.getName(), "Name not null");
+        Assert.hasText(job.getCreateUser(), "CreateUser not null");
+        Assert.hasText(job.getLifeCycle(), "LifeCycle not null");
+        Assert.notNull(LifeCycle.getByName(job.getLifeCycle()), String.format("LifeCycle:%s not in enum", job.getLifeCycle()));
+        Assert.hasText(job.getType(), "Type not null");
+        if (LifeCycle.PERIOD.name().equalsIgnoreCase(job.getLifeCycle())) {
+            Assert.hasText(job.getSchedulerCron(), "SchedulerCron not null");
+            try {
+                new CronExpression(job.getSchedulerCron());
+            } catch (ParseException e) {
+                new RuntimeException(String.format("Cron(%s) ParseException:%s", job.getSchedulerCron(), e.getMessage()));
+            }
+        }
+        Assert.notNull(MergeMode.getByName(job.getMergeMode()), String.format("MergeMode:%s not in enum", job.getMergeMode()));
     }
 
     @Override
