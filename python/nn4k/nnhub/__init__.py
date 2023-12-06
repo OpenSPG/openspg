@@ -55,7 +55,10 @@ class SimpleNNHub(NNHub):
 
         # init executor info.
         # TODO
-        self._add_executor(())
+        # self._add_executor((DeepKEExecutor, xxx))
+        # self._add_executor((DeepKEExecutor, xxx))
+        # self._add_executor((HF, xxx))
+        # self._add_executor((HF, xxx))
 
     def _add_executor(self,
                       executor: Union[NNExecutor, Tuple[Type[NNExecutor], tuple, dict, tuple]],
