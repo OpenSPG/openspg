@@ -17,6 +17,7 @@ class NNInvoker(ABC):
     - Interfaces starting with "submit_" means submitting a batch task to a remote execution engine.
     - Interfaces starting with "remote_" means querying a remote service for some results.
     - Interfaces starting with "local_"  means running something locally.
+            Must call `init_local_model` before calling any local_xxx interface.
     """
 
     hub = SimpleNNHub()
@@ -33,6 +34,8 @@ class LLMInvoker(NNInvoker):
         super().__init__(nn_executor)
 
     def submit_inference(self, submit_mode='k8s'):
+        # TODO. maybe like:
+        # engine.submit(self._nn_config, "xx_executor.execute_inference()")
         pass
 
     def submit_sft(self, submit_mode='k8s'):
@@ -54,6 +57,9 @@ class LLMInvoker(NNInvoker):
         Returns:
 
         """
+        # TODO . maybe like:
+        # service = self.hub.get_service()
+        # return service.query_xx(input)
         pass
 
     def local_inference(self, data, **kwargs):

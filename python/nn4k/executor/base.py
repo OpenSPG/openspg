@@ -34,21 +34,25 @@ class LLMExecutor(NNExecutor):
         pass
 
     @abstractmethod
-    def sft(self, args=None, callbacks=None, **kwargs):
+    def execute_sft(self, args=None, callbacks=None, **kwargs):
         """
         The entry point of SFT execution in a certain pod.
         """
         raise NotImplementedError(f"{self.__class__.__name__} does not support SFT.")
 
     @abstractmethod
-    def rl_tuning(self, args=None, callbacks=None, **kwargs):
+    def execute_rl_tuning(self, args=None, callbacks=None, **kwargs):
         """
         The entry point of SFT execution in a certain pod.
         """
         raise NotImplementedError(f"{self.__class__.__name__} does not support RL-Tuning.")
 
-    def batch_inference(self, args, **kwargs):
-        pass
+    def execute_inference(self, args, **kwargs):
+        dataset = args.parse_dataset()
+        ret = []
+        for d in dataset:
+            ret.append(self.inference(d))
+        return ret
 
     @abstractmethod
     def inference(self, data, **kwargs):
