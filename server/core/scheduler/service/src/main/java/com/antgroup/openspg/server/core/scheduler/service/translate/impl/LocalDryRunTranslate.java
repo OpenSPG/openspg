@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @version : localDryRunTranslate.java, v 0.1 2023年12月05日 14:33 yangjin Exp $
  */
 @Component("localDryRun")
-public class LocalDryRunTranslate implements Translate<SchedulerJob> {
+public class LocalDryRunTranslate implements Translate {
 
     @Override
     public WorkflowDag translate(SchedulerJob schedulerJob) {

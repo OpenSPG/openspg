@@ -221,6 +221,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
         Integer maxDays = schedulerValue.getExecuteMaxDay() + 1;
         Date startDate = DateUtils.addDays(new Date(), -maxDays);
         record.setStartCreateTime(startDate);
+        record.setEnv(schedulerValue.getExecuteEnv());
         List<SchedulerInstance> allInstance = schedulerInstanceService.getNotFinishInstance(record);
         return allInstance;
     }

@@ -34,6 +34,9 @@ public class SchedulerValue {
     @Value("${scheduler.execute.max.day:}")
     private String executeMaxDay;
 
+    @Value("${scheduler.execute.env:}")
+    private String executeEnv;
+
     public String getHandlerType() {
         return handlerType;
     }
@@ -71,5 +74,9 @@ public class SchedulerValue {
             return 10;
         }
         return Integer.valueOf(executeMaxDay);
+    }
+
+    public String getExecuteEnv() {
+        return executeEnv;
     }
 }

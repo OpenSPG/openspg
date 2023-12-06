@@ -14,4 +14,9 @@ public class SchedulerConstant {
      * underline separator
      */
     public static final String UNDERLINE_SEPARATOR = "_";
+
+    /**
+     * instance default version
+     */
+    public static final String INSTANCE_DEFAULT_VERSION = "V3";
 }

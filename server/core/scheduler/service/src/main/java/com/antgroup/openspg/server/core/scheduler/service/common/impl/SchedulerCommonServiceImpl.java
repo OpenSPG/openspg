@@ -7,22 +7,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.JSON;
+
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
+import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerConstant;
+import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.JobTask;
 import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskContext;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.JobAsyncTask;
+import com.antgroup.openspg.server.core.scheduler.service.translate.TranslatorFactory;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,6 +49,8 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
     SchedulerInstanceService schedulerInstanceService;
     @Autowired
     SchedulerTaskService     schedulerTaskService;
+    @Autowired
+    SchedulerValue           schedulerValue;
 
     @Override
     public void setInstanceFinish(SchedulerInstance instance, InstanceStatus instanceStatus, TaskStatus taskStatus) {
@@ -140,6 +147,42 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
     @Override
     public SchedulerInstance generateInstance(SchedulerJob job, String uniqueId, Date schedulerDate) {
-        return null;
+        SchedulerInstance existInstance = schedulerInstanceService.getByUniqueId(uniqueId);
+        if (existInstance != null) {
+            LOGGER.info(String.format("generateInstance uniqueId exist jobId:%s uniqueId:%s", job.getId(), uniqueId));
+            return existInstance;
+        }
+
+        LOGGER.info(String.format("generateInstance start jobId:%s uniqueId:%s", job.getId(), uniqueId));
+        SchedulerInstance instance = new SchedulerInstance();
+        instance.setUniqueId(uniqueId);
+        instance.setProjectId(job.getProjectId());
+        instance.setJobId(job.getId());
+        instance.setType(job.getType());
+        instance.setStatus(InstanceStatus.WAITING.name());
+        instance.setProgress(0L);
+        instance.setCreateUser(job.getCreateUserNo());
+        instance.setModifyUser(job.getCreateUserNo());
+        instance.setGmtCreate(new Date());
+        instance.setGmtModified(new Date());
+        instance.setBeginRunningTime(new Date());
+        instance.setLifeCycle(job.getLifeCycle());
+        instance.setSchedulerDate(schedulerDate);
+        instance.setMergeMode(job.getMergeMode());
+        instance.setEnv(schedulerValue.getExecuteEnv());
+        instance.setVersion(SchedulerConstant.INSTANCE_DEFAULT_VERSION);
+        instance.setConfig(job.getConfig());
+        WorkflowDag workflowDag = TranslatorFactory.getTranslator(job.getType()).translate(job);
+        instance.setWorkflowConfig(JSON.toJSONString(workflowDag));
+
+        schedulerInstanceService.insert(instance);
+        LOGGER.info(String.format("generateInstance successful jobId:%s instances:%s", job.getId(), uniqueId));
+
+        List<WorkflowDag.Node> nodes = workflowDag.getNodes();
+        nodes.forEach(node -> {
+            TaskStatus status = CollectionUtils.isEmpty(workflowDag.getPreNodes(node.getId())) ? TaskStatus.RUNNING : TaskStatus.WAIT;
+            schedulerTaskService.insert(new SchedulerTask(instance.getCreateUser(), instance.getId(), status, node));
+        });
+        return instance;
     }
 }
