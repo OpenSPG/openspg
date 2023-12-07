@@ -11,10 +11,7 @@
  * or implied.
  */
 
-/*
- * Ant Group
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+
 package com.antgroup.openspg.reasoner.common.graph.type;
 
 import java.io.Serializable;

@@ -11,7 +11,7 @@
  * or implied.
  */
 
-/** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
+
 package com.antgroup.openspg.reasoner.common.graph.vertex.impl;
 
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;

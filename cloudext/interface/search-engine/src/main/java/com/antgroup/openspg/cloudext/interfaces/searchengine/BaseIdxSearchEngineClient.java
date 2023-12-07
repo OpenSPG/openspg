@@ -11,10 +11,7 @@
  * or implied.
  */
 
-/*
- * Ant Group
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
+
 package com.antgroup.openspg.cloudext.interfaces.searchengine;
 
 import com.antgroup.openspg.builder.model.record.SPGRecordManipulateCmd;
