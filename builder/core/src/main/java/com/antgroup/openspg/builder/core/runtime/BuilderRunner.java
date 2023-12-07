@@ -10,7 +10,7 @@ import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 public interface BuilderRunner {
 
   /** runner的初始化，当初始化异常时则直接抛出异常不再进行构建流程 */
-  void init(Pipeline pipeline, RuntimeContext context) throws BuilderException;
+  void init(Pipeline pipeline, BuilderContext context) throws BuilderException;
 
   /** 开始执行runner，即开始知识构建流程，会按照pipeline的定义在具体执行引擎上执行知识构建 */
   void execute();

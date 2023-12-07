@@ -14,7 +14,7 @@
 package com.antgroup.openspg.builder.runner.local.sink.impl;
 
 import com.antgroup.openspg.builder.core.physical.process.CheckProcessor;
-import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
@@ -54,7 +54,7 @@ public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfi
   }
 
   @Override
-  public void doInit(RuntimeContext context) throws Exception {
+  public void doInit(BuilderContext context) throws Exception {
     if (context.getGraphStoreClient() != null) {
       graphStoreClient = context.getGraphStoreClient();
     } else {

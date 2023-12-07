@@ -6,7 +6,7 @@ import com.antgroup.openspg.builder.core.physical.PhysicalPlan;
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
 import com.antgroup.openspg.builder.core.runtime.BuilderExecutor;
 import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
-import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class DefaultBuilderExecutor implements BuilderExecutor {
   private PhysicalPlan plan;
 
   @Override
-  public void init(PhysicalPlan plan, RuntimeContext context) throws BuilderException {
+  public void init(PhysicalPlan plan, BuilderContext context) throws BuilderException {
     this.plan = plan;
     for (BasePhysicalNode node : plan.nodes()) {
       node.init(context);

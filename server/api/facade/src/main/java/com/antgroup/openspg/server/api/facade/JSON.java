@@ -109,13 +109,6 @@ public class JSON {
                         OperatorIdentifier.class, SPGIdentifierTypeEnum.OPERATOR.name())
                     .recognizeSubtypes())
             .registerTypeAdapterFactory(
-                RuntimeTypeAdapterFactory.of(BaseNodeConfig.class, DEFAULT_TYPE_FIELD_NAME)
-                    .registerSubtype(CsvSourceNodeConfig.class, NodeTypeEnum.CSV_SOURCE.name())
-                    .registerSubtype(ExtractNodeConfig.class, NodeTypeEnum.EXTRACT.name())
-                    .registerSubtype(MappingNodeConfig.class, NodeTypeEnum.MAPPING.name())
-                    .registerSubtype(GraphStoreSinkNodeConfig.class, NodeTypeEnum.GRAPH_SINK.name())
-                    .recognizeSubtypes())
-            .registerTypeAdapterFactory(
                 RuntimeTypeAdapterFactory.of(BaseBuilderResult.class, DEFAULT_TYPE_FIELD_NAME)
                     .registerSubtype(FailureBuilderResult.class, JobInstStatusEnum.FAILURE.name())
                     .registerSubtype(SuccessBuilderResult.class, JobInstStatusEnum.SUCCESS.name())

@@ -14,7 +14,7 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
 import com.antgroup.openspg.builder.model.BuilderException;
-import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.core.semantic.PropertyMounter;
 import com.antgroup.openspg.builder.core.semantic.PropertyMounterFactory;
 import com.antgroup.openspg.builder.model.pipeline.config.MappingNodeConfig;
@@ -58,7 +58,7 @@ public class MappingProcessor extends BaseProcessor<MappingNodeConfig> {
   }
 
   @Override
-  public void doInit(RuntimeContext context) throws BuilderException {
+  public void doInit(BuilderContext context) throws BuilderException {
     loadPropertyMounter();
   }
 

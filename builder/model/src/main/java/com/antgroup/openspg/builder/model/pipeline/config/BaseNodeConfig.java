@@ -14,7 +14,9 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
+import lombok.Getter;
 
+@Getter
 public abstract class BaseNodeConfig {
 
   /** The type of the node. */
@@ -22,9 +24,5 @@ public abstract class BaseNodeConfig {
 
   public BaseNodeConfig(NodeTypeEnum type) {
     this.type = type;
-  }
-
-  public NodeTypeEnum getType() {
-    return type;
   }
 }

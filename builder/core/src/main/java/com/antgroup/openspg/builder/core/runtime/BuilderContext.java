@@ -13,21 +13,21 @@
 
 package com.antgroup.openspg.builder.core.runtime;
 
-import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import java.io.Serializable;
-import java.util.Map;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
+@Setter
 @Getter
-@AllArgsConstructor
-public class RuntimeContext implements Serializable {
+@Accessors(chain = true)
+public class BuilderContext implements Serializable {
 
-  private final long projectId;
-  private final String jobName;
-  private final ProjectSchema projectSchema;
-  private final RecordAlterOperationEnum operation;
+  private long projectId;
+  private String jobName;
+  private ProjectSchema projectSchema;
 
-  private final Map<String, Object> params;
+  private String pythonExec;
+  private String pythonPaths;
 }

@@ -13,16 +13,16 @@
 
 package com.antgroup.openspg.cloudext.impl.computing.local.impl;
 
-import static com.antgroup.openspg.builder.core.runtime.RuntimeContext.GRAPH_STORE_CONN_INFO;
-import static com.antgroup.openspg.builder.core.runtime.RuntimeContext.SEARCH_ENGINE_CONN_INFO;
-import static com.antgroup.openspg.builder.core.runtime.RuntimeContext.TABLE_STORE_CONN_INFO;
+import static com.antgroup.openspg.builder.core.runtime.BuilderContext.GRAPH_STORE_CONN_INFO;
+import static com.antgroup.openspg.builder.core.runtime.BuilderContext.SEARCH_ENGINE_CONN_INFO;
+import static com.antgroup.openspg.builder.core.runtime.BuilderContext.TABLE_STORE_CONN_INFO;
 
 import com.antgroup.openspg.builder.core.physical.PhysicalPlan;
 import com.antgroup.openspg.builder.core.runtime.BuilderMetric;
 import com.antgroup.openspg.builder.core.runtime.BuilderStat;
 import com.antgroup.openspg.builder.core.runtime.PipelineExecutor;
 import com.antgroup.openspg.builder.core.runtime.RecordCollector;
-import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.runner.local.runtime.impl.DefaultRecordCollector;
 import com.antgroup.openspg.cloudext.impl.computing.local.LocalBuilderExecutor;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobCanSubmitQuery;
@@ -129,8 +129,8 @@ public class LocalBuilderExecutorImpl implements LocalBuilderExecutor {
 
     Map<String, Object> params = buildParams(cmd);
     for (int i = 0; i < parallelism; i++) {
-      RuntimeContext runtimeContext =
-          new RuntimeContext(
+      BuilderContext runtimeContext =
+          new BuilderContext(
               jobInfo.getProjectId(),
               cmd.getSchemaUrl(),
               jobInfo.getJobName(),

@@ -14,7 +14,7 @@
 package com.antgroup.openspg.builder.core.physical;
 
 import com.antgroup.openspg.builder.model.BuilderException;
-import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -53,9 +53,9 @@ public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
    * instance ID, task parallelism, and so on. The task parallelism can be used for distributed data
    * reading and partitioning.
    *
-   * <p>For detailed runtime parameters, please refer to the {@link RuntimeContext} class.
+   * <p>For detailed runtime parameters, please refer to the {@link BuilderContext} class.
    */
-  protected RuntimeContext context;
+  protected BuilderContext context;
 
   /** Whether the node is initialized. */
   private volatile boolean isInitialized = false;
@@ -65,7 +65,7 @@ public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
     this.name = name;
   }
 
-  public void init(RuntimeContext context) throws BuilderException {
+  public void init(BuilderContext context) throws BuilderException {
     this.context = context;
     if (!isInitialized) {
       synchronized (this) {
@@ -77,7 +77,7 @@ public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
     }
   }
 
-  public void doInit(RuntimeContext context) throws BuilderException {}
+  public void doInit(BuilderContext context) throws BuilderException {}
 
   public abstract void close() throws Exception;
 

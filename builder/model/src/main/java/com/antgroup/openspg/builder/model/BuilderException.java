@@ -17,11 +17,11 @@ import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 
 public class BuilderException extends OpenSPGException {
 
-  protected BuilderException(Throwable cause, String messagePattern, Object... args) {
+  public BuilderException(Throwable cause, String messagePattern, Object... args) {
     super(cause, true, true, messagePattern, args);
   }
 
-  protected BuilderException(String messagePattern, Object... args) {
+  public BuilderException(String messagePattern, Object... args) {
     this(null, messagePattern, args);
   }
 

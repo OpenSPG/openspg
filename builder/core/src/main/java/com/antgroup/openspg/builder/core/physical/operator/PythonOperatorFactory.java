@@ -1,6 +1,6 @@
 package com.antgroup.openspg.builder.core.physical.operator;
 
-import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.common.util.Md5Utils;
 import com.antgroup.openspg.core.schema.model.type.OperatorKey;
@@ -47,7 +47,7 @@ public class PythonOperatorFactory implements OperatorFactory {
   }
 
   @Override
-  public void init(RuntimeContext context) {
+  public void init(BuilderContext context) {
     if (pythonInterpreter == null) {
       synchronized (PythonOperatorFactory.class) {
         if (pythonInterpreter == null) {
