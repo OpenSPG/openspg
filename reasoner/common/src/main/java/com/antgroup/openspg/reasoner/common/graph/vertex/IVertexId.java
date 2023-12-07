@@ -16,10 +16,6 @@ package com.antgroup.openspg.reasoner.common.graph.vertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexId;
 import java.io.Serializable;
 
-/**
- * @author donghai.ydh
- * @version IVertexId.java, v 0.1 2023-03-15 15:12 donghai.ydh
- */
 public interface IVertexId extends Serializable, Comparable<IVertexId> {
   static IVertexId from(long internalId, String type) {
     return new VertexId(internalId, type);

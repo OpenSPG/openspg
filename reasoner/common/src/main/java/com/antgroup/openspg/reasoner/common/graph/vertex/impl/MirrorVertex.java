@@ -15,10 +15,6 @@ package com.antgroup.openspg.reasoner.common.graph.vertex.impl;
 
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 
-/**
- * @author chengqiang.cq
- * @version $Id: Vertex.java, v 0.1 2023-02-01 11:30 chengqiang.cq Exp $$
- */
 public class MirrorVertex<K, VV> extends NoneVertex<K, VV> {
 
   /** mirror vertex for optional */

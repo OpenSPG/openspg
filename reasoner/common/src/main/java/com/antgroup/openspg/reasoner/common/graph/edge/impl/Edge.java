@@ -17,10 +17,6 @@ import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import java.util.Objects;
 
-/**
- * @author chengqiang.cq
- * @version $Id: Edge.java, v 0.1 2023-02-01 11:37 chengqiang.cq Exp $$
- */
 public class Edge<K, EV> implements IEdge<K, EV> {
 
   protected K sourceId;

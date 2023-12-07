@@ -16,10 +16,6 @@ package com.antgroup.openspg.reasoner.common.graph.property;
 import java.util.List;
 import scala.Tuple2;
 
-/**
- * @author kejian
- * @version IVersionProperty.java, v 0.1 2023-02-09 8:15 PM kejian
- */
 public interface IVersionProperty extends IProperty {
   /**
    * Get the value from properties

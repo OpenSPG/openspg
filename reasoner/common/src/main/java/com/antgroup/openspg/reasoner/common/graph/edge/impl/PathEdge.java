@@ -27,10 +27,6 @@ import java.util.Set;
 import org.apache.commons.collections4.CollectionUtils;
 import scala.Tuple2;
 
-/**
- * @author donghai.ydh
- * @version PathEdge.java, v 0.1 2023-10-18 15:18 donghai.ydh
- */
 public class PathEdge<K, VV, EV> implements IEdge<K, EV> {
   private final List<Edge<K, EV>> edgeList;
   private final List<Vertex<K, VV>> vertexList;

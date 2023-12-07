@@ -22,10 +22,6 @@ import java.util.TreeMap;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author donghai.ydh
- * @version PropertyTest.java, v 0.1 2023-07-07 15:54 donghai.ydh
- */
 public class PropertyTest {
 
   @Test

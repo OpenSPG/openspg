@@ -20,10 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * @author kejian
- * @version MockMapType2Id.java, v 0.1 2023-03-27 7:44 PM kejian
- */
 public class MemMapType2Id implements MapType2Id, Serializable {
 
   private final Map<Long, String> ID_2_TYPE = new ConcurrentHashMap<>();

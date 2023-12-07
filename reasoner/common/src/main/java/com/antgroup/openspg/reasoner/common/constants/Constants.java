@@ -13,10 +13,6 @@
 
 package com.antgroup.openspg.reasoner.common.constants;
 
-/**
- * @author chengqiang.cq
- * @version $Id: Constants.java, v 0.1 2023-05-16 16:57 chengqiang.cq Exp $$
- */
 public class Constants {
   public static final String CONTEXT_LABEL = "__label__";
   /** edge from id key */

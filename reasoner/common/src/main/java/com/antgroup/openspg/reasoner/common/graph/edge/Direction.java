@@ -13,10 +13,6 @@
 
 package com.antgroup.openspg.reasoner.common.graph.edge;
 
-/**
- * @author chengqiang.cq
- * @version $Id: Direction.java, v 0.1 2023-02-01 11:45 chengqiang.cq Exp $$
- */
 public enum Direction {
 
   /** OUT edge */

@@ -19,10 +19,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author donghai.ydh
- * @version CombinationIteratorTest.java, v 0.1 2023-04-21 18:09 donghai.ydh
- */
 public class CombinationIteratorTest {
 
   @Test

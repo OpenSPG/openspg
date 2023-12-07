@@ -13,10 +13,6 @@
 
 package com.antgroup.openspg.reasoner.common.graph.type;
 
-/**
- * @author kejian
- * @version MapType2IdFactory.java, v 0.1 2023-03-27 8:01 PM kejian
- */
 public class MapType2IdFactory {
 
   /**

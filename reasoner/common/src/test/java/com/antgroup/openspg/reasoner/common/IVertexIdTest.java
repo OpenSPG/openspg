@@ -17,10 +17,6 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author donghai.ydh
- * @version IVertexIdTest.java, v 0.1 2023-08-07 17:48 donghai.ydh
- */
 public class IVertexIdTest {
 
   @Test

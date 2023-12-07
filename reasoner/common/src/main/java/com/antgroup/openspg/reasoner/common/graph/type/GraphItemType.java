@@ -15,10 +15,6 @@ package com.antgroup.openspg.reasoner.common.graph.type;
 
 import java.io.Serializable;
 
-/**
- * @author donghai.ydh
- * @version GraphItemType.java, v 0.1 2023-04-12 10:30 donghai.ydh
- */
 public enum GraphItemType implements Serializable {
   /** vertex */
   VERTEX,

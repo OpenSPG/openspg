@@ -16,10 +16,6 @@ package com.antgroup.openspg.reasoner.common.graph.vertex.impl;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import java.util.Objects;
 
-/**
- * @author chengqiang.cq
- * @version $Id: Vertex.java, v 0.1 2023-02-01 11:30 chengqiang.cq Exp $$
- */
 public class Vertex<K, VV> implements IVertex<K, VV> {
   protected K id;
   protected VV value;

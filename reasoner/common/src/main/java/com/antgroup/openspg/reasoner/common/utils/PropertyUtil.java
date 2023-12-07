@@ -22,10 +22,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author kejian
- * @version PropertyUtil.java, v 0.1 2023-05-18 5:37 PM kejian
- */
 @Slf4j(topic = "userlogger")
 public class PropertyUtil {
   public static Boolean useBinaryProperty = false;

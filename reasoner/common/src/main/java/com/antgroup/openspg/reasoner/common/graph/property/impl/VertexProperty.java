@@ -19,10 +19,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author chengqiang.cq
- * @version $Id: MapProperty.java, v 0.1 2023-02-01 11:22 chengqiang.cq Exp $$
- */
 public class VertexProperty implements IProperty {
   private final Map<String, Object> props;
 

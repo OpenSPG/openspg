@@ -42,10 +42,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import scala.collection.JavaConversions;
 
-/**
- * @author donghai.ydh
- * @version Utils.java, v 0.1 2023-02-07 10:01 donghai.ydh
- */
 public class Utils {
   private static final Random RANDOM = new Random();
 

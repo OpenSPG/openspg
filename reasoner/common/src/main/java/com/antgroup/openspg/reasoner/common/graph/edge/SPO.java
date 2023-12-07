@@ -20,10 +20,6 @@ import java.util.List;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * @author chengqiang.cq
- * @version $Id: SPO.java, v 0.1 2023-02-08 19:02 chengqiang.cq Exp $$
- */
 public class SPO implements Serializable {
   public static final String SPLITTER = "_";
 

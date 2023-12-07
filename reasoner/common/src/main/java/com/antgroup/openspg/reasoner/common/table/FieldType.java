@@ -21,10 +21,6 @@ import com.antgroup.openspg.reasoner.common.types.KTString$;
 import com.antgroup.openspg.reasoner.common.types.KgType;
 import java.io.Serializable;
 
-/**
- * @author donghai.ydh
- * @version FieldType.java, v 0.1 2023-10-20 14:49 donghai.ydh
- */
 public enum FieldType implements Serializable {
   STRING(KTString$.MODULE$),
   INT(KTInteger$.MODULE$),

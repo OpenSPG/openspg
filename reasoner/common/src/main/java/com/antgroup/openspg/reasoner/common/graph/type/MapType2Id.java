@@ -13,10 +13,6 @@
 
 package com.antgroup.openspg.reasoner.common.graph.type;
 
-/**
- * @author kejian
- * @version Type2IdMapping.java, v 0.1 2023-03-27 7:39 PM kejian
- */
 public interface MapType2Id {
 
   /**

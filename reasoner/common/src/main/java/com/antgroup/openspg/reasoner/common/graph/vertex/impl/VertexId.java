@@ -25,10 +25,6 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Comparator;
 
-/**
- * @author donghai.ydh
- * @version VertexId.java, v 0.1 2023-03-15 15:12 donghai.ydh
- */
 public class VertexId implements IVertexId {
   /**
    * vertex id consists of a type and an internal ID where the type is converted to a long type ID

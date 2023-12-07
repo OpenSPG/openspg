@@ -24,10 +24,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author donghai.ydh
- * @version UtilsTest.java, v 0.1 2023-10-20 16:28 donghai.ydh
- */
 public class UtilsTest {
   @Test
   public void testGetResultTableColumns() {

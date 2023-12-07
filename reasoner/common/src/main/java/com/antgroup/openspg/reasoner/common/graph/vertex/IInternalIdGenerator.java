@@ -13,10 +13,6 @@
 
 package com.antgroup.openspg.reasoner.common.graph.vertex;
 
-/**
- * @author donghai.ydh
- * @version IInternalIdGenerator.java, v 0.1 2023-04-17 15:44 donghai.ydh
- */
 public interface IInternalIdGenerator {
   long gen(String bizId, String type);
 }

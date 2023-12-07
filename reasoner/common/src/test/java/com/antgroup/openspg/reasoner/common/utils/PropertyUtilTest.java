@@ -24,10 +24,6 @@ import com.antgroup.openspg.reasoner.common.graph.propertybuild.impl.BasePropert
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author kejian
- * @version PropertyUtilTest.java, v 0.1 2023-05-30 3:54 PM kejian
- */
 public class PropertyUtilTest {
   @Test
   public void test2Str() {

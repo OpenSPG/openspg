@@ -13,10 +13,6 @@
 
 package com.antgroup.openspg.reasoner.common.graph.edge.impl;
 
-/**
- * @author chengqiang.cq
- * @version $Id: Edge.java, v 0.1 2023-02-01 11:37 chengqiang.cq Exp $$
- */
 public class OptionalEdge<K, EV> extends Edge<K, EV> {
 
   /** optional edge */

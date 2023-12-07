@@ -16,10 +16,6 @@ package com.antgroup.openspg.reasoner.common.graph.property;
 import java.io.Serializable;
 import java.util.Collection;
 
-/**
- * @author chengqiang.cq
- * @version $Id: IProperty.java, v 0.1 2023-02-01 11:13 chengqiang.cq Exp $$
- */
 public interface IProperty extends Serializable {
   /**
    * Get the value from properties

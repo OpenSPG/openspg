@@ -27,10 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * @author chengqiang.cq
- * @version $Id: IVertex.java, v 0.1 2023-02-01 10:22 chengqiang.cq Exp $$
- */
 @Slf4j
 public class AkgHttpClient {
   public static final int MAX_RETRY_TIMES = 10;

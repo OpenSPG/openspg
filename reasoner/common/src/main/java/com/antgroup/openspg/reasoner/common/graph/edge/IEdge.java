@@ -15,10 +15,6 @@ package com.antgroup.openspg.reasoner.common.graph.edge;
 
 import java.io.Serializable;
 
-/**
- * @author chengqiang.cq
- * @version $Id: IVertex.java, v 0.1 2023-02-01 10:22 chengqiang.cq Exp $$
- */
 public interface IEdge<K, EV> extends Serializable {
   /**
    * Getter method for srcId of a edge

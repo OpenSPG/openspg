@@ -15,10 +15,6 @@ package com.antgroup.openspg.reasoner.common.graph.vertex;
 
 import java.io.Serializable;
 
-/**
- * @author chengqiang.cq
- * @version $Id: IVertex.java, v 0.1 2023-02-01 10:22 chengqiang.cq Exp $$
- */
 public interface IVertex<K, VV> extends Serializable {
   /**
    * Return the id of vertex

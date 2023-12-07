@@ -15,10 +15,6 @@ package com.antgroup.openspg.reasoner.common.table;
 
 import java.io.Serializable;
 
-/**
- * @author donghai.ydh
- * @version Field.java, v 0.1 2023-10-20 14:48 donghai.ydh
- */
 public class Field implements Serializable {
   private final String name;
   private final FieldType type;

@@ -25,10 +25,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import scala.Tuple2;
 
-/**
- * @author kejian
- * @version VertexVersionProperty.java, v 0.1 2023-02-10 11:30 AM kejian
- */
 public class VertexVersionProperty implements IVersionProperty {
   private final Map<String, TreeMap<Long, Object>> props;
 

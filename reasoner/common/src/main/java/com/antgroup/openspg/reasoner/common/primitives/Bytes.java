@@ -16,10 +16,6 @@ package com.antgroup.openspg.reasoner.common.primitives;
 import java.io.Serializable;
 import java.util.Arrays;
 
-/**
- * @author donghai.ydh
- * @version Bytes.java, v 0.1 2023-04-25 19:58 donghai.ydh
- */
 public class Bytes implements Serializable {
 
   private final byte[] bytes;

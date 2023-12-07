@@ -19,10 +19,6 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * @author kejian
- * @version IPropertyBuilder.java, v 0.1 2023-07-20 5:05 PM kejian
- */
 public interface IPropertyBuilder {
 
   /**

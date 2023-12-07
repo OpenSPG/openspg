@@ -23,10 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * @author kejian
- * @version BasePropertyBuilder.java, v 0.1 2023-07-20 5:07 PM kejian
- */
 public class BasePropertyBuilder implements IPropertyBuilder {
   /**
    * build vertex multi-version property

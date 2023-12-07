@@ -32,10 +32,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import scala.Tuple2;
 
-/**
- * @author donghai.ydh
- * @version MiscTest.java, v 0.1 2023-10-13 18:02 donghai.ydh
- */
 public class MiscTest {
 
   @Test
