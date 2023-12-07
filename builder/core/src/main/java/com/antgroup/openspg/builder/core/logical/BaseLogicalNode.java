@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.core.logical;
 
-import com.antgroup.openspg.builder.core.runtime.PipelineConfigException;
+import com.antgroup.openspg.builder.model.exception.PipelineConfigException;
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseNodeConfig;
 import lombok.AllArgsConstructor;

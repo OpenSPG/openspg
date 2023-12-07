@@ -1,6 +1,6 @@
 package com.antgroup.openspg.builder.core.runtime;
 
-import com.antgroup.openspg.builder.core.BuilderException;
+import com.antgroup.openspg.builder.model.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 
 /**
@@ -14,4 +14,7 @@ public interface BuilderRunner {
 
   /** 开始执行runner，即开始知识构建流程，会按照pipeline的定义在具体执行引擎上执行知识构建 */
   void execute();
+
+  /** 关闭runner，执行一些资源的清理工作 */
+  void close() throws Exception;
 }

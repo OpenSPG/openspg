@@ -44,7 +44,7 @@ public class BuilderMetric implements Serializable {
     reporter.start(1, TimeUnit.SECONDS);
   }
 
-  public void close() throws Exception {
+  public void close() {
     if (reporter != null) {
       reporter.close();
     }

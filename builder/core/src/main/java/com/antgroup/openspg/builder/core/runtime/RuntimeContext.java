@@ -25,6 +25,7 @@ import lombok.Getter;
 public class RuntimeContext implements Serializable {
 
   private final long projectId;
+  private final String jobName;
   private final ProjectSchema projectSchema;
   private final RecordAlterOperationEnum operation;
 

@@ -1,11 +1,10 @@
 package com.antgroup.openspg.builder.core.semantic.impl;
 
-import com.antgroup.openspg.builder.core.BuilderException;
+import com.antgroup.openspg.builder.model.BuilderException;
 import com.antgroup.openspg.builder.core.runtime.PropertyMounterException;
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
 import com.antgroup.openspg.builder.core.semantic.PropertyMounter;
-import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 
 public class IdEqualsPropertyMounter implements PropertyMounter {
 
@@ -17,7 +16,5 @@ public class IdEqualsPropertyMounter implements PropertyMounter {
   public void init(RuntimeContext context) throws BuilderException {}
 
   @Override
-  public boolean propertyMount(BasePropertyRecord record) throws PropertyMounterException {
-    return true;
-  }
+  public void propertyMount(SPGPropertyRecord record) throws PropertyMounterException {}
 }

@@ -1,6 +1,6 @@
 package com.antgroup.openspg.builder.core.runtime.impl;
 
-import com.antgroup.openspg.builder.core.BuilderException;
+import com.antgroup.openspg.builder.model.BuilderException;
 import com.antgroup.openspg.builder.core.physical.BasePhysicalNode;
 import com.antgroup.openspg.builder.core.physical.PhysicalPlan;
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;

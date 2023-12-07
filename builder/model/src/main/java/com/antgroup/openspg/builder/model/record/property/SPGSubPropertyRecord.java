@@ -17,7 +17,9 @@ import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.core.schema.model.type.WithSPGTypeEnum;
+import lombok.Getter;
 
+@Getter
 public class SPGSubPropertyRecord extends BasePropertyRecord implements WithSPGTypeEnum {
 
   private final SubProperty subPropertyType;
@@ -28,10 +30,6 @@ public class SPGSubPropertyRecord extends BasePropertyRecord implements WithSPGT
     if (!subPropertyType.getObjectTypeRef().isBasicType()) {
       throw new IllegalStateException("object of subPropertyType must be basicType");
     }
-  }
-
-  public SubProperty getSubPropertyType() {
-    return subPropertyType;
   }
 
   @Override

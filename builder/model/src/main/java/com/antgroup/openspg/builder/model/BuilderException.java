@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.openspg.builder.core;
+package com.antgroup.openspg.builder.model;
 
 import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 

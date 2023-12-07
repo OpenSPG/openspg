@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.openspg.builder.core.physical.invoker.operator.protocol;
+package com.antgroup.openspg.builder.core.physical.operator.protocol;
 
 import java.util.List;
 

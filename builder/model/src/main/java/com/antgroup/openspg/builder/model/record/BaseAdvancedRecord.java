@@ -68,19 +68,6 @@ public abstract class BaseAdvancedRecord extends BaseSPGRecord
         .collect(Collectors.toList());
   }
 
-  public void mergePropertyValue(SPGPropertyRecord otherRecord) {
-    boolean find = false;
-    for (SPGPropertyRecord existRecord : getSpgProperties()) {
-      if (otherRecord.getProperty().equals(existRecord.getProperty())) {
-        existRecord.getValue().merge(otherRecord.getValue());
-        find = true;
-      }
-    }
-    if (!find) {
-      addSpgProperties(otherRecord);
-    }
-  }
-
   @Override
   public String toString() {
     String spgType = getSpgType().getName();

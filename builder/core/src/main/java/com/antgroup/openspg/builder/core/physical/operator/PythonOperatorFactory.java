@@ -1,13 +1,13 @@
 package com.antgroup.openspg.builder.core.physical.operator;
 
 import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
 import com.antgroup.openspg.common.util.Md5Utils;
 import com.antgroup.openspg.core.schema.model.type.OperatorKey;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import pemja.core.PythonInterpreter;
@@ -21,6 +21,14 @@ public class PythonOperatorFactory implements OperatorFactory {
   private static volatile PythonInterpreter pythonInterpreter;
   private final Map<OperatorKey, OperatorConfig> operators = new ConcurrentHashMap<>();
   private final Map<OperatorKey, String> operatorObjects = new ConcurrentHashMap<>();
+
+  private PythonOperatorFactory() {}
+
+  private static final PythonOperatorFactory INSTANCE = new PythonOperatorFactory();
+
+  public static OperatorFactory getInstance() {
+    return INSTANCE;
+  }
 
   private static PythonInterpreter newPythonInterpreter(Map<String, Object> params) {
     String[] pythonPaths = (String[]) params.get(PYTHON_PATHS);
@@ -50,10 +58,11 @@ public class PythonOperatorFactory implements OperatorFactory {
   }
 
   @Override
-  public void register(OperatorConfig config) {
+  public boolean register(OperatorConfig config) {
     OperatorKey operatorKey = config.toKey();
     operators.put(operatorKey, config);
     loadOperatorObject(operatorKey, config);
+    return true;
   }
 
   @Override
@@ -68,9 +77,9 @@ public class PythonOperatorFactory implements OperatorFactory {
       return;
     }
 
-    String jarAddress = config.getJarAddress();
+    String address = config.getAddress();
     String pythonFileName =
-        jarAddress.substring(jarAddress.lastIndexOf("/") + 1, jarAddress.lastIndexOf(".py"));
+        address.substring(address.lastIndexOf("/") + 1, address.lastIndexOf(".py"));
     pythonInterpreter.exec("from objectStore.operator import " + pythonFileName);
     String paramMd5 =
         Md5Utils.md5Of(

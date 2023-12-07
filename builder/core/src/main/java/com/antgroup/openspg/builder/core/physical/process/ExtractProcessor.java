@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.core.BuilderException;
+import com.antgroup.openspg.builder.model.BuilderException;
 import com.antgroup.openspg.builder.model.record.BuilderRecord;
 import com.antgroup.openspg.builder.core.physical.invoker.operator.OperatorInvoker;
 import com.antgroup.openspg.builder.core.physical.invoker.operator.impl.OperatorInvokerImpl;

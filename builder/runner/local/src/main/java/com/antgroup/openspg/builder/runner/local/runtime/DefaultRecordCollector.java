@@ -23,7 +23,7 @@ import com.antgroup.openspg.cloudext.interfaces.tablestore.model.ColumnMeta;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.TableRecord;
 import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
 
-public class DefaultRecordCollector implements RecordCollector {
+public class DefaultRecordCollector implements ErrorRecordCollector {
 
   private static final String RECORD_ID = "recordId";
   private static final String COMPONENT = "componentName";

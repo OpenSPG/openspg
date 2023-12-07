@@ -11,12 +11,14 @@
  * or implied.
  */
 
-package com.antgroup.openspg.builder.core.physical.invoker.operator.protocol;
+package com.antgroup.openspg.builder.core.physical.operator.protocol;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
 
 /** Python operator entity */
+@Getter
 public class Vertex {
 
   private String bizId;
@@ -31,26 +33,14 @@ public class Vertex {
     return map;
   }
 
-  public String getBizId() {
-    return bizId;
-  }
-
   public Vertex setBizId(String bizId) {
     this.bizId = bizId;
     return this;
   }
 
-  public String getVertexType() {
-    return vertexType;
-  }
-
   public Vertex setVertexType(String vertexType) {
     this.vertexType = vertexType;
     return this;
-  }
-
-  public Map<String, String> getProps() {
-    return props;
   }
 
   public Vertex setProps(Map<String, String> props) {

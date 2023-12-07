@@ -8,7 +8,11 @@ public class LocalBuilderMain {
     CommandLineParser parser = new DefaultParser();
     Options options = new Options();
 
+    options.addRequiredOption("prj", "project", true, "project");
+    options.addRequiredOption("n", "jobName", true, "job name");
     options.addRequiredOption("p", "pipeline", true, "pipeline info");
+    options.addRequiredOption("pe", "pythonExec", true, "python exec");
+    options.addRequiredOption("pp", "pythonPaths", true, "python path");
     options.addOption("s", "schema", true, "schema info");
 
     CommandLine commandLine = null;

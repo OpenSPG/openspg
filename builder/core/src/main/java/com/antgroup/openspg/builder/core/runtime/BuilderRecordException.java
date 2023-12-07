@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.core.runtime;
 
-import com.antgroup.openspg.builder.core.BuilderException;
+import com.antgroup.openspg.builder.model.BuilderException;
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
 import lombok.Getter;
 

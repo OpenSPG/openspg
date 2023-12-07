@@ -11,12 +11,18 @@
  * or implied.
  */
 
-package com.antgroup.openspg.builder.core.physical.invoker.concept;
+package com.antgroup.openspg.builder.runner.local.runtime;
 
-import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.core.schema.model.type.ConceptList;
+import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
+import com.antgroup.openspg.builder.model.record.BuilderRecord;
 
-public interface ConceptService {
+public interface ErrorRecordCollector {
 
-  ConceptList query(BaseSPGRecord spgRecord);
+  boolean haveCollected();
+
+  String getTableName();
+
+  void collectRecord(BuilderRecord record, BuilderRecordException e);
+
+  void close() throws Exception;
 }

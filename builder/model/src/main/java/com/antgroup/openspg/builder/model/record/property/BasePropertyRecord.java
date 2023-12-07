@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.builder.model.record.property;
 
-import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import lombok.Getter;
@@ -32,40 +31,4 @@ public abstract class BasePropertyRecord extends BaseValObj {
   public abstract SPGTypeRef getObjectTypeRef();
 
   public abstract boolean isSemanticProperty();
-
-  public void setStdValue() {
-    Object rawValue = value.getStdOrRawValue();
-    if (rawValue == null) {
-      // if rawValue is null, this property value will be set to null.
-      return;
-    }
-    Object stdValue = null;
-    SPGTypeRef objectTypeRef = getObjectTypeRef();
-    if (objectTypeRef.isBasicType()) {
-      BasicTypeEnum basicType = BasicTypeEnum.from(objectTypeRef.getName());
-      switch (basicType) {
-        case LONG:
-          stdValue = rawValue instanceof Long ? rawValue : Long.valueOf((String) rawValue);
-          break;
-        case DOUBLE:
-          stdValue = rawValue instanceof Double ? rawValue : Double.valueOf((String) rawValue);
-          break;
-        default:
-          stdValue = rawValue.toString();
-          break;
-      }
-    } else {
-      stdValue = rawValue.toString();
-    }
-    value.setStd(stdValue);
-  }
-
-  public void setIdsValue() {
-    Object stdValue = value.getStd();
-    SPGTypeRef objectTypeRef = getObjectTypeRef();
-    if (value.getIds() == null && objectTypeRef.isAdvancedType()) {
-      // 只有没有链指上时且属性类型是高级类型时走idEqual策略
-      value.setIds(stdValue == null ? null : stdValue.toString());
-    }
-  }
 }

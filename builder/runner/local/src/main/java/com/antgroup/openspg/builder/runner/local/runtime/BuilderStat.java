@@ -24,13 +24,13 @@ import org.apache.commons.collections4.CollectionUtils;
 public class BuilderStat implements Serializable {
 
   private final BuilderMetric metric;
-  private final RecordCollector collector;
+  private final ErrorRecordCollector collector;
 
   private final int parallelism;
   private final Set<Integer> successSplitIds;
   private final Set<Integer> failedSplitIds;
 
-  public BuilderStat(BuilderMetric metric, RecordCollector collector, int parallelism) {
+  public BuilderStat(BuilderMetric metric, ErrorRecordCollector collector, int parallelism) {
     this.metric = metric;
     this.collector = collector;
     this.parallelism = parallelism;

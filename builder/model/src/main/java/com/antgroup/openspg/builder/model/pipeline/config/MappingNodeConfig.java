@@ -22,8 +22,11 @@ import lombok.Getter;
 
 @Getter
 public class MappingNodeConfig extends BaseNodeConfig {
-
-  /** 映射的元素，可能是一个或者多个实体类型，也可能是一个或者多个关系，也可能是一个子图 */
+  /**
+   * 映射的元素，可能是一个或者多个实体类型，也可能是一个或者多个关系，也可能是一个子图 支持的几类语法： 1.
+   * RiskMining.App/RiskMining.App_hasCert_RiskMining.Cert 支持单个类型或者单条边的映射 2.
+   * (RiskMining.App|...)-[hasCert|...]->(RiskMining.Cert|...).+
+   */
   private final String elements;
 
   /** 映射过滤器，在映射前将某些元素根据filter条件过滤 */
@@ -39,9 +42,9 @@ public class MappingNodeConfig extends BaseNodeConfig {
   private final List<MappingConfig> mappingConfigs;
 
   private final transient SubgraphPattern elementsPattern;
-  private final transient Map<String, List<MappingFilter>> mappingFiltersById;
-  private final transient Map<String, List<MappingSchema>> mappingSchemasById;
-  private final transient Map<String, List<MappingConfig>> mappingConfigsById;
+  private final transient Map<String, List<MappingFilter>> mappingFiltersById = null;
+  private final transient Map<String, List<MappingSchema>> mappingSchemasById = null;
+  private final transient Map<String, List<MappingConfig>> mappingConfigsById = null;
 
   public MappingNodeConfig(
       String elements,
@@ -50,14 +53,10 @@ public class MappingNodeConfig extends BaseNodeConfig {
       List<MappingConfig> mappingConfigs) {
     super(NodeTypeEnum.MAPPING);
     this.elements = elements;
-    this.elementsPattern = parseElementsPattern(elements);
+    this.elementsPattern = SubgraphPattern.from(elements);
     this.mappingFilters = mappingFilters;
     this.mappingSchemas = mappingSchemas;
     this.mappingConfigs = mappingConfigs;
-  }
-
-  public SubgraphPattern parseElementsPattern(String elements) {
-    return null;
   }
 
   @Getter
