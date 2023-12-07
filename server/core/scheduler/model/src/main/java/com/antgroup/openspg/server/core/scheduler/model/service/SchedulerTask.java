@@ -5,6 +5,8 @@ package com.antgroup.openspg.server.core.scheduler.model.service;
 
 import java.util.Date;
 
+import com.alibaba.fastjson.JSON;
+
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.common.util.IpUtils;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
@@ -69,11 +71,6 @@ public class SchedulerTask extends BaseModel {
      * instance id
      */
     private Long instanceId;
-
-    /**
-     * task Status
-     */
-    private String taskStatus;
 
     /**
      * execute Num
@@ -147,7 +144,7 @@ public class SchedulerTask extends BaseModel {
      * @param status
      * @param node
      */
-    public SchedulerTask(String createUser, Long instanceId, TaskStatus status, WorkflowDag.Node node) {
+    public SchedulerTask(String createUser, Long jobId, Long instanceId, TaskStatus status, WorkflowDag.Node node) {
         this.createUser = createUser;
         this.updateUser = createUser;
         this.type = node.getType();
@@ -158,9 +155,13 @@ public class SchedulerTask extends BaseModel {
         }
         this.status = status.name();
         this.nodeId = node.getId();
+        this.jobId = jobId;
         this.instanceId = instanceId;
         this.executeNum = 0;
         this.beginTime = new Date();
+        if (node.getProperties() != null) {
+            this.extension = JSON.toJSONString(node.getProperties());
+        }
         StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
         log.append("(").append(IpUtils.IP_LIST).append(")：").append("新建流程，当前等待前置节点执行完成.....").append(System.getProperty("line.separator"));
         this.remark = log.toString();
@@ -244,14 +245,6 @@ public class SchedulerTask extends BaseModel {
 
     public void setInstanceId(Long instanceId) {
         this.instanceId = instanceId;
-    }
-
-    public String getTaskStatus() {
-        return taskStatus;
-    }
-
-    public void setTaskStatus(String taskStatus) {
-        this.taskStatus = taskStatus;
     }
 
     public Integer getExecuteNum() {

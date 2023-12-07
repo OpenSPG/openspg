@@ -9,6 +9,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import javax.annotation.PostConstruct;
 
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;
+import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecuteService;
+import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerGenerateService;
 import com.antgroup.openspg.server.core.scheduler.service.handler.SchedulerHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +32,11 @@ public class LocalSchedulerHandler implements SchedulerHandler {
     private static ScheduledExecutorService GENERATE_INSTANCES_EXECUTOR = new ScheduledThreadPoolExecutor(1);
 
     @Autowired
-    SchedulerValue schedulerValue;
+    SchedulerValue           schedulerValue;
+    @Autowired
+    SchedulerExecuteService  schedulerExecuteService;
+    @Autowired
+    SchedulerGenerateService schedulerGenerateService;
 
     @Override
     @PostConstruct
@@ -41,8 +47,8 @@ public class LocalSchedulerHandler implements SchedulerHandler {
         }
         try {
             LOGGER.info("====== start executeInstances ======");
-            SCHEDULER_EXECUTOR.scheduleAtFixedRate(new ExecuteInstances(), 0, schedulerValue.getExecuteInstancesPeriod(),
-                    schedulerValue.getExecuteInstancesUnit());
+            SCHEDULER_EXECUTOR.scheduleAtFixedRate(new ExecuteInstances(schedulerExecuteService), 0,
+                    schedulerValue.getExecuteInstancesPeriod(), schedulerValue.getExecuteInstancesUnit());
             LOGGER.info("====== end executeInstances ======");
         } catch (Exception e) {
             LOGGER.error("executeInstances Exception", e);
@@ -58,8 +64,8 @@ public class LocalSchedulerHandler implements SchedulerHandler {
         }
         try {
             LOGGER.info("====== start generateInstances ======");
-            GENERATE_INSTANCES_EXECUTOR.scheduleAtFixedRate(new GenerateInstances(), 0, schedulerValue.getGenerateInstancesPeriod(),
-                    schedulerValue.getGenerateInstancesUnit());
+            GENERATE_INSTANCES_EXECUTOR.scheduleAtFixedRate(new GenerateInstances(schedulerGenerateService), 0,
+                    schedulerValue.getGenerateInstancesPeriod(), schedulerValue.getGenerateInstancesUnit());
             LOGGER.info("====== end generateInstances ======");
         } catch (Exception e) {
             LOGGER.error("generateInstances Exception", e);

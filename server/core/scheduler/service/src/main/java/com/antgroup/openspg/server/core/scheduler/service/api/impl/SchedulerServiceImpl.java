@@ -30,6 +30,7 @@ import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecut
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
+import com.antgroup.openspg.server.core.scheduler.service.translate.TranslateEnum;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.quartz.CronExpression;
@@ -97,7 +98,8 @@ public class SchedulerServiceImpl implements SchedulerService {
         Assert.hasText(job.getCreateUser(), "CreateUser not null");
         Assert.hasText(job.getLifeCycle(), "LifeCycle not null");
         Assert.notNull(LifeCycle.getByName(job.getLifeCycle()), String.format("LifeCycle:%s not in enum", job.getLifeCycle()));
-        Assert.hasText(job.getType(), "Type not null");
+        Assert.hasText(job.getTranslate(), "Type not null");
+        Assert.notNull(TranslateEnum.getByName(job.getTranslate()), String.format("Type:%s not in enum", job.getTranslate()));
         if (LifeCycle.PERIOD.name().equalsIgnoreCase(job.getLifeCycle())) {
             Assert.hasText(job.getSchedulerCron(), "SchedulerCron not null");
             try {

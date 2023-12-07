@@ -62,9 +62,9 @@ public class SchedulerJob  extends BaseModel {
     private String lifeCycle;
 
     /**
-     * job type
+     * job translate
      */
-    private String type;
+    private String translate;
 
     /**
      * job Status：ONLINE,OFFLINE
@@ -170,12 +170,12 @@ public class SchedulerJob  extends BaseModel {
         this.lifeCycle = lifeCycle;
     }
 
-    public String getType() {
-        return type;
+    public String getTranslate() {
+        return translate;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setTranslate(String translate) {
+        this.translate = translate;
     }
 
     public String getStatus() {

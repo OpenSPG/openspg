@@ -3,7 +3,6 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,8 +28,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
 
     @Override
     public Long insert(SchedulerTask record) {
-        Long max = tasks.keySet().stream().max(Comparator.comparing(x -> x)).orElse(null);
-        Long id = ++max;
+        Long id = CommonUtils.getMaxId(tasks.keySet());
         record.setId(id);
         record.setGmtModified(new Date());
         tasks.put(id, record);
@@ -77,7 +75,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
         if (oldRecord == null) {
             throw new RuntimeException("not find id:" + id);
         }
-        if (!oldRecord.getGmtModified().equals(record.getGmtModified())) {
+        if (record.getGmtModified() != null && !oldRecord.getGmtModified().equals(record.getGmtModified())) {
             return 0L;
         }
         record = CommonUtils.merge(oldRecord, record);
@@ -117,7 +115,6 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
                     || !CommonUtils.contains(task.getTitle(), record.getTitle())
                     || !CommonUtils.equals(task.getJobId(), record.getJobId())
                     || !CommonUtils.equals(task.getInstanceId(), record.getInstanceId())
-                    || !CommonUtils.equals(task.getTaskStatus(), record.getTaskStatus())
                     || !CommonUtils.contains(task.getExtension(), record.getExtension())) {
                 continue;
             }
@@ -204,7 +201,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
             SchedulerTask task = tasks.get(key);
             if (instanceId.equals(task.getInstanceId())) {
                 task.setGmtModified(new Date());
-                task.setTaskStatus(status.name());
+                task.setStatus(status.name());
                 flag++;
             }
         }

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author yangjin
  * @version : localDryRunTranslate.java, v 0.1 2023年12月05日 14:33 yangjin Exp $
  */
-@Component("localDryRun")
+@Component("localDryRunTranslate")
 public class LocalDryRunTranslate implements Translate {
 
     @Override
@@ -48,6 +48,7 @@ public class LocalDryRunTranslate implements Translate {
         WorkflowDag.Edge edge = new WorkflowDag.Edge();
         edge.setFrom("1000001");
         edge.setTo("2000001");
+        edges.add(edge);
 
         workflowGraph.setNodes(nodes);
         workflowGraph.setEdges(edges);

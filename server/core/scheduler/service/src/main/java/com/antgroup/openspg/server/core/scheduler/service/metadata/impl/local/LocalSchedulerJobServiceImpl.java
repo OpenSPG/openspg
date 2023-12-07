@@ -3,7 +3,6 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,8 +28,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
 
     @Override
     public Long insert(SchedulerJob record) {
-        Long max = jobs.keySet().stream().max(Comparator.comparing(x -> x)).orElse(null);
-        Long id = ++max;
+        Long id = CommonUtils.getMaxId(jobs.keySet());
         record.setId(id);
         record.setGmtModified(new Date());
         jobs.put(id, record);
@@ -62,7 +60,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
         if (oldRecord == null) {
             throw new RuntimeException("not find id:" + id);
         }
-        if (!oldRecord.getGmtModified().equals(record.getGmtModified())) {
+        if (record.getGmtModified() != null && !oldRecord.getGmtModified().equals(record.getGmtModified())) {
             return 0L;
         }
         record = CommonUtils.merge(oldRecord, record);
@@ -88,7 +86,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
             SchedulerJob job = jobs.get(key);
             if (!CommonUtils.equals(job.getId(), record.getId())
                     || !CommonUtils.equals(job.getCreateUser(), record.getCreateUser())
-                    || !CommonUtils.equals(job.getType(), record.getType())
+                    || !CommonUtils.equals(job.getTranslate(), record.getTranslate())
                     || !CommonUtils.equals(job.getLifeCycle(), record.getLifeCycle())
                     || !CommonUtils.equals(job.getStatus(), record.getStatus())
                     || !CommonUtils.equals(job.getMergeMode(), record.getMergeMode())
@@ -102,7 +100,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
             if (!CommonUtils.contains(job.getName(), keyword) || !CommonUtils.contains(job.getCreateUser(), keyword)) {
                 continue;
             }
-            if (CollectionUtils.isNotEmpty(record.getTypes()) && !record.getTypes().contains(job.getType())) {
+            if (CollectionUtils.isNotEmpty(record.getTypes()) && !record.getTypes().contains(job.getTranslate())) {
                 continue;
             }
 

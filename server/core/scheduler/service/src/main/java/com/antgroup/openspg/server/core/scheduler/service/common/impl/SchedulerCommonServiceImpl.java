@@ -168,7 +168,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
         instance.setUniqueId(uniqueId);
         instance.setProjectId(job.getProjectId());
         instance.setJobId(job.getId());
-        instance.setType(job.getType());
+        instance.setType(job.getTranslate());
         instance.setStatus(InstanceStatus.WAITING.name());
         instance.setProgress(0L);
         instance.setCreateUser(job.getCreateUser());
@@ -182,7 +182,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
         instance.setEnv(schedulerValue.getExecuteEnv());
         instance.setVersion(SchedulerConstant.INSTANCE_DEFAULT_VERSION);
         instance.setConfig(job.getConfig());
-        WorkflowDag workflowDag = TranslatorFactory.getTranslator(job.getType()).translate(job);
+        WorkflowDag workflowDag = TranslatorFactory.getTranslator(job.getTranslate()).translate(job);
         instance.setWorkflowConfig(JSON.toJSONString(workflowDag));
 
         schedulerInstanceService.insert(instance);
@@ -191,7 +191,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
         List<WorkflowDag.Node> nodes = workflowDag.getNodes();
         nodes.forEach(node -> {
             TaskStatus status = CollectionUtils.isEmpty(workflowDag.getPreNodes(node.getId())) ? TaskStatus.RUNNING : TaskStatus.WAIT;
-            schedulerTaskService.insert(new SchedulerTask(instance.getCreateUser(), instance.getId(), status, node));
+            schedulerTaskService.insert(new SchedulerTask(instance.getCreateUser(), job.getId(), instance.getId(), status, node));
         });
 
         SchedulerJob updateJob = new SchedulerJob();

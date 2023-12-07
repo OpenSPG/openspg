@@ -15,12 +15,17 @@
 package com.antgroup.openspg.test.kgschema
 
 import com.antgroup.openspg.server.api.facade.ApiResponse
+import com.antgroup.openspg.server.api.facade.dto.schema.request.BuiltInPropertyRequest
+import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest
+import com.antgroup.openspg.server.api.facade.dto.schema.request.ProjectSchemaRequest
+import com.antgroup.openspg.server.api.facade.dto.schema.request.RelationRequest
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SPGTypeRequest
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SchemaAlterRequest
 import com.antgroup.openspg.server.api.http.client.HttpConceptFacade
 import com.antgroup.openspg.server.api.http.client.HttpSchemaFacade
 import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo
 import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap
 import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClient
-import com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchEngineClient
 import com.antgroup.openspg.server.common.service.datasource.DataSourceService
 import com.antgroup.openspg.core.schema.model.alter.SchemaDraft
 import com.antgroup.openspg.core.schema.model.predicate.Property

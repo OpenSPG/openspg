@@ -18,8 +18,6 @@ public class TranslatorFactory {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TranslatorFactory.class);
 
-    private static final String TRANSLATE = "Translate";
-
     /**
      * Translate
      *
@@ -37,6 +35,10 @@ public class TranslatorFactory {
     }
 
     private static String getTranslatorNameByType(String type) {
-        return type + TRANSLATE;
+        TranslateEnum translate = TranslateEnum.getByName(type);
+        if (translate == null) {
+            throw new RuntimeException("TranslateEnum Not exist:" + type);
+        }
+        return translate.getType();
     }
 }

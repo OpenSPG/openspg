@@ -3,7 +3,6 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,8 +45,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
                 throw new RuntimeException(String.format("uniqueId:%s already existed", uniqueId));
             }
         }
-        Long max = instances.keySet().stream().max(Comparator.comparing(x -> x)).orElse(null);
-        Long id = ++max;
+        Long id = CommonUtils.getMaxId(instances.keySet());
         record.setId(id);
         record.setGmtModified(new Date());
         instances.put(id, record);
@@ -107,7 +105,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
         if (oldInstance == null) {
             throw new RuntimeException("not find id:" + id);
         }
-        if (!oldInstance.getGmtModified().equals(record.getGmtModified())) {
+        if (record.getGmtModified() != null && !oldInstance.getGmtModified().equals(record.getGmtModified())) {
             return 0L;
         }
         record = CommonUtils.merge(oldInstance, record);

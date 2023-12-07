@@ -54,7 +54,7 @@ class SchedulerServiceImplTest {
         job.setName("Test Job");
         job.setCreateUser("test");
         job.setLifeCycle(LifeCycle.ONCE.name());
-        job.setType("localDryRun");
+        job.setTranslate("localDryRun");
         job.setMergeMode(MergeMode.MERGE.name());
         job = schedulerService.submitJob(job);
         jobId = job.getId();

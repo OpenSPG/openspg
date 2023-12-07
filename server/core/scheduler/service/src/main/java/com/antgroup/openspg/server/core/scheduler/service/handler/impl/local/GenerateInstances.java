@@ -6,20 +6,20 @@ package com.antgroup.openspg.server.core.scheduler.service.handler.impl.local;
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerGenerateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @author yangjin
  * @version : GenerateInstances.java, v 0.1 2023年12月01日 10:42 yangjin Exp $
  */
-@Service
 public class GenerateInstances implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExecuteInstances.class);
 
-    @Autowired
     SchedulerGenerateService schedulerGenerateService;
+
+    public GenerateInstances(SchedulerGenerateService schedulerGenerateService) {
+        this.schedulerGenerateService = schedulerGenerateService;
+    }
 
     @Override
     public void run() {

@@ -14,6 +14,7 @@ import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
+import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
@@ -179,6 +180,8 @@ public abstract class JobTaskTemplate implements JobTask {
     }
 
     private void startNextNode(JobTaskContext context, WorkflowDag workflowDag, WorkflowDag.Node nextNode) {
+        SchedulerJob job = context.getJob();
+        SchedulerInstance instance = context.getInstance();
         SchedulerTask task = context.getTask();
 
         List<WorkflowDag.Node> preNodes = workflowDag.getPreNodes(nextNode.getId());
@@ -203,7 +206,7 @@ public abstract class JobTaskTemplate implements JobTask {
         if (nextTask != null) {
             updateTask.setId(nextTask.getId());
         } else {
-            updateTask = new SchedulerTask(task.getCreateUser(), task.getInstanceId(), TaskStatus.WAIT, nextNode);
+            updateTask = new SchedulerTask(task.getCreateUser(), job.getId(), instance.getId(), TaskStatus.WAIT, nextNode);
             nextTask = updateTask;
         }
         context.addTraceLog("当前节点执行完成，开始触发后续节点：%s", nextNode.getName());
