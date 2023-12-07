@@ -1,6 +1,8 @@
-package com.antgroup.openspg.builder.model.pipeline.config;
+package com.antgroup.openspg.builder.core.physical.util;
 
 import com.antgroup.openspg.builder.model.exception.PipelineConfigException;
+import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,21 +38,26 @@ public class SubgraphPattern extends BaseValObj {
   private static final Pattern RELATION_REGEX =
       Pattern.compile("^(?<startVertices>[\\w|.]+)_(?<edges>\\w+)_(?<endVertices>[\\w|.]+)$");
 
-  private final Graph<String, LabeledEdge> subgraph;
+  @Getter private final boolean singleVertex;
+  @Getter private final boolean singleEdge;
+  private final Graph<BaseSPGIdentifier, LabeledEdge> subgraph;
 
   /** 按照顺序返回子图元素列表，按照逆拓扑结构返回所有的点，再逆拓扑结构返回所有的边 */
-  public List<String> elementOrdered() {
-    List<String> topoVertices = new ArrayList<>();
+  public List<BaseSPGIdentifier> elementOrdered() {
+    List<BaseSPGIdentifier> topoVertices = new ArrayList<>();
 
     try {
-      TopologicalOrderIterator<String, LabeledEdge> iterator =
+      TopologicalOrderIterator<BaseSPGIdentifier, LabeledEdge> iterator =
           new TopologicalOrderIterator<>(subgraph);
       while (iterator.hasNext()) {
-        String vertex = iterator.next();
-        topoVertices.add(vertex);
+        BaseSPGIdentifier spgType = iterator.next();
+        topoVertices.add(spgType);
       }
 
       Collections.reverse(topoVertices);
+      if (singleEdge) {
+        topoVertices.clear();
+      }
       for (LabeledEdge edge : subgraph.edgeSet()) {
         topoVertices.add(edge.toString());
       }
@@ -61,14 +68,16 @@ public class SubgraphPattern extends BaseValObj {
   }
 
   public static SubgraphPattern from(String elements) {
-    Graph<String, LabeledEdge> subgraph =
-        GraphTypeBuilder.<String, DefaultEdge>directed()
+    Graph<BaseSPGIdentifier, LabeledEdge> subgraph =
+        GraphTypeBuilder.<BaseSPGIdentifier, DefaultEdge>directed()
             .allowingSelfLoops(false)
             .allowingMultipleEdges(true)
             .edgeClass(LabeledEdge.class)
             .weighted(false)
             .buildGraph();
 
+    boolean singleVertex = false;
+    boolean singleEdge = false;
     for (String element : elements.split(",")) {
       Matcher gqlMatcher = GQL_REGEX.matcher(element);
       if (gqlMatcher.matches()) {
@@ -79,27 +88,32 @@ public class SubgraphPattern extends BaseValObj {
       } else {
         Matcher relationMatcher = RELATION_REGEX.matcher(element);
         if (relationMatcher.matches()) {
+          singleEdge = true;
           String startVertices = relationMatcher.group("startVertices");
           String edges = relationMatcher.group("edges");
           String endVertices = relationMatcher.group("endVertices");
           addIntoSubgraph(subgraph, startVertices, edges, endVertices);
         } else {
+          singleVertex = true;
           addIntoSubgraph(subgraph, element, null, null);
         }
       }
     }
-    return new SubgraphPattern(subgraph);
+    return new SubgraphPattern(singleVertex, singleEdge, subgraph);
   }
 
   private static void addIntoSubgraph(
-      Graph<String, LabeledEdge> subgraph, String startVertices, String edges, String endVertices) {
+      Graph<BaseSPGIdentifier, LabeledEdge> subgraph,
+      String startVertices,
+      String edges,
+      String endVertices) {
     if (StringUtils.isBlank(startVertices)) {
       throw new PipelineConfigException();
     }
 
     String[] ss = startVertices.split("\\|");
     for (String s : ss) {
-      subgraph.addVertex(s);
+      subgraph.addVertex(SPGTypeIdentifier.parse(s));
     }
     if (edges != null) {
       if (StringUtils.isBlank(edges) || StringUtils.isBlank(endVertices)) {
@@ -109,12 +123,13 @@ public class SubgraphPattern extends BaseValObj {
       String[] ps = edges.split("\\|");
       String[] os = endVertices.split("\\|");
       for (String o : os) {
-        subgraph.addVertex(o);
+        subgraph.addVertex(SPGTypeIdentifier.parse(o));
       }
       for (String s : ss) {
         for (String p : ps) {
           for (String o : os) {
-            subgraph.addEdge(s, o, new LabeledEdge(p));
+            subgraph.addEdge(
+                SPGTypeIdentifier.parse(s), SPGTypeIdentifier.parse(o), new LabeledEdge(p));
           }
         }
       }

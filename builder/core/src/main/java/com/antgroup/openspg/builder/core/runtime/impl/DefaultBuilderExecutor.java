@@ -32,7 +32,7 @@ public class DefaultBuilderExecutor implements BuilderExecutor {
     }
 
     List<BaseRecord> results = new ArrayList<>(inputRecords.size());
-    for (BaseProcessor<?> processor : plan.startProcessor()) {
+    for (BaseProcessor<?> processor : plan.sourceNodes()) {
       processRecursively(processor, inputRecords, results);
     }
     return results;

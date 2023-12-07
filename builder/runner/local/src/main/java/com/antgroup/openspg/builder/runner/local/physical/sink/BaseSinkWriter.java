@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.openspg.builder.runner.local.sink;
+package com.antgroup.openspg.builder.runner.local.physical.sink;
 
 import com.antgroup.openspg.builder.core.physical.BasePhysicalNode;
 import com.antgroup.openspg.builder.model.record.BaseRecord;

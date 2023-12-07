@@ -20,33 +20,29 @@ import com.antgroup.openspg.builder.model.pipeline.config.CsvSourceNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.ExtractNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.MappingNodeConfig;
-import com.google.common.graph.Graph;
-import com.google.common.graph.GraphBuilder;
-import com.google.common.graph.ImmutableGraph;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.builder.GraphTypeBuilder;
 
 @AllArgsConstructor
-@SuppressWarnings({"UnstableApiUsage"})
 public class LogicalPlan implements Serializable {
 
   /** DAG (Directed Acyclic Graph) of the logical execution plan. */
-  private final Graph<BaseLogicalNode<?>> dag;
+  private final Graph<BaseLogicalNode<?>, DefaultEdge> dag;
 
   /**
    * Converting the user-defined pipeline configuration into a logical execution plan.
    *
-   * @param pipeline Spgbuilder pipeline.
+   * @param pipeline builder pipeline.
    * @return Logical execution plan.
    */
   public static LogicalPlan parse(Pipeline pipeline) {
-    ImmutableGraph.Builder<BaseLogicalNode<?>> immutable =
-        GraphBuilder.directed().allowsSelfLoops(false).immutable();
+    Graph<BaseLogicalNode<?>, DefaultEdge> graph = newGraph();
     Map<String, BaseLogicalNode<?>> visited = new HashMap<>(pipeline.getNodes().size());
     for (Node node : pipeline.getNodes()) {
       BaseLogicalNode<?> baseNode = parse(node);
@@ -54,7 +50,7 @@ public class LogicalPlan implements Serializable {
       if (visited.containsKey(node.getId())) {
         throw new IllegalArgumentException("pipeline config is error");
       } else {
-        immutable.addNode(baseNode);
+        graph.addVertex(baseNode);
         visited.put(node.getId(), baseNode);
       }
     }
@@ -65,9 +61,17 @@ public class LogicalPlan implements Serializable {
       if (fromNode == null || toNode == null) {
         throw new IllegalArgumentException("pipeline config is error");
       }
-      immutable.putEdge(fromNode, toNode);
+      graph.addEdge(fromNode, toNode);
     }
-    return new LogicalPlan(immutable.build());
+    return new LogicalPlan(graph);
+  }
+
+  private static Graph<BaseLogicalNode<?>, DefaultEdge> newGraph() {
+    return GraphTypeBuilder.<BaseLogicalNode<?>, DefaultEdge>directed()
+        .allowingSelfLoops(false)
+        .allowingMultipleEdges(false)
+        .weighted(false)
+        .buildGraph();
   }
 
   /**
@@ -95,27 +99,31 @@ public class LogicalPlan implements Serializable {
     }
   }
 
-  public Set<BaseLogicalNode<?>> startNodes() {
-    return dag.nodes().stream()
-        .filter(node -> CollectionUtils.isEmpty(dag.predecessors(node)))
+  public Set<BaseLogicalNode<?>> sourceNodes() {
+    return dag.vertexSet().stream()
+        .filter(node -> dag.inDegreeOf(node) == 0)
         .collect(Collectors.toSet());
   }
 
-  public Set<BaseLogicalNode<?>> endNodes() {
-    return dag.nodes().stream()
-        .filter(node -> CollectionUtils.isEmpty(dag.successors(node)))
+  public Set<BaseLogicalNode<?>> sinkNodes() {
+    return dag.vertexSet().stream()
+        .filter(node -> dag.outDegreeOf(node) == 0)
         .collect(Collectors.toSet());
   }
 
   public Set<BaseLogicalNode<?>> successors(BaseLogicalNode<?> cur) {
-    return dag.successors(cur);
+    return new HashSet<>(Graphs.successorListOf(dag, cur));
   }
 
   public int size() {
-    return dag.nodes().size();
+    return dag.vertexSet().size();
   }
 
-  public LogicalPlan removeSourceAndSink() {
-    return null;
+  public LogicalPlan removeSourceAndSinkNodes() {
+    Graph<BaseLogicalNode<?>, DefaultEdge> newGraph = newGraph();
+    Graphs.addGraph(newGraph, dag);
+    newGraph.removeAllVertices(sourceNodes());
+    newGraph.removeAllVertices(sinkNodes());
+    return new LogicalPlan(newGraph);
   }
 }

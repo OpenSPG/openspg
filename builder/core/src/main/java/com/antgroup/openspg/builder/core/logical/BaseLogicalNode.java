@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.builder.core.logical;
 
-import com.antgroup.openspg.builder.model.exception.PipelineConfigException;
 import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseNodeConfig;
 import lombok.AllArgsConstructor;
@@ -36,6 +35,4 @@ public abstract class BaseLogicalNode<C extends BaseNodeConfig> {
 
   /** Each node needs to define its own configuration. */
   private final C nodeConfig;
-
-  public void checkConfig() throws PipelineConfigException {}
 }

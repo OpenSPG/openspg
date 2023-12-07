@@ -1,10 +1,11 @@
-package com.antgroup.openspg.builder.runner.local.source.impl;
+package com.antgroup.openspg.builder.runner.local.physical.source.impl;
 
+import com.antgroup.openspg.builder.model.BuilderException;
 import com.antgroup.openspg.builder.model.record.BuilderRecord;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.pipeline.config.CsvSourceNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
-import com.antgroup.openspg.builder.runner.local.source.BaseSourceReader;
+import com.antgroup.openspg.builder.runner.local.physical.source.BaseSourceReader;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -27,7 +28,7 @@ public class CsvFileSourceReader extends BaseSourceReader<CsvSourceNodeConfig> {
   }
 
   @Override
-  public void doInit(BuilderContext context) throws Exception {
+  public void doInit(BuilderContext context) throws BuilderException {
     queue = new ArrayBlockingQueue<>(context.getBatchSize() * context.getParallelism());
     csvReader =
         new CSVReaderBuilder(new FileReader(config.getUrl()))

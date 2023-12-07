@@ -11,19 +11,20 @@
  * or implied.
  */
 
-package com.antgroup.openspg.builder.runner.local.sink.impl;
+package com.antgroup.openspg.builder.runner.local.physical.sink.impl;
 
 import com.antgroup.openspg.builder.core.physical.process.CheckProcessor;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.model.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.builder.model.record.SPGRecordAlterItem;
 import com.antgroup.openspg.builder.model.record.SPGRecordManipulateCmd;
 import com.antgroup.openspg.builder.model.record.SPGRecordTypeEnum;
-import com.antgroup.openspg.builder.runner.local.sink.BaseSinkWriter;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
+import com.antgroup.openspg.builder.runner.local.physical.sink.BaseSinkWriter;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
@@ -54,7 +55,7 @@ public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfi
   }
 
   @Override
-  public void doInit(BuilderContext context) throws Exception {
+  public void doInit(BuilderContext context) throws BuilderException {
     if (context.getGraphStoreClient() != null) {
       graphStoreClient = context.getGraphStoreClient();
     } else {

@@ -13,10 +13,10 @@ import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.runner.local.runtime.BuilderMetric;
 import com.antgroup.openspg.builder.runner.local.runtime.DefaultRecordCollector;
 import com.antgroup.openspg.builder.runner.local.runtime.ErrorRecordCollector;
-import com.antgroup.openspg.builder.runner.local.sink.BaseSinkWriter;
-import com.antgroup.openspg.builder.runner.local.sink.SinkWriterFactory;
-import com.antgroup.openspg.builder.runner.local.source.BaseSourceReader;
-import com.antgroup.openspg.builder.runner.local.source.SourceReaderFactory;
+import com.antgroup.openspg.builder.runner.local.physical.sink.BaseSinkWriter;
+import com.antgroup.openspg.builder.runner.local.physical.sink.SinkWriterFactory;
+import com.antgroup.openspg.builder.runner.local.physical.source.BaseSourceReader;
+import com.antgroup.openspg.builder.runner.local.physical.source.SourceReaderFactory;
 import com.antgroup.openspg.common.util.thread.ThreadUtils;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
@@ -48,12 +48,12 @@ public class LocalBuilderRunner implements BuilderRunner {
   public void init(Pipeline pipeline, BuilderContext context) throws BuilderException {
     LogicalPlan logicalPlan = LogicalPlan.parse(pipeline);
     sourceReader =
-        logicalPlan.startNodes().stream()
+        logicalPlan.sourceNodes().stream()
             .map(SourceReaderFactory::getSourceReader)
             .findFirst()
             .get();
     sinkWriter =
-        logicalPlan.endNodes().stream().map(SinkWriterFactory::getSinkWriter).findFirst().get();
+        logicalPlan.sinkNodes().stream().map(SinkWriterFactory::getSinkWriter).findFirst().get();
 
     PhysicalPlan physicalPlan = PhysicalPlan.plan(logicalPlan);
     builderExecutor = new DefaultBuilderExecutor();
