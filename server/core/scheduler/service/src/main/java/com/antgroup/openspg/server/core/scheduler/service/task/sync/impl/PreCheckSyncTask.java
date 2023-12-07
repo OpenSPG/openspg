@@ -42,6 +42,19 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
 
     @Override
     public TaskStatus submit(JobTaskContext context) {
+        TaskStatus status = getTaskStatus(context);
+        if (TaskStatus.isFinish(status)) {
+            SchedulerInstance instance = context.getInstance();
+            SchedulerInstance updateInstance = new SchedulerInstance();
+            updateInstance.setId(instance.getId());
+            updateInstance.setStatus(InstanceStatus.RUNNING.name());
+            updateInstance.setGmtModified(instance.getGmtModified());
+            schedulerInstanceService.update(updateInstance);
+        }
+        return status;
+    }
+
+    private TaskStatus getTaskStatus(JobTaskContext context) {
         SchedulerInstance instance = context.getInstance();
 
         long days = TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - instance.getGmtCreate().getTime());
@@ -72,12 +85,7 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
     }
 
     private TaskStatus processBySkip(JobTaskContext context) {
-        SchedulerInstance instance = context.getInstance();
         context.addTraceLog("当前任务无需前置数据检查。直接进行下一节点");
-        SchedulerInstance updateInstance = new SchedulerInstance();
-        updateInstance.setId(instance.getId());
-        updateInstance.setStatus(InstanceStatus.RUNNING.name());
-        schedulerInstanceService.update(updateInstance);
         return TaskStatus.FINISH;
     }
 
