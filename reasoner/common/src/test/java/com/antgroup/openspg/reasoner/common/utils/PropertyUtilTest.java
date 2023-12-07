@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.reasoner.common.utils;
 
 import static org.junit.Assert.assertTrue;

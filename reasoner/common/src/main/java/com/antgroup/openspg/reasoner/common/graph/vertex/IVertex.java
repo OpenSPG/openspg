@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.reasoner.common.graph.vertex;
 
 import java.io.Serializable;

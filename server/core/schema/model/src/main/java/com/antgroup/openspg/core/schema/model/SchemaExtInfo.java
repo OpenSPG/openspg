@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.core.schema.model;
 
 import java.util.HashMap;

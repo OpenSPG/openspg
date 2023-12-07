@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.reasoner.common.graph.edge;
 
 import com.google.common.base.Splitter;

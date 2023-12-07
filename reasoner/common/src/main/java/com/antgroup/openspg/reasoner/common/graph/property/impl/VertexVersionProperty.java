@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.reasoner.common.graph.property.impl;
 
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;

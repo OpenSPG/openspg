@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.cloudext.interfaces.graphstore.impl;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGInternalIdGenerator;

@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.cloudext.interfaces.searchengine;
 
 import com.antgroup.openspg.builder.model.record.SPGRecordManipulateCmd;

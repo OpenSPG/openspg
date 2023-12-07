@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.reasoner.common.table;
 
 import com.antgroup.openspg.reasoner.common.types.KTBoolean$;

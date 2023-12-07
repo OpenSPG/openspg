@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.reasoner.common.graph.vertex;
 
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexId;

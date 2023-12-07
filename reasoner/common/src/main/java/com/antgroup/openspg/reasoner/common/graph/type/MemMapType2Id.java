@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.reasoner.common.graph.type;
 
 import com.antgroup.openspg.reasoner.common.Utils;

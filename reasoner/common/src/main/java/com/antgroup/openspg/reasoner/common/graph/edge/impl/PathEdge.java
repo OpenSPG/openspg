@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.reasoner.common.graph.edge.impl;
 
 import com.antgroup.openspg.reasoner.common.exception.IllegalArgumentException;
