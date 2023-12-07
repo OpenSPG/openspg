@@ -125,12 +125,11 @@ class SchedulerServiceImplTest {
         notFinishInstances = schedulerInstanceService.getNotFinishInstance(instanceQuery);
         assertTrue(CollectionUtils.isEmpty(notFinishInstances));
 
-        // step 6: reRun Instance and to trigger
+        // step 6: reRun Instance
         assertTrue(schedulerService.reRunInstance(instance.getId()));
         notFinishInstances = schedulerInstanceService.getNotFinishInstance(instanceQuery);
         assertEquals(1, notFinishInstances.size());
         instance = notFinishInstances.get(0);
-        assertTrue(schedulerService.triggerInstance(instance.getId()));
 
         ThreadUtils.sleep(5000);
         // step 7: trigger Instance until it ends
