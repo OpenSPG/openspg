@@ -6,6 +6,7 @@ package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
@@ -24,11 +25,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
 
-    private static ConcurrentHashMap<Long, SchedulerJob> jobs = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Long, SchedulerJob> jobs  = new ConcurrentHashMap<>();
+    private static AtomicLong                            maxId = new AtomicLong(0L);
 
     @Override
     public Long insert(SchedulerJob record) {
-        Long id = CommonUtils.getMaxId(jobs.keySet());
+        Long id = maxId.incrementAndGet();
         record.setId(id);
         record.setGmtModified(new Date());
         jobs.put(id, record);

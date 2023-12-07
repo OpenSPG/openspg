@@ -12,12 +12,9 @@ import java.io.StringWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,22 +200,14 @@ public class CommonUtils {
     }
 
     /**
-     * get Max Id
+     * get Unique Id
      *
-     * @param ids
+     * @param jobId
+     * @param schedulerDate
      * @return
      */
-    public static Long getMaxId(Set<Long> ids) {
-        Long id = 1L;
-        if (CollectionUtils.isEmpty(ids)) {
-            return id;
-        }
-        Long max = ids.stream().max(Comparator.comparing(x -> x)).orElse(null);
-        if (max == null) {
-            return id;
-        }
-        id = ++max;
-        return id;
+    public static String getUniqueId(Long jobId, Date schedulerDate) {
+        return jobId.toString() + DateTimeUtils.getDate2Str(DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, schedulerDate);
     }
 
     /**

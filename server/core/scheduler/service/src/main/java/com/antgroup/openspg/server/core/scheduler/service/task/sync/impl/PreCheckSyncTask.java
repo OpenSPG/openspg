@@ -90,9 +90,8 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
         context.addTraceLog("当前任务依赖上次实例完成，需检查上次实例是否执行完成");
         SchedulerInstance instance = context.getInstance();
         SchedulerJob job = context.getJob();
-        String preSchedulerDate = DateTimeUtils.getDate2LongStr(
-                CommonUtils.getPreviousValidTime(job.getSchedulerCron(), instance.getSchedulerDate()));
-        String preUniqueId = instance.getJobId() + preSchedulerDate;
+        Date preSchedulerDate = CommonUtils.getPreviousValidTime(job.getSchedulerCron(), instance.getSchedulerDate());
+        String preUniqueId = CommonUtils.getUniqueId(job.getId(), preSchedulerDate);
         SchedulerInstance preInstance = schedulerInstanceService.getByUniqueId(preUniqueId);
 
         if (null == preInstance) {

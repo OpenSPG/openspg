@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import com.alibaba.fastjson.JSON;
 
 import com.antgroup.openspg.common.util.CommonUtils;
-import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
@@ -137,7 +136,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
         List<SchedulerInstance> instances = Lists.newArrayList();
         List<Date> executionDates = CommonUtils.getCronExecutionDatesByToday(job.getSchedulerCron());
         for (Date schedulerDate : executionDates) {
-            String uniqueId = job.getId().toString() + DateTimeUtils.getDate2Str(DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, schedulerDate);
+            String uniqueId = CommonUtils.getUniqueId(job.getId(), schedulerDate);
             SchedulerInstance instance = generateInstance(job, uniqueId, schedulerDate);
             if (instance == null) {
                 continue;

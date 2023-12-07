@@ -6,6 +6,7 @@ package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import com.antgroup.openspg.common.util.CommonUtils;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Service;
 public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceService {
 
     private static ConcurrentHashMap<Long, SchedulerInstance> instances = new ConcurrentHashMap<>();
+    private static AtomicLong                                 maxId     = new AtomicLong(0L);
 
     @Autowired
     SchedulerTaskService schedulerTaskService;
@@ -45,7 +47,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
                 throw new RuntimeException(String.format("uniqueId:%s already existed", uniqueId));
             }
         }
-        Long id = CommonUtils.getMaxId(instances.keySet());
+        Long id = maxId.incrementAndGet();
         record.setId(id);
         record.setGmtModified(new Date());
         instances.put(id, record);
