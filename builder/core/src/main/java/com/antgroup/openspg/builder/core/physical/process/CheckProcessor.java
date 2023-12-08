@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
+import com.antgroup.openspg.builder.model.exception.BuilderRecordException;
 import com.antgroup.openspg.builder.model.pipeline.config.CheckNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseRecord;

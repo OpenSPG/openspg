@@ -15,7 +15,7 @@ package com.antgroup.openspg.builder.runner.local.physical.sink.impl;
 
 import com.antgroup.openspg.builder.core.physical.process.CheckProcessor;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
-import com.antgroup.openspg.builder.model.BuilderException;
+import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;

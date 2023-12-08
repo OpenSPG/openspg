@@ -16,7 +16,7 @@ package com.antgroup.openspg.builder.core.physical.process;
 import com.antgroup.openspg.builder.core.physical.process.pattern.BaseMappingPattern;
 import com.antgroup.openspg.builder.core.physical.process.pattern.MappingPatternFactory;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
-import com.antgroup.openspg.builder.model.BuilderException;
+import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.MappingNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import java.util.List;

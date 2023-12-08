@@ -11,24 +11,15 @@
  * or implied.
  */
 
-package com.antgroup.openspg.builder.core.runtime;
+package com.antgroup.openspg.builder.model.exception;
 
-import com.antgroup.openspg.builder.model.BuilderException;
-import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
-import lombok.Getter;
-
-@Getter
 public class BuilderRecordException extends BuilderException {
 
-  private final BaseProcessor<?> processor;
-
-  public BuilderRecordException(
-      BaseProcessor<?> processor, Throwable cause, String messagePattern, Object... args) {
+  public BuilderRecordException(Throwable cause, String messagePattern, Object... args) {
     super(cause, messagePattern, args);
-    this.processor = processor;
   }
 
-  public BuilderRecordException(BaseProcessor<?> processor, String messagePattern, Object... args) {
-    this(processor, null, messagePattern, args);
+  public BuilderRecordException(String messagePattern, Object... args) {
+    this(null, messagePattern, args);
   }
 }

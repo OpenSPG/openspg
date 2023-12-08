@@ -1,6 +1,6 @@
 package com.antgroup.openspg.builder.core.runtime;
 
-import com.antgroup.openspg.builder.model.BuilderException;
+import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 
 /**

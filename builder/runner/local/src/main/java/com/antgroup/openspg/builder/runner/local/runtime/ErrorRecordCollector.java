@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.runner.local.runtime;
 
-import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
+import com.antgroup.openspg.builder.model.exception.BuilderRecordException;
 import com.antgroup.openspg.builder.model.record.BuilderRecord;
 
 public interface ErrorRecordCollector {

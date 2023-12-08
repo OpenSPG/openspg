@@ -1,7 +1,5 @@
 package com.antgroup.openspg.builder.model.exception;
 
-import com.antgroup.openspg.builder.model.BuilderException;
-
 public class PipelineConfigException extends BuilderException {
 
   public PipelineConfigException(Throwable cause, String messagePattern, Object... args) {

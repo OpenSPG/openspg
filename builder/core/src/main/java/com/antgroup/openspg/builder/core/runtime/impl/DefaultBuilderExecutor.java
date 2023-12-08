@@ -1,11 +1,11 @@
 package com.antgroup.openspg.builder.core.runtime.impl;
 
-import com.antgroup.openspg.builder.model.BuilderException;
+import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.core.physical.BasePhysicalNode;
 import com.antgroup.openspg.builder.core.physical.PhysicalPlan;
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
 import com.antgroup.openspg.builder.core.runtime.BuilderExecutor;
-import com.antgroup.openspg.builder.core.runtime.BuilderRecordException;
+import com.antgroup.openspg.builder.model.exception.BuilderRecordException;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import java.util.ArrayList;
