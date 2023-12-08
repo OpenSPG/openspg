@@ -18,7 +18,7 @@ import com.antgroup.openspg.builder.core.logical.LogicalPlan;
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
 import com.antgroup.openspg.builder.core.physical.process.ExtractProcessor;
 import com.antgroup.openspg.builder.core.physical.process.MappingProcessor;
-import com.antgroup.openspg.builder.model.pipeline.config.ExtractNodeConfig;
+import com.antgroup.openspg.builder.model.pipeline.config.BaseExtractNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.MappingNodeConfig;
 import java.io.Serializable;
 import java.util.*;
@@ -92,7 +92,7 @@ public class PhysicalPlan implements Serializable {
     switch (node.getType()) {
       case EXTRACT:
         return new ExtractProcessor(
-            node.getId(), node.getName(), (ExtractNodeConfig) node.getNodeConfig());
+            node.getId(), node.getName(), (BaseExtractNodeConfig) node.getNodeConfig());
       case MAPPING:
         return new MappingProcessor(
             node.getId(), node.getName(), (MappingNodeConfig) node.getNodeConfig());

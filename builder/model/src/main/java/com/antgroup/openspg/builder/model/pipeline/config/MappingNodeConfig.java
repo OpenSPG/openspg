@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.model.pipeline.config;
 
-import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
+import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.List;
 import lombok.AllArgsConstructor;

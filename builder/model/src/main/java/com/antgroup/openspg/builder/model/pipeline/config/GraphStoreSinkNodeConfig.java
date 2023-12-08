@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.builder.model.pipeline.config;
 
-import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
+import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
 import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;

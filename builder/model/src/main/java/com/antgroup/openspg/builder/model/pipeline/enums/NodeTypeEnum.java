@@ -11,13 +11,25 @@
  * or implied.
  */
 
-package com.antgroup.openspg.builder.model.pipeline;
+package com.antgroup.openspg.builder.model.pipeline.enums;
 
 public enum NodeTypeEnum {
+  /** SOURCE Component */
   CSV_SOURCE,
-  MAPPING,
-  EXTRACT,
+
+  /** MAPPING Component */
+  SPG_TYPE_MAPPING,
+  RELATION_MAPPING,
+  SUBGRAPH_MAPPING,
+
+  /** EXTRACT Component */
+  USER_DEFINED_EXTRACT,
+  LLM_BASED_EXTRACT,
+
+  /** CHECK Component */
   CHECK,
+
+  /** SINK Component */
   GRAPH_SINK,
   ;
 }

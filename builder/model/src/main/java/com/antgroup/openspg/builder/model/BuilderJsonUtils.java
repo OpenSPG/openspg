@@ -1,6 +1,6 @@
 package com.antgroup.openspg.builder.model;
 
-import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
+import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.config.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,7 +19,7 @@ public class BuilderJsonUtils {
             .registerTypeAdapterFactory(
                 RuntimeTypeAdapterFactory.of(BaseNodeConfig.class, DEFAULT_TYPE_FIELD_NAME)
                     .registerSubtype(CsvSourceNodeConfig.class, NodeTypeEnum.CSV_SOURCE.name())
-                    .registerSubtype(ExtractNodeConfig.class, NodeTypeEnum.EXTRACT.name())
+                    .registerSubtype(BaseExtractNodeConfig.class, NodeTypeEnum.EXTRACT.name())
                     .registerSubtype(MappingNodeConfig.class, NodeTypeEnum.MAPPING.name())
                     .registerSubtype(GraphStoreSinkNodeConfig.class, NodeTypeEnum.GRAPH_SINK.name())
                     .recognizeSubtypes())

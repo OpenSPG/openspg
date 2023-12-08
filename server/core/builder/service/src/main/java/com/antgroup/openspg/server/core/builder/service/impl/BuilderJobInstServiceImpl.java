@@ -14,7 +14,7 @@
 package com.antgroup.openspg.server.core.builder.service.impl;
 
 import com.antgroup.openspg.builder.model.pipeline.Node;
-import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
+import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
 import com.antgroup.openspg.cloudext.interfaces.computing.ComputingClient;

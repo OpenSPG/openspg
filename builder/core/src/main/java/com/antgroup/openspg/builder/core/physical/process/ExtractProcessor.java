@@ -18,7 +18,7 @@ import com.antgroup.openspg.builder.model.record.BuilderRecord;
 import com.antgroup.openspg.builder.core.physical.invoker.operator.OperatorInvoker;
 import com.antgroup.openspg.builder.core.physical.invoker.operator.impl.OperatorInvokerImpl;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
-import com.antgroup.openspg.builder.model.pipeline.config.ExtractNodeConfig;
+import com.antgroup.openspg.builder.model.pipeline.config.BaseExtractNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +44,11 @@ import lombok.extern.slf4j.Slf4j;
  * effectively, extracting valuable insights and information from it.
  */
 @Slf4j
-public class ExtractProcessor extends BaseProcessor<ExtractNodeConfig> {
+public class ExtractProcessor extends BaseProcessor<BaseExtractNodeConfig> {
 
   private OperatorInvoker operatorInvoker;
 
-  public ExtractProcessor(String id, String name, ExtractNodeConfig config) {
+  public ExtractProcessor(String id, String name, BaseExtractNodeConfig config) {
     super(id, name, config);
   }
 

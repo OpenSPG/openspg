@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.api.facade;
 
-import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
-import com.antgroup.openspg.builder.model.pipeline.config.*;
 import com.antgroup.openspg.core.schema.model.constraint.BaseConstraintItem;
 import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
 import com.antgroup.openspg.core.schema.model.constraint.EnumConstraint;

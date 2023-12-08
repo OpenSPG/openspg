@@ -17,7 +17,7 @@ import com.antgroup.openspg.builder.model.pipeline.Edge;
 import com.antgroup.openspg.builder.model.pipeline.Node;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 import com.antgroup.openspg.builder.model.pipeline.config.CsvSourceNodeConfig;
-import com.antgroup.openspg.builder.model.pipeline.config.ExtractNodeConfig;
+import com.antgroup.openspg.builder.model.pipeline.config.BaseExtractNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.MappingNodeConfig;
 import java.io.Serializable;
@@ -87,7 +87,7 @@ public class LogicalPlan implements Serializable {
             node.getId(), node.getName(), (CsvSourceNodeConfig) node.getNodeConfig());
       case EXTRACT:
         return new ExtractNode(
-            node.getId(), node.getName(), (ExtractNodeConfig) node.getNodeConfig());
+            node.getId(), node.getName(), (BaseExtractNodeConfig) node.getNodeConfig());
       case MAPPING:
         return new MappingNode(
             node.getId(), node.getName(), (MappingNodeConfig) node.getNodeConfig());
