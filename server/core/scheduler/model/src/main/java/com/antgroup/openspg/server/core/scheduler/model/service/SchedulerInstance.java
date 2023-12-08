@@ -86,7 +86,7 @@ public class SchedulerInstance extends BaseModel {
     private Date estimateEndTime;
 
     /**
-     * job Life Cycle：PERIOD,ONCE,REAL_TIME Enum:JobCycleEnum
+     * job Life Cycle：PERIOD,ONCE,REAL_TIME Enum:LifeCycle
      */
     private String lifeCycle;
 

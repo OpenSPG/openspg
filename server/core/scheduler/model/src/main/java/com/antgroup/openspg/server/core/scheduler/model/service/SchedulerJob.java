@@ -32,11 +32,6 @@ public class SchedulerJob  extends BaseModel {
     private String modifyUser;
 
     /**
-     * modifyUser Name
-     */
-    private String modifyUserName;
-
-    /**
      * Create time
      */
     private Date gmtCreate;
@@ -52,12 +47,17 @@ public class SchedulerJob  extends BaseModel {
     private Long projectId;
 
     /**
+     * invoker id
+     */
+    private String invokerId;
+
+    /**
      * job name
      */
     private String name;
 
     /**
-     * job Life Cycle：PERIOD,ONCE,REAL_TIME Enum:JobCycleEnum
+     * job Life Cycle：PERIOD,ONCE,REAL_TIME Enum:LifeCycle
      */
     private String lifeCycle;
 
@@ -152,6 +152,14 @@ public class SchedulerJob  extends BaseModel {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public String getInvokerId() {
+        return invokerId;
+    }
+
+    public void setInvokerId(String invokerId) {
+        this.invokerId = invokerId;
     }
 
     public String getName() {
