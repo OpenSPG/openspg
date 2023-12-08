@@ -1,33 +1,14 @@
-from abc import ABC
-from typing import Union, Mapping, Dict, List
+from typing import Union, Dict, List
 
-from NN4K.invoker.base import ModelInvoker
+from knext.component.builder.base import SPGExtractor
+from knext.operator.spg_record import SPGRecord
+from nn4k.invoker.base import NNInvoker
 from knext import rest
-from knext.component.base import RESTable, Component, ComponentTypeEnum, ComponentLabelEnum, Runnable, Input, Output
-from knext.component.builder.source_reader import SourceReader
-from knext.core.builder.operator.model.op import PromptOp
+from knext.component.base import SPGTypeHelper, PropertyHelper
+from knext.operator.op import PromptOp, ExtractOp
 
 
-class SPGExtractor(RESTable, Component, ABC):
-
-    @property
-    def upstream_types(self):
-        return Union[SourceReader, SPGExtractor]
-
-    @property
-    def downstream_types(self):
-        return Union[SPGExtractor, Mapping]
-
-    @property
-    def type(self):
-        return ComponentTypeEnum.Builder
-
-    @property
-    def label(self):
-        return ComponentLabelEnum.Extractor
-
-
-class LLMBasedExtractor(Runnable, SPGExtractor):
+class LLMBasedExtractor(SPGExtractor):
     """A Process Component that transforming unstructured data into structured data.
 
     Examples:
@@ -40,7 +21,7 @@ class LLMBasedExtractor(Runnable, SPGExtractor):
     """All output column names after knowledge extraction processing."""
     output_fields: List[str]
     """Knowledge extract operator of this component."""
-    llm: ModelInvoker
+    llm: NNInvoker
 
     prompt_ops: List[PromptOp]
 
@@ -49,11 +30,11 @@ class LLMBasedExtractor(Runnable, SPGExtractor):
     property_names: List[Union[str, PropertyHelper]]
 
     @property
-    def input_types(self) -> Input:
+    def input_types(self):
         return Dict[str, str]
 
     @property
-    def output_types(self) -> Output:
+    def output_types(self):
         return SPGRecord
 
     def to_rest(self):
@@ -68,7 +49,7 @@ class LLMBasedExtractor(Runnable, SPGExtractor):
 
         return rest.Node(**super().to_dict(), node_config=config)
 
-    def invoke(self, input: Input) -> Output:
+    def invoke(self, input):
         pass
 
     @classmethod
@@ -79,7 +60,7 @@ class LLMBasedExtractor(Runnable, SPGExtractor):
         pass
 
 
-class UserDefinedExtractor(Runnable[Dict[str, str], Dict[str, str]], SPGExtractor):
+class UserDefinedExtractor(SPGExtractor):
     """A Process Component that transforming unstructured data into structured data.
 
     Examples:
@@ -95,11 +76,11 @@ class UserDefinedExtractor(Runnable[Dict[str, str], Dict[str, str]], SPGExtracto
     extract_op: ExtractOp
 
     @property
-    def input_types(self) -> Input:
+    def input_types(self):
         return Dict[str, str]
 
     @property
-    def output_types(self) -> Output:
+    def output_types(self):
         return Dict[str, str]
 
     @property

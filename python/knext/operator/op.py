@@ -31,31 +31,6 @@ class ExtractOp(BaseOp, ABC):
             return EvalResult[List[SPGRecord]](output).to_dict()
 
 
-class NormalizeOp(BaseOp, ABC):
-    """Base class for all property normalize operators."""
-
-    def __init__(self, params: Dict[str, str] = None):
-        super().__init__(params)
-
-    def eval(self, property: str, record: SPGRecord) -> str:
-        raise NotImplementedError(
-            f"{self.__class__.__name__} need to implement `eval` method."
-        )
-
-    @staticmethod
-    def _pre_process(*inputs):
-        return inputs[0], SPGRecord.from_dict(inputs[1])
-
-    @staticmethod
-    def _post_process(output) -> Dict[str, Any]:
-        if isinstance(output, EvalResult):
-            return output.to_dict()
-        if isinstance(output, tuple):
-            return EvalResult[str](*output[:3]).to_dict()
-        else:
-            return EvalResult[str](output).to_dict()
-
-
 class LinkOp(BaseOp, ABC):
     """Base class for all entity link operators."""
 

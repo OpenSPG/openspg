@@ -2,29 +2,7 @@ from abc import ABC
 from typing import Union, List, Dict
 
 from knext import rest
-
-from knext.component.base import RESTable, Component, ComponentTypeEnum, ComponentLabelEnum, Runnable, Input, Output
-from knext.component.builder.extractor import SPGExtractor
-from knext.component.builder.mapping import Mapping
-
-
-class SourceReader(RESTable, Component, ABC):
-
-    @property
-    def upstream_types(self):
-        return None
-
-    @property
-    def downstream_types(self):
-        return Union[SPGExtractor, Mapping]
-
-    @property
-    def type(self):
-        return ComponentTypeEnum.Builder
-
-    @property
-    def label(self):
-        return ComponentLabelEnum.SourceReader
+from knext.component.builder.base import SourceReader
 
 
 class CsvSourceReader(SourceReader):
@@ -51,7 +29,7 @@ class CsvSourceReader(SourceReader):
     If the CSV file includes a header, it needs to be greater than or equal to 2."""
     start_row: int
 
-    def invoke(self, input: Input) -> Output:
+    def invoke(self, input):
         pass
 
     def submit(self):

@@ -12,7 +12,7 @@ class BuilderChain(RESTable, Chain):
 
     source: SourceReader
 
-    process: Union[SPGExtractor, Mapping]
+    process: Union[SPGExtractor, Mapping, ]
 
     sink: SinkWriter
 
@@ -24,3 +24,6 @@ class BuilderChain(RESTable, Chain):
     def output_types(self):
         return None
 
+    @classmethod
+    def from_config(cls):
+        return cls()

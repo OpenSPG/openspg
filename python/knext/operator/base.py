@@ -15,7 +15,7 @@ from enum import Enum
 from typing import List, Dict, Any, Type
 
 from knext.operator.eval_result import EvalResult
-from knext.operator.spg_record import Vertex
+from knext.operator.spg_record import SPGRecord
 
 
 class OperatorTypeEnum(str, Enum):

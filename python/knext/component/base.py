@@ -11,12 +11,14 @@
 # or implied.
 
 
-from abc import ABC, abstractmethod
+from abc import ABC
 from enum import Enum
-from typing import List, Union, TypeVar, Generic, Any, Dict, Tuple, Type
+from typing import List, Union, TypeVar, Type
 
-from knext import rest
+import networkx as nx
 
+from knext.common.restable import RESTable
+from knext.common.runnable import Runnable
 
 Other = TypeVar("Other")
 
@@ -46,52 +48,7 @@ class PropertyHelper:
     pass
 
 
-class RESTable(ABC):
-
-    @property
-    def upstream_types(self):
-        raise NotImplementedError("To be implemented in subclass")
-
-    @property
-    def downstream_types(self):
-        raise NotImplementedError("To be implemented in subclass")
-
-    @abstractmethod
-    def to_rest(self):
-        raise NotImplementedError("To be implemented in subclass")
-
-    @classmethod
-    def from_rest(cls, node: rest.Node):
-        raise NotImplementedError("To be implemented in subclass")
-
-    @abstractmethod
-    def submit(self):
-        raise NotImplementedError("To be implemented in subclass")
-
-
-class Runnable(ABC):
-
-    @property
-    def input_types(self) -> Input:
-        return
-
-    @property
-    def output_types(self) -> Output:
-        return
-
-    @abstractmethod
-    def invoke(self, input: Input) -> Output:
-        raise NotImplementedError("To be implemented in subclass")
-
-    def __rshift__(
-            self,
-            other: Type['Runnable']
-    ) -> Type['Runnable']:
-        """Compose this runnable with another object to create a RunnableSequence."""
-        return Chain(first=self, last=coerce_to_runnable(other))
-
-
-class Component(ABC):
+class Component(Runnable, RESTable, ABC):
     """
     Base class for all component.
     """
@@ -114,3 +71,50 @@ class Component(ABC):
     def to_dict(self):
         return self.__dict__
 
+    def __hash__(self):
+        return id(self)
+
+    def __eq__(self, other):
+        return hash(self) == hash(other)
+
+    def __rshift__(self, other: Union[
+        Type['Chain'],
+        List[Type['Chain']],
+        Type['Component'],
+        List[Type['Component']],
+        None
+    ]):
+        from knext.chain.base import Chain
+        if not other:
+            return self
+        if not isinstance(other, list):
+            other = [other]
+        dag_list = []
+        for o in other:
+            if not o:
+                dag = nx.DiGraph()
+                self.last = True
+                dag.add_node(self)
+                print(dag.nodes)
+                dag_list.append(dag)
+            if isinstance(o, Component):
+                dag = nx.DiGraph()
+                dag.add_node(self)
+                dag.add_node(o)
+                dag.add_edge(self, o)
+                dag_list.append(dag)
+            elif isinstance(o, Chain):
+                dag = nx.DiGraph()
+                dag.add_node(self)
+                end_nodes = [node for node, out_degree in dag.out_degree() if out_degree == 0 or node.last]
+                start_nodes = [node for node, in_degree in o.dag.in_degree() if in_degree == 0]
+
+                if len(end_nodes) > 0 and len(start_nodes) > 0:
+                    for end_node in end_nodes:
+                        for start_node in start_nodes:
+                            combined_dag.add_edge(end_node, start_node)
+                combined_dag = nx.compose(dag, o.dag)
+                dag_list.append(combined_dag)
+        final_dag = nx.compose_all(dag_list)
+
+        return Chain(dag=final_dag)

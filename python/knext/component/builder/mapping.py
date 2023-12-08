@@ -1,34 +1,20 @@
 from abc import ABC
+from collections import defaultdict
 from typing import Union, Dict, List, Tuple
 
-from knext.component.base import RESTable, Component, ComponentTypeEnum, ComponentLabelEnum, Runnable
-from knext.component.builder.extractor import SPGExtractor
-from knext.component.builder.sink_writer import SinkWriter
-from knext.component.builder.source_reader import SourceReader
+from knext import rest
+
+from knext.component.base import SPGTypeHelper, PropertyHelper, MappingTypeEnum
+from knext.component.builder.base import Mapping
+from knext.operator.op import LinkOp
 from knext.operator.spg_record import SPGRecord
 
 
-class Mapping(RESTable, Component, ABC):
-
-    @property
-    def upstream_types(self):
-        return Union[SourceReader, SPGExtractor]
-
-    @property
-    def downstream_types(self):
-        return Union[SinkWriter]
-
-    @property
-    def type(self):
-        return ComponentTypeEnum.Builder
-
-    @property
-    def label(self):
-        return ComponentLabelEnum.Mapping
+class NormalizeOp:
+    pass
 
 
-
-class SPGTypeMapping(Runnable[Dict[str, str], SPGRecord], Mapping):
+class SPGTypeMapping(Mapping):
     """A Process Component that mapping data to entity/event/concept type.
 
     Args:
@@ -49,8 +35,8 @@ class SPGTypeMapping(Runnable[Dict[str, str], SPGRecord], Mapping):
 
     filters: List[Tuple[str, str]] = list()
 
-    def add_field(self, source_field: str, target_field: Union[str, PropertyHelper], link_op: LinkOp,
-                  norm_op: NormalizeOp):
+    def add_field(self, source_field: str, target_field: Union[str, PropertyHelper], link_op: LinkOp = None,
+                  norm_op: NormalizeOp = None):
         """Adds a field mapping from source data to property of spg_type.
 
         :param source_field: The source field to be mapped.
@@ -124,8 +110,11 @@ class SPGTypeMapping(Runnable[Dict[str, str], SPGRecord], Mapping):
         )
         return rest.Node(**super().to_dict(), node_config=config)
 
+    def submit(self):
+        pass
 
-class RelationMappingComponent(Component):
+
+class RelationMapping(Mapping):
     """A Process Component that mapping data to relation type.
 
     Args:
@@ -150,8 +139,6 @@ class RelationMappingComponent(Component):
 
     filters: List[Tuple[str, str]] = list()
 
-    RELATION_BASE_FIELDS = ["srcId", "dstId"]
-
     def add_field(self, source_field: str, target_field: str):
         """Adds a field mapping from source data to property of spg_type.
 
@@ -173,13 +160,8 @@ class RelationMappingComponent(Component):
         self.filters.append((column_name, column_value))
         return self
 
-    def _to_rest(self):
+    def to_rest(self):
         """Transforms `RelationMappingComponent` to REST model `MappingNodeConfig`."""
-        assert all(
-            field in self.mapping.keys()
-            for field in RelationMappingComponent.RELATION_BASE_FIELDS
-        ), f"{self.__class__.__name__} must include mapping to {str(RelationMappingComponent.RELATION_BASE_FIELDS)}"
-
         mapping = defaultdict(list)
         for dst_name, src_name in self.mapping.items():
             mapping[src_name].append(dst_name)

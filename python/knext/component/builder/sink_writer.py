@@ -1,30 +1,12 @@
 from abc import ABC
 from ctypes import Union
+from typing import Dict
 
-from knext.component.base import RESTable, Component
-
-
-class SinkWriter(RESTable, Component, ABC):
-
-    @property
-    def upstream_types(self):
-        return Union[Mapping, Evaluator]
-
-    @property
-    def downstream_types(self):
-        return None
-
-    @property
-    def type(self):
-        return ComponentTypeEnum.Builder
-
-    @property
-    def label(self):
-        return ComponentLabelEnum.SinkWriter
+from knext.component.base import Runnable
+from knext.component.builder.base import SinkWriter
 
 
-
-class KGSinkWriter(Runnable[Dict[str, str], None], SinkWriter):
+class KGSinkWriter(SinkWriter):
     """The Sink Component that writing data to KG storage.
 
     Args:
@@ -35,14 +17,14 @@ class KGSinkWriter(Runnable[Dict[str, str], None], SinkWriter):
     """
 
     @property
-    def input_types(self) -> Input:
+    def input_types(self):
         return Dict[str, str]
 
     @property
-    def output_types(self) -> Output:
+    def output_types(self):
         return None
 
-    def invoke(self, input: Input) -> Output:
+    def invoke(self, input):
         pass
 
     def to_rest(self):
@@ -53,3 +35,6 @@ class KGSinkWriter(Runnable[Dict[str, str], None], SinkWriter):
             },
             **super().to_dict(),
         )
+
+    def submit(self):
+        pass

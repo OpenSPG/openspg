@@ -233,7 +233,7 @@ class SPGConceptRuleMarkLang:
         Load and then parse the script file
         """
 
-        file = open(filename, "r")
+        file = open(filename, "r", encoding="utf-8")
         lines = file.read().splitlines()
         last_indent_level = 0
 
