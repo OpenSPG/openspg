@@ -23,8 +23,10 @@ public class DateFormat {
   @UdfDefine(name = "date_format", compatibleName = "DateFormat")
   public String dateFormat(String dateStr, String toFormat) {
     Calendar calendar = Calendar.getInstance();
+    calendar.setTimeZone(DateUtils.timeZone);
     calendar.setTime(DateUtils.parseDateFromStr(dateStr));
     SimpleDateFormat timeFormat3 = new SimpleDateFormat(toFormat, Locale.ENGLISH);
+    timeFormat3.setTimeZone(DateUtils.timeZone);
     return timeFormat3.format(calendar.getTime());
   }
 
