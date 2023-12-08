@@ -26,6 +26,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>common</module>
+    <module>udf</module>
   </modules>
 
   <properties>
@@ -53,6 +54,11 @@
       <dependency>
         <groupId>com.antgroup.openspg.reasoner</groupId>
         <artifactId>reasoner-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-udf</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -527,6 +533,18 @@
           <exclusion>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.eclipse.emf</groupId>
+            <artifactId>org.eclipse.emf.common</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.eclipse.emf</groupId>
+            <artifactId>org.eclipse.emf.ecore</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.eclipse.emf</groupId>
+            <artifactId>org.eclipse.emf.ecore.xmi</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
