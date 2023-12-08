@@ -13,12 +13,23 @@ public class RelationIdentifier extends BaseSPGIdentifier {
 
   private final SPGTypeIdentifier end;
 
-  protected RelationIdentifier(
+  public RelationIdentifier(
       SPGTypeIdentifier start, PredicateIdentifier predicate, SPGTypeIdentifier end) {
     super(SPGIdentifierTypeEnum.RELATION);
     this.start = start;
     this.predicate = predicate;
     this.end = end;
+  }
+
+  public static RelationIdentifier parse(String identifier) {
+    String[] splits = identifier.split("_");
+    if (splits.length != 3) {
+      throw new IllegalArgumentException("illegal relation identifier=" + identifier);
+    }
+    return new RelationIdentifier(
+        SPGTypeIdentifier.parse(splits[0]),
+        new PredicateIdentifier(splits[1]),
+        SPGTypeIdentifier.parse(splits[2]));
   }
 
   @Override

@@ -19,6 +19,7 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 
 /** The transmission protocol used for basic data, with a format of key-value (KV). */
 @Getter
@@ -30,7 +31,7 @@ public class BuilderRecord extends BaseRecord {
   private final String recordId;
 
   /** 表示spg类型或者关系 */
-  private final BaseSPGIdentifier identifier;
+  @Setter private BaseSPGIdentifier identifier;
 
   /** Key-value representation of a single data record. */
   private final Map<String, String> props;

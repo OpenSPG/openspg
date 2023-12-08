@@ -1,14 +1,15 @@
 package com.antgroup.openspg.builder.runner.local.physical.source.impl;
 
-import com.antgroup.openspg.builder.model.BuilderException;
-import com.antgroup.openspg.builder.model.record.BuilderRecord;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.model.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.CsvSourceNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
+import com.antgroup.openspg.builder.model.record.BuilderRecord;
 import com.antgroup.openspg.builder.runner.local.physical.source.BaseSourceReader;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -30,10 +31,14 @@ public class CsvFileSourceReader extends BaseSourceReader<CsvSourceNodeConfig> {
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
     queue = new ArrayBlockingQueue<>(context.getBatchSize() * context.getParallelism());
-    csvReader =
-        new CSVReaderBuilder(new FileReader(config.getUrl()))
-            .withSkipLines(config.getStartRow() - 1)
-            .build();
+    try {
+      csvReader =
+          new CSVReaderBuilder(new FileReader(config.getUrl()))
+              .withSkipLines(config.getStartRow() - 1)
+              .build();
+    } catch (FileNotFoundException e) {
+      throw new BuilderException(e, "csv file={} is not exist.", config.getUrl());
+    }
     lineNumber = new AtomicLong(config.getStartRow() - 1);
     lines = csvReader.iterator();
   }
@@ -95,6 +100,6 @@ public class CsvFileSourceReader extends BaseSourceReader<CsvSourceNodeConfig> {
         props.put(column, fields[i]);
       }
     }
-    return new BuilderRecord("line" + lineNumber.get(), props);
+    return new BuilderRecord("line" + lineNumber.get(), null, props);
   }
 }

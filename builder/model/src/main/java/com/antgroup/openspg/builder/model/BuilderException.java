@@ -24,8 +24,4 @@ public class BuilderException extends OpenSPGException {
   public BuilderException(String messagePattern, Object... args) {
     this(null, messagePattern, args);
   }
-
-  public static BuilderException illegalMappingType(String type) {
-    return new BuilderException(new Exception(), "illegal mapping type={}", type);
-  }
 }

@@ -56,18 +56,10 @@ public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfi
 
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
-    if (context.getGraphStoreClient() != null) {
-      graphStoreClient = context.getGraphStoreClient();
-    } else {
-      graphStoreClient =
-          GraphStoreClientDriverManager.getClient(config.getGraphStoreConnectionInfo());
-    }
-    if (context.getSearchEngineClient() != null) {
-      searchEngineClient = context.getSearchEngineClient();
-    } else {
-      searchEngineClient =
-          SearchEngineClientDriverManager.getClient(config.getSearchEngineConnectionInfo());
-    }
+    graphStoreClient =
+        GraphStoreClientDriverManager.getClient(config.getGraphStoreConnectionInfo());
+    searchEngineClient =
+        SearchEngineClientDriverManager.getClient(config.getSearchEngineConnectionInfo());
     checkProcessor = new CheckProcessor();
     checkProcessor.init(context);
   }
@@ -82,9 +74,7 @@ public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfi
     records.forEach(record -> replaceUnSpreadableStandardProperty((BaseSPGRecord) record));
 
     batchWriteToGraphStore(records);
-    if (context.isEnableSearchEngine()) {
-      batchWriteToSearchEngine(records);
-    }
+    batchWriteToSearchEngine(records);
   }
 
   private void batchWriteToGraphStore(List<BaseRecord> records) {
