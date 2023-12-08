@@ -19,13 +19,21 @@ import com.antgroup.openspg.reasoner.udf.UdfMng;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
 import com.antgroup.openspg.reasoner.udf.model.BaseUdaf;
 import com.antgroup.openspg.reasoner.udf.model.UdafMeta;
+import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 public class UdafTest {
+  @Before
+  public void init() {
+    DateUtils.timeZone = TimeZone.getTimeZone("Asia/Shanghai");
+  }
+
   @Test
   public void testAggCount1() {
     UdfMng mng = UdfMngFactory.getUdfMng();

@@ -18,8 +18,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class DateUtils {
+  /** udf time zone */
+  public static TimeZone timeZone = TimeZone.getDefault();
 
   public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
   public static final String DEFAULT_DATETIME_FORMAT2 = "yyyyMMdd HH:mm:ss";
@@ -36,6 +39,7 @@ public class DateUtils {
    */
   public static String second2Str(long seconds, String format) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+    simpleDateFormat.setTimeZone(timeZone);
     return simpleDateFormat.format(seconds * 1000L);
   }
 
@@ -50,7 +54,9 @@ public class DateUtils {
       if (dateFormat.length() != dateStr.length()) {
         continue;
       }
-      return new SimpleDateFormat(dateFormat);
+      SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+      sdf.setTimeZone(timeZone);
+      return sdf;
     }
     throw new RuntimeException("not support parse default date " + dateStr);
   }
@@ -77,6 +83,7 @@ public class DateUtils {
    */
   public static long str2Second(String date, String format) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+    simpleDateFormat.setTimeZone(timeZone);
     try {
       return simpleDateFormat.parse(date).getTime() / 1000;
     } catch (ParseException e) {

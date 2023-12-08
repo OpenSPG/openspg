@@ -19,14 +19,22 @@ import com.antgroup.openspg.reasoner.udf.UdfMng;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
 import com.antgroup.openspg.reasoner.udf.model.BaseUdtf;
 import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
+import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 import com.google.common.collect.Lists;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 public class UdtfTest {
+  @Before
+  public void init() {
+    DateUtils.timeZone = TimeZone.getTimeZone("Asia/Shanghai");
+  }
+
   @Test
   public void testAlipayId() {
     UdfMng udfMng = UdfMngFactory.getUdfMng();

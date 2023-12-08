@@ -31,6 +31,7 @@ import com.antgroup.openspg.reasoner.udf.model.RuntimeUdfMeta;
 import com.antgroup.openspg.reasoner.udf.model.UdfMeta;
 import com.antgroup.openspg.reasoner.udf.model.UdfOperatorTypeEnum;
 import com.antgroup.openspg.reasoner.udf.model.UdfParameterTypeHint;
+import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 import com.antgroup.openspg.reasoner.udf.utils.UdfUtils;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
@@ -40,10 +41,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 public class UdfTest {
+
+  @Before
+  public void init() {
+    DateUtils.timeZone = TimeZone.getTimeZone("Asia/Shanghai");
+  }
+
   @Test
   public void testInStr() {
     UdfMng mng = UdfMngFactory.getUdfMng();
@@ -684,7 +693,8 @@ public class UdfTest {
         mng.getUdfMeta("geo_distance", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
     String wkt1 =
         "POLYGON((111.70491 40.785621,111.705244 40.784815,111.705611 40.783997,111.705782 40.783617,111.705969 40.783243,111"
-            + ".705957 40.783195,111.704255 40.782743,111.704047 40.783161,111.703855 40.783577,111.703528 40.784288,111.702702 40"
+            + ".705957 40.783195,111.704255 40.782743,111.704047 40.783161,111.703855 40.783577,111.703528 40.784288,111"
+            + ".702702 40"
             + ".785904,111.704559 40.786378,111.70491 40.785621))";
     String wkt2 =
         "POLYGON((111.705405 40.783523,111.70549 40.783329,111.705854 40.783417,111.70577 40.783613,111.705405 40.783523))";
@@ -702,7 +712,8 @@ public class UdfTest {
             "geo_intersects_area", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
     String wkt1 =
         "POLYGON((111.70491 40.785621,111.705244 40.784815,111.705611 40.783997,111.705782 40.783617,111.705969 40.783243,111"
-            + ".705957 40.783195,111.704255 40.782743,111.704047 40.783161,111.703855 40.783577,111.703528 40.784288,111.702702 40"
+            + ".705957 40.783195,111.704255 40.782743,111.704047 40.783161,111.703855 40.783577,111.703528 40.784288,111"
+            + ".702702 40"
             + ".785904,111.704559 40.786378,111.70491 40.785621))";
     String wkt2 =
         "POLYGON((111.705405 40.783523,111.70549 40.783329,111.705854 40.783417,111.70577 40.783613,111.705405 40.783523))";

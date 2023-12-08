@@ -13,16 +13,24 @@
 
 package com.antgroup.openspg.reasoner.udf.test;
 
+import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 import com.antgroup.openspg.reasoner.udf.utils.GeoUtils;
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.TimeZone;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.io.WKTWriter;
 
 public class GeoUtilTest {
   private WKTWriter writer = new WKTWriter();
+
+  @Before
+  public void init() {
+    DateUtils.timeZone = TimeZone.getTimeZone("Asia/Shanghai");
+  }
 
   @Test
   public void testBuffer() {

@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
+import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 import java.util.Calendar;
 
 public class TimeUdf {
@@ -70,6 +71,7 @@ public class TimeUdf {
   private Calendar getCalendar(long timeMillis) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTimeInMillis(timeMillis);
+    calendar.setTimeZone(DateUtils.timeZone);
     return calendar;
   }
 }

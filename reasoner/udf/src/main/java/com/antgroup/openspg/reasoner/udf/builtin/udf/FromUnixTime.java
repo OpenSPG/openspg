@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
+import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -39,6 +40,7 @@ public class FromUnixTime {
   @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime")
   public String fromUnixTime(long ts, String format) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+    simpleDateFormat.setTimeZone(DateUtils.timeZone);
     return simpleDateFormat.format(new Date(ts * 1000));
   }
 }
