@@ -15,11 +15,8 @@ package com.antgroup.openspg.builder.core.physical;
 
 import com.antgroup.openspg.builder.core.logical.BaseLogicalNode;
 import com.antgroup.openspg.builder.core.logical.LogicalPlan;
-import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
-import com.antgroup.openspg.builder.core.physical.process.ExtractProcessor;
-import com.antgroup.openspg.builder.core.physical.process.SPGTypeMappingProcessor;
-import com.antgroup.openspg.builder.model.pipeline.config.BaseExtractNodeConfig;
-
+import com.antgroup.openspg.builder.core.physical.process.*;
+import com.antgroup.openspg.builder.model.pipeline.config.*;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -90,12 +87,21 @@ public class PhysicalPlan implements Serializable {
    */
   private static BaseProcessor<?> parse(BaseLogicalNode<?> node) {
     switch (node.getType()) {
-      case EXTRACT:
-        return new ExtractProcessor(
-            node.getId(), node.getName(), (BaseExtractNodeConfig) node.getNodeConfig());
-      case MAPPING:
+      case USER_DEFINED_EXTRACT:
+        return new UserDefinedExtractProcessor(
+            node.getId(), node.getName(), (UserDefinedExtractNodeConfig) node.getNodeConfig());
+      case LLM_BASED_EXTRACT:
+        return new LLMBasedExtractProcessor(
+            node.getId(), node.getName(), (LLMBasedExtractNodeConfig) node.getNodeConfig());
+      case SPG_TYPE_MAPPING:
         return new SPGTypeMappingProcessor(
-            node.getId(), node.getName(), (MappingNodeConfig) node.getNodeConfig());
+            node.getId(), node.getName(), (SPGTypeMappingNodeConfig) node.getNodeConfig());
+      case RELATION_MAPPING:
+        return new RelationMappingProcessor(
+            node.getId(), node.getName(), (RelationMappingNodeConfig) node.getNodeConfig());
+      case SUBGRAPH_MAPPING:
+        return new SubgraphMappingProcessor(
+            node.getId(), node.getName(), (SubGraphMappingNodeConfig) node.getNodeConfig());
       default:
         throw new IllegalArgumentException("illegal type=" + node.getType());
     }

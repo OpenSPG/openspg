@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.core.logical;
 
-import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
+import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 
 public class GraphStoreSinkNode extends BaseLogicalNode<GraphStoreSinkNodeConfig> {
 

@@ -29,10 +29,6 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>biz-builder</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>biz-reasoner</artifactId>
     </dependency>
     <dependency>

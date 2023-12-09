@@ -35,7 +35,7 @@ public class PropertyRecordConvertor {
 
     for (BasePropertyRecord propertyRecord : propertyRecords) {
       resultProperties.add(
-          new LPGPropertyRecord(propertyRecord.getName(), propertyRecord.getValue().getStd()));
+          new LPGPropertyRecord(propertyRecord.getName(), propertyRecord.getValue().getStdValue()));
     }
     return resultProperties;
   }

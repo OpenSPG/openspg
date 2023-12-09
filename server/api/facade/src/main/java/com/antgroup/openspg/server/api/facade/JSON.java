@@ -42,9 +42,6 @@ import com.antgroup.openspg.core.schema.model.type.EventType;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.StandardType;
 import com.antgroup.openspg.server.common.model.job.JobInstStatusEnum;
-import com.antgroup.openspg.server.core.builder.model.service.BaseBuilderResult;
-import com.antgroup.openspg.server.core.builder.model.service.FailureBuilderResult;
-import com.antgroup.openspg.server.core.builder.model.service.SuccessBuilderResult;
 import com.antgroup.openspg.server.core.reasoner.model.service.BaseReasonerContent;
 import com.antgroup.openspg.server.core.reasoner.model.service.BaseReasonerReceipt;
 import com.antgroup.openspg.server.core.reasoner.model.service.BaseReasonerResult;
@@ -105,11 +102,6 @@ public class JSON {
                         PredicateIdentifier.class, SPGIdentifierTypeEnum.PREDICATE.name())
                     .registerSubtype(
                         OperatorIdentifier.class, SPGIdentifierTypeEnum.OPERATOR.name())
-                    .recognizeSubtypes())
-            .registerTypeAdapterFactory(
-                RuntimeTypeAdapterFactory.of(BaseBuilderResult.class, DEFAULT_TYPE_FIELD_NAME)
-                    .registerSubtype(FailureBuilderResult.class, JobInstStatusEnum.FAILURE.name())
-                    .registerSubtype(SuccessBuilderResult.class, JobInstStatusEnum.SUCCESS.name())
                     .recognizeSubtypes())
             .registerTypeAdapterFactory(
                 RuntimeTypeAdapterFactory.of(BaseReasonerResult.class, DEFAULT_TYPE_FIELD_NAME)

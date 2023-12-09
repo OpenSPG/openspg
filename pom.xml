@@ -12,7 +12,7 @@
   ~ or implied.
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.antgroup.openspg</groupId>
@@ -85,13 +85,8 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.builder</groupId>
         <artifactId>builder-model</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg</groupId>
-        <artifactId>builder-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -424,8 +419,7 @@
         <version>3.1.2</version>
         <configuration>
           <argLine>@{argLine} -Xmx1024m -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=512m
-            -Dfile.encoding=UTF-8
-          </argLine>
+            -Dfile.encoding=UTF-8</argLine>
           <includes>
             <include>**/*Test.groovy</include>
             <include>**/Test*.groovy</include>

@@ -95,6 +95,6 @@ public class LocalBuilderMain {
     if (response.isSuccess()) {
       return response.getData();
     }
-    throw new PipelineConfigException();
+    throw new PipelineConfigException("");
   }
 }

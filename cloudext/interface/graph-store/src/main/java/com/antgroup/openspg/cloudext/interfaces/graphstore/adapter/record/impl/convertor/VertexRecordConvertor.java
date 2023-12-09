@@ -17,8 +17,8 @@ import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.ConceptRecord;
 import com.antgroup.openspg.builder.model.record.EntityRecord;
 import com.antgroup.openspg.builder.model.record.EventRecord;
-import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.builder.model.record.StandardRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
@@ -51,7 +51,7 @@ public class VertexRecordConvertor {
       throw GraphStoreException.unexpectedSPGPropertyRecordType(propertyRecord);
     }
     String vertexType = propertyRecord.getProperty().getObjectTypeRef().getName();
-    List<String> vertexIdList = propertyRecord.getValue().getSplitIds();
+    List<String> vertexIdList = propertyRecord.getValue().getIds();
     return vertexIdList.stream()
         .map(vertexId -> new VertexRecord(vertexId, vertexType, Collections.emptyList()))
         .collect(Collectors.toList());

@@ -13,19 +13,10 @@
 
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.model.exception.BuilderRecordException;
 import com.antgroup.openspg.builder.model.pipeline.config.CheckNodeConfig;
-import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.builder.model.record.RelationRecord;
-import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.builder.model.record.SPGRecordTypeEnum;
-import com.antgroup.openspg.builder.model.record.property.SPGSubPropertyRecord;
-import com.antgroup.openspg.core.schema.model.constraint.BaseConstraintItem;
-import com.antgroup.openspg.core.schema.model.constraint.MultiValConstraint;
-import com.antgroup.openspg.core.schema.model.predicate.Property;
-import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
 import java.util.List;
 
 public class CheckProcessor extends BaseProcessor<CheckNodeConfig> {
@@ -44,62 +35,63 @@ public class CheckProcessor extends BaseProcessor<CheckNodeConfig> {
     for (BaseRecord record : inputs) {
       BaseSPGRecord spgRecord = (BaseSPGRecord) record;
       if (SPGRecordTypeEnum.RELATION.equals(spgRecord.getRecordType())) {
-        checkSubProperty(((RelationRecord) spgRecord));
+        //        checkSubProperty(((RelationRecord) spgRecord));
       } else {
-        checkProperty(((BaseAdvancedRecord) spgRecord));
+        //        checkProperty(((BaseAdvancedRecord) spgRecord));
       }
     }
     return inputs;
   }
 
-  private void checkProperty(BaseAdvancedRecord advancedRecord) {
-    for (Property property : advancedRecord.getSpgType().getProperties()) {
-      if (property.getObjectTypeRef().isBasicType()) {
-        if (property.getConstraint() == null) {
-          continue;
-        }
-        SPGPropertyRecord propertyRecord = advancedRecord.getPropertyRecord(property);
-        Object stdValue = (propertyRecord == null ? null : propertyRecord.getValue().getStd());
-        doCheckBasicProperty(
-            property.getName(), stdValue, property.getConstraint().getConstraintItems());
-      }
-    }
-  }
-
-  private void checkSubProperty(RelationRecord relationRecord) {
-    for (SubProperty subProperty : relationRecord.getRelationType().getSubProperties()) {
-      if (subProperty.getObjectTypeRef().isBasicType()) {
-        if (subProperty.getConstraint() == null) {
-          continue;
-        }
-        SPGSubPropertyRecord subPropertyRecord = relationRecord.getSubPropertyRecord(subProperty);
-        Object stdValue =
-            (subPropertyRecord == null ? null : subPropertyRecord.getValue().getStd());
-        doCheckBasicProperty(
-            subProperty.getName(), stdValue, subProperty.getConstraint().getConstraintItems());
-      }
-    }
-  }
-
-  private void doCheckBasicProperty(
-      String propertyName, Object stdValue, List<BaseConstraintItem> constraintItems) {
-    Object[] values = new Object[] {stdValue};
-    for (BaseConstraintItem constraintItem : constraintItems) {
-      for (Object value : values) {
-        if (!constraintItem.checkIsLegal(value)) {
-          throw new BuilderRecordException(
-              this,
-              "the property {}={} violates constraints:{}",
-              propertyName,
-              stdValue,
-              constraintItem.getConstraintTypeEnum().name());
-        }
-      }
-      if (constraintItem instanceof MultiValConstraint) {
-        if (stdValue != null) {
-          values = stdValue.toString().split(",");
-        }
-      }
-    }
-  }
+  //  private void checkProperty(BaseAdvancedRecord advancedRecord) {
+  //    for (Property property : advancedRecord.getSpgType().getProperties()) {
+  //      if (property.getObjectTypeRef().isBasicType()) {
+  //        if (property.getConstraint() == null) {
+  //          continue;
+  //        }
+  //        SPGPropertyRecord propertyRecord = advancedRecord.getPropertyRecord(property);
+  //        Object stdValue = (propertyRecord == null ? null : propertyRecord.getValue().getStd());
+  //        doCheckBasicProperty(
+  //            property.getName(), stdValue, property.getConstraint().getConstraintItems());
+  //      }
+  //    }
+  //  }
+  //
+  //  private void checkSubProperty(RelationRecord relationRecord) {
+  //    for (SubProperty subProperty : relationRecord.getRelationType().getSubProperties()) {
+  //      if (subProperty.getObjectTypeRef().isBasicType()) {
+  //        if (subProperty.getConstraint() == null) {
+  //          continue;
+  //        }
+  //        SPGSubPropertyRecord subPropertyRecord =
+  // relationRecord.getSubPropertyRecord(subProperty);
+  //        Object stdValue =
+  //            (subPropertyRecord == null ? null : subPropertyRecord.getValue().getStd());
+  //        doCheckBasicProperty(
+  //            subProperty.getName(), stdValue, subProperty.getConstraint().getConstraintItems());
+  //      }
+  //    }
+  //  }
+  //
+  //  private void doCheckBasicProperty(
+  //      String propertyName, Object stdValue, List<BaseConstraintItem> constraintItems) {
+  //    Object[] values = new Object[] {stdValue};
+  //    for (BaseConstraintItem constraintItem : constraintItems) {
+  //      for (Object value : values) {
+  //        if (!constraintItem.checkIsLegal(value)) {
+  //          throw new BuilderRecordException(
+  //              this,
+  //              "the property {}={} violates constraints:{}",
+  //              propertyName,
+  //              stdValue,
+  //              constraintItem.getConstraintTypeEnum().name());
+  //        }
+  //      }
+  //      if (constraintItem instanceof MultiValConstraint) {
+  //        if (stdValue != null) {
+  //          values = stdValue.toString().split(",");
+  //        }
+  //      }
+  //    }
+  //  }
 }

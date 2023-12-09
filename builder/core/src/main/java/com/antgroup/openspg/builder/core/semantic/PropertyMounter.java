@@ -1,8 +1,8 @@
 package com.antgroup.openspg.builder.core.semantic;
 
+import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PropertyMounterException;
-import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 
 /** 属性挂载将某个非基础类型的属性链接到具体某个实例id上 */

@@ -1,9 +1,9 @@
 package com.antgroup.openspg.builder.core.semantic.impl;
 
-import com.antgroup.openspg.builder.model.exception.BuilderException;
-import com.antgroup.openspg.builder.model.exception.PropertyMounterException;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.core.semantic.PropertyMounter;
+import com.antgroup.openspg.builder.model.exception.BuilderException;
+import com.antgroup.openspg.builder.model.exception.PropertyMounterException;
 import com.antgroup.openspg.builder.model.pipeline.config.SearchEnginePropertyMounterConfig;
 import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 
@@ -19,6 +19,5 @@ public class SearchEnginePropertyMounter implements PropertyMounter {
   public void init(BuilderContext context) throws BuilderException {}
 
   @Override
-  public void propertyMount(SPGPropertyRecord record) throws PropertyMounterException {
-  }
+  public void propertyMount(SPGPropertyRecord record) throws PropertyMounterException {}
 }

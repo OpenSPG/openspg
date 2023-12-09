@@ -25,14 +25,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
-      <artifactId>builder-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>core-builder-model</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>cloudext-interface-computing</artifactId>
     </dependency>
@@ -46,6 +38,10 @@
       <version>${kgreasoner-version}</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/../../../../lib/spgreasoner-local-0.0.1.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>core-reasoner-service</artifactId>
     </dependency>
   </dependencies>
 </project>

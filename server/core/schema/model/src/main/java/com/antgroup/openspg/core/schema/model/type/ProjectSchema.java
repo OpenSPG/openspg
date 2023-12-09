@@ -15,11 +15,10 @@ package com.antgroup.openspg.core.schema.model.type;
 
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.server.common.model.base.BaseToString;
-import lombok.Getter;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.Getter;
 
 /** The schema details of the project, contains a list of SPG types. */
 public class ProjectSchema extends BaseToString {

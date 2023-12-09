@@ -20,7 +20,6 @@ import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.TableStoreClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.cmd.TableFileCreateCmd;
 import com.antgroup.openspg.cloudext.interfaces.tablestore.model.ColumnMeta;
-import com.antgroup.openspg.cloudext.interfaces.tablestore.model.TableRecord;
 import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
 
 public class DefaultRecordCollector implements ErrorRecordCollector {
@@ -73,9 +72,9 @@ public class DefaultRecordCollector implements ErrorRecordCollector {
   @Override
   public void collectRecord(BuilderRecord record, BuilderRecordException e) {
     init();
-    tableFileHandler.write(
-        new TableRecord(
-            new Object[] {record.getRecordId(), e.getProcessor().getName(), e.getMessage()}));
+    //    tableFileHandler.write(
+    //        new TableRecord(
+    //            new Object[] {record.getRecordId(), e.getProcessor().getName(), e.getMessage()}));
   }
 
   @Override

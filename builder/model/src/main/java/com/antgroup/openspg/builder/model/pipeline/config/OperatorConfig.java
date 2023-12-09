@@ -2,10 +2,9 @@ package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.antgroup.openspg.core.schema.model.type.OperatorKey;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.Map;
 
 @Getter
 @AllArgsConstructor

@@ -13,29 +13,15 @@
 
 package com.antgroup.openspg.cloudext.interfaces.computing;
 
-import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobCanSubmitQuery;
-import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobProcessQuery;
-import com.antgroup.openspg.cloudext.interfaces.computing.cmd.BuilderJobSubmitCmd;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobCanSubmitQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobProcessQuery;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobRunCmd;
 import com.antgroup.openspg.cloudext.interfaces.computing.cmd.ReasonerJobSubmitCmd;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClient;
-import com.antgroup.openspg.server.core.builder.model.service.BuilderStatusWithProgress;
 import com.antgroup.openspg.server.core.reasoner.model.service.ReasonerStatusWithProgress;
 import com.antgroup.openspg.server.core.reasoner.model.service.TableReasonerReceipt;
 
 public interface ComputingClient extends CloudExtClient {
-
-  /* ----------------------- *
-  |      Builder Job        |
-  * ----------------------- */
-
-  BuilderStatusWithProgress query(BuilderJobProcessQuery query);
-
-  boolean canSubmit(BuilderJobCanSubmitQuery query);
-
-  String submit(BuilderJobSubmitCmd cmd);
 
   /* ----------------------- *
   |      Reasoner Job       |

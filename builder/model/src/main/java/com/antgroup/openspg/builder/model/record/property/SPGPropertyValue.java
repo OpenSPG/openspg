@@ -15,6 +15,7 @@ package com.antgroup.openspg.builder.model.record.property;
 
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,5 +36,9 @@ public class SPGPropertyValue extends BaseValObj {
 
   public SPGPropertyValue(String raw) {
     this.raw = raw;
+  }
+
+  public String getStdValue() {
+    return stds.stream().map(Object::toString).collect(Collectors.joining(SEPARATOR));
   }
 }

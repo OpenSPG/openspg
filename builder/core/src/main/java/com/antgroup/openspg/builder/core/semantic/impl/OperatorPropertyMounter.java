@@ -1,13 +1,13 @@
 package com.antgroup.openspg.builder.core.semantic.impl;
 
-import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.core.physical.operator.OperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.PythonOperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.protocol.EvalResult;
 import com.antgroup.openspg.builder.core.physical.operator.protocol.Vertex;
-import com.antgroup.openspg.builder.model.exception.PropertyMounterException;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.core.semantic.PropertyMounter;
+import com.antgroup.openspg.builder.model.exception.BuilderException;
+import com.antgroup.openspg.builder.model.exception.PropertyMounterException;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorPropertyMounterConfig;
 import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.core.schema.model.type.OperatorKey;
@@ -33,7 +33,7 @@ public class OperatorPropertyMounter implements PropertyMounter {
   public void init(BuilderContext context) throws BuilderException {
     operatorFactory = PythonOperatorFactory.getInstance();
     operatorFactory.init(context);
-    operatorFactory.register(mounterConfig.getConfig());
+    operatorFactory.loadOperator(mounterConfig.getConfig());
   }
 
   @Override

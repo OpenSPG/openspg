@@ -29,7 +29,7 @@
       <artifactId>common-util</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
+      <groupId>com.antgroup.openspg.builder</groupId>
       <artifactId>builder-model</artifactId>
     </dependency>
   </dependencies>

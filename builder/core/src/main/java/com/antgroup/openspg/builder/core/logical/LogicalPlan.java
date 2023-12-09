@@ -16,10 +16,7 @@ package com.antgroup.openspg.builder.core.logical;
 import com.antgroup.openspg.builder.model.pipeline.Edge;
 import com.antgroup.openspg.builder.model.pipeline.Node;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
-import com.antgroup.openspg.builder.model.pipeline.config.CsvSourceNodeConfig;
-import com.antgroup.openspg.builder.model.pipeline.config.BaseExtractNodeConfig;
-import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
-
+import com.antgroup.openspg.builder.model.pipeline.config.*;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -85,12 +82,21 @@ public class LogicalPlan implements Serializable {
       case CSV_SOURCE:
         return new CsvSourceNode(
             node.getId(), node.getName(), (CsvSourceNodeConfig) node.getNodeConfig());
-      case EXTRACT:
-        return new ExtractNode(
-            node.getId(), node.getName(), (BaseExtractNodeConfig) node.getNodeConfig());
-      case MAPPING:
-        return new MappingNode(
-            node.getId(), node.getName(), (MappingNodeConfig) node.getNodeConfig());
+      case USER_DEFINED_EXTRACT:
+        return new UserDefinedExtractNode(
+            node.getId(), node.getName(), (UserDefinedExtractNodeConfig) node.getNodeConfig());
+      case LLM_BASED_EXTRACT:
+        return new LLMBasedExtractNode(
+            node.getId(), node.getName(), (LLMBasedExtractNodeConfig) node.getNodeConfig());
+      case SPG_TYPE_MAPPING:
+        return new SPGTypeMappingNode(
+            node.getId(), node.getName(), (SPGTypeMappingNodeConfig) node.getNodeConfig());
+      case RELATION_MAPPING:
+        return new RelationMappingNode(
+            node.getId(), node.getName(), (RelationMappingNodeConfig) node.getNodeConfig());
+      case SUBGRAPH_MAPPING:
+        return new SubGraphMappingNode(
+            node.getId(), node.getName(), (SubGraphMappingNodeConfig) node.getNodeConfig());
       case GRAPH_SINK:
         return new GraphStoreSinkNode(
             node.getId(), node.getName(), (GraphStoreSinkNodeConfig) node.getNodeConfig());

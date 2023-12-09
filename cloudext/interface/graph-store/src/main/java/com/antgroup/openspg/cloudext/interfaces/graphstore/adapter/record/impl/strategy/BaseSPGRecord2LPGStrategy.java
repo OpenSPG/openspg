@@ -15,8 +15,8 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.
 
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.builder.model.record.SPGRecordAlterItem;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.BaseLPGGraphStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.EdgeRecordConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.VertexRecordConvertor;

@@ -16,8 +16,6 @@ import pemja.core.PythonInterpreterConfig;
 @Slf4j
 public class PythonOperatorFactory implements OperatorFactory {
 
-  public static final String PYTHON_EXEC = "pythonExec";
-  public static final String PYTHON_PATHS = "pythonPaths";
   private static volatile PythonInterpreter pythonInterpreter;
   private final Map<OperatorKey, OperatorConfig> operators = new ConcurrentHashMap<>();
   private final Map<OperatorKey, String> operatorObjects = new ConcurrentHashMap<>();
@@ -30,9 +28,10 @@ public class PythonOperatorFactory implements OperatorFactory {
     return INSTANCE;
   }
 
-  private static PythonInterpreter newPythonInterpreter(Map<String, Object> params) {
-    String[] pythonPaths = (String[]) params.get(PYTHON_PATHS);
-    String pythonExec = (String) params.get(PYTHON_EXEC);
+  private static PythonInterpreter newPythonInterpreter(BuilderContext context) {
+    String pythonExec = context.getPythonExec();
+    String[] pythonPaths =
+        (context.getPythonPaths() != null ? context.getPythonPaths().split(",") : null);
 
     PythonInterpreterConfig.PythonInterpreterConfigBuilder builder =
         PythonInterpreterConfig.newBuilder();
@@ -51,18 +50,17 @@ public class PythonOperatorFactory implements OperatorFactory {
     if (pythonInterpreter == null) {
       synchronized (PythonOperatorFactory.class) {
         if (pythonInterpreter == null) {
-          pythonInterpreter = newPythonInterpreter(context.getParams());
+          pythonInterpreter = newPythonInterpreter(context);
         }
       }
     }
   }
 
   @Override
-  public boolean register(OperatorConfig config) {
+  public void loadOperator(OperatorConfig config) {
     OperatorKey operatorKey = config.toKey();
     operators.put(operatorKey, config);
     loadOperatorObject(operatorKey, config);
-    return true;
   }
 
   @Override
