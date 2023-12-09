@@ -1,0 +1,19 @@
+<Configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="com.baidu.brpc" level="ERROR" additivity="false">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+
+  <logger name="com.dtflys.forest" level="ERROR" additivity="false">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+  　　　
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</Configuration>

@@ -1,14 +1,14 @@
-package com.antgroup.openspg.builder.core.semantic.impl;
+package com.antgroup.openspg.builder.core.normalize.impl;
 
 import com.antgroup.openspg.builder.core.physical.operator.OperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.PythonOperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.protocol.EvalResult;
 import com.antgroup.openspg.builder.core.physical.operator.protocol.Vertex;
+import com.antgroup.openspg.builder.core.normalize.AdvancedPropertyNormalizer;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
-import com.antgroup.openspg.builder.core.semantic.PropertyMounter;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
-import com.antgroup.openspg.builder.model.exception.PropertyMounterException;
-import com.antgroup.openspg.builder.model.pipeline.config.OperatorPropertyMounterConfig;
+import com.antgroup.openspg.builder.model.exception.PropertyNormalizeException;
+import com.antgroup.openspg.builder.model.pipeline.config.OperatorPropertyNormalizerConfig;
 import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.core.schema.model.type.OperatorKey;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -17,14 +17,14 @@ import java.util.*;
 import org.apache.commons.collections4.CollectionUtils;
 
 @SuppressWarnings("unchecked")
-public class OperatorPropertyMounter implements PropertyMounter {
+public class OperatorPropertyNormalizer extends AdvancedPropertyNormalizer {
 
   private static final ObjectMapper mapper = new ObjectMapper();
   private final OperatorKey operatorKey;
-  private final OperatorPropertyMounterConfig mounterConfig;
+  private final OperatorPropertyNormalizerConfig mounterConfig;
   private OperatorFactory operatorFactory;
 
-  public OperatorPropertyMounter(OperatorPropertyMounterConfig config) {
+  public OperatorPropertyNormalizer(OperatorPropertyNormalizerConfig config) {
     this.mounterConfig = config;
     this.operatorKey = config.getConfig().toKey();
   }
@@ -37,7 +37,7 @@ public class OperatorPropertyMounter implements PropertyMounter {
   }
 
   @Override
-  public void propertyMount(SPGPropertyRecord record) throws PropertyMounterException {
+  public void propertyNormalize(SPGPropertyRecord record) throws PropertyNormalizeException {
     List<String> rawValues = record.getRawValues();
 
     // todo

@@ -13,7 +13,10 @@
 
 package com.antgroup.openspg.core.schema.model.type;
 
+import com.antgroup.openspg.core.schema.model.identifier.RelationIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTripleIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import com.antgroup.openspg.server.common.model.base.BaseToString;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +53,13 @@ public class ProjectSchema extends BaseToString {
           spgTypes.stream().collect(Collectors.toMap(WithBasicInfo::getBaseSpgIdentifier, x -> x));
     }
     return spgTypeMap.get(name);
+  }
+
+  public Relation getByName(RelationIdentifier identifier) {
+    BaseSPGType spgType = getByName(identifier.getStart());
+    return spgType.getRelationByName(
+        new SPGTripleIdentifier(
+            identifier.getStart(), identifier.getPredicate(), identifier.getEnd()));
   }
 
   public boolean getSpreadable(SPGTypeIdentifier identifier) {

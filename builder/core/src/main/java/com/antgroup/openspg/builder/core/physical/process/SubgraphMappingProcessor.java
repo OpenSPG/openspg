@@ -1,7 +1,8 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
+import com.antgroup.openspg.builder.core.normalize.RecordNormalizer;
+import com.antgroup.openspg.builder.core.normalize.RecordNormalizerImpl;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
-import com.antgroup.openspg.builder.core.semantic.PropertyMounter;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PipelineConfigException;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseMappingNodeConfig;
@@ -25,8 +26,7 @@ public class SubgraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
 
   private final Map<BaseSPGIdentifier, BaseMappingNodeConfig> mappingNodeConfigs = new HashMap<>();
   private final Map<BaseSPGIdentifier, BaseOntology> ontologies = new HashMap<>();
-  private final Map<BaseSPGIdentifier, Map<String, List<PropertyMounter>>> propertyMounters =
-      new HashMap<>();
+  private final Map<BaseSPGIdentifier, RecordNormalizer> recordNormalizers = new HashMap<>();
 
   public SubgraphMappingProcessor(String id, String name, SubGraphMappingNodeConfig config) {
     super(id, name, config);
@@ -41,20 +41,26 @@ public class SubgraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
         case SPG_TYPE_MAPPING:
           SPGTypeMappingNodeConfig mappingConfig1 = (SPGTypeMappingNodeConfig) mappingConfig;
           SPGTypeIdentifier identifier1 = SPGTypeIdentifier.parse(mappingConfig1.getSpgType());
-          this.ontologies.put(identifier1, loadSchema(identifier1, context.getProjectSchema()));
-          this.propertyMounters.put(
-              identifier1, loadPropertyMounters(mappingConfig1.getMappingConfigs()));
-          mappingNodeConfigs.put(identifier1, mappingConfig1);
+          setUpVariables(mappingConfig1, identifier1);
           break;
         case RELATION_MAPPING:
           RelationMappingNodeConfig mappingConfig2 = (RelationMappingNodeConfig) mappingConfig;
           RelationIdentifier identifier2 = RelationIdentifier.parse(mappingConfig2.getRelation());
-          this.ontologies.put(identifier2, loadSchema(identifier2, context.getProjectSchema()));
-          mappingNodeConfigs.put(identifier2, mappingConfig2);
+          setUpVariables(mappingConfig2, identifier2);
         default:
           throw new PipelineConfigException("illegal mapping config for SubgraphMappingProcessor");
       }
     }
+  }
+
+  private void setUpVariables(
+      BaseMappingNodeConfig mappingNodeConfig, BaseSPGIdentifier identifier) {
+    this.ontologies.put(identifier, loadSchema(identifier, context.getProjectSchema()));
+    RecordNormalizerImpl propertyNormalizerFactory =
+        new RecordNormalizerImpl(mappingNodeConfig.getMappingConfigs());
+    propertyNormalizerFactory.init(context);
+    this.recordNormalizers.put(identifier, propertyNormalizerFactory);
+    mappingNodeConfigs.put(identifier, mappingNodeConfig);
   }
 
   @Override
@@ -80,22 +86,25 @@ public class SubgraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
       BuilderRecord record, BaseSPGIdentifier identifier) {
     BaseMappingNodeConfig mappingNodeConfig = mappingNodeConfigs.get(identifier);
     BaseOntology baseOntology = ontologies.get(identifier);
+    RecordNormalizer normalizerFactory = recordNormalizers.get(identifier);
 
     BaseRecord result = null;
     switch (mappingNodeConfig.getType()) {
       case SPG_TYPE_MAPPING:
-        Map<String, List<PropertyMounter>> mounters = propertyMounters.get(identifier);
         result =
             SPGTypeMappingProcessor.spgTypeRecordMapping(
                 record,
                 (BaseSPGType) baseOntology,
                 (SPGTypeMappingNodeConfig) mappingNodeConfig,
-                mounters);
+                normalizerFactory);
         break;
       case RELATION_MAPPING:
         result =
             RelationMappingProcessor.relationRecordMapping(
-                record, (Relation) baseOntology, (RelationMappingNodeConfig) mappingNodeConfig);
+                record,
+                (Relation) baseOntology,
+                (RelationMappingNodeConfig) mappingNodeConfig,
+                normalizerFactory);
         break;
       default:
         throw new PipelineConfigException("illegal mapping config for SubgraphMappingProcessor");

@@ -13,31 +13,28 @@
 
 package com.antgroup.openspg.builder.core.physical.process;
 
+import com.antgroup.openspg.builder.core.normalize.RecordNormalizer;
+import com.antgroup.openspg.builder.core.normalize.RecordNormalizerImpl;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
-import com.antgroup.openspg.builder.core.semantic.PropertyMounter;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.BuilderRecordException;
 import com.antgroup.openspg.builder.model.pipeline.config.SPGTypeMappingNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BuilderRecord;
-import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.VertexRecordConvertor;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 
 @Slf4j
 public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMappingNodeConfig> {
 
   private BaseSPGType spgType;
-  private Map<String, List<PropertyMounter>> propertyMounters;
+  private RecordNormalizer recordNormalizer;
 
   public SPGTypeMappingProcessor(String id, String name, SPGTypeMappingNodeConfig config) {
     super(id, name, config);
@@ -49,7 +46,8 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
 
     SPGTypeIdentifier identifier = SPGTypeIdentifier.parse(config.getSpgType());
     this.spgType = (BaseSPGType) loadSchema(identifier, context.getProjectSchema());
-    this.propertyMounters = loadPropertyMounters(config.getMappingConfigs());
+    this.recordNormalizer = new RecordNormalizerImpl(config.getMappingConfigs());
+    this.recordNormalizer.init(context);
   }
 
   @Override
@@ -58,7 +56,7 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
     for (BaseRecord baseRecord : inputs) {
       BuilderRecord record = (BuilderRecord) baseRecord;
       BaseAdvancedRecord advancedRecord =
-          spgTypeRecordMapping(record, spgType, config, propertyMounters);
+          spgTypeRecordMapping(record, spgType, config, recordNormalizer);
       if (advancedRecord != null) {
         spgRecords.add(advancedRecord);
       }
@@ -70,14 +68,14 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
       BuilderRecord record,
       BaseSPGType spgType,
       SPGTypeMappingNodeConfig mappingConfig,
-      Map<String, List<PropertyMounter>> propertyMounters) {
+      RecordNormalizer propertyNormalizerFactory) {
     if (isFiltered(record, mappingConfig.getMappingFilters())) {
       return null;
     }
 
     BuilderRecord mappedRecord = mapping(record, mappingConfig.getMappingConfigs());
     BaseAdvancedRecord advancedRecord = toSPGRecord(mappedRecord, spgType);
-    propertyMount(advancedRecord, propertyMounters);
+    propertyNormalizerFactory.propertyNormalize(advancedRecord);
     return advancedRecord;
   }
 
@@ -87,24 +85,6 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
       throw new BuilderRecordException("");
     }
     return VertexRecordConvertor.toAdvancedRecord(spgType, bizId, record.getProps());
-  }
-
-  private static void propertyMount(
-      BaseAdvancedRecord advancedRecord, Map<String, List<PropertyMounter>> propertyMounters) {
-    if (MapUtils.isEmpty(propertyMounters)) {
-      return;
-    }
-
-    for (SPGPropertyRecord propertyRecord : advancedRecord.getSpgProperties()) {
-      if (!propertyRecord.getProperty().getObjectTypeRef().isAdvancedType()) {
-        continue;
-      }
-      List<PropertyMounter> mounters = propertyMounters.get(propertyRecord.getName());
-      if (CollectionUtils.isEmpty(mounters)) {
-        continue;
-      }
-      mounters.forEach(mounter -> mounter.propertyMount(propertyRecord));
-    }
   }
 
   @Override

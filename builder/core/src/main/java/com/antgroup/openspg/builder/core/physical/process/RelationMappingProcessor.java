@@ -1,5 +1,7 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
+import com.antgroup.openspg.builder.core.normalize.RecordNormalizer;
+import com.antgroup.openspg.builder.core.normalize.RecordNormalizerImpl;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.BuilderRecordException;
@@ -17,6 +19,7 @@ import java.util.List;
 public class RelationMappingProcessor extends BaseMappingProcessor<RelationMappingNodeConfig> {
 
   private Relation relation;
+  private RecordNormalizer recordNormalizer;
 
   public RelationMappingProcessor(String id, String name, RelationMappingNodeConfig config) {
     super(id, name, config);
@@ -28,6 +31,8 @@ public class RelationMappingProcessor extends BaseMappingProcessor<RelationMappi
 
     RelationIdentifier identifier = RelationIdentifier.parse(config.getRelation());
     this.relation = (Relation) loadSchema(identifier, context.getProjectSchema());
+    this.recordNormalizer = new RecordNormalizerImpl(config.getMappingConfigs());
+    this.recordNormalizer.init(context);
   }
 
   @Override
@@ -35,7 +40,8 @@ public class RelationMappingProcessor extends BaseMappingProcessor<RelationMappi
     List<BaseRecord> spgRecords = new ArrayList<>(inputs.size());
     for (BaseRecord baseRecord : inputs) {
       BuilderRecord record = (BuilderRecord) baseRecord;
-      RelationRecord relationRecord = relationRecordMapping(record, relation, config);
+      RelationRecord relationRecord =
+          relationRecordMapping(record, relation, config, recordNormalizer);
       if (relationRecord != null) {
         spgRecords.add(relationRecord);
       }
@@ -44,13 +50,18 @@ public class RelationMappingProcessor extends BaseMappingProcessor<RelationMappi
   }
 
   public static RelationRecord relationRecordMapping(
-      BuilderRecord record, Relation relation, RelationMappingNodeConfig mappingConfig) {
+      BuilderRecord record,
+      Relation relation,
+      RelationMappingNodeConfig mappingConfig,
+      RecordNormalizer propertyNormalizerFactory) {
     if (isFiltered(record, mappingConfig.getMappingFilters())) {
       return null;
     }
 
     BuilderRecord mappedRecord = mapping(record, mappingConfig.getMappingConfigs());
-    return toSPGRecord(mappedRecord, relation);
+    RelationRecord relationRecord = toSPGRecord(mappedRecord, relation);
+    propertyNormalizerFactory.propertyNormalize(relationRecord);
+    return relationRecord;
   }
 
   private static RelationRecord toSPGRecord(BuilderRecord record, Relation relation) {

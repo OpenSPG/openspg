@@ -1,8 +1,8 @@
 package com.antgroup.openspg.builder.model.pipeline.enums;
 
-public enum PropertyMounterTypeEnum {
+public enum PropertyNormalizerTypeEnum {
   OPERATOR,
-  SEARCH_ENGINE,
+  SEARCH,
   ID_EQUALS,
   ;
 }

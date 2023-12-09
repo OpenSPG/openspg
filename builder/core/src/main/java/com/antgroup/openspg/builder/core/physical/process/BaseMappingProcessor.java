@@ -1,16 +1,16 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.core.semantic.PropertyMounter;
-import com.antgroup.openspg.builder.core.semantic.PropertyMounterFactory;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseMappingNodeConfig;
 import com.antgroup.openspg.builder.model.record.BuilderRecord;
 import com.antgroup.openspg.core.schema.model.BaseOntology;
 import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.RelationIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.SPGIdentifierTypeEnum;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
 public abstract class BaseMappingProcessor<T extends BaseMappingNodeConfig>
@@ -21,24 +21,15 @@ public abstract class BaseMappingProcessor<T extends BaseMappingNodeConfig>
   }
 
   protected BaseOntology loadSchema(BaseSPGIdentifier identifier, ProjectSchema projectSchema) {
-    // todo
-    return null;
-  }
-
-  protected Map<String, List<PropertyMounter>> loadPropertyMounters(
-      List<BaseMappingNodeConfig.MappingConfig> mappingConfigs) {
-    if (CollectionUtils.isEmpty(mappingConfigs)) {
-      return new HashMap<>(0);
+    SPGIdentifierTypeEnum identifierType = identifier.getIdentifierType();
+    switch (identifierType) {
+      case SPG_TYPE:
+        return projectSchema.getByName((SPGTypeIdentifier) identifier);
+      case RELATION:
+        return projectSchema.getByName((RelationIdentifier) identifier);
+      default:
+        throw new IllegalArgumentException("illegal identifier type=" + identifierType);
     }
-    Map<String, List<PropertyMounter>> results = new HashMap<>(mappingConfigs.size());
-    for (BaseMappingNodeConfig.MappingConfig mappingConfig : mappingConfigs) {
-      List<PropertyMounter> propertyMounters =
-          mappingConfig.getMounterConfigs().stream()
-              .map(PropertyMounterFactory::getPropertyMounter)
-              .collect(Collectors.toList());
-      results.put(mappingConfig.getTarget(), propertyMounters);
-    }
-    return results;
   }
 
   protected static boolean isFiltered(
