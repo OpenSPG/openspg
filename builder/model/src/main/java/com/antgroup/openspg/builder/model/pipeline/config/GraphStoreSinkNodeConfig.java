@@ -15,25 +15,16 @@ package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 public class GraphStoreSinkNodeConfig extends BaseNodeConfig {
 
   /** The configuration information for graph storage. */
-  private GraphStoreConnectionInfo graphStoreConnectionInfo;
+  private final GraphStoreConnectionInfo graphStoreConnectionInfo;
 
-  /** The configuration information for the search engine. */
-  private SearchEngineConnectionInfo searchEngineConnectionInfo;
-
-  /** The configuration information for the table store. */
-  private TableStoreConnectionInfo tableStoreConnectionInfo;
-
-  public GraphStoreSinkNodeConfig() {
+  public GraphStoreSinkNodeConfig(GraphStoreConnectionInfo graphStoreConnectionInfo) {
     super(NodeTypeEnum.GRAPH_SINK);
+    this.graphStoreConnectionInfo = graphStoreConnectionInfo;
   }
 }

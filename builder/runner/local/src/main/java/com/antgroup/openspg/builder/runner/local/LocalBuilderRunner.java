@@ -20,13 +20,16 @@ import com.antgroup.openspg.builder.runner.local.runtime.ErrorRecordCollector;
 import com.antgroup.openspg.common.util.thread.ThreadUtils;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
 /** 本地的知识构建runner，在本地执行构建任务 */
+@Slf4j
 public class LocalBuilderRunner implements BuilderRunner {
 
   private BuilderExecutor builderExecutor = null;
@@ -52,8 +55,10 @@ public class LocalBuilderRunner implements BuilderRunner {
             .map(SourceReaderFactory::getSourceReader)
             .findFirst()
             .get();
+    sourceReader.init(context);
     sinkWriter =
         logicalPlan.sinkNodes().stream().map(SinkWriterFactory::getSinkWriter).findFirst().get();
+    sinkWriter.init(context);
 
     PhysicalPlan physicalPlan = PhysicalPlan.plan(logicalPlan);
     builderExecutor = new DefaultBuilderExecutor();
@@ -68,35 +73,50 @@ public class LocalBuilderRunner implements BuilderRunner {
   }
 
   @Override
-  public void execute() {
+  public void execute() throws Exception {
     Meter totalMeter = builderMetric.getTotalCnt();
     Counter errorCnt = builderMetric.getErrorCnt();
 
+    final List<CompletableFuture<Void>> futures = new ArrayList<>(parallelism);
     for (int i = 0; i < parallelism; i++) {
-      threadPoolExecutor.execute(
-          new Runnable() {
-            @Override
-            public void run() {
-              List<BaseRecord> records = Collections.unmodifiableList(sourceReader.read());
-              while (CollectionUtils.isNotEmpty(records)) {
-                totalMeter.mark(records.size());
-                List<BaseRecord> results = null;
-                try {
-                  results = builderExecutor.eval(records);
-                } catch (BuilderRecordException e) {
-                  errorCnt.inc(records.size());
-                  // todo
+      CompletableFuture<Void> future =
+          CompletableFuture.runAsync(
+              () -> {
+                List<BaseRecord> records = Collections.unmodifiableList(sourceReader.read());
+                while (CollectionUtils.isNotEmpty(records)) {
+                  totalMeter.mark(records.size());
+                  List<BaseRecord> results = null;
+                  try {
+                    results = builderExecutor.eval(records);
+                  } catch (BuilderRecordException e) {
+                    errorCnt.inc(records.size());
+                    // todo
+                  }
+                  sinkWriter.write(results);
+                  records = Collections.unmodifiableList(sourceReader.read());
                 }
-                sinkWriter.write(results);
-                records = Collections.unmodifiableList(sourceReader.read());
-              }
-            }
-          });
+              },
+              threadPoolExecutor);
+      futures.add(future);
     }
-    try {
-      threadPoolExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
-    } catch (InterruptedException e) {
-      throw new BuilderException("", e);
+
+    CompletableFuture<Void> joint =
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+    failFast(futures, joint);
+  }
+
+  private static <T> void failFast(List<CompletableFuture<T>> futures, CompletableFuture<T> joint)
+      throws Exception {
+    while (true) {
+      if (joint.isDone()) {
+        return;
+      }
+      for (CompletableFuture<T> future : futures) {
+        if (future.isCompletedExceptionally()) {
+          future.get();
+          return;
+        }
+      }
     }
   }
 
@@ -107,6 +127,9 @@ public class LocalBuilderRunner implements BuilderRunner {
     }
     if (errorRecordCollector != null) {
       errorRecordCollector.close();
+    }
+    if (threadPoolExecutor != null) {
+      threadPoolExecutor.shutdownNow();
     }
   }
 }

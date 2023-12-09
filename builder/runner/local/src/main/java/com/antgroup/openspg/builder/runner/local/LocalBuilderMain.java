@@ -32,13 +32,13 @@ public class LocalBuilderMain {
     CommandLineParser parser = new DefaultParser();
     Options options = new Options();
 
-    options.addRequiredOption(PROJECT_ID_OPTION, null, true, "project id");
-    options.addRequiredOption(JOB_NAME_OPTION, null, true, "job name");
-    options.addRequiredOption(PIPELINE_OPTION, null, true, "pipeline info");
-    options.addRequiredOption(PYTHON_EXEC_OPTION, null, true, "python exec");
-    options.addRequiredOption(PYTHON_PATHS_OPTION, null, true, "python path");
-    options.addRequiredOption(SCHEMA_URL_OPTION, null, true, "schema url");
-    options.addOption(PARALLELISM_OPTION, null, true, "parallelism");
+    options.addRequiredOption(PROJECT_ID_OPTION, PROJECT_ID_OPTION, true, "project id");
+    options.addRequiredOption(JOB_NAME_OPTION, JOB_NAME_OPTION, true, "job name");
+    options.addRequiredOption(PIPELINE_OPTION, PIPELINE_OPTION, true, "pipeline info");
+    options.addRequiredOption(PYTHON_EXEC_OPTION, PYTHON_EXEC_OPTION, true, "python exec");
+    options.addRequiredOption(PYTHON_PATHS_OPTION, PYTHON_PATHS_OPTION, true, "python path");
+    options.addRequiredOption(SCHEMA_URL_OPTION, SCHEMA_URL_OPTION, true, "schema url");
+    options.addOption(PARALLELISM_OPTION, PARALLELISM_OPTION, true, "parallelism");
 
     CommandLine commandLine = null;
     HelpFormatter helper = new HelpFormatter();

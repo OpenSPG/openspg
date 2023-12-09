@@ -75,6 +75,7 @@ public class PhysicalPlan implements Serializable {
     return GraphTypeBuilder.<BaseProcessor<?>, DefaultEdge>directed()
         .allowingSelfLoops(false)
         .allowingMultipleEdges(false)
+        .edgeClass(DefaultEdge.class)
         .weighted(false)
         .buildGraph();
   }

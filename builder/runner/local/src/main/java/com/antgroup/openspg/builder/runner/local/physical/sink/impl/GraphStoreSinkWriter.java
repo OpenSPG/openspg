@@ -58,8 +58,6 @@ public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfi
   public void doInit(BuilderContext context) throws BuilderException {
     graphStoreClient =
         GraphStoreClientDriverManager.getClient(config.getGraphStoreConnectionInfo());
-    searchEngineClient =
-        SearchEngineClientDriverManager.getClient(config.getSearchEngineConnectionInfo());
     checkProcessor = new CheckProcessor();
     checkProcessor.init(context);
   }
@@ -80,7 +78,6 @@ public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfi
   private void batchWriteToGraphStore(List<BaseRecord> records) {
     List<SPGRecordAlterItem> items =
         records.stream()
-            .sorted(BaseRecord.ADVANCED_RECORD_FIRST_COMPARATOR)
             .map(record -> new SPGRecordAlterItem(context.getOperation(), (BaseSPGRecord) record))
             .collect(Collectors.toList());
 

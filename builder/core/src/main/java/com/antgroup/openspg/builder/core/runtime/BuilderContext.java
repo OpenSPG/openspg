@@ -33,6 +33,6 @@ public class BuilderContext implements Serializable {
   private String pythonExec;
   private String pythonPaths;
 
-  private int batchSize;
-  private int parallelism;
+  private int batchSize = 1;
+  private int parallelism = 1;
 }

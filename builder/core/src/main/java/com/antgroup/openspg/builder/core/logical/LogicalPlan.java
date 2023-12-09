@@ -67,6 +67,7 @@ public class LogicalPlan implements Serializable {
     return GraphTypeBuilder.<BaseLogicalNode<?>, DefaultEdge>directed()
         .allowingSelfLoops(false)
         .allowingMultipleEdges(false)
+        .edgeClass(DefaultEdge.class)
         .weighted(false)
         .buildGraph();
   }
