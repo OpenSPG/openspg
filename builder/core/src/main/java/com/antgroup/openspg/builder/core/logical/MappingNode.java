@@ -14,7 +14,6 @@
 package com.antgroup.openspg.builder.core.logical;
 
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
-import com.antgroup.openspg.builder.model.pipeline.config.MappingNodeConfig;
 
 public class MappingNode extends BaseLogicalNode<MappingNodeConfig> {
 

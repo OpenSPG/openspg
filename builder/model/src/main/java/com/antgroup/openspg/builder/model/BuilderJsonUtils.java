@@ -1,7 +1,7 @@
 package com.antgroup.openspg.builder.model;
 
-import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.config.*;
+import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
@@ -19,8 +19,17 @@ public class BuilderJsonUtils {
             .registerTypeAdapterFactory(
                 RuntimeTypeAdapterFactory.of(BaseNodeConfig.class, DEFAULT_TYPE_FIELD_NAME)
                     .registerSubtype(CsvSourceNodeConfig.class, NodeTypeEnum.CSV_SOURCE.name())
-                    .registerSubtype(BaseExtractNodeConfig.class, NodeTypeEnum.EXTRACT.name())
-                    .registerSubtype(MappingNodeConfig.class, NodeTypeEnum.MAPPING.name())
+                    .registerSubtype(
+                        UserDefinedExtractNodeConfig.class,
+                        NodeTypeEnum.USER_DEFINED_EXTRACT.name())
+                    .registerSubtype(
+                        LLMBasedExtractNodeConfig.class, NodeTypeEnum.LLM_BASED_EXTRACT.name())
+                    .registerSubtype(
+                        SPGTypeMappingNodeConfig.class, NodeTypeEnum.SPG_TYPE_MAPPING.name())
+                    .registerSubtype(
+                        RelationMappingNodeConfig.class, NodeTypeEnum.RELATION_MAPPING.name())
+                    .registerSubtype(
+                        SubGraphMappingNodeConfig.class, NodeTypeEnum.SUBGRAPH_MAPPING.name())
                     .registerSubtype(GraphStoreSinkNodeConfig.class, NodeTypeEnum.GRAPH_SINK.name())
                     .recognizeSubtypes())
             .create();

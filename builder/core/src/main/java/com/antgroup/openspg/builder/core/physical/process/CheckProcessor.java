@@ -40,8 +40,8 @@ public class CheckProcessor extends BaseProcessor<CheckNodeConfig> {
   public void close() throws Exception {}
 
   @Override
-  public List<BaseRecord> process(List<BaseRecord> records) {
-    for (BaseRecord record : records) {
+  public List<BaseRecord> process(List<BaseRecord> inputs) {
+    for (BaseRecord record : inputs) {
       BaseSPGRecord spgRecord = (BaseSPGRecord) record;
       if (SPGRecordTypeEnum.RELATION.equals(spgRecord.getRecordType())) {
         checkSubProperty(((RelationRecord) spgRecord));
@@ -49,7 +49,7 @@ public class CheckProcessor extends BaseProcessor<CheckNodeConfig> {
         checkProperty(((BaseAdvancedRecord) spgRecord));
       }
     }
-    return records;
+    return inputs;
   }
 
   private void checkProperty(BaseAdvancedRecord advancedRecord) {

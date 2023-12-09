@@ -17,9 +17,9 @@ import com.antgroup.openspg.builder.core.logical.BaseLogicalNode;
 import com.antgroup.openspg.builder.core.logical.LogicalPlan;
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
 import com.antgroup.openspg.builder.core.physical.process.ExtractProcessor;
-import com.antgroup.openspg.builder.core.physical.process.MappingProcessor;
+import com.antgroup.openspg.builder.core.physical.process.SPGTypeMappingProcessor;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseExtractNodeConfig;
-import com.antgroup.openspg.builder.model.pipeline.config.MappingNodeConfig;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -94,7 +94,7 @@ public class PhysicalPlan implements Serializable {
         return new ExtractProcessor(
             node.getId(), node.getName(), (BaseExtractNodeConfig) node.getNodeConfig());
       case MAPPING:
-        return new MappingProcessor(
+        return new SPGTypeMappingProcessor(
             node.getId(), node.getName(), (MappingNodeConfig) node.getNodeConfig());
       default:
         throw new IllegalArgumentException("illegal type=" + node.getType());

@@ -60,9 +60,9 @@ public class ExtractProcessor extends BaseProcessor<BaseExtractNodeConfig> {
   }
 
   @Override
-  public List<BaseRecord> process(List<BaseRecord> records) {
-    List<BaseRecord> resultRecords = new ArrayList<>(records.size());
-    for (BaseRecord record : records) {
+  public List<BaseRecord> process(List<BaseRecord> inputs) {
+    List<BaseRecord> resultRecords = new ArrayList<>(inputs.size());
+    for (BaseRecord record : inputs) {
       List<BuilderRecord> invokeResults =
           operatorInvoker.invoke((BuilderRecord) record, config.getOperatorConfig());
       resultRecords.addAll(invokeResults);

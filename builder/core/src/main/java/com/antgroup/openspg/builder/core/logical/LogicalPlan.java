@@ -19,7 +19,7 @@ import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 import com.antgroup.openspg.builder.model.pipeline.config.CsvSourceNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseExtractNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
-import com.antgroup.openspg.builder.model.pipeline.config.MappingNodeConfig;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
