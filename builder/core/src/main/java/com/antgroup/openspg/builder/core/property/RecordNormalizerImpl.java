@@ -48,12 +48,14 @@ public class RecordNormalizerImpl implements RecordNormalizer {
       if (propertyRecord.isSemanticProperty()) {
         PropertyNormalizer normalizer = semanticPropertyNormalizers.get(propertyRecord.getName());
         if (normalizer != null) {
+          // we use user-defined normalizer to normalize property value
           normalizer.propertyNormalize(propertyRecord);
         } else {
           // we use default normalizer to normalize property value
           defaultPropertyNormalizer.propertyNormalize(propertyRecord);
         }
       } else {
+        // we use basic normalizer to normalize property value
         basicPropertyNormalizer.propertyNormalize(propertyRecord);
       }
     }

@@ -40,8 +40,6 @@ public class PropertyOperatorNormalizer implements PropertyNormalizer {
   public void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
     List<String> rawValues = record.getRawValues();
 
-    // todo 链指链到哪个实体类型？以及标准化后的值是哪个？这里必须产出链指后的id以及标准化后的属性值
-    List<String> stdValues = new ArrayList<>(rawValues.size());
     List<String> ids = new ArrayList<>(rawValues.size());
     for (String rawValue : rawValues) {
       Map<String, Object> result =
@@ -50,14 +48,16 @@ public class PropertyOperatorNormalizer implements PropertyNormalizer {
           mapper.convertValue(result, new TypeReference<EvalResult<List<Vertex>>>() {});
 
       if (evalResult == null || CollectionUtils.isEmpty(evalResult.getData())) {
-        continue;
+        throw new PropertyNormalizeException("property={} normalize failed", rawValue);
       }
 
-      evalResult.getData().stream()
-          .map(Vertex::getBizId)
-          .filter(Objects::nonNull)
-          .forEach(ids::add);
+      if (evalResult.getData().size() > 1) {
+        throw new PropertyNormalizeException("property={} normalize failed", rawValue);
+      }
+
+      ids.add(evalResult.getData().get(0).getBizId());
     }
+    record.getValue().setStds(Collections.singletonList(ids));
     record.getValue().setIds(ids);
   }
 }
