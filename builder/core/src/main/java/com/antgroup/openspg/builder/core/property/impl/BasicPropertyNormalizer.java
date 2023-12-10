@@ -13,7 +13,7 @@ public class BasicPropertyNormalizer implements PropertyNormalizer {
   public void init(BuilderContext context) throws BuilderException {}
 
   @Override
-  public void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
+  public boolean propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
     SPGTypeRef objectTypeRef = record.getObjectTypeRef();
     if (!objectTypeRef.isBasicType()) {
       throw new IllegalStateException();
@@ -38,5 +38,6 @@ public class BasicPropertyNormalizer implements PropertyNormalizer {
       throw new PropertyNormalizeException(e, "");
     }
     record.getValue().setSingleStd(stdValue);
+    return true;
   }
 }

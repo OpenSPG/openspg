@@ -52,25 +52,33 @@ public class RecordNormalizerImpl implements RecordNormalizer {
 
   @Override
   public void propertyNormalize(BaseSPGRecord spgRecord) throws PropertyNormalizeException {
-    try {
-      for (BasePropertyRecord propertyRecord : spgRecord.getProperties()) {
+    for (BasePropertyRecord propertyRecord : spgRecord.getProperties()) {
+      boolean propertyNormalized = false;
+      try {
         if (propertyRecord.isSemanticProperty()) {
           List<AdvancedPropertyNormalizer> normalizers =
               advancedPropertyNormalizers.get(propertyRecord.getName());
           if (normalizers != null) {
             for (AdvancedPropertyNormalizer normalizer : normalizers) {
-              normalizer.propertyNormalize(propertyRecord);
+              propertyNormalized = normalizer.propertyNormalize(propertyRecord);
+              if (propertyNormalized) {
+                break;
+              }
             }
           }
           if (backupPropertyNormalizer != null) {
-            backupPropertyNormalizer.propertyNormalize(propertyRecord);
+            propertyNormalized = backupPropertyNormalizer.propertyNormalize(propertyRecord);
           }
         } else {
-          basicPropertyNormalizer.propertyNormalize(propertyRecord);
+          propertyNormalized = basicPropertyNormalizer.propertyNormalize(propertyRecord);
         }
+      } catch (Exception e) {
+        throw new PropertyNormalizeException(e, "property normalizer error");
       }
-    } catch (Exception e) {
-      throw new PropertyNormalizeException(e, "property normalizer error");
+
+      if (!propertyNormalized) {
+        throw new PropertyNormalizeException("");
+      }
     }
   }
 }

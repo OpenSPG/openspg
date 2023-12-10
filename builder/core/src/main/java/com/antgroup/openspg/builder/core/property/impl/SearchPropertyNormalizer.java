@@ -5,6 +5,7 @@ import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PropertyNormalizeException;
 import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
+import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.SearchRequest;
 
 public class SearchPropertyNormalizer extends AdvancedPropertyNormalizer {
@@ -13,12 +14,13 @@ public class SearchPropertyNormalizer extends AdvancedPropertyNormalizer {
 
   @Override
   public void init(BuilderContext context) throws BuilderException {
-    //    searchEngineClient =
-    //        SearchEngineClientDriverManager.getClient(context.getSearchEngineConnectionInfo());
+    searchEngineClient =
+        SearchEngineClientDriverManager.getClient(context.getCatalog().getSearchEngineConnInfo());
   }
 
   @Override
-  public void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
+  public boolean propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
     SearchRequest request = new SearchRequest();
+    return true;
   }
 }

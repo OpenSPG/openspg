@@ -20,26 +20,26 @@ public class OperatorPropertyNormalizer extends AdvancedPropertyNormalizer {
 
   private static final ObjectMapper mapper = new ObjectMapper();
   private final OperatorKey operatorKey;
-  private final OperatorPropertyNormalizerConfig mounterConfig;
-  private OperatorFactory operatorFactory;
+  private final OperatorPropertyNormalizerConfig normalizerConfig;
+  private final OperatorFactory operatorFactory;
 
   public OperatorPropertyNormalizer(OperatorPropertyNormalizerConfig config) {
-    this.mounterConfig = config;
+    this.normalizerConfig = config;
     this.operatorKey = config.getConfig().toKey();
+    this.operatorFactory = PythonOperatorFactory.getInstance();
   }
 
   @Override
   public void init(BuilderContext context) throws BuilderException {
-    operatorFactory = PythonOperatorFactory.getInstance();
     operatorFactory.init(context);
-    operatorFactory.loadOperator(mounterConfig.getConfig());
+    operatorFactory.loadOperator(normalizerConfig.getConfig());
   }
 
   @Override
-  public void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
+  public boolean propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
     List<String> rawValues = record.getRawValues();
 
-    // todo
+    // todo 链指链到哪个实体类型？以及标准化后的值是哪个？这里必须产出链指后的id以及标准化后的属性值
     List<String> stdValues = new ArrayList<>(rawValues.size());
     List<String> ids = new ArrayList<>(rawValues.size());
     for (String rawValue : rawValues) {
@@ -58,5 +58,6 @@ public class OperatorPropertyNormalizer extends AdvancedPropertyNormalizer {
           .forEach(ids::add);
     }
     record.getValue().setIds(ids);
+    return true;
   }
 }
