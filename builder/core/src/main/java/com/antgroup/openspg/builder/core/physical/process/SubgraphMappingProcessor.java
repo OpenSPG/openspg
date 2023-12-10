@@ -55,7 +55,7 @@ public class SubgraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
 
   private void setUpVariables(
       BaseMappingNodeConfig mappingNodeConfig, BaseSPGIdentifier identifier) {
-    this.ontologies.put(identifier, loadSchema(identifier, context.getProjectSchema()));
+    this.ontologies.put(identifier, loadSchema(identifier, context.getCatalog()));
     RecordNormalizerImpl propertyNormalizerFactory =
         new RecordNormalizerImpl(mappingNodeConfig.getMappingConfigs());
     propertyNormalizerFactory.init(context);

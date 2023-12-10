@@ -14,7 +14,6 @@
 package com.antgroup.openspg.builder.core.runtime;
 
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,8 +26,8 @@ public class BuilderContext implements Serializable {
 
   private long projectId;
   private String jobName;
-  private ProjectSchema projectSchema;
   private RecordAlterOperationEnum operation;
+  private BuilderCatalog catalog;
 
   private String pythonExec;
   private String pythonPaths;

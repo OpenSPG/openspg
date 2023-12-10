@@ -14,17 +14,12 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import lombok.Getter;
 
 @Getter
 public class GraphStoreSinkNodeConfig extends BaseNodeConfig {
 
-  /** The configuration information for graph storage. */
-  private final GraphStoreConnectionInfo graphStoreConnectionInfo;
-
-  public GraphStoreSinkNodeConfig(GraphStoreConnectionInfo graphStoreConnectionInfo) {
+  public GraphStoreSinkNodeConfig() {
     super(NodeTypeEnum.GRAPH_SINK);
-    this.graphStoreConnectionInfo = graphStoreConnectionInfo;
   }
 }

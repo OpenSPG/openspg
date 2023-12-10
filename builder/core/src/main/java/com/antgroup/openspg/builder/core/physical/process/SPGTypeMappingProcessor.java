@@ -45,7 +45,7 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
     super.doInit(context);
 
     SPGTypeIdentifier identifier = SPGTypeIdentifier.parse(config.getSpgType());
-    this.spgType = (BaseSPGType) loadSchema(identifier, context.getProjectSchema());
+    this.spgType = (BaseSPGType) loadSchema(identifier, context.getCatalog());
     this.recordNormalizer = new RecordNormalizerImpl(config.getMappingConfigs());
     this.recordNormalizer.init(context);
   }

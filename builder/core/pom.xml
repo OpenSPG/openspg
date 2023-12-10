@@ -44,6 +44,10 @@
       <artifactId>cloudext-interface-search-engine</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.antgroup.kg.reasoner</groupId>
       <artifactId>local</artifactId>
       <version>${kgreasoner-version}</version>

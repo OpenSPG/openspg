@@ -1,5 +1,6 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
+import com.antgroup.openspg.builder.core.runtime.BuilderCatalog;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseMappingNodeConfig;
 import com.antgroup.openspg.builder.model.record.BuilderRecord;
 import com.antgroup.openspg.core.schema.model.BaseOntology;
@@ -7,7 +8,6 @@ import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.RelationIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGIdentifierTypeEnum;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +20,13 @@ public abstract class BaseMappingProcessor<T extends BaseMappingNodeConfig>
     super(id, name, config);
   }
 
-  protected BaseOntology loadSchema(BaseSPGIdentifier identifier, ProjectSchema projectSchema) {
+  protected BaseOntology loadSchema(BaseSPGIdentifier identifier, BuilderCatalog catalog) {
     SPGIdentifierTypeEnum identifierType = identifier.getIdentifierType();
     switch (identifierType) {
       case SPG_TYPE:
-        return projectSchema.getByName((SPGTypeIdentifier) identifier);
+        return catalog.getSPGType((SPGTypeIdentifier) identifier);
       case RELATION:
-        return projectSchema.getByName((RelationIdentifier) identifier);
+        return catalog.getRelation((RelationIdentifier) identifier);
       default:
         throw new IllegalArgumentException("illegal identifier type=" + identifierType);
     }

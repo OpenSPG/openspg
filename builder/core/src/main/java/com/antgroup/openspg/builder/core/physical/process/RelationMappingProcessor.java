@@ -30,7 +30,7 @@ public class RelationMappingProcessor extends BaseMappingProcessor<RelationMappi
     super.doInit(context);
 
     RelationIdentifier identifier = RelationIdentifier.parse(config.getRelation());
-    this.relation = (Relation) loadSchema(identifier, context.getProjectSchema());
+    this.relation = (Relation) loadSchema(identifier, context.getCatalog());
     this.recordNormalizer = new RecordNormalizerImpl(config.getMappingConfigs());
     this.recordNormalizer.init(context);
   }

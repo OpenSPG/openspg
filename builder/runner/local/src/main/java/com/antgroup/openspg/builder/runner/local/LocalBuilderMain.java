@@ -1,6 +1,7 @@
 package com.antgroup.openspg.builder.runner.local;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.core.runtime.impl.DefaultBuilderCatalog;
 import com.antgroup.openspg.builder.model.BuilderJsonUtils;
 import com.antgroup.openspg.builder.model.exception.PipelineConfigException;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
@@ -23,6 +24,7 @@ public class LocalBuilderMain {
   private static final String PYTHON_PATHS_OPTION = "pythonPaths";
   private static final String SCHEMA_URL_OPTION = "schemaUrl";
   private static final String PARALLELISM_OPTION = "parallelism";
+  private static final String ALTER_OPERATION_OPTION = "alterOperation";
 
   public static void main(String[] args) throws Exception {
     CommandLine commandLine = parseArgs(args);
@@ -40,6 +42,8 @@ public class LocalBuilderMain {
     options.addRequiredOption(PYTHON_PATHS_OPTION, PYTHON_PATHS_OPTION, true, "python path");
     options.addRequiredOption(SCHEMA_URL_OPTION, SCHEMA_URL_OPTION, true, "schema url");
     options.addOption(PARALLELISM_OPTION, PARALLELISM_OPTION, true, "parallelism");
+    options.addOption(
+        ALTER_OPERATION_OPTION, ALTER_OPERATION_OPTION, true, "alter operation, upsert or delete");
 
     CommandLine commandLine = null;
     HelpFormatter helper = new HelpFormatter();
@@ -67,15 +71,18 @@ public class LocalBuilderMain {
     String parallelismStr = commandLine.getOptionValue(PARALLELISM_OPTION);
     int parallelism = (parallelismStr == null ? 1 : Integer.parseInt(parallelismStr));
 
+    String alterOperation = commandLine.getOptionValue(ALTER_OPERATION_OPTION);
+    RecordAlterOperationEnum alterOperationEnum = RecordAlterOperationEnum.valueOf(alterOperation);
+
     ProjectSchema projectSchema = getProjectSchema(projectId, schemaUrl);
     BuilderContext builderContext =
         new BuilderContext()
             .setProjectId(projectId)
             .setJobName(jobName)
-            .setProjectSchema(projectSchema)
+            .setCatalog(new DefaultBuilderCatalog(projectSchema))
             .setPythonExec(pythonExec)
             .setPythonPaths(pythonPaths)
-            .setOperation(RecordAlterOperationEnum.UPSERT);
+            .setOperation(alterOperationEnum);
 
     LocalBuilderRunner runner = new LocalBuilderRunner(parallelism);
     runner.init(pipeline, builderContext);
