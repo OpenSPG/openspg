@@ -31,6 +31,7 @@
     <module>common/util</module>
     <module>server</module>
     <module>builder</module>
+    <module>reasoner</module>
     <module>cloudext/interface/graph-store</module>
     <module>cloudext/interface/object-store</module>
     <module>cloudext/interface/table-store</module>
