@@ -19,7 +19,7 @@ public class PropertyIdEqualsNormalizer implements PropertyNormalizer {
   public void init(BuilderContext context) throws BuilderException {}
 
   @Override
-  public boolean propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
+  public void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
     SPGTypeRef objectTypeRef = record.getObjectTypeRef();
     if (!objectTypeRef.isAdvancedType()) {
       throw new IllegalStateException();
@@ -28,6 +28,5 @@ public class PropertyIdEqualsNormalizer implements PropertyNormalizer {
     List<String> rawValues = record.getRawValues();
     record.getValue().setStds(Collections.singletonList(rawValues));
     record.getValue().setIds(rawValues);
-    return true;
   }
 }

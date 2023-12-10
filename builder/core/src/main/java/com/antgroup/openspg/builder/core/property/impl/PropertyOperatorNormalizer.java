@@ -37,7 +37,7 @@ public class PropertyOperatorNormalizer implements PropertyNormalizer {
   }
 
   @Override
-  public boolean propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
+  public void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
     List<String> rawValues = record.getRawValues();
 
     // todo 链指链到哪个实体类型？以及标准化后的值是哪个？这里必须产出链指后的id以及标准化后的属性值
@@ -59,6 +59,5 @@ public class PropertyOperatorNormalizer implements PropertyNormalizer {
           .forEach(ids::add);
     }
     record.getValue().setIds(ids);
-    return true;
   }
 }

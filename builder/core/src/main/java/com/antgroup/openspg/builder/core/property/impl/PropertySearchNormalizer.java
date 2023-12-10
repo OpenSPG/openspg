@@ -30,11 +30,11 @@ public class PropertySearchNormalizer implements PropertyNormalizer {
   }
 
   @Override
-  public boolean propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
+  public void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
     SPGTypeRef objectTypeRef = record.getObjectTypeRef();
 
     if (!objectTypeRef.isEntityType() && !objectTypeRef.isConceptType()) {
-      return true;
+      return;
     }
     String objectTypeRefName = objectTypeRef.getName();
 
@@ -71,6 +71,5 @@ public class PropertySearchNormalizer implements PropertyNormalizer {
 
     record.getValue().setStds(Collections.singletonList(ids));
     record.getValue().setIds(ids);
-    return true;
   }
 }

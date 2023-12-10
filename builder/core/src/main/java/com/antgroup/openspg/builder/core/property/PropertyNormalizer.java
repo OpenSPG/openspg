@@ -18,5 +18,5 @@ public interface PropertyNormalizer {
   void init(BuilderContext context) throws BuilderException;
 
   /** 输入一条spg属性记录，对该属性进行标准化 */
-  boolean propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException;
+  void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException;
 }
