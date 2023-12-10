@@ -4,6 +4,7 @@ import com.antgroup.openspg.builder.core.physical.operator.OperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.PythonOperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.protocol.EvalResult;
 import com.antgroup.openspg.builder.core.physical.operator.protocol.Vertex;
+import com.antgroup.openspg.builder.core.property.PropertyNormalizer;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PropertyNormalizeException;
@@ -16,14 +17,14 @@ import java.util.*;
 import org.apache.commons.collections4.CollectionUtils;
 
 @SuppressWarnings("unchecked")
-public class OperatorPropertyNormalizer extends AdvancedPropertyNormalizer {
+public class PropertyOperatorNormalizer implements PropertyNormalizer {
 
   private static final ObjectMapper mapper = new ObjectMapper();
   private final OperatorKey operatorKey;
   private final OperatorPropertyNormalizerConfig normalizerConfig;
   private final OperatorFactory operatorFactory;
 
-  public OperatorPropertyNormalizer(OperatorPropertyNormalizerConfig config) {
+  public PropertyOperatorNormalizer(OperatorPropertyNormalizerConfig config) {
     this.normalizerConfig = config;
     this.operatorKey = config.getConfig().toKey();
     this.operatorFactory = PythonOperatorFactory.getInstance();

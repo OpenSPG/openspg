@@ -23,14 +23,15 @@ import com.antgroup.openspg.core.schema.model.type.ConceptType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 
 public class ConceptRecord extends BaseAdvancedRecord {
 
   private static final String NAME = "name";
 
-  private final ConceptType conceptType;
+  @Getter private final ConceptType conceptType;
 
-  private final ConceptIdentifier conceptName;
+  @Getter private final ConceptIdentifier conceptName;
 
   private final List<SPGPropertyRecord> properties;
 
@@ -76,13 +77,5 @@ public class ConceptRecord extends BaseAdvancedRecord {
   @Override
   public void addSpgProperties(SPGPropertyRecord record) {
     properties.add(record);
-  }
-
-  public ConceptType getConceptType() {
-    return conceptType;
-  }
-
-  public ConceptIdentifier getConceptName() {
-    return conceptName;
   }
 }

@@ -1,8 +1,7 @@
 package com.antgroup.openspg.builder.core.property;
 
-import com.antgroup.openspg.builder.core.property.impl.AdvancedPropertyNormalizer;
 import com.antgroup.openspg.builder.core.property.impl.BasicPropertyNormalizer;
-import com.antgroup.openspg.builder.core.property.impl.SearchPropertyNormalizer;
+import com.antgroup.openspg.builder.core.property.impl.PropertySearchNormalizer;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PropertyNormalizeException;
@@ -20,33 +19,33 @@ public class RecordNormalizerImpl implements RecordNormalizer {
 
   private final List<BaseMappingNodeConfig.MappingConfig> mappingConfigs;
   private final BasicPropertyNormalizer basicPropertyNormalizer;
-  private final Map<String, List<AdvancedPropertyNormalizer>> advancedPropertyNormalizers;
-  private final AdvancedPropertyNormalizer backupPropertyNormalizer;
+  private final Map<String, List<PropertyNormalizer>> semanticPropertyNormalizers;
+  private final PropertyNormalizer defaultPropertyNormalizer;
 
   public RecordNormalizerImpl(List<BaseMappingNodeConfig.MappingConfig> mappingConfigs) {
     this.mappingConfigs = mappingConfigs;
     this.basicPropertyNormalizer = new BasicPropertyNormalizer();
-    this.advancedPropertyNormalizers = new HashMap<>(mappingConfigs.size());
-    this.backupPropertyNormalizer = new SearchPropertyNormalizer();
+    this.semanticPropertyNormalizers = new HashMap<>(mappingConfigs.size());
+    this.defaultPropertyNormalizer = new PropertySearchNormalizer();
   }
 
   @Override
   public void init(BuilderContext context) throws BuilderException {
     basicPropertyNormalizer.init(context);
-    backupPropertyNormalizer.init(context);
+    defaultPropertyNormalizer.init(context);
     if (CollectionUtils.isEmpty(mappingConfigs)) {
       return;
     }
     for (BaseMappingNodeConfig.MappingConfig mappingConfig : mappingConfigs) {
-      List<AdvancedPropertyNormalizer> normalizers =
+      List<PropertyNormalizer> normalizers =
           new ArrayList<>(mappingConfig.getNormalizerConfigs().size());
       for (PropertyNormalizerConfig normalizerConfig : mappingConfig.getNormalizerConfigs()) {
-        AdvancedPropertyNormalizer normalizer =
-            AdvancedPropertyNormalizer.getPropertyNormalizer(normalizerConfig);
+        PropertyNormalizer normalizer =
+            PropertyNormalizerFactory.getPropertyNormalizer(normalizerConfig);
         normalizer.init(context);
         normalizers.add(normalizer);
       }
-      advancedPropertyNormalizers.put(mappingConfig.getTarget(), normalizers);
+      semanticPropertyNormalizers.put(mappingConfig.getTarget(), normalizers);
     }
   }
 
@@ -56,18 +55,18 @@ public class RecordNormalizerImpl implements RecordNormalizer {
       boolean propertyNormalized = false;
       try {
         if (propertyRecord.isSemanticProperty()) {
-          List<AdvancedPropertyNormalizer> normalizers =
-              advancedPropertyNormalizers.get(propertyRecord.getName());
+          List<PropertyNormalizer> normalizers =
+              semanticPropertyNormalizers.get(propertyRecord.getName());
           if (normalizers != null) {
-            for (AdvancedPropertyNormalizer normalizer : normalizers) {
+            for (PropertyNormalizer normalizer : normalizers) {
               propertyNormalized = normalizer.propertyNormalize(propertyRecord);
               if (propertyNormalized) {
                 break;
               }
             }
-          }
-          if (backupPropertyNormalizer != null) {
-            propertyNormalized = backupPropertyNormalizer.propertyNormalize(propertyRecord);
+          } else {
+            // we use default normalizer to normalize property value
+            propertyNormalized = defaultPropertyNormalizer.propertyNormalize(propertyRecord);
           }
         } else {
           propertyNormalized = basicPropertyNormalizer.propertyNormalize(propertyRecord);

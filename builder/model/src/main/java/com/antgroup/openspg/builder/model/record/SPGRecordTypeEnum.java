@@ -13,9 +13,6 @@
 
 package com.antgroup.openspg.builder.model.record;
 
-import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
-import java.util.HashMap;
-import java.util.Map;
 
 public enum SPGRecordTypeEnum {
   ENTITY,
@@ -24,17 +21,4 @@ public enum SPGRecordTypeEnum {
   STANDARD,
   RELATION,
   ;
-
-  private static final Map<SPGTypeEnum, SPGRecordTypeEnum> TYPE_2_RECORD = new HashMap<>(5);
-
-  static {
-    TYPE_2_RECORD.put(SPGTypeEnum.ENTITY_TYPE, ENTITY);
-    TYPE_2_RECORD.put(SPGTypeEnum.CONCEPT_TYPE, CONCEPT);
-    TYPE_2_RECORD.put(SPGTypeEnum.EVENT_TYPE, EVENT);
-    TYPE_2_RECORD.put(SPGTypeEnum.STANDARD_TYPE, STANDARD);
-  }
-
-  public boolean isInstanceOf(SPGTypeEnum spgTypeEnum) {
-    return TYPE_2_RECORD.containsKey(spgTypeEnum);
-  }
 }

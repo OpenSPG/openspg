@@ -19,12 +19,13 @@ import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.EventType;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 
 public class EventRecord extends BaseAdvancedRecord {
 
-  private final EventType eventType;
+  @Getter private final EventType eventType;
 
-  private final String eventId;
+  @Getter private final String eventId;
 
   private final List<SPGPropertyRecord> properties;
 
@@ -58,13 +59,5 @@ public class EventRecord extends BaseAdvancedRecord {
   @Override
   public List<BasePropertyRecord> getProperties() {
     return Collections.unmodifiableList(properties);
-  }
-
-  public EventType getEventType() {
-    return eventType;
-  }
-
-  public String getEventId() {
-    return eventId;
   }
 }
