@@ -41,7 +41,7 @@ public class BuilderMetric implements Serializable {
 
   public void reportToLog() {
     reporter = Slf4jReporter.forRegistry(metricRegistry).outputTo(log).build();
-    reporter.start(1, TimeUnit.SECONDS);
+    reporter.start(1, TimeUnit.MINUTES);
   }
 
   public void close() {

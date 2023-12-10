@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.builder.model.record;
 
-
 public enum SPGRecordTypeEnum {
   ENTITY,
   CONCEPT,

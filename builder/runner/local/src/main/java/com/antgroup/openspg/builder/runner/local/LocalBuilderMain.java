@@ -1,11 +1,19 @@
 package com.antgroup.openspg.builder.runner.local;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.ConsoleAppender;
+import ch.qos.logback.core.FileAppender;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.core.runtime.impl.DefaultBuilderCatalog;
 import com.antgroup.openspg.builder.model.BuilderJsonUtils;
 import com.antgroup.openspg.builder.model.exception.PipelineConfigException;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
+import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.server.api.facade.ApiResponse;
 import com.antgroup.openspg.server.api.facade.client.SchemaFacade;
@@ -14,6 +22,7 @@ import com.antgroup.openspg.server.api.http.client.HttpSchemaFacade;
 import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo;
 import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap;
 import org.apache.commons.cli.*;
+import org.slf4j.LoggerFactory;
 
 public class LocalBuilderMain {
 
@@ -25,6 +34,7 @@ public class LocalBuilderMain {
   private static final String SCHEMA_URL_OPTION = "schemaUrl";
   private static final String PARALLELISM_OPTION = "parallelism";
   private static final String ALTER_OPERATION_OPTION = "alterOperation";
+  private static final String LOG_FILE_OPTION = "logFile";
 
   public static void main(String[] args) throws Exception {
     CommandLine commandLine = parseArgs(args);
@@ -44,6 +54,7 @@ public class LocalBuilderMain {
     options.addOption(PARALLELISM_OPTION, PARALLELISM_OPTION, true, "parallelism");
     options.addOption(
         ALTER_OPERATION_OPTION, ALTER_OPERATION_OPTION, true, "alter operation, upsert or delete");
+    options.addOption(LOG_FILE_OPTION, LOG_FILE_OPTION, true, "log file");
 
     CommandLine commandLine = null;
     HelpFormatter helper = new HelpFormatter();
@@ -58,6 +69,9 @@ public class LocalBuilderMain {
   }
 
   private static void run(CommandLine commandLine) throws Exception {
+    String logFileName = commandLine.getOptionValue(LOG_FILE_OPTION);
+    setUpLogFile(logFileName);
+
     long projectId = Long.parseLong(commandLine.getOptionValue(PROJECT_ID_OPTION));
     String jobName = commandLine.getOptionValue(JOB_NAME_OPTION);
 
@@ -105,5 +119,53 @@ public class LocalBuilderMain {
       return response.getData();
     }
     throw new PipelineConfigException("");
+  }
+
+  private static void setUpLogFile(String logFileName) {
+    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+    loggerContext.reset();
+
+    PatternLayoutEncoder patternLayoutEncoder = new PatternLayoutEncoder();
+    patternLayoutEncoder.setPattern("%d [%X{traceId}] [%X{rpcId}] [%t] %-5p %c{2} - %m%n");
+    patternLayoutEncoder.setContext(loggerContext);
+    patternLayoutEncoder.start();
+
+    FileAppender<ILoggingEvent> fileAppender = null;
+    if (StringUtils.isNotBlank(logFileName)) {
+      fileAppender = new FileAppender<>();
+      fileAppender.setFile(logFileName);
+      fileAppender.setEncoder(patternLayoutEncoder);
+      fileAppender.setContext(loggerContext);
+      fileAppender.setAppend(false);
+      fileAppender.start();
+    }
+
+    ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<>();
+    consoleAppender.setEncoder(patternLayoutEncoder);
+    consoleAppender.setContext(loggerContext);
+    consoleAppender.start();
+
+    Logger brpcLogger = loggerContext.getLogger("com.baidu.brpc");
+    brpcLogger.setLevel(Level.ERROR);
+    brpcLogger.setAdditive(false);
+    if (fileAppender != null) {
+      brpcLogger.addAppender(fileAppender);
+    }
+    brpcLogger.addAppender(consoleAppender);
+
+    Logger dtflysLogger = loggerContext.getLogger("com.dtflys.forest");
+    dtflysLogger.setLevel(Level.ERROR);
+    dtflysLogger.setAdditive(false);
+    if (fileAppender != null) {
+      dtflysLogger.addAppender(fileAppender);
+    }
+    dtflysLogger.addAppender(consoleAppender);
+
+    Logger rootLogger = loggerContext.getLogger("root");
+    if (fileAppender != null) {
+      rootLogger.addAppender(fileAppender);
+    }
+    rootLogger.addAppender(consoleAppender);
+    rootLogger.setLevel(Level.INFO);
   }
 }

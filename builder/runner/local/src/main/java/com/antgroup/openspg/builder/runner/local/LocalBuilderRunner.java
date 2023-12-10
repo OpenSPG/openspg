@@ -15,8 +15,6 @@ import com.antgroup.openspg.builder.runner.local.physical.sink.SinkWriterFactory
 import com.antgroup.openspg.builder.runner.local.physical.source.BaseSourceReader;
 import com.antgroup.openspg.builder.runner.local.physical.source.SourceReaderFactory;
 import com.antgroup.openspg.builder.runner.local.runtime.BuilderMetric;
-import com.antgroup.openspg.builder.runner.local.runtime.DefaultRecordCollector;
-import com.antgroup.openspg.builder.runner.local.runtime.ErrorRecordCollector;
 import com.antgroup.openspg.common.util.thread.ThreadUtils;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Meter;
@@ -36,7 +34,6 @@ public class LocalBuilderRunner implements BuilderRunner {
   private BaseSourceReader<?> sourceReader = null;
   private BaseSinkWriter<?> sinkWriter = null;
   private BuilderMetric builderMetric = null;
-  private ErrorRecordCollector errorRecordCollector = null;
 
   private final int parallelism;
   private final ThreadPoolExecutor threadPoolExecutor;
@@ -67,9 +64,6 @@ public class LocalBuilderRunner implements BuilderRunner {
     // 构建指标统计，并将构建指标输出到log
     builderMetric = new BuilderMetric(context.getJobName());
     builderMetric.reportToLog();
-
-    // 错误记录收集，将构建错误的记录收集到csv文件中
-    errorRecordCollector = new DefaultRecordCollector(context.getJobName(), null);
   }
 
   @Override
@@ -90,9 +84,11 @@ public class LocalBuilderRunner implements BuilderRunner {
                     results = builderExecutor.eval(records);
                   } catch (BuilderRecordException e) {
                     errorCnt.inc(records.size());
-                    // todo
+                    log.error("builder record error", e);
                   }
-                  sinkWriter.write(results);
+                  if (CollectionUtils.isNotEmpty(results)) {
+                    sinkWriter.write(results);
+                  }
                   records = Collections.unmodifiableList(sourceReader.read());
                 }
               },
@@ -124,9 +120,6 @@ public class LocalBuilderRunner implements BuilderRunner {
   public void close() throws Exception {
     if (builderMetric != null) {
       builderMetric.close();
-    }
-    if (errorRecordCollector != null) {
-      errorRecordCollector.close();
     }
     if (threadPoolExecutor != null) {
       threadPoolExecutor.shutdownNow();
