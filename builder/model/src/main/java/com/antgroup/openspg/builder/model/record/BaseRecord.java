@@ -15,6 +15,4 @@ package com.antgroup.openspg.builder.model.record;
 
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
 
-public abstract class BaseRecord extends BaseValObj {
-
-}
+public abstract class BaseRecord extends BaseValObj {}

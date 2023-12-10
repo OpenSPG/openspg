@@ -15,7 +15,5 @@ public class IdEqualsPropertyNormalizer extends AdvancedPropertyNormalizer {
   public void init(BuilderContext context) throws BuilderException {}
 
   @Override
-  public void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
-
-  }
+  public void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {}
 }
