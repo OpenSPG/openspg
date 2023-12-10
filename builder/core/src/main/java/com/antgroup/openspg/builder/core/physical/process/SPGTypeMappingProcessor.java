@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.core.normalize.RecordNormalizer;
-import com.antgroup.openspg.builder.core.normalize.RecordNormalizerImpl;
+import com.antgroup.openspg.builder.core.property.RecordNormalizer;
+import com.antgroup.openspg.builder.core.property.RecordNormalizerImpl;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.BuilderRecordException;

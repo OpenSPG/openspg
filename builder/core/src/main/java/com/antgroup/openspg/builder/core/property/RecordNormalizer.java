@@ -1,4 +1,4 @@
-package com.antgroup.openspg.builder.core.normalize;
+package com.antgroup.openspg.builder.core.property;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;

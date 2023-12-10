@@ -23,7 +23,7 @@ public abstract class BaseMappingNodeConfig extends BaseNodeConfig {
   public static class MappingConfig {
     private final String source;
     private final String target;
-    private final List<PropertyNormalizerConfig> mounterConfigs;
+    private final List<PropertyNormalizerConfig> normalizerConfigs;
   }
 
   public List<MappingConfig> getMappingConfigs() {

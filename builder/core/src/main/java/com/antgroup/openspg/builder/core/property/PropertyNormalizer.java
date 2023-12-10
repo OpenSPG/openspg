@@ -1,9 +1,9 @@
-package com.antgroup.openspg.builder.core.normalize;
+package com.antgroup.openspg.builder.core.property;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PropertyNormalizeException;
-import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
 
 /**
  * 属性标准化，针对以下情况会执行对应的标准化操作：
@@ -18,5 +18,5 @@ public interface PropertyNormalizer {
   void init(BuilderContext context) throws BuilderException;
 
   /** 输入一条spg属性记录，对该属性进行标准化 */
-  void propertyNormalize(SPGPropertyRecord record) throws PropertyNormalizeException;
+  void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException;
 }

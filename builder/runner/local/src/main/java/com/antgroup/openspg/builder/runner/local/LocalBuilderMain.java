@@ -4,6 +4,7 @@ import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.BuilderJsonUtils;
 import com.antgroup.openspg.builder.model.exception.PipelineConfigException;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
+import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.server.api.facade.ApiResponse;
 import com.antgroup.openspg.server.api.facade.client.SchemaFacade;
@@ -73,7 +74,8 @@ public class LocalBuilderMain {
             .setJobName(jobName)
             .setProjectSchema(projectSchema)
             .setPythonExec(pythonExec)
-            .setPythonPaths(pythonPaths);
+            .setPythonPaths(pythonPaths)
+            .setOperation(RecordAlterOperationEnum.UPSERT);
 
     LocalBuilderRunner runner = new LocalBuilderRunner(parallelism);
     runner.init(pipeline, builderContext);

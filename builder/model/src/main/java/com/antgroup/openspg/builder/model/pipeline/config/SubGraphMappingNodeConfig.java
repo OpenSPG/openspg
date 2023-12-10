@@ -7,10 +7,10 @@ import lombok.Getter;
 @Getter
 public class SubGraphMappingNodeConfig extends BaseMappingNodeConfig {
 
-  private final List<BaseMappingNodeConfig> mappingConfigs;
+  private final List<BaseMappingNodeConfig> childrenNodeConfigs;
 
-  public SubGraphMappingNodeConfig(List<BaseMappingNodeConfig> mappingConfigs) {
+  public SubGraphMappingNodeConfig(List<BaseMappingNodeConfig> childrenNodeConfigs) {
     super(NodeTypeEnum.SUBGRAPH_MAPPING);
-    this.mappingConfigs = mappingConfigs;
+    this.childrenNodeConfigs = childrenNodeConfigs;
   }
 }

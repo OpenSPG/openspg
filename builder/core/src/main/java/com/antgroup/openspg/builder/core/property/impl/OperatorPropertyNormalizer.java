@@ -1,15 +1,14 @@
-package com.antgroup.openspg.builder.core.normalize.impl;
+package com.antgroup.openspg.builder.core.property.impl;
 
 import com.antgroup.openspg.builder.core.physical.operator.OperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.PythonOperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.protocol.EvalResult;
 import com.antgroup.openspg.builder.core.physical.operator.protocol.Vertex;
-import com.antgroup.openspg.builder.core.normalize.AdvancedPropertyNormalizer;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PropertyNormalizeException;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorPropertyNormalizerConfig;
-import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
 import com.antgroup.openspg.core.schema.model.type.OperatorKey;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,7 +36,7 @@ public class OperatorPropertyNormalizer extends AdvancedPropertyNormalizer {
   }
 
   @Override
-  public void propertyNormalize(SPGPropertyRecord record) throws PropertyNormalizeException {
+  public void propertyNormalize(BasePropertyRecord record) throws PropertyNormalizeException {
     List<String> rawValues = record.getRawValues();
 
     // todo

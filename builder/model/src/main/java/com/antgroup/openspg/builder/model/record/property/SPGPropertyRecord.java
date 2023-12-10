@@ -14,15 +14,10 @@
 package com.antgroup.openspg.builder.model.record.property;
 
 import com.antgroup.openspg.core.schema.model.constraint.Constraint;
-import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.core.schema.model.type.WithSPGTypeEnum;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
@@ -50,22 +45,12 @@ public class SPGPropertyRecord extends BasePropertyRecord implements WithSPGType
   }
 
   @Override
-  public SPGTypeEnum getSpgTypeEnum() {
-    return getProperty().getObjectTypeRef().getSpgTypeEnum();
+  public Constraint getConstraint() {
+    return property.getConstraint();
   }
 
-  public List<String> getRawValues() {
-    List<String> rawValues = null;
-    Constraint constraint = property.getConstraint();
-    String rawValue = value.getRaw();
-    if (constraint != null
-        && constraint.contains(ConstraintTypeEnum.MULTI_VALUE)
-        && rawValue != null) {
-      rawValues = Arrays.stream(rawValue.split(",")).collect(Collectors.toList());
-    } else {
-      rawValues = new ArrayList<>(1);
-      rawValues.add(rawValue);
-    }
-    return rawValues;
+  @Override
+  public SPGTypeEnum getSpgTypeEnum() {
+    return getProperty().getObjectTypeRef().getSpgTypeEnum();
   }
 }

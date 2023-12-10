@@ -46,7 +46,7 @@ public class RelationRecord extends BaseSPGRecord {
 
   public SPGSubPropertyRecord getSubPropertyRecord(SubProperty property) {
     for (SPGSubPropertyRecord record : getSubProperties()) {
-      if (record.getSubPropertyType().getName().equals(property.getName())) {
+      if (record.getSubProperty().getName().equals(property.getName())) {
         return record;
       }
     }

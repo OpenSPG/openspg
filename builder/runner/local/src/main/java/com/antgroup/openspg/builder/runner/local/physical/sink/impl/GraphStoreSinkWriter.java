@@ -28,7 +28,6 @@ import com.antgroup.openspg.builder.runner.local.physical.sink.BaseSinkWriter;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
-import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;

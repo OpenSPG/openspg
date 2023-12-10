@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.builder.model.record.property;
 
+import com.antgroup.openspg.core.schema.model.constraint.Constraint;
 import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
@@ -22,19 +23,19 @@ import lombok.Getter;
 @Getter
 public class SPGSubPropertyRecord extends BasePropertyRecord implements WithSPGTypeEnum {
 
-  private final SubProperty subPropertyType;
+  private final SubProperty subProperty;
 
-  public SPGSubPropertyRecord(SubProperty subPropertyType, SPGPropertyValue value) {
+  public SPGSubPropertyRecord(SubProperty subProperty, SPGPropertyValue value) {
     super(value);
-    this.subPropertyType = subPropertyType;
-    if (!subPropertyType.getObjectTypeRef().isBasicType()) {
+    this.subProperty = subProperty;
+    if (!subProperty.getObjectTypeRef().isBasicType()) {
       throw new IllegalStateException("object of subPropertyType must be basicType");
     }
   }
 
   @Override
   public String getName() {
-    return subPropertyType.getName();
+    return subProperty.getName();
   }
 
   public SPGPropertyValue getValue() {
@@ -43,7 +44,7 @@ public class SPGSubPropertyRecord extends BasePropertyRecord implements WithSPGT
 
   @Override
   public SPGTypeRef getObjectTypeRef() {
-    return getSubPropertyType().getObjectTypeRef();
+    return getSubProperty().getObjectTypeRef();
   }
 
   @Override
@@ -52,7 +53,12 @@ public class SPGSubPropertyRecord extends BasePropertyRecord implements WithSPGT
   }
 
   @Override
+  public Constraint getConstraint() {
+    return subProperty.getConstraint();
+  }
+
+  @Override
   public SPGTypeEnum getSpgTypeEnum() {
-    return getSubPropertyType().getObjectTypeRef().getSpgTypeEnum();
+    return getSubProperty().getObjectTypeRef().getSpgTypeEnum();
   }
 }

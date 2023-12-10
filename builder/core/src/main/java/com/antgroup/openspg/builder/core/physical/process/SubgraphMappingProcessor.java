@@ -1,7 +1,7 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.core.normalize.RecordNormalizer;
-import com.antgroup.openspg.builder.core.normalize.RecordNormalizerImpl;
+import com.antgroup.openspg.builder.core.property.RecordNormalizer;
+import com.antgroup.openspg.builder.core.property.RecordNormalizerImpl;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PipelineConfigException;
@@ -36,7 +36,7 @@ public class SubgraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
   public void doInit(BuilderContext context) throws BuilderException {
     super.doInit(context);
 
-    for (BaseMappingNodeConfig mappingConfig : config.getMappingConfigs()) {
+    for (BaseMappingNodeConfig mappingConfig : config.getChildrenNodeConfigs()) {
       switch (mappingConfig.getType()) {
         case SPG_TYPE_MAPPING:
           SPGTypeMappingNodeConfig mappingConfig1 = (SPGTypeMappingNodeConfig) mappingConfig;
