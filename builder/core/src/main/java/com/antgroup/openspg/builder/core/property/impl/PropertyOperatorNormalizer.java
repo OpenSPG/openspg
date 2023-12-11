@@ -14,8 +14,10 @@ import com.antgroup.openspg.common.util.StringUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
+@Slf4j
 @SuppressWarnings("unchecked")
 public class PropertyOperatorNormalizer implements PropertyNormalizer {
 
@@ -40,13 +42,18 @@ public class PropertyOperatorNormalizer implements PropertyNormalizer {
 
     List<String> ids = new ArrayList<>(rawValues.size());
     for (String rawValue : rawValues) {
-      Map<String, Object> result =
-          (Map<String, Object>)
-              operatorFactory.invoke(
-                  normalizerConfig.getOperatorConfig(), rawValue, new HashMap<>(0));
-      InvokeResultWrapper<List<InvokeResult>> invokeResultWrapper =
-          mapper.convertValue(
-              result, new TypeReference<InvokeResultWrapper<List<InvokeResult>>>() {});
+      InvokeResultWrapper<List<InvokeResult>> invokeResultWrapper = null;
+      try {
+        Map<String, Object> result =
+            (Map<String, Object>)
+                operatorFactory.invoke(
+                    normalizerConfig.getOperatorConfig(), rawValue, new HashMap<>(0));
+        invokeResultWrapper =
+            mapper.convertValue(
+                result, new TypeReference<InvokeResultWrapper<List<InvokeResult>>>() {});
+      } catch (Exception e) {
+        throw new PropertyNormalizeException(e, "{} normalize error", rawValue);
+      }
 
       if (invokeResultWrapper == null || CollectionUtils.isEmpty(invokeResultWrapper.getData())) {
         continue;

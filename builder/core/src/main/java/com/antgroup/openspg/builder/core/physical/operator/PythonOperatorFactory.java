@@ -30,7 +30,7 @@ public class PythonOperatorFactory implements OperatorFactory {
   private static PythonInterpreter newPythonInterpreter(BuilderContext context) {
     String pythonExec = context.getPythonExec();
     String[] pythonPaths =
-        (context.getPythonPaths() != null ? context.getPythonPaths().split(",") : null);
+        (context.getPythonPaths() != null ? context.getPythonPaths().split(";") : null);
 
     PythonInterpreterConfig.PythonInterpreterConfigBuilder builder =
         PythonInterpreterConfig.newBuilder();

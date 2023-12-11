@@ -23,9 +23,9 @@ import lombok.Setter;
 public class InvokeResult {
 
   private String spgTypeName;
-  private Map<String, String> props;
+  private Map<String, String> properties;
 
   public String getId() {
-    return props.get("id");
+    return properties.get("id");
   }
 }

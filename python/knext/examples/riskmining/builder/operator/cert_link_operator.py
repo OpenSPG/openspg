@@ -14,7 +14,7 @@ from typing import List
 
 from knext.operator.op import LinkOp
 from knext.client.search import SearchClient
-from operator.spg_record import SPGRecord
+from knext.operator.spg_record import SPGRecord
 
 
 class CertLinkerOperator(LinkOp):
@@ -28,8 +28,8 @@ class CertLinkerOperator(LinkOp):
         has_cert = property
         query = {"match": {"certNum": has_cert}}
         recall_certs = self.search_client.search(query, start=0, size=10)
-        if recall_certs is not None:
+        if recall_certs is not None and len(recall_certs) > 0:
             return [
                 SPGRecord('RiskMining.Cert', {'id': recall_certs[0].doc_id})
             ]
-        return [SPGRecord('RiskMining.Cert', {})]
+        return [SPGRecord('RiskMining.Cert', {'id': property})]

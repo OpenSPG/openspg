@@ -55,7 +55,7 @@ public class UserDefinedExtractProcessor
       for (InvokeResult data : invokeResultWrapper.getData()) {
         results.add(
             new BuilderRecord(
-                null, SPGTypeIdentifier.parse(data.getSpgTypeName()), data.getProps()));
+                null, SPGTypeIdentifier.parse(data.getSpgTypeName()), data.getProperties()));
       }
     }
     return results;

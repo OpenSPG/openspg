@@ -122,14 +122,14 @@ class SPGRecord:
     def to_dict(self):
         """Returns the model properties as a dict"""
         return {
-            "SPGTypeName": self.spg_type_name,
+            "spgTypeName": self.spg_type_name,
             "properties": self.properties,
         }
 
     @classmethod
     def from_dict(cls, input: Dict[str, Any]):
         """Returns the model from a dict"""
-        return cls(input.get("SPGTypeName"), input.get("properties"))
+        return cls(input.get("spgTypeName"), input.get("properties"))
 
     def __repr__(self):
         """For `print` and `pprint`"""

@@ -39,7 +39,13 @@ public class PropertySearchNormalizer implements PropertyNormalizer {
       if (!objectTypeRef.isEntityType() && !objectTypeRef.isConceptType()) {
         ids.add(rawValue);
       } else {
-        ids.add(search(objectTypeRef, rawValue));
+        String searchResult = null;
+        try {
+          searchResult = search(objectTypeRef, rawValue);
+        } catch (Exception e) {
+          throw new PropertyNormalizeException(e, "{} normalize error", rawValue);
+        }
+        ids.add(searchResult);
       }
     }
     record.getValue().setStds(Collections.singletonList(ids));
