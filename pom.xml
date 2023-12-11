@@ -80,7 +80,7 @@
       <dependency>
         <groupId>com.antgroup.openspg.builder</groupId>
         <artifactId>builder-model</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.builder</groupId>
@@ -95,7 +95,7 @@
       <dependency>
         <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-interface-graph-store</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.cloudext</groupId>
