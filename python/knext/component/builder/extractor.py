@@ -7,10 +7,10 @@ from knext.operator.spg_record import SPGRecord
 from knext import rest
 from knext.operator.op import PromptOp, ExtractOp
 
-try:
-    from nn4k.invoker.base import NNInvoker  # noqa: F403
-except ImportError:
-    pass
+# try:
+from nn4k.invoker.base import NNInvoker  # noqa: F403
+# except ImportError:
+#     pass
 
 
 class LLMBasedExtractor(SPGExtractor):

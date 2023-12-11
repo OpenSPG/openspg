@@ -1,7 +1,6 @@
-from abc import ABC
 from collections import defaultdict
 from enum import Enum
-from typing import Union, Dict, List, Tuple, Sequence, Any
+from typing import Union, Dict, List, Tuple, Sequence
 
 from knext import rest
 from knext.common.runnable import Input, Output
@@ -12,15 +11,13 @@ from knext.operator.op import LinkOp
 from knext.operator.spg_record import SPGRecord
 
 
-
 class MappingTypeEnum(str, Enum):
     SPGType = "SPG_TYPE"
     Relation = "RELATION"
 
 
 class LinkStrategyEnum(str, Enum):
-    IDEqual = "ID_EQUAL"
-    Search = "SEARCH"
+    IDEquals = "ID_EQUALS"
 
 
 SPG_TYPE_BASE_FIELDS = ["id"]
@@ -45,7 +42,7 @@ class SPGTypeMapping(Mapping):
 
     spg_type_name: Union[str, SPGTypeHelper]
 
-    mapping: Dict[str, List[str]] = defaultdict(list)
+    mapping: Dict[str, str] = dict()
 
     filters: List[Tuple[str, str]] = list()
 
@@ -74,7 +71,7 @@ class SPGTypeMapping(Mapping):
         :param target_field: The target field to map the source field to.
         :return: self
         """
-        self.mapping[source_field].append(target_field)
+        self.mapping[target_field] = source_field
         self.link_strategies[target_field] = link_strategy
         return self
 
@@ -100,22 +97,22 @@ class SPGTypeMapping(Mapping):
             rest.MappingFilter(column_name=name, column_value=value)
             for name, value in self.filters
         ]
-        mapping_configs = [
-            rest.MappingConfig(source=src_name, target=tgt_names)
-            for src_name, tgt_names in self.mapping.items()
-        ]
-        mapping_schemas = [
-            rest.MappingSchema(name, operator_config=operator_config)
-            for name, operator_config in schema.items()
-        ]
+        mapping_configs = []
+        for tgt_name, src_name in self.mapping.items():
+            link_strategy = self.link_strategies.get(tgt_name, None)
+            if isinstance(link_strategy, LinkOp):
+                property_normalizer = rest.OperatorPropertyNormalizerConfig(config=link_strategy.to_rest())
+            elif link_strategy == LinkStrategyEnum.IDEquals:
+                property_normalizer = rest.IdEqualsPropertyNormalizerConfig()
+            elif not link_strategy:
+                property_normalizer = None
+            else:
+                raise ValueError(f"Invalid link_strategy {link_strategy}")
+            mapping_configs.append(rest.MappingConfig(source=src_name, target=tgt_name, normalizer_config=property_normalizer))
 
-        node_config_list = []
-
-        config = rest.MappingNodeConfig(
-            spg_name=self.spg_type_name,
-            mapping_type=self.mapping_type,
+        config = rest.SpgTypeMappingNodeConfig(
+            spg_type=self.spg_type_name,
             mapping_filters=mapping_filters,
-            mapping_schemas=mapping_schemas,
             mapping_configs=mapping_configs,
         )
         return rest.Node(**super().to_dict(), node_config=config)
@@ -152,7 +149,7 @@ class RelationMapping(Mapping):
     predicate_name: Union[str, PropertyHelper]
     object_name: Union[str, SPGTypeHelper]
 
-    mapping: Dict[str, List[str]] = defaultdict(list)
+    mapping: Dict[str, str] = dict()
 
     filters: List[Tuple[str, str]] = list()
 
@@ -163,7 +160,7 @@ class RelationMapping(Mapping):
         :param target_field: The target field to map the source field to.
         :return: self
         """
-        self.mapping[source_field].append(target_field)
+        self.mapping[target_field] = source_field
         return self
 
     def add_filter(self, column_name: str, column_value: str):
@@ -185,25 +182,22 @@ class RelationMapping(Mapping):
             for name, value in self.filters
         ]
         mapping_configs = [
-            rest.MappingConfig(source=src_name, target=tgt_names)
-            for src_name, tgt_names in self.mapping.items()
+            rest.MappingConfig(source=src_name, target=tgt_name)
+            for tgt_name, src_name in self.mapping.items()
         ]
-        mapping_schemas = []
 
-        config = rest.MappingNodeConfig(
-            spg_name=f"{self.subject_name}_{self.predicate_name}_{self.object_name}",
-            mapping_type=MappingTypeEnum.Relation,
+        config = rest.RelationMappingNodeConfig(
+            relation=f"{self.subject_name}_{self.predicate_name}_{self.object_name}",
             mapping_filters=mapping_filters,
-            mapping_schemas=mapping_schemas,
             mapping_configs=mapping_configs,
         )
         return rest.Node(**super().to_dict(), node_config=config)
 
-    def invoke(self, input: Input) -> Sequence[Output]:
-        pass
-
     @classmethod
     def from_rest(cls, node: rest.Node):
+        pass
+
+    def invoke(self, input: Input) -> Sequence[Output]:
         pass
 
     def submit(self):
@@ -214,7 +208,7 @@ class SubGraphMapping(Mapping):
 
     spg_type_name: Union[str, SPGTypeHelper]
 
-    mapping: Dict[str, List[str]] = defaultdict(list)
+    mapping: Dict[str, str] = dict()
 
     filters: List[Tuple[str, str]] = list()
 
@@ -222,7 +216,7 @@ class SubGraphMapping(Mapping):
 
     @property
     def input_types(self) -> Input:
-        return Dict[str, str]
+        return Union[Dict[str, str], SPGRecord]
 
     @property
     def output_types(self) -> Output:
@@ -243,7 +237,7 @@ class SubGraphMapping(Mapping):
         :param target_field: The target field to map the source field to.
         :return: self
         """
-        self.mapping[source_field].append(target_field)
+        self.mapping[target_field] = source_field
         self.link_strategies[target_field] = link_strategy
         return self
 
@@ -251,7 +245,6 @@ class SubGraphMapping(Mapping):
         pass
 
     def to_rest(self) -> rest.Node:
-        schema = {}
         # TODO generate schema with link_strategy
 
         mapping_filters = [
@@ -262,17 +255,11 @@ class SubGraphMapping(Mapping):
             rest.MappingConfig(source=src_name, target=tgt_names)
             for src_name, tgt_names in self.mapping.items()
         ]
-        mapping_schemas = [
-            rest.MappingSchema(name, operator_config=operator_config)
-            for name, operator_config in schema.items()
-        ]
 
-        config = rest.MappingNodeConfig(
-            spg_name=self.spg_type_name,
-            mapping_type=self.mapping_type,
-            mapping_filters=mapping_filters,
-            mapping_schemas=mapping_schemas,
-            mapping_configs=mapping_configs,
+        node_configs = []
+
+        config = rest.SubGraphMappingNodeConfig(
+            children_node_configs=node_configs,
         )
         return rest.Node(**super().to_dict(), node_config=config)
 

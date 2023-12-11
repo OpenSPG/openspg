@@ -1,6 +1,7 @@
-from typing import Dict
 
+from knext import rest
 from knext.component.builder.base import SinkWriter
+from knext.operator.spg_record import SPGRecord
 
 
 class KGSinkWriter(SinkWriter):
@@ -15,23 +16,23 @@ class KGSinkWriter(SinkWriter):
 
     @property
     def input_types(self):
-        return Dict[str, str]
+        return SPGRecord
 
     @property
     def output_types(self):
         return None
 
-    def invoke(self, input):
-        pass
-
     def to_rest(self):
         """Transforms `SinkToKgComponent` to REST model `GraphStoreSinkNodeConfig`."""
-        return dict(
-            {
-                "properties": {},
-            },
-            **super().to_dict(),
-        )
+        config = rest.GraphStoreSinkNodeConfig()
+        return rest.Node(**super().to_dict(), node_config=config)
+
+    @classmethod
+    def from_rest(cls, node: rest.Node):
+        pass
+
+    def invoke(self, input):
+        pass
 
     def submit(self):
         pass

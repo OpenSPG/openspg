@@ -1,20 +1,21 @@
-from typing import Union
+from typing import Union, List
 
 from knext.chain.base import Chain
-from knext.component.base import RESTable
+from knext.client.builder import BuilderClient
+from knext.client.model.builder_job import BuilderJob
 from knext.component.builder.extractor import SPGExtractor
 from knext.component.builder.mapping import Mapping
 from knext.component.builder.sink_writer import SinkWriter
 from knext.component.builder.source_reader import SourceReader
 
 
-class BuilderChain(RESTable, Chain):
+class BuilderChain(Chain):
 
-    source: SourceReader
+    source_node: SourceReader
 
-    process: Union[SPGExtractor, Mapping, ]
+    process_nodes: List[Union[SPGExtractor, Mapping]]
 
-    sink: SinkWriter
+    sink_node: SinkWriter
 
     @property
     def input_types(self):
@@ -27,3 +28,7 @@ class BuilderChain(RESTable, Chain):
     @classmethod
     def from_config(cls):
         return cls()
+
+    def invoke(self, **kwargs):
+        client = BuilderClient(**kwargs)
+        client.execute(self, **kwargs)

@@ -106,9 +106,7 @@ class PromptOp(ExtractOp, ABC):
 
     def eval(self, *args):
         """Used to implement operator execution logic."""
-        raise NotImplementedError(
-            f"{self.__class__.__name__} need to implement `eval` method."
-        )
+        pass
 
     def handle(self, *inputs) -> Dict[str, Any]:
         """Only available for Builder in OpenKgEngine to call through the pemja tool."""

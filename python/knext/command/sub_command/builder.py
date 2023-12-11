@@ -18,7 +18,8 @@ import click
 from tabulate import tabulate
 
 from knext import rest
-from knext.core.builder.job.builder import Builder
+from knext.client.builder import BuilderClient
+from knext.client.model.builder_job import BuilderJob
 
 
 @click.argument("job_names", required=True)
@@ -27,10 +28,30 @@ def submit_job(job_names):
     Submit asynchronous builder jobs to server by providing job names.
     """
     job_list = [name.strip() for name in job_names.split(",") if name]
-    client = Builder()
+    client = BuilderClient()
 
     for job in job_list:
         inst = client.submit(job)
+        click.secho(
+            f"BuilderJob [{job}] has been successfully submitted."
+            f" Use ` knext builder get --id {inst.building_job_inst_id} ` to check job status.",
+            fg="bright_green",
+        )
+
+
+@click.argument("job_names", required=True)
+def execute_job(job_names):
+    job_list = [name.strip() for name in job_names.split(",") if name]
+    client = BuilderClient()
+
+    for job in job_list:
+        builder_job = BuilderJob.by_name(job)()
+        builder_chain = builder_job.build()
+        inst = client.execute(builder_chain,
+                              job_name=job,
+                              parallelism=builder_job.parallelism,
+                              alter_operation=builder_job.alter_operation
+                              )
         click.secho(
             f"BuilderJob [{job}] has been successfully submitted."
             f" Use ` knext builder get --id {inst.building_job_inst_id} ` to check job status.",
@@ -49,7 +70,7 @@ def get_job(id):
         click.secho("ERROR: Option [--id] must be a integer.", fg="bright_red")
         sys.exit()
 
-    client = Builder()
+    client = BuilderClient()
     res = client.query(job_inst_id)
     if res and len(res) > 0:
         data = {k: [v if v else "-"] for k, v in res[0].to_dict().items()}

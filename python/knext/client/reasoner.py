@@ -14,6 +14,7 @@ import os
 from enum import Enum
 
 from knext import rest
+from knext.client.base import Client
 
 _DEFAULT_JOB_NAME = "job"
 
@@ -32,9 +33,10 @@ class LocalClusterModeEnum(str, Enum):
 class ReasonerClient(Client):
     """SPG Reasoner Client."""
 
-    def __init__(self):
-        self._client = rest.ReasonerApi()
-        self._project_id = os.environ.get("KNEXT_PROJECT_ID")
+    _rest_client = rest.ReasonerApi()
+
+    def __init__(self, host_addr: str = None, project_id: int = None):
+        super().__init__(host_addr, project_id)
 
     def submit(self, dsl_content: str):
         """Submit an asynchronous reasoner job to the server by name."""
@@ -42,7 +44,7 @@ class ReasonerClient(Client):
         request = rest.ReasonerJobSubmitRequest(
             job_name=_DEFAULT_JOB_NAME, project_id=self._project_id, content=content
         )
-        return self._client.reasoner_submit_job_info_post(
+        return self._rest_client.reasoner_submit_job_info_post(
             reasoner_job_submit_request=request
         )
 
@@ -52,8 +54,8 @@ class ReasonerClient(Client):
         request = rest.ReasonerDslRunRequest(
             content=content, project_id=self._project_id
         )
-        return self._client.reasoner_run_dsl_post(reasoner_dsl_run_request=request)
+        return self._rest_client.reasoner_run_dsl_post(reasoner_dsl_run_request=request)
 
     def query(self, job_inst_id: int):
         """Query status of a submitted reasoner job by job inst id."""
-        return self._client.reasoner_query_job_inst_get(job_inst_id=job_inst_id)
+        return self._rest_client.reasoner_query_job_inst_get(job_inst_id=job_inst_id)

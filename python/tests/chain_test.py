@@ -21,13 +21,13 @@ if __name__ == '__main__':
     sink = KGSinkWriter()
     sink2 = KGSinkWriter()
 
-    builder_chain = source >> [mapping1, None] >> sink2
+    builder_chain = source >> mapping1 >> sink2
 
-    print(builder_chain.dag.edges)
+    print(builder_chain.dag)
 
-    G = builder_chain.dag
-    # 绘制图形
-    nx.draw(G, with_labels=True, arrows=True)
-
-    # 显示图形
-    plt.show()
+    # G = builder_chain.dag
+    # # 绘制图形
+    # # nx.draw(G, with_labels=True, arrows=True)
+    #
+    # # 显示图形
+    # plt.show()

@@ -2,22 +2,24 @@ from abc import ABC
 from enum import Enum
 from typing import Union
 
-from knext.component.base import Component, ComponentTypeEnum
+from knext.component.base import Component
 
 
-class ComponentLabelEnum(str, Enum):
-    SourceReader = "SOURCE_READER"
-    Extractor = "EXTRACTOR"
-    Mapping = "MAPPING"
-    Evaluator = "EVALUATOR"
-    SinkWriter = "SINK_WRITER"
+class ComponentTypeEnum(str, Enum):
+    CsvSourceReader = "CSV_SOURCE"
+    LLMBasedExtractor = "LLM_BASED_EXTRACT"
+    UserDefinedExtractor = "USER_DEFINED_EXTRACT"
+    SPGTypeMapping = "SPG_TYPE_MAPPING"
+    RelationMapping = "RELATION_MAPPING"
+    SubGraphMapping = "SUBGRAPH_MAPPING"
+    KGSinkWriter = "GRAPH_SINK"
 
 
 class BuilderComponent(Component, ABC):
 
     @property
     def type(self):
-        return ComponentTypeEnum.Builder
+        return ComponentTypeEnum.__members__[self.__class__.__name__].value
 
     @property
     def input_keys(self):
@@ -38,10 +40,6 @@ class SourceReader(BuilderComponent, ABC):
     def downstream_types(self):
         return Union[SPGExtractor, Mapping]
 
-    @property
-    def label(self):
-        return ComponentLabelEnum.SourceReader
-
 
 class SPGExtractor(BuilderComponent, ABC):
 
@@ -52,10 +50,6 @@ class SPGExtractor(BuilderComponent, ABC):
     @property
     def downstream_types(self):
         return Union[SPGExtractor, Mapping]
-
-    @property
-    def label(self):
-        return ComponentLabelEnum.Extractor
 
 
 class Mapping(BuilderComponent, ABC):
@@ -68,10 +62,6 @@ class Mapping(BuilderComponent, ABC):
     def downstream_types(self):
         return Union[SinkWriter]
 
-    @property
-    def label(self):
-        return ComponentLabelEnum.Mapping
-
 
 class SinkWriter(BuilderComponent, ABC):
 
@@ -82,7 +72,3 @@ class SinkWriter(BuilderComponent, ABC):
     @property
     def downstream_types(self):
         return None
-
-    @property
-    def label(self):
-        return ComponentLabelEnum.SinkWriter

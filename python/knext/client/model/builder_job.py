@@ -10,30 +10,31 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from abc import ABC
 from enum import Enum
 from typing import Dict, Type
 
+from knext.chain.builder_chain import BuilderChain
 
-class OperationTypeEnum(str, Enum):
-    Add = "ADD"
+
+class AlterOperationEnum(str, Enum):
+    Upsert = "UPSERT"
     Delete = "DELETE"
 
 
-class BuilderJob(ABC):
+class BuilderJob:
     """Base class for all knowledge builder jobs.
     A builder job consists of multiple components.
     The declaration of components and the dependencies between components need to be implemented in `build` method.
     """
 
     parallelism: int
-    operation_type: OperationTypeEnum
+    alter_operation: AlterOperationEnum
     lead_to: bool
 
     _registry: Dict[str, Type] = {}
     _local_path: str
 
-    def build(self):
+    def build(self) -> BuilderChain:
         """All classes as subclass of BuilderJob need to implement this method,
         to declare the DAG structure of the builder job.
         """

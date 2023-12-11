@@ -89,12 +89,7 @@ class BaseNodeConfig(object):
             raise ValueError(
                 "Invalid value for `type`, must not be `None`"
             )  # noqa: E501
-        allowed_values = [
-            "CSV_SOURCE",
-            "GRAPH_SINK",
-            "MAPPING",
-            "EXTRACT",
-        ]  # noqa: E501
+        allowed_values = ["CSV_SOURCE", "SPG_TYPE_MAPPING", "RELATION_MAPPING", "SUBGRAPH_MAPPING", "USER_DEFINED_EXTRACT", "LLM_BASED_EXTRACT", "GRAPH_SINK"]  # noqa: E501
         if (
             self.local_vars_configuration.client_side_validation
             and type not in allowed_values

@@ -13,28 +13,31 @@
 import os
 
 from knext import rest
+from knext.chain.builder_chain import BuilderChain
 from knext.client.base import Client
+from knext.client.model.builder_job import BuilderJob, AlterOperationEnum
 from knext.common.class_register import register_from_package
-from knext.core.builder.job.builder_job import BuilderJob
 
 
 class BuilderClient(Client):
     """SPG Builder Client."""
 
-    def __init__(self):
-        self._client = rest.BuilderApi()
-        self._project_id = os.environ.get("KNEXT_PROJECT_ID")
-        self._builder_job_path = os.path.join(
-            os.environ["KNEXT_ROOT_PATH"], os.environ["KNEXT_BUILDER_JOB_DIR"]
-        )
+    _rest_client = rest.BuilderApi()
 
-        register_from_package(self._builder_job_path, BuilderJob)
+    def __init__(self, host_addr: str = None, project_id: int = None):
+        super().__init__(host_addr, project_id)
+
+        if "KNEXT_ROOT_PATH" in os.environ and "KNEXT_BUILDER_JOB_DIR" in os.environ:
+            self._builder_job_path = os.path.join(
+                os.environ["KNEXT_ROOT_PATH"], os.environ["KNEXT_BUILDER_JOB_DIR"]
+            )
+            register_from_package(self._builder_job_path, BuilderJob)
 
     def submit(self, job_name: str):
         """Submit an asynchronous builder job to the server by name."""
         job = BuilderJob.by_name(job_name)()
-        start_node = job.build()
-        config = self._generate_dag_config(start_node)
+        builder_chain = job.build()
+        dag_config = builder_chain.to_rest()
 
         params = {
             param: getattr(job, param)
@@ -44,26 +47,58 @@ class BuilderClient(Client):
         request = rest.BuilderJobSubmitRequest(
             job_name=job.name,
             project_id=self._project_id,
-            pipeline=config,
+            pipeline=dag_config,
             params=params,
         )
-        return self._client.builder_submit_job_info_post(
+        return self._rest_client.builder_submit_job_info_post(
             builder_job_submit_request=request
         )
 
+    def execute(self, builder_chain: BuilderChain, **kwargs):
+        """
+          --projectId 2 \
+  --jobName "TaxOfRiskApp" \
+  --pipeline "{\"nodes\":[{\"id\":\"1\",\"name\":\"csv\",\"nodeConfig\":{\"@type\":\"CSV_SOURCE\",\"startRow\":2,\"url\":\"./src/test/resources/TaxOfRiskApp.csv\",\"columns\":[\"id\"],\"type\":\"CSV_SOURCE\"}},{\"id\":\"2\",\"name\":\"mapping\",\"nodeConfig\":{\"@type\":\"SPG_TYPE_MAPPING\",\"spgType\":\"RiskMining.TaxOfRiskUser\",\"mappingFilters\":[],\"mappingConfigs\":[],\"type\":\"SPG_TYPE_MAPPING\"}},{\"id\":\"3\",\"name\":\"sink\",\"nodeConfig\":{\"@type\":\"GRAPH_SINK\",\"type\":\"GRAPH_SINK\"}}],\"edges\":[{\"from\":\"1\",\"to\":\"2\"},{\"from\":\"2\",\"to\":\"3\"}]}" \
+  --pythonExec "/usr/local/bin/python3.9" \
+  --pythonPaths "/usr/local/lib/python3.9/site-packages;./python" \
+  --schemaUrl "http://localhost:8887" \
+  --parallelism "1" \
+  --alterOperation "UPSERT" \
+  --logFile TaxOfRiskApp.log
+        """
+
+        dag_config = builder_chain.to_rest()
+
+        import sys
+        python_exec = sys.executable
+        python_paths = sys.path
+
+        import os
+        import subprocess
+        import knext
+        import datetime
+        import json
+
+        jar_path = os.path.join(knext.__path__[0], f"engine/builder-runner-local-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
+        pipeline = json.dumps(dag_config, ensure_ascii=False)
+        log_file_name = f"{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
+
+        java_cmd = ['java', '-jar',
+                    "-Dcloudext.graphstore.drivers=com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClientDriver",
+                    "-Dcloudext.searchengine.drivers=com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchEngineClientDriver",
+                    jar_path,
+                    "--projectId", self._project_id,
+                    "--jobName", kwargs.get("job_name", "default_job"),
+                    "--pipeline", pipeline,
+                    "--pythonExec", python_exec,
+                    "--pythonPaths", python_paths,
+                    "--schemaUrl", self._host_addr,
+                    "--parallelism", kwargs.get("parallelism", 1),
+                    "--alterOperation", kwargs.get("alter_operation", AlterOperationEnum.Upsert),
+                    "--logFile", log_file_name
+                    ]
+        subprocess.call(java_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
     def query(self, job_inst_id: int):
         """Query status of a submitted builder job by job inst id."""
-        return self._client.builder_query_job_inst_get(job_inst_id=job_inst_id)
-
-    def _generate_dag_config(self, node):
-        """Transforms a list of components to REST model `Pipeline`."""
-        nodes, edges = [node._to_rest()], []
-        while node.next:
-            next_nodes = node.next
-            nodes.extend([n._to_rest() for n in next_nodes])
-            edges.extend(
-                [rest.Edge(_from=pre.id, to=n.id) for n in next_nodes for pre in n.pre]
-            )
-            node = node.next[0]
-        dag_config = rest.Pipeline(nodes=nodes, edges=edges)
-        return dag_config
+        return self._rest_client.builder_query_job_inst_get(job_inst_id=job_inst_id)

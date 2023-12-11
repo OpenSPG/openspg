@@ -15,22 +15,23 @@ from typing import List
 
 from knext import rest
 from knext.client.base import Client
-from knext.core.schema.model import Relation
 from knext.client.model.base import BaseSpgType, AlterOperationEnum, SpgTypeEnum
+from knext.client.model.relation import Relation
 
 
 class SchemaClient(Client):
     """ """
 
-    def __init__(self):
-        self._client = rest.SchemaApi()
-        self._project_id = os.environ.get("KNEXT_PROJECT_ID")
+    _rest_client = rest.SchemaApi()
+
+    def __init__(self, host_addr: str = None, project_id: int = None):
+        super().__init__(host_addr, project_id)
 
         self._session = None
 
     def query_spg_type(self, spg_type_name: str) -> BaseSpgType:
         """Query SPG type by name."""
-        rest_model = self._client.schema_query_spg_type_get(spg_type_name)
+        rest_model = self._rest_client.schema_query_spg_type_get(spg_type_name)
         type_class = BaseSpgType.by_type_enum(f"{rest_model.spg_type_enum}")
 
         if rest_model.spg_type_enum == SpgTypeEnum.Concept:
@@ -46,7 +47,7 @@ class SchemaClient(Client):
         self, subject_name: str, predicate_name: str, object_name: str
     ) -> Relation:
         """Query relation type by s_p_o name."""
-        rest_model = self._client.schema_query_relation_type_get(
+        rest_model = self._rest_client.schema_query_relation_type_get(
             subject_name, predicate_name, object_name
         )
         return Relation(
@@ -55,12 +56,12 @@ class SchemaClient(Client):
 
     def create_session(self):
         """Create session for altering schema."""
-        return self.SchemaSession(self._client, self._project_id)
+        return self.SchemaSession(self._rest_client, self._project_id)
 
     class SchemaSession:
         def __init__(self, client, project_id):
             self._alter_spg_types: List[BaseSpgType] = []
-            self._client = client
+            self._rest_client = client
             self._project_id = project_id
 
             self._spg_types = {}
@@ -69,7 +70,7 @@ class SchemaClient(Client):
 
         def _init_spg_types(self):
             """Query project schema and init SPG types in session."""
-            project_schema = self._client.schema_query_project_schema_get(
+            project_schema = self._rest_client.schema_query_project_schema_get(
                 self._project_id
             )
             for spg_type in project_schema.spg_types:
@@ -145,4 +146,4 @@ class SchemaClient(Client):
             request = rest.SchemaAlterRequest(
                 project_id=self._project_id, schema_draft=rest.SchemaDraft(schema_draft)
             )
-            self._client.schema_alter_schema_post(schema_alter_request=request)
+            self._rest_client.schema_alter_schema_post(schema_alter_request=request)

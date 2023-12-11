@@ -18,7 +18,7 @@ import click
 from tabulate import tabulate
 
 from knext import rest
-from knext.core.reasoner import Reasoner
+from knext.client.reasoner import ReasonerClient
 
 
 @click.option("--file", help="Path of DSL file.")
@@ -27,7 +27,7 @@ def run_dsl(file, dsl):
     """
     Query dsl by providing a string or file.
     """
-    client = Reasoner()
+    client = ReasonerClient()
     dsl_content = ""
     if file and not dsl:
         with open(file, "r") as f:
@@ -48,7 +48,7 @@ def submit_reasoner_job(file, dsl):
     """
     Submit asynchronous reasoner jobs to server by providing DSL file or string.
     """
-    client = Reasoner()
+    client = ReasonerClient()
     if file and not dsl:
         with open(file, "r") as f:
             dsl_content = f.read()
@@ -77,7 +77,7 @@ def query_reasoner_job(id):
         click.secho("ERROR: Option [--id] must be a integer.", fg="bright_red")
         sys.exit()
 
-    client = Reasoner()
+    client = ReasonerClient()
     res = client.query(job_inst_id=job_inst_id)
     if res and len(res) > 0:
         data = {k: [v if v else "-"] for k, v in res[0].to_dict().items()}

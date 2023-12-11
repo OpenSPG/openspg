@@ -1,21 +1,47 @@
-from abc import ABC
-from typing import Union, Type, List
+from typing import Union, Type, List, Sequence, TypeVar, Generic
 
 import networkx as nx
 
+from knext import rest
 from knext.common.restable import RESTable
-from knext.common.runnable import Runnable
+from knext.common.runnable import Runnable, Input, Output
 
 
 class Chain(Runnable, RESTable):
 
+    first: RESTable
+
+    last: RESTable
+
     dag: nx.DiGraph
 
-    def submit(self):
+    def invoke(self, input=None, **kwargs):
         pass
 
-    def to_rest(self):
+    @property
+    def upstream_types(self) -> Type['RESTable']:
+        return self.first.upstream_types
+
+    @property
+    def downstream_types(self) -> Type['RESTable']:
+        return self.last.downstream_types
+
+    @classmethod
+    def from_rest(cls, node: rest.Node):
         pass
+
+    def submit(self):
+        raise ValueError("Not support yet.")
+
+    def to_rest(self) -> rest.Pipeline:
+        nodes, edges = [], []
+        for node in self.g.nodes:
+            nodes.append(node.to_rest())
+        for edge in self.g.edges:
+            edges.append(rest.Edge(_from=edge[0].id, to=edge[1].id))
+
+        dag_config = rest.Pipeline(nodes=nodes, edges=edges)
+        return dag_config
 
     def __rshift__(self, other: Union[
         Type['Chain'],

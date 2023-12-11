@@ -12,7 +12,7 @@
 
 import click
 
-from knext.core.builder.operator import Operator
+from knext.client.operator import OperatorClient
 
 
 @click.argument("op_names", required=True)
@@ -20,7 +20,7 @@ def publish_operator(op_names):
     """
     Publish operators to server.
     """
-    client = Operator()
+    client = OperatorClient()
 
     op_list = [name.strip() for name in op_names.split(",") if name]
     for op_name in op_list:

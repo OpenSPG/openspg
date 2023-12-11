@@ -17,7 +17,7 @@ from typing import Dict
 from knext import rest
 from knext.client.base import Client
 from knext.common.class_register import register_from_package
-from knext.core.builder.operator.model.op import BaseOp
+from knext.operator.base import BaseOp
 
 
 class OperatorTypeEnum(str, Enum):
@@ -30,14 +30,12 @@ class OperatorTypeEnum(str, Enum):
 class OperatorClient(Client):
     """SPG Operator Client."""
 
-    def __init__(
-        self,
-    ):
-        self._client = rest.OperatorApi()
-        self._project_id = os.environ.get("KNEXT_PROJECT_ID")
-        self._builder_operator_path = os.path.join(
-            os.environ["KNEXT_ROOT_PATH"], os.environ["KNEXT_BUILDER_OPERATOR_DIR"]
-        )
+    def __init__(self, host_addr: str = None, project_id: int = None):
+        super().__init__(host_addr, project_id)
+        if "KNEXT_ROOT_PATH" in os.environ and "KNEXT_BUILDER_OPERATOR_DIR" in os.environ:
+            self._builder_operator_path = os.path.join(
+                os.environ["KNEXT_ROOT_PATH"], os.environ["KNEXT_BUILDER_OPERATOR_DIR"]
+            )
 
         register_from_package(self._builder_operator_path, BaseOp)
 
