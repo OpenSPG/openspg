@@ -18,80 +18,58 @@ class SPGRecord:
     """Data structure in operator, used to store entity information."""
 
     def __init__(
-        self, biz_id: str = "", vertex_type: str = "", properties: Dict[str, str] = None
+        self, spg_type_name: str = "", properties: Dict[str, str] = None
     ):
-        self._biz_id = None
-        self._vertex_type = None
+        self._spg_type_name = None
         self._properties = None
 
-        self._biz_id = biz_id
-        self._vertex_type = vertex_type
+        self._spg_type_name = spg_type_name
         if properties is None:
             properties = {}
         self._properties = properties
 
     @property
-    def biz_id(self) -> str:
-        """Gets the biz_id of this Vertex.  # noqa: E501
+    def spg_type_name(self) -> str:
+        """Gets the spg_type_name of this SPGRecord.  # noqa: E501
 
 
-        :return: The biz_id of this Vertex.  # noqa: E501
+        :return: The spg_type_name of this SPGRecord.  # noqa: E501
         :rtype: str
         """
-        return self._biz_id
+        return self._spg_type_name
 
-    @biz_id.setter
-    def biz_id(self, biz_id: str):
-        """Sets the biz_id of this Vertex.
+    @spg_type_name.setter
+    def spg_type_name(self, spg_type_name: str):
+        """Sets the spg_type_name of this SPGRecord.
 
 
-        :param biz_id: The biz_id of this Vertex.  # noqa: E501
+        :param spg_type_name: The spg_type_name of this SPGRecord.  # noqa: E501
         :type: str
         """
-        self._biz_id = biz_id
-
-    @property
-    def vertex_type(self) -> str:
-        """Gets the vertex_type of this Vertex.  # noqa: E501
-
-
-        :return: The vertex_type of this Vertex.  # noqa: E501
-        :rtype: str
-        """
-        return self._vertex_type
-
-    @vertex_type.setter
-    def vertex_type(self, vertex_type: str):
-        """Sets the vertex_type of this Vertex.
-
-
-        :param vertex_type: The vertex_type of this Vertex.  # noqa: E501
-        :type: str
-        """
-        self._vertex_type = vertex_type
+        self._spg_type_name = spg_type_name
 
     @property
     def properties(self) -> Dict[str, str]:
-        """Gets the properties of this Vertex.  # noqa: E501
+        """Gets the properties of this SPGRecord.  # noqa: E501
 
 
-        :return: The properties of this Vertex.  # noqa: E501
+        :return: The properties of this SPGRecord.  # noqa: E501
         :rtype: dict
         """
         return self._properties
 
     @properties.setter
     def properties(self, properties: Dict[str, str]):
-        """Sets the properties of this Vertex.
+        """Sets the properties of this SPGRecord.
 
 
-        :param properties: The properties of this Vertex.  # noqa: E501
+        :param properties: The properties of this SPGRecord.  # noqa: E501
         :type: dict
         """
         self._properties = properties
 
     def get_property(self, name: str, default_value: str = None) -> str:
-        """Gets a property of this Vertex by name.  # noqa: E501
+        """Gets a property of this SPGRecord by name.  # noqa: E501
 
 
         :param name: The property name.  # noqa: E501
@@ -102,7 +80,7 @@ class SPGRecord:
         return self.properties.get(name, default_value)
 
     def update_property(self, name: str, value: str):
-        """Updates a property of this Vertex.  # noqa: E501
+        """Updates a property of this SPGRecord.  # noqa: E501
 
 
         :param name: The updated property name.  # noqa: E501
@@ -112,7 +90,7 @@ class SPGRecord:
         self.properties[name] = value
 
     def update_properties(self, properties: Dict[str, str]):
-        """Updates properties of this Vertex.  # noqa: E501
+        """Updates properties of this SPGRecord.  # noqa: E501
 
 
         :param properties: The updated properties.  # noqa: E501
@@ -121,7 +99,7 @@ class SPGRecord:
         self.properties.update(properties)
 
     def remove_property(self, name: str):
-        """Removes a property of this Vertex.  # noqa: E501
+        """Removes a property of this SPGRecord.  # noqa: E501
 
 
         :param name: The property name.  # noqa: E501
@@ -146,15 +124,14 @@ class SPGRecord:
     def to_dict(self):
         """Returns the model properties as a dict"""
         return {
-            "bizId": self.biz_id,
-            "vertexType": self.vertex_type,
-            "props": self.properties,
+            "SPGTypeName": self.spg_type_name,
+            "properties": self.properties,
         }
 
     @classmethod
     def from_dict(cls, input: Dict[str, Any]):
         """Returns the model from a dict"""
-        return cls(input.get("bizId"), input.get("vertexType"), input.get("props"))
+        return cls(input.get("SPGTypeName"), input.get("properties"))
 
     def __repr__(self):
         """For `print` and `pprint`"""
