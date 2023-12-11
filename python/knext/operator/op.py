@@ -1,5 +1,6 @@
+import json
 from abc import ABC
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
 
 from knext.operator.base import BaseOp
 from knext.operator.eval_result import EvalResult
@@ -98,7 +99,7 @@ class PromptOp(ExtractOp, ABC):
             f"{self.__class__.__name__} need to implement `build_prompt` method."
         )
 
-    def parse_response(self, response: str) -> List[Dict[str, str]]:
+    def parse_response(self, response: str) -> Union[List[Dict[str, str]], List[SPGRecord]]:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `parse_response` method."
         )
@@ -129,3 +130,39 @@ class PromptOp(ExtractOp, ABC):
             return EvalResult[List[SPGRecord]](*output[:3]).to_dict()
         else:
             return EvalResult[List[SPGRecord]](output).to_dict()
+
+    def parse_response_re(self, response: str) -> List[SPGRecord]:
+        """
+        识别关系抽取结果，并进行NER，再转换为加工链路协议格式
+        """
+        result = []
+        subject = {}
+        re_obj = json.loads(response)
+        for spo_item in re_obj:
+            # 过滤掉Schema定义以外的谓词
+            if spo_item["predicate"] not in self.predicate_zh_to_en_name:
+                continue
+
+            subject_properties = {}
+            if spo_item["subject"] not in subject:
+                subject[spo_item["subject"]] = subject_properties
+            else:
+                subject_properties = subject[spo_item["subject"]]
+
+            # 获取属性类型
+            spo_en_name = self.predicate_zh_to_en_name[spo_item["predicate"]]
+            spo_type = self.predicate_type_zh_to_en_name[spo_item["predicate"]]
+
+            if spo_en_name in subject_properties and len(
+                subject_properties[spo_en_name]
+            ):
+                subject_properties[spo_en_name] = (
+                    subject_properties[spo_en_name] + "," + spo_item["object"]
+                )
+            else:
+                subject_properties[spo_en_name] = spo_item["object"]
+
+        for k, val in subject.items():
+            subject_entity = Vertex(k, "Medical.Disease", val)
+            result.append(subject_entity)
+        return result

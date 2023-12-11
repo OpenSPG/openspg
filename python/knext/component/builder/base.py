@@ -1,10 +1,49 @@
 from abc import ABC
+from enum import Enum
 from typing import Union
 
-from knext.component.base import Component, ComponentTypeEnum, ComponentLabelEnum
+from knext.component.base import Component, ComponentTypeEnum
 
 
-class SPGExtractor(Component, ABC):
+class ComponentLabelEnum(str, Enum):
+    SourceReader = "SOURCE_READER"
+    Extractor = "EXTRACTOR"
+    Mapping = "MAPPING"
+    Evaluator = "EVALUATOR"
+    SinkWriter = "SINK_WRITER"
+
+
+class BuilderComponent(Component, ABC):
+
+    @property
+    def type(self):
+        return ComponentTypeEnum.Builder
+
+    @property
+    def input_keys(self):
+        return
+
+    @property
+    def output_keys(self):
+        return
+
+
+class SourceReader(BuilderComponent, ABC):
+
+    @property
+    def upstream_types(self):
+        return None
+
+    @property
+    def downstream_types(self):
+        return Union[SPGExtractor, Mapping]
+
+    @property
+    def label(self):
+        return ComponentLabelEnum.SourceReader
+
+
+class SPGExtractor(BuilderComponent, ABC):
 
     @property
     def upstream_types(self):
@@ -15,15 +54,11 @@ class SPGExtractor(Component, ABC):
         return Union[SPGExtractor, Mapping]
 
     @property
-    def type(self):
-        return ComponentTypeEnum.Builder
-
-    @property
     def label(self):
         return ComponentLabelEnum.Extractor
 
 
-class Mapping(Component, ABC):
+class Mapping(BuilderComponent, ABC):
 
     @property
     def upstream_types(self):
@@ -34,15 +69,11 @@ class Mapping(Component, ABC):
         return Union[SinkWriter]
 
     @property
-    def type(self):
-        return ComponentTypeEnum.Builder
-
-    @property
     def label(self):
         return ComponentLabelEnum.Mapping
 
 
-class SinkWriter(Component, ABC):
+class SinkWriter(BuilderComponent, ABC):
 
     @property
     def upstream_types(self):
@@ -53,28 +84,5 @@ class SinkWriter(Component, ABC):
         return None
 
     @property
-    def type(self):
-        return ComponentTypeEnum.Builder
-
-    @property
     def label(self):
         return ComponentLabelEnum.SinkWriter
-
-
-class SourceReader(Component, ABC):
-
-    @property
-    def upstream_types(self):
-        return None
-
-    @property
-    def downstream_types(self):
-        return Union[SPGExtractor, Mapping]
-
-    @property
-    def type(self):
-        return ComponentTypeEnum.Builder
-
-    @property
-    def label(self):
-        return ComponentLabelEnum.SourceReader

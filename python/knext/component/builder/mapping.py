@@ -1,17 +1,31 @@
 from abc import ABC
 from collections import defaultdict
-from typing import Union, Dict, List, Tuple
+from enum import Enum
+from typing import Union, Dict, List, Tuple, Sequence, Any
 
 from knext import rest
+from knext.common.runnable import Input, Output
 
-from knext.component.base import SPGTypeHelper, PropertyHelper, MappingTypeEnum
+from knext.common.schema_helper import SPGTypeHelper, PropertyHelper
 from knext.component.builder.base import Mapping
 from knext.operator.op import LinkOp
 from knext.operator.spg_record import SPGRecord
 
 
-class NormalizeOp:
-    pass
+
+class MappingTypeEnum(str, Enum):
+    SPGType = "SPG_TYPE"
+    Relation = "RELATION"
+
+
+class LinkStrategyEnum(str, Enum):
+    IDEqual = "ID_EQUAL"
+    Search = "SEARCH"
+
+
+SPG_TYPE_BASE_FIELDS = ["id"]
+
+RELATION_BASE_FIELDS = ["src_id", "dst_id"]
 
 
 class SPGTypeMapping(Mapping):
@@ -31,19 +45,37 @@ class SPGTypeMapping(Mapping):
 
     spg_type_name: Union[str, SPGTypeHelper]
 
-    mapping: Dict[str, str] = dict()
+    mapping: Dict[str, List[str]] = defaultdict(list)
 
     filters: List[Tuple[str, str]] = list()
 
-    def add_field(self, source_field: str, target_field: Union[str, PropertyHelper], link_op: LinkOp = None,
-                  norm_op: NormalizeOp = None):
+    link_strategies: Dict[str, Union[LinkStrategyEnum, LinkOp]] = dict()
+
+    @property
+    def input_types(self) -> Input:
+        return Dict[str, str]
+
+    @property
+    def output_types(self) -> Output:
+        return SPGRecord
+
+    @property
+    def input_keys(self):
+        return None
+
+    @property
+    def output_keys(self):
+        return self.output_fields
+
+    def add_field(self, source_field: str, target_field: Union[str, PropertyHelper], link_strategy: Union[LinkStrategyEnum ,LinkOp] = None):
         """Adds a field mapping from source data to property of spg_type.
 
         :param source_field: The source field to be mapped.
         :param target_field: The target field to map the source field to.
         :return: self
         """
-        self.mapping[target_field] = source_field
+        self.mapping[source_field].append(target_field)
+        self.link_strategies[target_field] = link_strategy
         return self
 
     def add_filter(self, column_name: str, column_value: str):
@@ -61,32 +93,8 @@ class SPGTypeMapping(Mapping):
         """
         Transforms `EntityMappingComponent` to REST model `MappingNodeConfig`.
         """
-        assert all(
-            field in self.mapping.keys()
-            for field in EntityMappingComponent.ENTITY_BASE_FIELDS
-        ), f"{self.__class__.__name__} must include mapping to {str(EntityMappingComponent.ENTITY_BASE_FIELDS)}"
-        mapping = defaultdict(list)
         schema = {}
-        subject_type = self.schema_session.get(self.spg_type_name)
-        for dst_name, src_name in self.mapping.items():
-            prop = subject_type.properties.get(dst_name)
-            mapping[src_name].append(prop.name)
-            object_type_name = prop.object_type_name
-
-            object_type = self.schema_session.get(object_type_name)
-            if (
-                    hasattr(object_type, "link_operator")
-                    and object_type.link_operator is not None
-            ):
-                schema[dst_name] = object_type.link_operator
-            if (
-                    hasattr(object_type, "normalize_operator")
-                    and object_type.normalize_operator is not None
-            ):
-                schema[dst_name] = object_type.normalize_operator
-        if os.environ.get("KNEXT_DEBUG"):
-            for name, operator in self.debug_operators:
-                schema[name] = operator
+        #TODO generate schema with link_strategy
 
         mapping_filters = [
             rest.MappingFilter(column_name=name, column_value=value)
@@ -94,12 +102,14 @@ class SPGTypeMapping(Mapping):
         ]
         mapping_configs = [
             rest.MappingConfig(source=src_name, target=tgt_names)
-            for src_name, tgt_names in mapping.items()
+            for src_name, tgt_names in self.mapping.items()
         ]
         mapping_schemas = [
             rest.MappingSchema(name, operator_config=operator_config)
             for name, operator_config in schema.items()
         ]
+
+        node_config_list = []
 
         config = rest.MappingNodeConfig(
             spg_name=self.spg_type_name,
@@ -109,6 +119,13 @@ class SPGTypeMapping(Mapping):
             mapping_configs=mapping_configs,
         )
         return rest.Node(**super().to_dict(), node_config=config)
+
+    def invoke(self, input: Input) -> Sequence[Output]:
+        pass
+
+    @classmethod
+    def from_rest(cls, node: rest.Node):
+        pass
 
     def submit(self):
         pass
@@ -135,7 +152,7 @@ class RelationMapping(Mapping):
     predicate_name: Union[str, PropertyHelper]
     object_name: Union[str, SPGTypeHelper]
 
-    mapping: Dict[str, str] = dict()
+    mapping: Dict[str, List[str]] = defaultdict(list)
 
     filters: List[Tuple[str, str]] = list()
 
@@ -146,7 +163,7 @@ class RelationMapping(Mapping):
         :param target_field: The target field to map the source field to.
         :return: self
         """
-        self.mapping[target_field] = source_field
+        self.mapping[source_field].append(target_field)
         return self
 
     def add_filter(self, column_name: str, column_value: str):
@@ -162,9 +179,6 @@ class RelationMapping(Mapping):
 
     def to_rest(self):
         """Transforms `RelationMappingComponent` to REST model `MappingNodeConfig`."""
-        mapping = defaultdict(list)
-        for dst_name, src_name in self.mapping.items():
-            mapping[src_name].append(dst_name)
 
         mapping_filters = [
             rest.MappingFilter(column_name=name, column_value=value)
@@ -172,7 +186,7 @@ class RelationMapping(Mapping):
         ]
         mapping_configs = [
             rest.MappingConfig(source=src_name, target=tgt_names)
-            for src_name, tgt_names in mapping.items()
+            for src_name, tgt_names in self.mapping.items()
         ]
         mapping_schemas = []
 
@@ -184,3 +198,88 @@ class RelationMapping(Mapping):
             mapping_configs=mapping_configs,
         )
         return rest.Node(**super().to_dict(), node_config=config)
+
+    def invoke(self, input: Input) -> Sequence[Output]:
+        pass
+
+    @classmethod
+    def from_rest(cls, node: rest.Node):
+        pass
+
+    def submit(self):
+        pass
+
+
+class SubGraphMapping(Mapping):
+
+    spg_type_name: Union[str, SPGTypeHelper]
+
+    mapping: Dict[str, List[str]] = defaultdict(list)
+
+    filters: List[Tuple[str, str]] = list()
+
+    link_strategies: Dict[str, Union[LinkStrategyEnum, LinkOp]] = dict()
+
+    @property
+    def input_types(self) -> Input:
+        return Dict[str, str]
+
+    @property
+    def output_types(self) -> Output:
+        return SPGRecord
+
+    @property
+    def input_keys(self):
+        return None
+
+    @property
+    def output_keys(self):
+        return self.output_fields
+
+    def add_field(self, source_field: str, target_field: Union[str, PropertyHelper], link_strategy: Union[LinkStrategyEnum ,LinkOp] = None):
+        """Adds a field mapping from source data to property of spg_type.
+
+        :param source_field: The source field to be mapped.
+        :param target_field: The target field to map the source field to.
+        :return: self
+        """
+        self.mapping[source_field].append(target_field)
+        self.link_strategies[target_field] = link_strategy
+        return self
+
+    def invoke(self, input: Input) -> Sequence[Output]:
+        pass
+
+    def to_rest(self) -> rest.Node:
+        schema = {}
+        # TODO generate schema with link_strategy
+
+        mapping_filters = [
+            rest.MappingFilter(column_name=name, column_value=value)
+            for name, value in self.filters
+        ]
+        mapping_configs = [
+            rest.MappingConfig(source=src_name, target=tgt_names)
+            for src_name, tgt_names in self.mapping.items()
+        ]
+        mapping_schemas = [
+            rest.MappingSchema(name, operator_config=operator_config)
+            for name, operator_config in schema.items()
+        ]
+
+        config = rest.MappingNodeConfig(
+            spg_name=self.spg_type_name,
+            mapping_type=self.mapping_type,
+            mapping_filters=mapping_filters,
+            mapping_schemas=mapping_schemas,
+            mapping_configs=mapping_configs,
+        )
+        return rest.Node(**super().to_dict(), node_config=config)
+
+    @classmethod
+    def from_rest(cls, node: rest.Node):
+        pass
+
+    def submit(self):
+        pass
+

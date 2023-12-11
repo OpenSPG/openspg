@@ -29,7 +29,7 @@ class HospitalDepartment(BuilderJob):
 
         mapping = EntityMappingComponent(
             spg_type_name=Medical.HospitalDepartment
-        ).add_field("id", Medical.HospitalDepartment.id)
+        )
 
         sink = SinkToKgComponent()
 

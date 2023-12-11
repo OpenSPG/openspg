@@ -13,39 +13,16 @@
 
 from abc import ABC
 from enum import Enum
-from typing import List, Union, TypeVar, Type
+from typing import List, Union, Type
 
 import networkx as nx
 
 from knext.common.restable import RESTable
 from knext.common.runnable import Runnable
 
-Other = TypeVar("Other")
-
 
 class ComponentTypeEnum(str, Enum):
     Builder = "BUILDER"
-
-
-class ComponentLabelEnum(str, Enum):
-    SourceReader = "SOURCE_READER"
-    Extractor = "EXTRACTOR"
-    Mapping = "MAPPING"
-    Evaluator = "EVALUATOR"
-    SinkWriter = "SINK_WRITER"
-
-
-class MappingTypeEnum(str, Enum):
-    SPGType = "SPG_TYPE"
-    Relation = "RELATION"
-
-
-class SPGTypeHelper:
-    pass
-
-
-class PropertyHelper:
-    pass
 
 
 class Component(Runnable, RESTable, ABC):
@@ -66,7 +43,7 @@ class Component(Runnable, RESTable, ABC):
 
     @property
     def name(self):
-        return
+        return self.__class__.__name__
 
     def to_dict(self):
         return self.__dict__

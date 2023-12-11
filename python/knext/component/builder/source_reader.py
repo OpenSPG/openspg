@@ -2,6 +2,7 @@ from abc import ABC
 from typing import Union, List, Dict
 
 from knext import rest
+from knext.common.runnable import Input, Output
 from knext.component.builder.base import SourceReader
 
 
@@ -29,7 +30,23 @@ class CsvSourceReader(SourceReader):
     If the CSV file includes a header, it needs to be greater than or equal to 2."""
     start_row: int
 
-    def invoke(self, input):
+    @property
+    def input_types(self) -> Input:
+        return None
+
+    @property
+    def output_types(self) -> Output:
+        return Dict[str, str]
+
+    @property
+    def input_keys(self):
+        return None
+
+    @property
+    def output_keys(self):
+        return self.columns
+
+    def invoke(self, input: Input):
         pass
 
     def submit(self):
