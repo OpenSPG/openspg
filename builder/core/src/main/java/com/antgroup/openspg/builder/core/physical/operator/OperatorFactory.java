@@ -3,7 +3,6 @@ package com.antgroup.openspg.builder.core.physical.operator;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
-import com.antgroup.openspg.core.schema.model.type.OperatorKey;
 
 public interface OperatorFactory {
 
@@ -11,5 +10,5 @@ public interface OperatorFactory {
 
   void loadOperator(OperatorConfig config);
 
-  Object invoke(OperatorKey key, Object... input);
+  Object invoke(OperatorConfig config, Object... input);
 }

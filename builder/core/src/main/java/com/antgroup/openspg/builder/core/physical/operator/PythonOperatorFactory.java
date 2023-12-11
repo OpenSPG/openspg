@@ -2,10 +2,10 @@ package com.antgroup.openspg.builder.core.physical.operator;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
-import com.antgroup.openspg.common.util.Md5Utils;
-import com.antgroup.openspg.core.schema.model.type.OperatorKey;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +17,7 @@ import pemja.core.PythonInterpreterConfig;
 public class PythonOperatorFactory implements OperatorFactory {
 
   private static volatile PythonInterpreter pythonInterpreter;
-  private final Map<OperatorKey, OperatorConfig> operators = new ConcurrentHashMap<>();
-  private final Map<OperatorKey, String> operatorObjects = new ConcurrentHashMap<>();
+  private final Set<String> operatorObjects = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
   private PythonOperatorFactory() {}
 
@@ -58,45 +57,27 @@ public class PythonOperatorFactory implements OperatorFactory {
 
   @Override
   public void loadOperator(OperatorConfig config) {
-    OperatorKey operatorKey = config.toKey();
-    operators.put(operatorKey, config);
-    loadOperatorObject(operatorKey, config);
+    loadOperatorObject(config);
   }
 
   @Override
-  public Object invoke(OperatorKey key, Object... input) {
-    OperatorConfig config = operators.get(key);
-    String operatorObject = operatorObjects.get(key);
-    return pythonInterpreter.invokeMethod(operatorObject, config.getMainClass(), input);
+  public Object invoke(OperatorConfig config, Object... input) {
+    return pythonInterpreter.invokeMethod(config.getUniqueKey(), config.getMethod(), input);
   }
 
-  private void loadOperatorObject(OperatorKey key, OperatorConfig config) {
-    if (operatorObjects.containsKey(key)) {
+  private void loadOperatorObject(OperatorConfig config) {
+    String pythonOperatorObject = config.getUniqueKey();
+    if (operatorObjects.contains(pythonOperatorObject)) {
       return;
     }
 
-    String address = config.getAddress();
-    String pythonFileName =
-        address.substring(address.lastIndexOf("/") + 1, address.lastIndexOf(".py"));
-    pythonInterpreter.exec("from objectStore.operator import " + pythonFileName);
-    String paramMd5 =
-        Md5Utils.md5Of(
-            String.valueOf(Thread.currentThread().hashCode()),
-            config.getParams() == null ? "" : config.getParams().toString());
-    String operatorObjectName = String.join("_", config.toKey().toString(), paramMd5);
-    String classNamePath =
-        config
-            .getName()
-            .concat("_")
-            .concat("v")
-            .concat(String.valueOf(config.getVersion()))
-            .concat(".")
-            .concat(config.getName());
+    pythonInterpreter.exec(
+        String.format("from %s import %s", config.getModulePath(), config.getClassName()));
     pythonInterpreter.exec(
         String.format(
             "%s=%s(%s)",
-            operatorObjectName, classNamePath, paramToPythonString(config.getParams())));
-    operatorObjects.put(key, operatorObjectName);
+            pythonOperatorObject, config.getClassName(), paramToPythonString(config.getParams())));
+    operatorObjects.add(pythonOperatorObject);
   }
 
   private String paramToPythonString(Map<String, String> params) {

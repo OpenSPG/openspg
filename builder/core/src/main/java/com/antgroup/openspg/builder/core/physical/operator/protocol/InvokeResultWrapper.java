@@ -14,14 +14,13 @@
 package com.antgroup.openspg.builder.core.physical.operator.protocol;
 
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * python operator result
- *
- * @param <T>
- */
-public class EvalResult<T> {
-
+/** python operator result */
+@Getter
+@Setter
+public class InvokeResultWrapper<T> {
   /** data */
   private T data;
 
@@ -30,28 +29,4 @@ public class EvalResult<T> {
 
   /** error log */
   private List<String> errors;
-
-  public T getData() {
-    return data;
-  }
-
-  public void setData(T data) {
-    this.data = data;
-  }
-
-  public List<String> getTraces() {
-    return traces;
-  }
-
-  public void setTraces(List<String> traces) {
-    this.traces = traces;
-  }
-
-  public List<String> getErrors() {
-    return errors;
-  }
-
-  public void setErrors(List<String> errors) {
-    this.errors = errors;
-  }
 }

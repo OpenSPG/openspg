@@ -39,5 +39,9 @@
       <groupId>org.danilopianini</groupId>
       <artifactId>gson-extras</artifactId>
     </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
   </dependencies>
 </project>

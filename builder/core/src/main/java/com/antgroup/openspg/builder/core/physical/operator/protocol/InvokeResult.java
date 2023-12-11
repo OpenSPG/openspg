@@ -13,38 +13,19 @@
 
 package com.antgroup.openspg.builder.core.physical.operator.protocol;
 
-import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
+import lombok.Setter;
 
 /** Python operator entity */
 @Getter
-public class Vertex {
+@Setter
+public class InvokeResult {
 
-  private String bizId;
-  private String vertexType;
+  private String spgTypeName;
   private Map<String, String> props;
 
-  public Map<String, Object> toMap() {
-    Map<String, Object> map = new HashMap<>(3);
-    map.put("bizId", bizId);
-    map.put("vertexType", vertexType);
-    map.put("props", props);
-    return map;
-  }
-
-  public Vertex setBizId(String bizId) {
-    this.bizId = bizId;
-    return this;
-  }
-
-  public Vertex setVertexType(String vertexType) {
-    this.vertexType = vertexType;
-    return this;
-  }
-
-  public Vertex setProps(Map<String, String> props) {
-    this.props = props;
-    return this;
+  public String getId() {
+    return props.get("id");
   }
 }
