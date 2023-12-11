@@ -16,7 +16,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.antgroup.openspg.server</groupId>
-    <artifactId>openspg-server-parent</artifactId>
+    <artifactId>server-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../../../pom.xml</relativePath>
   </parent>

@@ -14,27 +14,40 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
-    <groupId>com.antgroup.openspg.server</groupId>
-    <artifactId>server-parent</artifactId>
+    <groupId>com.antgroup.openspg</groupId>
+    <artifactId>openspg-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>../../../pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>cloudext-interface-computing</artifactId>
+  <groupId>com.antgroup.openspg.builder</groupId>
+  <artifactId>builder-parent</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <licenses>
+    <license>
+      <name>Apache 2.0 License</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.antgroup.openspg</groupId>
-      <artifactId>common-util</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>core-builder-model</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>core-reasoner-model</artifactId>
-    </dependency>
-  </dependencies>
+  <modules>
+    <module>core</module>
+    <module>model</module>
+  </modules>
+
+  <properties/>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.antgroup.openspg.builder</groupId>
+        <artifactId>builder-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 </project>
