@@ -17,9 +17,7 @@ from typing import Dict, Any, List
 class SPGRecord:
     """Data structure in operator, used to store entity information."""
 
-    def __init__(
-        self, spg_type_name: str = "", properties: Dict[str, str] = None
-    ):
+    def __init__(self, spg_type_name: str = "", properties: Dict[str, str] = None):
         self._spg_type_name = None
         self._properties = None
 

@@ -99,7 +99,9 @@ class PromptOp(ExtractOp, ABC):
             f"{self.__class__.__name__} need to implement `build_prompt` method."
         )
 
-    def parse_response(self, response: str) -> Union[List[Dict[str, str]], List[SPGRecord]]:
+    def parse_response(
+        self, response: str
+    ) -> Union[List[Dict[str, str]], List[SPGRecord]]:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `parse_response` method."
         )

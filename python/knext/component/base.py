@@ -54,14 +54,18 @@ class Component(Runnable, RESTable, ABC):
     def __eq__(self, other):
         return hash(self) == hash(other)
 
-    def __rshift__(self, other: Union[
-        Type['Chain'],
-        List[Type['Chain']],
-        Type['Component'],
-        List[Type['Component']],
-        None
-    ]):
+    def __rshift__(
+        self,
+        other: Union[
+            Type["Chain"],
+            List[Type["Chain"]],
+            Type["Component"],
+            List[Type["Component"]],
+            None,
+        ],
+    ):
         from knext.chain.base import Chain
+
         if not other:
             return self
         if not isinstance(other, list):
@@ -83,8 +87,14 @@ class Component(Runnable, RESTable, ABC):
             elif isinstance(o, Chain):
                 dag = nx.DiGraph()
                 dag.add_node(self)
-                end_nodes = [node for node, out_degree in dag.out_degree() if out_degree == 0 or node.last]
-                start_nodes = [node for node, in_degree in o.dag.in_degree() if in_degree == 0]
+                end_nodes = [
+                    node
+                    for node, out_degree in dag.out_degree()
+                    if out_degree == 0 or node.last
+                ]
+                start_nodes = [
+                    node for node, in_degree in o.dag.in_degree() if in_degree == 0
+                ]
 
                 if len(end_nodes) > 0 and len(start_nodes) > 0:
                     for end_node in end_nodes:

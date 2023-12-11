@@ -5,13 +5,12 @@ from knext import rest
 
 
 class RESTable(ABC):
-
     @property
-    def upstream_types(self) -> Type['RESTable']:
+    def upstream_types(self) -> Type["RESTable"]:
         raise NotImplementedError("To be implemented in subclass")
 
     @property
-    def downstream_types(self) -> Type['RESTable']:
+    def downstream_types(self) -> Type["RESTable"]:
         raise NotImplementedError("To be implemented in subclass")
 
     def to_rest(self) -> rest.Node:

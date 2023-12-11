@@ -12,7 +12,10 @@ class BuilderChain(RESTable, Chain):
 
     source: SourceReader
 
-    process: Union[SPGExtractor, Mapping, ]
+    process: Union[
+        SPGExtractor,
+        Mapping,
+    ]
 
     sink: SinkWriter
 

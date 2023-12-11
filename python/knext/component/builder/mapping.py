@@ -12,7 +12,6 @@ from knext.operator.op import LinkOp
 from knext.operator.spg_record import SPGRecord
 
 
-
 class MappingTypeEnum(str, Enum):
     SPGType = "SPG_TYPE"
     Relation = "RELATION"
@@ -67,7 +66,12 @@ class SPGTypeMapping(Mapping):
     def output_keys(self):
         return self.output_fields
 
-    def add_field(self, source_field: str, target_field: Union[str, PropertyHelper], link_strategy: Union[LinkStrategyEnum ,LinkOp] = None):
+    def add_field(
+        self,
+        source_field: str,
+        target_field: Union[str, PropertyHelper],
+        link_strategy: Union[LinkStrategyEnum, LinkOp] = None,
+    ):
         """Adds a field mapping from source data to property of spg_type.
 
         :param source_field: The source field to be mapped.
@@ -94,7 +98,7 @@ class SPGTypeMapping(Mapping):
         Transforms `EntityMappingComponent` to REST model `MappingNodeConfig`.
         """
         schema = {}
-        #TODO generate schema with link_strategy
+        # TODO generate schema with link_strategy
 
         mapping_filters = [
             rest.MappingFilter(column_name=name, column_value=value)
@@ -236,7 +240,12 @@ class SubGraphMapping(Mapping):
     def output_keys(self):
         return self.output_fields
 
-    def add_field(self, source_field: str, target_field: Union[str, PropertyHelper], link_strategy: Union[LinkStrategyEnum ,LinkOp] = None):
+    def add_field(
+        self,
+        source_field: str,
+        target_field: Union[str, PropertyHelper],
+        link_strategy: Union[LinkStrategyEnum, LinkOp] = None,
+    ):
         """Adds a field mapping from source data to property of spg_type.
 
         :param source_field: The source field to be mapped.
@@ -282,4 +291,3 @@ class SubGraphMapping(Mapping):
 
     def submit(self):
         pass
-

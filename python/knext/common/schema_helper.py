@@ -10,13 +10,10 @@ class SchemaHelper(ABC):
 
 
 class SPGTypeHelper(SchemaHelper):
-
     def __init__(self, type_name: str):
         super().__init__(type_name)
 
 
 class PropertyHelper(SchemaHelper):
-
     def __init__(self, type_name: str):
         super().__init__(type_name)
-

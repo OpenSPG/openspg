@@ -30,17 +30,9 @@
   <modules>
     <module>common/util</module>
     <module>server</module>
-    <module>builder</module>
     <module>reasoner</module>
-    <module>cloudext/interface/graph-store</module>
-    <module>cloudext/interface/object-store</module>
-    <module>cloudext/interface/table-store</module>
-    <module>cloudext/interface/search-engine</module>
-    <module>cloudext/impl/graph-store/tugraph</module>
-    <module>cloudext/impl/object-store/local</module>
-    <module>cloudext/impl/table-store/local</module>
-    <module>cloudext/impl/search-engine/elasticsearch</module>
-
+    <module>builder</module>
+    <module>cloudext</module>
   </modules>
 
   <properties>
@@ -96,42 +88,42 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-interface-graph-store</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-interface-search-engine</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-interface-object-store</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-interface-table-store</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-impl-object-store-local</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-impl-table-store-local</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
         <version>${project.version}</version>
       </dependency>

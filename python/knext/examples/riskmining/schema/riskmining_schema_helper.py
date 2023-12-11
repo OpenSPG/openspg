@@ -3,90 +3,90 @@
 # PLEASE DO NOT MODIFY THIS FILE!!!
 #
 
+
 class RiskMining:
-	def __init__(self):
-		self.App = self.App()
-		self.Cert = self.Cert()
-		self.Company = self.Company()
-		self.Device = self.Device()
-		self.Person = self.Person()
-		self.TaxOfRiskApp = self.TaxOfRiskApp()
-		self.TaxOfRiskUser = self.TaxOfRiskUser()
+    def __init__(self):
+        self.App = self.App()
+        self.Cert = self.Cert()
+        self.Company = self.Company()
+        self.Device = self.Device()
+        self.Person = self.Person()
+        self.TaxOfRiskApp = self.TaxOfRiskApp()
+        self.TaxOfRiskUser = self.TaxOfRiskUser()
 
-	class App:
-		__typename__ = "RiskMining.App"
-		description = "description"
-		id = "id"
-		name = "name"
-		belongTo = "belongTo"
-		useCert = "useCert"
-		riskMark = "riskMark"
+    class App:
+        __typename__ = "RiskMining.App"
+        description = "description"
+        id = "id"
+        name = "name"
+        belongTo = "belongTo"
+        useCert = "useCert"
+        riskMark = "riskMark"
 
-		def __init__(self):
-			pass
+        def __init__(self):
+            pass
 
-	class Cert:
-		__typename__ = "RiskMining.Cert"
-		description = "description"
-		id = "id"
-		name = "name"
-		certNum = "certNum"
+    class Cert:
+        __typename__ = "RiskMining.Cert"
+        description = "description"
+        id = "id"
+        name = "name"
+        certNum = "certNum"
 
-		def __init__(self):
-			pass
+        def __init__(self):
+            pass
 
-	class Company:
-		__typename__ = "RiskMining.Company"
-		description = "description"
-		id = "id"
-		name = "name"
-		hasPhone = "hasPhone"
+    class Company:
+        __typename__ = "RiskMining.Company"
+        description = "description"
+        id = "id"
+        name = "name"
+        hasPhone = "hasPhone"
 
-		def __init__(self):
-			pass
+        def __init__(self):
+            pass
 
-	class Device:
-		__typename__ = "RiskMining.Device"
-		description = "description"
-		id = "id"
-		name = "name"
-		install = "install"
-		umid = "umid"
+    class Device:
+        __typename__ = "RiskMining.Device"
+        description = "description"
+        id = "id"
+        name = "name"
+        install = "install"
+        umid = "umid"
 
-		def __init__(self):
-			pass
+        def __init__(self):
+            pass
 
-	class Person:
-		__typename__ = "RiskMining.Person"
-		description = "description"
-		id = "id"
-		name = "name"
-		hasPhone = "hasPhone"
-		belongTo = "belongTo"
-		age = "age"
+    class Person:
+        __typename__ = "RiskMining.Person"
+        description = "description"
+        id = "id"
+        name = "name"
+        hasPhone = "hasPhone"
+        belongTo = "belongTo"
+        age = "age"
 
-		def __init__(self):
-			pass
+        def __init__(self):
+            pass
 
-	class TaxOfRiskApp:
-		__typename__ = "RiskMining.TaxOfRiskApp"
-		description = "description"
-		id = "id"
-		name = "name"
-		alias = "alias"
-		stdId = "stdId"
+    class TaxOfRiskApp:
+        __typename__ = "RiskMining.TaxOfRiskApp"
+        description = "description"
+        id = "id"
+        name = "name"
+        alias = "alias"
+        stdId = "stdId"
 
-		def __init__(self):
-			pass
+        def __init__(self):
+            pass
 
-	class TaxOfRiskUser:
-		__typename__ = "RiskMining.TaxOfRiskUser"
-		description = "description"
-		id = "id"
-		name = "name"
-		alias = "alias"
-		stdId = "stdId"
+    class TaxOfRiskUser:
+        __typename__ = "RiskMining.TaxOfRiskUser"
+        description = "description"
+        id = "id"
+        name = "name"
+        alias = "alias"
+        stdId = "stdId"
 
-		def __init__(self):
-			pass
-
+        def __init__(self):
+            pass
