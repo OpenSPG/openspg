@@ -1,3 +1,14 @@
+# Copyright 2023 Ant Group CO., Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied.
+
 from abc import ABC, abstractmethod
 from typing import Optional, Union, Tuple, Type
 
@@ -5,12 +16,13 @@ from nn4k.executor import NNExecutor
 
 
 class NNHub(ABC):
-
     @abstractmethod
-    def publish(self,
-                model_executor: Union[NNExecutor, Tuple[Type[NNExecutor], tuple, dict, tuple]],
-                name: str,
-                version: str = None) -> str:
+    def publish(
+        self,
+        model_executor: Union[NNExecutor, Tuple[Type[NNExecutor], tuple, dict, tuple]],
+        name: str,
+        version: str = None,
+    ) -> str:
         """
         Publish a model(executor) to hub.
         Args:
@@ -26,7 +38,9 @@ class NNHub(ABC):
         pass
 
     @abstractmethod
-    def get_model_executor(self, name: str, version: str = None) -> Optional[NNExecutor]:
+    def get_model_executor(
+        self, name: str, version: str = None
+    ) -> Optional[NNExecutor]:
         """
         Get a ModelExecutor instance from Hub.
         Args:
@@ -48,7 +62,6 @@ class NNHub(ABC):
 
 
 class SimpleNNHub(NNHub):
-
     def __init__(self) -> None:
         super().__init__()
         self._model_executors = {}
@@ -60,27 +73,33 @@ class SimpleNNHub(NNHub):
         # self._add_executor((HF, xxx))
         # self._add_executor((HF, xxx))
 
-    def _add_executor(self,
-                      executor: Union[NNExecutor, Tuple[Type[NNExecutor], tuple, dict, tuple]],
-                      name: str,
-                      version: str = None):
+    def _add_executor(
+        self,
+        executor: Union[NNExecutor, Tuple[Type[NNExecutor], tuple, dict, tuple]],
+        name: str,
+        version: str = None,
+    ):
         if version is None:
-            version = 'default'
+            version = "default"
         if self._model_executors.get(name) is None:
-            self._model_executors[name] = {
-                version: executor
-            }
+            self._model_executors[name] = {version: executor}
         else:
             self._model_executors[name][version] = executor
 
-    def publish(self, model_executor: NNExecutor, name: str, version: str = None) -> str:
-        print("WARNING: You are using SimpleNNHub which can only maintain models in memory without data persistence!")
+    def publish(
+        self, model_executor: NNExecutor, name: str, version: str = None
+    ) -> str:
+        print(
+            "WARNING: You are using SimpleNNHub which can only maintain models in memory without data persistence!"
+        )
         if version is None:
-            version = 'default'
+            version = "default"
         self._add_executor(model_executor, name, version)
         return version
 
-    def get_model_executor(self, name: str, version: str = None) -> Optional[NNExecutor]:
+    def get_model_executor(
+        self, name: str, version: str = None
+    ) -> Optional[NNExecutor]:
         if self._model_executors.get(name) is None:
             return None
         return self._model_executors.get(name).get(version)
