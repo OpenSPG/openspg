@@ -90,19 +90,24 @@ class SchedulerServiceImplTest {
     jobQuery.setId(jobId);
     List<SchedulerJob> jobs = schedulerService.searchJobs(jobQuery).getData();
     assertEquals(1, jobs.size());
+    ThreadUtils.sleep(1000);
+
     // step 3: offline job
     assertTrue(schedulerService.disableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.OFFLINE.name(), job.getStatus());
     SchedulerInstanceQuery instanceQuery = new SchedulerInstanceQuery();
     instanceQuery.setJobId(jobId);
+    assertTrue(schedulerService.disableJob(jobId));
     List<SchedulerInstance> notFinishInstances =
         schedulerInstanceService.getNotFinishInstance(instanceQuery);
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
+
     // step 4: online Job
     assertTrue(schedulerService.enableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.ONLINE.name(), job.getStatus());
+
     // step 5: update Job
     String updateName = "Update Test Once Job";
     job.setName(updateName);
