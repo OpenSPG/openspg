@@ -17,8 +17,8 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.NotDefineException
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
-import com.antgroup.openspg.reasoner.common.types.KgType
-import com.antgroup.openspg.reasoner.lube.catalog.struct.{Edge, Field, Node}
+import com.antgroup.openspg.reasoner.common.types.{KgType, KTString}
+import com.antgroup.openspg.reasoner.lube.catalog.struct.{Edge, Field, Node, NodeType}
 
 /**
  * A graph defined by Property Graph Model with enhanced semantics.
@@ -49,12 +49,22 @@ class SemanticPropertyGraph(
     graphSchema.addVertexField(nodeLabel, property)
   }
 
-  def getNode(nodeLabel: String): Node = {
-    if (nodeLabel.contains("/")) {
-      graphSchema.nodes(nodeLabel.split("/")(0))
-    } else {
-      graphSchema.nodes(nodeLabel)
+  def addNode(nodeLabel: String, nodeType: NodeType.Value, properties: Set[Field]): Unit = {
+    val node = graphSchema.nodes.get(nodeLabel)
+    if (node.isDefined) {
+      return
     }
+    val finalProperties =
+      properties ++ Set.apply(new Field("id", KTString, true), new Field("name", KTString, true))
+    if (nodeType == NodeType.CONCEPT) {
+      graphSchema.addNode(nodeLabel, nodeType, finalProperties, true)
+    } else {
+      graphSchema.addNode(nodeLabel, nodeType, finalProperties, false)
+    }
+  }
+
+  def getNode(nodeLabel: String): Node = {
+    graphSchema.nodes(nodeLabel)
   }
 
   def getEdge(spoStr: String): Edge = {
@@ -66,11 +76,7 @@ class SemanticPropertyGraph(
   }
 
   def containsNode(nodeLabel: String): Boolean = {
-    if (nodeLabel.contains("/")) {
-      graphSchema.nodes.contains(nodeLabel.split("/")(0))
-    } else {
-      graphSchema.nodes.contains(nodeLabel)
-    }
+    graphSchema.nodes.contains(nodeLabel)
   }
 
   def containsEdge(spoStr: String): Boolean = {

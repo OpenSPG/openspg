@@ -53,7 +53,23 @@ class Expr2QlexpressTransformer extends ExprTransformer[String] {
 
   def trans(e: Expr, params: List[String]): String = {
     val opTrans: PartialFunction[Expr, String] = {
-      case BinaryOpExpr(name, l, r) => params.head + binaryOpSetTrans(name) + params(1)
+      case BinaryOpExpr(name, l, r) =>
+        val opStr = binaryOpSetTrans(name)
+        name match {
+          case BIn|BLike|BRLike|BAssign
+               |BEqual|BNotEqual|BGreaterThan
+               |BNotGreaterThan|BSmallerThan|BNotSmallerThan => params.head + opStr + params(1)
+          case _ =>
+            val leftStr = l match {
+              case c: BinaryOpExpr => "(" + params.head + ")"
+              case _ => params.head
+            }
+            val rightStr = r match {
+              case c: BinaryOpExpr => "(" + params(1) + ")"
+              case _ => params(1)
+            }
+            leftStr + opStr + rightStr
+        }
       case UnaryOpExpr(name, arg) => unaryOpSetTrans(name).format(params.head)
       case FunctionExpr(name, funcArgs) => "%s(%s)".format(name, params.mkString(","))
       case Ref(refName) => refName
@@ -74,7 +90,7 @@ class Expr2QlexpressTransformer extends ExprTransformer[String] {
         val l = list
           .map(x =>
             if (listType.equals(KTString)) {
-              "'%s'".format(x)
+              "\"%s\"".format(x)
             } else {
               x
             })

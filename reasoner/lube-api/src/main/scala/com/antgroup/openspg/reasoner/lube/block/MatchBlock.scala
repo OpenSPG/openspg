@@ -13,14 +13,8 @@
 
 package com.antgroup.openspg.reasoner.lube.block
 
-import scala.collection.mutable
-
-import com.antgroup.openspg.reasoner.lube.common.graph.{IRArray, IREdge, IRGraph, IRNode, IRPath}
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  Connection,
-  GraphPath,
-  VariablePatternConnection
-}
+import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode, IRPath, IRRepeatPath}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{Connection, GraphPath, VariablePatternConnection}
 
 /**
  * parse from "GraphStructure" block to match path
@@ -31,34 +25,34 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.{
  */
 final case class MatchBlock(
     dependencies: List[Block],
-    patterns: Map[String, GraphPath],
-    graph: IRGraph)
+    patterns: Map[String, GraphPath])
     extends BasicBlock[Binds](BlockType("match")) {
 
   override def binds: Binds = {
+    val props = patterns.values.head.graphPattern.properties
     val nodes = patterns.values
       .flatMap(path =>
-        path.graphPattern.nodes.map(node => IRNode(node._1, new mutable.HashSet[String]())))
+        path.graphPattern.nodes.map(node => IRNode(node._1, props(node._1))))
       .toList
     val edges = patterns.values
       .flatMap(path =>
         path.graphPattern.edges
-          .map(pair => pair._2.map(rel => edgeToIRField(rel)).toList)
+          .map(pair => pair._2.map(rel => edgeToIRField(rel, props)).toList)
           .flatten)
       .toList
     Fields(nodes.++(edges))
   }
 
-  private def edgeToIRField(edge: Connection) = {
+  private def edgeToIRField(edge: Connection, props: Map[String, Set[String]]) = {
     edge match {
       case connection: VariablePatternConnection =>
-        val start = IRNode(connection.source, new mutable.HashSet[String]())
-        val end = IRNode(connection.target, new mutable.HashSet[String]())
-        val irEdge = IREdge(connection.alias, new mutable.HashSet[String]())
+        val start = IRNode(connection.source, props(connection.source))
+        val end = IRNode(connection.target, props(connection.target))
+        val irEdge = IREdge(connection.alias, props(connection.alias))
         val path = IRPath(connection.alias, List.apply(start, irEdge, end))
-        IRArray(path)
+        IRRepeatPath(path, connection.lower, connection.upper)
       case _ =>
-        IREdge(edge.alias, new mutable.HashSet[String]())
+        IREdge(edge.alias, props(edge.alias))
     }
   }
 

@@ -24,9 +24,8 @@ import org.json4s.ext.EnumNameSerializer
 import org.json4s.jackson.Serialization
 import org.json4s.jackson.Serialization.write
 
-class PropertyGraphSchema(
-    val nodes: mutable.Map[String, Node],
-    val edges: mutable.Map[SPO, Edge]) extends Serializable {
+class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutable.Map[SPO, Edge])
+    extends Serializable {
 
   def getNodeField(nodeTypes: Set[String], fieldName: String): Field = {
     for (nodeType <- nodeTypes) {
@@ -50,6 +49,14 @@ class PropertyGraphSchema(
         tmpFields.head
       }
     }
+  }
+
+  def addNode(
+      typeName: String,
+      nodeType: NodeType.Value,
+      properties: Set[Field],
+      resolved: Boolean): Unit = {
+    nodes.put(typeName, Node(typeName, nodeType, properties, resolved))
   }
 
   def addVertexField(nodeType: String, field: Field): Unit = {
