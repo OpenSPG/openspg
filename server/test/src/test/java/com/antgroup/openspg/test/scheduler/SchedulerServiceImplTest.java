@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.common.util.thread.ThreadUtils;
 import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo;
@@ -207,6 +208,7 @@ class SchedulerServiceImplTest {
     instanceQuery.setJobId(jobId);
     List<SchedulerInstance> instances = schedulerService.searchInstances(instanceQuery).getData();
     assertEquals(24, instances.size());
+    ThreadUtils.sleep(1000);
 
     // step 3: offline Period job
     assertTrue(schedulerService.disableJob(jobId));
@@ -215,7 +217,7 @@ class SchedulerServiceImplTest {
     List<SchedulerInstance> notFinishInstances =
         schedulerInstanceService.getNotFinishInstance(instanceQuery);
     assertTrue(schedulerService.disableJob(jobId));
-    LOGGER.info(String.format("notFinishInstances size %s", notFinishInstances.size()));
+    LOGGER.info(String.format("notFinishInstances %s", JSON.toJSONString(notFinishInstances)));
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
 
     // step 4: online Period Job
@@ -317,11 +319,13 @@ class SchedulerServiceImplTest {
     instanceQuery.setJobId(jobId);
     List<SchedulerInstance> instances = schedulerService.searchInstances(instanceQuery).getData();
     assertEquals(1, instances.size());
+    ThreadUtils.sleep(1000);
 
     // step 3: offline RealTime job
     assertTrue(schedulerService.disableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.OFFLINE.name(), job.getStatus());
+    assertTrue(schedulerService.disableJob(jobId));
     List<SchedulerInstance> notFinishInstances =
         schedulerInstanceService.getNotFinishInstance(instanceQuery);
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
