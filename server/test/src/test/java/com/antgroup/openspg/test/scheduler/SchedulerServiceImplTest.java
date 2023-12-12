@@ -214,6 +214,7 @@ class SchedulerServiceImplTest {
     assertEquals(Status.OFFLINE.name(), job.getStatus());
     List<SchedulerInstance> notFinishInstances =
         schedulerInstanceService.getNotFinishInstance(instanceQuery);
+    assertTrue(schedulerService.disableJob(jobId));
     LOGGER.info(String.format("notFinishInstances size %s", notFinishInstances.size()));
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
 
