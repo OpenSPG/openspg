@@ -127,7 +127,7 @@ class PatternParser extends Serializable {
       val paths: Set[GraphPath] = ctx.getChild(0) match {
         case c: Graph_structure_bodyContext => parseGraphStructureBody(c, head, predicate)
         case c: Path_pattern_listContext => parsePathPatternList(c, head, predicate)
-        case _ => ???
+        case _ => throw new UnsupportedOperationException(ctx.getChild(0).toString + " not impl")
       }
       paths.foreach(x => {
         if (pathMaps.contains(x.pathName)) {

@@ -85,7 +85,8 @@ class RuleExprParser extends Serializable {
     if (isQuote(s(0)) && isQuote(s(s.length - 1))) {
       s.substring(1, s.length - 1)
     } else {
-      ???
+      throw new
+          KGDSLGrammarException(s + " need quote, like `" + s + "`")
     }
   }
 
@@ -93,7 +94,8 @@ class RuleExprParser extends Serializable {
 
   def expressionTreeBuilder(exprList: List[Expr], operList: List[String]): Expr = {
     if (exprList.length != operList.length + 1) {
-      ??? // "assertion failed: lenght(item) != length(oper) + 1"
+      throw new
+          KGDSLGrammarException("expr list length not equal op list + 1")
     }
     val expr1 = exprList.head
     val tupleList = (exprList.slice(1, exprList.length), operList: List[String]).zipped.toList
@@ -159,7 +161,8 @@ class RuleExprParser extends Serializable {
             listType = KTLong
           }
           if (listType != KTLong && listType != KTDouble) {
-            ???
+            throw new
+                KGDSLGrammarException(listType + " is not in [KTLong, KTDouble]")
           }
           value
         case VString(value) =>
@@ -167,7 +170,8 @@ class RuleExprParser extends Serializable {
             listType = KTString
           }
           if (listType != KTString) {
-            ???
+            throw new
+                KGDSLGrammarException(listType + " is not in [KTString]")
           }
           value
         case VDouble(value) =>
@@ -175,7 +179,8 @@ class RuleExprParser extends Serializable {
             listType = KTDouble
           }
           if (listType != KTDouble) {
-            ???
+            throw new
+                KGDSLGrammarException(listType + " is not in [KTDouble]")
           }
           value
         case VBoolean(value) =>
@@ -183,11 +188,15 @@ class RuleExprParser extends Serializable {
             listType = KTBoolean
           }
           if (listType != KTBoolean) {
-            ???
+            throw new
+                KGDSLGrammarException(listType + " is not in [KTBoolean]")
           }
           value
-        case VList(list, listType) => ???
-        case _ => ???
+        case VList(list, listType) =>
+          throw new
+              NotImplementedError("not impl list")
+        case _ => throw new
+            NotImplementedError("not impl other types")
       })
     VList(strList, listType)
   }
@@ -386,7 +395,6 @@ class RuleExprParser extends Serializable {
           case _: Abs_operatorContext => Abs
           case _: Floor_operatorContext => Floor
           case _: Ceiling_operatorContext => Ceil
-          case _ => ???
         }
         UnaryOpExpr(opStr, expr)
     }
@@ -511,7 +519,7 @@ class RuleExprParser extends Serializable {
       case c: List_slice_opContext => parseListSliceOp(c, opEle)
       case c: List_accumulate_opContext => parseListAccumulateOp(c, opEle)
       case c: List_str_join_opContext => parseListStrJoinOp(c, opEle)
-      case _ => ???
+      case _ => throw new UnsupportedOperationException(ctx.getChild(0).toString + " not impl")
     }
   }
 
@@ -656,7 +664,7 @@ class RuleExprParser extends Serializable {
       case "SUM" => Sum
       case "MIN" => Min
       case "MAX" => Max
-      case _ => ???
+      case _ => throw new UnsupportedOperationException(opName + " not impl")
     }
     AggOpExpr(opExpr, ele)
   }
@@ -784,7 +792,7 @@ class RuleExprParser extends Serializable {
       case c: Value_expressionContext => parseValueExpression(c)
       case c: List_op_expressContext => parseListOpExpression(c)
       case c: Graph_group_op_expressContext => parseGraphGroupExpression(c)
-      case _ => ???
+      case _ => throw new UnsupportedOperationException(ctx.getChild(0).toString + " not impl")
     }
   }
 

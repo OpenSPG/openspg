@@ -338,7 +338,8 @@ class KgDslParser extends ParserInterface {
               List.apply(opBlock),
               Aggregations(Map.apply(lValueName -> opChain.curExpr.asInstanceOf[Aggregator])),
               graphAggExpr.by.map(x => x.refName))
-          case _ => ???
+          case _ => throw new
+              KGDSLGrammarException("not support " + opChain.curExpr)
         }
       } else {
         opChain.curExpr match {
@@ -369,7 +370,7 @@ class KgDslParser extends ParserInterface {
                       lValueName,
                       exprParser.parseRetType(opChain.curExpr),
                       opChain.curExpr))))
-          case _ => ???
+          case _ => throw new UnsupportedOperationException(opChain.curExpr.toString + " not impl")
         }
       }
 
@@ -646,7 +647,7 @@ class KgDslParser extends ParserInterface {
   def parseActionBody(ctx: Action_bodyContext, preBlock: Block): Block = {
     ctx.getChild(0) match {
       case c: Get_actionContext => parseGetAction(c, preBlock)
-      case _ => ???
+      case _ => throw new UnsupportedOperationException(ctx.getChild(0).toString + " not impl")
     }
   }
 
