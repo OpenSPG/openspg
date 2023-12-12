@@ -1,0 +1,22 @@
+package com.antgroup.openspg.reasoner.lube.block
+
+import com.antgroup.openspg.reasoner.lube.common.expr.Expr
+import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
+
+final case class OrderAndSliceBlock(
+    dependencies: List[Block],
+    orderBy: Seq[SortItem],
+    limit: Option[Int],
+    group: List[String],
+    graph: IRGraph)
+    extends BasicBlock[Binds](BlockType("order-and-slice")) {
+  override def binds: Binds = dependencies.head.binds
+}
+
+sealed trait SortItem {
+  def expr: Expr
+}
+
+final case class Asc(expr: Expr) extends SortItem
+
+final case class Desc(expr: Expr) extends SortItem
