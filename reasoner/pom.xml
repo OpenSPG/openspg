@@ -360,18 +360,7 @@
       </dependency>
       <!-- cloud sdk end-->
 
-      <!-- msg broker start -->
-      <dependency>
-        <groupId>com.antgroup.kg</groupId>
-        <artifactId>msg-open-interface</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.kg</groupId>
-        <artifactId>msg-impl</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-      </dependency>
-      <!-- msg broker end -->
+
       <dependency>
         <groupId>com.opencsv</groupId>
         <artifactId>opencsv</artifactId>
