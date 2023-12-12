@@ -11,17 +11,14 @@
  * or implied.
  */
 
-/**
- * Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.translate.impl;
-
-import java.util.List;
 
 import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.translate.Translate;
 import com.google.common.collect.Lists;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,42 +28,41 @@ import org.springframework.stereotype.Component;
 @Component("localDryRunTranslate")
 public class LocalDryRunTranslate implements Translate {
 
-    @Override
-    public WorkflowDag translate(SchedulerJob schedulerJob) {
-        return getWorkflowDag();
-    }
+  @Override
+  public WorkflowDag translate(SchedulerJob schedulerJob) {
+    return getWorkflowDag();
+  }
 
-    public WorkflowDag getWorkflowDag() {
+  public WorkflowDag getWorkflowDag() {
 
-        List<WorkflowDag.Node> nodes = Lists.newArrayList();
-        List<WorkflowDag.Edge> edges = Lists.newArrayList();
+    List<WorkflowDag.Node> nodes = Lists.newArrayList();
+    List<WorkflowDag.Edge> edges = Lists.newArrayList();
 
-        WorkflowDag workflowGraph = new WorkflowDag();
-        WorkflowDag.Node preCheck = new WorkflowDag.Node();
-        preCheck.setId("1000001");
-        preCheck.setName("前置校验");
-        preCheck.setType("preCheckTask");
-        preCheck.setX(250L);
-        preCheck.setY(280L);
-        nodes.add(preCheck);
+    WorkflowDag workflowGraph = new WorkflowDag();
+    WorkflowDag.Node preCheck = new WorkflowDag.Node();
+    preCheck.setId("1000001");
+    preCheck.setName("前置校验");
+    preCheck.setType("preCheckTask");
+    preCheck.setX(250L);
+    preCheck.setY(280L);
+    nodes.add(preCheck);
 
-        WorkflowDag.Node localDryRun = new WorkflowDag.Node();
-        localDryRun.setId("2000001");
-        localDryRun.setName("本地执行");
-        localDryRun.setType("localDryRunTask");
-        localDryRun.setX(500L);
-        localDryRun.setY(280L);
-        nodes.add(localDryRun);
+    WorkflowDag.Node localDryRun = new WorkflowDag.Node();
+    localDryRun.setId("2000001");
+    localDryRun.setName("本地执行");
+    localDryRun.setType("localDryRunTask");
+    localDryRun.setX(500L);
+    localDryRun.setY(280L);
+    nodes.add(localDryRun);
 
-        WorkflowDag.Edge edge = new WorkflowDag.Edge();
-        edge.setFrom("1000001");
-        edge.setTo("2000001");
-        edges.add(edge);
+    WorkflowDag.Edge edge = new WorkflowDag.Edge();
+    edge.setFrom("1000001");
+    edge.setTo("2000001");
+    edges.add(edge);
 
-        workflowGraph.setNodes(nodes);
-        workflowGraph.setEdges(edges);
+    workflowGraph.setNodes(nodes);
+    workflowGraph.setEdges(edges);
 
-        return workflowGraph;
-    }
-
+    return workflowGraph;
+  }
 }

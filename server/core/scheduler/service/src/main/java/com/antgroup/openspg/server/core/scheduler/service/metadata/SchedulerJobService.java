@@ -11,16 +11,13 @@
  * or implied.
  */
 
-/**
- * Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.metadata;
-
-import java.util.List;
 
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
+import java.util.List;
 
 /**
  * @author yangjin
@@ -28,67 +25,67 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
  */
 public interface SchedulerJobService {
 
-    /**
-     * insert
-     *
-     * @param record
-     * @return
-     */
-    Long insert(SchedulerJob record);
+  /**
+   * insert
+   *
+   * @param record
+   * @return
+   */
+  Long insert(SchedulerJob record);
 
-    /**
-     * delete By Id
-     *
-     * @param id
-     * @return
-     */
-    int deleteById(Long id);
+  /**
+   * delete By Id
+   *
+   * @param id
+   * @return
+   */
+  int deleteById(Long id);
 
-    /**
-     * delete By Id List
-     *
-     * @param ids
-     * @return
-     */
-    int deleteByIds(List<Long> ids);
+  /**
+   * delete By Id List
+   *
+   * @param ids
+   * @return
+   */
+  int deleteByIds(List<Long> ids);
 
-    /**
-     * update
-     *
-     * @param record
-     * @return
-     */
-    Long update(SchedulerJob record);
+  /**
+   * update
+   *
+   * @param record
+   * @return
+   */
+  Long update(SchedulerJob record);
 
-    /**
-     * get By Id
-     *
-     * @param id
-     * @return
-     */
-    SchedulerJob getById(Long id);
+  /**
+   * get By Id
+   *
+   * @param id
+   * @return
+   */
+  SchedulerJob getById(Long id);
 
-    /**
-     * query By Condition，query all if pageNo is null
-     *
-     * @param record
-     * @return
-     */
-    Page<List<SchedulerJob>> query(SchedulerJobQuery record);
+  /**
+   * query By Condition，query all if pageNo is null
+   *
+   * @param record
+   * @return
+   */
+  Page<List<SchedulerJob>> query(SchedulerJobQuery record);
 
-    /**
-     * get Count By Condition
-     *
-     * @param record
-     * @return
-     */
-    Long getCount(SchedulerJobQuery record);
+  /**
+   * get Count By Condition
+   *
+   * @param record
+   * @return
+   */
+  Long getCount(SchedulerJobQuery record);
 
-    /**
-     * get By Id List
-     *
-     * @param ids
-     * @return
-     */
-    List<SchedulerJob> getByIds(List<Long> ids);
+  /**
+   * get By Id List
+   *
+   * @param ids
+   * @return
+   */
+  List<SchedulerJob> getByIds(List<Long> ids);
 }

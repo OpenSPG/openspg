@@ -11,9 +11,7 @@
  * or implied.
  */
 
-/**
- * Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.engine;
 
 /**
@@ -21,8 +19,6 @@ package com.antgroup.openspg.server.core.scheduler.service.engine;
  * @version : SchedulerEngineService.java, v 0.1 2023年12月01日 11:25 yangjin Exp $
  */
 public interface SchedulerGenerateService {
-    /**
-     * generate Instances
-     */
-    void generateInstances();
+  /** generate Instances */
+  void generateInstances();
 }

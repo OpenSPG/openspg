@@ -11,9 +11,7 @@
  * or implied.
  */
 
-/**
- * Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved.
- */
+/** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.engine;
 
 /**
@@ -22,15 +20,13 @@ package com.antgroup.openspg.server.core.scheduler.service.engine;
  */
 public interface SchedulerExecuteService {
 
-    /**
-     * execute all Instances
-     */
-    void executeInstances();
+  /** execute all Instances */
+  void executeInstances();
 
-    /**
-     * execute Instance by id
-     * @param id
-     */
-    void executeInstance(Long id);
-
+  /**
+   * execute Instance by id
+   *
+   * @param id
+   */
+  void executeInstance(Long id);
 }

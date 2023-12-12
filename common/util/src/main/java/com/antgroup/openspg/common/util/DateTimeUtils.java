@@ -17,7 +17,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
@@ -75,5 +74,4 @@ public class DateTimeUtils {
     c.add(calendarField, amount);
     return c.getTime();
   }
-
 }
