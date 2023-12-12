@@ -139,11 +139,11 @@ class SchedulerServiceImplTest {
     assertEquals(1, notFinishInstances.size());
     instance = notFinishInstances.get(0);
 
-    ThreadUtils.sleep(5000);
+    ThreadUtils.sleep(1000);
     // step 10: trigger Instance until it ends
     while (!InstanceStatus.isFinished(getInstance(instance.getId()))) {
       assertTrue(schedulerService.triggerInstance(instance.getId()));
-      ThreadUtils.sleep(5000);
+      ThreadUtils.sleep(1000);
     }
     instance = schedulerService.getInstanceById(instance.getId());
     assertEquals(InstanceStatus.FINISH.name(), instance.getStatus());
@@ -236,12 +236,12 @@ class SchedulerServiceImplTest {
         notFinishInstances.stream()
             .min(Comparator.comparing(x -> x.getSchedulerDate()))
             .orElse(null);
-    ThreadUtils.sleep(5000);
+    ThreadUtils.sleep(1000);
 
     // step 6: trigger first Instance until it ends
     while (schedulerInstanceService.getNotFinishInstance(instanceQuery).size() == 24) {
       schedulerExecuteService.executeInstances();
-      ThreadUtils.sleep(5000);
+      ThreadUtils.sleep(1000);
     }
     instance = schedulerService.getInstanceById(instance.getId());
     assertEquals(InstanceStatus.FINISH.name(), instance.getStatus());
@@ -255,7 +255,7 @@ class SchedulerServiceImplTest {
             .orElse(null);
     while (schedulerInstanceService.getNotFinishInstance(instanceQuery).size() == 23) {
       schedulerExecuteService.executeInstances();
-      ThreadUtils.sleep(5000);
+      ThreadUtils.sleep(1000);
     }
     instance = schedulerService.getInstanceById(instance.getId());
     assertEquals(InstanceStatus.FINISH.name(), instance.getStatus());
@@ -337,12 +337,12 @@ class SchedulerServiceImplTest {
         notFinishInstances.stream()
             .min(Comparator.comparing(x -> x.getSchedulerDate()))
             .orElse(null);
-    ThreadUtils.sleep(5000);
+    ThreadUtils.sleep(1000);
 
     // step 5: trigger Instance
     for (int i = 0; i < 10; i++) {
       assertTrue(schedulerService.triggerInstance(instance.getId()));
-      ThreadUtils.sleep(5000);
+      ThreadUtils.sleep(1000);
     }
     instance = schedulerService.getInstanceById(instance.getId());
     assertEquals(InstanceStatus.RUNNING.name(), instance.getStatus());
