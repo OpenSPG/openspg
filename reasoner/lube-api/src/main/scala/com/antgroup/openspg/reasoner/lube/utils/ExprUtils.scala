@@ -54,10 +54,10 @@ object ExprUtils {
               case GetField(fieldName) =>
                 val refName = arg.asInstanceOf[Ref].refName
                 if (edgeAlias != null && edgeAlias.contains(refName)) {
-                  List.apply(IREdge(refName, mutable.Set.apply(fieldName)))
+                  List.apply(IREdge(refName, Set.apply(fieldName)))
                 } else {
                   // other as ir node
-                  List.apply(IRNode(refName, mutable.Set.apply(fieldName)))
+                  List.apply(IRNode(refName, Set.apply(fieldName)))
                 }
               case _ => c.filter(Option(_).isDefined).flatten
             }
@@ -67,7 +67,14 @@ object ExprUtils {
         }
       } else {
         e match {
-          case Ref(refName) => List.apply(IRVariable(refName))
+          case Ref(refName) =>
+            if (nodesAlias != null && nodesAlias.contains(refName)) {
+              List.apply(IRNode(refName, Set.empty))
+            } else if (edgeAlias != null && edgeAlias.contains(refName)) {
+              List.apply(IREdge(refName, Set.empty))
+            } else {
+              List.apply(IRVariable(refName))
+            }
           case _ => List.empty
         }
       }
@@ -139,8 +146,8 @@ object ExprUtils {
    * @return
    */
   def mergeListIRField(c: List[IRField]): List[IRField] = {
-    var nodesMap = Map[String, mutable.Set[String]]()
-    var edgesMap = Map[String, mutable.Set[String]]()
+    var nodesMap = Map[String, Set[String]]()
+    var edgesMap = Map[String, Set[String]]()
     var refSet = mutable.Set[String]()
     var variable = c
       .filter(Option(_).isDefined)

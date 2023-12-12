@@ -11,10 +11,6 @@
  * or implied.
  */
 
-/**
- * Alipay.com Inc.
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
 package com.antgroup.openspg.reasoner.lube.catalog.impl
 
 import scala.collection.mutable
@@ -77,6 +73,7 @@ class PropertyGraphCatalog(val propertyGraphSchema: Map[String, Set[String]]) ex
   : Set[Field] = {
     Set.apply(
       new Field(Constants.NODE_ID_KEY, KTString, true),
+      new Field(Constants.VERTEX_INTERNAL_ID_KEY, KTString, true),
       new Field(Constants.CONTEXT_LABEL, KTString, true))
   }
 
@@ -86,8 +83,13 @@ class PropertyGraphCatalog(val propertyGraphSchema: Map[String, Set[String]]) ex
   override def getDefaultEdgeProperties()
   : Set[Field] = {
     Set.apply(
+      new Field(Constants.CONTEXT_LABEL, KTString, true),
       new Field(Constants.EDGE_FROM_ID_KEY, KTString, true),
-      new Field(Constants.EDGE_TO_ID_KEY, KTString, true)
+      new Field(Constants.EDGE_TO_ID_KEY, KTString, true),
+      new Field(Constants.EDGE_FROM_INTERNAL_ID_KEY, KTString, true),
+      new Field(Constants.EDGE_TO_INTERNAL_ID_KEY, KTString, true),
+      new Field(Constants.EDGE_FROM_ID_TYPE_KEY, KTString, true),
+      new Field(Constants.EDGE_TO_ID_TYPE_KEY, KTString, true)
     )
   }
 }

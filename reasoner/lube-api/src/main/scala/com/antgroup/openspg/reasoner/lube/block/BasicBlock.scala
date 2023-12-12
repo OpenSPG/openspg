@@ -13,6 +13,10 @@
 
 package com.antgroup.openspg.reasoner.lube.block
 
+import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
+
 abstract class BasicBlock[B <: Binds](override val blockType: BlockType) extends Block {
   override def binds: B
+
+  override def graph: IRGraph = dependencies.head.graph
 }

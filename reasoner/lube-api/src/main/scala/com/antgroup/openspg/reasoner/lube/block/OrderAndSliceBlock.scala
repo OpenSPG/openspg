@@ -20,8 +20,7 @@ final case class OrderAndSliceBlock(
     dependencies: List[Block],
     orderBy: Seq[SortItem],
     limit: Option[Int],
-    group: List[String],
-    graph: IRGraph)
+    group: List[String])
     extends BasicBlock[Binds](BlockType("order-and-slice")) {
   override def binds: Binds = dependencies.head.binds
 }

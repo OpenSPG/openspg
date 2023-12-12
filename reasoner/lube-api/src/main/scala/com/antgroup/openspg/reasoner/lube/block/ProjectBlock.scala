@@ -15,7 +15,7 @@ package com.antgroup.openspg.reasoner.lube.block
 
 import scala.collection.mutable.ListBuffer
 
-import com.antgroup.openspg.reasoner.lube.common.graph.{IRField, IRGraph, IRVariable}
+import com.antgroup.openspg.reasoner.lube.common.graph.IRField
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 
 /**
@@ -26,8 +26,7 @@ import com.antgroup.openspg.reasoner.lube.common.rule.Rule
  */
 final case class ProjectBlock(
     dependencies: List[Block],
-    projects: ProjectFields = ProjectFields(),
-    graph: IRGraph)
+    projects: ProjectFields = ProjectFields())
     extends BasicBlock[Fields](BlockType("project")) {
 
   override def binds: Fields = {
