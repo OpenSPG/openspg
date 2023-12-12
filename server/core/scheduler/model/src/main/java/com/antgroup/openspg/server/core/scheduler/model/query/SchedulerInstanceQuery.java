@@ -11,7 +11,6 @@
  * or implied.
  */
 
-/** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.model.query;
 
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
@@ -48,7 +47,7 @@ public class SchedulerInstanceQuery extends SchedulerInstance {
 
   /** start SchedulerDate Date */
   private Date startSchedulerDate;
-  
+
   /** end SchedulerDate Date */
   private Date endSchedulerDate;
 
@@ -60,7 +59,7 @@ public class SchedulerInstanceQuery extends SchedulerInstance {
 
   /** start FinishTime Date */
   private Date startFinishTime;
-  
+
   /** end FinishTime Date */
   private Date endFinishTime;
 }

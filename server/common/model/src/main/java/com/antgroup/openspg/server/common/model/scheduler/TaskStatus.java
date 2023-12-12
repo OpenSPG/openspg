@@ -30,9 +30,7 @@ public enum TaskStatus {
   /** set finish */
   SET_FINISH;
 
-  /**
-   * get TaskStatus by name
-   */
+  /** get TaskStatus by name */
   public static TaskStatus getByName(String name, TaskStatus defaultValue) {
     for (TaskStatus workflowStatus : TaskStatus.values()) {
       if (workflowStatus.name().equalsIgnoreCase(name)) {

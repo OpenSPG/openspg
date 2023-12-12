@@ -11,7 +11,6 @@
  * or implied.
  */
 
-/** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.api;
 
 import com.antgroup.openspg.server.common.model.base.Page;
@@ -23,9 +22,7 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import java.util.List;
 
-/**
- * Scheduler Service:submit,execute,delete and other scheduler interfaces
- */
+/** Scheduler Service:submit,execute,delete and other scheduler interfaces */
 public interface SchedulerService {
   /** submit job */
   SchedulerJob submitJob(SchedulerJob job);

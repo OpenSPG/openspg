@@ -11,7 +11,6 @@
  * or implied.
  */
 
-/** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
 import com.antgroup.openspg.common.util.CommonUtils;

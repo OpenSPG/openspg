@@ -11,7 +11,6 @@
  * or implied.
  */
 
-/** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.common.impl;
 
 import com.alibaba.fastjson.JSON;
@@ -77,9 +76,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
     schedulerTaskService.setStatusByInstanceId(instance.getId(), taskStatus);
   }
 
-  /**
-   * stop Running Process
-   */
+  /** stop Running Process */
   private void stopRunningProcess(SchedulerInstance instance) {
     List<SchedulerTask> taskList = schedulerTaskService.queryByInstanceId(instance.getId());
     List<SchedulerTask> processList =

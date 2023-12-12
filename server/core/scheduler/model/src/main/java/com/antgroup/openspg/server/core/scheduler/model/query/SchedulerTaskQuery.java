@@ -11,7 +11,6 @@
  * or implied.
  */
 
-/** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.model.query;
 
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -34,14 +33,13 @@ public class SchedulerTaskQuery extends SchedulerTask {
 
   /** sort */
   private String sort;
-  
+
   /** order asc, desc */
   private String order;
 
   /** start CreateTime Date */
   private Date startCreateTime;
-  
+
   /** end CreateTime Date */
   private Date endCreateTime;
-
 }

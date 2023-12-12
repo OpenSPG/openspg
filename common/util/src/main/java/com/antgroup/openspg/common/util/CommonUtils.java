@@ -11,7 +11,6 @@
  * or implied.
  */
 
-/** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.common.util;
 
 import java.beans.BeanInfo;
@@ -60,10 +59,7 @@ public class CommonUtils {
     return dest;
   }
 
-  /**
-   * Exception to String
-   *
-   */
+  /** Exception to String */
   public static String getExceptionToString(Throwable e) {
     if (e == null) {
       return "";
@@ -81,10 +77,7 @@ public class CommonUtils {
     return stringWriter.toString();
   }
 
-  /**
-   * close Closeable
-   *
-   */
+  /** close Closeable */
   public static void close(Closeable closeable) {
     if (closeable != null) {
       try {
@@ -95,18 +88,12 @@ public class CommonUtils {
     }
   }
 
-  /**
-   * Limit remark
-   *
-   */
+  /** Limit remark */
   public static String setRemarkLimit(String oldRemark, StringBuffer appendRemark) {
     return subStringToLength(appendRemark.append(oldRemark), 100000, "...");
   }
 
-  /**
-   * sub String To Length
-   *
-   */
+  /** sub String To Length */
   public static String subStringToLength(StringBuffer str, Integer length, String fill) {
     if (str == null) {
       return "";
@@ -120,10 +107,7 @@ public class CommonUtils {
     return str.substring(0, length - fill.length()) + fill;
   }
 
-  /**
-   * get Cron Execution Dates By Today
-   *
-   */
+  /** get Cron Execution Dates By Today */
   public static List<Date> getCronExecutionDatesByToday(String cron) {
     CronExpression expression = null;
     try {
@@ -157,10 +141,7 @@ public class CommonUtils {
     return dates;
   }
 
-  /**
-   * get Previous ValidTime
-   *
-   */
+  /** get Previous ValidTime */
   public static Date getPreviousValidTime(String cron, Date specifiedTime) {
     CronExpression expression = null;
     try {
@@ -185,19 +166,13 @@ public class CommonUtils {
     return preDate;
   }
 
-  /**
-   * get Unique Id
-   *
-   */
+  /** get Unique Id */
   public static String getUniqueId(Long jobId, Date schedulerDate) {
     return jobId.toString()
         + DateTimeUtils.getDate2Str(DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, schedulerDate);
   }
 
-  /**
-   * content contains key
-   *
-   */
+  /** content contains key */
   public static boolean contains(String content, String key) {
     if (StringUtils.isBlank(key)) {
       return true;
@@ -211,10 +186,7 @@ public class CommonUtils {
     return false;
   }
 
-  /**
-   * content equals key
-   *
-   */
+  /** content equals key */
   public static boolean equals(Object content, Object key) {
     if (key == null) {
       return true;
@@ -228,10 +200,7 @@ public class CommonUtils {
     return false;
   }
 
-  /**
-   * content Date after key Date
-   *
-   */
+  /** content Date after key Date */
   public static boolean after(Date content, Date key) {
     if (key == null) {
       return true;
