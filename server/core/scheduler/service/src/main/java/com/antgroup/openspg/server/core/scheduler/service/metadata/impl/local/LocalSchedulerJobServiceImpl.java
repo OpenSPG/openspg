@@ -35,7 +35,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
   private static AtomicLong maxId = new AtomicLong(0L);
 
   @Override
-  public Long insert(SchedulerJob record) {
+  public synchronized Long insert(SchedulerJob record) {
     Long id = maxId.incrementAndGet();
     record.setId(id);
     record.setGmtModified(new Date());
@@ -44,13 +44,13 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
   }
 
   @Override
-  public int deleteById(Long id) {
+  public synchronized int deleteById(Long id) {
     SchedulerJob record = jobs.remove(id);
     return record == null ? 0 : 1;
   }
 
   @Override
-  public int deleteByIds(List<Long> ids) {
+  public synchronized int deleteByIds(List<Long> ids) {
     int flag = 0;
     for (Long id : ids) {
       SchedulerJob record = jobs.remove(id);
@@ -62,7 +62,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
   }
 
   @Override
-  public Long update(SchedulerJob record) {
+  public synchronized Long update(SchedulerJob record) {
     Long id = record.getId();
     SchedulerJob oldRecord = jobs.get(id);
     if (oldRecord == null) {

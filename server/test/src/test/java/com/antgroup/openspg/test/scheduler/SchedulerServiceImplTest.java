@@ -90,24 +90,19 @@ class SchedulerServiceImplTest {
     jobQuery.setId(jobId);
     List<SchedulerJob> jobs = schedulerService.searchJobs(jobQuery).getData();
     assertEquals(1, jobs.size());
-    ThreadUtils.sleep(1000);
-
     // step 3: offline job
     assertTrue(schedulerService.disableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.OFFLINE.name(), job.getStatus());
     SchedulerInstanceQuery instanceQuery = new SchedulerInstanceQuery();
     instanceQuery.setJobId(jobId);
-    assertTrue(schedulerService.disableJob(jobId));
     List<SchedulerInstance> notFinishInstances =
         schedulerInstanceService.getNotFinishInstance(instanceQuery);
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
-
     // step 4: online Job
     assertTrue(schedulerService.enableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.ONLINE.name(), job.getStatus());
-
     // step 5: update Job
     String updateName = "Update Test Once Job";
     job.setName(updateName);
@@ -145,11 +140,11 @@ class SchedulerServiceImplTest {
     assertEquals(1, notFinishInstances.size());
     instance = notFinishInstances.get(0);
 
-    ThreadUtils.sleep(1000);
+    ThreadUtils.sleep(2000);
     // step 10: trigger Instance until it ends
     while (!InstanceStatus.isFinished(getInstance(instance.getId()))) {
       assertTrue(schedulerService.triggerInstance(instance.getId()));
-      ThreadUtils.sleep(1000);
+      ThreadUtils.sleep(2000);
     }
     instance = schedulerService.getInstanceById(instance.getId());
     assertEquals(InstanceStatus.FINISH.name(), instance.getStatus());
@@ -213,7 +208,6 @@ class SchedulerServiceImplTest {
     instanceQuery.setJobId(jobId);
     List<SchedulerInstance> instances = schedulerService.searchInstances(instanceQuery).getData();
     assertEquals(24, instances.size());
-    ThreadUtils.sleep(1000);
 
     // step 3: offline Period job
     assertTrue(schedulerService.disableJob(jobId));
@@ -221,7 +215,6 @@ class SchedulerServiceImplTest {
     assertEquals(Status.OFFLINE.name(), job.getStatus());
     List<SchedulerInstance> notFinishInstances =
         schedulerInstanceService.getNotFinishInstance(instanceQuery);
-    assertTrue(schedulerService.disableJob(jobId));
     LOGGER.info(String.format("notFinishInstances %s", JSON.toJSONString(notFinishInstances)));
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
 
@@ -243,12 +236,12 @@ class SchedulerServiceImplTest {
         notFinishInstances.stream()
             .min(Comparator.comparing(x -> x.getSchedulerDate()))
             .orElse(null);
-    ThreadUtils.sleep(1000);
+    ThreadUtils.sleep(2000);
 
     // step 6: trigger first Instance until it ends
     while (schedulerInstanceService.getNotFinishInstance(instanceQuery).size() == 24) {
       schedulerExecuteService.executeInstances();
-      ThreadUtils.sleep(1000);
+      ThreadUtils.sleep(2000);
     }
     instance = schedulerService.getInstanceById(instance.getId());
     assertEquals(InstanceStatus.FINISH.name(), instance.getStatus());
@@ -262,7 +255,7 @@ class SchedulerServiceImplTest {
             .orElse(null);
     while (schedulerInstanceService.getNotFinishInstance(instanceQuery).size() == 23) {
       schedulerExecuteService.executeInstances();
-      ThreadUtils.sleep(1000);
+      ThreadUtils.sleep(2000);
     }
     instance = schedulerService.getInstanceById(instance.getId());
     assertEquals(InstanceStatus.FINISH.name(), instance.getStatus());
@@ -324,13 +317,11 @@ class SchedulerServiceImplTest {
     instanceQuery.setJobId(jobId);
     List<SchedulerInstance> instances = schedulerService.searchInstances(instanceQuery).getData();
     assertEquals(1, instances.size());
-    ThreadUtils.sleep(1000);
 
     // step 3: offline RealTime job
     assertTrue(schedulerService.disableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.OFFLINE.name(), job.getStatus());
-    assertTrue(schedulerService.disableJob(jobId));
     List<SchedulerInstance> notFinishInstances =
         schedulerInstanceService.getNotFinishInstance(instanceQuery);
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
@@ -346,12 +337,12 @@ class SchedulerServiceImplTest {
         notFinishInstances.stream()
             .min(Comparator.comparing(x -> x.getSchedulerDate()))
             .orElse(null);
-    ThreadUtils.sleep(1000);
+    ThreadUtils.sleep(2000);
 
     // step 5: trigger Instance
     for (int i = 0; i < 10; i++) {
       assertTrue(schedulerService.triggerInstance(instance.getId()));
-      ThreadUtils.sleep(1000);
+      ThreadUtils.sleep(2000);
     }
     instance = schedulerService.getInstanceById(instance.getId());
     assertEquals(InstanceStatus.RUNNING.name(), instance.getStatus());

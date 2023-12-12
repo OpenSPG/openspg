@@ -35,7 +35,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   private static AtomicLong maxId = new AtomicLong(0L);
 
   @Override
-  public Long insert(SchedulerTask record) {
+  public synchronized Long insert(SchedulerTask record) {
     Long id = maxId.incrementAndGet();
     record.setId(id);
     record.setGmtModified(new Date());
@@ -44,13 +44,13 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   }
 
   @Override
-  public int deleteById(Long id) {
+  public synchronized int deleteById(Long id) {
     SchedulerTask record = tasks.remove(id);
     return record == null ? 0 : 1;
   }
 
   @Override
-  public int deleteByIds(List<Long> ids) {
+  public synchronized int deleteByIds(List<Long> ids) {
     int flag = 0;
     for (Long id : ids) {
       SchedulerTask record = tasks.remove(id);
@@ -62,7 +62,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   }
 
   @Override
-  public int deleteByJobId(Long jobId) {
+  public synchronized int deleteByJobId(Long jobId) {
     List<Long> ids = Lists.newArrayList();
     for (Long key : tasks.keySet()) {
       SchedulerTask task = tasks.get(key);
@@ -77,7 +77,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   }
 
   @Override
-  public Long update(SchedulerTask record) {
+  public synchronized Long update(SchedulerTask record) {
     Long id = record.getId();
     SchedulerTask oldRecord = tasks.get(id);
     if (oldRecord == null) {
@@ -94,7 +94,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   }
 
   @Override
-  public Long replace(SchedulerTask record) {
+  public synchronized Long replace(SchedulerTask record) {
     if (record.getId() == null) {
       return insert(record);
     } else {

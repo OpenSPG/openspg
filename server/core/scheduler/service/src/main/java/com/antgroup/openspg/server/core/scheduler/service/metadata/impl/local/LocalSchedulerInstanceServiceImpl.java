@@ -44,7 +44,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   @Autowired SchedulerTaskService schedulerTaskService;
 
   @Override
-  public Long insert(SchedulerInstance record) {
+  public synchronized Long insert(SchedulerInstance record) {
     String uniqueId = record.getUniqueId();
     for (Long id : instances.keySet()) {
       SchedulerInstance instance = instances.get(id);
@@ -60,13 +60,13 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   }
 
   @Override
-  public int deleteById(Long id) {
+  public synchronized int deleteById(Long id) {
     SchedulerInstance record = instances.remove(id);
     return record == null ? 0 : 1;
   }
 
   @Override
-  public int deleteByJobId(Long jobId) {
+  public synchronized int deleteByJobId(Long jobId) {
     List<Long> instanceList = Lists.newArrayList();
     for (Long key : instances.keySet()) {
       SchedulerInstance instance = instances.get(key);
@@ -81,7 +81,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   }
 
   @Override
-  public int deleteByIds(List<Long> ids) {
+  public synchronized int deleteByIds(List<Long> ids) {
     int flag = 0;
     for (Long id : ids) {
       SchedulerInstance record = instances.remove(id);
@@ -93,7 +93,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   }
 
   @Override
-  public Long update(SchedulerInstance record) {
+  public synchronized Long update(SchedulerInstance record) {
     Long id = record.getId();
     SchedulerInstance oldInstance = instances.get(id);
     if (oldInstance == null) {
