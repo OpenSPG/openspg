@@ -68,6 +68,11 @@
         <artifactId>reasoner-lube-api</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-kgdsl-parser</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>org.antlr</groupId>
@@ -365,7 +370,6 @@
         </exclusions>
       </dependency>
       <!-- cloud sdk end-->
-
 
       <dependency>
         <groupId>com.opencsv</groupId>
