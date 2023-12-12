@@ -17,11 +17,7 @@ package com.antgroup.openspg.server.core.scheduler.service.translate;
 import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 
-/**
- * scheduler Translate
- * @Title: DagTranslate.java @Description:
- * @date 2022/3/11 16:41
- */
+/** scheduler Translate. SchedulerJob to WorkflowDag */
 public interface Translate {
 
   /**

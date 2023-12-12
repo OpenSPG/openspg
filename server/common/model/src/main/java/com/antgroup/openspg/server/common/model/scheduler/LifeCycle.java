@@ -13,10 +13,7 @@
 
 package com.antgroup.openspg.server.common.model.scheduler;
 
-/**
- * Life Cycle
- * @Title: LifeCycle.java @Description:
- */
+/** Life Cycle Enum */
 public enum LifeCycle {
 
   /** period */
@@ -28,12 +25,7 @@ public enum LifeCycle {
   /** realtime */
   REAL_TIME;
 
-  /**
-   * get by name
-   *
-   * @param name
-   * @return
-   */
+  /** get by name */
   public static LifeCycle getByName(String name, LifeCycle defaultValue) {
     for (LifeCycle value : LifeCycle.values()) {
       if (value.name().equalsIgnoreCase(name)) {
@@ -43,12 +35,7 @@ public enum LifeCycle {
     return defaultValue;
   }
 
-  /**
-   * get by name
-   *
-   * @param name
-   * @return
-   */
+  /** get by name, return null if the enum does not exist */
   public static LifeCycle getByName(String name) {
     return getByName(name, null);
   }

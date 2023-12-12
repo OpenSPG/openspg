@@ -21,53 +21,22 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Scheduler Common Service
- * @version : SchedulerCommonService.java, v 0.1 2023-12-04 16:37 $
- */
+/** Scheduler Common Service */
 public interface SchedulerCommonService {
 
-  /**
-   * set Instance Finish
-   *
-   * @param instance
-   * @param instanceStatus
-   * @param taskStatus
-   */
+  /** set Instance To Finish */
   void setInstanceFinish(
       SchedulerInstance instance, InstanceStatus instanceStatus, TaskStatus taskStatus);
 
-  /**
-   * generate Once Instance
-   *
-   * @param job
-   * @return
-   */
+  /** generate Once Instance */
   SchedulerInstance generateOnceInstance(SchedulerJob job);
 
-  /**
-   * generate Period Instance
-   *
-   * @param job
-   * @return
-   */
+  /** generate Period Instance by Cron */
   List<SchedulerInstance> generatePeriodInstance(SchedulerJob job);
 
-  /**
-   * generate RealTime Instance
-   *
-   * @param job
-   * @return
-   */
+  /** generate RealTime Instance */
   SchedulerInstance generateRealTimeInstance(SchedulerJob job);
 
-  /**
-   * generate Instance
-   *
-   * @param job
-   * @param uniqueId
-   * @param schedulerDate
-   * @return
-   */
+  /** generate Instance by schedulerDate */
   SchedulerInstance generateInstance(SchedulerJob job, String uniqueId, Date schedulerDate);
 }

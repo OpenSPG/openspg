@@ -26,9 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * @version : QuartzSchedulerHandler.java, v 0.1 2023-11-30 19:05 $
- */
+/** Scheduler Handler Local implementation class. To generate and execute Instances */
 @Service
 public class LocalSchedulerHandler implements SchedulerHandler {
 
@@ -80,6 +78,7 @@ public class LocalSchedulerHandler implements SchedulerHandler {
               schedulerValue.getHandlerType()));
       return;
     }
+
     try {
       LOGGER.info("====== start generateInstances ======");
       GENERATE_INSTANCES_EXECUTOR.scheduleAtFixedRate(

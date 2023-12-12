@@ -21,116 +21,43 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstanc
 import java.util.Date;
 import java.util.List;
 
-/**
- * @version : SchedulerService.java, v 0.1 2023-11-30 13:50 $
- */
+/** Scheduler Instance Service: Add, delete, update, and query instances */
 public interface SchedulerInstanceService {
 
-  /**
-   * insert
-   *
-   * @param record
-   * @return
-   */
+  /** insert Instance */
   Long insert(SchedulerInstance record);
 
-  /**
-   * delete By Id
-   *
-   * @param id
-   * @return
-   */
+  /** delete By Id */
   int deleteById(Long id);
 
-  /**
-   * delete By JobId
-   *
-   * @param jobId
-   * @return
-   */
+  /** delete By JobId */
   int deleteByJobId(Long jobId);
 
-  /**
-   * get Max UniqueId By JobId
-   *
-   * @param jobId
-   * @return
-   */
-  String getMaxUniqueIdByJobId(Long jobId);
-
-  /**
-   * delete By Id List
-   *
-   * @param ids
-   * @return
-   */
+  /** delete By Id List */
   int deleteByIds(List<Long> ids);
 
-  /**
-   * update
-   *
-   * @param record
-   * @return
-   */
+  /** update */
   Long update(SchedulerInstance record);
 
-  /**
-   * get By Id
-   *
-   * @param id
-   * @return
-   */
+  /** get By id */
   SchedulerInstance getById(Long id);
 
-  /**
-   * get By instanceId
-   *
-   * @param instanceId
-   * @return
-   */
+  /** get By instanceId */
   SchedulerInstance getByUniqueId(String instanceId);
 
-  /**
-   * query By Condition，query all if pageNo is null
-   *
-   * @param record
-   * @return
-   */
+  /** query By Condition，query all if pageNo is null */
   Page<List<SchedulerInstance>> query(SchedulerInstanceQuery record);
 
-  /**
-   * get Count By Condition
-   *
-   * @param record
-   * @return
-   */
+  /** get Count By Condition */
   Long getCount(SchedulerInstanceQuery record);
 
-  /**
-   * get By id List
-   *
-   * @param ids
-   * @return
-   */
+  /** get By id List */
   List<SchedulerInstance> getByIds(List<Long> ids);
 
-  /**
-   * get Not Finish Instance
-   *
-   * @param record
-   * @return
-   */
+  /** get Not Finish Instance */
   List<SchedulerInstance> getNotFinishInstance(SchedulerInstanceQuery record);
 
-  /**
-   * get Instance By task type,status,time
-   *
-   * @param taskType
-   * @param status
-   * @param startFinishTime
-   * @param endFinishTime
-   * @return
-   */
+  /** get Instance By task type,status,time */
   List<SchedulerInstance> getInstanceByTask(
       String taskType, TaskStatus status, Date startFinishTime, Date endFinishTime);
 }

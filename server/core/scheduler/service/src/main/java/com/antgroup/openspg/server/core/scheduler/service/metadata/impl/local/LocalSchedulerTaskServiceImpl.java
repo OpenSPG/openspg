@@ -28,9 +28,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-/**
- * @version : SchedulerTaskServiceImpl.java, v 0.1 2023-11-30 14:11 $
- */
+/** Scheduler Task Service implementation class: Add, delete, update, and query tasks */
 @Service
 public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
 

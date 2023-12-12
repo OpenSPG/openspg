@@ -21,9 +21,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
-/**
- * @version : localDryRunTranslate.java, v 0.1 2023-12-05 14:33 $
- */
+/** scheduler Translate Local implementation class. SchedulerJob to WorkflowDag */
 @Component("localDryRunTranslate")
 public class LocalDryRunTranslate implements Translate {
 
@@ -32,6 +30,7 @@ public class LocalDryRunTranslate implements Translate {
     return getWorkflowDag();
   }
 
+  /** get Local DryRun WorkflowDag */
   public WorkflowDag getWorkflowDag() {
 
     List<WorkflowDag.Node> nodes = Lists.newArrayList();
@@ -40,22 +39,22 @@ public class LocalDryRunTranslate implements Translate {
     WorkflowDag workflowGraph = new WorkflowDag();
     WorkflowDag.Node preCheck = new WorkflowDag.Node();
     String prdId = "1000001";
+    Long preX = 250L;
+    Long preY = 280L;
     preCheck.setId(prdId);
     preCheck.setName("Pre Check");
     preCheck.setType("preCheckTask");
-    Long preX = 250L;
-    Long preY = 280L;
     preCheck.setX(preX);
     preCheck.setY(preY);
     nodes.add(preCheck);
 
     WorkflowDag.Node localDryRun = new WorkflowDag.Node();
     String dryRunId = "2000001";
+    Long dryRunX = 500L;
+    Long dryRunY = 280L;
     localDryRun.setId(dryRunId);
     localDryRun.setName("Local DryRun");
     localDryRun.setType("localDryRunTask");
-    Long dryRunX = 500L;
-    Long dryRunY = 280L;
     localDryRun.setX(dryRunX);
     localDryRun.setY(dryRunY);
     nodes.add(localDryRun);

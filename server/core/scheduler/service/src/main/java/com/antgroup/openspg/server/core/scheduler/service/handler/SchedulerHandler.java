@@ -14,22 +14,12 @@
 /** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.handler;
 
-/**
- * @version : SchedulerHandler.java, v 0.1 2023-11-30 18:33 $
- */
+/** Scheduler Handler. To generate and execute Instances */
 public interface SchedulerHandler {
 
-  /**
-   * scheduler timer entrance. execute Instances
-   *
-   * @return
-   */
+  /** scheduler timer entrance. execute Instances */
   void executeInstances();
 
-  /**
-   * scheduler generate Instances timer
-   *
-   * @return
-   */
+  /** scheduler generate Instances timer */
   void generateInstances();
 }

@@ -17,34 +17,14 @@ package com.antgroup.openspg.server.core.scheduler.service.task.async;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskContext;
 
-/**
- * Async scheduler Task
- * @Title: JobAsyncTask.java @Description:
- */
+/** Async scheduler Task, submit/stop task */
 public interface JobAsyncTask {
-  /**
-   * Async submit task, return null and retry
-   *
-   * @param context
-   * @return
-   */
+  /** Async submit task, return null and retry */
   String submit(JobTaskContext context);
 
-  /**
-   * get task Status
-   *
-   * @param context
-   * @param resource
-   * @return
-   */
+  /** get task Status */
   TaskStatus getStatus(JobTaskContext context, String resource);
 
-  /**
-   * stop Task
-   *
-   * @param context
-   * @param resource
-   * @return
-   */
+  /** stop Task */
   Boolean stop(JobTaskContext context, String resource);
 }

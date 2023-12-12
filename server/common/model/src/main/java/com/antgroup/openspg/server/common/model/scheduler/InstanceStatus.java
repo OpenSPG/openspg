@@ -13,10 +13,7 @@
 
 package com.antgroup.openspg.server.common.model.scheduler;
 
-/**
- * Instance Status
- * @Title: InstanceStatus.java @Description:
- */
+/** Instance Status enum */
 public enum InstanceStatus {
   /** WAITING */
   WAITING,
@@ -33,13 +30,8 @@ public enum InstanceStatus {
   /** all done */
   ALL_DONE;
 
-  /**
-   * status is Finish
-   *
-   * @param status
-   * @return
-   */
-  public static boolean isFinish(String status) {
+  /** status is Finished */
+  public static boolean isFinished(String status) {
     return InstanceStatus.FINISH.name().equalsIgnoreCase(status)
         || InstanceStatus.TERMINATE.name().equalsIgnoreCase(status)
         || InstanceStatus.SET_FINISH.name().equalsIgnoreCase(status)
@@ -47,12 +39,7 @@ public enum InstanceStatus {
         || InstanceStatus.SKIP.name().equalsIgnoreCase(status);
   }
 
-  /**
-   * get by name
-   *
-   * @param name
-   * @return
-   */
+  /** get by name */
   public static InstanceStatus getByName(String name, InstanceStatus defaultValue) {
     for (InstanceStatus value : InstanceStatus.values()) {
       if (value.name().equalsIgnoreCase(name)) {
@@ -62,12 +49,7 @@ public enum InstanceStatus {
     return defaultValue;
   }
 
-  /**
-   * get by name
-   *
-   * @param name
-   * @return
-   */
+  /** get by name, return null if the enum does not exist */
   public static InstanceStatus getByName(String name) {
     return getByName(name, null);
   }

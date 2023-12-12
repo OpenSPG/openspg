@@ -24,21 +24,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * ip Utils
- * @version : IpUtils.java, v 0.1 2023-11-30 16:53 $
- */
+/** ip Utils */
 public class IpUtils {
   private static final Logger LOGGER = LoggerFactory.getLogger(IpUtils.class);
 
   public static final String LOCALHOST = "127.0.0.1";
   public static final String IP_LIST = String.join(",", getLocalIPList());
 
-  /**
-   * @return
-   * @author
-   * @date
-   */
+  /** get local ips */
   public static List<String> getLocalIPList() {
     List<String> ipList = new ArrayList<>();
     try {

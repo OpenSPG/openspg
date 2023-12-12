@@ -13,22 +13,14 @@
 
 package com.antgroup.openspg.server.common.model.scheduler;
 
-/**
- * Status
- * @Title: Status.java @Description:
- */
+/** Status Enum */
 public enum Status {
   /** online */
   ONLINE,
   /** offline */
   OFFLINE;
 
-  /**
-   * get by name
-   *
-   * @param name
-   * @return
-   */
+  /** get by name */
   public static Status getByName(String name, Status defaultValue) {
     for (Status value : Status.values()) {
       if (value.name().equalsIgnoreCase(name)) {
@@ -38,12 +30,7 @@ public enum Status {
     return defaultValue;
   }
 
-  /**
-   * get by name
-   *
-   * @param name
-   * @return
-   */
+  /** get by name, return null if the enum does not exist */
   public static Status getByName(String name) {
     return getByName(name, null);
   }

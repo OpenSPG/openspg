@@ -35,9 +35,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * @version : SchedulerInstanceServiceImpl.java, v 0.1 2023-11-30 14:10 $
- */
+/** Scheduler Instance Service implementation class: Add, delete, update, and query instances */
 @Service
 public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceService {
 
@@ -81,19 +79,6 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
       instances.remove(id);
     }
     return instanceList.size();
-  }
-
-  @Override
-  public String getMaxUniqueIdByJobId(Long jobId) {
-    Long max = 0L;
-    for (Long key : instances.keySet()) {
-      SchedulerInstance instance = instances.get(key);
-      if (jobId.equals(instance.getJobId())) {
-        Long uniqueId = Long.valueOf(instance.getUniqueId());
-        max = (uniqueId > max) ? uniqueId : max;
-      }
-    }
-    return max.toString();
   }
 
   @Override
@@ -174,6 +159,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
           || !CommonUtils.contains(instance.getCreateUser(), keyword)) {
         continue;
       }
+
       if (!CommonUtils.after(instance.getSchedulerDate(), record.getStartSchedulerDate())
           || !CommonUtils.before(instance.getSchedulerDate(), record.getEndSchedulerDate())
           || !CommonUtils.after(instance.getGmtCreate(), record.getStartCreateTime())
@@ -182,6 +168,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
           || !CommonUtils.before(instance.getFinishTime(), record.getEndFinishTime())) {
         continue;
       }
+
       if (CollectionUtils.isNotEmpty(record.getTypes())
           && !record.getTypes().contains(instance.getType())) {
         continue;
@@ -219,7 +206,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     List<SchedulerInstance> instanceList = query(record).getData();
     instanceList =
         instanceList.stream()
-            .filter(s -> !InstanceStatus.isFinish(s.getStatus()))
+            .filter(s -> !InstanceStatus.isFinished(s.getStatus()))
             .collect(Collectors.toList());
     return instanceList;
   }

@@ -19,72 +19,30 @@ import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import java.util.List;
 
-/**
- * @version : SchedulerService.java, v 0.1 2023-11-30 13:50 $
- */
+/** Scheduler Job Service: Add, delete, update, and query Jobs */
 public interface SchedulerJobService {
 
-  /**
-   * insert
-   *
-   * @param record
-   * @return
-   */
+  /** insert Job */
   Long insert(SchedulerJob record);
 
-  /**
-   * delete By Id
-   *
-   * @param id
-   * @return
-   */
+  /** delete By Id */
   int deleteById(Long id);
 
-  /**
-   * delete By Id List
-   *
-   * @param ids
-   * @return
-   */
+  /** delete By id List */
   int deleteByIds(List<Long> ids);
 
-  /**
-   * update
-   *
-   * @param record
-   * @return
-   */
+  /** update Job */
   Long update(SchedulerJob record);
 
-  /**
-   * get By Id
-   *
-   * @param id
-   * @return
-   */
+  /** get By id */
   SchedulerJob getById(Long id);
 
-  /**
-   * query By Condition，query all if pageNo is null
-   *
-   * @param record
-   * @return
-   */
+  /** query By Condition，query all if pageNo is null */
   Page<List<SchedulerJob>> query(SchedulerJobQuery record);
 
-  /**
-   * get Count By Condition
-   *
-   * @param record
-   * @return
-   */
+  /** get Count By Condition */
   Long getCount(SchedulerJobQuery record);
 
-  /**
-   * get By Id List
-   *
-   * @param ids
-   * @return
-   */
+  /** get By id List */
   List<SchedulerJob> getByIds(List<Long> ids);
 }

@@ -13,23 +13,14 @@
 
 package com.antgroup.openspg.server.common.model.scheduler;
 
-/**
- * Merge Mode
- *
- @Title: MergeMode.java @Description:
- */
+/** Merge Mode Enum */
 public enum MergeMode {
   /** merge */
   MERGE,
   /** snapshot */
   SNAPSHOT;
 
-  /**
-   * get by name
-   *
-   * @param name
-   * @return
-   */
+  /** get by name */
   public static MergeMode getByName(String name, MergeMode defaultValue) {
     for (MergeMode value : MergeMode.values()) {
       if (value.name().equalsIgnoreCase(name)) {
@@ -39,12 +30,7 @@ public enum MergeMode {
     return defaultValue;
   }
 
-  /**
-   * get by name
-   *
-   * @param name
-   * @return
-   */
+  /** get by name, return null if the enum does not exist */
   public static MergeMode getByName(String name) {
     return getByName(name, null);
   }

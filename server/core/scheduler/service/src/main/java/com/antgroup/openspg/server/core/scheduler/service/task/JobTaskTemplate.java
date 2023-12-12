@@ -21,7 +21,6 @@ import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
-import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
@@ -34,9 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * @version : JobTaskTemplate.java, v 0.1 2023-12-04 19:26 $
- */
+/** JobTask Template class. execute before,process,finally and other functions */
 public abstract class JobTaskTemplate implements JobTask {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(JobTaskTemplate.class);
@@ -62,7 +59,7 @@ public abstract class JobTaskTemplate implements JobTask {
       }
     } catch (Throwable e) {
       context.getTask().setStatus(TaskStatus.ERROR.name());
-      context.addTraceLog("任务调度执行异常：%s", CommonUtils.getExceptionToString(e));
+      context.addTraceLog("Scheduling execute exception：%s", CommonUtils.getExceptionToString(e));
       LOGGER.warn(
           String.format(
               "JobProcessTemplate process error uniqueId:%s", context.getInstance().getUniqueId()),
@@ -90,7 +87,8 @@ public abstract class JobTaskTemplate implements JobTask {
           break;
       }
     } catch (Throwable e) {
-      context.addTraceLog("任务调度存储异常：%s", CommonUtils.getExceptionToString(e));
+      context.addTraceLog(
+          "Scheduling save status exception：%s", CommonUtils.getExceptionToString(e));
       LOGGER.error(
           String.format("process status error uniqueId:%s", context.getInstance().getUniqueId()),
           e);
@@ -105,29 +103,30 @@ public abstract class JobTaskTemplate implements JobTask {
     if (task.getLockTime() == null) {
       int count = schedulerTaskService.updateLock(task.getId());
       if (count < 1) {
-        context.addTraceLog("抢占调度执行锁失败，锁已被占用！");
+        context.addTraceLog("Failed to preempt lock, the lock is already occupied!");
         return false;
       }
-      context.addTraceLog("抢占调度执行锁成功！");
+      context.addTraceLog("Lock preempt successful!");
       return true;
     }
     Date now = new Date();
     Date unLockTime = DateUtils.addMinutes(task.getLockTime(), LOCK_TIME_MINUTES);
     if (now.before(unLockTime)) {
       context.addTraceLog(
-          "上次调度执行锁抢锁时间：%s，未超过执行阈值。请等待调度执行完成。", DateTimeUtils.getDate2LongStr(task.getLockTime()));
+          "Last lock preempt time：%s,The threshold was not exceeded. Wait for the execution to complete",
+          DateTimeUtils.getDate2LongStr(task.getLockTime()));
       return false;
     }
     context.addTraceLog(
-        "上次调度执行锁抢锁时间：%s，超过执行阈值。当前流程直接抢占调度锁进行执行。",
+        "Last lock preempt time：%s, The threshold was exceeded. The current process is executed directly",
         DateTimeUtils.getDate2LongStr(task.getLockTime()));
     unlockTask(context, true);
     int count = schedulerTaskService.updateLock(task.getId());
     if (count < 1) {
-      context.addTraceLog("重新抢占调度执行锁失败，锁已被占用！");
+      context.addTraceLog("Failed to re-preempt lock!");
       return false;
     }
-    context.addTraceLog("重新抢占调度执行锁成功！");
+    context.addTraceLog("Re-preempt lock successfully!");
     return true;
   }
 
@@ -136,11 +135,11 @@ public abstract class JobTaskTemplate implements JobTask {
       return;
     }
     schedulerTaskService.updateUnlock(context.getTask().getId());
-    context.addTraceLog("释放调度执行锁成功！");
+    context.addTraceLog("Lock released successfully!");
   }
 
   public void before(JobTaskContext context) {
-    context.addTraceLog("开始执行任务!");
+    context.addTraceLog("Start process task!");
   }
 
   public void finish(JobTaskContext context) {
@@ -152,12 +151,16 @@ public abstract class JobTaskTemplate implements JobTask {
   }
 
   public void finallyFunc(JobTaskContext context) {
-    context.addTraceLog("任务调度完成。耗时：%s ms !!", System.currentTimeMillis() - context.getStartTime());
+    context.addTraceLog(
+        "Task scheduling completed. cost:%s ms !",
+        System.currentTimeMillis() - context.getStartTime());
     // replace task
     SchedulerTask task = context.getTask();
     SchedulerTask oldTask = schedulerTaskService.getById(task.getId());
-    if (TaskStatus.isFinish(oldTask.getStatus())) {
-      context.addTraceLog("任务已被其他线程执行完成，当前状态：%s。当前调度不做数据变更，只进行调度日志保存!!", oldTask.getStatus());
+    if (TaskStatus.isFinished(oldTask.getStatus())) {
+      context.addTraceLog(
+          "The task has been completed by other threads, Current status:%s. The schedule does not change the data, only saves the log!!",
+          oldTask.getStatus());
       task = oldTask;
     } else {
       task.setGmtModified(oldTask.getGmtModified());
@@ -193,7 +196,6 @@ public abstract class JobTaskTemplate implements JobTask {
 
   private void startNextNode(
       JobTaskContext context, WorkflowDag workflowDag, WorkflowDag.Node nextNode) {
-    SchedulerJob job = context.getJob();
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
 
@@ -206,7 +208,7 @@ public abstract class JobTaskTemplate implements JobTask {
       }
       SchedulerTask preTask =
           schedulerTaskService.queryByInstanceIdAndType(task.getInstanceId(), preNode.getType());
-      if (!TaskStatus.isFinish(preTask.getStatus())) {
+      if (!TaskStatus.isFinished(preTask.getStatus())) {
         allPreFinish = false;
         break;
       }
@@ -221,14 +223,16 @@ public abstract class JobTaskTemplate implements JobTask {
     if (nextTask != null) {
       updateTask.setId(nextTask.getId());
     } else {
-      updateTask =
-          new SchedulerTask(
-              task.getCreateUser(), job.getId(), instance.getId(), TaskStatus.WAIT, nextNode);
+      updateTask = new SchedulerTask(instance, TaskStatus.WAIT, nextNode);
       nextTask = updateTask;
     }
-    context.addTraceLog("当前节点执行完成，开始触发后续节点：%s", nextNode.getName());
+    context.addTraceLog(
+        "The execution of the current node is completed and subsequent nodes are triggered:%s",
+        nextNode.getName());
     if (!TaskStatus.WAIT.name().equals(nextTask.getStatus())) {
-      context.addTraceLog("后续节点：%s 状态为：%s，只有WAIT状态才能修改", nextNode.getName(), nextTask.getStatus());
+      context.addTraceLog(
+          "subsequent nodes:%s status is:%s,Only the WAIT state can be modified",
+          nextNode.getName(), nextTask.getStatus());
       return;
     }
     updateTask.setStatus(TaskStatus.RUNNING.name());
@@ -248,7 +252,7 @@ public abstract class JobTaskTemplate implements JobTask {
       if (task.getId().equals(task.getId())) {
         continue;
       }
-      if (!TaskStatus.isFinish(task.getStatus())) {
+      if (!TaskStatus.isFinished(task.getStatus())) {
         allFinish = false;
         break;
       }
@@ -263,7 +267,8 @@ public abstract class JobTaskTemplate implements JobTask {
       JobTaskContext context, TaskStatus taskStatus, InstanceStatus instanceStatus) {
     SchedulerInstance instance = context.getInstance();
     context.addTraceLog(
-        "完成整个流程，后续节点状态将全部变更为：%s。任务状态置为：%s", taskStatus.name(), instanceStatus.name());
+        "Complete instance,Subsequent task status will all be changed to:%s. instance status set to:%s",
+        taskStatus.name(), instanceStatus.name());
     schedulerCommonService.setInstanceFinish(instance, instanceStatus, taskStatus);
   }
 }

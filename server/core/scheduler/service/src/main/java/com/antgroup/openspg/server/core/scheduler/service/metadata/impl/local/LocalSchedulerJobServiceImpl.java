@@ -28,9 +28,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-/**
- * @version : SchedulerJobServiceImpl.java, v 0.1 2023-11-30 14:09 $
- */
+/** Scheduler Job Service implementation class: Add, delete, update, and query Jobs */
 @Service
 public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
 

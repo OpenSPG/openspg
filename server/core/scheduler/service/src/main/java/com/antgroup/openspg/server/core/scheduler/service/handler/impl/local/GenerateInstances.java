@@ -18,9 +18,7 @@ import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerGenera
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @version : GenerateInstances.java, v 0.1 2023-12-01 10:42 $
- */
+/** Generate Instances Runnable. To execute all instances */
 public class GenerateInstances implements Runnable {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ExecuteInstances.class);

@@ -25,126 +25,50 @@ import java.util.List;
 
 /**
  * Scheduler Service:submit,execute,delete and other scheduler interfaces
- * @version : SchedulerService.java, v 0.1 2023-11-30 13:50 $
  */
 public interface SchedulerService {
-  /**
-   * submit job
-   *
-   * @param job
-   * @return
-   */
+  /** submit job */
   SchedulerJob submitJob(SchedulerJob job);
 
-  /**
-   * execute Job
-   *
-   * @param id
-   * @return
-   */
+  /** execute Job */
   Boolean executeJob(Long id);
 
-  /**
-   * enable Job
-   *
-   * @param id
-   * @return
-   */
+  /** enable Job */
   Boolean enableJob(Long id);
 
-  /**
-   * disable Job
-   *
-   * @param id
-   * @return
-   */
+  /** disable Job */
   Boolean disableJob(Long id);
 
-  /**
-   * delete Job
-   *
-   * @param id
-   * @return
-   */
+  /** delete Job */
   Boolean deleteJob(Long id);
 
-  /**
-   * update Job
-   *
-   * @param job
-   * @return
-   */
+  /** update Job */
   boolean updateJob(SchedulerJob job);
 
-  /**
-   * get Job By id
-   *
-   * @param id
-   * @return
-   */
+  /** get Job By id */
   SchedulerJob getJobById(Long id);
 
-  /**
-   * search Jobs
-   *
-   * @param query
-   * @return
-   */
+  /** search Jobs */
   Page<List<SchedulerJob>> searchJobs(SchedulerJobQuery query);
 
-  /**
-   * get Instance By id
-   *
-   * @param id
-   * @return
-   */
+  /** get Instance By id */
   SchedulerInstance getInstanceById(Long id);
 
-  /**
-   * stop Instance
-   *
-   * @param id
-   * @return
-   */
+  /** stop Instance */
   Boolean stopInstance(Long id);
 
-  /**
-   * set Finish Instance
-   *
-   * @param id
-   * @return
-   */
+  /** set Instance To Finish */
   Boolean setFinishInstance(Long id);
 
-  /**
-   * reRun Instance
-   *
-   * @param id
-   * @return
-   */
+  /** restart Instance */
   Boolean restartInstance(Long id);
 
-  /**
-   * trigger Instance
-   *
-   * @param id
-   * @return
-   */
+  /** trigger Instance */
   Boolean triggerInstance(Long id);
 
-  /**
-   * search Instances
-   *
-   * @param query
-   * @return
-   */
+  /** search Instances */
   Page<List<SchedulerInstance>> searchInstances(SchedulerInstanceQuery query);
 
-  /**
-   * search Tasks
-   *
-   * @param query
-   * @return
-   */
+  /** search Tasks */
   Page<List<SchedulerTask>> searchTasks(SchedulerTaskQuery query);
 }

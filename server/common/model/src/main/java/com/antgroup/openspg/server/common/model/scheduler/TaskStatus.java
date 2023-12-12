@@ -13,10 +13,7 @@
 
 package com.antgroup.openspg.server.common.model.scheduler;
 
-/**
- * Task Status
- * @Title: TaskStatus.java @Description:
- */
+/** Task Status Enum */
 public enum TaskStatus {
   /** wait */
   WAIT,
@@ -35,9 +32,6 @@ public enum TaskStatus {
 
   /**
    * get TaskStatus by name
-   *
-   * @param name
-   * @return
    */
   public static TaskStatus getByName(String name, TaskStatus defaultValue) {
     for (TaskStatus workflowStatus : TaskStatus.values()) {
@@ -48,43 +42,30 @@ public enum TaskStatus {
     return defaultValue;
   }
 
-  /**
-   * get by name
-   *
-   * @param name
-   * @return
-   */
+  /** get by name, return null if the enum does not exist */
   public static TaskStatus getByName(String name) {
     return getByName(name, null);
   }
 
-  /**
-   * status is Finish
-   *
-   * @param status
-   * @return
-   */
-  public static boolean isFinish(TaskStatus status) {
+  /** status is Finished by TaskStatus */
+  public static boolean isFinished(TaskStatus status) {
     return TaskStatus.FINISH.equals(status)
         || TaskStatus.SKIP.equals(status)
         || TaskStatus.TERMINATE.equals(status)
         || TaskStatus.SET_FINISH.equals(status);
   }
 
-  public static boolean isFinish(String status) {
-    return isFinish(getByName(status));
+  /** status is Finished by String */
+  public static boolean isFinished(String status) {
+    return isFinished(getByName(status));
   }
 
-  /**
-   * status is Running
-   *
-   * @param status
-   * @return
-   */
+  /** status is Running by TaskStatus */
   public static boolean isRunning(TaskStatus status) {
     return TaskStatus.RUNNING.equals(status) || TaskStatus.ERROR.equals(status);
   }
 
+  /** status is Running by String */
   public static boolean isRunning(String status) {
     return isRunning(getByName(status));
   }

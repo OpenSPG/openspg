@@ -18,20 +18,12 @@ import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Translator Factory
- * @Title: TranslatorFactory.java @Description:
- */
+/** Translator Factory. get Translate Bean by type */
 public class TranslatorFactory {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TranslatorFactory.class);
 
-  /**
-   * Translate
-   *
-   * @param type
-   * @return
-   */
+  /** get Translate by type */
   public static Translate getTranslator(String type) {
     String translator = getTranslatorNameByType(type);
     Translate dagTranslate = SpringContextHolder.getBean(translator, Translate.class);
@@ -42,6 +34,7 @@ public class TranslatorFactory {
     return dagTranslate;
   }
 
+  /** get Translate name by type */
   private static String getTranslatorNameByType(String type) {
     TranslateEnum translate = TranslateEnum.getByName(type);
     if (translate == null) {

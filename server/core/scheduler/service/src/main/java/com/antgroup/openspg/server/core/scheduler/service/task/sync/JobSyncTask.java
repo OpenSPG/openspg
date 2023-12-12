@@ -17,17 +17,9 @@ package com.antgroup.openspg.server.core.scheduler.service.task.sync;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskContext;
 
-/**
- * Job Sync task
- * @Title: JobSyncProcess.java @Description:
- */
+/** Job Sync task, submit task */
 public interface JobSyncTask {
 
-  /**
-   * Sync submit task
-   *
-   * @param context
-   * @return
-   */
+  /** Sync submit task */
   TaskStatus submit(JobTaskContext context);
 }

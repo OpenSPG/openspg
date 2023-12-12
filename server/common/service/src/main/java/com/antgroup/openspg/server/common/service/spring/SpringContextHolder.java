@@ -43,6 +43,7 @@ public class SpringContextHolder implements ApplicationContextAware {
     return null;
   }
 
+  /** get spring bean by name */
   public static <T> T getBean(String name, Class<T> clazz) {
     Preconditions.checkArgument(StringUtils.isNotBlank(name), "beanName should not be null");
     if (applicationContext != null) {

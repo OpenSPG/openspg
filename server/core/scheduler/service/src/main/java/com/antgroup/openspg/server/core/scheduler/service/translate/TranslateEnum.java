@@ -13,10 +13,7 @@
 
 package com.antgroup.openspg.server.core.scheduler.service.translate;
 
-/**
- * Translate Enum
- * @Title: TranslateEnum.java @Description:
- */
+/** Translate Enum */
 public enum TranslateEnum {
   /** local dry run */
   LOCAL_DRY_RUN("localDryRunTranslate"),
@@ -33,12 +30,7 @@ public enum TranslateEnum {
     return type;
   }
 
-  /**
-   * get by name
-   *
-   * @param name
-   * @return
-   */
+  /** get by name */
   public static TranslateEnum getByName(String name, TranslateEnum defaultValue) {
     for (TranslateEnum value : TranslateEnum.values()) {
       if (value.name().equalsIgnoreCase(name)) {
@@ -48,12 +40,7 @@ public enum TranslateEnum {
     return defaultValue;
   }
 
-  /**
-   * get by name
-   *
-   * @param name
-   * @return
-   */
+  /** get by name, return null if the enum does not exist */
   public static TranslateEnum getByName(String name) {
     return getByName(name, null);
   }

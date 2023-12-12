@@ -46,10 +46,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Scheduler Common Service implementation class
- * @version : SchedulerCommonServiceImpl.java, v 0.1 2023-12-04 16:44 $
- */
+/** Scheduler Common Service implementation class */
 @Service
 public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
@@ -70,6 +67,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
     updateInstance.setProgress(finish);
     Date finishTime = instance.getFinishTime() == null ? new Date() : instance.getFinishTime();
     updateInstance.setFinishTime(finishTime);
+
     Long updateNum = schedulerInstanceService.update(updateInstance);
     if (updateNum <= 0) {
       throw new RuntimeException(String.format("update instance failed %s", updateInstance));
@@ -81,8 +79,6 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
   /**
    * stop Running Process
-   *
-   * @param instance
    */
   private void stopRunningProcess(SchedulerInstance instance) {
     List<SchedulerTask> taskList = schedulerTaskService.queryByInstanceId(instance.getId());
@@ -122,6 +118,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
         });
   }
 
+  /** check Instance is Running within 24H */
   private void checkInstanceRunning(SchedulerJob job) {
     SchedulerInstanceQuery query = new SchedulerInstanceQuery();
     query.setJobId(job.getId());
@@ -131,7 +128,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
     instances.stream()
         .forEach(
             instance -> {
-              if (!InstanceStatus.isFinish(instance.getStatus())) {
+              if (!InstanceStatus.isFinished(instance.getStatus())) {
                 throw new RuntimeException(
                     String.format(
                         "Running instances exist within 24H uniqueId:%", instance.getUniqueId()));
@@ -157,6 +154,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
       if (instance == null) {
         continue;
       }
+
       instances.add(instance);
     }
     return instances;
@@ -182,13 +180,14 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
     LOGGER.info(
         String.format("generateInstance start jobId:%s uniqueId:%s", job.getId(), uniqueId));
+    Long progress = 0L;
     SchedulerInstance instance = new SchedulerInstance();
     instance.setUniqueId(uniqueId);
     instance.setProjectId(job.getProjectId());
     instance.setJobId(job.getId());
     instance.setType(job.getTranslate());
     instance.setStatus(InstanceStatus.WAITING.name());
-    instance.setProgress(0L);
+    instance.setProgress(progress);
     instance.setCreateUser(job.getCreateUser());
     instance.setModifyUser(job.getCreateUser());
     instance.setGmtCreate(new Date());
@@ -214,9 +213,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
               CollectionUtils.isEmpty(workflowDag.getPreNodes(node.getId()))
                   ? TaskStatus.RUNNING
                   : TaskStatus.WAIT;
-          schedulerTaskService.insert(
-              new SchedulerTask(
-                  instance.getCreateUser(), job.getId(), instance.getId(), status, node));
+          schedulerTaskService.insert(new SchedulerTask(instance, status, node));
         });
 
     SchedulerJob updateJob = new SchedulerJob();

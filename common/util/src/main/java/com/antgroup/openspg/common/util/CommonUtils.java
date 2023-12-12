@@ -29,22 +29,12 @@ import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Common Utils
- * @version : CommonUtils.java, v 0.1 2023-12-01 14:19 $
- */
+/** some common tools */
 public class CommonUtils {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
 
-  /**
-   * merge two bean by discovering differences
-   *
-   * @param dest
-   * @param orig
-   * @param <M>
-   * @throws Exception
-   */
+  /** merge two bean by discovering differences */
   public static <M> M merge(M dest, M orig) {
     if (dest == null) {
       return orig;
@@ -73,8 +63,6 @@ public class CommonUtils {
   /**
    * Exception to String
    *
-   * @param e
-   * @return
    */
   public static String getExceptionToString(Throwable e) {
     if (e == null) {
@@ -96,7 +84,6 @@ public class CommonUtils {
   /**
    * close Closeable
    *
-   * @param closeable
    */
   public static void close(Closeable closeable) {
     if (closeable != null) {
@@ -111,9 +98,6 @@ public class CommonUtils {
   /**
    * Limit remark
    *
-   * @param oldRemark
-   * @param appendRemark
-   * @return
    */
   public static String setRemarkLimit(String oldRemark, StringBuffer appendRemark) {
     return subStringToLength(appendRemark.append(oldRemark), 100000, "...");
@@ -122,10 +106,6 @@ public class CommonUtils {
   /**
    * sub String To Length
    *
-   * @param str
-   * @param length
-   * @param fill
-   * @return
    */
   public static String subStringToLength(StringBuffer str, Integer length, String fill) {
     if (str == null) {
@@ -143,8 +123,6 @@ public class CommonUtils {
   /**
    * get Cron Execution Dates By Today
    *
-   * @param cron
-   * @return
    */
   public static List<Date> getCronExecutionDatesByToday(String cron) {
     CronExpression expression = null;
@@ -182,9 +160,6 @@ public class CommonUtils {
   /**
    * get Previous ValidTime
    *
-   * @param cron
-   * @param specifiedTime
-   * @return
    */
   public static Date getPreviousValidTime(String cron, Date specifiedTime) {
     CronExpression expression = null;
@@ -213,9 +188,6 @@ public class CommonUtils {
   /**
    * get Unique Id
    *
-   * @param jobId
-   * @param schedulerDate
-   * @return
    */
   public static String getUniqueId(Long jobId, Date schedulerDate) {
     return jobId.toString()
@@ -225,9 +197,6 @@ public class CommonUtils {
   /**
    * content contains key
    *
-   * @param content
-   * @param key
-   * @return
    */
   public static boolean contains(String content, String key) {
     if (StringUtils.isBlank(key)) {
@@ -245,9 +214,6 @@ public class CommonUtils {
   /**
    * content equals key
    *
-   * @param content
-   * @param key
-   * @return
    */
   public static boolean equals(Object content, Object key) {
     if (key == null) {
@@ -265,9 +231,6 @@ public class CommonUtils {
   /**
    * content Date after key Date
    *
-   * @param content
-   * @param key
-   * @return
    */
   public static boolean after(Date content, Date key) {
     if (key == null) {
@@ -282,13 +245,7 @@ public class CommonUtils {
     return false;
   }
 
-  /**
-   * content Date before key Date
-   *
-   * @param content
-   * @param key
-   * @return
-   */
+  /** content Date before key Date */
   public static boolean before(Date content, Date key) {
     if (key == null) {
       return true;

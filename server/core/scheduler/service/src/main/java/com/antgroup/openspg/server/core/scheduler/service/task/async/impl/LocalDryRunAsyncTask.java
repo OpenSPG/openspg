@@ -23,26 +23,25 @@ import com.antgroup.openspg.server.core.scheduler.service.task.async.JobAsyncTas
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 
-/**
- * @version : LocalAsyncTask.java, v 0.1 2023-12-05 14:24 $
- */
+/** local Dry Run Async Task */
 @Component("localDryRunTask")
 public class LocalDryRunAsyncTask extends JobAsyncTaskTemplate {
 
   @Override
   public String submit(JobTaskContext context) {
     String resource = UUID.randomUUID().toString();
-    context.addTraceLog("发起本地构建测试任务，资源名：%s", resource);
+    context.addTraceLog("submit a local dry run Task, resource:%s", resource);
     return resource;
   }
 
   @Override
   public TaskStatus getStatus(JobTaskContext context, String resource) {
-    context.addTraceLog("检查本地构建测试任务状态，资源名：%s", resource);
+    context.addTraceLog("check local dry run Task Status, resource:%s", resource);
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
     if (LifeCycle.REAL_TIME.name().equalsIgnoreCase(instance.getLifeCycle())) {
-      context.addTraceLog("当前任务为流式任务，实例持续运行中。。。。");
+      context.addTraceLog(
+          "instance LifeCycle is REAL_TIME, The instance is running continuously...");
       return TaskStatus.RUNNING;
     }
     return task.getExecuteNum() > 2 ? TaskStatus.FINISH : TaskStatus.RUNNING;
@@ -50,7 +49,7 @@ public class LocalDryRunAsyncTask extends JobAsyncTaskTemplate {
 
   @Override
   public Boolean stop(JobTaskContext context, String resource) {
-    context.addTraceLog("停止本地构建测试任务，资源名：%s", resource);
+    context.addTraceLog("stop local dry run Task, resource:%s", resource);
     return true;
   }
 }

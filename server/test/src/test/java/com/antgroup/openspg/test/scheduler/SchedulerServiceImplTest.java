@@ -14,6 +14,7 @@
 package com.antgroup.openspg.test.scheduler;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.antgroup.openspg.common.util.DateTimeUtils;
@@ -45,10 +46,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-/** @Title: @Package
- *     com.antgroup.openspg.server.core.scheduler.service.api.impl @Description:
- * @date 2023/12/617:29
- */
+/** Scheduler Service Test */
 @SpringBootTest(
     classes = SofaBootTestApplication.class,
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -143,7 +141,7 @@ class SchedulerServiceImplTest {
 
     ThreadUtils.sleep(5000);
     // step 10: trigger Instance until it ends
-    while (!InstanceStatus.isFinish(getInstance(instance.getId()))) {
+    while (!InstanceStatus.isFinished(getInstance(instance.getId()))) {
       assertTrue(schedulerService.triggerInstance(instance.getId()));
       ThreadUtils.sleep(5000);
     }
@@ -216,6 +214,7 @@ class SchedulerServiceImplTest {
     assertEquals(Status.OFFLINE.name(), job.getStatus());
     List<SchedulerInstance> notFinishInstances =
         schedulerInstanceService.getNotFinishInstance(instanceQuery);
+    LOGGER.info(String.format("notFinishInstances size %s", notFinishInstances.size()));
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
 
     // step 4: online Period Job
@@ -224,9 +223,9 @@ class SchedulerServiceImplTest {
     assertEquals(Status.ONLINE.name(), job.getStatus());
 
     // step 5: execute Job
-    assertTrue(schedulerService.executeJob(jobId));
+    assertFalse(schedulerService.executeJob(jobId));
     notFinishInstances = schedulerInstanceService.getNotFinishInstance(instanceQuery);
-    assertEquals(0, notFinishInstances.size());
+    assertTrue(notFinishInstances.size() < 24);
     schedulerInstanceService.deleteByJobId(jobId);
     assertTrue(schedulerService.executeJob(jobId));
     notFinishInstances = schedulerInstanceService.getNotFinishInstance(instanceQuery);

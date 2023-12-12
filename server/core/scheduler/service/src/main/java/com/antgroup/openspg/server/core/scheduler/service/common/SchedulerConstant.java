@@ -14,10 +14,7 @@
 /** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.common;
 
-/**
- * Scheduler Common Constant
- * @version : SchedulerConstant.java, v 0.1 2023-12-04 17:06 $
- */
+/** Scheduler Common Constant */
 public class SchedulerConstant {
 
   /** underline separator */

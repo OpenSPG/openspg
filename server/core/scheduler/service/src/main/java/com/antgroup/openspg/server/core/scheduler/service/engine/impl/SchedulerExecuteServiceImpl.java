@@ -50,9 +50,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * @version : SchedulerExecuteServiceImpl.java, v 0.1 2023-12-04 14:18 $
- */
+/** Scheduler Execute Service implementation class. execute all instances */
 @Service
 public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
 
@@ -84,6 +82,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     executeInstances(allInstance);
   }
 
+  /** execute all Instances */
   public void executeInstances(List<SchedulerInstance> allInstance) {
     for (SchedulerInstance instance : allInstance) {
       String type = instance.getType();
@@ -101,13 +100,14 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     }
   }
 
+  /** execute Instance by id */
   @Override
   public void executeInstance(Long id) {
     try {
       List<SchedulerTask> tasks = schedulerTaskService.queryBaseColumnByInstanceId(id);
       List<SchedulerTask> processTasks =
           tasks.stream()
-              .filter(s -> TaskStatus.isFinish(s.getStatus()))
+              .filter(s -> TaskStatus.isFinished(s.getStatus()))
               .collect(Collectors.toList());
       if (processTasks.size() == tasks.size()) {
         SchedulerInstance instance = schedulerInstanceService.getById(id);
@@ -121,9 +121,10 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     }
   }
 
+  /** execute Instance by all tasks */
   public void executeInstance(Long id, List<SchedulerTask> tasks) {
     SchedulerInstance instance = schedulerInstanceService.getById(id);
-    if (InstanceStatus.isFinish(instance.getStatus())) {
+    if (InstanceStatus.isFinished(instance.getStatus())) {
       LOGGER.info(
           String.format("instanceStatus is FINISH slip id:%s status:%s", id, instance.getStatus()));
       return;
@@ -152,6 +153,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
         });
   }
 
+  /** execute Instance by task */
   public void executeTask(SchedulerInstance instance, SchedulerTask task) {
 
     long start = System.currentTimeMillis();
@@ -165,6 +167,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
                 "task type is null uniqueId:%s taskId:%s", instance.getUniqueId(), task.getId()));
         return;
       }
+
       type = type.split(SchedulerConstant.UNDERLINE_SEPARATOR)[0];
 
       JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
@@ -175,6 +178,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
                 instance.getUniqueId(), task.getId()));
         return;
       }
+
       jobTask.executeEntry(context);
 
       executeNextTask(context);
@@ -199,6 +203,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     }
   }
 
+  /** execute next task */
   public void executeNextTask(JobTaskContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
@@ -220,12 +225,14 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
                   String.format("executeInstance error uniqueId:%s", instance.getUniqueId()), e);
             }
           };
+
       long delay = 10;
       scheduledExecutor.schedule(instanceRunnable, delay, TimeUnit.SECONDS);
       LOGGER.info(String.format("executeNextTask successful:%s", instance.getUniqueId()));
     }
   }
 
+  /** check next task Status is WAIT to RUNNING */
   private List<SchedulerTask> checkAndUpdateWaitStatus(
       SchedulerInstance instance, List<SchedulerTask> tasks) {
     List<SchedulerTask> result = Lists.newArrayList();
@@ -236,6 +243,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     if (CollectionUtils.isEmpty(processList)) {
       return result;
     }
+
     WorkflowDag workflowDag = JSON.parseObject(instance.getWorkflowConfig(), WorkflowDag.class);
     processList.forEach(
         it -> {
@@ -244,7 +252,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
           for (WorkflowDag.Node preNode : preNodes) {
             SchedulerTask preTask =
                 schedulerTaskService.queryByInstanceIdAndType(instance.getId(), preNode.getType());
-            if (!TaskStatus.isFinish(preTask.getStatus())) {
+            if (!TaskStatus.isFinished(preTask.getStatus())) {
               allFinish = false;
               break;
             }
@@ -261,6 +269,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     return result;
   }
 
+  /** get All Not Finish Instance */
   private List<SchedulerInstance> getAllNotFinishInstance() {
     SchedulerInstanceQuery record = new SchedulerInstanceQuery();
     Integer maxDays = schedulerValue.getExecuteMaxDay() + 1;
@@ -271,6 +280,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     return allInstance;
   }
 
+  /** get Instance ThreadPoolExecutor by type */
   private ThreadPoolExecutor getInstanceExecutor(String type) {
     if (instanceExecutorMap.containsKey(type)) {
       return instanceExecutorMap.get(type);
@@ -284,6 +294,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     return instanceExecutor;
   }
 
+  /** get Task ThreadPoolExecutor by type */
   private ThreadPoolExecutor getTaskExecutor(String type) {
     if (taskExecutorMap.containsKey(type)) {
       return taskExecutorMap.get(type);
@@ -297,6 +308,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     return instanceExecutor;
   }
 
+  /** get ThreadPoolExecutor by type */
   private ThreadPoolExecutor getThreadPoolExecutor(
       String type, int corePoolSize, int maximumPoolSize) {
     long keepAliveTime = 30;

@@ -22,10 +22,7 @@ import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskTemplate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * Job Async Task Template
- * @Title: JobAsyncTaskTemplate.java @Description:
- */
+/** Job Async Task Template class. execute process functions */
 public abstract class JobAsyncTaskTemplate extends JobTaskTemplate implements JobAsyncTask {
 
   @Autowired SchedulerTaskService schedulerTaskService;
@@ -36,19 +33,19 @@ public abstract class JobAsyncTaskTemplate extends JobTaskTemplate implements Jo
     String resource = task.getResource();
 
     if (StringUtils.isBlank(resource)) {
-      context.addTraceLog("异步任务尚未提交！发起异步任务构建提交");
+      context.addTraceLog("The Async task has not been submit! Go to submit");
       resource = submit(context);
       if (StringUtils.isBlank(resource)) {
         return TaskStatus.RUNNING;
       }
-      context.addTraceLog("异步任务提交成功！资源名称：%s", resource);
+      context.addTraceLog("Async task submit successful! resource：%s", resource);
       SchedulerTask updateTask = new SchedulerTask();
       updateTask.setId(task.getId());
       updateTask.setResource(resource);
       schedulerTaskService.update(updateTask);
       return TaskStatus.RUNNING;
     }
-    context.addTraceLog("异步任务已提交！获取任务状态。资源名称：%s", resource);
+    context.addTraceLog("Async task submitted! Get task status. resource：%s", resource);
     return getStatus(context, resource);
   }
 }

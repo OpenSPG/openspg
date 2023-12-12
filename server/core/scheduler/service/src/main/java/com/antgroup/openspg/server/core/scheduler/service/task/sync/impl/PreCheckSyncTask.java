@@ -31,11 +31,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * pre check Task
- *
- * @version : PreCheckSyncTask.java, v 0.1 2023-12-05 11:11 $
- */
+/** pre check Task */
 @Component("preCheckTask")
 public class PreCheckSyncTask extends JobSyncTaskTemplate {
 
@@ -48,7 +44,7 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
   @Override
   public TaskStatus submit(JobTaskContext context) {
     TaskStatus status = getTaskStatus(context);
-    if (TaskStatus.isFinish(status)) {
+    if (TaskStatus.isFinished(status)) {
       SchedulerInstance instance = context.getInstance();
       SchedulerInstance updateInstance = new SchedulerInstance();
       updateInstance.setId(instance.getId());
@@ -59,6 +55,7 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
     return status;
   }
 
+  /** Is pre-check required */
   private TaskStatus getTaskStatus(JobTaskContext context) {
     SchedulerInstance instance = context.getInstance();
 
@@ -67,12 +64,16 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
             System.currentTimeMillis() - instance.getGmtCreate().getTime());
     Integer lastDays = schedulerValue.getExecuteMaxDay();
     if (days > SCHEDULER_MAX_DAYS) {
-      context.addTraceLog("前置校验已超过%s天未通过。超过%s天后任务将不会调度", days, lastDays);
+      context.addTraceLog(
+          "The pre-check has not passed for more than %s days. It will not be scheduled after more than %s days",
+          days, lastDays);
     }
     Date schedulerDate = instance.getSchedulerDate();
     Date now = new Date();
     if (now.before(schedulerDate)) {
-      context.addTraceLog("实例未到执行时间！开始调度日期：%s", DateTimeUtils.getDate2LongStr(schedulerDate));
+      context.addTraceLog(
+          "Execution time not reached! Start scheduling date:%s",
+          DateTimeUtils.getDate2LongStr(schedulerDate));
       return TaskStatus.RUNNING;
     }
 
@@ -91,18 +92,21 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
     }
   }
 
+  /** Skip pre-check */
   private TaskStatus processBySkip(JobTaskContext context) {
-    context.addTraceLog("当前任务无需前置数据检查。直接进行下一节点");
+    context.addTraceLog("No pre-check required");
     return TaskStatus.FINISH;
   }
 
+  /** Snapshot instance pre-check */
   private TaskStatus processBySnapshot(JobTaskContext context) {
-    context.addTraceLog("当前任务不依赖上次实例完成，直接检查前置实例依赖");
+    context.addTraceLog("The current task does not depend on the completion of the last instance");
     return checkPreInstance(context);
   }
 
+  /** Merge instance pre-check */
   public TaskStatus processByMerge(JobTaskContext context) {
-    context.addTraceLog("当前任务依赖上次实例完成，需检查上次实例是否执行完成");
+    context.addTraceLog("The current task depends on the completion of the last instance");
     SchedulerInstance instance = context.getInstance();
     SchedulerJob job = context.getJob();
     Date preSchedulerDate =
@@ -113,11 +117,13 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
     if (null == preInstance) {
       return checkPreInstance(context);
     }
-    if (InstanceStatus.isFinish(preInstance.getStatus())) {
+    if (InstanceStatus.isFinished(preInstance.getStatus())) {
       return checkPreInstance(context);
     }
 
-    context.addTraceLog("当前任务依赖上次实例未执行完成，请等待实例(%s)调度完成", preInstance.getUniqueId());
+    context.addTraceLog(
+        "The last instance(%s) has not been executed, please wait for the scheduling to be completed.",
+        preInstance.getUniqueId());
     return TaskStatus.RUNNING;
   }
 

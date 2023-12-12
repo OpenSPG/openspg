@@ -16,11 +16,12 @@ package com.antgroup.openspg.server.core.scheduler.model.service;
 
 import com.antgroup.openspg.server.common.model.base.BaseModel;
 import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Scheduler Job Model
- * @version : SchedulerJob.java, v 0.1 2023-11-30 09:50 $
- */
+/** Scheduler Job Model */
+@Getter
+@Setter
 public class SchedulerJob extends BaseModel {
 
   private static final long serialVersionUID = 3050626766276089001L;
@@ -78,148 +79,4 @@ public class SchedulerJob extends BaseModel {
 
   /** Scheduler dag config */
   private String config;
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getCreateUser() {
-    return createUser;
-  }
-
-  public void setCreateUser(String createUser) {
-    this.createUser = createUser;
-  }
-
-  public String getModifyUser() {
-    return modifyUser;
-  }
-
-  public void setModifyUser(String modifyUser) {
-    this.modifyUser = modifyUser;
-  }
-
-  public Date getGmtCreate() {
-    return gmtCreate;
-  }
-
-  public void setGmtCreate(Date gmtCreate) {
-    this.gmtCreate = gmtCreate;
-  }
-
-  public Date getGmtModified() {
-    return gmtModified;
-  }
-
-  public void setGmtModified(Date gmtModified) {
-    this.gmtModified = gmtModified;
-  }
-
-  public Long getProjectId() {
-    return projectId;
-  }
-
-  public void setProjectId(Long projectId) {
-    this.projectId = projectId;
-  }
-
-  public String getInvokerId() {
-    return invokerId;
-  }
-
-  public void setInvokerId(String invokerId) {
-    this.invokerId = invokerId;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getLifeCycle() {
-    return lifeCycle;
-  }
-
-  public void setLifeCycle(String lifeCycle) {
-    this.lifeCycle = lifeCycle;
-  }
-
-  public String getTranslate() {
-    return translate;
-  }
-
-  public void setTranslate(String translate) {
-    this.translate = translate;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
-  public String getSchedulerCron() {
-    return schedulerCron;
-  }
-
-  public void setSchedulerCron(String schedulerCron) {
-    this.schedulerCron = schedulerCron;
-  }
-
-  public Long getPreJobId() {
-    return preJobId;
-  }
-
-  public void setPreJobId(Long preJobId) {
-    this.preJobId = preJobId;
-  }
-
-  public Date getLastExecuteTime() {
-    return lastExecuteTime;
-  }
-
-  public void setLastExecuteTime(Date lastExecuteTime) {
-    this.lastExecuteTime = lastExecuteTime;
-  }
-
-  public String getExtension() {
-    return extension;
-  }
-
-  public void setExtension(String extension) {
-    this.extension = extension;
-  }
-
-  public String getVersion() {
-    return version;
-  }
-
-  public void setVersion(String version) {
-    this.version = version;
-  }
-
-  public String getMergeMode() {
-    return mergeMode;
-  }
-
-  public void setMergeMode(String mergeMode) {
-    this.mergeMode = mergeMode;
-  }
-
-  public String getConfig() {
-    return config;
-  }
-
-  public void setConfig(String config) {
-    this.config = config;
-  }
 }

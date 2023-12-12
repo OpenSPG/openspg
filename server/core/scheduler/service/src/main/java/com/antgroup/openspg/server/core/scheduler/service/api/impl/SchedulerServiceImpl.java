@@ -48,11 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-/**
- * Scheduler Service implementation class
- *
- * @version : SchedulerJobServiceImpl.java, v 0.1 2023-11-30 14:09 $
- */
+/** Scheduler Service implementation class */
 @Service
 public class SchedulerServiceImpl implements SchedulerService {
 
@@ -99,6 +95,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     return job;
   }
 
+  /** set Job Property Default Value */
   private void setJobPropertyDefaultValue(SchedulerJob job) {
     job.setGmtModified(new Date());
     if (job.getId() == null) {
@@ -107,14 +104,14 @@ public class SchedulerServiceImpl implements SchedulerService {
     if (job.getMergeMode() == null) {
       job.setMergeMode(MergeMode.MERGE.name());
     }
+    String data = DateTimeUtils.getDate2Str(DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, new Date());
 
     job.setStatus(Status.ONLINE.name());
     job.setVersion(
-        SchedulerConstant.JOB_DEFAULT_VERSION
-            + SchedulerConstant.UNDERLINE_SEPARATOR
-            + DateTimeUtils.getDate2Str(DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, new Date()));
+        SchedulerConstant.JOB_DEFAULT_VERSION + SchedulerConstant.UNDERLINE_SEPARATOR + data);
   }
 
+  /** check Job Property is validity */
   private void checkJobPropertyValidity(SchedulerJob job) {
     Assert.notNull(job, "job not null");
     Assert.notNull(job.getProjectId(), "ProjectId not null");
@@ -150,6 +147,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     SchedulerJob job = schedulerJobService.getById(id);
     Assert.notNull(job, String.format("job not find id:%s", id));
     LifeCycle lifeCycle = LifeCycle.valueOf(job.getLifeCycle());
+
     switch (lifeCycle) {
       case REAL_TIME:
         stopJobAllInstance(id);
@@ -170,6 +168,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     if (CollectionUtils.isEmpty(instances)) {
       return false;
     }
+
     for (SchedulerInstance ins : instances) {
       Long instanceId = ins.getId();
       Runnable instanceRunnable = () -> schedulerExecuteService.executeInstance(instanceId);
@@ -185,6 +184,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     if (CollectionUtils.isEmpty(instances)) {
       return;
     }
+
     for (SchedulerInstance instance : instances) {
       stopInstance(instance.getId());
     }
@@ -197,7 +197,11 @@ public class SchedulerServiceImpl implements SchedulerService {
     SchedulerJob updateJob = new SchedulerJob();
     updateJob.setId(id);
     updateJob.setStatus(Status.ONLINE.name());
-    schedulerJobService.update(updateJob);
+    Long flag = schedulerJobService.update(updateJob);
+    if (flag <= 0) {
+      return false;
+    }
+
     if (LifeCycle.REAL_TIME.name().equals(job.getLifeCycle())) {
       this.executeJob(id);
     }
@@ -211,7 +215,11 @@ public class SchedulerServiceImpl implements SchedulerService {
     SchedulerJob updateJob = new SchedulerJob();
     updateJob.setId(id);
     updateJob.setStatus(Status.OFFLINE.name());
-    schedulerJobService.update(updateJob);
+    Long flag = schedulerJobService.update(updateJob);
+    if (flag <= 0) {
+      return false;
+    }
+
     stopJobAllInstance(id);
     return true;
   }
@@ -219,7 +227,11 @@ public class SchedulerServiceImpl implements SchedulerService {
   @Override
   public Boolean deleteJob(Long id) {
     stopJobAllInstance(id);
-    schedulerJobService.deleteById(id);
+    Integer flag = schedulerJobService.deleteById(id);
+    if (flag <= 0) {
+      return false;
+    }
+
     schedulerInstanceService.deleteByJobId(id);
     schedulerTaskService.deleteByJobId(id);
     return true;
@@ -274,6 +286,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     if (reRunInstance == null) {
       return false;
     }
+
     Long instanceId = reRunInstance.getId();
     Runnable instanceRunnable = () -> schedulerExecuteService.executeInstance(instanceId);
     instanceExecutor.execute(instanceRunnable);
@@ -284,7 +297,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   public Boolean triggerInstance(Long id) {
     SchedulerInstance instance = schedulerInstanceService.getById(id);
     Assert.notNull(instance, String.format("instance not find id:%s", id));
-    if (InstanceStatus.isFinish(instance.getStatus())) {
+    if (InstanceStatus.isFinished(instance.getStatus())) {
       throw new RuntimeException("The instance has been finished");
     }
     schedulerExecuteService.executeInstance(id);

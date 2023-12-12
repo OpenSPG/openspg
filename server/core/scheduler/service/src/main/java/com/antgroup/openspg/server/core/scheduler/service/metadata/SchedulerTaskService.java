@@ -20,147 +20,57 @@ import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import java.util.List;
 
-/**
- * @version : SchedulerService.java, v 0.1 2023-11-30 13:50 $
- */
+/** Scheduler Task Service: Add, delete, update, and query tasks */
 public interface SchedulerTaskService {
 
-  /**
-   * insert Task
-   *
-   * @param record
-   * @return
-   */
+  /** insert Task */
   Long insert(SchedulerTask record);
 
-  /**
-   * delete Task By Id
-   *
-   * @param id
-   * @return
-   */
+  /** delete Task By id */
   int deleteById(Long id);
 
-  /**
-   * delete By Id List
-   *
-   * @param ids
-   * @return
-   */
+  /** delete By id List */
   int deleteByIds(List<Long> ids);
 
-  /**
-   * delete By jobId
-   *
-   * @param jobId
-   * @return
-   */
+  /** delete By jobId */
   int deleteByJobId(Long jobId);
 
-  /**
-   * update By Id
-   *
-   * @param record
-   * @return
-   */
+  /** update By Id */
   Long update(SchedulerTask record);
 
-  /**
-   * insert Or Update，id is null to Update
-   *
-   * @param record
-   * @return
-   */
+  /** insert Or Update，id is null to Update */
   Long replace(SchedulerTask record);
 
-  /**
-   * get By Id
-   *
-   * @param id
-   * @return
-   */
+  /** get By id */
   SchedulerTask getById(Long id);
 
-  /**
-   * query By Condition，query all if pageNo is null
-   *
-   * @param record
-   * @return
-   */
+  /** query By Condition，query all if pageNo is null */
   Page<List<SchedulerTask>> query(SchedulerTaskQuery record);
 
-  /**
-   * get Count By Condition
-   *
-   * @param record
-   * @return
-   */
+  /** get Count By Condition */
   Long getCount(SchedulerTaskQuery record);
 
-  /**
-   * get By Id List
-   *
-   * @param ids
-   * @return
-   */
+  /** get By id List */
   List<SchedulerTask> getByIds(List<Long> ids);
 
-  /**
-   * query By InstanceId And Type
-   *
-   * @param instanceId
-   * @param type
-   * @return
-   */
+  /** query By InstanceId And Type */
   SchedulerTask queryByInstanceIdAndType(Long instanceId, String type);
 
-  /**
-   * query By InstanceId
-   *
-   * @param instanceId
-   * @return
-   */
+  /** query By InstanceId */
   List<SchedulerTask> queryByInstanceId(Long instanceId);
 
-  /**
-   * query Base Column By InstanceId
-   *
-   * @param instanceId
-   * @return
-   */
+  /** query Base Column By InstanceId */
   List<SchedulerTask> queryBaseColumnByInstanceId(Long instanceId);
 
-  /**
-   * Status By InstanceId
-   *
-   * @param instanceId
-   * @param status
-   * @return
-   */
+  /** set Status By InstanceId */
   int setStatusByInstanceId(Long instanceId, TaskStatus status);
 
-  /**
-   * update Extension By Lock
-   *
-   * @param record
-   * @param extension
-   * @return
-   */
+  /** update Extension By Lock */
   int updateExtensionByLock(SchedulerTask record, String extension);
 
-  /**
-   * update Lock
-   *
-   * @param id
-   * @return
-   */
+  /** update Lock */
   int updateLock(Long id);
 
-  /**
-   * update Unlock
-   *
-   * @param id
-   * @return
-   */
+  /** update Unlock */
   int updateUnlock(Long id);
 }

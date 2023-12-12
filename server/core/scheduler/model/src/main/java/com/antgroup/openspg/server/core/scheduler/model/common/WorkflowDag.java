@@ -13,17 +13,19 @@
 
 package com.antgroup.openspg.server.core.scheduler.model.common;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.collections4.CollectionUtils;
 
-/**
- * Workflow Dag Model
- * @Title: WorkflowDag.java
- */
+/** Workflow Dag Model ,Contains nodes and edges */
+@Getter
+@Setter
+@ToString
 public class WorkflowDag {
 
   /** dag nodes List */
@@ -35,12 +37,7 @@ public class WorkflowDag {
   /** dag extend */
   private String extend;
 
-  /**
-   * get Nodes By Type
-   *
-   * @param nodeType
-   * @return
-   */
+  /** get Nodes By Type */
   @JSONField(serialize = false)
   public List<Node> getNodesByType(String nodeType) {
     List<Node> nodes = Lists.newArrayList();
@@ -58,12 +55,7 @@ public class WorkflowDag {
     return nodes;
   }
 
-  /**
-   * get node by id
-   *
-   * @param nodeId
-   * @return
-   */
+  /** get node by id */
   @JSONField(serialize = false)
   public Node getNode(String nodeId) {
     for (Node node : nodes) {
@@ -74,12 +66,7 @@ public class WorkflowDag {
     return null;
   }
 
-  /**
-   * get node by id list
-   *
-   * @param idList
-   * @return
-   */
+  /** get node by id list */
   @JSONField(serialize = false)
   public List<Node> getNode(List<String> idList) {
     List<Node> nodes = Lists.newArrayList();
@@ -94,12 +81,7 @@ public class WorkflowDag {
     return nodes;
   }
 
-  /**
-   * get Next Nodes
-   *
-   * @param nodeId
-   * @return
-   */
+  /** get Next Nodes */
   @JSONField(serialize = false)
   public List<Node> getNextNodes(String nodeId) {
     List<String> idList = Lists.newArrayList();
@@ -111,12 +93,7 @@ public class WorkflowDag {
     return getNode(idList);
   }
 
-  /**
-   * get Pre Nodes
-   *
-   * @param nodeId
-   * @return
-   */
+  /** get Pre Nodes */
   @JSONField(serialize = false)
   public List<Node> getPreNodes(String nodeId) {
     List<String> idList = Lists.newArrayList();
@@ -128,35 +105,9 @@ public class WorkflowDag {
     return getNode(idList);
   }
 
-  public List<Node> getNodes() {
-    return nodes;
-  }
-
-  public void setNodes(List<Node> nodes) {
-    this.nodes = nodes;
-  }
-
-  public List<Edge> getEdges() {
-    return edges;
-  }
-
-  public void setEdges(List<Edge> edges) {
-    this.edges = edges;
-  }
-
-  public String getExtend() {
-    return extend;
-  }
-
-  public void setExtend(String extend) {
-    this.extend = extend;
-  }
-
-  @Override
-  public String toString() {
-    return JSON.toJSONString(this);
-  }
-
+  @Getter
+  @Setter
+  @ToString
   public static class Node<T> {
     /** id */
     private String id;
@@ -175,87 +126,16 @@ public class WorkflowDag {
 
     /** properties */
     private T properties;
-
-    public String getId() {
-      return id;
-    }
-
-    public void setId(String id) {
-      this.id = id;
-    }
-
-    public String getType() {
-      return type;
-    }
-
-    public void setType(String type) {
-      this.type = type;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public Long getX() {
-      return x;
-    }
-
-    public void setX(Long x) {
-      this.x = x;
-    }
-
-    public Long getY() {
-      return y;
-    }
-
-    public void setY(Long y) {
-      this.y = y;
-    }
-
-    public T getProperties() {
-      return properties;
-    }
-
-    public void setProperties(T properties) {
-      this.properties = properties;
-    }
-
-    @Override
-    public String toString() {
-      return JSON.toJSONString(this);
-    }
   }
 
+  @Getter
+  @Setter
+  @ToString
   public static class Edge {
     /** from id */
     private String from;
 
     /** to id */
     private String to;
-
-    public String getFrom() {
-      return from;
-    }
-
-    public void setFrom(String from) {
-      this.from = from;
-    }
-
-    public String getTo() {
-      return to;
-    }
-
-    public void setTo(String to) {
-      this.to = to;
-    }
-
-    @Override
-    public String toString() {
-      return JSON.toJSONString(this);
-    }
   }
 }

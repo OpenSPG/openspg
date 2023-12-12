@@ -29,9 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * @version : SchedulerEngineServiceImpl.java, v 0.1 2023-12-01 11:29 $
- */
+/** Scheduler Generate Service implementation class. generate instances by all period Job */
 @Service
 public class SchedulerGenerateServiceImpl implements SchedulerGenerateService {
 
@@ -42,7 +40,7 @@ public class SchedulerGenerateServiceImpl implements SchedulerGenerateService {
 
   @Override
   public void generateInstances() {
-    List<SchedulerJob> allJob = getAllPeriodJob();
+    List<SchedulerJob> allJob = getAllPeriodJobs();
     LOGGER.info(String.format("getAllPeriodJob succeed size:%s", allJob.size()));
     if (CollectionUtils.isEmpty(allJob)) {
       return;
@@ -50,6 +48,7 @@ public class SchedulerGenerateServiceImpl implements SchedulerGenerateService {
     generatePeriodInstance(allJob);
   }
 
+  /** generate all Period Instance */
   public void generatePeriodInstance(List<SchedulerJob> allJob) {
     for (SchedulerJob job : allJob) {
       try {
@@ -64,7 +63,8 @@ public class SchedulerGenerateServiceImpl implements SchedulerGenerateService {
     }
   }
 
-  private List<SchedulerJob> getAllPeriodJob() {
+  /** get all Period Jobs */
+  private List<SchedulerJob> getAllPeriodJobs() {
     SchedulerJobQuery record = new SchedulerJobQuery();
     record.setLifeCycle(LifeCycle.PERIOD.name());
     record.setStatus(Status.ONLINE.name());

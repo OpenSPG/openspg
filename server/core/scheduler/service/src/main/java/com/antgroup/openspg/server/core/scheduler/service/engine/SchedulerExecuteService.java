@@ -14,18 +14,12 @@
 /** Alipay.com Inc. Copyright (c) 2004-2023 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.engine;
 
-/**
- * @version : SchedulerEngineService.java, v 0.1 2023-12-01 11:25 $
- */
+/** Scheduler Execute Service. execute all instances */
 public interface SchedulerExecuteService {
 
   /** execute all Instances */
   void executeInstances();
 
-  /**
-   * execute Instance by id
-   *
-   * @param id
-   */
+  /** execute Instance by id */
   void executeInstance(Long id);
 }

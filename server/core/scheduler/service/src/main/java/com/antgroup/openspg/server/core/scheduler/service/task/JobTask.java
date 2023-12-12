@@ -15,23 +15,11 @@ package com.antgroup.openspg.server.core.scheduler.service.task;
 
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 
-/**
- * Job Task
- * @Title: JobTask.java @Description:
- */
+/** Job Task .execute instance Entry and process task */
 public interface JobTask {
-  /**
-   * execute Entry
-   *
-   * @param context
-   */
+  /** execute Entry */
   void executeEntry(JobTaskContext context);
 
-  /**
-   * process task
-   *
-   * @param context
-   * @return
-   */
+  /** process task */
   TaskStatus process(JobTaskContext context);
 }

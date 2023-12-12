@@ -18,10 +18,7 @@ import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskContext;
 import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskTemplate;
 
-/**
- * Job Sync task Template
- * @Title: JobSyncTaskTemplate.java @Description:
- */
+/** Job Sync task Template class. execute process functions */
 public abstract class JobSyncTaskTemplate extends JobTaskTemplate implements JobSyncTask {
 
   @Override

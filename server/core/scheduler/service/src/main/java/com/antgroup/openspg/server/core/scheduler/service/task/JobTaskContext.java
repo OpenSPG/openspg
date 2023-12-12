@@ -14,18 +14,20 @@
 /** Alipay.com Inc. Copyright (c) 2004-2021 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.task;
 
-import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.common.util.IpUtils;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import java.util.Date;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-/**
- * Scheduler Task Context
- * @Title: JobTaskContext.java @Description:
- */
+/** Scheduler Task Context */
+@Getter
+@Setter
+@ToString
 public class JobTaskContext {
 
   /** Scheduler Job */
@@ -71,64 +73,13 @@ public class JobTaskContext {
   public void addTraceLog(String message, Object... args) {
     message = String.format(message, args);
     StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
+    int dstOffset = 0;
     log.append("(")
         .append(IpUtils.IP_LIST)
         .append(")：")
         .append(message)
         .append(System.getProperty("line.separator"));
-    traceLog.insert(0, log);
-  }
 
-  public SchedulerJob getJob() {
-    return job;
-  }
-
-  public void setJob(SchedulerJob job) {
-    this.job = job;
-  }
-
-  public SchedulerInstance getInstance() {
-    return instance;
-  }
-
-  public void setInstance(SchedulerInstance instance) {
-    this.instance = instance;
-  }
-
-  public SchedulerTask getTask() {
-    return task;
-  }
-
-  public void setTask(SchedulerTask task) {
-    this.task = task;
-  }
-
-  public StringBuffer getTraceLog() {
-    return traceLog;
-  }
-
-  public void setTraceLog(StringBuffer traceLog) {
-    this.traceLog = traceLog;
-  }
-
-  public long getStartTime() {
-    return startTime;
-  }
-
-  public void setStartTime(long startTime) {
-    this.startTime = startTime;
-  }
-
-  public boolean isTaskFinish() {
-    return taskFinish;
-  }
-
-  public void setTaskFinish(boolean taskFinish) {
-    this.taskFinish = taskFinish;
-  }
-
-  @Override
-  public String toString() {
-    return JSON.toJSONString(this);
+    traceLog.insert(dstOffset, log);
   }
 }

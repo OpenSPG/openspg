@@ -22,9 +22,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-/**
- * Scheduler Common Value
- */
+/** Scheduler Common Value */
 @Component
 public class SchedulerValue {
 
