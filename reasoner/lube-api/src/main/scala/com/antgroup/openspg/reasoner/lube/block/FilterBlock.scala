@@ -11,20 +11,23 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.common.utils;
+package com.antgroup.openspg.reasoner.lube.block
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import org.apache.commons.collections4.CollectionUtils;
+import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
+import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 
-public class SetsUtils {
+/**
+ * a filter block，to filter data that meets the rules
+ *
+ * @param dependencies
+ * @param rules
+ * @param graph
+ */
+final case class FilterBlock(dependencies: List[Block], rules: Rule, graph: IRGraph)
+    extends BasicBlock[Binds](BlockType("filter")) {
 
-  public static <I, O> Set<O> map(Set<I> input, Function<I, O> func) {
-    if (CollectionUtils.isEmpty(input)) {
-      return new HashSet<>(0);
-    }
-    return input.stream().map(func).collect(Collectors.toSet());
+  override def binds: Binds = {
+    dependencies.head.binds
   }
+
 }

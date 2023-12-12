@@ -188,12 +188,6 @@ public class AkgHttpClient {
     return sb.toString();
   }
 
-  /**
-   * HttpResult
-   *
-   * @author liqi.cy
-   * @version $Id: SimpleHttpClient.java, v 0.1 Mar 7, 2016 1:17:42 PM liqi.cy Exp $
-   */
   public static class HttpResult {
 
     /** 返回码 */

@@ -11,6 +11,8 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.common.utils;
+package com.antgroup.openspg.reasoner.lube.block
 
-public interface AutoCloseableIterator<T> extends Iterable<T>, AutoCloseable {}
+abstract class BasicBlock[B <: Binds](override val blockType: BlockType) extends Block {
+  override def binds: B
+}
