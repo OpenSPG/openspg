@@ -11,6 +11,11 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.common.utils;
+package com.antgroup.openspg.reasoner.lube.block
 
-public interface AutoCloseableIterator<T> extends Iterable<T>, AutoCloseable {}
+import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
+
+case class SourceBlock(graph: IRGraph) extends BasicBlock[Binds](BlockType("source")) {
+  override val dependencies: List[Block] = List.empty
+  override val binds: Binds = Binds.empty
+}

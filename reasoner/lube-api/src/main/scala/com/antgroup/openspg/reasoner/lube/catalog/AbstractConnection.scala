@@ -11,6 +11,6 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.common.utils;
+package com.antgroup.openspg.reasoner.lube.catalog
 
-public interface AutoCloseableIterator<T> extends Iterable<T>, AutoCloseable {}
+trait AbstractConnection extends Serializable

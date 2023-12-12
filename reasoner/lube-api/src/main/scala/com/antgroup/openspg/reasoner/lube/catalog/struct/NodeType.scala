@@ -11,6 +11,8 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.common.utils;
+package com.antgroup.openspg.reasoner.lube.catalog.struct
 
-public interface AutoCloseableIterator<T> extends Iterable<T>, AutoCloseable {}
+object NodeType extends Enumeration {
+  val CONCEPT, STANDARD, ADVANCED, EVENT = Value
+}

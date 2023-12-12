@@ -11,6 +11,15 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.common.utils;
+package com.antgroup.openspg.reasoner.lube
 
-public interface AutoCloseableIterator<T> extends Iterable<T>, AutoCloseable {}
+import org.slf4j.{Logger, LoggerFactory}
+
+trait Logging {
+
+  /**
+   * A [[Logger]] named lube.
+   */
+  protected val logger: Logger = LoggerFactory.getLogger("lube")
+
+}
