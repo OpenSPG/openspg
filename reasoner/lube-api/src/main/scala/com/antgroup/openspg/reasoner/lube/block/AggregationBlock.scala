@@ -16,13 +16,12 @@ package com.antgroup.openspg.reasoner.lube.block
 import scala.collection.mutable.ListBuffer
 
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator
-import com.antgroup.openspg.reasoner.lube.common.graph.{IRField, IRGraph}
+import com.antgroup.openspg.reasoner.lube.common.graph.IRField
 
 final case class AggregationBlock(
     dependencies: List[Block],
     aggregations: Aggregations,
-    group: List[String],
-    graph: IRGraph)
+    group: List[String])
     extends BasicBlock[Fields](BlockType("aggregation")) {
 
   override def binds: Fields = {

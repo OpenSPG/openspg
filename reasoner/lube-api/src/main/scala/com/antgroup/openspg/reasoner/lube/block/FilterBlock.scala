@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.reasoner.lube.block
 
-import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 
 /**
@@ -23,7 +22,7 @@ import com.antgroup.openspg.reasoner.lube.common.rule.Rule
  * @param rules
  * @param graph
  */
-final case class FilterBlock(dependencies: List[Block], rules: Rule, graph: IRGraph)
+final case class FilterBlock(dependencies: List[Block], rules: Rule)
     extends BasicBlock[Binds](BlockType("filter")) {
 
   override def binds: Binds = {

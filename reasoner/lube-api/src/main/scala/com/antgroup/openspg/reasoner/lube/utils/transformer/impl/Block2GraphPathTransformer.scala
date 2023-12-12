@@ -20,7 +20,7 @@ import com.antgroup.openspg.reasoner.lube.utils.transformer.BlockTransformer
 class Block2GraphPathTransformer extends BlockTransformer[GraphPath] {
   def transformBlock2GraphPath(block: Block): List[GraphPath] = {
     block match {
-      case MatchBlock(_, patterns, _) => patterns.values.toList
+      case MatchBlock(_, patterns) => patterns.values.toList
       case _ => null
     }
   }

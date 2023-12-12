@@ -92,7 +92,7 @@ final case class LogicRule(ruleName: String, ruleExplain: String, expr: Expr)
       newRule.addDependency(r)
     }
     for (r <- rule.getDependencies) {
-      addDependency(r)
+      newRule.addDependency(r)
     }
     newRule
   }
