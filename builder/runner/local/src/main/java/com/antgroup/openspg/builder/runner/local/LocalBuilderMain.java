@@ -21,9 +21,11 @@ import com.antgroup.openspg.server.api.facade.dto.schema.request.ProjectSchemaRe
 import com.antgroup.openspg.server.api.http.client.HttpSchemaFacade;
 import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo;
 import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 import org.slf4j.LoggerFactory;
 
+@Slf4j
 public class LocalBuilderMain {
 
   private static final String PROJECT_ID_OPTION = "projectId";
@@ -36,9 +38,14 @@ public class LocalBuilderMain {
   private static final String ALTER_OPERATION_OPTION = "alterOperation";
   private static final String LOG_FILE_OPTION = "logFile";
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     CommandLine commandLine = parseArgs(args);
-    run(commandLine);
+    try {
+      run(commandLine);
+    } catch (Throwable e) {
+      log.error("unknown exception.", e);
+      System.exit(0);
+    }
   }
 
   public static CommandLine parseArgs(String[] args) {

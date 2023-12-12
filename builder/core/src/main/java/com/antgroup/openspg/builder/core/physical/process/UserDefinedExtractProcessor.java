@@ -2,14 +2,14 @@ package com.antgroup.openspg.builder.core.physical.process;
 
 import com.antgroup.openspg.builder.core.physical.operator.OperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.PythonOperatorFactory;
-import com.antgroup.openspg.builder.core.physical.operator.protocol.EvalResult;
-import com.antgroup.openspg.builder.core.physical.operator.protocol.Vertex;
+import com.antgroup.openspg.builder.core.physical.operator.protocol.InvokeResult;
+import com.antgroup.openspg.builder.core.physical.operator.protocol.InvokeResultWrapper;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.UserDefinedExtractNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BuilderRecord;
-import com.antgroup.openspg.core.schema.model.type.OperatorKey;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
@@ -23,12 +23,10 @@ public class UserDefinedExtractProcessor
 
   private static final ObjectMapper mapper = new ObjectMapper();
   private final OperatorFactory operatorFactory;
-  private final OperatorKey operatorKey;
 
   public UserDefinedExtractProcessor(String id, String name, UserDefinedExtractNodeConfig config) {
     super(id, name, config);
     this.operatorFactory = PythonOperatorFactory.getInstance();
-    this.operatorKey = config.getOperatorConfig().toKey();
   }
 
   @Override
@@ -43,18 +41,21 @@ public class UserDefinedExtractProcessor
     List<BaseRecord> results = new ArrayList<>();
     for (BaseRecord record : inputs) {
       BuilderRecord builderRecord = (BuilderRecord) record;
-      Vertex inputVertex = new Vertex().setProps(builderRecord.getProps());
       Map<String, Object> result =
-          (Map<String, Object>) operatorFactory.invoke(operatorKey, inputVertex);
+          (Map<String, Object>)
+              operatorFactory.invoke(config.getOperatorConfig(), builderRecord.getProps());
 
-      EvalResult<List<Vertex>> evalResult =
-          mapper.convertValue(result, new TypeReference<EvalResult<List<Vertex>>>() {});
-      if (evalResult == null || CollectionUtils.isEmpty(evalResult.getData())) {
+      InvokeResultWrapper<List<InvokeResult>> invokeResultWrapper =
+          mapper.convertValue(
+              result, new TypeReference<InvokeResultWrapper<List<InvokeResult>>>() {});
+      if (invokeResultWrapper == null || CollectionUtils.isEmpty(invokeResultWrapper.getData())) {
         continue;
       }
 
-      for (Vertex vertex : evalResult.getData()) {
-        results.add(new BuilderRecord(builderRecord.getRecordId(), null, vertex.getProps()));
+      for (InvokeResult data : invokeResultWrapper.getData()) {
+        results.add(
+            new BuilderRecord(
+                null, SPGTypeIdentifier.parse(data.getSpgTypeName()), data.getProperties()));
       }
     }
     return results;

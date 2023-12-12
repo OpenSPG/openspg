@@ -61,4 +61,9 @@ public class SPGSubPropertyRecord extends BasePropertyRecord implements WithSPGT
   public SPGTypeEnum getSpgTypeEnum() {
     return getSubProperty().getObjectTypeRef().getSpgTypeEnum();
   }
+
+  @Override
+  public String toString() {
+    return subProperty.getName();
+  }
 }

@@ -1,4 +1,3 @@
-
 from knext.component.builder import UserDefinedExtractor, LLMBasedExtractor
 from knext.component.builder import SPGTypeMapping, RelationMapping
 from knext.component.builder import CsvSourceReader
@@ -13,5 +12,5 @@ __all__ = [
     "SPGTypeMapping",
     "RelationMapping",
     "KGSinkWriter",
-    "Component"
+    "Component",
 ]

@@ -35,7 +35,7 @@ public class BasicPropertyNormalizer implements PropertyNormalizer {
           break;
       }
     } catch (NumberFormatException e) {
-      throw new PropertyNormalizeException(e, "");
+      throw new PropertyNormalizeException(e, "{} normalize error", rawValue);
     }
     record.getValue().setSingleStd(stdValue);
   }

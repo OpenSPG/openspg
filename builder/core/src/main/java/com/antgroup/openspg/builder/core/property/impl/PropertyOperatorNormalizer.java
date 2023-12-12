@@ -2,38 +2,38 @@ package com.antgroup.openspg.builder.core.property.impl;
 
 import com.antgroup.openspg.builder.core.physical.operator.OperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.PythonOperatorFactory;
-import com.antgroup.openspg.builder.core.physical.operator.protocol.EvalResult;
-import com.antgroup.openspg.builder.core.physical.operator.protocol.Vertex;
+import com.antgroup.openspg.builder.core.physical.operator.protocol.InvokeResult;
+import com.antgroup.openspg.builder.core.physical.operator.protocol.InvokeResultWrapper;
 import com.antgroup.openspg.builder.core.property.PropertyNormalizer;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PropertyNormalizeException;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorPropertyNormalizerConfig;
 import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
-import com.antgroup.openspg.core.schema.model.type.OperatorKey;
+import com.antgroup.openspg.common.util.StringUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
+@Slf4j
 @SuppressWarnings("unchecked")
 public class PropertyOperatorNormalizer implements PropertyNormalizer {
 
   private static final ObjectMapper mapper = new ObjectMapper();
-  private final OperatorKey operatorKey;
   private final OperatorPropertyNormalizerConfig normalizerConfig;
   private final OperatorFactory operatorFactory;
 
   public PropertyOperatorNormalizer(OperatorPropertyNormalizerConfig config) {
     this.normalizerConfig = config;
-    this.operatorKey = config.getConfig().toKey();
     this.operatorFactory = PythonOperatorFactory.getInstance();
   }
 
   @Override
   public void init(BuilderContext context) throws BuilderException {
     operatorFactory.init(context);
-    operatorFactory.loadOperator(normalizerConfig.getConfig());
+    operatorFactory.loadOperator(normalizerConfig.getOperatorConfig());
   }
 
   @Override
@@ -42,20 +42,30 @@ public class PropertyOperatorNormalizer implements PropertyNormalizer {
 
     List<String> ids = new ArrayList<>(rawValues.size());
     for (String rawValue : rawValues) {
-      Map<String, Object> result =
-          (Map<String, Object>) operatorFactory.invoke(operatorKey, rawValue, new HashMap<>(0));
-      EvalResult<List<Vertex>> evalResult =
-          mapper.convertValue(result, new TypeReference<EvalResult<List<Vertex>>>() {});
-
-      if (evalResult == null || CollectionUtils.isEmpty(evalResult.getData())) {
-        throw new PropertyNormalizeException("property={} normalize failed", rawValue);
+      InvokeResultWrapper<List<InvokeResult>> invokeResultWrapper = null;
+      try {
+        Map<String, Object> result =
+            (Map<String, Object>)
+                operatorFactory.invoke(
+                    normalizerConfig.getOperatorConfig(), rawValue, new HashMap<>(0));
+        invokeResultWrapper =
+            mapper.convertValue(
+                result, new TypeReference<InvokeResultWrapper<List<InvokeResult>>>() {});
+      } catch (Exception e) {
+        throw new PropertyNormalizeException(e, "{} normalize error", rawValue);
       }
 
-      if (evalResult.getData().size() > 1) {
-        throw new PropertyNormalizeException("property={} normalize failed", rawValue);
+      if (invokeResultWrapper == null || CollectionUtils.isEmpty(invokeResultWrapper.getData())) {
+        continue;
       }
 
-      ids.add(evalResult.getData().get(0).getBizId());
+      for (InvokeResult data : invokeResultWrapper.getData()) {
+        String id = data.getId();
+        if (StringUtils.isBlank(id)) {
+          continue;
+        }
+        ids.add(id);
+      }
     }
     record.getValue().setStds(Collections.singletonList(ids));
     record.getValue().setIds(ids);

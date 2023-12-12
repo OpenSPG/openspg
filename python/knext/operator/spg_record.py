@@ -17,9 +17,7 @@ from typing import Dict, Any, List
 class SPGRecord:
     """Data structure in operator, used to store entity information."""
 
-    def __init__(
-        self, spg_type_name: str = "", properties: Dict[str, str] = None
-    ):
+    def __init__(self, spg_type_name: str = "", properties: Dict[str, str] = None):
         self._spg_type_name = None
         self._properties = None
 
@@ -124,14 +122,14 @@ class SPGRecord:
     def to_dict(self):
         """Returns the model properties as a dict"""
         return {
-            "SPGTypeName": self.spg_type_name,
+            "spgTypeName": self.spg_type_name,
             "properties": self.properties,
         }
 
     @classmethod
     def from_dict(cls, input: Dict[str, Any]):
         """Returns the model from a dict"""
-        return cls(input.get("SPGTypeName"), input.get("properties"))
+        return cls(input.get("spgTypeName"), input.get("properties"))
 
     def __repr__(self):
         """For `print` and `pprint`"""

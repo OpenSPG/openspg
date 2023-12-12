@@ -6,7 +6,6 @@ from NN4K.invoker.base import ModelInvoker
 
 
 class BuiltInOnlineLLMBasedExtractOp(ExtractOp):
-
     def __init__(self, params: Dict[str, str] = None):
         """
 

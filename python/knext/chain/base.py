@@ -33,24 +33,18 @@ class Chain(Runnable, RESTable):
     def submit(self):
         raise ValueError("Not support yet.")
 
-    def to_rest(self) -> rest.Pipeline:
-        nodes, edges = [], []
-        for node in self.g.nodes:
-            nodes.append(node.to_rest())
-        for edge in self.g.edges:
-            edges.append(rest.Edge(_from=edge[0].id, to=edge[1].id))
-
-        dag_config = rest.Pipeline(nodes=nodes, edges=edges)
-        return dag_config
-
-    def __rshift__(self, other: Union[
-        Type['Chain'],
-        List[Type['Chain']],
-        Type['Component'],
-        List[Type['Component']],
-        None
-    ]):
+    def __rshift__(
+        self,
+        other: Union[
+            Type["Chain"],
+            List[Type["Chain"]],
+            Type["Component"],
+            List[Type["Component"]],
+            None,
+        ],
+    ):
         from knext.component.base import Component
+
         if not other:
             return self
         if not isinstance(other, list):
@@ -60,7 +54,11 @@ class Chain(Runnable, RESTable):
             if not o:
                 dag_list.append(o.dag)
             if isinstance(o, Component):
-                end_nodes = [node for node, out_degree in self.dag.out_degree() if out_degree == 0 or node.last]
+                end_nodes = [
+                    node
+                    for node, out_degree in self.dag.out_degree()
+                    if out_degree == 0 or node.last
+                ]
                 dag = nx.DiGraph(self.dag)
                 if len(end_nodes) > 0:
                     for end_node in end_nodes:
@@ -69,8 +67,14 @@ class Chain(Runnable, RESTable):
                 dag_list.append(dag)
             elif isinstance(o, Chain):
                 combined_dag = nx.compose(self.dag, o.dag)
-                end_nodes = [node for node, out_degree in self.dag.out_degree() if out_degree == 0 or node.last]
-                start_nodes = [node for node, in_degree in o.dag.in_degree() if in_degree == 0]
+                end_nodes = [
+                    node
+                    for node, out_degree in self.dag.out_degree()
+                    if out_degree == 0 or node.last
+                ]
+                start_nodes = [
+                    node for node, in_degree in o.dag.in_degree() if in_degree == 0
+                ]
 
                 if len(end_nodes) > 0 and len(start_nodes) > 0:
                     for end_node in end_nodes:

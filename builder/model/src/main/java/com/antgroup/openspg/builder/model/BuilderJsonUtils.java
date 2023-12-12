@@ -2,6 +2,7 @@ package com.antgroup.openspg.builder.model;
 
 import com.antgroup.openspg.builder.model.pipeline.config.*;
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
+import com.antgroup.openspg.builder.model.pipeline.enums.PropertyNormalizerTypeEnum;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
@@ -31,6 +32,16 @@ public class BuilderJsonUtils {
                     .registerSubtype(
                         SubGraphMappingNodeConfig.class, NodeTypeEnum.SUBGRAPH_MAPPING.name())
                     .registerSubtype(GraphStoreSinkNodeConfig.class, NodeTypeEnum.GRAPH_SINK.name())
+                    .recognizeSubtypes())
+            .registerTypeAdapterFactory(
+                RuntimeTypeAdapterFactory.of(
+                        PropertyNormalizerConfig.class, DEFAULT_TYPE_FIELD_NAME)
+                    .registerSubtype(
+                        OperatorPropertyNormalizerConfig.class,
+                        PropertyNormalizerTypeEnum.OPERATOR.name())
+                    .registerSubtype(
+                        IdEqualsPropertyNormalizerConfig.class,
+                        PropertyNormalizerTypeEnum.ID_EQUALS.name())
                     .recognizeSubtypes())
             .create();
   }

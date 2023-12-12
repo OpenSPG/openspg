@@ -16,7 +16,6 @@ class ComponentTypeEnum(str, Enum):
 
 
 class BuilderComponent(Component, ABC):
-
     @property
     def type(self):
         return ComponentTypeEnum.__members__[self.__class__.__name__].value
@@ -31,7 +30,6 @@ class BuilderComponent(Component, ABC):
 
 
 class SourceReader(BuilderComponent, ABC):
-
     @property
     def upstream_types(self):
         return None
@@ -42,7 +40,6 @@ class SourceReader(BuilderComponent, ABC):
 
 
 class SPGExtractor(BuilderComponent, ABC):
-
     @property
     def upstream_types(self):
         return Union[SourceReader, SPGExtractor]
@@ -53,7 +50,6 @@ class SPGExtractor(BuilderComponent, ABC):
 
 
 class Mapping(BuilderComponent, ABC):
-
     @property
     def upstream_types(self):
         return Union[SourceReader, SPGExtractor]
@@ -64,7 +60,6 @@ class Mapping(BuilderComponent, ABC):
 
 
 class SinkWriter(BuilderComponent, ABC):
-
     @property
     def upstream_types(self):
         return Union[Mapping]

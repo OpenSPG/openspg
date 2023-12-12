@@ -35,10 +35,12 @@ public class RecordNormalizerImpl implements RecordNormalizer {
       return;
     }
     for (BaseMappingNodeConfig.MappingConfig mappingConfig : mappingConfigs) {
-      PropertyNormalizer normalizer =
-          PropertyNormalizerFactory.getPropertyNormalizer(mappingConfig.getNormalizerConfig());
-      normalizer.init(context);
-      semanticPropertyNormalizers.put(mappingConfig.getTarget(), normalizer);
+      if (mappingConfig.getNormalizerConfig() != null) {
+        PropertyNormalizer normalizer =
+            PropertyNormalizerFactory.getPropertyNormalizer(mappingConfig.getNormalizerConfig());
+        normalizer.init(context);
+        semanticPropertyNormalizers.put(mappingConfig.getTarget(), normalizer);
+      }
     }
   }
 

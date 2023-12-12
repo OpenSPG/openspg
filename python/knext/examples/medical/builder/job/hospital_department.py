@@ -27,9 +27,7 @@ class HospitalDepartment(BuilderJob):
             start_row=1,
         )
 
-        mapping = EntityMappingComponent(
-            spg_type_name=Medical.HospitalDepartment
-        )
+        mapping = EntityMappingComponent(spg_type_name=Medical.HospitalDepartment)
 
         sink = SinkToKgComponent()
 

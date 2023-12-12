@@ -1,4 +1,3 @@
-
 from knext.client.builder import BuilderClient
 from knext.client.schema import SchemaClient
 from knext.client.reasoner import ReasonerClient
@@ -10,5 +9,5 @@ __all__ = [
     "SchemaClient",
     "ReasonerClient",
     "OperatorClient",
-    "SearchClient"
+    "SearchClient",
 ]

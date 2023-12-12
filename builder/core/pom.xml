@@ -16,7 +16,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.antgroup.openspg.builder</groupId>
-    <artifactId>openspg-builder-parent</artifactId>
+    <artifactId>builder-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
@@ -28,23 +28,23 @@
       <artifactId>api-http-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-interface-graph-store</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-interface-table-store</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-interface-search-engine</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
     </dependency>
     <dependency>

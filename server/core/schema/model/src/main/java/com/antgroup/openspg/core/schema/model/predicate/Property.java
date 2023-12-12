@@ -117,4 +117,9 @@ public class Property extends BaseSpoTriple
         this.getProjectId(),
         this.getOntologyId());
   }
+
+  @Override
+  public String toString() {
+    return getName();
+  }
 }
