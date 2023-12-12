@@ -28,6 +28,7 @@
     <module>common</module>
     <module>udf</module>
     <module>lube-api</module>
+    <module>warehouse/reasoner-warehouse-common</module>
   </modules>
 
   <properties>
