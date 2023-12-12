@@ -24,8 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Job Async Task Template
- *
- * @author yangjin @Title: JobAsyncTaskTemplate.java @Description:
+ * @Title: JobAsyncTaskTemplate.java @Description:
  */
 public abstract class JobAsyncTaskTemplate extends JobTaskTemplate implements JobAsyncTask {
 

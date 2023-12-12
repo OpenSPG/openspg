@@ -34,8 +34,7 @@ import org.springframework.stereotype.Component;
 /**
  * pre check Task
  *
- * @author yangjin
- * @version : PreCheckSyncTask.java, v 0.1 2023年12月05日 11:11 yangjin Exp $
+ * @version : PreCheckSyncTask.java, v 0.1 2023-12-05 11:11 $
  */
 @Component("preCheckTask")
 public class PreCheckSyncTask extends JobSyncTaskTemplate {

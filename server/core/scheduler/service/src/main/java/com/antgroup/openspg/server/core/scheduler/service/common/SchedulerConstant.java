@@ -15,8 +15,8 @@
 package com.antgroup.openspg.server.core.scheduler.service.common;
 
 /**
- * @author yangjin
- * @version : SchedulerConstant.java, v 0.1 2023年12月04日 17:06 yangjin Exp $
+ * Scheduler Common Constant
+ * @version : SchedulerConstant.java, v 0.1 2023-12-04 17:06 $
  */
 public class SchedulerConstant {
 

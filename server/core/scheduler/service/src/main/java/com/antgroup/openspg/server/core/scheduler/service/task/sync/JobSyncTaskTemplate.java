@@ -20,8 +20,7 @@ import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskTemplate;
 
 /**
  * Job Sync task Template
- *
- * @author yangjin @Title: JobSyncTaskTemplate.java @Description:
+ * @Title: JobSyncTaskTemplate.java @Description:
  */
 public abstract class JobSyncTaskTemplate extends JobTaskTemplate implements JobSyncTask {
 

@@ -21,9 +21,8 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 
 /**
- * Workflow Dag
- *
- * @author yangjin @Title: WorkflowDag.java @Description:
+ * Workflow Dag Model
+ * @Title: WorkflowDag.java
  */
 public class WorkflowDag {
 

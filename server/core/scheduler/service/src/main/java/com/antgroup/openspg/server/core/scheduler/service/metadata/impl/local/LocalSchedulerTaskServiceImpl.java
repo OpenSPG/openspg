@@ -29,8 +29,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 /**
- * @author yangjin
- * @version : SchedulerTaskServiceImpl.java, v 0.1 2023年11月30日 14:11 yangjin Exp $
+ * @version : SchedulerTaskServiceImpl.java, v 0.1 2023-11-30 14:11 $
  */
 @Service
 public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {

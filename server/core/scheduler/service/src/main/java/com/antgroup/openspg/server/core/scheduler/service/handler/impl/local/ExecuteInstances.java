@@ -19,8 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author yangjin
- * @version : ExecuteInstances.java, v 0.1 2023年12月01日 10:42 yangjin Exp $
+ * @version : ExecuteInstances.java, v 0.1 2023-12-01 10:42 $
  */
 public class ExecuteInstances implements Runnable {
 
@@ -36,10 +35,10 @@ public class ExecuteInstances implements Runnable {
   public void run() {
     try {
       Long startTime = System.currentTimeMillis();
-      LOGGER.info("====== run ExecuteInstances start ======");
+      LOGGER.info("run ExecuteInstances start");
       schedulerExecuteService.executeInstances();
       Long time = System.currentTimeMillis() - startTime;
-      LOGGER.info(String.format("====== run ExecuteInstances end time:%s ======", time));
+      LOGGER.info(String.format("run ExecuteInstances end time:%s", time));
     } catch (Exception e) {
       LOGGER.error("run ExecuteInstances Exception", e);
     }

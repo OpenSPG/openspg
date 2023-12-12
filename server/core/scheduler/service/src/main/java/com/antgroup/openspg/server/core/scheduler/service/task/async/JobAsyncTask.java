@@ -19,8 +19,7 @@ import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskContext;
 
 /**
  * Async scheduler Task
- *
- * @author yangjin @Title: JobAsyncTask.java @Description:
+ * @Title: JobAsyncTask.java @Description:
  */
 public interface JobAsyncTask {
   /**

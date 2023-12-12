@@ -22,8 +22,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author yangjin
- * @version : SchedulerCommonService.java, v 0.1 2023年12月04日 16:37 yangjin Exp $
+ * Scheduler Common Service
+ * @version : SchedulerCommonService.java, v 0.1 2023-12-04 16:37 $
  */
 public interface SchedulerCommonService {
 

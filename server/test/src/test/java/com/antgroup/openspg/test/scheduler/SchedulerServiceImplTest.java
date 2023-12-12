@@ -45,8 +45,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * @author yangjin @Title: @Package
+/** @Title: @Package
  *     com.antgroup.openspg.server.core.scheduler.service.api.impl @Description:
  * @date 2023/12/617:29
  */
@@ -93,7 +92,7 @@ class SchedulerServiceImplTest {
     List<SchedulerJob> jobs = schedulerService.searchJobs(jobQuery).getData();
     assertEquals(1, jobs.size());
     // step 3: offline job
-    assertTrue(schedulerService.offlineJob(jobId));
+    assertTrue(schedulerService.disableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.OFFLINE.name(), job.getStatus());
     SchedulerInstanceQuery instanceQuery = new SchedulerInstanceQuery();
@@ -102,7 +101,7 @@ class SchedulerServiceImplTest {
         schedulerInstanceService.getNotFinishInstance(instanceQuery);
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
     // step 4: online Job
-    assertTrue(schedulerService.onlineJob(jobId));
+    assertTrue(schedulerService.enableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.ONLINE.name(), job.getStatus());
     // step 5: update Job
@@ -128,7 +127,7 @@ class SchedulerServiceImplTest {
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
 
     // step 8: reRun Instance and to stop
-    assertTrue(schedulerService.reRunInstance(instance.getId()));
+    assertTrue(schedulerService.restartInstance(instance.getId()));
     notFinishInstances = schedulerInstanceService.getNotFinishInstance(instanceQuery);
     assertEquals(1, notFinishInstances.size());
     instance = notFinishInstances.get(0);
@@ -137,7 +136,7 @@ class SchedulerServiceImplTest {
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
 
     // step 9: reRun Instance
-    assertTrue(schedulerService.reRunInstance(instance.getId()));
+    assertTrue(schedulerService.restartInstance(instance.getId()));
     notFinishInstances = schedulerInstanceService.getNotFinishInstance(instanceQuery);
     assertEquals(1, notFinishInstances.size());
     instance = notFinishInstances.get(0);
@@ -212,7 +211,7 @@ class SchedulerServiceImplTest {
     assertEquals(24, instances.size());
 
     // step 3: offline Period job
-    assertTrue(schedulerService.offlineJob(jobId));
+    assertTrue(schedulerService.disableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.OFFLINE.name(), job.getStatus());
     List<SchedulerInstance> notFinishInstances =
@@ -220,7 +219,7 @@ class SchedulerServiceImplTest {
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
 
     // step 4: online Period Job
-    assertTrue(schedulerService.onlineJob(jobId));
+    assertTrue(schedulerService.enableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.ONLINE.name(), job.getStatus());
 
@@ -320,7 +319,7 @@ class SchedulerServiceImplTest {
     assertEquals(1, instances.size());
 
     // step 3: offline RealTime job
-    assertTrue(schedulerService.offlineJob(jobId));
+    assertTrue(schedulerService.disableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.OFFLINE.name(), job.getStatus());
     List<SchedulerInstance> notFinishInstances =
@@ -328,7 +327,7 @@ class SchedulerServiceImplTest {
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
 
     // step 4: online RealTime Job
-    assertTrue(schedulerService.onlineJob(jobId));
+    assertTrue(schedulerService.enableJob(jobId));
     job = schedulerService.getJobById(jobId);
     assertEquals(Status.ONLINE.name(), job.getStatus());
     notFinishInstances = schedulerInstanceService.getNotFinishInstance(instanceQuery);

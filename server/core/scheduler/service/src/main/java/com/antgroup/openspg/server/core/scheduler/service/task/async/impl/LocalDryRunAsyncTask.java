@@ -24,8 +24,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 /**
- * @author yangjin
- * @version : LocalAsyncTask.java, v 0.1 2023年12月05日 14:24 yangjin Exp $
+ * @version : LocalAsyncTask.java, v 0.1 2023-12-05 14:24 $
  */
 @Component("localDryRunTask")
 public class LocalDryRunAsyncTask extends JobAsyncTaskTemplate {

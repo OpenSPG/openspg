@@ -51,8 +51,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @author yangjin
- * @version : SchedulerExecuteServiceImpl.java, v 0.1 2023年12月04日 14:18 yangjin Exp $
+ * @version : SchedulerExecuteServiceImpl.java, v 0.1 2023-12-04 14:18 $
  */
 @Service
 public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
@@ -61,10 +60,13 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
 
   private static final Logger METRIC_LOGGER = LoggerFactory.getLogger("SCHEDULER-METRIC");
 
+  private static final int corePoolSize = 10;
+
   private ConcurrentHashMap<String, ThreadPoolExecutor> instanceExecutorMap =
       new ConcurrentHashMap<>();
   private ConcurrentHashMap<String, ThreadPoolExecutor> taskExecutorMap = new ConcurrentHashMap<>();
-  private ScheduledExecutorService scheduledExecutor = new ScheduledThreadPoolExecutor(10);
+  private ScheduledExecutorService scheduledExecutor =
+      new ScheduledThreadPoolExecutor(corePoolSize);
 
   @Autowired SchedulerValue schedulerValue;
   @Autowired SchedulerJobService schedulerJobService;
@@ -218,7 +220,8 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
                   String.format("executeInstance error uniqueId:%s", instance.getUniqueId()), e);
             }
           };
-      scheduledExecutor.schedule(instanceRunnable, 10, TimeUnit.SECONDS);
+      long delay = 10;
+      scheduledExecutor.schedule(instanceRunnable, delay, TimeUnit.SECONDS);
       LOGGER.info(String.format("executeNextTask successful:%s", instance.getUniqueId()));
     }
   }
@@ -272,7 +275,11 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     if (instanceExecutorMap.containsKey(type)) {
       return instanceExecutorMap.get(type);
     }
-    ThreadPoolExecutor instanceExecutor = getThreadPoolExecutor("instanceExecutor" + type, 20, 100);
+
+    int corePoolSize = 20;
+    int maximumPoolSize = 100;
+    ThreadPoolExecutor instanceExecutor =
+        getThreadPoolExecutor("instanceExecutor" + type, corePoolSize, maximumPoolSize);
     instanceExecutorMap.put(type, instanceExecutor);
     return instanceExecutor;
   }
@@ -281,20 +288,27 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     if (taskExecutorMap.containsKey(type)) {
       return taskExecutorMap.get(type);
     }
-    ThreadPoolExecutor instanceExecutor = getThreadPoolExecutor("taskExecutor" + type, 10, 50);
+
+    int corePoolSize = 10;
+    int maximumPoolSize = 50;
+    ThreadPoolExecutor instanceExecutor =
+        getThreadPoolExecutor("taskExecutor" + type, corePoolSize, maximumPoolSize);
     taskExecutorMap.put(type, instanceExecutor);
     return instanceExecutor;
   }
 
   private ThreadPoolExecutor getThreadPoolExecutor(
       String type, int corePoolSize, int maximumPoolSize) {
+    long keepAliveTime = 30;
+    int capacity = 100000;
+
     ThreadPoolExecutor taskExecutor =
         new ThreadPoolExecutor(
             corePoolSize,
             maximumPoolSize,
-            30,
+            keepAliveTime,
             TimeUnit.MINUTES,
-            new LinkedBlockingQueue<>(100000),
+            new LinkedBlockingQueue<>(capacity),
             runnable -> {
               Thread thread = new Thread(runnable);
               thread.setDaemon(true);
@@ -302,6 +316,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
               return thread;
             },
             new ThreadPoolExecutor.DiscardOldestPolicy());
+
     return taskExecutor;
   }
 }

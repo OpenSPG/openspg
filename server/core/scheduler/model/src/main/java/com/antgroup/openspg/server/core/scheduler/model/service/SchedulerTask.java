@@ -24,8 +24,8 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * @author yangjin
- * @version : SchedulerTask.java, v 0.1 2023年11月30日 09:50 yangjin Exp $
+ * Scheduler Task Model
+ * @version : SchedulerTask.java, v 0.1 2023-11-30 09:50 $
  */
 public class SchedulerTask extends BaseModel {
 
@@ -112,26 +112,24 @@ public class SchedulerTask extends BaseModel {
     this.createUser = createUser;
     this.updateUser = createUser;
     this.type = node.getType();
-    if (StringUtils.isNotBlank(node.getName())) {
-      this.title = node.getName();
-    } else {
-      this.title = node.getType();
-    }
     this.status = status.name();
     this.nodeId = node.getId();
     this.jobId = jobId;
     this.instanceId = instanceId;
     this.executeNum = 0;
     this.beginTime = new Date();
+    this.title = StringUtils.isNotBlank(node.getName()) ? node.getName() : node.getType();
     if (node.getProperties() != null) {
       this.extension = JSON.toJSONString(node.getProperties());
     }
+
     StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
     log.append("(")
         .append(IpUtils.IP_LIST)
         .append(")：")
         .append("新建流程，当前等待前置节点执行完成.....")
         .append(System.getProperty("line.separator"));
+
     this.remark = log.toString();
   }
 

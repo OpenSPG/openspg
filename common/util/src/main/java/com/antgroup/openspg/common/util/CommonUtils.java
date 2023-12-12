@@ -30,8 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author yangjin
- * @version : CommonUtils.java, v 0.1 2023年12月01日 14:19 yangjin Exp $
+ * Common Utils
+ * @version : CommonUtils.java, v 0.1 2023-12-01 14:19 $
  */
 public class CommonUtils {
 

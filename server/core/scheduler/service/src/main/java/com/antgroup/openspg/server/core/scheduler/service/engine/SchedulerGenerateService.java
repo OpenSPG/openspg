@@ -15,8 +15,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.engine;
 
 /**
- * @author yangjin
- * @version : SchedulerEngineService.java, v 0.1 2023年12月01日 11:25 yangjin Exp $
+ * @version : SchedulerEngineService.java, v 0.1 2023-12-01 11:25 $
  */
 public interface SchedulerGenerateService {
   /** generate Instances */

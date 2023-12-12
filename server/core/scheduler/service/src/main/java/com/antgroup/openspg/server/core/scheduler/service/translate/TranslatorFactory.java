@@ -20,8 +20,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Translator Factory
- *
- * @author yangjin @Title: TranslatorFactory.java @Description:
+ * @Title: TranslatorFactory.java @Description:
  */
 public class TranslatorFactory {
 

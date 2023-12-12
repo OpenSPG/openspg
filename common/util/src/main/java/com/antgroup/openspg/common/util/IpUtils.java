@@ -25,8 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author yangjin
- * @version : IpUtils.java, v 0.1 2023年11月30日 16:53 yangjin Exp $
+ * ip Utils
+ * @version : IpUtils.java, v 0.1 2023-11-30 16:53 $
  */
 public class IpUtils {
   private static final Logger LOGGER = LoggerFactory.getLogger(IpUtils.class);

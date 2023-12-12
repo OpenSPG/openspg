@@ -18,8 +18,8 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import java.util.Date;
 
 /**
- * @author yangjin
- * @version : SchedulerTaskQuery.java, v 0.1 2023年12月04日 11:26 yangjin Exp $
+ * Scheduler Task Query Model
+ * @version : SchedulerTaskQuery.java, v 0.1 2023-12-04 11:26 $
  */
 public class SchedulerTaskQuery extends SchedulerTask {
 

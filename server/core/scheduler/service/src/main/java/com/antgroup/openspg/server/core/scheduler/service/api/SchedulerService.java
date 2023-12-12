@@ -24,8 +24,8 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import java.util.List;
 
 /**
- * @author yangjin
- * @version : SchedulerService.java, v 0.1 2023年11月30日 13:50 yangjin Exp $
+ * Scheduler Service:submit,execute,delete and other scheduler interfaces
+ * @version : SchedulerService.java, v 0.1 2023-11-30 13:50 $
  */
 public interface SchedulerService {
   /**
@@ -45,20 +45,20 @@ public interface SchedulerService {
   Boolean executeJob(Long id);
 
   /**
-   * online Job
+   * enable Job
    *
    * @param id
    * @return
    */
-  Boolean onlineJob(Long id);
+  Boolean enableJob(Long id);
 
   /**
-   * offline Job
+   * disable Job
    *
    * @param id
    * @return
    */
-  Boolean offlineJob(Long id);
+  Boolean disableJob(Long id);
 
   /**
    * delete Job
@@ -122,7 +122,7 @@ public interface SchedulerService {
    * @param id
    * @return
    */
-  Boolean reRunInstance(Long id);
+  Boolean restartInstance(Long id);
 
   /**
    * trigger Instance

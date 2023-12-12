@@ -36,8 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @author yangjin
- * @version : SchedulerInstanceServiceImpl.java, v 0.1 2023年11月30日 14:10 yangjin Exp $
+ * @version : SchedulerInstanceServiceImpl.java, v 0.1 2023-11-30 14:10 $
  */
 @Service
 public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceService {

@@ -15,8 +15,7 @@ package com.antgroup.openspg.server.common.model.scheduler;
 
 /**
  * Env
- *
- * @author yangjin @Title: Env.java @Description:
+ * @Title: Env.java @Description:
  */
 public enum Env {
 

@@ -15,37 +15,22 @@ package com.antgroup.openspg.server.core.scheduler.service.translate;
 
 /**
  * Translate Enum
- *
- * @author yangjin @Title: TranslateEnum.java @Description:
+ * @Title: TranslateEnum.java @Description:
  */
 public enum TranslateEnum {
   /** local dry run */
-  LOCAL_DRY_RUN("localDryRunTranslate", "本地空跑任务"),
+  LOCAL_DRY_RUN("localDryRunTranslate"),
   /** builder */
-  KG_BUILDER("builderTranslate", "知识加工任务");
+  KG_BUILDER("builderTranslate");
 
   private String type;
-  private String description;
 
-  TranslateEnum(String type, String description) {
+  TranslateEnum(String type) {
     this.type = type;
-    this.description = description;
   }
 
   public String getType() {
     return type;
-  }
-
-  public void setType(String type) {
-    this.type = type;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
   }
 
   /**

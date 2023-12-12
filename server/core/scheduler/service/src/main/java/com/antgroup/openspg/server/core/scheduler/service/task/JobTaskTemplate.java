@@ -35,8 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * @author yangjin
- * @version : JobTaskTemplate.java, v 0.1 2023年12月04日 19:26 yangjin Exp $
+ * @version : JobTaskTemplate.java, v 0.1 2023-12-04 19:26 $
  */
 public abstract class JobTaskTemplate implements JobTask {
 
@@ -55,9 +54,9 @@ public abstract class JobTaskTemplate implements JobTask {
     try {
       lock = lockTask(context);
       if (lock) {
-        // 前置处理
+        // Pre-process
         before(context);
-        // 处理核心类
+        // Core process
         status = process(context);
         context.getTask().setStatus(status.name());
       }
@@ -154,7 +153,7 @@ public abstract class JobTaskTemplate implements JobTask {
 
   public void finallyFunc(JobTaskContext context) {
     context.addTraceLog("任务调度完成。耗时：%s ms !!", System.currentTimeMillis() - context.getStartTime());
-    // 每次结束必须更新Workflow
+    // replace task
     SchedulerTask task = context.getTask();
     SchedulerTask oldTask = schedulerTaskService.getById(task.getId());
     if (TaskStatus.isFinish(oldTask.getStatus())) {
@@ -183,7 +182,7 @@ public abstract class JobTaskTemplate implements JobTask {
     List<WorkflowDag.Node> nextNodes = workflowDag.getNextNodes(task.getNodeId());
 
     if (CollectionUtils.isEmpty(nextNodes)) {
-      checkAllNodesFinish(context);
+      checkAllNodesFinished(context);
       return;
     }
 
@@ -241,7 +240,7 @@ public abstract class JobTaskTemplate implements JobTask {
     context.setTaskFinish(true);
   }
 
-  private boolean checkAllNodesFinish(JobTaskContext context) {
+  private boolean checkAllNodesFinished(JobTaskContext context) {
     boolean allFinish = true;
     List<SchedulerTask> taskList =
         schedulerTaskService.queryByInstanceId(context.getInstance().getId());

@@ -19,8 +19,7 @@ import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskContext;
 
 /**
  * Job Sync task
- *
- * @author yangjin @Title: JobSyncProcess.java @Description:
+ * @Title: JobSyncProcess.java @Description:
  */
 public interface JobSyncTask {
 

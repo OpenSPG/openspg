@@ -20,8 +20,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author yangjin
- * @version : SchedulerInstanceQuery.java, v 0.1 2023年12月04日 11:15 yangjin Exp $
+ * Scheduler Instance Query Model
+ * @version : SchedulerInstanceQuery.java, v 0.1 2023-12-04 11:15 $
  */
 public class SchedulerInstanceQuery extends SchedulerInstance {
 

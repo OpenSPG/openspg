@@ -15,8 +15,7 @@ package com.antgroup.openspg.server.common.model.scheduler;
 
 /**
  * Life Cycle
- *
- * @author yangjin @Title: LifeCycle.java @Description:
+ * @Title: LifeCycle.java @Description:
  */
 public enum LifeCycle {
 

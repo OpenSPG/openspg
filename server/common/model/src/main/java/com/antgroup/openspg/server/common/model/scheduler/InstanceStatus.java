@@ -15,8 +15,7 @@ package com.antgroup.openspg.server.common.model.scheduler;
 
 /**
  * Instance Status
- *
- * @author yangjin @Title: InstanceStatus.java @Description:
+ * @Title: InstanceStatus.java @Description:
  */
 public enum InstanceStatus {
   /** WAITING */

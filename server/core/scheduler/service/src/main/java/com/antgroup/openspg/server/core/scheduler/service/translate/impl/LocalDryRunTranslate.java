@@ -22,8 +22,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 /**
- * @author yangjin
- * @version : localDryRunTranslate.java, v 0.1 2023年12月05日 14:33 yangjin Exp $
+ * @version : localDryRunTranslate.java, v 0.1 2023-12-05 14:33 $
  */
 @Component("localDryRunTranslate")
 public class LocalDryRunTranslate implements Translate {
@@ -40,24 +39,30 @@ public class LocalDryRunTranslate implements Translate {
 
     WorkflowDag workflowGraph = new WorkflowDag();
     WorkflowDag.Node preCheck = new WorkflowDag.Node();
-    preCheck.setId("1000001");
-    preCheck.setName("前置校验");
+    String prdId = "1000001";
+    preCheck.setId(prdId);
+    preCheck.setName("Pre Check");
     preCheck.setType("preCheckTask");
-    preCheck.setX(250L);
-    preCheck.setY(280L);
+    Long preX = 250L;
+    Long preY = 280L;
+    preCheck.setX(preX);
+    preCheck.setY(preY);
     nodes.add(preCheck);
 
     WorkflowDag.Node localDryRun = new WorkflowDag.Node();
-    localDryRun.setId("2000001");
-    localDryRun.setName("本地执行");
+    String dryRunId = "2000001";
+    localDryRun.setId(dryRunId);
+    localDryRun.setName("Local DryRun");
     localDryRun.setType("localDryRunTask");
-    localDryRun.setX(500L);
-    localDryRun.setY(280L);
+    Long dryRunX = 500L;
+    Long dryRunY = 280L;
+    localDryRun.setX(dryRunX);
+    localDryRun.setY(dryRunY);
     nodes.add(localDryRun);
 
     WorkflowDag.Edge edge = new WorkflowDag.Edge();
-    edge.setFrom("1000001");
-    edge.setTo("2000001");
+    edge.setFrom(prdId);
+    edge.setTo(dryRunId);
     edges.add(edge);
 
     workflowGraph.setNodes(nodes);

@@ -22,8 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author yangjin
- * @version : SchedulerService.java, v 0.1 2023年11月30日 13:50 yangjin Exp $
+ * @version : SchedulerService.java, v 0.1 2023-11-30 13:50 $
  */
 public interface SchedulerInstanceService {
 

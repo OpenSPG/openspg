@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.common.model.base;
 
-/** @author 庄舟 @Title: Page.java @Description: */
+/**  @Title: Page.java @Description: */
 public class Page<T> extends BaseToString {
 
   private static final long serialVersionUID = 7805112437553092273L;

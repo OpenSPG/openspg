@@ -15,8 +15,7 @@ package com.antgroup.openspg.server.common.model.scheduler;
 
 /**
  * Task Status
- *
- * @author yangjin @Title: TaskStatus.java @Description:
+ * @Title: TaskStatus.java @Description:
  */
 public enum TaskStatus {
   /** wait */

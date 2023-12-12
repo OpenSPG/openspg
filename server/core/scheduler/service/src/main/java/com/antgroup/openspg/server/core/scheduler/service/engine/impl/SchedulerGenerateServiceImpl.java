@@ -30,8 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @author yangjin
- * @version : SchedulerEngineServiceImpl.java, v 0.1 2023年12月01日 11:29 yangjin Exp $
+ * @version : SchedulerEngineServiceImpl.java, v 0.1 2023-12-01 11:29 $
  */
 @Service
 public class SchedulerGenerateServiceImpl implements SchedulerGenerateService {

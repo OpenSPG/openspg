@@ -18,8 +18,8 @@ import com.antgroup.openspg.server.common.model.base.BaseModel;
 import java.util.Date;
 
 /**
- * @author yangjin
- * @version : SchedulerInstance.java, v 0.1 2023年11月30日 09:50 yangjin Exp $
+ * Scheduler Instance Model
+ * @version : SchedulerInstance.java, v 0.1 2023-11-30 09:50 $
  */
 public class SchedulerInstance extends BaseModel {
 

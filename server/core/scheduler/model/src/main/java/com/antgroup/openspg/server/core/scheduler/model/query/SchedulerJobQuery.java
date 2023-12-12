@@ -19,8 +19,8 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 /**
- * @author yangjin
- * @version : SchedulerJobQuery.java, v 0.1 2023年12月04日 11:23 yangjin Exp $
+ * Scheduler Job Query Model
+ * @version : SchedulerJobQuery.java, v 0.1 2023-12-04 11:23 $
  */
 public class SchedulerJobQuery extends SchedulerJob {
 

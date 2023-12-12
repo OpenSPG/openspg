@@ -15,8 +15,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.handler;
 
 /**
- * @author yangjin
- * @version : SchedulerHandler.java, v 0.1 2023年11月30日 18:33 yangjin Exp $
+ * @version : SchedulerHandler.java, v 0.1 2023-11-30 18:33 $
  */
 public interface SchedulerHandler {
 

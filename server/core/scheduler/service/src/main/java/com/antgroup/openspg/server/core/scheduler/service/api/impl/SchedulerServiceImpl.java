@@ -49,19 +49,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 /**
- * @author yangjin
- * @version : SchedulerJobServiceImpl.java, v 0.1 2023年11月30日 14:09 yangjin Exp $
+ * Scheduler Service implementation class
+ *
+ * @version : SchedulerJobServiceImpl.java, v 0.1 2023-11-30 14:09 $
  */
 @Service
 public class SchedulerServiceImpl implements SchedulerService {
 
+  private static final int corePoolSize = 1;
+  private static final int maximumPoolSize = 20;
+  private static final int keepAliveTime = 30;
+  private static final int capacity = 100;
+
   private ThreadPoolExecutor instanceExecutor =
       new ThreadPoolExecutor(
-          1,
-          20,
-          30,
+          corePoolSize,
+          maximumPoolSize,
+          keepAliveTime,
           TimeUnit.MINUTES,
-          new LinkedBlockingQueue<>(100),
+          new LinkedBlockingQueue<>(capacity),
           runnable -> {
             Thread thread = new Thread(runnable);
             thread.setDaemon(true);
@@ -81,12 +87,15 @@ public class SchedulerServiceImpl implements SchedulerService {
     setJobPropertyDefaultValue(job);
     checkJobPropertyValidity(job);
     Long id = job.getId();
+
     if (id == null || id < 0) {
       schedulerJobService.insert(job);
     } else {
       schedulerJobService.update(job);
     }
+
     this.executeJob(job.getId());
+
     return job;
   }
 
@@ -98,6 +107,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     if (job.getMergeMode() == null) {
       job.setMergeMode(MergeMode.MERGE.name());
     }
+
     job.setStatus(Status.ONLINE.name());
     job.setVersion(
         SchedulerConstant.JOB_DEFAULT_VERSION
@@ -118,6 +128,10 @@ public class SchedulerServiceImpl implements SchedulerService {
     Assert.notNull(
         TranslateEnum.getByName(job.getTranslate()),
         String.format("Type:%s not in enum", job.getTranslate()));
+    Assert.notNull(
+        MergeMode.getByName(job.getMergeMode()),
+        String.format("MergeMode:%s not in enum", job.getMergeMode()));
+
     if (LifeCycle.PERIOD.name().equalsIgnoreCase(job.getLifeCycle())) {
       Assert.hasText(job.getSchedulerCron(), "SchedulerCron not null");
       try {
@@ -127,17 +141,14 @@ public class SchedulerServiceImpl implements SchedulerService {
             String.format("Cron(%s) ParseException:%s", job.getSchedulerCron(), e.getMessage()));
       }
     }
-    Assert.notNull(
-        MergeMode.getByName(job.getMergeMode()),
-        String.format("MergeMode:%s not in enum", job.getMergeMode()));
   }
 
   @Override
   public Boolean executeJob(Long id) {
+    SchedulerInstance instance = null;
+    List<SchedulerInstance> instances = Lists.newArrayList();
     SchedulerJob job = schedulerJobService.getById(id);
     Assert.notNull(job, String.format("job not find id:%s", id));
-    List<SchedulerInstance> instances = Lists.newArrayList();
-    SchedulerInstance instance = null;
     LifeCycle lifeCycle = LifeCycle.valueOf(job.getLifeCycle());
     switch (lifeCycle) {
       case REAL_TIME:
@@ -155,6 +166,9 @@ public class SchedulerServiceImpl implements SchedulerService {
     }
     if (instance != null) {
       instances.add(instance);
+    }
+    if (CollectionUtils.isEmpty(instances)) {
+      return false;
     }
     for (SchedulerInstance ins : instances) {
       Long instanceId = ins.getId();
@@ -177,7 +191,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  public Boolean onlineJob(Long id) {
+  public Boolean enableJob(Long id) {
     SchedulerJob job = schedulerJobService.getById(id);
     Assert.notNull(job, String.format("job not find id:%s", id));
     SchedulerJob updateJob = new SchedulerJob();
@@ -191,7 +205,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  public Boolean offlineJob(Long id) {
+  public Boolean disableJob(Long id) {
     SchedulerJob job = schedulerJobService.getById(id);
     Assert.notNull(job, String.format("job not find id:%s", id));
     SchedulerJob updateJob = new SchedulerJob();
@@ -251,7 +265,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  public Boolean reRunInstance(Long id) {
+  public Boolean restartInstance(Long id) {
     SchedulerInstance instance = schedulerInstanceService.getById(id);
     Assert.notNull(instance, String.format("instance not find id:%s", id));
     SchedulerJob job = schedulerJobService.getById(instance.getJobId());

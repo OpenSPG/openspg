@@ -27,8 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @author yangjin
- * @version : QuartzSchedulerHandler.java, v 0.1 2023年11月30日 19:05 yangjin Exp $
+ * @version : QuartzSchedulerHandler.java, v 0.1 2023-11-30 19:05 $
  */
 @Service
 public class LocalSchedulerHandler implements SchedulerHandler {
@@ -36,10 +35,12 @@ public class LocalSchedulerHandler implements SchedulerHandler {
   private static final Logger LOGGER = LoggerFactory.getLogger(LocalSchedulerHandler.class);
 
   private static final String HANDLER_TYPE = "local";
+  private static final int corePoolSize = 1;
 
-  private static ScheduledExecutorService SCHEDULER_EXECUTOR = new ScheduledThreadPoolExecutor(1);
+  private static ScheduledExecutorService SCHEDULER_EXECUTOR =
+      new ScheduledThreadPoolExecutor(corePoolSize);
   private static ScheduledExecutorService GENERATE_INSTANCES_EXECUTOR =
-      new ScheduledThreadPoolExecutor(1);
+      new ScheduledThreadPoolExecutor(corePoolSize);
 
   @Autowired SchedulerValue schedulerValue;
   @Autowired SchedulerExecuteService schedulerExecuteService;
@@ -51,18 +52,19 @@ public class LocalSchedulerHandler implements SchedulerHandler {
     if (!HANDLER_TYPE.equalsIgnoreCase(schedulerValue.getHandlerType())) {
       LOGGER.warn(
           String.format(
-              "=== ignore executeInstances inconsistent handlerType:%s ===",
+              "ignore executeInstances inconsistent handlerType:%s",
               schedulerValue.getHandlerType()));
       return;
     }
+
     try {
-      LOGGER.info("====== start executeInstances ======");
+      LOGGER.info("start executeInstances");
       SCHEDULER_EXECUTOR.scheduleAtFixedRate(
           new ExecuteInstances(schedulerExecuteService),
           0,
           schedulerValue.getExecuteInstancesPeriod(),
           schedulerValue.getExecuteInstancesUnit());
-      LOGGER.info("====== end executeInstances ======");
+      LOGGER.info("end executeInstances");
     } catch (Exception e) {
       LOGGER.error("executeInstances Exception", e);
     }

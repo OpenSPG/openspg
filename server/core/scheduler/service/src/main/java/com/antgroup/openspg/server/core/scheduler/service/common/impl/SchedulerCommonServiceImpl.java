@@ -47,8 +47,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @author yangjin
- * @version : SchedulerCommonServiceImpl.java, v 0.1 2023年12月04日 16:44 yangjin Exp $
+ * Scheduler Common Service implementation class
+ * @version : SchedulerCommonServiceImpl.java, v 0.1 2023-12-04 16:44 $
  */
 @Service
 public class SchedulerCommonServiceImpl implements SchedulerCommonService {
@@ -66,7 +66,8 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
     SchedulerInstance updateInstance = new SchedulerInstance();
     updateInstance.setId(instance.getId());
     updateInstance.setStatus(instanceStatus.name());
-    updateInstance.setProgress(100L);
+    Long finish = 100L;
+    updateInstance.setProgress(finish);
     Date finishTime = instance.getFinishTime() == null ? new Date() : instance.getFinishTime();
     updateInstance.setFinishTime(finishTime);
     Long updateNum = schedulerInstanceService.update(updateInstance);
@@ -92,6 +93,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
     if (CollectionUtils.isEmpty(processList)) {
       return;
     }
+
     SchedulerJob job = schedulerJobService.getById(instance.getJobId());
     processList.forEach(
         task -> {
@@ -102,12 +104,14 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
               LOGGER.warn(String.format("stop task type is null id:%s", task.getId()));
               return;
             }
+
             type = type.split(SchedulerConstant.UNDERLINE_SEPARATOR)[0];
             JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
             if (jobTask == null) {
               LOGGER.error(String.format("stop task is null id:%s", task.getId()));
               return;
             }
+
             if (jobTask instanceof JobAsyncTask) {
               JobAsyncTask jobAsyncTask = (JobAsyncTask) jobTask;
               jobAsyncTask.stop(context, task.getResource());

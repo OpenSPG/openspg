@@ -24,8 +24,7 @@ import java.util.Date;
 
 /**
  * Scheduler Task Context
- *
- * @author yangjin @Title: JobTaskContext.java @Description:
+ * @Title: JobTaskContext.java @Description:
  */
 public class JobTaskContext {
 
@@ -63,11 +62,10 @@ public class JobTaskContext {
   }
 
   /**
-   * 往TraceLog 添加日志，用于页面展示
+   * insert TraceLog
    *
    * @param
    * @return
-   * @author 庄舟
    * @date 2020/9/14 09:26
    */
   public void addTraceLog(String message, Object... args) {

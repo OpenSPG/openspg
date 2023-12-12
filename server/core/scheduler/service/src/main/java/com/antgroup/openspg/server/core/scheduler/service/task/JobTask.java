@@ -17,8 +17,7 @@ import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 
 /**
  * Job Task
- *
- * @author yangjin @Title: JobTask.java @Description:
+ * @Title: JobTask.java @Description:
  */
 public interface JobTask {
   /**
