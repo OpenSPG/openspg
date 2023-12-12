@@ -27,6 +27,7 @@
   <modules>
     <module>common</module>
     <module>udf</module>
+    <module>kgdsl-parser</module>
   </modules>
 
   <properties>
@@ -175,115 +176,6 @@
         <version>${json4s.version}</version>
       </dependency>
 
-      <!-- kg state start -->
-      <dependency>
-        <groupId>com.antfin.aikg</groupId>
-        <artifactId>kgstate-reader</artifactId>
-        <version>${kgstate.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>jdk.tools</groupId>
-            <artifactId>jdk.tools</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.alibaba</groupId>
-            <artifactId>QLExpress</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.antfin.aikg</groupId>
-        <artifactId>kgstate-rt</artifactId>
-        <version>${kgstate.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>com.alipay.sofa.common</groupId>
-            <artifactId>sofa-common-tools</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.alipay.sofa.common.log</groupId>
-            <artifactId>sofa-middleware-log</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.aliyun.odps</groupId>
-            <artifactId>odps-sdk-mapred</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.taobao.diamond</groupId>
-            <artifactId>diamond-client</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.alipay.sofa</groupId>
-        <artifactId>sofa-security-util</artifactId>
-        <version>1.0.3</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antfin.aikg</groupId>
-        <artifactId>kgstate-tool</artifactId>
-        <version>${kgstate.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>jdk.tools</groupId>
-            <artifactId>jdk.tools</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.antfin.aikg</groupId>
-        <artifactId>kgstate-meta</artifactId>
-        <version>${kgstate.version}</version>
-      </dependency>
-      <!-- kg state end-->
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-text</artifactId>
