@@ -35,7 +35,7 @@ public class IpUtils {
   public static final String IP_LIST = String.join(",", getLocalIPList());
 
   /**
-   * @return @Description: 获取本地IP列表（针对多网卡或者虚礼机情况）
+   * @return
    * @author
    * @date
    */
