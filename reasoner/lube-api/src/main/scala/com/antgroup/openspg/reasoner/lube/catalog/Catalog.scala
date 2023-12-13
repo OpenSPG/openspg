@@ -32,7 +32,7 @@ import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
  * and the property graph at runtime
  */
 abstract class Catalog() extends Serializable {
-  private val graphRepository = new mutable.HashMap[String, SemanticPropertyGraph]()
+  protected val graphRepository = new mutable.HashMap[String, SemanticPropertyGraph]()
   private val connections = new mutable.HashMap[String, AbstractConnection]()
 
   /**
