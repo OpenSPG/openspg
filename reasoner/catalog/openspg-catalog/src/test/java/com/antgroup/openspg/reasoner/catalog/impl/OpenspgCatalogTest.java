@@ -19,7 +19,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 @Ignore
-public class OpenKgCatalogTest {
+public class OpenspgCatalogTest {
 
   public static final KgSchemaConnectionInfo connInfo =
       new KgSchemaConnectionInfo("http://127.0.0.1:8887", "a8bB6398B6Da9170");
@@ -28,7 +28,7 @@ public class OpenKgCatalogTest {
   public void testGet() {
     long projectId = 2L;
 
-    OpenKgCatalog catalog = new OpenKgCatalog(projectId, connInfo, null);
+    OpenspgCatalog catalog = new OpenspgCatalog(projectId, connInfo, null);
     catalog.init();
     SemanticPropertyGraph graph = catalog.getKnowledgeGraph();
 

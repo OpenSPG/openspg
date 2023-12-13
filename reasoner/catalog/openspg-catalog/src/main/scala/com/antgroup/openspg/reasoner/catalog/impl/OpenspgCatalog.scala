@@ -35,9 +35,9 @@ import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 
 
-class OpenKgCatalog(val projectId: Long,
-                    val connInfo: KgSchemaConnectionInfo,
-                    val projectSchema: ProjectSchema = null) extends Catalog {
+class OpenspgCatalog(val projectId: Long,
+                     val connInfo: KgSchemaConnectionInfo,
+                     val projectSchema: ProjectSchema = null) extends Catalog {
 
   if (projectSchema == null) {
     HttpClientBootstrap.init(new ConnectionInfo(connInfo.uri))
