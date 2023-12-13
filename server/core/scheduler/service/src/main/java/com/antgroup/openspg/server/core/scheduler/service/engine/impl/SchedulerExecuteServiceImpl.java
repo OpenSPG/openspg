@@ -154,7 +154,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
     TaskDag taskDag = instance.getTaskDag();
-    List<TaskDag.Node> nextNodes = taskDag.getNextNodes(task.getNodeId());
+    List<TaskDag.Node> nextNodes = taskDag.getRelatedNodes(task.getNodeId(), true);
     List<SchedulerTask> taskList = Lists.newArrayList();
     for (TaskDag.Node nextNode : nextNodes) {
       SchedulerTask nextTask =
@@ -185,7 +185,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     TaskDag taskDag = instance.getTaskDag();
     processList.forEach(
         it -> {
-          List<TaskDag.Node> preNodes = taskDag.getPreNodes(it.getNodeId());
+          List<TaskDag.Node> preNodes = taskDag.getRelatedNodes(it.getNodeId(), false);
           boolean allFinish = true;
           for (TaskDag.Node preNode : preNodes) {
             SchedulerTask preTask =

@@ -174,7 +174,7 @@ public abstract class JobTaskTemplate implements JobTask {
 
     TaskDag taskDag = instance.getTaskDag();
 
-    List<TaskDag.Node> nextNodes = taskDag.getNextNodes(task.getNodeId());
+    List<TaskDag.Node> nextNodes = taskDag.getRelatedNodes(task.getNodeId(), true);
 
     if (CollectionUtils.isEmpty(nextNodes)) {
       checkAllNodesFinished(context);
@@ -190,7 +190,7 @@ public abstract class JobTaskTemplate implements JobTask {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
 
-    List<TaskDag.Node> preNodes = taskDag.getPreNodes(nextNode.getId());
+    List<TaskDag.Node> preNodes = taskDag.getRelatedNodes(nextNode.getId(), false);
     boolean allPreFinish = true;
 
     for (TaskDag.Node preNode : preNodes) {

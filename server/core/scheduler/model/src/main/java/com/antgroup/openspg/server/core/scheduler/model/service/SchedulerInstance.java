@@ -68,7 +68,7 @@ public class SchedulerInstance extends BaseModel {
   /** job Life Cycle：PERIOD,ONCE,REAL_TIME Enum:LifeCycle */
   private LifeCycle lifeCycle;
 
-  /** Dependent upstream partition-MERGE，independent-SNAPSHOT */
+  /** Dependent Pre schedulerDate-MERGE，independent-SNAPSHOT */
   private MergeMode mergeMode;
 
   /** scheduler Date */

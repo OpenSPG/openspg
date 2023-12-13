@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import com.antgroup.openspg.server.common.model.scheduler.Compare;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronExpression;
 
@@ -169,58 +171,25 @@ public class CommonUtils {
         + DateTimeUtils.getDate2Str(DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, schedulerDate);
   }
 
-  /** content contains key */
-  public static boolean contains(String content, String key) {
-    if (StringUtils.isBlank(key)) {
-      return true;
-    }
-    if (StringUtils.isBlank(content)) {
-      return false;
-    }
-    if (content.contains(key)) {
-      return true;
-    }
-    return false;
-  }
-
-  /** content equals key */
-  public static boolean equals(Object content, Object key) {
+  /** content compare key */
+  public static boolean compare(Object content, Object key, Compare type) {
     if (key == null) {
       return true;
     }
     if (content == null) {
       return false;
     }
-    if (content.equals(key)) {
-      return true;
+    if (type == Compare.EQUALS) {
+      return content.equals(key);
     }
-    return false;
-  }
-
-  /** content Date after key Date */
-  public static boolean after(Date content, Date key) {
-    if (key == null) {
-      return true;
+    if (type == Compare.CONTAINS) {
+      return ((String) content).contains((String) key);
     }
-    if (content == null) {
-      return false;
+    if (type == Compare.AFTER) {
+      return ((Date) key).after((Date) content);
     }
-    if (content.after(key)) {
-      return true;
-    }
-    return false;
-  }
-
-  /** content Date before key Date */
-  public static boolean before(Date content, Date key) {
-    if (key == null) {
-      return true;
-    }
-    if (content == null) {
-      return false;
-    }
-    if (content.before(key)) {
-      return true;
+    if (type == Compare.BEFORE) {
+      return ((Date) key).before((Date) content);
     }
     return false;
   }

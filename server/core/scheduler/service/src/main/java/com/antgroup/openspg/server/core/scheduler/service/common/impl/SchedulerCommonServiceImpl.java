@@ -195,7 +195,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
     nodes.forEach(
         node -> {
           TaskStatus status =
-              CollectionUtils.isEmpty(taskDag.getPreNodes(node.getId()))
+              CollectionUtils.isEmpty(taskDag.getRelatedNodes(node.getId(), false))
                   ? TaskStatus.RUNNING
                   : TaskStatus.WAIT;
           schedulerTaskService.insert(new SchedulerTask(instance, status, node));

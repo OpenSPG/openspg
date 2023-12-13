@@ -15,6 +15,7 @@ package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
+import com.antgroup.openspg.server.common.model.scheduler.Compare;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -100,11 +101,11 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
     for (Long key : tasks.keySet()) {
       SchedulerTask task = tasks.get(key);
 
-      if (!CommonUtils.equals(task.getId(), record.getId())
-          || !CommonUtils.equals(task.getType(), record.getType())
-          || !CommonUtils.contains(task.getTitle(), record.getTitle())
-          || !CommonUtils.equals(task.getJobId(), record.getJobId())
-          || !CommonUtils.equals(task.getInstanceId(), record.getInstanceId())) {
+      if (!CommonUtils.compare(task.getId(), record.getId(), Compare.EQUALS)
+          || !CommonUtils.compare(task.getType(), record.getType(), Compare.EQUALS)
+          || !CommonUtils.compare(task.getTitle(), record.getTitle(), Compare.CONTAINS)
+          || !CommonUtils.compare(task.getJobId(), record.getJobId(), Compare.EQUALS)
+          || !CommonUtils.compare(task.getInstanceId(), record.getInstanceId(), Compare.EQUALS)) {
         continue;
       }
 

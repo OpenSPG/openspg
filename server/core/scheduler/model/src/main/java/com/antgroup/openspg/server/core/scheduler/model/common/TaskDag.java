@@ -17,6 +17,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -39,38 +40,22 @@ public class TaskDag {
 
   /** get node by id list */
   @JSONField(serialize = false)
-  public List<Node> getNode(List<String> idList) {
-    List<Node> nodes = Lists.newArrayList();
-    if (CollectionUtils.isEmpty(idList)) {
-      return nodes;
+  public List<Node> getNode(List<String> ids) {
+    if (CollectionUtils.isEmpty(ids)) {
+      return Lists.newArrayList();
     }
-    for (Node node : this.nodes) {
-      if (idList.contains(node.getId())) {
-        nodes.add(node);
-      }
-    }
-    return nodes;
+    return this.nodes.stream()
+        .filter(node -> ids.contains(node.getId()))
+        .collect(Collectors.toList());
   }
 
-  /** get Next Nodes */
-  @JSONField(serialize = false)
-  public List<Node> getNextNodes(String nodeId) {
+  /** get Next/Pre Nodes */
+  public List<Node> getRelatedNodes(String id, boolean next) {
     List<String> idList = Lists.newArrayList();
     for (Edge edge : edges) {
-      if (edge.getFrom().equals(nodeId)) {
-        idList.add(edge.getTo());
-      }
-    }
-    return getNode(idList);
-  }
-
-  /** get Pre Nodes */
-  @JSONField(serialize = false)
-  public List<Node> getPreNodes(String nodeId) {
-    List<String> idList = Lists.newArrayList();
-    for (Edge edge : edges) {
-      if (edge.getTo().equals(nodeId)) {
-        idList.add(edge.getFrom());
+      boolean select = (next && edge.getFrom().equals(id)) || (!next && edge.getTo().equals(id));
+      if (select) {
+        idList.add(next ? edge.getTo() : edge.getFrom());
       }
     }
     return getNode(idList);

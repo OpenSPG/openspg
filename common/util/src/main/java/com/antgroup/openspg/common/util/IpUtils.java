@@ -17,41 +17,31 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 
 /** ip Utils. get local ips */
 @Slf4j
 public class IpUtils {
 
-  public static final String LOCALHOST = "127.0.0.1";
-  public static final String IP_LIST = String.join(",", getLocalIPList());
+  public static final String IP_LIST = String.join(",", getLocalIps());
 
   /** get local ips */
-  public static List<String> getLocalIPList() {
-    List<String> ipList = new ArrayList<>();
+  public static List<String> getLocalIps() {
     try {
       Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-      Enumeration<InetAddress> inetAddresses;
-      InetAddress inetAddress;
-      String ip;
-      while (networkInterfaces.hasMoreElements()) {
-        inetAddresses = networkInterfaces.nextElement().getInetAddresses();
-        while (inetAddresses.hasMoreElements()) {
-          inetAddress = inetAddresses.nextElement();
-          if (inetAddress != null && inetAddress instanceof Inet4Address) {
-            ip = inetAddress.getHostAddress();
-            if (LOCALHOST.equals(ip)) {
-              continue;
-            }
-            ipList.add(ip);
-          }
-        }
-      }
+      return Collections.list(networkInterfaces).stream()
+          .flatMap(network -> Collections.list(network.getInetAddresses()).stream())
+          .filter(address -> address instanceof Inet4Address && !address.isLoopbackAddress())
+          .map(InetAddress::getHostAddress)
+          .collect(Collectors.toList());
     } catch (SocketException e) {
-      log.error("getLocalIPList failed.", e);
+      log.error("getLocalIps failed.", e);
     }
-    return ipList;
+    return new ArrayList<>();
   }
 }
