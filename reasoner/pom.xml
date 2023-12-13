@@ -29,6 +29,7 @@
     <module>udf</module>
     <module>lube-api</module>
     <module>kgdsl-parser</module>
+    <module>catalog/openspg-catalog</module>
   </modules>
 
   <properties>
