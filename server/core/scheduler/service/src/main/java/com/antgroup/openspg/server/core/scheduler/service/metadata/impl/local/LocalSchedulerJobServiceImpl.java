@@ -15,7 +15,6 @@ package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
-import com.antgroup.openspg.server.common.model.scheduler.Compare;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
@@ -81,13 +80,13 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
     page.setData(jobList);
     for (Long key : jobs.keySet()) {
       SchedulerJob job = jobs.get(key);
-      if (!CommonUtils.compare(job.getId(), record.getId(), Compare.EQUALS)
-          || !CommonUtils.compare(job.getCreateUser(), record.getCreateUser(), Compare.EQUALS)
-          || !CommonUtils.compare(job.getTranslateType(), record.getTranslateType(), Compare.EQUALS)
-          || !CommonUtils.compare(job.getLifeCycle(), record.getLifeCycle(), Compare.EQUALS)
-          || !CommonUtils.compare(job.getStatus(), record.getStatus(), Compare.EQUALS)
-          || !CommonUtils.compare(job.getMergeMode(), record.getMergeMode(), Compare.EQUALS)
-          || !CommonUtils.compare(job.getName(), record.getName(), Compare.CONTAINS)) {
+      if (!CommonUtils.compare(job.getId(), record.getId(), CommonUtils.EQ)
+          || !CommonUtils.compare(job.getCreateUser(), record.getCreateUser(), CommonUtils.EQ)
+          || !CommonUtils.compare(job.getTranslateType(), record.getTranslateType(), CommonUtils.EQ)
+          || !CommonUtils.compare(job.getLifeCycle(), record.getLifeCycle(), CommonUtils.EQ)
+          || !CommonUtils.compare(job.getStatus(), record.getStatus(), CommonUtils.EQ)
+          || !CommonUtils.compare(job.getMergeMode(), record.getMergeMode(), CommonUtils.EQ)
+          || !CommonUtils.compare(job.getName(), record.getName(), CommonUtils.IN)) {
         continue;
       }
 

@@ -12,7 +12,6 @@
  */
 package com.antgroup.openspg.common.util;
 
-import com.antgroup.openspg.server.common.model.scheduler.Compare;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -30,6 +29,11 @@ import org.quartz.CronExpression;
 /** some common tools */
 @Slf4j
 public class CommonUtils {
+
+  public static final String EQ = "eq";
+  public static final String IN = "in";
+  public static final String GT = "gt";
+  public static final String LT = "lt";
 
   /** merge two bean by discovering differences */
   public static <M> M merge(M dest, M orig) {
@@ -171,23 +175,23 @@ public class CommonUtils {
   }
 
   /** content compare key */
-  public static boolean compare(Object content, Object key, Compare type) {
+  public static boolean compare(Object content, Object key, String type) {
     if (key == null) {
       return true;
     }
     if (content == null) {
       return false;
     }
-    if (type == Compare.EQUALS) {
+    if (type.equals(EQ)) {
       return content.equals(key);
     }
-    if (type == Compare.CONTAINS) {
+    if (type.equals(IN)) {
       return ((String) content).contains((String) key);
     }
-    if (type == Compare.AFTER) {
+    if (type.equals(GT)) {
       return ((Date) key).after((Date) content);
     }
-    if (type == Compare.BEFORE) {
+    if (type.equals(LT)) {
       return ((Date) key).before((Date) content);
     }
     return false;

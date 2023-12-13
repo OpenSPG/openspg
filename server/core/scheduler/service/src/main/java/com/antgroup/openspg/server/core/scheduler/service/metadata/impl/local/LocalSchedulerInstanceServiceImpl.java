@@ -15,7 +15,6 @@ package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
-import com.antgroup.openspg.server.common.model.scheduler.Compare;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
@@ -116,21 +115,21 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     page.setData(instanceList);
     for (Long key : instances.keySet()) {
       SchedulerInstance instance = instances.get(key);
-      if (!CommonUtils.compare(instance.getId(), record.getId(), Compare.EQUALS)
-          || !CommonUtils.compare(instance.getProjectId(), record.getProjectId(), Compare.EQUALS)
-          || !CommonUtils.compare(instance.getJobId(), record.getJobId(), Compare.EQUALS)
-          || !CommonUtils.compare(instance.getUniqueId(), record.getUniqueId(), Compare.EQUALS)
-          || !CommonUtils.compare(instance.getType(), record.getType(), Compare.EQUALS)
-          || !CommonUtils.compare(instance.getStatus(), record.getStatus(), Compare.EQUALS)
-          || !CommonUtils.compare(instance.getLifeCycle(), record.getLifeCycle(), Compare.EQUALS)
-          || !CommonUtils.compare(instance.getMergeMode(), record.getMergeMode(), Compare.EQUALS)
-          || !CommonUtils.compare(instance.getVersion(), record.getVersion(), Compare.EQUALS)) {
+      if (!CommonUtils.compare(instance.getId(), record.getId(), CommonUtils.EQ)
+          || !CommonUtils.compare(instance.getProjectId(), record.getProjectId(), CommonUtils.EQ)
+          || !CommonUtils.compare(instance.getJobId(), record.getJobId(), CommonUtils.EQ)
+          || !CommonUtils.compare(instance.getUniqueId(), record.getUniqueId(), CommonUtils.EQ)
+          || !CommonUtils.compare(instance.getType(), record.getType(), CommonUtils.EQ)
+          || !CommonUtils.compare(instance.getStatus(), record.getStatus(), CommonUtils.EQ)
+          || !CommonUtils.compare(instance.getLifeCycle(), record.getLifeCycle(), CommonUtils.EQ)
+          || !CommonUtils.compare(instance.getMergeMode(), record.getMergeMode(), CommonUtils.EQ)
+          || !CommonUtils.compare(instance.getVersion(), record.getVersion(), CommonUtils.EQ)) {
         continue;
       }
 
       Date create = instance.getGmtCreate();
-      if (!CommonUtils.compare(create, record.getStartCreateTime(), Compare.AFTER)
-          || !CommonUtils.compare(create, record.getEndCreateTime(), Compare.BEFORE)) {
+      if (!CommonUtils.compare(create, record.getStartCreateTime(), CommonUtils.GT)
+          || !CommonUtils.compare(create, record.getEndCreateTime(), CommonUtils.LT)) {
         continue;
       }
 
