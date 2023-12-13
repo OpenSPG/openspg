@@ -75,6 +75,16 @@
         <artifactId>reasoner-kgdsl-parser</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-warehouse-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-runner-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>org.antlr</groupId>
@@ -234,6 +244,12 @@
         <groupId>com.aliyun.odps</groupId>
         <artifactId>odps-sdk-commons</artifactId>
         <version>${odps.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>3.8.0</version>
+        <scope>provided</scope>
       </dependency>
 
       <!-- parquet start -->
