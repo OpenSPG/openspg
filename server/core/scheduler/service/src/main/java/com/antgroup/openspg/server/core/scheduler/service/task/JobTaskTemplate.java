@@ -186,8 +186,7 @@ public abstract class JobTaskTemplate implements JobTask {
     }
   }
 
-  private void startNextNode(
-          JobTaskContext context, TaskDag taskDag, TaskDag.Node nextNode) {
+  private void startNextNode(JobTaskContext context, TaskDag taskDag, TaskDag.Node nextNode) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
 

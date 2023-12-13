@@ -185,8 +185,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
     instance.setSchedulerDate(schedulerDate);
     instance.setMergeMode(job.getMergeMode());
     instance.setVersion(SchedulerConstant.DEFAULT_VERSION);
-    TaskDag taskDag =
-        TranslatorFactory.getTranslator(job.getTranslateType()).translate(job);
+    TaskDag taskDag = TranslatorFactory.getTranslator(job.getTranslateType()).translate(job);
     instance.setTaskDag(taskDag);
 
     schedulerInstanceService.insert(instance);
