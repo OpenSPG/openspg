@@ -22,9 +22,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 import scala.Tuple2;
 
+@Getter
+@Setter
 public class VertexLoaderConfig implements Serializable {
   /** vertex type */
   private String vertexType;
@@ -46,20 +51,8 @@ public class VertexLoaderConfig implements Serializable {
   /** allow loading of isolate vertex */
   private boolean allowIsolateVertex = false;
 
-  public String getVertexType() {
-    return vertexType;
-  }
-
-  public void setVertexType(String vertexType) {
-    this.vertexType = vertexType;
-  }
-
   public Set<String> getNeedProperties() {
     return needProperties == null ? Collections.emptySet() : needProperties;
-  }
-
-  public void setNeedProperties(Set<String> needProperties) {
-    this.needProperties = needProperties;
   }
 
   public List<Rule> getPropertiesFilterRules() {
@@ -120,42 +113,6 @@ public class VertexLoaderConfig implements Serializable {
   @Override
   public int hashCode() {
     return Objects.hash(vertexType);
-  }
-
-  /**
-   * Getter method for property connection.
-   *
-   * @return property value of connection
-   */
-  public AbstractConnection getConnection() {
-    return connection;
-  }
-
-  /**
-   * Setter method for property connection.
-   *
-   * @param connection value to be assigned to property connection
-   */
-  public void setConnection(AbstractConnection connection) {
-    this.connection = connection;
-  }
-
-  /**
-   * Getter method for property <tt>allowIsolateVertex</tt>.
-   *
-   * @return property value of allowIsolateVertex
-   */
-  public boolean isAllowIsolateVertex() {
-    return allowIsolateVertex;
-  }
-
-  /**
-   * Setter method for property <tt>allowIsolateVertex</tt>.
-   *
-   * @param allowIsolateVertex value to be assigned to property allowIsolateVertex
-   */
-  public void setAllowIsolateVertex(boolean allowIsolateVertex) {
-    this.allowIsolateVertex = allowIsolateVertex;
   }
 
   @Override

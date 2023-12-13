@@ -17,8 +17,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
+@Getter
 public class GraphVersionConfig implements Serializable {
   private final Long snapshotVersion;
   private final Long startVersion;
@@ -64,32 +67,5 @@ public class GraphVersionConfig implements Serializable {
     this.snapshotVersion = snapshot;
     this.startVersion = start;
     this.endVersion = end;
-  }
-
-  /**
-   * Getter method for property <tt>snapshotVersion</tt>.
-   *
-   * @return property value of snapshotVersion
-   */
-  public Long getSnapshotVersion() {
-    return snapshotVersion;
-  }
-
-  /**
-   * Getter method for property <tt>startVersion</tt>.
-   *
-   * @return property value of startVersion
-   */
-  public Long getStartVersion() {
-    return startVersion;
-  }
-
-  /**
-   * Getter method for property <tt>endVersion</tt>.
-   *
-   * @return property value of endVersion
-   */
-  public Long getEndVersion() {
-    return endVersion;
   }
 }

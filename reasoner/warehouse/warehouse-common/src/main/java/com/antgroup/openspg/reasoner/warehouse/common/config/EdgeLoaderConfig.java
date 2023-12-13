@@ -23,24 +23,34 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import scala.Tuple2;
 
 public class EdgeLoaderConfig implements Serializable {
   /** edge type */
+  @Setter
+  @Getter
   private String edgeType;
 
   /** maximum edge threshold for this edge type */
+  @Setter
+  @Getter
   private int edgeTruncateThreshold = GraphLoaderConfig.DEFAULT_EDGE_TRUNCATE_THRESHOLD;
 
   /**
    * connection info for this edge type considering that each edge may be stored in different
    * storage or different table
    */
+  @Setter
+  @Getter
   private AbstractConnection connection;
 
   /** cut out the unnecessary attribute fields, and only keep the necessary attributes here */
+  @Setter
   private Set<String> needProperties;
 
   /** pushdown edge attribute filtering rules */
@@ -49,6 +59,8 @@ public class EdgeLoaderConfig implements Serializable {
   private List<Tuple2<String, List<String>>> propertiesFilterRuleString;
 
   /** edge load direction */
+  @Setter
+  @Getter
   private Direction loadDirection = Direction.BOTH;
 
   /**
@@ -78,57 +90,12 @@ public class EdgeLoaderConfig implements Serializable {
   }
 
   /**
-   * get edge type
-   *
-   * @return
-   */
-  public String getEdgeType() {
-    return edgeType;
-  }
-
-  /**
-   * setter
-   *
-   * @param edgeType
-   */
-  public void setEdgeType(String edgeType) {
-    this.edgeType = edgeType;
-  }
-
-  /**
-   * getter
-   *
-   * @return
-   */
-  public int getEdgeTruncateThreshold() {
-    return edgeTruncateThreshold;
-  }
-
-  /**
-   * setter
-   *
-   * @param edgeTruncateThreshold
-   */
-  public void setEdgeTruncateThreshold(int edgeTruncateThreshold) {
-    this.edgeTruncateThreshold = edgeTruncateThreshold;
-  }
-
-  /**
    * getter
    *
    * @return
    */
   public Set<String> getNeedProperties() {
     return needProperties == null ? Collections.emptySet() : needProperties;
-  }
-
-  /**
-   * setter
-   *
-   * @param needProperties
-   */
-  public void setNeedProperties(Set<String> needProperties) {
-    this.needProperties = needProperties;
   }
 
   /**
@@ -211,42 +178,6 @@ public class EdgeLoaderConfig implements Serializable {
   @Override
   public int hashCode() {
     return Objects.hash(edgeType);
-  }
-
-  /**
-   * Getter method for property connection.
-   *
-   * @return property value of connection
-   */
-  public AbstractConnection getConnection() {
-    return connection;
-  }
-
-  /**
-   * Setter method for property connection.
-   *
-   * @param connection value to be assigned to property connection
-   */
-  public void setConnection(AbstractConnection connection) {
-    this.connection = connection;
-  }
-
-  /**
-   * Getter method for property <tt>loadDirection</tt>.
-   *
-   * @return property value of loadDirection
-   */
-  public Direction getLoadDirection() {
-    return loadDirection;
-  }
-
-  /**
-   * Setter method for property <tt>loadDirection</tt>.
-   *
-   * @param loadDirection value to be assigned to property loadDirection
-   */
-  public void setLoadDirection(Direction loadDirection) {
-    this.loadDirection = loadDirection;
   }
 
   @Override

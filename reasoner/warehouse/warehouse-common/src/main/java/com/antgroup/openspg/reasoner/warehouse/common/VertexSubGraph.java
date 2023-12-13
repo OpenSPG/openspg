@@ -22,8 +22,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 
+@Getter
 public class VertexSubGraph implements Serializable {
   /** center vertex in vertex subgraph */
   private final IVertex<IVertexId, IProperty> vertex;
@@ -88,20 +91,8 @@ public class VertexSubGraph implements Serializable {
     return vertex.getId().equals(vertexId);
   }
 
-  public IVertex<IVertexId, IProperty> getVertex() {
-    return vertex;
-  }
-
-  public List<IEdge<IVertexId, IProperty>> getInEdges() {
-    return inEdges;
-  }
-
   public Long getInEdgeCnt(String edgeType) {
     return inEdgeCntMap.getOrDefault(edgeType, 0L);
-  }
-
-  public List<IEdge<IVertexId, IProperty>> getOutEdges() {
-    return outEdges;
   }
 
   public Long getOutEdgeCnt(String edgeType) {
@@ -113,24 +104,6 @@ public class VertexSubGraph implements Serializable {
     inEdgeCntMap.values().forEach(v -> count[0] += v);
     outEdgeCntMap.values().forEach(v -> count[0] += v);
     return count[0];
-  }
-
-  /**
-   * Getter method for property <tt>inEdgeCntMap</tt>.
-   *
-   * @return property value of inEdgeCntMap
-   */
-  public Map<String, Long> getInEdgeCntMap() {
-    return inEdgeCntMap;
-  }
-
-  /**
-   * Getter method for property <tt>outEdgeCntMap</tt>.
-   *
-   * @return property value of outEdgeCntMap
-   */
-  public Map<String, Long> getOutEdgeCntMap() {
-    return outEdgeCntMap;
   }
 
   @Override

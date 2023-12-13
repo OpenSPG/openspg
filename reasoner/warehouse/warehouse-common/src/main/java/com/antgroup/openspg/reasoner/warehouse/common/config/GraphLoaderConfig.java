@@ -25,8 +25,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 
+@Getter
+@Setter
 public class GraphLoaderConfig implements Serializable {
   /** edge truncate threshold for each edge type */
   public static final int DEFAULT_EDGE_TRUNCATE_THRESHOLD = 8 * 10000;
@@ -73,58 +78,10 @@ public class GraphLoaderConfig implements Serializable {
   /** kg reasoner task id */
   private String taskId = "";
 
-  public int getTotalWorkerCount() {
-    return totalWorkerCount;
-  }
-
-  public void setTotalWorkerCount(int totalWorkerCount) {
-    this.totalWorkerCount = totalWorkerCount;
-  }
-
-  public int getCurWorkerIndex() {
-    return curWorkerIndex;
-  }
-
-  public void setCurWorkerIndex(int curWorkerIndex) {
-    this.curWorkerIndex = curWorkerIndex;
-  }
-
-  public int getEdgeTruncateThreshold() {
-    return edgeTruncateThreshold;
-  }
-
-  public void setEdgeTruncateThreshold(int edgeTruncateThreshold) {
-    this.edgeTruncateThreshold = edgeTruncateThreshold;
-  }
-
   public void setEdgeTruncateEachTypeThreshold(int edgeTruncateThreshold) {
     for (EdgeLoaderConfig edgeLoaderConfig : this.edgeLoaderConfigs) {
       edgeLoaderConfig.setEdgeTruncateThreshold(edgeTruncateThreshold);
     }
-  }
-
-  public Set<VertexLoaderConfig> getVertexLoaderConfigs() {
-    return vertexLoaderConfigs;
-  }
-
-  public void setVertexLoaderConfigs(Set<VertexLoaderConfig> vertexLoaderConfigs) {
-    this.vertexLoaderConfigs = vertexLoaderConfigs;
-  }
-
-  public Set<EdgeLoaderConfig> getEdgeLoaderConfigs() {
-    return edgeLoaderConfigs;
-  }
-
-  public void setEdgeLoaderConfigs(Set<EdgeLoaderConfig> edgeLoaderConfigs) {
-    this.edgeLoaderConfigs = edgeLoaderConfigs;
-  }
-
-  public String getNamespaceUrl() {
-    return namespaceUrl;
-  }
-
-  public void setNamespaceUrl(String namespaceUrl) {
-    this.namespaceUrl = namespaceUrl;
   }
 
   public Set<String> allVertexTypes() {
@@ -258,42 +215,6 @@ public class GraphLoaderConfig implements Serializable {
     }
   }
 
-  /**
-   * Getter method for property <tt>schemaUrl</tt>.
-   *
-   * @return property value of schemaUrl
-   */
-  public String getSchemaUrl() {
-    return schemaUrl;
-  }
-
-  /**
-   * Setter method for property <tt>schemaUrl</tt>.
-   *
-   * @param schemaUrl value to be assigned to property schemaUrl
-   */
-  public void setSchemaUrl(String schemaUrl) {
-    this.schemaUrl = schemaUrl;
-  }
-
-  /**
-   * Getter method for property <tt>binary</tt>.
-   *
-   * @return property value of binary
-   */
-  public Boolean getBinary() {
-    return binary;
-  }
-
-  /**
-   * Setter method for property <tt>binary</tt>.
-   *
-   * @param binary value to be assigned to property binary
-   */
-  public void setBinary(Boolean binary) {
-    this.binary = binary;
-  }
-
   /** verify config */
   public GraphLoaderConfig verify() {
     if (CollectionUtils.isEmpty(this.edgeLoaderConfigs)) {
@@ -308,24 +229,6 @@ public class GraphLoaderConfig implements Serializable {
       }
     }
     return this;
-  }
-
-  /**
-   * Getter method for property <tt>taskId</tt>.
-   *
-   * @return property value of taskId
-   */
-  public String getTaskId() {
-    return taskId;
-  }
-
-  /**
-   * Setter method for property <tt>taskId</tt>.
-   *
-   * @param taskId value to be assigned to property schemaUrl
-   */
-  public void setTaskId(String taskId) {
-    this.taskId = taskId;
   }
 
   @Override
@@ -345,23 +248,5 @@ public class GraphLoaderConfig implements Serializable {
       str.append(",[").append(edgeLoaderConfig).append("]");
     }
     return str.toString();
-  }
-
-  /**
-   * Getter method for property <tt>graphVersionConfig</tt>.
-   *
-   * @return property value of graphVersionConfig
-   */
-  public GraphVersionConfig getGraphVersionConfig() {
-    return graphVersionConfig;
-  }
-
-  /**
-   * Setter method for property <tt>graphVersionConfig</tt>.
-   *
-   * @param graphVersionConfig value to be assigned to property graphVersionConfig
-   */
-  public void setGraphVersionConfig(GraphVersionConfig graphVersionConfig) {
-    this.graphVersionConfig = graphVersionConfig;
   }
 }
