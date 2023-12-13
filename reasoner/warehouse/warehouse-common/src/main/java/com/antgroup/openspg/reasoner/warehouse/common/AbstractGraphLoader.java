@@ -21,8 +21,7 @@ import org.apache.commons.lang3.NotImplementedException;
 @Slf4j
 public abstract class AbstractGraphLoader implements GraphLoader {
   /** graph loader config */
-  @Getter
-  protected final GraphLoaderConfig graphLoaderConfig;
+  @Getter protected final GraphLoaderConfig graphLoaderConfig;
 
   /** loader */
   public AbstractGraphLoader(GraphLoaderConfig graphLoaderConfig) {

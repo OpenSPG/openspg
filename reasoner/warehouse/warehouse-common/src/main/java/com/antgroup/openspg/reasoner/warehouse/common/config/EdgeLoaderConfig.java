@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
@@ -32,26 +31,20 @@ import scala.Tuple2;
 
 public class EdgeLoaderConfig implements Serializable {
   /** edge type */
-  @Setter
-  @Getter
-  private String edgeType;
+  @Setter @Getter private String edgeType;
 
   /** maximum edge threshold for this edge type */
-  @Setter
-  @Getter
+  @Setter @Getter
   private int edgeTruncateThreshold = GraphLoaderConfig.DEFAULT_EDGE_TRUNCATE_THRESHOLD;
 
   /**
    * connection info for this edge type considering that each edge may be stored in different
    * storage or different table
    */
-  @Setter
-  @Getter
-  private AbstractConnection connection;
+  @Setter @Getter private AbstractConnection connection;
 
   /** cut out the unnecessary attribute fields, and only keep the necessary attributes here */
-  @Setter
-  private Set<String> needProperties;
+  @Setter private Set<String> needProperties;
 
   /** pushdown edge attribute filtering rules */
   private List<Rule> propertiesFilterRules;
@@ -59,9 +52,7 @@ public class EdgeLoaderConfig implements Serializable {
   private List<Tuple2<String, List<String>>> propertiesFilterRuleString;
 
   /** edge load direction */
-  @Setter
-  @Getter
-  private Direction loadDirection = Direction.BOTH;
+  @Setter @Getter private Direction loadDirection = Direction.BOTH;
 
   /**
    * get start type from spo format
