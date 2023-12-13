@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.catalog.impl;
 
+import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -25,11 +26,12 @@ public class OpenKgCatalogTest {
 
   @Test
   public void testGet() {
-    long projectId = 1000025L;
+    long projectId = 2L;
 
     OpenKgCatalog catalog = new OpenKgCatalog(projectId, connInfo, null);
     catalog.init();
+    SemanticPropertyGraph graph = catalog.getKnowledgeGraph();
 
-    Assert.assertNotNull(catalog.getKnowledgeGraph());
+    Assert.assertNotNull(graph);
   }
 }
