@@ -28,6 +28,7 @@
     <module>common</module>
     <module>udf</module>
     <module>lube-api</module>
+    <module>warehouse/warehouse-common</module>
     <module>kgdsl-parser</module>
     <module>catalog/openspg-catalog</module>
   </modules>
