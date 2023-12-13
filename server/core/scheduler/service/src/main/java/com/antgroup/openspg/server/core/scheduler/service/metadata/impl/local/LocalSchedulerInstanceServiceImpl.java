@@ -14,6 +14,7 @@ package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
+import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
@@ -44,7 +45,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     for (Long id : instances.keySet()) {
       SchedulerInstance instance = instances.get(id);
       if (uniqueId.equals(instance.getUniqueId())) {
-        throw new RuntimeException(String.format("uniqueId:%s already existed", uniqueId));
+        throw new SchedulerException("uniqueId {} already existed", uniqueId);
       }
     }
     Long id = maxId.incrementAndGet();
@@ -87,7 +88,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   public SchedulerInstance getById(Long id) {
     SchedulerInstance oldInstance = instances.get(id);
     if (oldInstance == null) {
-      throw new RuntimeException("not find id:" + id);
+      throw new SchedulerException("not find id {}", id);
     }
     SchedulerInstance instance = new SchedulerInstance();
     BeanUtils.copyProperties(oldInstance, instance);

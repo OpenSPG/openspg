@@ -13,6 +13,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.api.impl;
 
 import com.antgroup.openspg.server.common.model.base.Page;
+import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
 import com.antgroup.openspg.server.common.model.scheduler.Status;
@@ -112,12 +113,12 @@ public class SchedulerServiceImpl implements SchedulerService {
     Assert.notNull(job.getMergeMode(), "MergeMode not null");
 
     if (LifeCycle.PERIOD.equals(job.getLifeCycle())) {
-      Assert.hasText(job.getSchedulerCron(), "SchedulerCron not null");
+      String cron = job.getSchedulerCron();
+      Assert.hasText(cron, "SchedulerCron not null");
       try {
-        new CronExpression(job.getSchedulerCron());
+        new CronExpression(cron);
       } catch (ParseException e) {
-        new RuntimeException(
-            String.format("Cron(%s) ParseException:%s", job.getSchedulerCron(), e.getMessage()));
+        throw new SchedulerException("Cron {} ParseException:{}", cron, e.getMessage());
       }
     }
   }
@@ -279,7 +280,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     SchedulerInstance instance = schedulerInstanceService.getById(id);
     Assert.notNull(instance, String.format("instance not find id:%s", id));
     if (InstanceStatus.isFinished(instance.getStatus())) {
-      throw new RuntimeException("The instance has been finished");
+      throw new SchedulerException("The instance has been finished");
     }
     schedulerExecuteService.executeInstance(id);
     return true;

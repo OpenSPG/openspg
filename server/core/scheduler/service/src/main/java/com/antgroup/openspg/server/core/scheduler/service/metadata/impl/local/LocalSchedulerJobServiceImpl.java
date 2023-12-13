@@ -14,6 +14,7 @@ package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
+import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
@@ -65,7 +66,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
   public SchedulerJob getById(Long id) {
     SchedulerJob oldJob = jobs.get(id);
     if (oldJob == null) {
-      throw new RuntimeException("not find id:" + id);
+      throw new SchedulerException("not find id {}", id);
     }
     SchedulerJob job = new SchedulerJob();
     BeanUtils.copyProperties(oldJob, job);

@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 
 /** Local Sync Task Example: Pre Check Task */
 @Component("localExampleSyncTask")
-public class LocalExampleSyncTask extends JobSyncTaskTemplate {
+public class LocalExampleSyncTaskTest extends JobSyncTaskTemplate {
 
   /** scheduler max days */
   private static final long SCHEDULER_MAX_DAYS = 5;

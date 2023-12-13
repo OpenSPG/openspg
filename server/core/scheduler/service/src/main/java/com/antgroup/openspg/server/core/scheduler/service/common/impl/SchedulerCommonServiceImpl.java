@@ -13,6 +13,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.common.impl;
 
 import com.antgroup.openspg.common.util.CommonUtils;
+import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
@@ -65,7 +66,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
     Long updateNum = schedulerInstanceService.update(updateInstance);
     if (updateNum <= 0) {
-      throw new RuntimeException(String.format("update instance failed %s", updateInstance));
+      throw new SchedulerException("update instance failed {}", updateInstance);
     }
     stopRunningProcess(instance);
 
@@ -122,9 +123,8 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
         .forEach(
             instance -> {
               if (!InstanceStatus.isFinished(instance.getStatus())) {
-                throw new RuntimeException(
-                    String.format(
-                        "Running instances exist within 24H uniqueId:%", instance.getUniqueId()));
+                throw new SchedulerException(
+                    "Running instances exist within 24H uniqueId {}", instance.getUniqueId());
               }
             });
   }
