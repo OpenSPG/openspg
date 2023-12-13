@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 /** Execute Instances Runnable. To generate instances by all period Job */
 @Slf4j
 public class ExecuteInstances implements Runnable {
-  
+
   SchedulerExecuteService schedulerExecuteService;
 
   public ExecuteInstances(SchedulerExecuteService schedulerExecuteService) {

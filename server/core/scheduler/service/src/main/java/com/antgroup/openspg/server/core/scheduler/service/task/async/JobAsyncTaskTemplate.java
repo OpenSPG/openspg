@@ -41,13 +41,12 @@ public abstract class JobAsyncTaskTemplate extends JobTaskTemplate implements Jo
     if (StringUtils.isBlank(resource)) {
       return TaskStatus.RUNNING;
     }
-    
+
     context.addTraceLog("Async task submit successful! resource：%s", resource);
     SchedulerTask updateTask = new SchedulerTask();
     updateTask.setId(task.getId());
     updateTask.setResource(resource);
     schedulerTaskService.update(updateTask);
-      return TaskStatus.RUNNING;
-    
+    return TaskStatus.RUNNING;
   }
 }

@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronExpression;
 
@@ -101,7 +100,7 @@ public class CommonUtils {
       return str.toString();
     }
     int start = 0;
-    fill = (fill == null ? "...":fill);
+    fill = (fill == null ? "..." : fill);
     return str.substring(start, length - fill.length()) + fill;
   }
 

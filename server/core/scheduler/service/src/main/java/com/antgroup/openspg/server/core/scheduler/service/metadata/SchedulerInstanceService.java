@@ -40,5 +40,4 @@ public interface SchedulerInstanceService {
 
   /** get Not Finish Instance */
   List<SchedulerInstance> getNotFinishInstance(SchedulerInstanceQuery record);
-
 }

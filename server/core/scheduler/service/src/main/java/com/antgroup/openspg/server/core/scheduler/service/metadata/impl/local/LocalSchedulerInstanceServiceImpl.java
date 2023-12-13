@@ -150,5 +150,4 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
             .collect(Collectors.toList());
     return instanceList;
   }
-  
 }

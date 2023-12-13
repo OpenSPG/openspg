@@ -51,7 +51,7 @@ public class LocalSchedulerHandler implements SchedulerHandler {
       log.info("start executeInstances");
       EXECUTE.scheduleAtFixedRate(
           new ExecuteInstances(schedulerExecuteService),
-              initialDelay,
+          initialDelay,
           schedulerValue.getExecuteInstancesPeriod(),
           schedulerValue.getExecuteInstancesUnit());
       log.info("end executeInstances");
@@ -72,7 +72,7 @@ public class LocalSchedulerHandler implements SchedulerHandler {
       log.info("start generateInstances");
       GENERATE.scheduleAtFixedRate(
           new GenerateInstances(schedulerGenerateService),
-              initialDelay,
+          initialDelay,
           schedulerValue.getGenerateInstancesPeriod(),
           schedulerValue.getGenerateInstancesUnit());
       log.info("end generateInstances");

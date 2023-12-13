@@ -98,5 +98,4 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
     page.setTotal(Long.valueOf(jobList.size()));
     return page;
   }
-
 }

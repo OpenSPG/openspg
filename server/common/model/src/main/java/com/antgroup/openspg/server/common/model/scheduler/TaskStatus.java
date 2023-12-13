@@ -34,5 +34,4 @@ public enum TaskStatus {
   public static boolean isRunning(TaskStatus status) {
     return TaskStatus.RUNNING.equals(status) || TaskStatus.ERROR.equals(status);
   }
-
 }

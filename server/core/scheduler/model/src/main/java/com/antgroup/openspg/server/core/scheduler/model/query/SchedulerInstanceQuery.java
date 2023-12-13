@@ -22,7 +22,7 @@ import lombok.Setter;
 public class SchedulerInstanceQuery extends SchedulerInstance {
 
   private static final long serialVersionUID = 6125004435485785299L;
-  
+
   /** page No */
   private Integer pageNo;
   /** page Size */

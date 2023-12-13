@@ -11,7 +11,8 @@
  * or implied.
  */
 
-/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */package com.antgroup.openspg.server.core.scheduler.service.translate;
+/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
+package com.antgroup.openspg.server.core.scheduler.service.translate;
 
 import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
