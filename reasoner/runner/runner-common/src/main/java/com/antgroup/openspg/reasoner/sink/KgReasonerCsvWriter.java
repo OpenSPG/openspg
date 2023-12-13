@@ -15,10 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * @author donghai.ydh
- * @version KgReasonerCsvWriter.java, v 0.1 2023年04月14日 14:41 donghai.ydh
- */
+
 @Slf4j(topic = "userlogger")
 public class KgReasonerCsvWriter {
 

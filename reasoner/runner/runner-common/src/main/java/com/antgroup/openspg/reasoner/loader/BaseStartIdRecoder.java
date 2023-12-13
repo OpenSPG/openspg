@@ -10,10 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 
-/**
- * @author donghai.ydh
- * @version BaseStartIdRecoder.java, v 0.1 2023年03月29日 17:41 donghai.ydh
- */
+
 public abstract class BaseStartIdRecoder implements Iterator<IVertexId> {
     private static final Map<String, BaseStartIdRecoder> START_ID_MAP = new ConcurrentHashMap<>();
 

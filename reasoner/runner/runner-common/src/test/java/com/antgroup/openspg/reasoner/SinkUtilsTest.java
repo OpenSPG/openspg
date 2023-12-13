@@ -20,10 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version SinkUtilsTest.java, v 0.1 2023年05月09日 17:38 donghai.ydh
- */
+
 public class SinkUtilsTest {
 
     @Test

@@ -7,10 +7,7 @@ package com.antgroup.openspg.reasoner.io.model;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * @author donghai.ydh
- * @version OdpsTableInfo.java, v 0.1 2023年03月03日 11:19 donghai.ydh
- */
+
 public class OdpsTableInfo extends AbstractTableInfo implements Comparable<OdpsTableInfo> {
     private String accessID;
     private String accessKey;

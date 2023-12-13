@@ -10,10 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
-/**
- * @author chengqiang.cq
- * @version $Id: FileUtil.java, v 0.1 2022-11-08 19:53 chengqiang.cq Exp $$
- */
+
 public class FileUtil {
     public final static String LOCAL_FILE_PREFIX = "file://";
 

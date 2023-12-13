@@ -15,10 +15,7 @@ import com.antgroup.openspg.reasoner.warehouse.common.VertexSubGraph;
 import com.antgroup.openspg.reasoner.warehouse.common.config.GraphLoaderConfig;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author peilong.zpl
- * @version $Id: MockGraphLoader.java, v 0.1 2023-08-29 17:59 peilong.zpl Exp $$
- */
+
 public class MockGraphLoader extends AbstractGraphLoader {
     /**
      * loader

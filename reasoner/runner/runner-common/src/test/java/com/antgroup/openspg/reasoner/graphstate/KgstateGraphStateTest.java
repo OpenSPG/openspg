@@ -15,10 +15,7 @@ import com.antgroup.openspg.reasoner.warehouse.common.AbstractGraphLoader;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author peilong.zpl
- * @version $Id: KgstateGraphStateTest.java, v 0.1 2023-08-29 17:55 peilong.zpl Exp $$
- */
+
 public class KgstateGraphStateTest {
     @Test
     public void testReadVertex() {

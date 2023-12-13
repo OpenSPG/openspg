@@ -18,10 +18,7 @@ import com.antgroup.openspg.reasoner.utils.SimpleObjSerde;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author donghai.ydh
- * @version CatalogFactory.java, v 0.1 2023年04月25日 15:36 donghai.ydh
- */
+
 @Slf4j(topic = "userlogger")
 public class CatalogFactory {
 

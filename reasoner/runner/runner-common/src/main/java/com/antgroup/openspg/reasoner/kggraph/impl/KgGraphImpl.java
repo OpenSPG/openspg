@@ -48,10 +48,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-/**
- * @author kejian
- * @version PathKgGraph.java, v 0.1 2023年02月21日 11:10 AM kejian
- */
+
 @Slf4j(topic = "userlogger")
 public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
     /**

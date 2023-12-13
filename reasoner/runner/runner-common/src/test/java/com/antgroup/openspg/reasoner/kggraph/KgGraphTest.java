@@ -34,10 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author kejian
- * @version KgGraphTest.java, v 0.1 2023年02月21日 8:51 PM kejian
- */
+
 public class KgGraphTest {
 
     private KgGraphImpl kgGraph = new KgGraphImpl();

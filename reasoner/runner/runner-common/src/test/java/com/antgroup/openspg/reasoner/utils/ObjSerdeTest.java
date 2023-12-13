@@ -25,10 +25,7 @@ import org.junit.Test;
 import scala.Tuple2;
 import scala.collection.immutable.Set;
 
-/**
- * @author donghai.ydh
- * @version ObjSerdeTest.java, v 0.1 2023年04月25日 16:11 donghai.ydh
- */
+
 public class ObjSerdeTest {
 
     private String encode;

@@ -42,10 +42,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @author donghai.ydh
- * @version IoFactory.java, v 0.1 2023年03月03日 10:38 donghai.ydh
- */
+
 @Slf4j(topic = "userlogger")
 public class IoFactory {
 

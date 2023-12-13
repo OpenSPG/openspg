@@ -17,10 +17,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.graphstate.model.MergeTypeEnum;
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
 
-/**
- * @author kejian
- * @version GraphState.java, v 0.1 2023年02月01日 4:31 PM kejian
- */
+
 public interface GraphState<K> {
 
     /**

@@ -9,10 +9,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * @author donghai.ydh
- * @version GraphStateFactory.java, v 0.1 2023年02月15日 15:47 donghai.ydh
- */
+
 public class GraphStateFactory {
     private static final Map<Integer, GraphState<IVertexId>> GRAPH_STATE_MAP = new ConcurrentHashMap<>();
 

@@ -23,10 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author donghai.ydh
- * @version WindEdgeImpl.java, v 0.1 2023年10月31日 14:57 donghai.ydh
- */
+
 public class UnfoldEdgeImpl implements Serializable {
     private static final long serialVersionUID = 8752841991024282878L;
     private final UnfoldRepeatEdgeInfo unfoldRepeatEdgeInfo;

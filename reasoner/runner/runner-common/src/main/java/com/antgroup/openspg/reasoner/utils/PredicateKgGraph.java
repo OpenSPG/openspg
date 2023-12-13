@@ -13,10 +13,7 @@ import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
 import com.antgroup.openspg.reasoner.rule.RuleRunner;
 
-/**
- * @author donghai.ydh
- * @version PredicateKgGraph.java, v 0.1 2023年02月23日 20:06 donghai.ydh
- */
+
 public class PredicateKgGraph implements Predicate<KgGraph<IVertexId>> {
 
     private final Pattern             kgGraphSchema;

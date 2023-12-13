@@ -4,10 +4,7 @@
  */
 package com.antgroup.openspg.reasoner.graphstate;
 
-/**
- * @author donghai.ydh
- * @version GraphStateTypeEnum.java, v 0.1 2023年06月21日 14:39 donghai.ydh
- */
+
 public enum GraphStateTypeEnum {
     /**
      * rocksdb

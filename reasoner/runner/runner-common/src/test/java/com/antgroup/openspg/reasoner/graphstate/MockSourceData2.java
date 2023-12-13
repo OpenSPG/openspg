@@ -22,10 +22,7 @@ import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
 import com.google.common.collect.ImmutableMap;
 import scala.collection.JavaConversions;
 
-/**
- * @author kejian
- * @version MockSourceDate2.java, v 0.1 2023年02月22日 10:44 AM kejian
- */
+
 public class MockSourceData2 extends LoadSourceData {
     /*
          a1  a2  a3  a4

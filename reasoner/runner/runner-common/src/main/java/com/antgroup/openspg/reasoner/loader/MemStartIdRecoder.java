@@ -10,10 +10,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * @author donghai.ydh
- * @version MemStartIdRecoder.java, v 0.1 2023年03月29日 17:48 donghai.ydh
- */
+
 public class MemStartIdRecoder extends BaseStartIdRecoder {
     // use TreeSet, sort vertex id
     protected Set<IVertexId> startIdSet = new TreeSet<>();

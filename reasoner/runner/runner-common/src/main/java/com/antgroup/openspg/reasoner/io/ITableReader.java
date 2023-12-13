@@ -9,10 +9,7 @@ import com.antgroup.openspg.reasoner.io.model.AbstractTableInfo;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * @author donghai.ydh
- * @version ITableReader.java, v 0.1 2023年03月03日 10:30 donghai.ydh
- */
+
 public interface ITableReader extends AutoCloseable, Iterator<Object[]> {
     /**
      * init reader for read a list of tables

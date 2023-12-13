@@ -19,10 +19,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 
-/**
- * @author donghai.ydh
- * @version RuleRunnerTest.java, v 0.1 2023年02月24日 14:40 donghai.ydh
- */
+
 public class RuleRunnerTest {
 
     /**

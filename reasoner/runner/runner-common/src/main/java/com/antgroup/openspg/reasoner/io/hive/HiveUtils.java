@@ -37,10 +37,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * @author donghai.ydh
- * @version HiveUtils.java, v 0.1 2023年03月13日 17:36 donghai.ydh
- */
+
 public class HiveUtils {
 
     public static HadoopOutputFile getHadoopOutputFile(HiveTableInfo hiveTableInfo, int index) {

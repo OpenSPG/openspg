@@ -33,10 +33,7 @@ import scala.Tuple2;
 import scala.collection.JavaConversions;
 
 
-/**
- * @author donghai.ydh
- * @version AbstractGraphGenerator.java, v 0.1 2023年02月23日 20:50 donghai.ydh
- */
+
 public abstract class AbstractGraphGenerator implements Serializable {
     private static final long serialVersionUID = -5588043366117487019L;
     protected IVertex<String, IProperty> constructionVertex(String bizId, String type, Object... kvs) {

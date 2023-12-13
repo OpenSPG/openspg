@@ -18,10 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * @author donghai.ydh
- * @version OdpsReadWriteTest.java, v 0.1 2023年03月07日 14:42 donghai.ydh
- */
+
 public class OdpsReadWriteTest {
 
     private String odpsAccessId  = null;

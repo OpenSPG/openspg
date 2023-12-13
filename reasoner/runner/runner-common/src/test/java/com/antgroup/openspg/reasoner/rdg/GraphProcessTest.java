@@ -19,10 +19,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import scala.collection.JavaConversions;
 
-/**
- * @author peilong.zpl
- * @version $Id: GraphProcessTest.java, v 0.1 2023-10-12 11:15 peilong.zpl Exp $$
- */
+
 public class GraphProcessTest {
     @Test
     public void testGetUnDefineUdaf() {

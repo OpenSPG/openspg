@@ -37,10 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author donghai.ydh
- * @version KgGraphJoinImpl.java, v 0.1 2023年10月18日 14:58 donghai.ydh
- */
+
 public class KgGraphJoinImpl implements Serializable {
     private static final long serialVersionUID = -5771663962539687553L;
     private final JoinType            joinType;

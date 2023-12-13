@@ -26,10 +26,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import scala.collection.JavaConversions;
 
-/**
- * @author kejian
- * @version MockSourceData3.java, v 0.1 2023年02月22日 8:57 PM kejian
- */
+
 public class MockSourceData3 extends LoadSourceData {
 
     private static final String DEFAULT_VERTEX_TYPE = "t";

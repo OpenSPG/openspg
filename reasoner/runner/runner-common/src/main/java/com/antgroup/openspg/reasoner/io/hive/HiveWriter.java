@@ -19,10 +19,7 @@ import org.apache.parquet.schema.MessageType;
 
 import java.io.IOException;
 
-/**
- * @author donghai.ydh
- * @version HiveWriter.java, v 0.1 2023年03月10日 15:06 donghai.ydh
- */
+
 public class HiveWriter implements ITableWriter {
     private HiveTableInfo hiveTableInfo;
 

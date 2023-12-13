@@ -43,10 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * @author donghai.ydh
- * @version OdpsUtils.java, v 0.1 2023年03月03日 14:04 donghai.ydh
- */
+
 @Slf4j(topic = "userlogger")
 public class OdpsUtils {
 

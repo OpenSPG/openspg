@@ -14,10 +14,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.generator.AbstractGraphGenerator;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
 
-/**
- * @author kejian
- * @version LoadSourceData.java, v 0.1 2023年02月13日 4:23 PM kejian
- */
+
 public abstract class LoadSourceData extends AbstractGraphGenerator {
 
     /**

@@ -15,10 +15,7 @@ import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version KgReasonerSinkUtils.java, v 0.1 2023年04月12日 13:55 donghai.ydh
- */
+
 public class KgReasonerSinkUtils {
 
     /**

@@ -14,10 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version com.antgroup.openspg.reasoner.context.ContextManagementTest.java, v 0.1 2023年07月12日 20:34 donghai.ydh
- */
+
 public class ContextManagementTest {
 
     @Test

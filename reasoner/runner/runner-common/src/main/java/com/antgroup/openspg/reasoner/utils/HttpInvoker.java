@@ -20,10 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
-/**
- * @author chengqiang.cq
- * @version $Id: HttpInvoker.java, v 0.1 2021-05-14 1:10 下午 chengqiang.cq Exp $$
- */
+
 @Slf4j(topic = "userlogger")
 public class HttpInvoker {
     /**

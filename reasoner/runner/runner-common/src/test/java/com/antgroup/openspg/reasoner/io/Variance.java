@@ -4,10 +4,7 @@
  */
 package com.antgroup.openspg.reasoner.io;
 
-/**
- * @author donghai.ydh
- * @version Variance.java, v 0.1 2023年03月03日 16:29 donghai.ydh
- */
+
 public class Variance {
     public static double Sum(double[] data) {
         double sum = 0;

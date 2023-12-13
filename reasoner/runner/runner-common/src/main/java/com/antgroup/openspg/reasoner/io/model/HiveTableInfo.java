@@ -6,10 +6,7 @@ package com.antgroup.openspg.reasoner.io.model;
 
 import java.util.Arrays;
 
-/**
- * @author donghai.ydh
- * @version HiveTableInfo.java, v 0.1 2023年03月07日 17:21 donghai.ydh
- */
+
 public class HiveTableInfo extends AbstractTableInfo {
     private String hadoopUserName = null;
 

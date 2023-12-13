@@ -14,10 +14,7 @@ import com.antgroup.openspg.reasoner.lube.common.expr.UnaryOpExpr;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author donghai.ydh
- * @version KgGraphSortItem.java, v 0.1 2023-11-21 15:11 donghai.ydh
- */
+
 public class KgGraphSortItem implements Comparable<KgGraphSortItem> {
     private final scala.collection.immutable.List<SortItem> sortItems;
     private final KgGraph<IVertexId> kgGraph;

@@ -15,10 +15,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/**
- * @author donghai.ydh
- * @version AbstractTableInfo.java, v 0.1 2023年03月06日 12:01 donghai.ydh
- */
+
 public abstract class AbstractTableInfo implements Serializable {
     protected String project;
     protected String table;

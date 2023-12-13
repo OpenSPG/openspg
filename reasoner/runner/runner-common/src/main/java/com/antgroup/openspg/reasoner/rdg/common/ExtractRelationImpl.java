@@ -34,10 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author donghai.ydh
- * @version ExtractRelationImpl.java, v 0.1 2023年06月29日 19:40 donghai.ydh
- */
+
 public class ExtractRelationImpl implements Serializable {
 
 private static final long serialVersionUID = 3442064493302533370L;

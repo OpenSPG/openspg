@@ -27,10 +27,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author donghai.ydh
- * @version EdgeCombinationIteratorTest.java, v 0.1 2023年04月24日 17:49 donghai.ydh
- */
+
 public class EdgeCombinationIteratorTest {
 
     private final String DEFAULT_VERTEX_TYPE = "t";

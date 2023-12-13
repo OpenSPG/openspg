@@ -8,10 +8,7 @@ import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 
-/**
- * @author donghai.ydh
- * @version UnfoldRepeatEdgeInfo.java, v 0.1 2023年11月14日 20:07 donghai.ydh
- */
+
 public class UnfoldRepeatEdgeInfo implements Serializable {
     private static final long serialVersionUID = 7558197193435125339L;
     private final String edgeAlias;

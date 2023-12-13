@@ -9,10 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
-/**
- * @author donghai.ydh
- * @version FoldRepeatEdgeInfo.java, v 0.1 2023年10月31日 14:44 donghai.ydh
- */
+
 public class FoldRepeatEdgeInfo implements Serializable {
     private final String fromEdgeAlias;
     private final String toEdgeAlias;

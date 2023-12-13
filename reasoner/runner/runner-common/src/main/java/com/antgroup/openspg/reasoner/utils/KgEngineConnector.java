@@ -15,10 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.reasoner.common.http.AkgHttpClient;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author chengqiang.cq
- * @version $Id: KgEngineMetrics.java, v 0.1 2021-06-08 3:09 下午 chengqiang.cq Exp $$
- */
+
 @Slf4j(topic = "userlogger")
 public class KgEngineConnector {
     /**

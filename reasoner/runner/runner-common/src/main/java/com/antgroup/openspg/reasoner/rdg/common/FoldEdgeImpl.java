@@ -28,10 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author donghai.ydh
- * @version WindEdgeImpl.java, v 0.1 2023年10月31日 14:57 donghai.ydh
- */
+
 public class FoldEdgeImpl implements Serializable {
 
 private static final long serialVersionUID = -3632032496948942544L;

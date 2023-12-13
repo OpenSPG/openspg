@@ -8,10 +8,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 
 import java.util.Arrays;
 
-/**
- * @author donghai.ydh
- * @version KgGraphKey.java, v 0.1 2023年07月20日 11:15 donghai.ydh
- */
+
 public class KgGraphKey {
     private final IVertexId[] vertexIds;
 

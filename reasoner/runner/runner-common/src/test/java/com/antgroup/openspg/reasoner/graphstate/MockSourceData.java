@@ -15,10 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author kejian
- * @version MockSourceData.java, v 0.1 2023年02月13日 4:30 PM kejian
- */
+
 public class MockSourceData extends LoadSourceData {
     /*
      *          vs1

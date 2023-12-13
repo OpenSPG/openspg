@@ -14,10 +14,7 @@ import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
 
-/**
- * @author peilong.zpl
- * @version $Id: AggIfOpProcess.java, v 0.1 2023-10-07 16:07 peilong.zpl Exp $$
- */
+
 public class AggIfOpProcessBaseGroupProcess extends BaseGroupProcess implements Serializable {
 
     /**

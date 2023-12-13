@@ -10,10 +10,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @author donghai.ydh
- * @version QueryGraphStateInfo.java, v 0.1 2023年04月12日 14:44 donghai.ydh
- */
+
 @Data
 public class QueryGraphStateInfo implements Serializable {
     private GraphItemType sourceGraphItemType;

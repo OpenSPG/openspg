@@ -4,10 +4,7 @@
  */
 package com.antgroup.openspg.reasoner.graphstate.model;
 
-/**
- * @author kejian
- * @version MergeTypeEnum.java, v 0.1 2023年02月09日 4:44 PM kejian
- */
+
 public enum MergeTypeEnum {
 
     /**

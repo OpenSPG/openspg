@@ -18,10 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * @author donghai.ydh
- * @version KgGraphDropFieldsImpl.java, v 0.1 2023年06月29日 19:32 donghai.ydh
- */
+
 public class KgGraphDropFieldsImpl implements Serializable {
 
 private static final long serialVersionUID = 3662110639574654863L;

@@ -23,10 +23,7 @@ import org.junit.Test;
 
 import static com.antgroup.openspg.reasoner.kggraph.KgGraphSimpleSplitTest.DEFAULT_VERTEX_TYPE;
 
-/**
- * @author donghai.ydh
- * @version SplitToWorkerIndexTest.java, v 0.1 2023年05月04日 09:56 donghai.ydh
- */
+
 public class SplitToWorkerIndexTest {
 
     @Before

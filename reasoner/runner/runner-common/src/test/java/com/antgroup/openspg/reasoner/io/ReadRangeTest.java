@@ -16,10 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-/**
- * @author donghai.ydh
- * @version ReadRangeTest.java, v 0.1 2023年03月03日 15:55 donghai.ydh
- */
+
 public class ReadRangeTest {
 
     private static final Random RANDOM = new Random();

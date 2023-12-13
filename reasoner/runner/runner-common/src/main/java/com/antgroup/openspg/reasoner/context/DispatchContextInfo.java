@@ -10,10 +10,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version DispatchContextInfo.java, v 0.1 2023年07月13日 09:58 donghai.ydh
- */
+
 public class DispatchContextInfo implements Serializable {
     private final TaskRecord taskRecord;
 

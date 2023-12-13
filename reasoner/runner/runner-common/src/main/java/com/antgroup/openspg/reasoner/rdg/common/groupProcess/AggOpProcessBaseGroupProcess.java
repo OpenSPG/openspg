@@ -13,10 +13,7 @@ import com.antgroup.openspg.reasoner.lube.common.expr.AggregatorOpSet;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
 
-/**
- * @author peilong.zpl
- * @version $Id: AggOpProcess.java, v 0.1 2023-10-07 16:08 peilong.zpl Exp $$
- */
+
 public class AggOpProcessBaseGroupProcess extends BaseGroupProcess implements Serializable {
 
     public AggOpProcessBaseGroupProcess(String taskId, Var var, Aggregator aggregator) {

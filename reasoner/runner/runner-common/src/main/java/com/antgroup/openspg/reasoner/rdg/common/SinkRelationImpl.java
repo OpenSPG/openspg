@@ -20,10 +20,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author donghai.ydh
- * @version SinkRelationImpl.java, v 0.1 2023年07月24日 10:32 donghai.ydh
- */
+
 @Slf4j(topic = "userlogger")
 public class SinkRelationImpl {
     private final GraphState<IVertexId> graphState;

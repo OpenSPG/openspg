@@ -16,10 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.Arrays;
 
-/**
- * @author donghai.ydh
- * @version OdpsWriter.java, v 0.1 2023年03月03日 10:38 donghai.ydh
- */
+
 @Slf4j(topic = "userlogger")
 public class OdpsWriter implements ITableWriter {
     private int taskIndex;

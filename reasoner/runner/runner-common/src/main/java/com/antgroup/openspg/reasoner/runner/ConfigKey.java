@@ -4,10 +4,7 @@
  */
 package com.antgroup.openspg.reasoner.runner;
 
-/**
- * @author donghai.ydh
- * @version ConfigKey.java, v 0.1 2023年02月08日 16:07 donghai.ydh
- */
+
 public class ConfigKey {
 
     /**

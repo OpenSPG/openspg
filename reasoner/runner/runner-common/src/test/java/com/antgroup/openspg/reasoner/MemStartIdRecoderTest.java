@@ -10,10 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author donghai.ydh
- * @version MemStartIdRecoderTest.java, v 0.1 2023年05月30日 13:44 donghai.ydh
- */
+
 public class MemStartIdRecoderTest {
 
     @Before

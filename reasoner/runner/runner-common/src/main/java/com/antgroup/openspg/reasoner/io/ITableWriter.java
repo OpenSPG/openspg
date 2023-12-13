@@ -6,10 +6,7 @@ package com.antgroup.openspg.reasoner.io;
 
 import com.antgroup.openspg.reasoner.io.model.AbstractTableInfo;
 
-/**
- * @author donghai.ydh
- * @version ITableWriter.java, v 0.1 2023年03月03日 10:30 donghai.ydh
- */
+
 public interface ITableWriter {
     /**
      * open a table writer

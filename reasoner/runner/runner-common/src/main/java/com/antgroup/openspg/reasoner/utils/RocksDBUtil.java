@@ -13,10 +13,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import lombok.extern.slf4j.Slf4j;
 import scala.Tuple2;
 
-/**
- * @author kejian
- * @version RockDBUtil.java, v 0.1 2023年03月08日 2:21 PM kejian
- */
+
 @Slf4j(topic = "userlogger")
 public class RocksDBUtil {
     private static final String PLACEHOLDER = "\01";

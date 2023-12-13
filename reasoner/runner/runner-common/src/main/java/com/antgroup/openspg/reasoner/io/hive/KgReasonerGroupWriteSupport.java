@@ -14,10 +14,7 @@ import org.apache.parquet.schema.MessageType;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version HolmesHolmesGroupWriteSupport.java, v 0.1 2022年11月22日 14:16 donghai.ydh
- */
+
 public class KgReasonerGroupWriteSupport extends WriteSupport<Group> {
 
     private final MessageType         schema;

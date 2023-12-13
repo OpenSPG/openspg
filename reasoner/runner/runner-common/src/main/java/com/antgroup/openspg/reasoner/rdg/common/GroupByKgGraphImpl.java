@@ -20,10 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author donghai.ydh
- * @version GroupByKgGraphImpl.java, v 0.1 2023年08月24日 20:47 donghai.ydh
- */
+
 public class GroupByKgGraphImpl implements Serializable {
 
 private static final long serialVersionUID = 5982445397315165348L;

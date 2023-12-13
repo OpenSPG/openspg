@@ -6,10 +6,7 @@ package com.antgroup.openspg.reasoner.sink;
 
 import java.io.Serializable;
 
-/**
- * @author donghai.ydh
- * @version KgReasonerSinkType.java, v 0.1 2023年04月12日 13:51 donghai.ydh
- */
+
 public enum KgReasonerSinkType implements Serializable {
     /**
      * log

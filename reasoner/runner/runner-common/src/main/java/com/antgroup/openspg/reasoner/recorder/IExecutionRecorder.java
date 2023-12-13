@@ -4,10 +4,7 @@
  */
 package com.antgroup.openspg.reasoner.recorder;
 
-/**
- * @author donghai.ydh
- * @version IExecutionRecorder.java, v 0.1 2023年11月07日 15:00 donghai.ydh
- */
+
 public interface IExecutionRecorder {
     /**
      * get readable string

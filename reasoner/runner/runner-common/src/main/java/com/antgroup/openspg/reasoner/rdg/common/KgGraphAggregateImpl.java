@@ -48,10 +48,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * @author donghai.ydh
- * @version KgGraphAggregateImpl.java, v 0.1 2023年06月29日 17:57 donghai.ydh
- */
+
 public class KgGraphAggregateImpl implements Serializable {
 
 private static final long serialVersionUID = -4440174716170402565L;

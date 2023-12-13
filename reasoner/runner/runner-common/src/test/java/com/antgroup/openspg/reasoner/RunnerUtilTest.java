@@ -22,10 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version RunnerUtilTest.java, v 0.1 2023年05月22日 16:22 donghai.ydh
- */
+
 public class RunnerUtilTest {
 
     @Test

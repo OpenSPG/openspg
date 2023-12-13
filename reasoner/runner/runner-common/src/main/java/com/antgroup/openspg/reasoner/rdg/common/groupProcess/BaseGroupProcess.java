@@ -22,10 +22,7 @@ import com.antgroup.openspg.reasoner.udf.model.UdafMeta;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
 import scala.collection.JavaConversions;
 
-/**
- * @author peilong.zpl
- * @version $Id: BaseGroupProcess.java, v 0.1 2023-10-07 16:06 peilong.zpl Exp $$
- */
+
 public abstract class BaseGroupProcess implements Serializable {
     protected     Var          var;
     protected     UdafMeta     udafMeta;

@@ -79,10 +79,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-/**
- * @author kejian
- * @version RunnerUtil.java, v 0.1 2023年02月07日 3:49 PM kejian
- */
+
 @Slf4j(topic = "userlogger")
 public class RunnerUtil {
 

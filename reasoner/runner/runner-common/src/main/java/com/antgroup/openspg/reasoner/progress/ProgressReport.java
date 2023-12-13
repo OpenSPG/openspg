@@ -14,10 +14,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 
-/**
- * @author donghai.ydh
- * @version ProgressReport.java, v 0.1 2023年04月18日 15:31 donghai.ydh
- */
+
 public class ProgressReport {
     private static ProgressStatus progressStatus = null;
 

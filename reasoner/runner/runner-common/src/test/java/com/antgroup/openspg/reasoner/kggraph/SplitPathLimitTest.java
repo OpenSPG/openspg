@@ -18,10 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-/**
- * @author donghai.ydh
- * @version SplitPathLimitTest.java, v 0.1 2023年05月22日 14:51 donghai.ydh
- */
+
 public class SplitPathLimitTest {
 
     @Before

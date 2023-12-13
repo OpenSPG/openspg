@@ -18,10 +18,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version KgReasonerBaseParquetWriter.java, v 0.1 2022年11月21日 17:31 donghai.ydh
- */
+
 public class KgReasonerBaseParquetWriter extends ParquetWriter<Group> {
 
     /**

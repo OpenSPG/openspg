@@ -16,10 +16,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version KgGraphRenameImpl.java, v 0.1 2023年10月31日 20:15 donghai.ydh
- */
+
 public class KgGraphRenameImpl implements Serializable {
     private final Map<String, String> vertexAliasMap;
     private final Map<String, String> edgeAliasMap;

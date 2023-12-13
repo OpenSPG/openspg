@@ -16,10 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version AggregationSchemaInfo.java, v 0.1 2023年09月14日 19:22 donghai.ydh
- */
+
 public class AggregationSchemaInfo implements Serializable {
 
     private final Map<String, List<Tuple2<String, Boolean>>> edgeEndpointMap  = new HashMap<>();

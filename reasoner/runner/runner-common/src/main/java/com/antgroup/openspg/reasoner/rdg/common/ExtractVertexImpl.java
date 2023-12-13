@@ -28,10 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-/**
- * @author donghai.ydh
- * @version ExtractRelationImpl.java, v 0.1 2023年06月29日 19:40 donghai.ydh
- */
+
 public class ExtractVertexImpl implements Serializable {
 
 private static final long serialVersionUID = 7788704894791547885L;

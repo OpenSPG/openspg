@@ -4,10 +4,7 @@
  */
 package com.antgroup.openspg.reasoner.io.model;
 
-/**
- * @author donghai.ydh
- * @version ReadRange.java, v 0.1 2023年03月03日 15:48 donghai.ydh
- */
+
 public class ReadRange implements Comparable<ReadRange> {
     private long start;
     private long end;

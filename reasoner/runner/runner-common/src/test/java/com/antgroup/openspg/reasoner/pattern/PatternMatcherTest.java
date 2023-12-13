@@ -10,10 +10,7 @@ import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import org.junit.Assert;
 import org.junit.Test;
 
-/**
- * @author peilong.zpl
- * @version $Id: PatternMatcherTest.java, v 0.1 2023-11-14 14:41 peilong.zpl Exp $$
- */
+
 public class PatternMatcherTest {
     @Test
     public void testTimeOut() throws InterruptedException {

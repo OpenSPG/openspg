@@ -30,10 +30,7 @@ import com.ql.util.express.Operator;
 import lombok.extern.slf4j.Slf4j;
 import scala.Tuple2;
 
-/**
- * @author donghai.ydh
- * @version RuleRunner.java, v 0.1 2023年02月23日 18:01 donghai.ydh
- */
+
 @Slf4j(topic = "userlogger")
 public class RuleRunner {
 

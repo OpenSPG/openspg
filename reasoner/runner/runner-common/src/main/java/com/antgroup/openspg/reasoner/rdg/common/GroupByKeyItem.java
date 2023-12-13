@@ -6,10 +6,7 @@ package com.antgroup.openspg.reasoner.rdg.common;
 
 import java.util.Arrays;
 
-/**
- * @author donghai.ydh
- * @version GroupByKeyItem.java, v 0.1 2023-11-21 15:01 donghai.ydh
- */
+
 public class GroupByKeyItem {
     private final Object[] keys;
 

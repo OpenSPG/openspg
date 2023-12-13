@@ -26,10 +26,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version HiveWriterSession.java, v 0.1 2023年03月13日 19:16 donghai.ydh
- */
+
 @Slf4j(topic = "userlogger")
 public class HiveWriterSession {
     private final HiveTableInfo hiveTableInfo;

@@ -13,10 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version TaskRecord.java, v 0.1 2023年06月21日 11:21 donghai.ydh
- */
+
 @Data
 @Builder
 public class TaskRecord implements Serializable {

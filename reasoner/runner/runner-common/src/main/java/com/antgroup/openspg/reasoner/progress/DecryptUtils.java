@@ -11,10 +11,7 @@ import java.io.Serializable;
 import java.security.Key;
 import java.util.Base64;
 
-/**
- * @author donghai.ydh@alibaba-inc.com
- * @version $Id: CommonUtils.java, v 0.1 2019年11月27日 15:46 donghai.ydh@alibaba-inc.com Exp $
- */
+
 @Slf4j(topic = "userlogger")
 public class DecryptUtils implements Serializable {
 

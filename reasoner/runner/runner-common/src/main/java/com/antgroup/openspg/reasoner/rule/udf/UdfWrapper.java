@@ -7,10 +7,7 @@ package com.antgroup.openspg.reasoner.rule.udf;
 import com.antgroup.openspg.reasoner.udf.model.RuntimeUdfMeta;
 import com.ql.util.express.Operator;
 
-/**
- * @author donghai.ydh
- * @version UdfWrapper.java, v 0.1 2023年02月24日 14:35 donghai.ydh
- */
+
 public class UdfWrapper extends Operator {
 
     private final RuntimeUdfMeta runtimeUdfMeta;

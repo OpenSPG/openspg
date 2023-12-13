@@ -11,10 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Base64;
 
-/**
- * @author donghai.ydh
- * @version SimpleObjSerde.java, v 0.1 2023年04月25日 16:03 donghai.ydh
- */
+
 public class SimpleObjSerde {
 
     /**

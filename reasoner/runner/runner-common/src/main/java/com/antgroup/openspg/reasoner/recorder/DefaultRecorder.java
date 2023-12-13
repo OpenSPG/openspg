@@ -10,10 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Stack;
 
-/**
- * @author donghai.ydh
- * @version DefaultRecorder.java, v 0.1 2023年11月07日 15:01 donghai.ydh
- */
+
 public class DefaultRecorder implements IExecutionRecorder {
     private final Stack<SubAction> actionStack = new Stack<>();
 

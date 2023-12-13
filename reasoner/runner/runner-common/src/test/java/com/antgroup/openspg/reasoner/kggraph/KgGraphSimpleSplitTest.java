@@ -26,10 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author donghai.ydh
- * @version KgGraphSimpleSplitTest.java, v 0.1 2023年04月21日 19:35 donghai.ydh
- */
+
 public class KgGraphSimpleSplitTest {
 
     public static final String DEFAULT_VERTEX_TYPE = "t";

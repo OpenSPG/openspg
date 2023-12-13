@@ -22,10 +22,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author donghai.ydh
- * @version DiskStartIdRecorder.java, v 0.1 2023年02月24日 10:28 donghai.ydh
- */
+
 @Slf4j(topic = "userlogger")
 public class DiskStartIdRecorder extends MemStartIdRecoder {
 

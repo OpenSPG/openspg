@@ -24,10 +24,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-/**
- * @author donghai.ydh
- * @version KgGraphSortImpl.java, v 0.1 2023-10-10 10:37 donghai.ydh
- */
+
 public class KgGraphSortImpl implements KgGraphListProcess {
     private final scala.collection.immutable.List<Var>      groupKey;
     private final scala.collection.immutable.List<SortItem> sortItems;

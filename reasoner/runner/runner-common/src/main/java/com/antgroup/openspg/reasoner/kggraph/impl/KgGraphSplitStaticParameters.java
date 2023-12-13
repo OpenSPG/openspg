@@ -30,10 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author donghai.ydh
- * @version KgGraphSplitStaticParameters.java, v 0.1 2023年09月04日 19:52 donghai.ydh
- */
+
 public class KgGraphSplitStaticParameters implements Serializable {
     private static final long serialVersionUID = 7532256372761127085L;
     private final List<EdgeIterateInfo> edgeIterateInfoList;

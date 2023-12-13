@@ -29,10 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author donghai.ydh
- * @version KgGraphAddFieldsImpl.java, v 0.1 2023年06月29日 19:25 donghai.ydh
- */
+
 public class KgGraphAddFieldsImpl implements Serializable {
     private static final long serialVersionUID = -4500069867630323486L;
     private final PartialGraphPattern kgGraphSchema;

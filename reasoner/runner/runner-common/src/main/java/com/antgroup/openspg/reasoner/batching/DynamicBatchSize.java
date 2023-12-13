@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author chengqiang.cq
- * @version $Id: DynamicBatchSize.java, v 0.1 2020-09-11 2:23 下午 chengqiang.cq Exp $$
- */
+
 @Slf4j(topic = "userlogger")
 public class DynamicBatchSize {
     private final List<Integer> costs        = new ArrayList<>();

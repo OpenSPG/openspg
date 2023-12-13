@@ -16,10 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author donghai.ydh
- * @version KgGraphFirstEdgeAggImpl.java, v 0.1 2023年09月14日 11:15 donghai.ydh
- */
+
 public class KgGraphFirstEdgeAggImpl implements Serializable {
 
     private final List<String> firstEdgeAliasList;

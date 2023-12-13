@@ -35,10 +35,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import scala.Option;
 import scala.collection.JavaConversions;
 
-/**
- * @author peilong.zpl
- * @version $Id: PatternMatcher.java, v 0.1 2023-10-22 21:46 peilong.zpl Exp $$
- */
+
 @Slf4j(topic = "userlogger")
 public class PatternMatcher implements Serializable {
     private static final long serialVersionUID = -484913653122295682L;
