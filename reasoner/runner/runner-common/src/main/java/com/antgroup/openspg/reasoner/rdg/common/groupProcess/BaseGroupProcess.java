@@ -12,10 +12,6 @@
  */
 package com.antgroup.openspg.reasoner.rdg.common.groupProcess;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.antgroup.openspg.reasoner.common.types.KTString$;
 import com.antgroup.openspg.reasoner.lube.common.expr.AggUdf;
@@ -28,131 +24,144 @@ import com.antgroup.openspg.reasoner.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
 import com.antgroup.openspg.reasoner.udf.model.UdafMeta;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
 import scala.collection.JavaConversions;
 
-
 public abstract class BaseGroupProcess implements Serializable {
-    protected     Var          var;
-    protected     UdafMeta     udafMeta;
-    protected     Object[]     udfInitParams;
-    protected     List<String> ruleList;
-    protected     Aggregator   aggOp;
-    protected     String       taskId;
+  protected Var var;
+  protected UdafMeta udafMeta;
+  protected Object[] udfInitParams;
+  protected List<String> ruleList;
+  protected Aggregator aggOp;
+  protected String taskId;
 
-    /**
-     * Construct from var and aggregator
-     * @param taskId
-     * @param var
-     * @param aggregator
-     */
-    public BaseGroupProcess(String taskId, Var var, Aggregator aggregator) {
-        this.taskId = taskId;
-        this.var = var;
-        this.aggOp = aggregator;
-        this.ruleList = parseRuleList();
-        this.udfInitParams = parseUdfInitParams();
-        this.udafMeta = parseUdafMeta();
+  /**
+   * Construct from var and aggregator
+   *
+   * @param taskId
+   * @param var
+   * @param aggregator
+   */
+  public BaseGroupProcess(String taskId, Var var, Aggregator aggregator) {
+    this.taskId = taskId;
+    this.var = var;
+    this.aggOp = aggregator;
+    this.ruleList = parseRuleList();
+    this.udfInitParams = parseUdfInitParams();
+    this.udafMeta = parseUdafMeta();
+  }
+
+  /**
+   * judge is first agg function
+   *
+   * @return
+   */
+  public boolean isFirstAgg() {
+    return (!(var instanceof PropertyVar));
+  }
+
+  /**
+   * get udaf str name from op
+   *
+   * @param op
+   * @return
+   */
+  public String getUdafStrName(AggregatorOpSet op) {
+    if (op instanceof AggUdf) {
+      AggUdf aggUdf = (AggUdf) op;
+      return aggUdf.name();
+    } else {
+      return op.toString();
     }
+  }
 
-    /**
-     * judge is first agg function
-     * @return
-     */
-    public boolean isFirstAgg() {
-        return (!(var instanceof PropertyVar));
+  private Object[] getUdafInitializeParams(List<Expr> exprList) {
+    Object[] params = new Object[exprList.size()];
+    for (int i = 0; i < exprList.size(); ++i) {
+      Expr expr = exprList.get(i);
+      List<String> paramRuleList = WareHouseUtils.getRuleList(expr);
+      Object value =
+          RuleRunner.getInstance().executeExpression(new HashMap<>(), paramRuleList, this.taskId);
+      params[i] = value;
     }
+    return params;
+  }
 
-    /**
-     * get udaf str name from op
-     * @param op
-     * @return
-     */
-    public String getUdafStrName(AggregatorOpSet op) {
-        if (op instanceof AggUdf) {
-            AggUdf aggUdf = (AggUdf) op;
-            return aggUdf.name();
-        } else {
-            return op.toString();
-        }
+  protected Object[] parseUdfInitParams() {
+    Object[] udfInitParams = null;
+    AggregatorOpSet aggregatorOpSet = getAggOpSet();
+    if (aggregatorOpSet instanceof AggUdf) {
+      AggUdf aggUdf = (AggUdf) aggregatorOpSet;
+      udfInitParams = getUdafInitializeParams(JavaConversions.seqAsJavaList(aggUdf.funcArgs()));
     }
+    return udfInitParams;
+  }
 
-    private Object[] getUdafInitializeParams(List<Expr> exprList) {
-        Object[] params = new Object[exprList.size()];
-        for (int i = 0; i < exprList.size(); ++i) {
-            Expr expr = exprList.get(i);
-            List<String> paramRuleList = WareHouseUtils.getRuleList(expr);
-            Object value = RuleRunner.getInstance().executeExpression(new HashMap<>(), paramRuleList, this.taskId);
-            params[i] = value;
-        }
-        return params;
+  protected UdafMeta parseUdafMeta() {
+    String udafName = getUdafStrName(getAggOpSet());
+    UdafMeta udafMeta = UdfMngFactory.getUdfMng().getUdafMeta(udafName, KTString$.MODULE$);
+    if (udafMeta == null) {
+      throw new NotImplementedException("unsupported aggregator function, type=" + udafName, null);
     }
+    return udafMeta;
+  }
 
-    protected Object[] parseUdfInitParams() {
-        Object[] udfInitParams = null;
-        AggregatorOpSet aggregatorOpSet = getAggOpSet();
-        if (aggregatorOpSet instanceof AggUdf) {
-            AggUdf aggUdf = (AggUdf) aggregatorOpSet;
-            udfInitParams = getUdafInitializeParams(JavaConversions.seqAsJavaList(aggUdf.funcArgs()));
-        }
-        return udfInitParams;
-    }
+  /**
+   * parse rule list by op
+   *
+   * @return
+   */
+  protected abstract List<String> parseRuleList();
 
-    protected UdafMeta parseUdafMeta() {
-        String udafName = getUdafStrName(getAggOpSet());
-        UdafMeta udafMeta = UdfMngFactory.getUdfMng().getUdafMeta(udafName, KTString$.MODULE$);
-        if (udafMeta == null) {
-            throw new NotImplementedException("unsupported aggregator function, type=" + udafName, null);
-        }
-        return udafMeta;
-    }
+  /**
+   * get agg op set by op
+   *
+   * @return
+   */
+  public abstract AggregatorOpSet getAggOpSet();
 
-    /**
-     * parse rule list by op
-     * @return
-     */
-    abstract protected List<String> parseRuleList();
+  /**
+   * get agg ele by op
+   *
+   * @return
+   */
+  public abstract Expr getAggEle();
 
-    /**
-     * get agg op set by op
-     * @return
-     */
-    abstract public AggregatorOpSet getAggOpSet();
+  /**
+   * getter
+   *
+   * @return
+   */
+  public Var getVar() {
+    return var;
+  }
 
-    /**
-     * get agg ele by op
-     * @return
-     */
-    abstract public Expr getAggEle();
+  /**
+   * getter
+   *
+   * @return
+   */
+  public UdafMeta getUdafMeta() {
+    return udafMeta;
+  }
 
-    /**
-     * getter
-     * @return
-     */
-    public Var getVar() {
-        return var;
-    }
+  /**
+   * getter
+   *
+   * @return
+   */
+  public Object[] getUdfInitParams() {
+    return udfInitParams;
+  }
 
-    /**
-     * getter
-     * @return
-     */
-    public UdafMeta getUdafMeta() {
-        return udafMeta;
-    }
-
-    /**
-     * getter
-     * @return
-     */
-    public Object[] getUdfInitParams() {
-        return udfInitParams;
-    }
-
-    /**
-     * getter
-     * @return
-     */
-    public List<String> getRuleList() {
-        return ruleList;
-    }
+  /**
+   * getter
+   *
+   * @return
+   */
+  public List<String> getRuleList() {
+    return ruleList;
+  }
 }

@@ -11,118 +11,92 @@
  * or implied.
  */
 
-/*
- * Ant Group
- * Copyright (c) 2004-2023 All Rights Reserved.
- */
 package com.antgroup.openspg.reasoner.progress;
 
+import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.reasoner.progress.ProgressStatus.JobStatus;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSON;
-
-
 public class ProgressReport {
-    private static ProgressStatus progressStatus = null;
+  private static ProgressStatus progressStatus = null;
 
-    /**
-     * report error
-     */
-    public static void reportError(Map config, Throwable e) {
-        if (!config.containsKey(ConfigKey.KG_REASONER_PARAMS)) {
-            return;
-        }
-        if (null == progressStatus) {
-            init(getProgressPath(config), 1);
-        }
-        updateStatus(JobStatus.error, e.getMessage());
+  /** report error */
+  public static void reportError(Map config, Throwable e) {
+    if (!config.containsKey(ConfigKey.KG_REASONER_PARAMS)) {
+      return;
     }
-
-    /**
-     * init progress status report
-     */
-    public static void init(Object path, long totalSteps) {
-        if (null == path) {
-            progressStatus = null;
-            return;
-        }
-        progressStatus = new ProgressStatus("", String.valueOf(path), "oss");
-        progressStatus.init(totalSteps);
+    if (null == progressStatus) {
+      init(getProgressPath(config), 1);
     }
+    updateStatus(JobStatus.error, e.getMessage());
+  }
 
-    /**
-     * set total num
-     */
-    public static void setStepTotal(long step, long total) {
-        if (null != progressStatus) {
-            progressStatus.setStepTotal(step, total);
-        }
+  /** init progress status report */
+  public static void init(Object path, long totalSteps) {
+    if (null == path) {
+      progressStatus = null;
+      return;
     }
+    progressStatus = new ProgressStatus("", String.valueOf(path), "oss");
+    progressStatus.init(totalSteps);
+  }
 
-    /**
-     * update progress
-     */
-    public static void updateProgress(long batchId, long readOffset, long processOffset) {
-        if (null != progressStatus) {
-            progressStatus.updateProgress(batchId, readOffset, processOffset);
-        }
+  /** set total num */
+  public static void setStepTotal(long step, long total) {
+    if (null != progressStatus) {
+      progressStatus.setStepTotal(step, total);
     }
+  }
 
-    /**
-     * finish task
-     */
-    public static void finishedProgress() {
-        if (null != progressStatus) {
-            progressStatus.finishedProgress();
-        }
+  /** update progress */
+  public static void updateProgress(long batchId, long readOffset, long processOffset) {
+    if (null != progressStatus) {
+      progressStatus.updateProgress(batchId, readOffset, processOffset);
     }
+  }
 
-    /**
-     * report status
-     */
-    public static void updateStatus(JobStatus jobStatus, String errMsg) {
-        if (null != progressStatus) {
-            progressStatus.updateStatus(jobStatus, errMsg);
-        }
+  /** finish task */
+  public static void finishedProgress() {
+    if (null != progressStatus) {
+      progressStatus.finishedProgress();
     }
+  }
 
-    /**
-     * clear
-     */
-    public static void clear() {
-        progressStatus = null;
+  /** report status */
+  public static void updateStatus(JobStatus jobStatus, String errMsg) {
+    if (null != progressStatus) {
+      progressStatus.updateStatus(jobStatus, errMsg);
     }
+  }
 
-    /**
-     * set time consume type
-     */
-    public static void setTimeConsumeType(TimeConsumeType type) {
-        if (null != progressStatus) {
-            progressStatus.setTimeConsumeType(type);
-        }
+  /** clear */
+  public static void clear() {
+    progressStatus = null;
+  }
+
+  /** set time consume type */
+  public static void setTimeConsumeType(TimeConsumeType type) {
+    if (null != progressStatus) {
+      progressStatus.setTimeConsumeType(type);
     }
+  }
 
-    /**
-     * update
-     */
-    public static void persistenceProgressStatus() {
-        if (null != progressStatus) {
-            progressStatus.persistenceProgressStatus();
-        }
+  /** update */
+  public static void persistenceProgressStatus() {
+    if (null != progressStatus) {
+      progressStatus.persistenceProgressStatus();
     }
+  }
 
-    private static String getProgressPath(Map config) {
-        String paramStringEncoded = String.valueOf(config.get(ConfigKey.KG_REASONER_PARAMS));
-        String paramsJsonString = new String(Base64.getDecoder().decode(
-                paramStringEncoded), StandardCharsets.UTF_8);
-        Map<String, Object> params = new HashMap<>(JSON.parseObject(paramsJsonString));
-        return (String) params.get(ConfigKey.KG_REASONER_PROGRESS_PATH);
-    }
-
+  private static String getProgressPath(Map config) {
+    String paramStringEncoded = String.valueOf(config.get(ConfigKey.KG_REASONER_PARAMS));
+    String paramsJsonString =
+        new String(Base64.getDecoder().decode(paramStringEncoded), StandardCharsets.UTF_8);
+    Map<String, Object> params = new HashMap<>(JSON.parseObject(paramsJsonString));
+    return (String) params.get(ConfigKey.KG_REASONER_PROGRESS_PATH);
+  }
 }

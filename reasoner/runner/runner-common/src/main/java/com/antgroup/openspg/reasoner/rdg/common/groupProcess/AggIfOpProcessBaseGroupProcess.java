@@ -12,49 +12,49 @@
  */
 package com.antgroup.openspg.reasoner.rdg.common.groupProcess;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.antgroup.openspg.reasoner.lube.common.expr.AggIfOpExpr;
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator;
 import com.antgroup.openspg.reasoner.lube.common.expr.AggregatorOpSet;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
-
+import java.io.Serializable;
+import java.util.List;
 
 public class AggIfOpProcessBaseGroupProcess extends BaseGroupProcess implements Serializable {
 
-    /**
-     * constructor
-     * @param taskId
-     * @param var
-     * @param aggregator
-     */
-    public AggIfOpProcessBaseGroupProcess(String taskId, Var var, Aggregator aggregator) {
-        super(taskId, var, aggregator);
-    }
+  /**
+   * constructor
+   *
+   * @param taskId
+   * @param var
+   * @param aggregator
+   */
+  public AggIfOpProcessBaseGroupProcess(String taskId, Var var, Aggregator aggregator) {
+    super(taskId, var, aggregator);
+  }
 
-    /**
-     * get op
-     * @return
-     */
-    public AggIfOpExpr getAggIfOpExpr() {
-        return (AggIfOpExpr) this.aggOp;
-    }
+  /**
+   * get op
+   *
+   * @return
+   */
+  public AggIfOpExpr getAggIfOpExpr() {
+    return (AggIfOpExpr) this.aggOp;
+  }
 
-    @Override
-    protected List<String> parseRuleList() {
-        return WareHouseUtils.getRuleList(getAggIfOpExpr().condition());
-    }
+  @Override
+  protected List<String> parseRuleList() {
+    return WareHouseUtils.getRuleList(getAggIfOpExpr().condition());
+  }
 
-    @Override
-    public AggregatorOpSet getAggOpSet() {
-        return getAggIfOpExpr().aggOpExpr().name();
-    }
+  @Override
+  public AggregatorOpSet getAggOpSet() {
+    return getAggIfOpExpr().aggOpExpr().name();
+  }
 
-    @Override
-    public Expr getAggEle() {
-        return getAggIfOpExpr().aggOpExpr().aggEleExpr();
-    }
+  @Override
+  public Expr getAggEle() {
+    return getAggIfOpExpr().aggOpExpr().aggEleExpr();
+  }
 }

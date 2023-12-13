@@ -12,43 +12,40 @@
  */
 package com.antgroup.openspg.reasoner.graphstate;
 
-import java.util.Iterator;
-
-import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexProperty;
 import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexVersionProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
 import com.antgroup.openspg.reasoner.warehouse.common.AbstractGraphLoader;
 import com.antgroup.openspg.reasoner.warehouse.common.VertexSubGraph;
 import com.antgroup.openspg.reasoner.warehouse.common.config.GraphLoaderConfig;
+import java.util.Iterator;
 import org.jetbrains.annotations.NotNull;
 
-
 public class MockGraphLoader extends AbstractGraphLoader {
-    /**
-     * loader
-     * @param graphLoaderConfig
-     */
-    public MockGraphLoader(GraphLoaderConfig graphLoaderConfig) {
-        super(graphLoaderConfig);
-    }
+  /**
+   * loader
+   *
+   * @param graphLoaderConfig
+   */
+  public MockGraphLoader(GraphLoaderConfig graphLoaderConfig) {
+    super(graphLoaderConfig);
+  }
 
-    @Override
-    public void close() throws Exception {
+  @Override
+  public void close() throws Exception {}
 
-    }
+  @NotNull
+  @Override
+  public Iterator<VertexSubGraph> iterator() {
+    return null;
+  }
 
-    @NotNull
-    @Override public Iterator<VertexSubGraph> iterator() {
-        return null;
+  @Override
+  public VertexSubGraph queryOneHotGraphState(IVertexId vertexId) {
+    IVertexId mockVertex = IVertexId.from("abc", "Test");
+    if (mockVertex.equals(vertexId)) {
+      return new VertexSubGraph(new Vertex<>(mockVertex, new VertexVersionProperty()));
     }
-
-    @Override
-    public VertexSubGraph queryOneHotGraphState(IVertexId vertexId) {
-        IVertexId mockVertex = IVertexId.from("abc", "Test");
-        if (mockVertex.equals(vertexId)) {
-            return new VertexSubGraph(new Vertex<>(mockVertex, new VertexVersionProperty()));
-        }
-        return null;
-    }
+    return null;
+  }
 }

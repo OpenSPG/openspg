@@ -10,18 +10,12 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
-/*
- * Ant Group
- * Copyright (c) 2004-2022 All Rights Reserved.
- */
 package com.antgroup.openspg.reasoner.progress;
 
 import java.io.Serializable;
 
-
 public enum TimeConsumeType implements Serializable {
-    WAIT_RESOURCE,
-    LOAD_GRAPH,
-    COMPUTE,
+  WAIT_RESOURCE,
+  LOAD_GRAPH,
+  COMPUTE,
 }
