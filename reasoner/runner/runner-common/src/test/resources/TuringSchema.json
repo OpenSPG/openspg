@@ -1,0 +1,1641 @@
+{
+  "nodes": {
+    "MKG.AntPOI": {
+      "typeName": "MKG.AntPOI",
+      "nodeType": "ADVANCED",
+      "properties": [{
+        "name": "dzdpId",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "mcc2Level2Namestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.MCC2"
+        },
+        "resolved": true
+      }, {
+        "name": "gmtModified",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level2Namestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.POICategory"
+        },
+        "resolved": true
+      }, {
+        "name": "shopList",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "MKG.MifShop",
+          "spreadable": false
+        },
+        "resolved": true
+      }, {
+        "name": "bdId",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "cityName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level3Code",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "sourceCategoryL3",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "pidList",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "MKG.PartnerID",
+          "spreadable": false
+        },
+        "resolved": true
+      }, {
+        "name": "countryName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "cityNamestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "address",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "mcc2Level1Name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "latitude",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTDouble$"
+        },
+        "resolved": true
+      }, {
+        "name": "provinceName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "brandCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "MKG.Brand",
+          "spreadable": false
+        },
+        "resolved": true
+      }, {
+        "name": "provinceCodestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "STD.AMapADCode",
+          "spreadable": true
+        },
+        "resolved": true
+      }, {
+        "name": "qualityScore",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "provinceNamestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "villageCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "crowdSalaryLvl",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level2Code",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "mcc2Level2Code",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "apId",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "crowdFreqLvl",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "townCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "townName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "sourceCategoryL1",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level3Codestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "STD.AMapPOICategoryCode",
+          "spreadable": true
+        },
+        "resolved": true
+      }, {
+        "name": "countyCodestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "STD.AMapADCode",
+          "spreadable": true
+        },
+        "resolved": true
+      }, {
+        "name": "cityCodestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "STD.AMapADCode",
+          "spreadable": true
+        },
+        "resolved": true
+      }, {
+        "name": "countryCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level2Codestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "STD.AMapPOICategoryCode",
+          "spreadable": true
+        },
+        "resolved": true
+      }, {
+        "name": "commercialFlag",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "source",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "crowdIfoldLvl",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "creator",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level3Name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "mcc2Level1Namestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.MCC2"
+        },
+        "resolved": true
+      }, {
+        "name": "avgPrice",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "mcc2Level2Codestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "STD.MCCCode",
+          "spreadable": true
+        },
+        "resolved": true
+      }, {
+        "name": "openTime",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "sourceCategoryType",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "description",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level2Name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level3Namestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.POICategory"
+        },
+        "resolved": true
+      }, {
+        "name": "longitude",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTDouble$"
+        },
+        "resolved": true
+      }, {
+        "name": "level1Code",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countryCodestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "STD.AMapADCode",
+          "spreadable": true
+        },
+        "resolved": true
+      }, {
+        "name": "crowdOccupationLvl",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countyCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "telephone",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "administrativeArea",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "aoiId",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "villageName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "isMainPOI",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "mcc2Level2Name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "belongAOIList",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "MKG.AntAOI",
+          "spreadable": false
+        },
+        "resolved": true
+      }, {
+        "name": "delFlag",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "koubeiId",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "region",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "smidList",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "MKG.IndirectMerchant",
+          "spreadable": false
+        },
+        "resolved": true
+      }, {
+        "name": "countyNamestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "qualityDegree",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "crowdCoverLvl",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "sourceCategoryL2",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "latLon",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "crowdloyaltyLvl",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "gmtCreated",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "elemeId",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "brandInfo",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "brandName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "alias",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "provinceCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "bizCodeList",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level1Name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level1Codestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "STD.AMapPOICategoryCode",
+          "spreadable": true
+        },
+        "resolved": true
+      }, {
+        "name": "crowdKoubeiLvl",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "crowdPopularLvl",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "crowdScaleLvl",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "crowdIfonlineLvl",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "amapList",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "mcc2Level1Code",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countryNamestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "mcc2Level1Codestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "STD.MCCCode",
+          "spreadable": true
+        },
+        "resolved": true
+      }, {
+        "name": "regionstd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "crowdAgeLvl",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "shortAddress",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "qualityRank",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level1Namestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.POICategory"
+        },
+        "resolved": true
+      }, {
+        "name": "countyName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "id",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "cityCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "joinStatus",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "MKG.AntAOI": {
+      "typeName": "MKG.AntAOI",
+      "nodeType": "ADVANCED",
+      "properties": [{
+        "name": "isOpen",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "gmtModified",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "polygonType",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "area",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "polygonExt",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "cityName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "businessId",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level3Code",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countryName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "cityNamestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "address",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "latitude",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTDouble$"
+        },
+        "resolved": true
+      }, {
+        "name": "provinceName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "provinceNamestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "level2Code",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "townCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "townName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "shapeType",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countryCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "remark",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "poiCategory",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.POICategory"
+        },
+        "resolved": true
+      }, {
+        "name": "source",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "creator",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level3Name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "centerLat",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "description",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level2Name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "longitude",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTDouble$"
+        },
+        "resolved": true
+      }, {
+        "name": "level1Code",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countyCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "aoiId",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "coords",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "region",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "centerLng",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countyNamestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "latLon",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "gmtCreated",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "provinceCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "bizCodeList",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level1Name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "pointNum",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "typeCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "radius",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countryNamestd",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "countyName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "id",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "cityCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "TuringCore.TravelEvent": {
+      "typeName": "TuringCore.TravelEvent",
+      "nodeType": "EVENT",
+      "properties": [{
+        "name": "travelEndpoint",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "description",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "traveler",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "TuringCore.AlipayUser",
+          "spreadable": false
+        },
+        "resolved": true
+      }, {
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "travelMode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "TuringCore.TravelMode"
+        },
+        "resolved": true
+      }, {
+        "name": "eventTime",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTStd",
+          "label": "STD.Timestamp",
+          "spreadable": false
+        },
+        "resolved": true
+      }, {
+        "name": "id",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "TuringCore.TravelMode": {
+      "typeName": "TuringCore.TravelMode",
+      "nodeType": "CONCEPT",
+      "properties": [{
+        "name": "conceptCategory",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "description",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "alias",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "id",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "conceptAttribute",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "STD.MCCCode": {
+      "typeName": "STD.MCCCode",
+      "nodeType": "STANDARD",
+      "properties": [{
+        "name": "description",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "id",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "CKG.POICategory": {
+      "typeName": "CKG.POICategory",
+      "nodeType": "CONCEPT",
+      "properties": [{
+        "name": "stdId",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "conceptCategory",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "description",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "alias",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "id",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "conceptAttribute",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "CKG.MCC2": {
+      "typeName": "CKG.MCC2",
+      "nodeType": "CONCEPT",
+      "properties": [{
+        "name": "stdId",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "conceptCategory",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "description",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "alias",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "id",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "conceptAttribute",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "CKG.AdministrativeArea": {
+      "typeName": "CKG.AdministrativeArea",
+      "nodeType": "CONCEPT",
+      "properties": [{
+        "name": "stdId",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "cityName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countryName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "provinceName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "version",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "parentName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countryCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "conceptCategory",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "description",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countyCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "parentCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "level",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "alias",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "provinceCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "code",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "countyName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "id",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "conceptAttribute",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "cityCode",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "shortName",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "STD.AMapPOICategoryCode": {
+      "typeName": "STD.AMapPOICategoryCode",
+      "nodeType": "STANDARD",
+      "properties": [{
+        "name": "description",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "id",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "STD.AMapADCode": {
+      "typeName": "STD.AMapADCode",
+      "nodeType": "STANDARD",
+      "properties": [{
+        "name": "description",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "id",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "TuringCore.AlipayUser": {
+      "typeName": "TuringCore.AlipayUser",
+      "nodeType": "ADVANCED",
+      "properties": [{
+        "name": "name",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "description",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "workLoc",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTConcept",
+          "label": "CKG.AdministrativeArea"
+        },
+        "resolved": true
+      }, {
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }, {
+        "name": "id",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    }
+  },
+  "edges": {
+    "CKG.AdministrativeArea_isA_CKG.AdministrativeArea": {
+      "startNode": "CKG.AdministrativeArea",
+      "typeName": "isA",
+      "endNode": "CKG.AdministrativeArea",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "TuringCore.TravelEvent_traveler_TuringCore.AlipayUser": {
+      "startNode": "TuringCore.TravelEvent",
+      "typeName": "traveler",
+      "endNode": "TuringCore.AlipayUser",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "MKG.AntPOI_cityCodestd_STD.AMapADCode": {
+      "startNode": "MKG.AntPOI",
+      "typeName": "cityCodestd",
+      "endNode": "STD.AMapADCode",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "CKG.MCC2_isA_CKG.MCC2": {
+      "startNode": "CKG.MCC2",
+      "typeName": "isA",
+      "endNode": "CKG.MCC2",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "MKG.AntPOI_level1Codestd_STD.AMapPOICategoryCode": {
+      "startNode": "MKG.AntPOI",
+      "typeName": "level1Codestd",
+      "endNode": "STD.AMapPOICategoryCode",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "MKG.AntPOI_mcc2Level2Codestd_STD.MCCCode": {
+      "startNode": "MKG.AntPOI",
+      "typeName": "mcc2Level2Codestd",
+      "endNode": "STD.MCCCode",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "TuringCore.TravelMode_isA_TuringCore.TravelMode": {
+      "startNode": "TuringCore.TravelMode",
+      "typeName": "isA",
+      "endNode": "TuringCore.TravelMode",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "TuringCore.TravelEvent_travelEndpoint_CKG.AdministrativeArea": {
+      "startNode": "TuringCore.TravelEvent",
+      "typeName": "travelEndpoint",
+      "endNode": "CKG.AdministrativeArea",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "TuringCore.AlipayUser_workLoc_CKG.AdministrativeArea": {
+      "startNode": "TuringCore.AlipayUser",
+      "typeName": "workLoc",
+      "endNode": "CKG.AdministrativeArea",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "MKG.AntPOI_provinceCodestd_STD.AMapADCode": {
+      "startNode": "MKG.AntPOI",
+      "typeName": "provinceCodestd",
+      "endNode": "STD.AMapADCode",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "MKG.AntPOI_mcc2Level1Codestd_STD.MCCCode": {
+      "startNode": "MKG.AntPOI",
+      "typeName": "mcc2Level1Codestd",
+      "endNode": "STD.MCCCode",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "MKG.AntPOI_level3Codestd_STD.AMapPOICategoryCode": {
+      "startNode": "MKG.AntPOI",
+      "typeName": "level3Codestd",
+      "endNode": "STD.AMapPOICategoryCode",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "MKG.AntPOI_countyCodestd_STD.AMapADCode": {
+      "startNode": "MKG.AntPOI",
+      "typeName": "countyCodestd",
+      "endNode": "STD.AMapADCode",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "MKG.AntPOI_countryCodestd_STD.AMapADCode": {
+      "startNode": "MKG.AntPOI",
+      "typeName": "countryCodestd",
+      "endNode": "STD.AMapADCode",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "TuringCore.TravelEvent_travelMode_TuringCore.TravelMode": {
+      "startNode": "TuringCore.TravelEvent",
+      "typeName": "travelMode",
+      "endNode": "TuringCore.TravelMode",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "CKG.POICategory_isA_CKG.POICategory": {
+      "startNode": "CKG.POICategory",
+      "typeName": "isA",
+      "endNode": "CKG.POICategory",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    },
+    "MKG.AntPOI_level2Codestd_STD.AMapPOICategoryCode": {
+      "startNode": "MKG.AntPOI",
+      "typeName": "level2Codestd",
+      "endNode": "STD.AMapPOICategoryCode",
+      "properties": [{
+        "name": "__label__",
+        "kgType": {
+          "jsonClass": "com.antgroup.openspg.reasoner.common.types.KTString$"
+        },
+        "resolved": true
+      }],
+      "resolved": true
+    }
+  }
+}

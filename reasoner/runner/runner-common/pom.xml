@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>reasoner-parent</artifactId>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>reasoner-runner-common</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- offline testing compatible with m1 chips -->
+            <dependency>
+                <groupId>org.rocksdb</groupId>
+                <artifactId>rocksdbjni</artifactId>
+                <version>6.29.5</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- offline testing compatible with m1 chips -->
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.antgroup.openspg.reasoner</groupId>
+            <artifactId>reasoner-lube-api</artifactId>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.antgroup.openspg.reasoner</groupId>-->
+<!--            <artifactId>reasoner-lube-logical</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.antgroup.openspg.reasoner</groupId>-->
+<!--            <artifactId>reasoner-lube-physical</artifactId>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>com.antgroup.openspg.reasoner</groupId>
+            <artifactId>reasoner-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.antgroup.openspg.reasoner</groupId>
+            <artifactId>reasoner-udf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.antgroup.openspg.reasoner</groupId>
+            <artifactId>reasoner-kgdsl-parser</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.antgroup.openspg.reasoner</groupId>
+            <artifactId>reasoner-warehouse-common</artifactId>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.antgroup.openspg.reasoner</groupId>-->
+<!--            <artifactId>reasoner-akg-catalog</artifactId>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.binary.version}</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>QLExpress</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun.odps</groupId>
+            <artifactId>odps-sdk-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.rocksdb</groupId>
+            <artifactId>rocksdbjni</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+        </dependency>
+
+        <!-- parquet start -->
+        <dependency>
+            <artifactId>parquet-hadoop-bundle</artifactId>
+            <groupId>org.apache.parquet</groupId>
+        </dependency>
+        <!-- parquet end -->
+        <!-- hive start -->
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-jdbc</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>arrow-vector</artifactId>
+                    <groupId>org.apache.arrow</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>netty</artifactId>
+                    <groupId>io.netty</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>hbase-mapreduce</artifactId>
+                    <groupId>org.apache.hbase</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>netty-all</artifactId>
+                    <groupId>io.netty</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
+                    <groupId>org.apache.hadoop</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- hive end -->
+
+        <dependency>
+            <groupId>com.alipay.cloudsdk</groupId>
+            <artifactId>object-storage-cloud-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.cloudsdk</groupId>
+            <artifactId>object-storage-cloud-driver-oss</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.cloudsdk</groupId>
+            <artifactId>object-storage-cloud-driver-minio</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.cloudsdk</groupId>
+            <artifactId>object-storage-cloud-driver-s3</artifactId>
+        </dependency>
+
+        <!-- cloud sdk-->
+        <dependency>
+            <groupId>com.alipay.cloudsdk</groupId>
+            <artifactId>cloud-sdk-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.cloudsdk</groupId>
+            <artifactId>logservice-cloud-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.cloudsdk</groupId>
+            <artifactId>logservice-cloud-driver-sls</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay.cloudsdk</groupId>
+            <artifactId>logservice-cloud-driver-kafka</artifactId>
+        </dependency>
+        <!-- cloud sdk end-->
+
+    </dependencies>
+</project>

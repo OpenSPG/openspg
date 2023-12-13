@@ -30,6 +30,7 @@
     <module>lube-api</module>
     <module>warehouse/warehouse-common</module>
     <module>kgdsl-parser</module>
+    <module>runner/runner-common</module>
   </modules>
 
   <properties>
