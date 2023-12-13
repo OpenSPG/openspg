@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.reasoner.lube.parser
 
-import scala.collection.mutable
-
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction
 import com.antgroup.openspg.reasoner.common.types.{KTInteger, KTLong, KTObject}
 import com.antgroup.openspg.reasoner.lube.block.{MatchBlock, ProjectBlock, ProjectFields, SourceBlock}
@@ -32,7 +30,7 @@ class TransformerTest extends AnyFunSpec {
     val block = ProjectBlock(
       List.apply(
         MatchBlock(
-          List.apply(SourceBlock(KG())),
+          List.apply(SourceBlock(KG(Map.empty, Map.empty))),
           Map.apply("t" -> GraphPath(
             "s",
             GraphPattern(
@@ -48,13 +46,11 @@ class TransformerTest extends AnyFunSpec {
                     Set.apply("belong"),
                     "d",
                     Direction.IN,
-                    null)))),
-            false)),
-          KG())),
+                    null))), Map.empty),
+            false)))),
       ProjectFields(
         Map.apply(IRVariable("total_domain_num") ->
-          ProjectRule(IRVariable("total_domain_num"), KTInteger, Ref("o")))),
-      KG())
+          ProjectRule(IRVariable("total_domain_num"), KTInteger, Ref("o")))))
     val p = BlockUtils.transBlock2Graph(block)
     p.size should equal(1)
     p.head.graphPattern.nodes.size should equal(2)
@@ -209,14 +205,14 @@ class TransformerTest extends AnyFunSpec {
 
     res(1) should equal(IRVariable("DayliyAmount"))
     res(2) should equal(IRVariable("MonthAmount"))
-    res(3) should equal(IRNode("user", mutable.Set.apply("sex")))
+    res(3) should equal(IRNode("user", Set.apply("sex")))
 
     val qlTransformer = new Expr2QlexpressTransformer()
     val qlExpress = qlTransformer.transform(r5)
     qlExpress.size should equal(5)
 
     qlExpress.head should equal("r0 = r0 = 123")
-    qlExpress.last should equal("R3 && R1 && !(R4 && R1)")
+    qlExpress.last should equal("(R3 && R1) && !(R4 && R1)")
   }
 
   it("variable_rule2_to_expr") {
@@ -227,7 +223,36 @@ class TransformerTest extends AnyFunSpec {
     val qlExpress = qlTransformer.transform(expr)
     print(qlExpress)
     qlExpress.head should
-      equal("DayliyAmount > 300 && R1 && !(MonthAmount < 500 && R1)")
+      equal("((DayliyAmount > 300) && R1) && !((MonthAmount < 500) && R1)")
+  }
+
+  it("agg rule flat") {
+    val r0 = LogicRule("tmp", "",
+      BinaryOpExpr(BGreaterThan, UnaryOpExpr(GetField("amount"), Ref("E1")), VLong("10")))
+    val r = ProjectRule(IRVariable("g"),
+      KTLong,
+      OpChainExpr(
+        GraphAggregatorExpr(
+          "unresolved_default_path",
+          List.apply(Ref("A"), Ref("B")),
+          null
+        ),
+        OpChainExpr(
+          AggIfOpExpr(
+            AggOpExpr(
+              Count,
+              Ref("E1")
+            ),
+            Ref("tmp")
+          ),
+          null
+        )
+      )
+    )
+    r.addDependency(r0)
+    val transformer = new Rule2ExprTransformer()
+    val expr = transformer.transform(r)
+    println(expr.pretty)
   }
 
   it("null ql") {

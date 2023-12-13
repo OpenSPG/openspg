@@ -13,9 +13,6 @@
 
 package com.antgroup.openspg.reasoner.lube.block
 
-import scala.collection.mutable.ListBuffer
-
-import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.types.KgType
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.common.graph._
@@ -24,7 +21,7 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.{Element, PatternElemen
 /**
  * every operator block tree of root is result block
  */
-sealed trait ResultBlock extends Block {}
+abstract class ResultBlock[B <: Binds] extends BasicBlock[B](BlockType("result"))
 
 /**
  * output as table
@@ -35,16 +32,15 @@ sealed trait ResultBlock extends Block {}
 final case class TableResultBlock(
     dependencies: List[Block],
     selectList: OrderedFields,
-    asList: List[String],
-    graph: IRGraph)
-    extends ResultBlock {
+    asList: List[String])
+    extends ResultBlock[OrderedFields] {
 
   /**
    * The metadata output by the current block
    *
    * @return
    */
-  override def binds: Binds = selectList
+  override def binds: OrderedFields = selectList
 }
 
 /**
@@ -53,11 +49,8 @@ final case class TableResultBlock(
  * @param outputGraphPath the path name array for output
  * @param graph
  */
-final case class GraphResultBlock(
-    dependencies: List[Block],
-    outputGraphPath: List[String],
-    graph: IRGraph)
-    extends ResultBlock {
+final case class GraphResultBlock(dependencies: List[Block], outputGraphPath: List[String])
+    extends ResultBlock[Binds] {
   override val binds: Binds = dependencies.head.binds
 }
 
@@ -94,34 +87,14 @@ case class AddPredicate(predicate: PredicateElement) extends DDLOp
  * @param dependencies
  * @param graph
  */
-case class DDLBlock(ddlOp: Set[DDLOp], dependencies: List[Block], graph: IRGraph)
-    extends ResultBlock {
+case class DDLBlock(ddlOp: Set[DDLOp], dependencies: List[Block]) extends ResultBlock[Fields] {
 
   /**
    * The metadata output by the current block
    *
    * @return
    */
-  override def binds: Binds = {
-    val fields = dependencies.head.binds.fields
-    ddlOp.head match {
-      case AddProperty(s, propertyType, _) =>
-        val field = fields.find(f => f.name.equals(s.alias)).get
-        if (field.isInstanceOf[IRNode]) {
-          field.asInstanceOf[IRNode].fields.add(propertyType)
-        } else if (field.isInstanceOf[IREdge]) {
-          field.asInstanceOf[IREdge].fields.add(propertyType)
-        }
-        Fields(fields)
-      case AddPredicate(predicate) =>
-        val newFields = new ListBuffer[IRField]
-        newFields.++=(dependencies.head.binds.fields)
-        newFields.+=(IREdge(predicate.alias, null))
-        Fields(newFields.toList)
-      case other =>
-        throw UnsupportedOperationException(s"$other ddlop unsupported")
-    }
-  }
+  override def binds: Fields = Fields.empty
 
 }
 

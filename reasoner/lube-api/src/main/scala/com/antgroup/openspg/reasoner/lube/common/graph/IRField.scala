@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.reasoner.lube.common.graph
 
-import scala.collection.mutable
-
 sealed trait IRField {
   def name: String
 }
@@ -26,14 +24,14 @@ sealed trait RichIRField extends IRField
  * @param name alias
  * @param fields the field names of node
  */
-case class IRNode(name: String, fields: mutable.Set[String]) extends IRField
+case class IRNode(name: String, fields: Set[String]) extends IRField
 
 /**
  * Used to represent Edge in QueryGraph, the name of IREdge is represented by alias
  * @param name alias
  * @param fields the field names of edge
  */
-case class IREdge(name: String, fields: mutable.Set[String]) extends IRField
+case class IREdge(name: String, fields: Set[String]) extends IRField
 
 /**
  * Used to represent prop of [[IRNode]] and [[IREdge]]
@@ -65,6 +63,6 @@ case class IRPath(name: String, elements: List[IRField]) extends RichIRField
  * @param name
  * @param element
  */
-case class IRArray(element: IRField) extends RichIRField {
+case class IRRepeatPath(element: IRPath, lower: Int, upper: Int) extends RichIRField {
   override def name: String = element.name
 }

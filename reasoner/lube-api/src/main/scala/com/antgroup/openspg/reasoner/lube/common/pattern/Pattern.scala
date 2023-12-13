@@ -14,7 +14,6 @@
 package com.antgroup.openspg.reasoner.lube.common.pattern
 
 import scala.collection.mutable
-import scala.reflect.runtime.universe.TypeTag
 
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
 import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph
@@ -130,7 +129,8 @@ case class PartialGraphPattern(
 case class GraphPattern(
     rootAlias: String,
     nodes: Map[String, Element],
-    edges: Map[String, Set[Connection]]) {
+    edges: Map[String, Set[Connection]],
+    properties: Map[String, Set[String]]) {
 
   /**
    * Get pattern element by node alias

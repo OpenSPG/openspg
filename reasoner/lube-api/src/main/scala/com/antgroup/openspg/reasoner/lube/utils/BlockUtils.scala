@@ -30,7 +30,7 @@ object BlockUtils {
   def getDefine(block: Block): Set[String] = {
     val defines = new mutable.HashSet[String]()
     block match {
-      case DDLBlock(ddlOps, _, _) =>
+      case DDLBlock(ddlOps, _) =>
         ddlOps.foreach(op => {
           op match {
             case AddPredicate(predicate) =>
