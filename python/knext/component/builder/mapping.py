@@ -106,14 +106,22 @@ class SPGTypeMapping(Mapping):
         for tgt_name, src_name in self.mapping.items():
             link_strategy = self.link_strategies.get(tgt_name, None)
             if isinstance(link_strategy, LinkOp):
-                property_normalizer = rest.OperatorPropertyNormalizerConfig(config=link_strategy.to_rest())
+                property_normalizer = rest.OperatorPropertyNormalizerConfig(
+                    config=link_strategy.to_rest()
+                )
             elif link_strategy == LinkStrategyEnum.IDEquals:
                 property_normalizer = rest.IdEqualsPropertyNormalizerConfig()
             elif not link_strategy:
                 property_normalizer = None
             else:
                 raise ValueError(f"Invalid link_strategy {link_strategy}")
-            mapping_configs.append(rest.MappingConfig(source=src_name, target=tgt_name, normalizer_config=property_normalizer))
+            mapping_configs.append(
+                rest.MappingConfig(
+                    source=src_name,
+                    target=tgt_name,
+                    normalizer_config=property_normalizer,
+                )
+            )
 
         config = rest.SpgTypeMappingNodeConfig(
             spg_type=self.spg_type_name,

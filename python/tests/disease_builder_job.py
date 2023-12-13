@@ -1,5 +1,10 @@
 from knext.client.model.builder_job import BuilderJob
-from knext.component.builder import CsvSourceReader, SPGTypeMapping, LLMBasedExtractor, KGSinkWriter
+from knext.component.builder import (
+    CsvSourceReader,
+    SPGTypeMapping,
+    LLMBasedExtractor,
+    KGSinkWriter,
+)
 
 
 class Disease(BuilderJob):

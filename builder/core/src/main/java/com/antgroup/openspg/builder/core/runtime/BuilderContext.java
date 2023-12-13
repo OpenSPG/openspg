@@ -34,4 +34,5 @@ public class BuilderContext implements Serializable {
 
   private int batchSize = 1;
   private int parallelism = 1;
+  private boolean enableLeadTo;
 }

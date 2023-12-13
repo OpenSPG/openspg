@@ -70,6 +70,7 @@ class BuilderClient(Client):
         dag_config = builder_chain.to_rest()
 
         import sys
+
         python_exec = sys.executable
         python_paths = sys.path
 
@@ -79,24 +80,38 @@ class BuilderClient(Client):
         import datetime
         import json
 
-        jar_path = os.path.join(knext.__path__[0], f"engine/builder-runner-local-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
+        jar_path = os.path.join(
+            knext.__path__[0],
+            f"engine/builder-runner-local-0.0.1-SNAPSHOT-jar-with-dependencies.jar",
+        )
         pipeline = json.dumps(dag_config, ensure_ascii=False)
         log_file_name = f"{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 
-        java_cmd = ['java', '-jar',
-                    "-Dcloudext.graphstore.drivers=com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClientDriver",
-                    "-Dcloudext.searchengine.drivers=com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchEngineClientDriver",
-                    jar_path,
-                    "--projectId", self._project_id,
-                    "--jobName", kwargs.get("job_name", "default_job"),
-                    "--pipeline", pipeline,
-                    "--pythonExec", python_exec,
-                    "--pythonPaths", python_paths,
-                    "--schemaUrl", self._host_addr,
-                    "--parallelism", kwargs.get("parallelism", 1),
-                    "--alterOperation", kwargs.get("alter_operation", AlterOperationEnum.Upsert),
-                    "--logFile", log_file_name
-                    ]
+        java_cmd = [
+            "java",
+            "-jar",
+            "-Dcloudext.graphstore.drivers=com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClientDriver",
+            "-Dcloudext.searchengine.drivers=com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchEngineClientDriver",
+            jar_path,
+            "--projectId",
+            self._project_id,
+            "--jobName",
+            kwargs.get("job_name", "default_job"),
+            "--pipeline",
+            pipeline,
+            "--pythonExec",
+            python_exec,
+            "--pythonPaths",
+            python_paths,
+            "--schemaUrl",
+            self._host_addr,
+            "--parallelism",
+            kwargs.get("parallelism", 1),
+            "--alterOperation",
+            kwargs.get("alter_operation", AlterOperationEnum.Upsert),
+            "--logFile",
+            log_file_name,
+        ]
         subprocess.call(java_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     def query(self, job_inst_id: int):

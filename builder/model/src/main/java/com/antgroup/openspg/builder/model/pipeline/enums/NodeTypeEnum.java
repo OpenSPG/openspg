@@ -26,8 +26,9 @@ public enum NodeTypeEnum {
   USER_DEFINED_EXTRACT,
   LLM_BASED_EXTRACT,
 
-  /** CHECK Component */
+  /** OTHER Component */
   CHECK,
+  REASON,
 
   /** SINK Component */
   GRAPH_SINK,

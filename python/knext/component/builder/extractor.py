@@ -9,6 +9,7 @@ from knext.operator.op import PromptOp, ExtractOp
 
 # try:
 from nn4k.invoker.base import NNInvoker  # noqa: F403
+
 # except ImportError:
 #     pass
 

@@ -170,11 +170,27 @@ from knext.rest.models.schema.type.spg_type_ref import SpgTypeRef
 from knext.rest.models.schema.type.spg_type_ref_basic_info import SpgTypeRefBasicInfo
 from knext.rest.models.schema.type.standard_type import StandardType
 from knext.rest.models.schema.type.standard_type_basic_info import StandardTypeBasicInfo
-from knext.rest.models.builder.pipeline.config.id_equals_property_normalizer_config import IdEqualsPropertyNormalizerConfig
-from knext.rest.models.builder.pipeline.config.llm_based_extract_node_config import LlmBasedExtractNodeConfig
-from knext.rest.models.builder.pipeline.config.operator_property_normalizer_config import OperatorPropertyNormalizerConfig
-from knext.rest.models.builder.pipeline.config.property_normalizer_config import PropertyNormalizerConfig
-from knext.rest.models.builder.pipeline.config.relation_mapping_node_config import RelationMappingNodeConfig
-from knext.rest.models.builder.pipeline.config.spg_type_mapping_node_config import SpgTypeMappingNodeConfig
-from knext.rest.models.builder.pipeline.config.sub_graph_mapping_node_config import SubGraphMappingNodeConfig
-from knext.rest.models.builder.pipeline.config.user_defined_extract_node_config import UserDefinedExtractNodeConfig
+from knext.rest.models.builder.pipeline.config.id_equals_property_normalizer_config import (
+    IdEqualsPropertyNormalizerConfig,
+)
+from knext.rest.models.builder.pipeline.config.llm_based_extract_node_config import (
+    LlmBasedExtractNodeConfig,
+)
+from knext.rest.models.builder.pipeline.config.operator_property_normalizer_config import (
+    OperatorPropertyNormalizerConfig,
+)
+from knext.rest.models.builder.pipeline.config.property_normalizer_config import (
+    PropertyNormalizerConfig,
+)
+from knext.rest.models.builder.pipeline.config.relation_mapping_node_config import (
+    RelationMappingNodeConfig,
+)
+from knext.rest.models.builder.pipeline.config.spg_type_mapping_node_config import (
+    SpgTypeMappingNodeConfig,
+)
+from knext.rest.models.builder.pipeline.config.sub_graph_mapping_node_config import (
+    SubGraphMappingNodeConfig,
+)
+from knext.rest.models.builder.pipeline.config.user_defined_extract_node_config import (
+    UserDefinedExtractNodeConfig,
+)

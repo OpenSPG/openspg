@@ -2,6 +2,7 @@ package com.antgroup.openspg.builder.runner.local;
 
 import com.antgroup.openspg.builder.core.logical.LogicalPlan;
 import com.antgroup.openspg.builder.core.physical.PhysicalPlan;
+import com.antgroup.openspg.builder.core.reason.ReasonProcessor;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.core.runtime.BuilderExecutor;
 import com.antgroup.openspg.builder.core.runtime.BuilderRunner;
@@ -33,6 +34,7 @@ public class LocalBuilderRunner implements BuilderRunner {
   private BuilderExecutor builderExecutor = null;
   private BaseSourceReader<?> sourceReader = null;
   private BaseSinkWriter<?> sinkWriter = null;
+  private ReasonProcessor reasonProcessor = null;
   private BuilderMetric builderMetric = null;
 
   private final int parallelism;
@@ -64,6 +66,10 @@ public class LocalBuilderRunner implements BuilderRunner {
     // 构建指标统计，并将构建指标输出到log
     builderMetric = new BuilderMetric(context.getJobName());
     builderMetric.reportToLog();
+
+    if (context.isEnableLeadTo()) {
+      reasonProcessor = new ReasonProcessor();
+    }
   }
 
   @Override
@@ -89,6 +95,7 @@ public class LocalBuilderRunner implements BuilderRunner {
                   if (CollectionUtils.isNotEmpty(results)) {
                     sinkWriter.write(results);
                   }
+                  reason(results);
                   records = Collections.unmodifiableList(sourceReader.read());
                 }
               },
@@ -99,6 +106,20 @@ public class LocalBuilderRunner implements BuilderRunner {
     CompletableFuture<Void> joint =
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
     failFast(futures, joint);
+  }
+
+  /**
+   * if there is a reasoning executor, the reasoning process is initiated after writing to the graph
+   * storage. it should be noted here that if the underlying graph storage does not make writes
+   * immediately visible, the reasoning will not work well
+   */
+  private void reason(List<BaseRecord> records) {
+    if (reasonProcessor != null && CollectionUtils.isNotEmpty(records)) {
+      List<BaseRecord> reasonResults = reasonProcessor.process(records);
+      if (CollectionUtils.isNotEmpty(reasonResults)) {
+        sinkWriter.write(reasonResults);
+      }
+    }
   }
 
   private static <T> void failFast(List<CompletableFuture<T>> futures, CompletableFuture<T> joint)

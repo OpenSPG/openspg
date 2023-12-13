@@ -10,11 +10,12 @@ from knext.operator.spg_record import SPGRecord
 
 
 class AutoPrompt(PromptOp, ABC):
-
     def build_prompt(self, record: Dict[str, str]) -> str:
         pass
 
-    def parse_response(self, response: str) -> Union[List[Dict[str, str]], List[SPGRecord]]:
+    def parse_response(
+        self, response: str
+    ) -> Union[List[Dict[str, str]], List[SPGRecord]]:
         pass
 
     def eval(self, *args):
@@ -30,7 +31,11 @@ input:{input}
 "output":
     """
 
-    def __init__(self, spg_type_name: Union[str, SPGTypeHelper], property_names: List[Union[str, PropertyHelper]]):
+    def __init__(
+        self,
+        spg_type_name: Union[str, SPGTypeHelper],
+        property_names: List[Union[str, PropertyHelper]],
+    ):
         super().__init__()
         schema_client = SchemaClient()
         spg_type = schema_client.query_spg_type(spg_type_name=spg_type_name)
@@ -44,7 +49,9 @@ input:{input}
     def build_prompt(self, record: Dict[str, str]) -> str:
         return self.template.format(input=record.get("input"))
 
-    def parse_response(self, response: str) -> Union[List[Dict[str, str]], List[SPGRecord]]:
+    def parse_response(
+        self, response: str
+    ) -> Union[List[Dict[str, str]], List[SPGRecord]]:
         result = []
         subject = {}
         re_obj = json.loads(response)
@@ -64,10 +71,10 @@ input:{input}
             spo_type = self.predicate_type_zh_to_en_name[spo_item["predicate"]]
 
             if spo_en_name in subject_properties and len(
-                    subject_properties[spo_en_name]
+                subject_properties[spo_en_name]
             ):
                 subject_properties[spo_en_name] = (
-                        subject_properties[spo_en_name] + "," + spo_item["object"]
+                    subject_properties[spo_en_name] + "," + spo_item["object"]
                 )
             else:
                 subject_properties[spo_en_name] = spo_item["object"]
@@ -83,6 +90,8 @@ input:{input}
             if property_name in ["id", "name", "description"]:
                 continue
             prop = spg_type.properties.get(property_name)
-            spos.append(f'{spg_type.name_zh}({spg_type.desc})-f{prop.name_zh}-f{prop.object_type_name_zh}')
-        schema_text = ','.join(spos)
+            spos.append(
+                f"{spg_type.name_zh}({spg_type.desc})-f{prop.name_zh}-f{prop.object_type_name_zh}"
+            )
+        schema_text = ",".join(spos)
         self.template.format(schema=schema_text)
