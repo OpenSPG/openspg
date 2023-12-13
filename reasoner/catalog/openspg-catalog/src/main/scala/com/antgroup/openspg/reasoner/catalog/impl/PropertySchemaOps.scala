@@ -15,11 +15,11 @@ package com.antgroup.openspg.reasoner.catalog.impl
 
 import scala.language.implicitConversions
 
+import com.antgroup.openspg.core.schema.model.`type`.{BaseSPGType, BasicType, ConceptType, EntityType, EventType, SPGTypeEnum, StandardType}
 import com.antgroup.openspg.reasoner.catalog.impl.struct.PropertyMeta
 import com.antgroup.openspg.reasoner.common.exception.KGValueException
 import com.antgroup.openspg.reasoner.common.types._
 import com.antgroup.openspg.reasoner.lube.catalog.struct.NodeType
-import com.antgroup.openspg.core.schema.model.`type`.{BaseSPGType, BasicType, ConceptType, EntityType, EventType, SPGTypeEnum, StandardType}
 
 object PropertySchemaOps {
 

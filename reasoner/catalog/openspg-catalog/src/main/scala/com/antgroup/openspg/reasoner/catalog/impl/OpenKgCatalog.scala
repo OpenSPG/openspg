@@ -13,23 +13,22 @@
 
 package com.antgroup.openspg.reasoner.catalog.impl
 
-import com.antgroup.kg.reasoner.catalog.impl.KgSchemaConnectionInfo
-
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+
+import com.antgroup.openspg.core.schema.model.`type`.{BaseAdvancedType, BaseSPGType, BasicType, ProjectSchema}
+import com.antgroup.openspg.core.schema.model.predicate.{Property, Relation}
+import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.exception.SchemaException
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO
 import com.antgroup.openspg.reasoner.common.types.KTString
 import com.antgroup.openspg.reasoner.lube.catalog.{AbstractConnection, Catalog, GeneralSemanticRule, PropertyGraphSchema, SemanticPropertyGraph, SemanticRule}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.{Edge, Field, Node}
-import com.antgroup.openspg.core.schema.model.`type`.{BaseAdvancedType, BaseSPGType, BasicType, ProjectSchema}
-import com.antgroup.openspg.core.schema.model.predicate.{Property, Relation}
-import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic
+import com.antgroup.openspg.server.api.facade.ApiResponse
 import com.antgroup.openspg.server.api.facade.client.{ConceptFacade, SchemaFacade}
 import com.antgroup.openspg.server.api.facade.dto.schema.request.{ConceptRequest, ProjectSchemaRequest}
-import com.antgroup.openspg.server.api.facade.ApiResponse
 import com.antgroup.openspg.server.api.http.client.{HttpConceptFacade, HttpSchemaFacade}
 import com.antgroup.openspg.server.api.http.client.util.{ConnectionInfo, HttpClientBootstrap}
 import org.apache.commons.collections4.CollectionUtils
@@ -104,7 +103,7 @@ class OpenKgCatalog(val projectId: Long,
         attrList.++=(advancedType.getProperties.asScala.map(spgProperty => {
           toField(projectSchema, spgType, spgProperty)
         }))
-        attrList.++= (getDefaultNodeProperties())
+        attrList.++=(getDefaultNodeProperties())
         Node(
           advancedType.getName,
           PropertySchemaOps.toNodeType(spgType.getSpgTypeEnum),
