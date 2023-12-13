@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.reasoner.catalog.impl;
 
-import com.antgroup.kg.reasoner.catalog.impl.KgSchemaConnectionInfo;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
