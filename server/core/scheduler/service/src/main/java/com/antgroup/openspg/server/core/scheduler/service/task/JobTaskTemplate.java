@@ -10,10 +10,8 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.service.task;
 
-import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
@@ -25,17 +23,15 @@ import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommon
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import java.util.Date;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 /** JobTask Template class. execute before,process,finally and other functions */
+@Slf4j
 public abstract class JobTaskTemplate implements JobTask {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(JobTaskTemplate.class);
 
   /** lock max time */
   public static final Integer LOCK_TIME_MINUTES = 15;
@@ -54,15 +50,12 @@ public abstract class JobTaskTemplate implements JobTask {
         before(context);
         // Core process
         status = process(context);
-        context.getTask().setStatus(status.name());
+        context.getTask().setStatus(status);
       }
     } catch (Throwable e) {
-      context.getTask().setStatus(TaskStatus.ERROR.name());
+      context.getTask().setStatus(TaskStatus.ERROR);
       context.addTraceLog("Scheduling execute exception：%s", CommonUtils.getExceptionToString(e));
-      LOGGER.warn(
-          String.format(
-              "JobProcessTemplate process error uniqueId:%s", context.getInstance().getUniqueId()),
-          e);
+      log.error("JobTask process error uniqueId:{}", context.getInstance().getUniqueId(), e);
     }
 
     processStatus(context, status, lock);
@@ -86,11 +79,8 @@ public abstract class JobTaskTemplate implements JobTask {
           break;
       }
     } catch (Throwable e) {
-      context.addTraceLog(
-          "Scheduling save status exception：%s", CommonUtils.getExceptionToString(e));
-      LOGGER.error(
-          String.format("process status error uniqueId:%s", context.getInstance().getUniqueId()),
-          e);
+      context.addTraceLog("Scheduling save status error：%s", CommonUtils.getExceptionToString(e));
+      log.error("process status error uniqueId:{}", context.getInstance().getUniqueId(), e);
     } finally {
       unlockTask(context, lock);
       finallyFunc(context);
@@ -164,12 +154,14 @@ public abstract class JobTaskTemplate implements JobTask {
     } else {
       task.setGmtModified(oldTask.getGmtModified());
     }
+
     task.setExecuteNum(oldTask.getExecuteNum() + 1);
     context.getTraceLog().insert(0, System.getProperty("line.separator"));
     task.setRemark(CommonUtils.setRemarkLimit(oldTask.getRemark(), context.getTraceLog()));
     task.setLockTime(null);
+
     if (schedulerTaskService.replace(task) <= 0) {
-      LOGGER.error(String.format("finally replace task error task:%s", task));
+      log.error("finally replace task error task:{}", task);
       throw new RuntimeException(String.format("finally replace task error task:%s", task));
     }
   }
@@ -179,7 +171,7 @@ public abstract class JobTaskTemplate implements JobTask {
     SchedulerTask task = context.getTask();
     task.setFinishTime(new Date());
 
-    WorkflowDag workflowDag = JSON.parseObject(instance.getWorkflowConfig(), WorkflowDag.class);
+    WorkflowDag workflowDag = instance.getWorkflowDag();
 
     List<WorkflowDag.Node> nextNodes = workflowDag.getNextNodes(task.getNodeId());
 
@@ -228,16 +220,16 @@ public abstract class JobTaskTemplate implements JobTask {
     context.addTraceLog(
         "The execution of the current node is completed and subsequent nodes are triggered:%s",
         nextNode.getName());
-    if (!TaskStatus.WAIT.name().equals(nextTask.getStatus())) {
+    if (!TaskStatus.WAIT.equals(nextTask.getStatus())) {
       context.addTraceLog(
           "subsequent nodes:%s status is:%s,Only the WAIT state can be modified",
           nextNode.getName(), nextTask.getStatus());
       return;
     }
-    updateTask.setStatus(TaskStatus.RUNNING.name());
+    updateTask.setStatus(TaskStatus.RUNNING);
     updateTask.setBeginTime(new Date());
     if (schedulerTaskService.replace(updateTask) <= 0) {
-      task.setStatus(TaskStatus.ERROR.name());
+      task.setStatus(TaskStatus.ERROR);
       throw new RuntimeException(String.format("replace task error task:%s", updateTask));
     }
     context.setTaskFinish(true);

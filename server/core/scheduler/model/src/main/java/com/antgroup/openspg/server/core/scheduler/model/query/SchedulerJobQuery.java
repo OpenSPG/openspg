@@ -10,12 +10,9 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.model.query;
 
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
-import com.google.common.collect.Lists;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,19 +25,6 @@ public class SchedulerJobQuery extends SchedulerJob {
 
   /** page No */
   private Integer pageNo;
-
   /** page Size */
   private Integer pageSize;
-
-  /** sort */
-  private String sort;
-
-  /** order asc, desc */
-  private String order;
-
-  /** keyword, like query name/id/createUserName */
-  private String keyword;
-
-  /** types */
-  private List<String> types = Lists.newArrayList();
 }

@@ -10,7 +10,6 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.common.util;
 
 import java.beans.BeanInfo;
@@ -24,14 +23,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronExpression;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** some common tools */
+@Slf4j
 public class CommonUtils {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(CommonUtils.class);
 
   /** merge two bean by discovering differences */
   public static <M> M merge(M dest, M orig) {
@@ -54,7 +52,7 @@ public class CommonUtils {
         descriptor.getWriteMethod().invoke(dest, originalValue);
       }
     } catch (Exception e) {
-      LOGGER.error("merge bean exception", e);
+      log.error("merge bean exception", e);
     }
     return dest;
   }
@@ -83,14 +81,15 @@ public class CommonUtils {
       try {
         closeable.close();
       } catch (Exception e) {
-        LOGGER.error("Unable to close ", e);
+        log.error("Unable to close ", e);
       }
     }
   }
 
   /** Limit remark */
   public static String setRemarkLimit(String oldRemark, StringBuffer appendRemark) {
-    return subStringToLength(appendRemark.append(oldRemark), 100000, "...");
+    Integer maxLength = 100000;
+    return subStringToLength(appendRemark.append(oldRemark), maxLength, "...");
   }
 
   /** sub String To Length */
@@ -101,10 +100,9 @@ public class CommonUtils {
     if (length == null || length >= str.length()) {
       return str.toString();
     }
-    if (fill == null) {
-      return str.substring(0, length - 3) + "...";
-    }
-    return str.substring(0, length - fill.length()) + fill;
+    int start = 0;
+    fill = (fill == null ? "...":fill);
+    return str.substring(start, length - fill.length()) + fill;
   }
 
   /** get Cron Execution Dates By Today */

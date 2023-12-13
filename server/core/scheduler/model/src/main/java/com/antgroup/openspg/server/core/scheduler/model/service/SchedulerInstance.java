@@ -10,10 +10,14 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.model.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
+import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
+import com.antgroup.openspg.server.common.model.scheduler.MergeMode;
+import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +32,7 @@ public class SchedulerInstance extends BaseModel {
   /** primary key */
   private Long id;
 
-  /** instance id = jobId+yyyyMMddHHmmss */
+  /** unique id = jobId+yyyyMMddHHmmss */
   private String uniqueId;
 
   /** project id */
@@ -41,16 +45,13 @@ public class SchedulerInstance extends BaseModel {
   private String type;
 
   /** status */
-  private String status;
+  private InstanceStatus status;
 
   /** progress [0-100] */
   private Long progress;
 
   /** create User */
   private String createUser;
-
-  /** modify User */
-  private String modifyUser;
 
   /** create time */
   private Date gmtCreate;
@@ -64,30 +65,21 @@ public class SchedulerInstance extends BaseModel {
   /** instance finish Time */
   private Date finishTime;
 
-  /** instance estimate End Time */
-  private Date estimateEndTime;
-
   /** job Life Cycle：PERIOD,ONCE,REAL_TIME Enum:LifeCycle */
-  private String lifeCycle;
+  private LifeCycle lifeCycle;
+
+  /** Dependent upstream partition-MERGE，independent-SNAPSHOT */
+  private MergeMode mergeMode;
 
   /** scheduler Date */
   private Date schedulerDate;
 
-  /** external Instance Id */
-  private String externalInstanceId;
-
-  /** Dependent upstream partition-MERGE，independent-SNAPSHOT */
-  private String mergeMode;
-
-  /** env:prod,prepub,dev */
-  private String env;
-
   /** version */
   private String version;
 
-  /** job dag config */
-  private String config;
+  /** extension */
+  private JSONObject extension;
 
   /** workflow dag Config */
-  private String workflowConfig;
+  private WorkflowDag workflowDag;
 }

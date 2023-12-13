@@ -10,10 +10,8 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.service.common.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
@@ -37,19 +35,17 @@ import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /** Scheduler Common Service implementation class */
 @Service
+@Slf4j
 public class SchedulerCommonServiceImpl implements SchedulerCommonService {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerCommonServiceImpl.class);
 
   @Autowired SchedulerJobService schedulerJobService;
   @Autowired SchedulerInstanceService schedulerInstanceService;
@@ -61,7 +57,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
       SchedulerInstance instance, InstanceStatus instanceStatus, TaskStatus taskStatus) {
     SchedulerInstance updateInstance = new SchedulerInstance();
     updateInstance.setId(instance.getId());
-    updateInstance.setStatus(instanceStatus.name());
+    updateInstance.setStatus(instanceStatus);
     Long finish = 100L;
     updateInstance.setProgress(finish);
     Date finishTime = instance.getFinishTime() == null ? new Date() : instance.getFinishTime();
@@ -94,14 +90,14 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
             JobTaskContext context = new JobTaskContext(job, instance, task);
             String type = task.getType();
             if (StringUtils.isBlank(type)) {
-              LOGGER.warn(String.format("stop task type is null id:%s", task.getId()));
+              log.warn("stop task type is null id:{}", task.getId());
               return;
             }
 
             type = type.split(SchedulerConstant.UNDERLINE_SEPARATOR)[0];
             JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
             if (jobTask == null) {
-              LOGGER.error(String.format("stop task is null id:%s", task.getId()));
+              log.error("stop task is null id:{}", task.getId());
               return;
             }
 
@@ -110,7 +106,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
               jobAsyncTask.stop(context, task.getResource());
             }
           } catch (Exception e) {
-            LOGGER.error(String.format("stop task error id:%s", task.getId()), e);
+            log.error("stop task error id:{}", task.getId());
           }
         });
   }
@@ -169,39 +165,32 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
   public SchedulerInstance generateInstance(SchedulerJob job, String uniqueId, Date schedulerDate) {
     SchedulerInstance existInstance = schedulerInstanceService.getByUniqueId(uniqueId);
     if (existInstance != null) {
-      LOGGER.info(
-          String.format(
-              "generateInstance uniqueId exist jobId:%s uniqueId:%s", job.getId(), uniqueId));
+      log.error("generateInstance uniqueId exist jobId:{} uniqueId:{}", job.getId(), uniqueId);
       return null;
     }
 
-    LOGGER.info(
-        String.format("generateInstance start jobId:%s uniqueId:%s", job.getId(), uniqueId));
+    log.info("generateInstance start jobId:{} uniqueId:{}", job.getId(), uniqueId);
     Long progress = 0L;
     SchedulerInstance instance = new SchedulerInstance();
     instance.setUniqueId(uniqueId);
     instance.setProjectId(job.getProjectId());
     instance.setJobId(job.getId());
-    instance.setType(job.getTranslate());
-    instance.setStatus(InstanceStatus.WAITING.name());
+    instance.setType(job.getTranslateType().getType());
+    instance.setStatus(InstanceStatus.WAITING);
     instance.setProgress(progress);
     instance.setCreateUser(job.getCreateUser());
-    instance.setModifyUser(job.getCreateUser());
     instance.setGmtCreate(new Date());
     instance.setGmtModified(new Date());
-    instance.setBeginRunningTime(new Date());
     instance.setLifeCycle(job.getLifeCycle());
     instance.setSchedulerDate(schedulerDate);
     instance.setMergeMode(job.getMergeMode());
-    instance.setEnv(schedulerValue.getExecuteEnv());
-    instance.setVersion(SchedulerConstant.INSTANCE_DEFAULT_VERSION);
-    instance.setConfig(job.getConfig());
-    WorkflowDag workflowDag = TranslatorFactory.getTranslator(job.getTranslate()).translate(job);
-    instance.setWorkflowConfig(JSON.toJSONString(workflowDag));
+    instance.setVersion(SchedulerConstant.DEFAULT_VERSION);
+    WorkflowDag workflowDag =
+        TranslatorFactory.getTranslator(job.getTranslateType()).translate(job);
+    instance.setWorkflowDag(workflowDag);
 
     schedulerInstanceService.insert(instance);
-    LOGGER.info(
-        String.format("generateInstance successful jobId:%s instances:%s", job.getId(), uniqueId));
+    log.info("generateInstance successful jobId:{} uniqueId:{}", job.getId(), uniqueId);
 
     List<WorkflowDag.Node> nodes = workflowDag.getNodes();
     nodes.forEach(

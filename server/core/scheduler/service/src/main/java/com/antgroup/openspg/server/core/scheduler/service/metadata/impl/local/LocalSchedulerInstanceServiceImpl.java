@@ -10,17 +10,13 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
-import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
-import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.google.common.collect.Lists;
@@ -29,7 +25,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,12 +55,6 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   }
 
   @Override
-  public synchronized int deleteById(Long id) {
-    SchedulerInstance record = instances.remove(id);
-    return record == null ? 0 : 1;
-  }
-
-  @Override
   public synchronized int deleteByJobId(Long jobId) {
     List<Long> instanceList = Lists.newArrayList();
     for (Long key : instances.keySet()) {
@@ -81,24 +70,9 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   }
 
   @Override
-  public synchronized int deleteByIds(List<Long> ids) {
-    int flag = 0;
-    for (Long id : ids) {
-      SchedulerInstance record = instances.remove(id);
-      if (record != null) {
-        flag++;
-      }
-    }
-    return flag;
-  }
-
-  @Override
   public synchronized Long update(SchedulerInstance record) {
     Long id = record.getId();
-    SchedulerInstance oldInstance = instances.get(id);
-    if (oldInstance == null) {
-      throw new RuntimeException("not find id:" + id);
-    }
+    SchedulerInstance oldInstance = getById(id);
     if (record.getGmtModified() != null
         && !oldInstance.getGmtModified().equals(record.getGmtModified())) {
       return 0L;
@@ -112,6 +86,9 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   @Override
   public SchedulerInstance getById(Long id) {
     SchedulerInstance oldInstance = instances.get(id);
+    if (oldInstance == null) {
+      throw new RuntimeException("not find id:" + id);
+    }
     SchedulerInstance instance = new SchedulerInstance();
     BeanUtils.copyProperties(oldInstance, instance);
     return instance;
@@ -141,35 +118,16 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
           || !CommonUtils.equals(instance.getProjectId(), record.getProjectId())
           || !CommonUtils.equals(instance.getJobId(), record.getJobId())
           || !CommonUtils.equals(instance.getUniqueId(), record.getUniqueId())
-          || !CommonUtils.equals(instance.getCreateUser(), record.getCreateUser())
           || !CommonUtils.equals(instance.getType(), record.getType())
           || !CommonUtils.equals(instance.getStatus(), record.getStatus())
           || !CommonUtils.equals(instance.getLifeCycle(), record.getLifeCycle())
           || !CommonUtils.equals(instance.getMergeMode(), record.getMergeMode())
-          || !CommonUtils.equals(instance.getEnv(), record.getEnv())
-          || !CommonUtils.equals(instance.getVersion(), record.getVersion())
-          || !CommonUtils.contains(instance.getConfig(), record.getConfig())
-          || !CommonUtils.contains(instance.getWorkflowConfig(), record.getWorkflowConfig())) {
+          || !CommonUtils.equals(instance.getVersion(), record.getVersion())) {
         continue;
       }
 
-      String keyword = record.getKeyword();
-      if (!CommonUtils.contains(instance.getUniqueId(), keyword)
-          || !CommonUtils.contains(instance.getCreateUser(), keyword)) {
-        continue;
-      }
-
-      if (!CommonUtils.after(instance.getSchedulerDate(), record.getStartSchedulerDate())
-          || !CommonUtils.before(instance.getSchedulerDate(), record.getEndSchedulerDate())
-          || !CommonUtils.after(instance.getGmtCreate(), record.getStartCreateTime())
-          || !CommonUtils.before(instance.getGmtCreate(), record.getEndCreateTime())
-          || !CommonUtils.after(instance.getFinishTime(), record.getStartFinishTime())
-          || !CommonUtils.before(instance.getFinishTime(), record.getEndFinishTime())) {
-        continue;
-      }
-
-      if (CollectionUtils.isNotEmpty(record.getTypes())
-          && !record.getTypes().contains(instance.getType())) {
+      if (!CommonUtils.after(instance.getGmtCreate(), record.getStartCreateTime())
+          || !CommonUtils.before(instance.getGmtCreate(), record.getEndCreateTime())) {
         continue;
       }
 
@@ -184,23 +142,6 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   }
 
   @Override
-  public Long getCount(SchedulerInstanceQuery record) {
-    return query(record).getTotal();
-  }
-
-  @Override
-  public List<SchedulerInstance> getByIds(List<Long> ids) {
-    List<SchedulerInstance> instanceList = Lists.newArrayList();
-    for (Long id : ids) {
-      SchedulerInstance instance = instances.get(id);
-      SchedulerInstance target = new SchedulerInstance();
-      BeanUtils.copyProperties(instance, target);
-      instanceList.add(target);
-    }
-    return instanceList;
-  }
-
-  @Override
   public List<SchedulerInstance> getNotFinishInstance(SchedulerInstanceQuery record) {
     List<SchedulerInstance> instanceList = query(record).getData();
     instanceList =
@@ -209,23 +150,5 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
             .collect(Collectors.toList());
     return instanceList;
   }
-
-  @Override
-  public List<SchedulerInstance> getInstanceByTask(
-      String taskType, TaskStatus status, Date startFinishTime, Date endFinishTime) {
-    SchedulerTaskQuery schedulerTask = new SchedulerTaskQuery();
-    schedulerTask.setType(taskType);
-    schedulerTask.setStatus(status.name());
-    List<SchedulerTask> tasks = schedulerTaskService.query(schedulerTask).getData();
-    List<Long> ids =
-        tasks.stream()
-            .filter(
-                task ->
-                    task.getFinishTime().after(startFinishTime)
-                        && task.getFinishTime().before(endFinishTime))
-            .map(SchedulerTask::getInstanceId)
-            .collect(Collectors.toList());
-    List<SchedulerInstance> instanceList = getByIds(ids);
-    return instanceList;
-  }
+  
 }

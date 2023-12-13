@@ -10,7 +10,6 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
 import com.antgroup.openspg.common.util.CommonUtils;
@@ -23,7 +22,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -50,24 +48,9 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
   }
 
   @Override
-  public synchronized int deleteByIds(List<Long> ids) {
-    int flag = 0;
-    for (Long id : ids) {
-      SchedulerJob record = jobs.remove(id);
-      if (record != null) {
-        flag++;
-      }
-    }
-    return flag;
-  }
-
-  @Override
   public synchronized Long update(SchedulerJob record) {
     Long id = record.getId();
-    SchedulerJob oldRecord = jobs.get(id);
-    if (oldRecord == null) {
-      throw new RuntimeException("not find id:" + id);
-    }
+    SchedulerJob oldRecord = getById(id);
     if (record.getGmtModified() != null
         && !oldRecord.getGmtModified().equals(record.getGmtModified())) {
       return 0L;
@@ -81,6 +64,9 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
   @Override
   public SchedulerJob getById(Long id) {
     SchedulerJob oldJob = jobs.get(id);
+    if (oldJob == null) {
+      throw new RuntimeException("not find id:" + id);
+    }
     SchedulerJob job = new SchedulerJob();
     BeanUtils.copyProperties(oldJob, job);
     return job;
@@ -95,23 +81,11 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
       SchedulerJob job = jobs.get(key);
       if (!CommonUtils.equals(job.getId(), record.getId())
           || !CommonUtils.equals(job.getCreateUser(), record.getCreateUser())
-          || !CommonUtils.equals(job.getTranslate(), record.getTranslate())
+          || !CommonUtils.equals(job.getTranslateType(), record.getTranslateType())
           || !CommonUtils.equals(job.getLifeCycle(), record.getLifeCycle())
           || !CommonUtils.equals(job.getStatus(), record.getStatus())
           || !CommonUtils.equals(job.getMergeMode(), record.getMergeMode())
-          || !CommonUtils.contains(job.getName(), record.getName())
-          || !CommonUtils.contains(job.getConfig(), record.getConfig())
-          || !CommonUtils.contains(job.getExtension(), record.getExtension())) {
-        continue;
-      }
-
-      String keyword = record.getKeyword();
-      if (!CommonUtils.contains(job.getName(), keyword)
-          || !CommonUtils.contains(job.getCreateUser(), keyword)) {
-        continue;
-      }
-      if (CollectionUtils.isNotEmpty(record.getTypes())
-          && !record.getTypes().contains(job.getTranslate())) {
+          || !CommonUtils.contains(job.getName(), record.getName())) {
         continue;
       }
 
@@ -125,20 +99,4 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
     return page;
   }
 
-  @Override
-  public Long getCount(SchedulerJobQuery record) {
-    return query(record).getTotal();
-  }
-
-  @Override
-  public List<SchedulerJob> getByIds(List<Long> ids) {
-    List<SchedulerJob> jobList = Lists.newArrayList();
-    for (Long id : ids) {
-      SchedulerJob job = jobs.get(id);
-      SchedulerJob target = new SchedulerJob();
-      BeanUtils.copyProperties(job, target);
-      jobList.add(target);
-    }
-    return jobList;
-  }
 }

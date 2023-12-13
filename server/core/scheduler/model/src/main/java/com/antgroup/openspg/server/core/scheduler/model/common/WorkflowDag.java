@@ -10,7 +10,6 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.model.common;
 
 import com.alibaba.fastjson.annotation.JSONField;
@@ -30,41 +29,10 @@ public class WorkflowDag {
 
   /** dag nodes List */
   private List<Node> nodes = Collections.emptyList();
-
   /** dag edges List */
   private List<Edge> edges = Collections.emptyList();
-
   /** dag extend */
   private String extend;
-
-  /** get Nodes By Type */
-  @JSONField(serialize = false)
-  public List<Node> getNodesByType(String nodeType) {
-    List<Node> nodes = Lists.newArrayList();
-    if (nodeType == null) {
-      return nodes;
-    }
-    for (Node node : this.nodes) {
-      if (node == null) {
-        continue;
-      }
-      if (nodeType.equals(node.getType())) {
-        nodes.add(node);
-      }
-    }
-    return nodes;
-  }
-
-  /** get node by id */
-  @JSONField(serialize = false)
-  public Node getNode(String nodeId) {
-    for (Node node : nodes) {
-      if (node.getId().equals(nodeId)) {
-        return node;
-      }
-    }
-    return null;
-  }
 
   /** get node by id list */
   @JSONField(serialize = false)
@@ -111,19 +79,10 @@ public class WorkflowDag {
   public static class Node<T> {
     /** id */
     private String id;
-
     /** type */
     private String type;
-
     /** name */
     private String name;
-
-    /** X coordinate */
-    private Long x;
-
-    /** Y coordinate */
-    private Long y;
-
     /** properties */
     private T properties;
   }
@@ -134,7 +93,6 @@ public class WorkflowDag {
   public static class Edge {
     /** from id */
     private String from;
-
     /** to id */
     private String to;
   }

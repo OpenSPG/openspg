@@ -10,7 +10,6 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.service.metadata;
 
 import com.antgroup.openspg.server.common.model.base.Page;
@@ -24,12 +23,6 @@ public interface SchedulerTaskService {
 
   /** insert Task */
   Long insert(SchedulerTask record);
-
-  /** delete Task By id */
-  int deleteById(Long id);
-
-  /** delete By id List */
-  int deleteByIds(List<Long> ids);
 
   /** delete By jobId */
   int deleteByJobId(Long jobId);
@@ -46,12 +39,6 @@ public interface SchedulerTaskService {
   /** query By Condition，query all if pageNo is null */
   Page<List<SchedulerTask>> query(SchedulerTaskQuery record);
 
-  /** get Count By Condition */
-  Long getCount(SchedulerTaskQuery record);
-
-  /** get By id List */
-  List<SchedulerTask> getByIds(List<Long> ids);
-
   /** query By InstanceId And Type */
   SchedulerTask queryByInstanceIdAndType(Long instanceId, String type);
 
@@ -63,9 +50,6 @@ public interface SchedulerTaskService {
 
   /** set Status By InstanceId */
   int setStatusByInstanceId(Long instanceId, TaskStatus status);
-
-  /** update Extension By Lock */
-  int updateExtensionByLock(SchedulerTask record, String extension);
 
   /** update Lock */
   int updateLock(Long id);

@@ -10,10 +10,8 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.service.engine.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
@@ -41,29 +39,22 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /** Scheduler Execute Service implementation class. execute all instances */
 @Service
+@Slf4j
 public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerExecuteServiceImpl.class);
-
-  private static final Logger METRIC_LOGGER = LoggerFactory.getLogger("SCHEDULER-METRIC");
 
   private static final int corePoolSize = 10;
 
-  private ConcurrentHashMap<String, ThreadPoolExecutor> instanceExecutorMap =
-      new ConcurrentHashMap<>();
-  private ConcurrentHashMap<String, ThreadPoolExecutor> taskExecutorMap = new ConcurrentHashMap<>();
-  private ScheduledExecutorService scheduledExecutor =
-      new ScheduledThreadPoolExecutor(corePoolSize);
+  private ConcurrentHashMap<String, ThreadPoolExecutor> instances = new ConcurrentHashMap<>();
+  private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(corePoolSize);
 
   @Autowired SchedulerValue schedulerValue;
   @Autowired SchedulerJobService schedulerJobService;
@@ -74,7 +65,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
   @Override
   public void executeInstances() {
     List<SchedulerInstance> allInstance = getAllNotFinishInstance();
-    LOGGER.info(String.format("getAllNotFinishInstance succeed size:%s", allInstance.size()));
+    log.info("getAllNotFinishInstance successful size:{}", allInstance.size());
     if (CollectionUtils.isEmpty(allInstance)) {
       return;
     }
@@ -87,15 +78,8 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
       String type = instance.getType();
       ThreadPoolExecutor executor = getInstanceExecutor(type);
       Runnable instanceRunnable = () -> executeInstance(instance.getId());
-      LOGGER.info(
-          String.format(
-              "instanceExecutor active:%s task:%s completed:%s remaining:%s",
-              executor.getActiveCount(),
-              executor.getTaskCount(),
-              executor.getCompletedTaskCount(),
-              executor.getQueue().remainingCapacity()));
       executor.execute(instanceRunnable);
-      LOGGER.info(String.format("add instanceExecutor successful:%s", instance.getUniqueId()));
+      log.info("add instanceExecutor successful {}", instance.getUniqueId());
     }
   }
 
@@ -116,7 +100,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
       }
       executeInstance(id, tasks);
     } catch (Exception e) {
-      LOGGER.error(String.format("execute instance error id:%s", id), e);
+      log.error("execute instance error id:", id, e);
     }
   }
 
@@ -124,8 +108,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
   public void executeInstance(Long id, List<SchedulerTask> tasks) {
     SchedulerInstance instance = schedulerInstanceService.getById(id);
     if (InstanceStatus.isFinished(instance.getStatus())) {
-      LOGGER.info(
-          String.format("instanceStatus is FINISH slip id:%s status:%s", id, instance.getStatus()));
+      log.info("instanceStatus is FINISH slip id:{} status:{}", id, instance.getStatus());
       return;
     }
     List<SchedulerTask> processList =
@@ -136,34 +119,17 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
       processList = checkAndUpdateWaitStatus(instance, tasks);
     }
 
-    String type = instance.getType();
-    ThreadPoolExecutor executor = getTaskExecutor(type);
-    processList.forEach(
-        task -> {
-          Runnable taskRunnable = () -> executeTask(instance, task);
-          LOGGER.info(
-              String.format(
-                  "taskExecutor active:%s task:%s completed:%s remaining:%s",
-                  executor.getActiveCount(),
-                  executor.getTaskCount(),
-                  executor.getCompletedTaskCount(),
-                  executor.getQueue().remainingCapacity()));
-          executor.execute(taskRunnable);
-        });
+    processList.forEach(task -> executeTask(instance, task));
   }
 
   /** execute Instance by task */
   public void executeTask(SchedulerInstance instance, SchedulerTask task) {
-
-    long start = System.currentTimeMillis();
     try {
       SchedulerJob job = schedulerJobService.getById(instance.getJobId());
       JobTaskContext context = new JobTaskContext(job, instance, task);
       String type = task.getType();
       if (StringUtils.isBlank(type)) {
-        LOGGER.error(
-            String.format(
-                "task type is null uniqueId:%s taskId:%s", instance.getUniqueId(), task.getId()));
+        log.error("task type is null uniqueId:{} taskId:{}", instance.getUniqueId(), task.getId());
         return;
       }
 
@@ -171,10 +137,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
 
       JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
       if (jobTask == null) {
-        LOGGER.error(
-            String.format(
-                "get jobTask bean error uniqueId:%s taskId:%s",
-                instance.getUniqueId(), task.getId()));
+        log.error("get bean error uniqueId:{} taskId:{}", instance.getUniqueId(), task.getId());
         return;
       }
 
@@ -182,23 +145,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
 
       executeNextTask(context);
     } catch (Exception e) {
-      LOGGER.error(String.format("process task error task:%s", task.getId()), e);
-    } finally {
-      Long time = System.currentTimeMillis() - start;
-      METRIC_LOGGER.info(
-          String.format(
-              "|process|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s",
-              instance.getProjectId(),
-              instance.getJobId(),
-              instance.getUniqueId(),
-              instance.getSchedulerDate(),
-              task.getType(),
-              task.getTitle(),
-              task.getUpdateUser(),
-              task.getExecuteNum(),
-              task.getBeginTime().getTime(),
-              task.getStatus(),
-              time));
+      log.error("process task error task:{}", task.getId(), e);
     }
   }
 
@@ -206,7 +153,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
   public void executeNextTask(JobTaskContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
-    WorkflowDag workflowDag = JSON.parseObject(instance.getWorkflowConfig(), WorkflowDag.class);
+    WorkflowDag workflowDag = instance.getWorkflowDag();
     List<WorkflowDag.Node> nextNodes = workflowDag.getNextNodes(task.getNodeId());
     List<SchedulerTask> taskList = Lists.newArrayList();
     for (WorkflowDag.Node nextNode : nextNodes) {
@@ -215,19 +162,11 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
       taskList.add(nextTask);
     }
     if (context.isTaskFinish() && CollectionUtils.isNotEmpty(taskList)) {
-      Runnable instanceRunnable =
-          () -> {
-            try {
-              executeInstance(instance.getId(), taskList);
-            } catch (Exception e) {
-              LOGGER.error(
-                  String.format("executeInstance error uniqueId:%s", instance.getUniqueId()), e);
-            }
-          };
+      Runnable instanceRunnable = () -> executeInstance(instance.getId(), taskList);
 
       long delay = 10;
-      scheduledExecutor.schedule(instanceRunnable, delay, TimeUnit.SECONDS);
-      LOGGER.info(String.format("executeNextTask successful:%s", instance.getUniqueId()));
+      executorService.schedule(instanceRunnable, delay, TimeUnit.SECONDS);
+      log.info("executeNextTask successful {}", instance.getUniqueId());
     }
   }
 
@@ -243,7 +182,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
       return result;
     }
 
-    WorkflowDag workflowDag = JSON.parseObject(instance.getWorkflowConfig(), WorkflowDag.class);
+    WorkflowDag workflowDag = instance.getWorkflowDag();
     processList.forEach(
         it -> {
           List<WorkflowDag.Node> preNodes = workflowDag.getPreNodes(it.getNodeId());
@@ -259,9 +198,9 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
           if (allFinish) {
             SchedulerTask updateTask = new SchedulerTask();
             updateTask.setId(it.getId());
-            updateTask.setStatus(TaskStatus.RUNNING.name());
+            updateTask.setStatus(TaskStatus.RUNNING);
             schedulerTaskService.update(updateTask);
-            it.setStatus(TaskStatus.RUNNING.name());
+            it.setStatus(TaskStatus.RUNNING);
             result.add(it);
           }
         });
@@ -274,46 +213,20 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     Integer maxDays = schedulerValue.getExecuteMaxDay() + 1;
     Date startDate = DateUtils.addDays(new Date(), -maxDays);
     record.setStartCreateTime(startDate);
-    record.setEnv(schedulerValue.getExecuteEnv());
     List<SchedulerInstance> allInstance = schedulerInstanceService.getNotFinishInstance(record);
     return allInstance;
   }
 
   /** get Instance ThreadPoolExecutor by type */
   private ThreadPoolExecutor getInstanceExecutor(String type) {
-    if (instanceExecutorMap.containsKey(type)) {
-      return instanceExecutorMap.get(type);
+    if (instances.containsKey(type)) {
+      return instances.get(type);
     }
-
     int corePoolSize = 20;
     int maximumPoolSize = 100;
-    ThreadPoolExecutor instanceExecutor =
-        getThreadPoolExecutor("instanceExecutor" + type, corePoolSize, maximumPoolSize);
-    instanceExecutorMap.put(type, instanceExecutor);
-    return instanceExecutor;
-  }
-
-  /** get Task ThreadPoolExecutor by type */
-  private ThreadPoolExecutor getTaskExecutor(String type) {
-    if (taskExecutorMap.containsKey(type)) {
-      return taskExecutorMap.get(type);
-    }
-
-    int corePoolSize = 10;
-    int maximumPoolSize = 50;
-    ThreadPoolExecutor instanceExecutor =
-        getThreadPoolExecutor("taskExecutor" + type, corePoolSize, maximumPoolSize);
-    taskExecutorMap.put(type, instanceExecutor);
-    return instanceExecutor;
-  }
-
-  /** get ThreadPoolExecutor by type */
-  private ThreadPoolExecutor getThreadPoolExecutor(
-      String type, int corePoolSize, int maximumPoolSize) {
     long keepAliveTime = 30;
     int capacity = 100000;
-
-    ThreadPoolExecutor taskExecutor =
+    ThreadPoolExecutor instanceExecutor =
         new ThreadPoolExecutor(
             corePoolSize,
             maximumPoolSize,
@@ -328,6 +241,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
             },
             new ThreadPoolExecutor.DiscardOldestPolicy());
 
-    return taskExecutor;
+    instances.put(type, instanceExecutor);
+    return instanceExecutor;
   }
 }

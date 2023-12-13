@@ -10,7 +10,6 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
 import com.antgroup.openspg.common.util.CommonUtils;
@@ -44,24 +43,6 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   }
 
   @Override
-  public synchronized int deleteById(Long id) {
-    SchedulerTask record = tasks.remove(id);
-    return record == null ? 0 : 1;
-  }
-
-  @Override
-  public synchronized int deleteByIds(List<Long> ids) {
-    int flag = 0;
-    for (Long id : ids) {
-      SchedulerTask record = tasks.remove(id);
-      if (record != null) {
-        flag++;
-      }
-    }
-    return flag;
-  }
-
-  @Override
   public synchronized int deleteByJobId(Long jobId) {
     List<Long> ids = Lists.newArrayList();
     for (Long key : tasks.keySet()) {
@@ -79,10 +60,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   @Override
   public synchronized Long update(SchedulerTask record) {
     Long id = record.getId();
-    SchedulerTask oldRecord = tasks.get(id);
-    if (oldRecord == null) {
-      throw new RuntimeException("not find id:" + id);
-    }
+    SchedulerTask oldRecord = getById(id);
     if (record.getGmtModified() != null
         && !oldRecord.getGmtModified().equals(record.getGmtModified())) {
       return 0L;
@@ -105,6 +83,9 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   @Override
   public SchedulerTask getById(Long id) {
     SchedulerTask oldTask = tasks.get(id);
+    if (oldTask == null) {
+      throw new RuntimeException("not find id:" + id);
+    }
     SchedulerTask task = new SchedulerTask();
     BeanUtils.copyProperties(oldTask, task);
     return task;
@@ -119,17 +100,10 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
       SchedulerTask task = tasks.get(key);
 
       if (!CommonUtils.equals(task.getId(), record.getId())
-          || !CommonUtils.equals(task.getCreateUser(), record.getCreateUser())
           || !CommonUtils.equals(task.getType(), record.getType())
           || !CommonUtils.contains(task.getTitle(), record.getTitle())
           || !CommonUtils.equals(task.getJobId(), record.getJobId())
-          || !CommonUtils.equals(task.getInstanceId(), record.getInstanceId())
-          || !CommonUtils.contains(task.getExtension(), record.getExtension())) {
-        continue;
-      }
-
-      if (!CommonUtils.after(task.getGmtCreate(), record.getStartCreateTime())
-          || !CommonUtils.before(task.getGmtCreate(), record.getEndCreateTime())) {
+          || !CommonUtils.equals(task.getInstanceId(), record.getInstanceId())) {
         continue;
       }
 
@@ -141,23 +115,6 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
     page.setPageSize(taskList.size());
     page.setTotal(Long.valueOf(taskList.size()));
     return page;
-  }
-
-  @Override
-  public Long getCount(SchedulerTaskQuery record) {
-    return query(record).getTotal();
-  }
-
-  @Override
-  public List<SchedulerTask> getByIds(List<Long> ids) {
-    List<SchedulerTask> taskList = Lists.newArrayList();
-    for (Long id : ids) {
-      SchedulerTask task = tasks.get(id);
-      SchedulerTask target = new SchedulerTask();
-      BeanUtils.copyProperties(task, target);
-      taskList.add(target);
-    }
-    return taskList;
   }
 
   @Override
@@ -209,7 +166,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
       SchedulerTask task = tasks.get(key);
       if (instanceId.equals(task.getInstanceId())) {
         task.setGmtModified(new Date());
-        task.setStatus(status.name());
+        task.setStatus(status);
         flag++;
       }
     }
@@ -217,27 +174,8 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   }
 
   @Override
-  public int updateExtensionByLock(SchedulerTask record, String extension) {
-    Long id = record.getId();
-    SchedulerTask oldRecord = tasks.get(id);
-    if (oldRecord == null) {
-      return 0;
-    }
-    if (record.getGmtModified() != oldRecord.getGmtModified()) {
-      throw new RuntimeException("modified time inconsistent,update extension failed");
-    }
-    oldRecord.setGmtModified(new Date());
-    oldRecord.setExtension(extension);
-    tasks.put(id, oldRecord);
-    return 1;
-  }
-
-  @Override
   public int updateLock(Long id) {
-    SchedulerTask oldRecord = tasks.get(id);
-    if (oldRecord == null) {
-      throw new RuntimeException(String.format("not find task id:%s", id));
-    }
+    SchedulerTask oldRecord = getById(id);
     if (oldRecord.getLockTime() != null) {
       return 0;
     }
@@ -249,10 +187,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
 
   @Override
   public int updateUnlock(Long id) {
-    SchedulerTask oldRecord = tasks.get(id);
-    if (oldRecord == null) {
-      throw new RuntimeException(String.format("not find task id:%s", id));
-    }
+    SchedulerTask oldRecord = getById(id);
     oldRecord.setGmtModified(new Date());
     oldRecord.setLockTime(null);
     tasks.put(id, oldRecord);

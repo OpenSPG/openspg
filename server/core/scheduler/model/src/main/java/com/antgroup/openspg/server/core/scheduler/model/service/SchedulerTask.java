@@ -10,12 +10,11 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.model.service;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.common.util.DateTimeUtils;
-import com.antgroup.openspg.common.util.IpUtils;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
@@ -40,12 +39,6 @@ public class SchedulerTask extends BaseModel {
   /** Modified time */
   private Date gmtModified;
 
-  /** create User */
-  private String createUser;
-
-  /** update User */
-  private String updateUser;
-
   /** type */
   private String type;
 
@@ -53,7 +46,7 @@ public class SchedulerTask extends BaseModel {
   private String title;
 
   /** status */
-  private String status;
+  private TaskStatus status;
 
   /** SchedulerJob Id */
   private Long jobId;
@@ -73,14 +66,8 @@ public class SchedulerTask extends BaseModel {
   /** estimate Finish Time */
   private Date estimateFinishTime;
 
-  /** config */
-  private String config;
-
   /** remark */
   private String remark;
-
-  /** extension，JSON */
-  private String extension;
 
   /** lock Time */
   private Date lockTime;
@@ -97,15 +84,16 @@ public class SchedulerTask extends BaseModel {
   /** node id */
   private String nodeId;
 
+  /** extension，JSON */
+  private JSONObject extension;
+
   public SchedulerTask() {}
 
   /** constructor */
   public SchedulerTask(SchedulerInstance instance, TaskStatus status, WorkflowDag.Node node) {
     this.executeNum = 0;
     this.beginTime = new Date();
-    this.status = status.name();
-    this.createUser = instance.getCreateUser();
-    this.updateUser = instance.getCreateUser();
+    this.status = status;
     this.jobId = instance.getJobId();
     this.instanceId = instance.getId();
     this.nodeId = node.getId();
@@ -113,14 +101,11 @@ public class SchedulerTask extends BaseModel {
     this.title = StringUtils.isNotBlank(node.getName()) ? node.getName() : node.getType();
 
     if (node.getProperties() != null) {
-      this.extension = JSON.toJSONString(node.getProperties());
+      this.extension = JSON.parseObject(JSON.toJSONString(node.getProperties()));
     }
 
     StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
-    log.append("(")
-        .append(IpUtils.IP_LIST)
-        .append("):")
-        .append("Create new Task，Wait for the execution of the preceding node to complete.....")
+    log.append("Create new Task，Wait for the execution of the preceding node to complete.....")
         .append(System.getProperty("line.separator"));
 
     this.remark = log.toString();

@@ -13,10 +13,8 @@
 
 package com.antgroup.openspg.server.common.service.spring;
 
-import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -45,7 +43,6 @@ public class SpringContextHolder implements ApplicationContextAware {
 
   /** get spring bean by name */
   public static <T> T getBean(String name, Class<T> clazz) {
-    Preconditions.checkArgument(StringUtils.isNotBlank(name), "beanName should not be null");
     if (applicationContext != null) {
       return applicationContext.getBean(name, clazz);
     }

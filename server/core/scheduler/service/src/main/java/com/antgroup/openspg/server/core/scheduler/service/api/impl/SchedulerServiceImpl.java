@@ -10,14 +10,11 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.service.api.impl;
 
-import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.base.Page;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
-import com.antgroup.openspg.server.common.model.scheduler.MergeMode;
 import com.antgroup.openspg.server.common.model.scheduler.Status;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
@@ -33,7 +30,6 @@ import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecut
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
-import com.antgroup.openspg.server.core.scheduler.service.translate.TranslateEnum;
 import com.google.common.collect.Lists;
 import java.text.ParseException;
 import java.util.Date;
@@ -97,17 +93,12 @@ public class SchedulerServiceImpl implements SchedulerService {
   /** set Job Property Default Value */
   private void setJobPropertyDefaultValue(SchedulerJob job) {
     job.setGmtModified(new Date());
-    if (job.getId() == null) {
+    if (job.getGmtCreate() == null) {
       job.setGmtCreate(new Date());
     }
-    if (job.getMergeMode() == null) {
-      job.setMergeMode(MergeMode.MERGE.name());
-    }
-    String data = DateTimeUtils.getDate2Str(DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, new Date());
 
-    job.setStatus(Status.ONLINE.name());
-    job.setVersion(
-        SchedulerConstant.JOB_DEFAULT_VERSION + SchedulerConstant.UNDERLINE_SEPARATOR + data);
+    job.setStatus(Status.ONLINE);
+    job.setVersion(SchedulerConstant.DEFAULT_VERSION);
   }
 
   /** check Job Property is validity */
@@ -116,19 +107,11 @@ public class SchedulerServiceImpl implements SchedulerService {
     Assert.notNull(job.getProjectId(), "ProjectId not null");
     Assert.hasText(job.getName(), "Name not null");
     Assert.hasText(job.getCreateUser(), "CreateUser not null");
-    Assert.hasText(job.getLifeCycle(), "LifeCycle not null");
-    Assert.notNull(
-        LifeCycle.getByName(job.getLifeCycle()),
-        String.format("LifeCycle:%s not in enum", job.getLifeCycle()));
-    Assert.hasText(job.getTranslate(), "Type not null");
-    Assert.notNull(
-        TranslateEnum.getByName(job.getTranslate()),
-        String.format("Type:%s not in enum", job.getTranslate()));
-    Assert.notNull(
-        MergeMode.getByName(job.getMergeMode()),
-        String.format("MergeMode:%s not in enum", job.getMergeMode()));
+    Assert.notNull(job.getLifeCycle(), "LifeCycle not null");
+    Assert.notNull(job.getTranslateType(), "TranslateType not null");
+    Assert.notNull(job.getMergeMode(), "MergeMode not null");
 
-    if (LifeCycle.PERIOD.name().equalsIgnoreCase(job.getLifeCycle())) {
+    if (LifeCycle.PERIOD.equals(job.getLifeCycle())) {
       Assert.hasText(job.getSchedulerCron(), "SchedulerCron not null");
       try {
         new CronExpression(job.getSchedulerCron());
@@ -145,9 +128,8 @@ public class SchedulerServiceImpl implements SchedulerService {
     List<SchedulerInstance> instances = Lists.newArrayList();
     SchedulerJob job = schedulerJobService.getById(id);
     Assert.notNull(job, String.format("job not find id:%s", id));
-    LifeCycle lifeCycle = LifeCycle.valueOf(job.getLifeCycle());
 
-    switch (lifeCycle) {
+    switch (job.getLifeCycle()) {
       case REAL_TIME:
         stopJobAllInstance(id);
         instance = schedulerCommonService.generateRealTimeInstance(job);
@@ -195,13 +177,13 @@ public class SchedulerServiceImpl implements SchedulerService {
     Assert.notNull(job, String.format("job not find id:%s", id));
     SchedulerJob updateJob = new SchedulerJob();
     updateJob.setId(id);
-    updateJob.setStatus(Status.ONLINE.name());
+    updateJob.setStatus(Status.ONLINE);
     Long flag = schedulerJobService.update(updateJob);
     if (flag <= 0) {
       return false;
     }
 
-    if (LifeCycle.REAL_TIME.name().equals(job.getLifeCycle())) {
+    if (LifeCycle.REAL_TIME.equals(job.getLifeCycle())) {
       this.executeJob(id);
     }
     return true;
@@ -213,7 +195,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     Assert.notNull(job, String.format("job not find id:%s", id));
     SchedulerJob updateJob = new SchedulerJob();
     updateJob.setId(id);
-    updateJob.setStatus(Status.OFFLINE.name());
+    updateJob.setStatus(Status.OFFLINE);
     Long flag = schedulerJobService.update(updateJob);
     if (flag <= 0) {
       return false;

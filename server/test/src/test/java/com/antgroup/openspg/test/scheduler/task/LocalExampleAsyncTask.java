@@ -10,8 +10,7 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
-package com.antgroup.openspg.server.core.scheduler.service.task.async.impl;
+package com.antgroup.openspg.test.scheduler.task;
 
 import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
@@ -22,9 +21,9 @@ import com.antgroup.openspg.server.core.scheduler.service.task.async.JobAsyncTas
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 
-/** local Dry Run Async Task */
-@Component("localDryRunTask")
-public class LocalDryRunAsyncTask extends JobAsyncTaskTemplate {
+/** Local Async Task Example */
+@Component("localExampleAsyncTask")
+public class LocalExampleAsyncTask extends JobAsyncTaskTemplate {
 
   @Override
   public String submit(JobTaskContext context) {
@@ -38,9 +37,8 @@ public class LocalDryRunAsyncTask extends JobAsyncTaskTemplate {
     context.addTraceLog("check local dry run Task Status, resource:%s", resource);
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
-    if (LifeCycle.REAL_TIME.name().equalsIgnoreCase(instance.getLifeCycle())) {
-      context.addTraceLog(
-          "instance LifeCycle is REAL_TIME, The instance is running continuously...");
+    if (LifeCycle.REAL_TIME.equals(instance.getLifeCycle())) {
+      context.addTraceLog("LifeCycle is REAL_TIME, The instance is running continuously...");
       return TaskStatus.RUNNING;
     }
     return task.getExecuteNum() > 2 ? TaskStatus.FINISH : TaskStatus.RUNNING;

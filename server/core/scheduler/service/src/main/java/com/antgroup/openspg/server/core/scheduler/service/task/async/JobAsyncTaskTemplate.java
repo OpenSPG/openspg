@@ -31,21 +31,23 @@ public abstract class JobAsyncTaskTemplate extends JobTaskTemplate implements Jo
   public TaskStatus process(JobTaskContext context) {
     SchedulerTask task = context.getTask();
     String resource = task.getResource();
+    if (StringUtils.isNotBlank(resource)) {
+      context.addTraceLog("Async task submitted! Get task status. resource：%s", resource);
+      return getStatus(context, resource);
+    }
 
+    context.addTraceLog("The Async task has not been submit! Go to submit");
+    resource = submit(context);
     if (StringUtils.isBlank(resource)) {
-      context.addTraceLog("The Async task has not been submit! Go to submit");
-      resource = submit(context);
-      if (StringUtils.isBlank(resource)) {
-        return TaskStatus.RUNNING;
-      }
-      context.addTraceLog("Async task submit successful! resource：%s", resource);
-      SchedulerTask updateTask = new SchedulerTask();
-      updateTask.setId(task.getId());
-      updateTask.setResource(resource);
-      schedulerTaskService.update(updateTask);
       return TaskStatus.RUNNING;
     }
-    context.addTraceLog("Async task submitted! Get task status. resource：%s", resource);
-    return getStatus(context, resource);
+    
+    context.addTraceLog("Async task submit successful! resource：%s", resource);
+    SchedulerTask updateTask = new SchedulerTask();
+    updateTask.setId(task.getId());
+    updateTask.setResource(resource);
+    schedulerTaskService.update(updateTask);
+      return TaskStatus.RUNNING;
+    
   }
 }

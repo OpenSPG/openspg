@@ -14,8 +14,7 @@
 /*
  * Ant Group
  * Copyright (c) 2004-2022 All Rights Reserved.
- */
-package com.antgroup.openspg.server.core.scheduler.service.common;
+ */package com.antgroup.openspg.server.core.scheduler.service.common;
 
 import com.antgroup.openspg.common.util.StringUtils;
 import java.util.concurrent.TimeUnit;
@@ -43,9 +42,6 @@ public class SchedulerValue {
 
   @Value("${scheduler.execute.max.day:}")
   private String executeMaxDay;
-
-  @Value("${scheduler.execute.env:}")
-  private String executeEnv;
 
   public String getHandlerType() {
     return handlerType;
@@ -86,7 +82,4 @@ public class SchedulerValue {
     return Integer.valueOf(executeMaxDay);
   }
 
-  public String getExecuteEnv() {
-    return executeEnv;
-  }
 }

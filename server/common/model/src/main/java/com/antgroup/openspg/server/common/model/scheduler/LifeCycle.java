@@ -10,33 +10,11 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.common.model.scheduler;
 
 /** Life Cycle Enum */
 public enum LifeCycle {
-
-  /** period */
   PERIOD,
-
-  /** once */
   ONCE,
-
-  /** realtime */
-  REAL_TIME;
-
-  /** get by name */
-  public static LifeCycle getByName(String name, LifeCycle defaultValue) {
-    for (LifeCycle value : LifeCycle.values()) {
-      if (value.name().equalsIgnoreCase(name)) {
-        return value;
-      }
-    }
-    return defaultValue;
-  }
-
-  /** get by name, return null if the enum does not exist */
-  public static LifeCycle getByName(String name) {
-    return getByName(name, null);
-  }
+  REAL_TIME
 }

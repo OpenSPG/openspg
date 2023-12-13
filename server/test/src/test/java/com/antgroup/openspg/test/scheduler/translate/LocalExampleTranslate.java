@@ -10,8 +10,7 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
-package com.antgroup.openspg.server.core.scheduler.service.translate.impl;
+package com.antgroup.openspg.test.scheduler.translate;
 
 import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
@@ -21,42 +20,34 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 /** scheduler Translate Local implementation class. SchedulerJob to WorkflowDag */
-@Component("localDryRunTranslate")
-public class LocalDryRunTranslate implements Translate {
+@Component("localExampleTranslate")
+public class LocalExampleTranslate implements Translate {
 
   @Override
   public WorkflowDag translate(SchedulerJob schedulerJob) {
     return getWorkflowDag();
   }
 
-  /** get Local DryRun WorkflowDag */
+  /** get Local Example WorkflowDag */
   public WorkflowDag getWorkflowDag() {
 
     List<WorkflowDag.Node> nodes = Lists.newArrayList();
     List<WorkflowDag.Edge> edges = Lists.newArrayList();
 
     WorkflowDag workflowGraph = new WorkflowDag();
-    WorkflowDag.Node preCheck = new WorkflowDag.Node();
+    WorkflowDag.Node sync = new WorkflowDag.Node();
     String prdId = "1000001";
-    Long preX = 250L;
-    Long preY = 280L;
-    preCheck.setId(prdId);
-    preCheck.setName("Pre Check");
-    preCheck.setType("preCheckTask");
-    preCheck.setX(preX);
-    preCheck.setY(preY);
-    nodes.add(preCheck);
+    sync.setId(prdId);
+    sync.setName("Local Sync Task Example");
+    sync.setType("localExampleSyncTask");
+    nodes.add(sync);
 
-    WorkflowDag.Node localDryRun = new WorkflowDag.Node();
+    WorkflowDag.Node async = new WorkflowDag.Node();
     String dryRunId = "2000001";
-    Long dryRunX = 500L;
-    Long dryRunY = 280L;
-    localDryRun.setId(dryRunId);
-    localDryRun.setName("Local DryRun");
-    localDryRun.setType("localDryRunTask");
-    localDryRun.setX(dryRunX);
-    localDryRun.setY(dryRunY);
-    nodes.add(localDryRun);
+    async.setId(dryRunId);
+    async.setName("Local Async Task Example");
+    async.setType("localExampleAsyncTask");
+    nodes.add(async);
 
     WorkflowDag.Edge edge = new WorkflowDag.Edge();
     edge.setFrom(prdId);

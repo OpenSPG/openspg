@@ -10,10 +10,14 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.model.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
+import com.antgroup.openspg.server.common.model.scheduler.MergeMode;
+import com.antgroup.openspg.server.common.model.scheduler.Status;
+import com.antgroup.openspg.server.common.model.scheduler.TranslateType;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,39 +47,33 @@ public class SchedulerJob extends BaseModel {
   /** project id */
   private Long projectId;
 
-  /** invoker id */
-  private String invokerId;
-
   /** job name */
   private String name;
 
-  /** job Life Cycle：PERIOD,ONCE,REAL_TIME Enum:LifeCycle */
-  private String lifeCycle;
+  /** job Life Cycle：PERIOD,ONCE,REAL_TIME */
+  private LifeCycle lifeCycle;
 
-  /** job translate */
-  private String translate;
+  /** translate type */
+  private TranslateType translateType;
 
   /** job Status：ONLINE,OFFLINE */
-  private String status;
+  private Status status;
+
+  /** Dependent upstream partition-MERGE，independent-SNAPSHOT */
+  private MergeMode mergeMode;
 
   /** Scheduler Cron expression default:0 0 0 * * ? */
   private String schedulerCron;
 
-  /** Upstream dependent Job */
-  private Long preJobId;
-
   /** last Execute Time */
   private Date lastExecuteTime;
 
+  /** invoker id, Primary key of the service table that triggers scheduler */
+  private String invokerId;
+
   /** extension */
-  private String extension;
+  private JSONObject extension;
 
   /** version */
   private String version;
-
-  /** Dependent upstream partition-MERGE，independent-SNAPSHOT */
-  private String mergeMode;
-
-  /** Scheduler dag config */
-  private String config;
 }

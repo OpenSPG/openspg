@@ -10,7 +10,6 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.common.util;
 
 import java.net.Inet4Address;
@@ -20,12 +19,11 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
-/** ip Utils */
+/** ip Utils. get local ips */
+@Slf4j
 public class IpUtils {
-  private static final Logger LOGGER = LoggerFactory.getLogger(IpUtils.class);
 
   public static final String LOCALHOST = "127.0.0.1";
   public static final String IP_LIST = String.join(",", getLocalIPList());
@@ -35,13 +33,11 @@ public class IpUtils {
     List<String> ipList = new ArrayList<>();
     try {
       Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-      NetworkInterface networkInterface;
       Enumeration<InetAddress> inetAddresses;
       InetAddress inetAddress;
       String ip;
       while (networkInterfaces.hasMoreElements()) {
-        networkInterface = networkInterfaces.nextElement();
-        inetAddresses = networkInterface.getInetAddresses();
+        inetAddresses = networkInterfaces.nextElement().getInetAddresses();
         while (inetAddresses.hasMoreElements()) {
           inetAddress = inetAddresses.nextElement();
           if (inetAddress != null && inetAddress instanceof Inet4Address) {
@@ -54,7 +50,7 @@ public class IpUtils {
         }
       }
     } catch (SocketException e) {
-      LOGGER.error(String.format("getLocalIPList failed."), e);
+      log.error("getLocalIPList failed.", e);
     }
     return ipList;
   }

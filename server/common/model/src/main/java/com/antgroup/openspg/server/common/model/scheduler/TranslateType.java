@@ -10,14 +10,19 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-package com.antgroup.openspg.server.core.scheduler.service.handler;
+package com.antgroup.openspg.server.common.model.scheduler;
 
-/** Scheduler Handler. To generate and execute Instances */
-public interface SchedulerHandler {
+/** Translate Enum */
+public enum TranslateType {
+  LOCAL_EXAMPLE("localExampleTranslate");
 
-  /** scheduler timer entrance. execute Instances */
-  void executeInstances();
+  private String type;
 
-  /** scheduler generate Instances timer */
-  void generateInstances();
+  TranslateType(String type) {
+    this.type = type;
+  }
+
+  public String getType() {
+    return type;
+  }
 }

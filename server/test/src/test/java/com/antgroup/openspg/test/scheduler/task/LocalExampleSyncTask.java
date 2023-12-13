@@ -10,8 +10,7 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
-package com.antgroup.openspg.server.core.scheduler.service.task.sync.impl;
+package com.antgroup.openspg.test.scheduler.task;
 
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.common.util.DateTimeUtils;
@@ -30,9 +29,9 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/** pre check Task */
-@Component("preCheckTask")
-public class PreCheckSyncTask extends JobSyncTaskTemplate {
+/** Local Sync Task Example: Pre Check Task */
+@Component("localExampleSyncTask")
+public class LocalExampleSyncTask extends JobSyncTaskTemplate {
 
   /** scheduler max days */
   private static final long SCHEDULER_MAX_DAYS = 5;
@@ -47,7 +46,7 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
       SchedulerInstance instance = context.getInstance();
       SchedulerInstance updateInstance = new SchedulerInstance();
       updateInstance.setId(instance.getId());
-      updateInstance.setStatus(InstanceStatus.RUNNING.name());
+      updateInstance.setStatus(InstanceStatus.RUNNING);
       updateInstance.setGmtModified(instance.getGmtModified());
       schedulerInstanceService.update(updateInstance);
     }
@@ -75,13 +74,9 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
           DateTimeUtils.getDate2LongStr(schedulerDate));
       return TaskStatus.RUNNING;
     }
-
-    if (LifeCycle.REAL_TIME.name().equals(instance.getLifeCycle())) {
+    LifeCycle lifeCycle = instance.getLifeCycle();
+    if (!LifeCycle.PERIOD.equals(lifeCycle)) {
       return processBySkip(context);
-    }
-
-    if (LifeCycle.ONCE.name().equals(instance.getLifeCycle())) {
-      return processBySnapshot(context);
     }
 
     if (MergeMode.SNAPSHOT.name().equals(instance.getMergeMode())) {
@@ -100,7 +95,7 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
   /** Snapshot instance pre-check */
   private TaskStatus processBySnapshot(JobTaskContext context) {
     context.addTraceLog("The current task does not depend on the completion of the last instance");
-    return checkPreInstance(context);
+    return TaskStatus.FINISH;
   }
 
   /** Merge instance pre-check */
@@ -111,22 +106,13 @@ public class PreCheckSyncTask extends JobSyncTaskTemplate {
     Date preSchedulerDate =
         CommonUtils.getPreviousValidTime(job.getSchedulerCron(), instance.getSchedulerDate());
     String preUniqueId = CommonUtils.getUniqueId(job.getId(), preSchedulerDate);
-    SchedulerInstance preInstance = schedulerInstanceService.getByUniqueId(preUniqueId);
+    SchedulerInstance pre = schedulerInstanceService.getByUniqueId(preUniqueId);
 
-    if (null == preInstance) {
-      return checkPreInstance(context);
-    }
-    if (InstanceStatus.isFinished(preInstance.getStatus())) {
-      return checkPreInstance(context);
+    if (null == pre || InstanceStatus.isFinished(pre.getStatus())) {
+      return TaskStatus.FINISH;
     }
 
-    context.addTraceLog(
-        "The last instance(%s) has not been executed, please wait for the scheduling to be completed.",
-        preInstance.getUniqueId());
+    context.addTraceLog("Last instance(%s) has not executed, please wait", pre.getUniqueId());
     return TaskStatus.RUNNING;
-  }
-
-  private TaskStatus checkPreInstance(JobTaskContext context) {
-    return TaskStatus.FINISH;
   }
 }

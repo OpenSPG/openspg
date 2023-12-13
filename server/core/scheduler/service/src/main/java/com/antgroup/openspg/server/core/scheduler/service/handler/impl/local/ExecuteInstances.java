@@ -10,18 +10,15 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.service.handler.impl.local;
 
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecuteService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /** Execute Instances Runnable. To generate instances by all period Job */
+@Slf4j
 public class ExecuteInstances implements Runnable {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(ExecuteInstances.class);
-
+  
   SchedulerExecuteService schedulerExecuteService;
 
   public ExecuteInstances(SchedulerExecuteService schedulerExecuteService) {
@@ -32,12 +29,12 @@ public class ExecuteInstances implements Runnable {
   public void run() {
     try {
       Long startTime = System.currentTimeMillis();
-      LOGGER.info("run ExecuteInstances start");
+      log.info("run ExecuteInstances start");
       schedulerExecuteService.executeInstances();
       Long time = System.currentTimeMillis() - startTime;
-      LOGGER.info(String.format("run ExecuteInstances end time:%s", time));
+      log.info("run ExecuteInstances end time:{}", time);
     } catch (Exception e) {
-      LOGGER.error("run ExecuteInstances Exception", e);
+      log.error("run ExecuteInstances Exception", e);
     }
   }
 }

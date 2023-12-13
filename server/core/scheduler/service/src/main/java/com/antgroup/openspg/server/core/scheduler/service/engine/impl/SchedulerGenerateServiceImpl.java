@@ -10,7 +10,6 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.service.engine.impl;
 
 import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
@@ -22,17 +21,15 @@ import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommon
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerGenerateService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /** Scheduler Generate Service implementation class. generate instances by all period Job */
 @Service
+@Slf4j
 public class SchedulerGenerateServiceImpl implements SchedulerGenerateService {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerGenerateServiceImpl.class);
 
   @Autowired SchedulerJobService schedulerJobService;
   @Autowired SchedulerCommonService schedulerCommonService;
@@ -40,7 +37,7 @@ public class SchedulerGenerateServiceImpl implements SchedulerGenerateService {
   @Override
   public void generateInstances() {
     List<SchedulerJob> allJob = getAllPeriodJobs();
-    LOGGER.info(String.format("getAllPeriodJob succeed size:%s", allJob.size()));
+    log.info("getAllPeriodJob successful size:{}", allJob.size());
     if (CollectionUtils.isEmpty(allJob)) {
       return;
     }
@@ -52,12 +49,9 @@ public class SchedulerGenerateServiceImpl implements SchedulerGenerateService {
     for (SchedulerJob job : allJob) {
       try {
         List<SchedulerInstance> instances = schedulerCommonService.generatePeriodInstance(job);
-        LOGGER.info(
-            String.format(
-                "generatePeriodInstance successful jobId:%s instances:%s",
-                job.getId(), instances.size()));
+        log.info("generate successful jobId:{} size:{}", job.getId(), instances.size());
       } catch (Exception e) {
-        LOGGER.error(String.format("generatePeriodInstance error,job:%s", job.getId()), e);
+        log.error("generate error jobId:{}", job.getId(), e);
       }
     }
   }
@@ -65,8 +59,8 @@ public class SchedulerGenerateServiceImpl implements SchedulerGenerateService {
   /** get all Period Jobs */
   private List<SchedulerJob> getAllPeriodJobs() {
     SchedulerJobQuery record = new SchedulerJobQuery();
-    record.setLifeCycle(LifeCycle.PERIOD.name());
-    record.setStatus(Status.ONLINE.name());
+    record.setLifeCycle(LifeCycle.PERIOD);
+    record.setStatus(Status.ONLINE);
     List<SchedulerJob> allJob = schedulerJobService.query(record).getData();
     return allJob;
   }

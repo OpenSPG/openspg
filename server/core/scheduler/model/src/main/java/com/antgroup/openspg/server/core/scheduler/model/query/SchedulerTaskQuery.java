@@ -10,11 +10,9 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
 package com.antgroup.openspg.server.core.scheduler.model.query;
 
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,19 +25,6 @@ public class SchedulerTaskQuery extends SchedulerTask {
 
   /** page No */
   private Integer pageNo;
-
   /** page Size */
   private Integer pageSize;
-
-  /** sort */
-  private String sort;
-
-  /** order asc, desc */
-  private String order;
-
-  /** start CreateTime Date */
-  private Date startCreateTime;
-
-  /** end CreateTime Date */
-  private Date endCreateTime;
 }
