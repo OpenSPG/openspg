@@ -35,7 +35,7 @@ import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 
 
-class OpenspgCatalog(val projectId: Long,
+class OpenSPGCatalog(val projectId: Long,
                      val connInfo: KgSchemaConnectionInfo,
                      val projectSchema: ProjectSchema = null) extends Catalog {
 
