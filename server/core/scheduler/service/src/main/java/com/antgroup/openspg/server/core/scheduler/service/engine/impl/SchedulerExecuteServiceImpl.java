@@ -15,7 +15,7 @@ package com.antgroup.openspg.server.core.scheduler.service.engine.impl;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
-import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
+import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
@@ -153,10 +153,10 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
   public void executeNextTask(JobTaskContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
-    WorkflowDag workflowDag = instance.getWorkflowDag();
-    List<WorkflowDag.Node> nextNodes = workflowDag.getNextNodes(task.getNodeId());
+    TaskDag taskDag = instance.getTaskDag();
+    List<TaskDag.Node> nextNodes = taskDag.getNextNodes(task.getNodeId());
     List<SchedulerTask> taskList = Lists.newArrayList();
-    for (WorkflowDag.Node nextNode : nextNodes) {
+    for (TaskDag.Node nextNode : nextNodes) {
       SchedulerTask nextTask =
           schedulerTaskService.queryByInstanceIdAndType(instance.getId(), nextNode.getType());
       taskList.add(nextTask);
@@ -182,12 +182,12 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
       return result;
     }
 
-    WorkflowDag workflowDag = instance.getWorkflowDag();
+    TaskDag taskDag = instance.getTaskDag();
     processList.forEach(
         it -> {
-          List<WorkflowDag.Node> preNodes = workflowDag.getPreNodes(it.getNodeId());
+          List<TaskDag.Node> preNodes = taskDag.getPreNodes(it.getNodeId());
           boolean allFinish = true;
-          for (WorkflowDag.Node preNode : preNodes) {
+          for (TaskDag.Node preNode : preNodes) {
             SchedulerTask preTask =
                 schedulerTaskService.queryByInstanceIdAndType(instance.getId(), preNode.getType());
             if (!TaskStatus.isFinished(preTask.getStatus())) {

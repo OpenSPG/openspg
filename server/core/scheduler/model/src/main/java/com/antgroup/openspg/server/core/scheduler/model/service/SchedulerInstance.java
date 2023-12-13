@@ -17,7 +17,7 @@ import com.antgroup.openspg.server.common.model.base.BaseModel;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
 import com.antgroup.openspg.server.common.model.scheduler.MergeMode;
-import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
+import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
@@ -80,6 +80,6 @@ public class SchedulerInstance extends BaseModel {
   /** extension */
   private JSONObject extension;
 
-  /** workflow dag Config */
-  private WorkflowDag workflowDag;
+  /** task dag Config */
+  private TaskDag taskDag;
 }

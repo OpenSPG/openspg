@@ -17,7 +17,7 @@ import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
-import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
+import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
@@ -185,18 +185,18 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
     instance.setSchedulerDate(schedulerDate);
     instance.setMergeMode(job.getMergeMode());
     instance.setVersion(SchedulerConstant.DEFAULT_VERSION);
-    WorkflowDag workflowDag =
+    TaskDag taskDag =
         TranslatorFactory.getTranslator(job.getTranslateType()).translate(job);
-    instance.setWorkflowDag(workflowDag);
+    instance.setTaskDag(taskDag);
 
     schedulerInstanceService.insert(instance);
     log.info("generateInstance successful jobId:{} uniqueId:{}", job.getId(), uniqueId);
 
-    List<WorkflowDag.Node> nodes = workflowDag.getNodes();
+    List<TaskDag.Node> nodes = taskDag.getNodes();
     nodes.forEach(
         node -> {
           TaskStatus status =
-              CollectionUtils.isEmpty(workflowDag.getPreNodes(node.getId()))
+              CollectionUtils.isEmpty(taskDag.getPreNodes(node.getId()))
                   ? TaskStatus.RUNNING
                   : TaskStatus.WAIT;
           schedulerTaskService.insert(new SchedulerTask(instance, status, node));

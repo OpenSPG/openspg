@@ -17,7 +17,7 @@ import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
-import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
+import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
@@ -172,29 +172,29 @@ public abstract class JobTaskTemplate implements JobTask {
     SchedulerTask task = context.getTask();
     task.setFinishTime(new Date());
 
-    WorkflowDag workflowDag = instance.getWorkflowDag();
+    TaskDag taskDag = instance.getTaskDag();
 
-    List<WorkflowDag.Node> nextNodes = workflowDag.getNextNodes(task.getNodeId());
+    List<TaskDag.Node> nextNodes = taskDag.getNextNodes(task.getNodeId());
 
     if (CollectionUtils.isEmpty(nextNodes)) {
       checkAllNodesFinished(context);
       return;
     }
 
-    for (WorkflowDag.Node nextNode : nextNodes) {
-      startNextNode(context, workflowDag, nextNode);
+    for (TaskDag.Node nextNode : nextNodes) {
+      startNextNode(context, taskDag, nextNode);
     }
   }
 
   private void startNextNode(
-      JobTaskContext context, WorkflowDag workflowDag, WorkflowDag.Node nextNode) {
+          JobTaskContext context, TaskDag taskDag, TaskDag.Node nextNode) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
 
-    List<WorkflowDag.Node> preNodes = workflowDag.getPreNodes(nextNode.getId());
+    List<TaskDag.Node> preNodes = taskDag.getPreNodes(nextNode.getId());
     boolean allPreFinish = true;
 
-    for (WorkflowDag.Node preNode : preNodes) {
+    for (TaskDag.Node preNode : preNodes) {
       if (preNode.getId().equals(task.getNodeId())) {
         continue;
       }

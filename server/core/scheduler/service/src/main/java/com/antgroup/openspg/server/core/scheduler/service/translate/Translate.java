@@ -14,17 +14,17 @@
 /** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.translate;
 
-import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
+import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 
-/** scheduler Translate. SchedulerJob to WorkflowDag */
+/** scheduler Translate. SchedulerJob to TaskDag */
 public interface Translate {
 
   /**
-   * translate to workflow Dag
+   * translate to Task Dag
    *
    * @param job
    * @return
    */
-  WorkflowDag translate(SchedulerJob job);
+  TaskDag translate(SchedulerJob job);
 }

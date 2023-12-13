@@ -12,51 +12,51 @@
  */
 package com.antgroup.openspg.test.scheduler.translate;
 
-import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
+import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.translate.Translate;
 import com.google.common.collect.Lists;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
-/** scheduler Translate Local implementation class. SchedulerJob to WorkflowDag */
+/** scheduler Translate Local implementation class. SchedulerJob to TaskDag */
 @Component("localExampleTranslate")
 public class LocalExampleTranslateTest implements Translate {
 
   @Override
-  public WorkflowDag translate(SchedulerJob schedulerJob) {
-    return getWorkflowDag();
+  public TaskDag translate(SchedulerJob schedulerJob) {
+    return getTaskDag();
   }
 
-  /** get Local Example WorkflowDag */
-  public WorkflowDag getWorkflowDag() {
+  /** get Local Example TaskDag */
+  public TaskDag getTaskDag() {
 
-    List<WorkflowDag.Node> nodes = Lists.newArrayList();
-    List<WorkflowDag.Edge> edges = Lists.newArrayList();
+    List<TaskDag.Node> nodes = Lists.newArrayList();
+    List<TaskDag.Edge> edges = Lists.newArrayList();
 
-    WorkflowDag workflowGraph = new WorkflowDag();
-    WorkflowDag.Node sync = new WorkflowDag.Node();
+    TaskDag taskDag = new TaskDag();
+    TaskDag.Node sync = new TaskDag.Node();
     String prdId = "1000001";
     sync.setId(prdId);
     sync.setName("Local Sync Task Example");
     sync.setType("localExampleSyncTask");
     nodes.add(sync);
 
-    WorkflowDag.Node async = new WorkflowDag.Node();
+    TaskDag.Node async = new TaskDag.Node();
     String dryRunId = "2000001";
     async.setId(dryRunId);
     async.setName("Local Async Task Example");
     async.setType("localExampleAsyncTask");
     nodes.add(async);
 
-    WorkflowDag.Edge edge = new WorkflowDag.Edge();
+    TaskDag.Edge edge = new TaskDag.Edge();
     edge.setFrom(prdId);
     edge.setTo(dryRunId);
     edges.add(edge);
 
-    workflowGraph.setNodes(nodes);
-    workflowGraph.setEdges(edges);
+    taskDag.setNodes(nodes);
+    taskDag.setEdges(edges);
 
-    return workflowGraph;
+    return taskDag;
   }
 }

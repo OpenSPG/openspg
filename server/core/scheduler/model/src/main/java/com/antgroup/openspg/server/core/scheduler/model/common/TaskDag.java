@@ -12,6 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.model.common;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
 import java.util.Collections;
@@ -21,16 +22,18 @@ import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.collections4.CollectionUtils;
 
-/** Workflow Dag Model ,Contains nodes and edges */
+/** Task Dag Model ,Contains nodes and edges */
 @Getter
 @Setter
 @ToString
-public class WorkflowDag {
+public class TaskDag {
 
   /** dag nodes List */
   private List<Node> nodes = Collections.emptyList();
+
   /** dag edges List */
   private List<Edge> edges = Collections.emptyList();
+
   /** dag extend */
   private String extend;
 
@@ -76,15 +79,18 @@ public class WorkflowDag {
   @Getter
   @Setter
   @ToString
-  public static class Node<T> {
+  public static class Node {
     /** id */
     private String id;
+
     /** type */
     private String type;
+
     /** name */
     private String name;
+
     /** properties */
-    private T properties;
+    private JSONObject properties;
   }
 
   @Getter
@@ -93,6 +99,7 @@ public class WorkflowDag {
   public static class Edge {
     /** from id */
     private String from;
+
     /** to id */
     private String to;
   }

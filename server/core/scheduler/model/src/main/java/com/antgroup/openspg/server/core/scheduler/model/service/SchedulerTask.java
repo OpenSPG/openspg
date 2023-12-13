@@ -17,7 +17,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
 import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
-import com.antgroup.openspg.server.core.scheduler.model.common.WorkflowDag;
+import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
@@ -90,7 +90,7 @@ public class SchedulerTask extends BaseModel {
   public SchedulerTask() {}
 
   /** constructor */
-  public SchedulerTask(SchedulerInstance instance, TaskStatus status, WorkflowDag.Node node) {
+  public SchedulerTask(SchedulerInstance instance, TaskStatus status, TaskDag.Node node) {
     this.executeNum = 0;
     this.beginTime = new Date();
     this.status = status;
