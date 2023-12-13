@@ -28,7 +28,7 @@
     <module>common</module>
     <module>udf</module>
     <module>lube-api</module>
-    <module>warehouse/reasoner-warehouse-common</module>
+    <module>warehouse/warehouse-common</module>
     <module>kgdsl-parser</module>
   </modules>
 
