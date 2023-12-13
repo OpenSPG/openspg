@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.extern.slf4j.Slf4j;
 
 /** ip Utils. get local ips */

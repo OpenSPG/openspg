@@ -12,6 +12,7 @@
  */
 package com.antgroup.openspg.common.util;
 
+import com.antgroup.openspg.server.common.model.scheduler.Compare;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -23,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import com.antgroup.openspg.server.common.model.scheduler.Compare;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronExpression;
 
