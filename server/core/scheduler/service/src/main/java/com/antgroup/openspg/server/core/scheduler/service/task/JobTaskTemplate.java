@@ -47,9 +47,7 @@ public abstract class JobTaskTemplate implements JobTask {
     try {
       lock = lockTask(context);
       if (lock) {
-        // Pre-process
         before(context);
-        // Core process
         status = process(context);
         context.getTask().setStatus(status);
       }
@@ -65,19 +63,8 @@ public abstract class JobTaskTemplate implements JobTask {
   @Transactional
   public void processStatus(JobTaskContext context, TaskStatus status, boolean lock) {
     try {
-      if (status == null) {
-        status = TaskStatus.WAIT;
-      }
-      switch (status) {
-        case FINISH:
-          finish(context);
-          break;
-        case SKIP:
-          skip(context);
-          break;
-        case ERROR:
-        default:
-          break;
+      if (TaskStatus.isFinished(status)) {
+        setTaskFinish(context);
       }
     } catch (Throwable e) {
       context.addTraceLog("Scheduling save status error：%s", CommonUtils.getExceptionToString(e));
@@ -88,17 +75,18 @@ public abstract class JobTaskTemplate implements JobTask {
     }
   }
 
+  /** lock task */
   private boolean lockTask(JobTaskContext context) {
     SchedulerTask task = context.getTask();
     if (task.getLockTime() == null) {
-      int count = schedulerTaskService.updateLock(task.getId());
-      if (count < 1) {
+      if (schedulerTaskService.updateLock(task.getId()) < 1) {
         context.addTraceLog("Failed to preempt lock, the lock is already occupied!");
         return false;
       }
       context.addTraceLog("Lock preempt successful!");
       return true;
     }
+
     Date now = new Date();
     Date unLockTime = DateUtils.addMinutes(task.getLockTime(), LOCK_TIME_MINUTES);
     if (now.before(unLockTime)) {
@@ -111,8 +99,7 @@ public abstract class JobTaskTemplate implements JobTask {
         "Last lock preempt time：%s, The threshold was exceeded. The current process is executed directly",
         DateTimeUtils.getDate2LongStr(task.getLockTime()));
     unlockTask(context, true);
-    int count = schedulerTaskService.updateLock(task.getId());
-    if (count < 1) {
+    if (schedulerTaskService.updateLock(task.getId()) < 1) {
       context.addTraceLog("Failed to re-preempt lock!");
       return false;
     }
@@ -120,6 +107,7 @@ public abstract class JobTaskTemplate implements JobTask {
     return true;
   }
 
+  /** unlock task */
   private void unlockTask(JobTaskContext context, boolean lock) {
     if (!lock) {
       return;
@@ -132,98 +120,62 @@ public abstract class JobTaskTemplate implements JobTask {
     context.addTraceLog("Start process task!");
   }
 
-  public void finish(JobTaskContext context) {
-    setTaskFinish(context);
-  }
-
-  public void skip(JobTaskContext context) {
-    setTaskFinish(context);
-  }
-
+  /** the finally Func */
   public void finallyFunc(JobTaskContext context) {
-    context.addTraceLog(
-        "Task scheduling completed. cost:%s ms !",
-        System.currentTimeMillis() - context.getStartTime());
-    // replace task
+    long cost = System.currentTimeMillis() - context.getStartTime();
+    context.addTraceLog("Task scheduling completed. cost:%s ms !", cost);
+
     SchedulerTask task = context.getTask();
-    SchedulerTask oldTask = schedulerTaskService.getById(task.getId());
-    if (TaskStatus.isFinished(oldTask.getStatus())) {
-      context.addTraceLog(
-          "The task has been completed by other threads, Current status:%s. The schedule does not change the data, only saves the log!!",
-          oldTask.getStatus());
-      task = oldTask;
-    } else {
-      task.setGmtModified(oldTask.getGmtModified());
+    SchedulerTask old = schedulerTaskService.getById(task.getId());
+    if (TaskStatus.isFinished(old.getStatus())) {
+      context.addTraceLog("Task has been completed by other threads,status:%s!", old.getStatus());
+      task = old;
     }
 
-    task.setExecuteNum(oldTask.getExecuteNum() + 1);
+    task.setGmtModified(old.getGmtModified());
+    task.setExecuteNum(old.getExecuteNum() + 1);
     context.getTraceLog().insert(0, System.getProperty("line.separator"));
-    task.setRemark(CommonUtils.setRemarkLimit(oldTask.getRemark(), context.getTraceLog()));
+    task.setRemark(CommonUtils.setRemarkLimit(old.getRemark(), context.getTraceLog()));
     task.setLockTime(null);
 
     if (schedulerTaskService.replace(task) <= 0) {
-      log.error("finally replace task error task:{}", task);
       throw new OpenSPGException("finally replace task error task {}", task);
     }
   }
 
+  /** set task to finished */
   public void setTaskFinish(JobTaskContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
     task.setFinishTime(new Date());
 
-    TaskDag taskDag = instance.getTaskDag();
-
-    List<TaskDag.Node> nextNodes = taskDag.getRelatedNodes(task.getNodeId(), true);
+    List<TaskDag.Node> nextNodes = instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
 
     if (CollectionUtils.isEmpty(nextNodes)) {
-      checkAllNodesFinished(context);
+      List<SchedulerTask> tasks = schedulerTaskService.queryByInstanceId(instance.getId());
+      if (checkAllTasksFinished(task, tasks)) {
+        setInstanceFinished(context, TaskStatus.FINISH, InstanceStatus.FINISH);
+      }
       return;
     }
-
-    for (TaskDag.Node nextNode : nextNodes) {
-      startNextNode(context, taskDag, nextNode);
-    }
+    nextNodes.forEach(node -> startNextNode(context, instance.getTaskDag(), node));
   }
 
+  /** start next node */
   private void startNextNode(JobTaskContext context, TaskDag taskDag, TaskDag.Node nextNode) {
-    SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
 
-    List<TaskDag.Node> preNodes = taskDag.getRelatedNodes(nextNode.getId(), false);
-    boolean allPreFinish = true;
-
-    for (TaskDag.Node preNode : preNodes) {
-      if (preNode.getId().equals(task.getNodeId())) {
-        continue;
-      }
-      SchedulerTask preTask =
-          schedulerTaskService.queryByInstanceIdAndType(task.getInstanceId(), preNode.getType());
-      if (!TaskStatus.isFinished(preTask.getStatus())) {
-        allPreFinish = false;
-        break;
-      }
-    }
-
-    if (!allPreFinish) {
+    if (!checkAllNodesFinished(task, taskDag.getRelatedNodes(nextNode.getId(), false))) {
       return;
     }
-    SchedulerTask updateTask = new SchedulerTask();
     SchedulerTask nextTask =
         schedulerTaskService.queryByInstanceIdAndType(task.getInstanceId(), nextNode.getType());
-    if (nextTask != null) {
-      updateTask.setId(nextTask.getId());
-    } else {
-      updateTask = new SchedulerTask(instance, TaskStatus.WAIT, nextNode);
-      nextTask = updateTask;
-    }
-    context.addTraceLog(
-        "The execution of the current node is completed and subsequent nodes are triggered:%s",
-        nextNode.getName());
+    SchedulerTask updateTask = new SchedulerTask();
+    updateTask.setId(nextTask.getId());
+    String name = nextNode.getName();
+    context.addTraceLog("current node is completed to trigger next node:%s", name);
     if (!TaskStatus.WAIT.equals(nextTask.getStatus())) {
-      context.addTraceLog(
-          "subsequent nodes:%s status is:%s,Only the WAIT state can be modified",
-          nextNode.getName(), nextTask.getStatus());
+      context.addTraceLog("%s status:%s,Only WAIT can be modified", name, nextTask.getStatus());
       return;
     }
     updateTask.setStatus(TaskStatus.RUNNING);
@@ -235,26 +187,30 @@ public abstract class JobTaskTemplate implements JobTask {
     context.setTaskFinish(true);
   }
 
-  private boolean checkAllNodesFinished(JobTaskContext context) {
-    boolean allFinish = true;
-    List<SchedulerTask> taskList =
-        schedulerTaskService.queryByInstanceId(context.getInstance().getId());
-    for (SchedulerTask task : taskList) {
-      if (task.getId().equals(task.getId())) {
-        continue;
-      }
-      if (!TaskStatus.isFinished(task.getStatus())) {
-        allFinish = false;
-        break;
+  /** check all tasks is finished */
+  private boolean checkAllTasksFinished(SchedulerTask task, List<SchedulerTask> taskList) {
+    for (SchedulerTask t : taskList) {
+      if (!t.getId().equals(task.getId()) && !TaskStatus.isFinished(t.getStatus())) {
+        return false;
       }
     }
-    if (allFinish) {
-      setInstanceFinish(context, TaskStatus.FINISH, InstanceStatus.FINISH);
-    }
-    return allFinish;
+    return true;
   }
 
-  public void setInstanceFinish(
+  /** check all nodes is finished */
+  private boolean checkAllNodesFinished(SchedulerTask task, List<TaskDag.Node> nodes) {
+    for (TaskDag.Node node : nodes) {
+      SchedulerTask t =
+          schedulerTaskService.queryByInstanceIdAndType(task.getInstanceId(), node.getType());
+      if (!node.getId().equals(task.getNodeId()) && !TaskStatus.isFinished(t.getStatus())) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /** set instance to finished */
+  public void setInstanceFinished(
       JobTaskContext context, TaskStatus taskStatus, InstanceStatus instanceStatus) {
     SchedulerInstance instance = context.getInstance();
     context.addTraceLog(

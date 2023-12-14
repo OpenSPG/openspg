@@ -49,12 +49,11 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
   @Override
   public synchronized Long update(SchedulerJob record) {
     Long id = record.getId();
-    SchedulerJob oldRecord = getById(id);
-    if (record.getGmtModified() != null
-        && !oldRecord.getGmtModified().equals(record.getGmtModified())) {
+    SchedulerJob old = getById(id);
+    if (record.getGmtModified() != null && !old.getGmtModified().equals(record.getGmtModified())) {
       return 0L;
     }
-    record = CommonUtils.merge(oldRecord, record);
+    record = CommonUtils.merge(old, record);
     record.setGmtModified(new Date());
     jobs.put(id, record);
     return id;

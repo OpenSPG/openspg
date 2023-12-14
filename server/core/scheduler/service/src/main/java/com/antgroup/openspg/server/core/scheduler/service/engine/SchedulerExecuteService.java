@@ -15,6 +15,9 @@ package com.antgroup.openspg.server.core.scheduler.service.engine;
 /** Scheduler Execute Service. execute all instances */
 public interface SchedulerExecuteService {
 
+  /** generate Instances */
+  void generateInstances();
+
   /** execute all Instances */
   void executeInstances();
 

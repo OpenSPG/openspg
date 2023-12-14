@@ -43,9 +43,6 @@ public interface SchedulerTaskService {
   /** query By InstanceId */
   List<SchedulerTask> queryByInstanceId(Long instanceId);
 
-  /** query Base Column By InstanceId */
-  List<SchedulerTask> queryBaseColumnByInstanceId(Long instanceId);
-
   /** set Status By InstanceId */
   int setStatusByInstanceId(Long instanceId, TaskStatus status);
 

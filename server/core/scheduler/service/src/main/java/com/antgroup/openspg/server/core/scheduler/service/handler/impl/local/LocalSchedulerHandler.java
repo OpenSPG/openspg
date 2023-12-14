@@ -14,7 +14,6 @@ package com.antgroup.openspg.server.core.scheduler.service.handler.impl.local;
 
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecuteService;
-import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerGenerateService;
 import com.antgroup.openspg.server.core.scheduler.service.handler.SchedulerHandler;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -37,7 +36,6 @@ public class LocalSchedulerHandler implements SchedulerHandler {
 
   @Autowired SchedulerValue schedulerValue;
   @Autowired SchedulerExecuteService schedulerExecuteService;
-  @Autowired SchedulerGenerateService schedulerGenerateService;
 
   @Override
   @PostConstruct
@@ -46,21 +44,9 @@ public class LocalSchedulerHandler implements SchedulerHandler {
       log.warn("ignore execute handlerType:{}", schedulerValue.getHandlerType());
       return;
     }
-    Runnable executeInstances =
-        () -> {
-          try {
-            Long startTime = System.currentTimeMillis();
-            schedulerExecuteService.executeInstances();
-            Long time = System.currentTimeMillis() - startTime;
-            log.info("run ExecuteInstances end time:{}", time);
-          } catch (Exception e) {
-            log.error("run ExecuteInstances Exception", e);
-          }
-        };
-
     log.info("start executeInstances");
     EXECUTE.scheduleAtFixedRate(
-        executeInstances,
+        new ExecuteRunnable(),
         initialDelay,
         schedulerValue.getExecuteInstancesPeriod(),
         schedulerValue.getExecuteInstancesUnit());
@@ -73,24 +59,41 @@ public class LocalSchedulerHandler implements SchedulerHandler {
       log.warn("ignore generate handlerType:{}", schedulerValue.getHandlerType());
       return;
     }
-
-    Runnable generateInstances =
-        () -> {
-          try {
-            Long startTime = System.currentTimeMillis();
-            schedulerGenerateService.generateInstances();
-            Long time = System.currentTimeMillis() - startTime;
-            log.info("run GenerateInstances end time:{}", time);
-          } catch (Exception e) {
-            log.error("run GenerateInstances Exception", e);
-          }
-        };
-
     log.info("start generateInstances");
     GENERATE.scheduleAtFixedRate(
-        generateInstances,
+        new GenerateRunnable(),
         initialDelay,
         schedulerValue.getGenerateInstancesPeriod(),
         schedulerValue.getGenerateInstancesUnit());
+  }
+
+  /** Execute Instances Runnable */
+  class ExecuteRunnable implements Runnable {
+    @Override
+    public void run() {
+      try {
+        Long startTime = System.currentTimeMillis();
+        schedulerExecuteService.executeInstances();
+        Long time = System.currentTimeMillis() - startTime;
+        log.info("run ExecuteInstances end time:{}", time);
+      } catch (Exception e) {
+        log.error("run ExecuteInstances Exception", e);
+      }
+    }
+  }
+
+  /** Generate Instances Runnable */
+  class GenerateRunnable implements Runnable {
+    @Override
+    public void run() {
+      try {
+        Long startTime = System.currentTimeMillis();
+        schedulerExecuteService.generateInstances();
+        Long time = System.currentTimeMillis() - startTime;
+        log.info("run GenerateInstances end time:{}", time);
+      } catch (Exception e) {
+        log.error("run GenerateInstances Exception", e);
+      }
+    }
   }
 }

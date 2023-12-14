@@ -59,12 +59,11 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   @Override
   public synchronized Long update(SchedulerTask record) {
     Long id = record.getId();
-    SchedulerTask oldRecord = getById(id);
-    if (record.getGmtModified() != null
-        && !oldRecord.getGmtModified().equals(record.getGmtModified())) {
+    SchedulerTask old = getById(id);
+    if (record.getGmtModified() != null && !old.getGmtModified().equals(record.getGmtModified())) {
       return 0L;
     }
-    record = CommonUtils.merge(oldRecord, record);
+    record = CommonUtils.merge(old, record);
     record.setGmtModified(new Date());
     tasks.put(id, record);
     return id;
@@ -132,21 +131,6 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
       if (instanceId.equals(task.getInstanceId())) {
         SchedulerTask target = new SchedulerTask();
         BeanUtils.copyProperties(task, target);
-        taskList.add(target);
-      }
-    }
-    return taskList;
-  }
-
-  @Override
-  public List<SchedulerTask> queryBaseColumnByInstanceId(Long instanceId) {
-    List<SchedulerTask> taskList = Lists.newArrayList();
-    for (Long key : tasks.keySet()) {
-      SchedulerTask task = tasks.get(key);
-      if (instanceId.equals(task.getInstanceId())) {
-        SchedulerTask target = new SchedulerTask();
-        BeanUtils.copyProperties(task, target);
-        target.setRemark(null);
         taskList.add(target);
       }
     }

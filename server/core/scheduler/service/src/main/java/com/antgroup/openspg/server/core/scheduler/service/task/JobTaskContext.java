@@ -48,13 +48,8 @@ public class JobTaskContext {
   /** task is Finish */
   private boolean taskFinish;
 
-  public JobTaskContext() {
-    this.traceLog = new StringBuffer();
-    this.startTime = System.currentTimeMillis();
-    this.taskFinish = false;
-  }
-
   public JobTaskContext(SchedulerJob job, SchedulerInstance instance, SchedulerTask task) {
+    task.setRemark(null);
     this.job = job;
     this.instance = instance;
     this.task = task;

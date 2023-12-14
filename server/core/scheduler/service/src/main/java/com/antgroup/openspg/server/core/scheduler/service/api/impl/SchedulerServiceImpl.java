@@ -43,26 +43,10 @@ import org.springframework.util.Assert;
 @Service
 public class SchedulerServiceImpl implements SchedulerService {
 
-  private static final int corePoolSize = 1;
-  private static final int maximumPoolSize = 20;
-  private static final int keepAliveTime = 30;
-  private static final int capacity = 100;
   public static final String DEFAULT_VERSION = "V3";
 
   private ThreadPoolExecutor instanceExecutor =
-      new ThreadPoolExecutor(
-          corePoolSize,
-          maximumPoolSize,
-          keepAliveTime,
-          TimeUnit.MINUTES,
-          new LinkedBlockingQueue<>(capacity),
-          runnable -> {
-            Thread thread = new Thread(runnable);
-            thread.setDaemon(true);
-            thread.setName("instanceExecutor" + thread.getId());
-            return thread;
-          },
-          new ThreadPoolExecutor.DiscardOldestPolicy());
+      new ThreadPoolExecutor(1, 20, 30, TimeUnit.MINUTES, new LinkedBlockingQueue<>(100));
 
   @Autowired SchedulerJobService schedulerJobService;
   @Autowired SchedulerInstanceService schedulerInstanceService;
@@ -75,15 +59,8 @@ public class SchedulerServiceImpl implements SchedulerService {
     setJobPropertyDefaultValue(job);
     checkJobPropertyValidity(job);
     Long id = job.getId();
-
-    if (id == null || id < 0) {
-      schedulerJobService.insert(job);
-    } else {
-      schedulerJobService.update(job);
-    }
-
-    this.executeJob(job.getId());
-
+    id = (id == null ? schedulerJobService.insert(job) : schedulerJobService.update(job));
+    this.executeJob(id);
     return job;
   }
 
@@ -126,19 +103,15 @@ public class SchedulerServiceImpl implements SchedulerService {
     SchedulerJob job = schedulerJobService.getById(id);
     Assert.notNull(job, String.format("job not find id:%s", id));
 
-    switch (job.getLifeCycle()) {
-      case REAL_TIME:
-        stopJobAllInstance(id);
-        instance = schedulerCommonService.generateRealTimeInstance(job);
-        break;
-      case PERIOD:
-        instances.addAll(schedulerCommonService.generatePeriodInstance(job));
-        break;
-      case ONCE:
-        instance = schedulerCommonService.generateOnceInstance(job);
-        break;
-      default:
-        break;
+    if (LifeCycle.REAL_TIME.equals(job.getLifeCycle())) {
+      stopJobAllInstance(id);
+      instance = schedulerCommonService.generateRealTimeInstance(job);
+    }
+    if (LifeCycle.PERIOD.equals(job.getLifeCycle())) {
+      instances.addAll(schedulerCommonService.generatePeriodInstance(job));
+    }
+    if (LifeCycle.ONCE.equals(job.getLifeCycle())) {
+      instance = schedulerCommonService.generateOnceInstance(job);
     }
     if (instance != null) {
       instances.add(instance);
@@ -205,11 +178,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   @Override
   public Boolean deleteJob(Long id) {
     stopJobAllInstance(id);
-    Integer flag = schedulerJobService.deleteById(id);
-    if (flag <= 0) {
-      return false;
-    }
-
+    schedulerJobService.deleteById(id);
     schedulerInstanceService.deleteByJobId(id);
     schedulerTaskService.deleteByJobId(id);
     return true;
@@ -239,7 +208,6 @@ public class SchedulerServiceImpl implements SchedulerService {
   @Override
   public Boolean stopInstance(Long id) {
     SchedulerInstance instance = schedulerInstanceService.getById(id);
-    Assert.notNull(instance, String.format("instance not find id:%s", id));
     schedulerCommonService.setInstanceFinish(
         instance, InstanceStatus.TERMINATE, TaskStatus.TERMINATE);
     return true;
@@ -248,7 +216,6 @@ public class SchedulerServiceImpl implements SchedulerService {
   @Override
   public Boolean setFinishInstance(Long id) {
     SchedulerInstance instance = schedulerInstanceService.getById(id);
-    Assert.notNull(instance, String.format("instance not find id:%s", id));
     schedulerCommonService.setInstanceFinish(
         instance, InstanceStatus.SET_FINISH, TaskStatus.SET_FINISH);
     return true;
@@ -257,14 +224,8 @@ public class SchedulerServiceImpl implements SchedulerService {
   @Override
   public Boolean restartInstance(Long id) {
     SchedulerInstance instance = schedulerInstanceService.getById(id);
-    Assert.notNull(instance, String.format("instance not find id:%s", id));
     SchedulerJob job = schedulerJobService.getById(instance.getJobId());
-    Assert.notNull(job, String.format("job not find id:%s", id));
     SchedulerInstance reRunInstance = schedulerCommonService.generateOnceInstance(job);
-    if (reRunInstance == null) {
-      return false;
-    }
-
     Long instanceId = reRunInstance.getId();
     Runnable instanceRunnable = () -> schedulerExecuteService.executeInstance(instanceId);
     instanceExecutor.execute(instanceRunnable);
@@ -274,7 +235,6 @@ public class SchedulerServiceImpl implements SchedulerService {
   @Override
   public Boolean triggerInstance(Long id) {
     SchedulerInstance instance = schedulerInstanceService.getById(id);
-    Assert.notNull(instance, String.format("instance not find id:%s", id));
     if (InstanceStatus.isFinished(instance.getStatus())) {
       throw new OpenSPGException("The instance has been finished");
     }

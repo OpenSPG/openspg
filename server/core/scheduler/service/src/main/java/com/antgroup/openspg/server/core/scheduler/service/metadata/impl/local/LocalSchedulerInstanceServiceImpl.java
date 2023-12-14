@@ -71,12 +71,11 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   @Override
   public synchronized Long update(SchedulerInstance record) {
     Long id = record.getId();
-    SchedulerInstance oldInstance = getById(id);
-    if (record.getGmtModified() != null
-        && !oldInstance.getGmtModified().equals(record.getGmtModified())) {
+    SchedulerInstance old = getById(id);
+    if (record.getGmtModified() != null && !old.getGmtModified().equals(record.getGmtModified())) {
       return 0L;
     }
-    record = CommonUtils.merge(oldInstance, record);
+    record = CommonUtils.merge(old, record);
     record.setGmtModified(new Date());
     instances.put(id, record);
     return id;

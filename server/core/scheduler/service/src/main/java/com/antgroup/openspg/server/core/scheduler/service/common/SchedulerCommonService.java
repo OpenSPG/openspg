@@ -38,6 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 /** Scheduler Common Service */
 @Service
@@ -54,20 +55,16 @@ public class SchedulerCommonService {
   /** set Instance To Finish */
   public void setInstanceFinish(
       SchedulerInstance instance, InstanceStatus instanceStatus, TaskStatus taskStatus) {
+    Long finish = 100L;
+    Date finishTime = (instance.getFinishTime() == null ? new Date() : instance.getFinishTime());
     SchedulerInstance updateInstance = new SchedulerInstance();
     updateInstance.setId(instance.getId());
     updateInstance.setStatus(instanceStatus);
-    Long finish = 100L;
     updateInstance.setProgress(finish);
-    Date finishTime = instance.getFinishTime() == null ? new Date() : instance.getFinishTime();
     updateInstance.setFinishTime(finishTime);
-
     Long updateNum = schedulerInstanceService.update(updateInstance);
-    if (updateNum <= 0) {
-      throw new OpenSPGException("update instance failed {}", updateInstance);
-    }
+    Assert.isTrue(updateNum > 0, "update instance failed " + updateInstance);
     stopRunningProcess(instance);
-
     schedulerTaskService.setStatusByInstanceId(instance.getId(), taskStatus);
   }
 
@@ -78,35 +75,23 @@ public class SchedulerCommonService {
         taskList.stream()
             .filter(s -> TaskStatus.isRunning(s.getStatus()))
             .collect(Collectors.toList());
-    if (CollectionUtils.isEmpty(processList)) {
-      return;
-    }
 
     SchedulerJob job = schedulerJobService.getById(instance.getJobId());
-    processList.forEach(
-        task -> {
-          try {
-            JobTaskContext context = new JobTaskContext(job, instance, task);
-            String type = task.getType();
-            if (StringUtils.isBlank(type)) {
-              return;
-            }
 
-            type = type.split(UNDERLINE_SEPARATOR)[0];
-            JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
-            if (jobTask == null) {
-              log.error("stop task is null id:{}", task.getId());
-              return;
-            }
-
-            if (jobTask instanceof JobAsyncTask) {
-              JobAsyncTask jobAsyncTask = (JobAsyncTask) jobTask;
-              jobAsyncTask.stop(context, task.getResource());
-            }
-          } catch (Exception e) {
-            log.error("stop task error id:{}", task.getId());
-          }
-        });
+    for (SchedulerTask task : processList) {
+      JobTaskContext context = new JobTaskContext(job, instance, task);
+      if (StringUtils.isBlank(task.getType())) {
+        continue;
+      }
+      String type = task.getType().split(UNDERLINE_SEPARATOR)[0];
+      JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
+      if (jobTask != null && jobTask instanceof JobAsyncTask) {
+        JobAsyncTask jobAsyncTask = (JobAsyncTask) jobTask;
+        jobAsyncTask.stop(context, task.getResource());
+      } else {
+        log.error("task is null or not an instance of JobAsyncTask id: {}", task.getId());
+      }
+    }
   }
 
   /** check Instance is Running within 24H */
@@ -116,22 +101,18 @@ public class SchedulerCommonService {
     query.setStartCreateTime(DateUtils.addDays(new Date(), -1));
     query.setEndCreateTime(new Date());
     List<SchedulerInstance> instances = schedulerInstanceService.query(query);
-    instances.stream()
-        .forEach(
-            instance -> {
-              if (!InstanceStatus.isFinished(instance.getStatus())) {
-                throw new OpenSPGException(
-                    "Running instances exist within 24H uniqueId {}", instance.getUniqueId());
-              }
-            });
+    for (SchedulerInstance instance : instances) {
+      if (!InstanceStatus.isFinished(instance.getStatus())) {
+        throw new OpenSPGException("Running instances exist within 24H {}", instance.getUniqueId());
+      }
+    }
   }
 
   /** generate Once Instance */
   public SchedulerInstance generateOnceInstance(SchedulerJob job) {
     checkInstanceRunning(job);
-    Date schedulerDate = new Date();
     String uniqueId = job.getId().toString() + System.currentTimeMillis();
-    return generateInstance(job, uniqueId, schedulerDate);
+    return generateInstance(job, uniqueId, new Date());
   }
 
   /** generate Period Instance by Cron */
@@ -144,7 +125,6 @@ public class SchedulerCommonService {
       if (instance == null) {
         continue;
       }
-
       instances.add(instance);
     }
     return instances;
@@ -153,9 +133,8 @@ public class SchedulerCommonService {
   /** generate RealTime Instance */
   public SchedulerInstance generateRealTimeInstance(SchedulerJob job) {
     checkInstanceRunning(job);
-    Date schedulerDate = new Date();
     String uniqueId = job.getId().toString() + System.currentTimeMillis();
-    return generateInstance(job, uniqueId, schedulerDate);
+    return generateInstance(job, uniqueId, new Date());
   }
 
   /** generate Instance by schedulerDate */
@@ -188,15 +167,11 @@ public class SchedulerCommonService {
     schedulerInstanceService.insert(instance);
     log.info("generateInstance successful jobId:{} uniqueId:{}", job.getId(), uniqueId);
 
-    List<TaskDag.Node> nodes = taskDag.getNodes();
-    nodes.forEach(
-        node -> {
-          TaskStatus status =
-              CollectionUtils.isEmpty(taskDag.getRelatedNodes(node.getId(), false))
-                  ? TaskStatus.RUNNING
-                  : TaskStatus.WAIT;
-          schedulerTaskService.insert(new SchedulerTask(instance, status, node));
-        });
+    for (TaskDag.Node node : taskDag.getNodes()) {
+      List<TaskDag.Node> pres = taskDag.getRelatedNodes(node.getId(), false);
+      TaskStatus status = CollectionUtils.isEmpty(pres) ? TaskStatus.RUNNING : TaskStatus.WAIT;
+      schedulerTaskService.insert(new SchedulerTask(instance, status, node));
+    }
 
     SchedulerJob updateJob = new SchedulerJob();
     updateJob.setId(job.getId());
