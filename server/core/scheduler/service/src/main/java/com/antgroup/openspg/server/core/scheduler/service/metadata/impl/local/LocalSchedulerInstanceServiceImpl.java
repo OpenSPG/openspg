@@ -124,8 +124,8 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
       }
 
       Date create = instance.getGmtCreate();
-      if (!CommonUtils.compare(create, record.getStartCreateTime(), CommonUtils.GT)
-          || !CommonUtils.compare(create, record.getEndCreateTime(), CommonUtils.LT)) {
+      if (!CommonUtils.compare(create, record.getStartCreateTime(), CommonUtils.LT)
+          || !CommonUtils.compare(create, record.getEndCreateTime(), CommonUtils.GT)) {
         continue;
       }
 
