@@ -114,7 +114,7 @@ public class FoldEdgeImpl implements Serializable {
     }
 
     if (null == pathEdgeSet) {
-      // 第一个wind，构造PathEdge
+      // Construct the pathEdge in the first wind
       Set<IEdge<IVertexId, IProperty>> toEdgeSet = new HashSet<>();
       for (IEdge<IVertexId, IProperty> edge : fromEdgeSet) {
         PathEdge<IVertexId, IProperty, IProperty> pathEdge =
@@ -123,7 +123,7 @@ public class FoldEdgeImpl implements Serializable {
       }
       kgGraph.getAlias2EdgeMap().put(this.foldRepeatEdgeInfo.getToEdgeAlias(), toEdgeSet);
 
-      // 重命名点
+      // Rename node
       kgGraph
           .getAlias2VertexMap()
           .put(
@@ -133,9 +133,9 @@ public class FoldEdgeImpl implements Serializable {
       return result;
     }
 
-    // 已经存在PathEdge，增加PathEdge的长度
+    // An existing PathEdge is present; increase the length of the PathEdge.
 
-    // 一般这个map只有一个value
+    // This map has only one value.
     Set<IVertex<IVertexId, IProperty>> toVertexSet =
         kgGraph.getAlias2VertexMap().get(this.foldRepeatEdgeInfo.getToVertexAlias());
     Map<IVertexId, IVertex<IVertexId, IProperty>> toVertexMap = new HashMap<>();
@@ -148,7 +148,7 @@ public class FoldEdgeImpl implements Serializable {
       fromEdgeMap.computeIfAbsent(edge.getSourceId(), k -> new ArrayList<>()).add(edge);
     }
 
-    // 开始构造新的PathEdge
+    // Construct a new PathEdge.
     Set<IEdge<IVertexId, IProperty>> newPathEdgeSet = new HashSet<>();
     for (IEdge<IVertexId, IProperty> edge : pathEdgeSet) {
       PathEdge<IVertexId, IProperty, IProperty> pathEdge =

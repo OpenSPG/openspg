@@ -53,9 +53,6 @@ import scala.Tuple2;
 /**
  * GraphState based on Rocksdb vertex key is V_TYPEID_ID_PLACEHOLDER_WINDOWS, value is vertex
  * property edge key is E_EDGETYPE_DIRECTION_VERTEXID_WINDOW, value is edges
- *
- * @author kejian
- * @version RocksDBGraphState.java, v 0.1 2023年03月03日 5:03 PM kejian
  */
 @Slf4j(topic = "userlogger")
 public class RocksdbGraphState implements GraphState<IVertexId> {

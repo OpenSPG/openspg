@@ -15,7 +15,9 @@ package com.antgroup.openspg.reasoner.rdg.common;
 
 import com.alibaba.fastjson.JSON;
 import java.io.Serializable;
+import lombok.Getter;
 
+@Getter
 public class UnfoldRepeatEdgeInfo implements Serializable {
   private static final long serialVersionUID = 7558197193435125339L;
   private final String edgeAlias;
@@ -29,42 +31,6 @@ public class UnfoldRepeatEdgeInfo implements Serializable {
     this.foldVertexAlias = foldVertexAlias;
     this.anchorVertexAlias = anchorVertexAlias;
     this.lower = lower;
-  }
-
-  /**
-   * Getter method for property <tt>edgeAlias</tt>.
-   *
-   * @return property value of edgeAlias
-   */
-  public String getEdgeAlias() {
-    return edgeAlias;
-  }
-
-  /**
-   * Getter method for property <tt>vertexAlias</tt>.
-   *
-   * @return property value of vertexAlias
-   */
-  public String getFoldVertexAlias() {
-    return foldVertexAlias;
-  }
-
-  /**
-   * Getter method for property <tt>lower</tt>.
-   *
-   * @return property value of lower
-   */
-  public int getLower() {
-    return lower;
-  }
-
-  /**
-   * Getter method for property <tt>anchorVertexAlias</tt>.
-   *
-   * @return property value of anchorVertexAlias
-   */
-  public String getAnchorVertexAlias() {
-    return anchorVertexAlias;
   }
 
   @Override

@@ -69,10 +69,10 @@ public class KgGraphAggregateImpl implements Serializable {
 
   private final AggregationSchemaInfo aggregationSchemaInfo;
 
-  // property aggregator 优先处理
+  // Property aggregator is given priority processing.
   private transient Map<String, List<BaseGroupProcess>> propertyAggregatorParsedMap;
 
-  // first聚合后处理
+  // Process after aggregation by 'first'.
   private transient Map<String, List<BaseGroupProcess>> aggregatorParsedMap;
 
   /** aggregate implement */
@@ -134,7 +134,7 @@ public class KgGraphAggregateImpl implements Serializable {
     for (BaseGroupProcess aggInfo : aggInfoList) {
       PropertyVar var = (PropertyVar) aggInfo.getVar();
 
-      // 进行聚合计算
+      // Perform aggregation calculation.
       UdafMeta udafMeta = aggInfo.getUdafMeta();
       Object[] udafInitParams = aggInfo.getUdfInitParams();
       List<String> ruleList = aggInfo.getRuleList();
@@ -206,7 +206,7 @@ public class KgGraphAggregateImpl implements Serializable {
       for (BaseGroupProcess aggInfo : entry.getValue()) {
         Var var = aggInfo.getVar();
 
-        // 进行聚合计算
+        // Perform aggregate calculations.
         UdafMeta udafMeta = aggInfo.getUdafMeta();
         Object[] udafInitParams = aggInfo.getUdfInitParams();
         List<String> ruleList = aggInfo.getRuleList();
@@ -214,7 +214,7 @@ public class KgGraphAggregateImpl implements Serializable {
         Object aggValue =
             doAggregation(valueFilteredList, udafMeta, udafInitParams, aggInfo.getAggEle());
 
-        // 聚合结果赋值
+        // Assign the aggregation result.
         if (var instanceof NodeVar) {
           IVertex<IVertexId, IProperty> vertex = (IVertex<IVertexId, IProperty>) aggValue;
           value.aggregateVertex(

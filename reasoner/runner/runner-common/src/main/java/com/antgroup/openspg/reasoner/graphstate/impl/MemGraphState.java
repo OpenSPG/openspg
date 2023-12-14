@@ -44,9 +44,6 @@ import scala.Tuple5;
 /**
  * Graph State based on memory The multi-version vertex is implemented through the multi-version
  * property The multi-version edge is implemented through multiple edges
- *
- * @author kejian
- * @version MemGraphState.java, v 0.1 2023年02月07日 2:36 PM kejian
  */
 @Slf4j(topic = "userlogger")
 public class MemGraphState implements GraphState<IVertexId> {
@@ -238,7 +235,7 @@ public class MemGraphState implements GraphState<IVertexId> {
       IVertexId o = pot._2();
       Long version = pot._3();
       if (endVersion != null && endVersion != 0) {
-        // 存在多版本场景下才做判断
+        // Make a judgment only in the presence of a multi-version scenario.
         if (!RunnerUtil.between(startVersion, endVersion, version)) {
           continue;
         }

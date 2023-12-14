@@ -74,7 +74,7 @@ public class KgReasonerBaseParquetWriter extends ParquetWriter<Group> {
         conf);
   }
 
-  /** Builder实现 */
+  /** Builder implement */
   public static class Builder extends ParquetWriter.Builder<Group, Builder> {
     private MessageType type = null;
     private Map<String, String> extraMetaData = new HashMap<String, String>();

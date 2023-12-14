@@ -29,9 +29,6 @@ import org.apache.commons.lang3.NotImplementedException;
 /**
  * Graph State based on KgState The multi-version vertex is implemented through the multi-version
  * property The multi-version edge is implemented through multiple edges
- *
- * @author kejian
- * @version MemGraphState.java, v 0.1 2023年02月07日 2:36 PM kejian
  */
 @Slf4j(topic = "userlogger")
 public class KgStateSourceGraphState extends MemGraphState {
@@ -40,7 +37,6 @@ public class KgStateSourceGraphState extends MemGraphState {
   @Override
   public void init(Map<String, String> param) {}
 
-  // 设置query
   public void setKgStateGraphQuery(AbstractGraphLoader kgStateGraphQuery) {
     this.kgStateGraphQuery = kgStateGraphQuery;
   }

@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import scala.Tuple2;
 
@@ -53,10 +54,10 @@ import scala.Tuple2;
 @Slf4j(topic = "userlogger")
 public class OSSClientHelper implements Serializable {
   private transient ObjectStorageClient client;
-  private String bucketName;
+  @Getter private String bucketName;
 
   /**
-   * 获得文件内容
+   * Get file content
    *
    * @param fileName
    * @return
@@ -103,7 +104,7 @@ public class OSSClientHelper implements Serializable {
   }
 
   /**
-   * 获取文件input stream
+   * Get the input stream of file
    *
    * @param fileName
    * @return
@@ -124,7 +125,7 @@ public class OSSClientHelper implements Serializable {
   }
 
   /**
-   * 写入文件
+   * Write file to object storage
    *
    * @param fileName
    * @param content
@@ -141,7 +142,7 @@ public class OSSClientHelper implements Serializable {
   }
 
   /**
-   * 删除文件
+   * Delete the file
    *
    * @param fileName
    */
@@ -153,7 +154,7 @@ public class OSSClientHelper implements Serializable {
   }
 
   /**
-   * 列出目录下文件
+   * List files in the directory with key
    *
    * @param key
    * @return
@@ -163,7 +164,7 @@ public class OSSClientHelper implements Serializable {
   }
 
   /**
-   * 列出目录下的文件
+   * List files in the directory with prefix and suffix
    *
    * @param prefix
    * @param suffix
@@ -176,7 +177,7 @@ public class OSSClientHelper implements Serializable {
   }
 
   /**
-   * 列出目录下的文件
+   * List files in the directory
    *
    * @param prefix
    * @param maker
@@ -200,7 +201,7 @@ public class OSSClientHelper implements Serializable {
   }
 
   /**
-   * 列出目录下的文件和子目录
+   * List the files and subdirectories in the directory.
    *
    * @param prefix
    * @param maker
@@ -255,7 +256,7 @@ public class OSSClientHelper implements Serializable {
         String.valueOf(
             params.getOrDefault("akSecret", "/C2/1dTfMmYElx9m0asGNSVdua7mB8HRP7Ti1lmUT9w="));
     String serviceHost = String.valueOf(params.getOrDefault("serviceHost", endpoint));
-    // accessKeySecret解密一下
+    // Decrypt the accessKeySecret
     accessKeySecret = DecryptUtils.decryptAccessInfo(accessKeySecret);
     this.bucketName = String.valueOf(params.getOrDefault("bucket", "alipay-solutions"));
 
@@ -279,7 +280,7 @@ public class OSSClientHelper implements Serializable {
   }
 
   /**
-   * 获取字符串
+   * Get the string by delimit
    *
    * @param fileKey
    * @param delimit
@@ -315,14 +316,14 @@ public class OSSClientHelper implements Serializable {
     return stringBuilder.toString();
   }
 
-  /** 下载数据到本地文件 */
+  /** Download data to a local file. */
   public String dumpToFile(String key, String dumpName) throws IOException {
     String localPath = System.getProperty("user.dir").concat("/").concat(dumpName);
     dumpToLocalFile(key, localPath);
     return localPath;
   }
 
-  /** 下载数据到本地文件 */
+  /** Download data to a local file. */
   public String dumpToLocalFile(String key, String localPath) throws IOException {
 
     GetObjectRequest request = new GetObjectRequest();
@@ -339,10 +340,9 @@ public class OSSClientHelper implements Serializable {
       throw new FileNotFoundException("OssFile ".concat(key).concat(" not exist"));
     }
 
-    // 获取当前容器运行路径
+    // Get the current container running path
     File tm = new File(localPath);
     if (tm.exists()) {
-      // 如果该处已有文件，删除
       tm.delete();
     } else if (!tm.getParentFile().exists()) {
       tm.getParentFile().mkdirs();
@@ -389,7 +389,7 @@ public class OSSClientHelper implements Serializable {
   }
 
   /**
-   * 获取底层client
+   * Get the client
    *
    * @return
    */
@@ -397,7 +397,7 @@ public class OSSClientHelper implements Serializable {
     return client;
   }
 
-  /** 获取单例 */
+  /** Get singletons */
   public static OSSClientHelper getInstance() {
     if (null != instance) {
       return instance;
@@ -412,7 +412,7 @@ public class OSSClientHelper implements Serializable {
     return instance;
   }
 
-  /** 初始化Oss配置 */
+  /** Initialize the oss configuration */
   public static void initInstance(String holmesOssConfigStr) {
     if (null != instance) {
       return;
@@ -428,15 +428,6 @@ public class OSSClientHelper implements Serializable {
         instance = instanceTmp;
       }
     }
-  }
-
-  /**
-   * Getter method for property <tt>bucketName</tt>.
-   *
-   * @return property value of bucketName
-   */
-  public String getBucketName() {
-    return bucketName;
   }
 
   private static boolean isEmpty(CharSequence cs) {

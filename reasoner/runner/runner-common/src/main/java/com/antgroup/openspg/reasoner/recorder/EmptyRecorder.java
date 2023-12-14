@@ -13,12 +13,7 @@
 
 package com.antgroup.openspg.reasoner.recorder;
 
-/**
- * This is an empty recorder
- *
- * @author donghai.ydh
- * @version EmptyRecorder.java, v 0.1 2023年11月07日 15:09 donghai.ydh
- */
+/** This is an empty recorder */
 public class EmptyRecorder implements IExecutionRecorder {
   @Override
   public String toReadableString() {

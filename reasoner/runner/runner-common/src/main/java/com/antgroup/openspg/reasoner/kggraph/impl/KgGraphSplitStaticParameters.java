@@ -53,7 +53,10 @@ public class KgGraphSplitStaticParameters implements Serializable {
   private final List<EdgeIterateInfo> subEdgeIterateInfoList;
   private final Map<String, Integer> subEdgeIterateOrderMap;
 
-  /** 将KgGraph中重复调用的逻辑抽出来，在初始化中一次完成 */
+  /**
+   * Extract the logic that is repeatedly invoked in KgGraph, and complete it once during
+   * initialization.
+   */
   public KgGraphSplitStaticParameters(Set<String> splitVertexAliases, Pattern schema) {
     this.edgeIterateInfoList = initEdgeIterateInfo(schema);
     this.edgeIterateOrderMap = initEdgeIterateOrderMap(this.edgeIterateInfoList);
@@ -214,7 +217,7 @@ public class KgGraphSplitStaticParameters implements Serializable {
     return neighborAliasSet;
   }
 
-  /** 获取边列表所覆盖的点和边的alias */
+  /** Obtain the aliases of the nodes and edges covered by the edge list. */
   private static Tuple2<Set<String>, Set<String>> getVertexAndEdgeAliasSet(
       Set<Connection> connectedEdgeSet) {
     Set<String> vertexAlias = new HashSet<>();
@@ -227,7 +230,10 @@ public class KgGraphSplitStaticParameters implements Serializable {
     return new Tuple2<>(vertexAlias, edgeAlias);
   }
 
-  /** 将需要划分的PatternConnectionSet, 切分为几个连通的PatternConnectionSet */
+  /**
+   * Divide the PatternConnectionSet that needs to be partitioned into several connected
+   * PatternConnectionSets.
+   */
   private List<Set<Connection>> getSplitConnectedSubgraph(Set<Connection> needSplitEdgeSet) {
     needSplitEdgeSet = Sets.newHashSet(needSplitEdgeSet);
     List<Set<Connection>> result = new ArrayList<>();
@@ -289,8 +295,9 @@ public class KgGraphSplitStaticParameters implements Serializable {
     for (Connection pc : patternConnectionList) {
       patternConnectionMap.put(pc.alias(), pc);
     }
-    // 先确定迭代Edge的顺序
-    // 这里的逻辑是确保当前Edge与之前迭代过的Edge是有共同Vertex的
+    // First, determine the order in which to iterate over the Edges.
+    // Ensure that the current Edge shares a common Vertex with the Edges that have been iterated
+    // over previously.
     Set<String> touchedVertexAliasSet = new HashSet<>();
     while (!patternConnectionList.isEmpty()) {
       boolean findOne = false;
@@ -332,7 +339,7 @@ public class KgGraphSplitStaticParameters implements Serializable {
       }
     }
 
-    // 计算边相交情况
+    // Calculate the intersection of edges.
     Map<String, List<Edge2VertexInfo>> touchedVertexAlias2EdgeMap = new HashMap<>();
     for (int i = 0; i < edgeIterateInfoList.size(); ++i) {
       EdgeIterateInfo edgeIterateInfo = edgeIterateInfoList.get(i);

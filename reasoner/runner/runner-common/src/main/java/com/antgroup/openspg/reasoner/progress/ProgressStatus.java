@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,13 +34,13 @@ import org.apache.commons.lang3.StringUtils;
  */
 @Slf4j(topic = "userlogger")
 public class ProgressStatus implements Serializable {
-  private JobStatus status;
-  private ProgressInfo progressInfo;
-  private String errMsg;
+  @Getter @Setter private JobStatus status;
+  @Getter @Setter private ProgressInfo progressInfo;
+  @Getter private String errMsg;
   private final String instanceId;
   private final String taskKey;
   private final String persistenceWay;
-  private final Map<TimeConsumeType, Long> timeConsumeMap = new HashMap<>();
+  @Getter private final Map<TimeConsumeType, Long> timeConsumeMap = new HashMap<>();
   private TimeConsumeType nowType;
   private long nowTypeStartMs;
 
@@ -55,7 +57,6 @@ public class ProgressStatus implements Serializable {
   public ProgressStatus(JSONObject context) {
     this.instanceId = context.getString("instanceId");
     this.taskKey = context.getString("taskKey");
-    // 内容清零0
     this.progressInfo = new ProgressInfo();
     this.errMsg = context.getString("errMsg");
     this.status = str2Status(context.getString("status"));
@@ -143,7 +144,7 @@ public class ProgressStatus implements Serializable {
     }
   }
 
-  /** 从存储中获取任务状态信息 */
+  /** Retrieve task status information from storage. */
   public void refresh() {
     if ("oss".equals(this.persistenceWay)) {
       String content = null;
@@ -178,10 +179,6 @@ public class ProgressStatus implements Serializable {
     persistenceProgressStatus();
   }
 
-  public String getErrMsg() {
-    return this.errMsg;
-  }
-
   public void finishedProgress() {
     this.status = JobStatus.finished;
     this.progressInfo.setProcessOffset(this.progressInfo.getRealTotal());
@@ -203,7 +200,7 @@ public class ProgressStatus implements Serializable {
           "task is finished, can not change status, now status=" + this.status);
     }
     if (step == this.progressInfo.getCurStep() && total == this.progressInfo.getTotal()) {
-      // 相同的步骤不需要重置
+      // The same steps do not need to be reset.
       return;
     }
     this.status = JobStatus.running;
@@ -240,22 +237,6 @@ public class ProgressStatus implements Serializable {
     persistenceProgressStatus();
   }
 
-  public ProgressInfo getProgressInfo() {
-    return progressInfo;
-  }
-
-  public void setProgressInfo(ProgressInfo progressInfo) {
-    this.progressInfo = progressInfo;
-  }
-
-  public String getStatus() {
-    return status.name();
-  }
-
-  public void setStatus(JobStatus status) {
-    this.status = status;
-  }
-
   public void setTimeConsumeType(TimeConsumeType type) {
     long nowMs = System.currentTimeMillis();
 
@@ -271,10 +252,6 @@ public class ProgressStatus implements Serializable {
     }
   }
 
-  public Map<TimeConsumeType, Long> getTimeConsumeMap() {
-    return timeConsumeMap;
-  }
-
   public enum JobStatus implements Serializable {
     running,
     pending,
@@ -282,6 +259,8 @@ public class ProgressStatus implements Serializable {
     finished
   }
 
+  @Getter
+  @Setter
   public static class ProgressInfo implements Serializable {
     private long batchId;
     private long totalSteps;
@@ -291,30 +270,6 @@ public class ProgressStatus implements Serializable {
     private long processOffset;
 
     private long shrinkFactor = 1;
-
-    public long getBatchId() {
-      return batchId;
-    }
-
-    public void setBatchId(long batchId) {
-      this.batchId = batchId;
-    }
-
-    public long getTotalSteps() {
-      return totalSteps;
-    }
-
-    public void setTotalSteps(long totalSteps) {
-      this.totalSteps = totalSteps;
-    }
-
-    public long getCurStep() {
-      return curStep;
-    }
-
-    public void setCurStep(long curStep) {
-      this.curStep = curStep;
-    }
 
     public long getTotal() {
       return total / this.shrinkFactor;
@@ -347,10 +302,6 @@ public class ProgressStatus implements Serializable {
       return readOffset / this.shrinkFactor;
     }
 
-    public void setReadOffset(long readOffset) {
-      this.readOffset = readOffset;
-    }
-
     public long getProcessOffset() {
       return processOffset / this.shrinkFactor;
     }
@@ -358,14 +309,6 @@ public class ProgressStatus implements Serializable {
     @JSONField(serialize = false)
     public long getRealProcessOffset() {
       return processOffset;
-    }
-
-    public void setProcessOffset(long processOffset) {
-      this.processOffset = processOffset;
-    }
-
-    public long getShrinkFactor() {
-      return shrinkFactor;
     }
   }
 }

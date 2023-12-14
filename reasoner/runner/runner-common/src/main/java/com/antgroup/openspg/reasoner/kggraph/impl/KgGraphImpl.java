@@ -775,7 +775,7 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
 
     Set<IEdge<IVertexId, IProperty>> oldEdgeSet = this.alias2EdgeMap.get(edgeAlias);
 
-    // 裁掉边
+    // Prune the edge
     this.alias2EdgeMap.put(edgeAlias, edgeSet);
 
     if (edgeSet.size() == oldEdgeSet.size()) {
@@ -822,7 +822,7 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
 
     Set<IVertex<IVertexId, IProperty>> oldVertexSet = this.alias2VertexMap.get(vertexAlias);
 
-    // 裁掉点
+    // Prune the vertex
     this.alias2VertexMap.put(vertexAlias, vertexSet);
 
     if (vertexSet.size() == oldVertexSet.size()) {

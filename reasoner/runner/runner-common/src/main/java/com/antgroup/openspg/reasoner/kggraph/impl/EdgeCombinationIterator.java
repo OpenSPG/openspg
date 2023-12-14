@@ -42,9 +42,6 @@ import scala.Tuple2;
  *
  * <p>example1: schema is [A -E1-> B, B -E2-> C], edgeMap is {E1:[a1_b1, a1_b2], E2:[b1_c1, b1_c2]}
  * output is {E1:[a1_b1],E2:[b1_c1]}, {E1:[a1_b1],E2:[b1_c2]}
- *
- * @author donghai.ydh
- * @version EdgeCombinationIterator.java, v 0.1 2023年04月24日 14:18 donghai.ydh
  */
 @Slf4j
 public class EdgeCombinationIterator implements Iterator<KgGraph<IVertexId>> {

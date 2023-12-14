@@ -27,12 +27,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-/**
- * Data structure that transmits messages between workers
- *
- * @author kejian
- * @version KgGraph.java, v 0.1 2023年02月14日 7:45 PM kejian
- */
 public interface KgGraph<K> {
 
   /**

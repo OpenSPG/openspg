@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.Getter;
 import scala.collection.JavaConversions;
 
 public class ExtractRelationImpl implements Serializable {
@@ -47,7 +48,7 @@ public class ExtractRelationImpl implements Serializable {
   private static final long serialVersionUID = 3442064493302533370L;
   private final AddPredicate addPredicate;
 
-  private final String predicate;
+  @Getter private final String predicate;
   private final Direction direction;
   private final boolean withReverseEdge;
 
@@ -158,14 +159,5 @@ public class ExtractRelationImpl implements Serializable {
   /** need add reverse edge */
   public boolean withReverseEdge() {
     return this.withReverseEdge;
-  }
-
-  /**
-   * Getter method for property <tt>predicate</tt>.
-   *
-   * @return property value of predicate
-   */
-  public String getPredicate() {
-    return predicate;
   }
 }

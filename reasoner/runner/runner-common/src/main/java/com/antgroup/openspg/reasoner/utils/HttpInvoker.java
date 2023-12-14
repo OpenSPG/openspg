@@ -69,7 +69,7 @@ public class HttpInvoker {
 
       conn.getOutputStream().write(encodedContentByte);
 
-      int respCode = conn.getResponseCode(); // 这里内部发送请求
+      int respCode = conn.getResponseCode();
       String resp = null;
 
       // result check
