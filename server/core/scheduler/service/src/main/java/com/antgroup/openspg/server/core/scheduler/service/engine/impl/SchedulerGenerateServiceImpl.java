@@ -12,9 +12,8 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.engine.impl;
 
-import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
-import com.antgroup.openspg.server.common.model.scheduler.Status;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Status;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
@@ -58,10 +57,10 @@ public class SchedulerGenerateServiceImpl implements SchedulerGenerateService {
 
   /** get all Period Jobs */
   private List<SchedulerJob> getAllPeriodJobs() {
-    SchedulerJobQuery record = new SchedulerJobQuery();
+    SchedulerJob record = new SchedulerJob();
     record.setLifeCycle(LifeCycle.PERIOD);
     record.setStatus(Status.ONLINE);
-    List<SchedulerJob> allJob = schedulerJobService.query(record).getData();
+    List<SchedulerJob> allJob = schedulerJobService.query(record);
     return allJob;
   }
 }

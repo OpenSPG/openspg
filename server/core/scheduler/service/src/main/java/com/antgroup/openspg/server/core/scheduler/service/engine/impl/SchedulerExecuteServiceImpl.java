@@ -12,16 +12,14 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.engine.impl;
 
-import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
-import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
 import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
-import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerConstant;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecuteService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
@@ -52,6 +50,7 @@ import org.springframework.stereotype.Service;
 public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
 
   private static final int corePoolSize = 10;
+  public static final String UNDERLINE_SEPARATOR = "_";
 
   private ConcurrentHashMap<String, ThreadPoolExecutor> instances = new ConcurrentHashMap<>();
   private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(corePoolSize);
@@ -133,7 +132,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
         return;
       }
 
-      type = type.split(SchedulerConstant.UNDERLINE_SEPARATOR)[0];
+      type = type.split(UNDERLINE_SEPARATOR)[0];
 
       JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
       if (jobTask == null) {
@@ -209,7 +208,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
 
   /** get All Not Finish Instance */
   private List<SchedulerInstance> getAllNotFinishInstance() {
-    SchedulerInstanceQuery record = new SchedulerInstanceQuery();
+    SchedulerInstance record = new SchedulerInstance();
     Integer maxDays = schedulerValue.getExecuteMaxDay() + 1;
     Date startDate = DateUtils.addDays(new Date(), -maxDays);
     record.setStartCreateTime(startDate);

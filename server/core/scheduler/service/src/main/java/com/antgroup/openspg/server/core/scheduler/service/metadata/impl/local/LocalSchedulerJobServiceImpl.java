@@ -13,9 +13,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
 import com.antgroup.openspg.common.util.CommonUtils;
-import com.antgroup.openspg.server.common.model.base.Page;
-import com.antgroup.openspg.server.common.model.exception.SchedulerException;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
+import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.google.common.collect.Lists;
@@ -66,7 +64,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
   public SchedulerJob getById(Long id) {
     SchedulerJob oldJob = jobs.get(id);
     if (oldJob == null) {
-      throw new SchedulerException("not find id {}", id);
+      throw new OpenSPGException("not find id {}", id);
     }
     SchedulerJob job = new SchedulerJob();
     BeanUtils.copyProperties(oldJob, job);
@@ -74,10 +72,8 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
   }
 
   @Override
-  public Page<List<SchedulerJob>> query(SchedulerJobQuery record) {
-    Page<List<SchedulerJob>> page = new Page<>();
+  public List<SchedulerJob> query(SchedulerJob record) {
     List<SchedulerJob> jobList = Lists.newArrayList();
-    page.setData(jobList);
     for (Long key : jobs.keySet()) {
       SchedulerJob job = jobs.get(key);
       if (!CommonUtils.compare(job.getId(), record.getId(), CommonUtils.EQ)
@@ -94,9 +90,6 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
       BeanUtils.copyProperties(job, target);
       jobList.add(target);
     }
-    page.setPageNo(1);
-    page.setPageSize(jobList.size());
-    page.setTotal(Long.valueOf(jobList.size()));
-    return page;
+    return jobList;
   }
 }

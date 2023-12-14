@@ -12,21 +12,16 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.api.impl;
 
-import com.antgroup.openspg.server.common.model.base.Page;
-import com.antgroup.openspg.server.common.model.exception.SchedulerException;
-import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
-import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
-import com.antgroup.openspg.server.common.model.scheduler.Status;
-import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
+import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Status;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.api.SchedulerService;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
-import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerConstant;
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecuteService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
@@ -52,6 +47,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   private static final int maximumPoolSize = 20;
   private static final int keepAliveTime = 30;
   private static final int capacity = 100;
+  public static final String DEFAULT_VERSION = "V3";
 
   private ThreadPoolExecutor instanceExecutor =
       new ThreadPoolExecutor(
@@ -99,7 +95,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     }
 
     job.setStatus(Status.ONLINE);
-    job.setVersion(SchedulerConstant.DEFAULT_VERSION);
+    job.setVersion(DEFAULT_VERSION);
   }
 
   /** check Job Property is validity */
@@ -118,7 +114,7 @@ public class SchedulerServiceImpl implements SchedulerService {
       try {
         new CronExpression(cron);
       } catch (ParseException e) {
-        throw new SchedulerException("Cron {} ParseException:{}", cron, e.getMessage());
+        throw new OpenSPGException("Cron {} ParseException:{}", cron, e.getMessage());
       }
     }
   }
@@ -160,7 +156,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   private void stopJobAllInstance(Long jobId) {
-    SchedulerInstanceQuery query = new SchedulerInstanceQuery();
+    SchedulerInstance query = new SchedulerInstance();
     query.setJobId(jobId);
     List<SchedulerInstance> instances = schedulerInstanceService.getNotFinishInstance(query);
     if (CollectionUtils.isEmpty(instances)) {
@@ -231,7 +227,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  public Page<List<SchedulerJob>> searchJobs(SchedulerJobQuery query) {
+  public List<SchedulerJob> searchJobs(SchedulerJob query) {
     return schedulerJobService.query(query);
   }
 
@@ -280,19 +276,19 @@ public class SchedulerServiceImpl implements SchedulerService {
     SchedulerInstance instance = schedulerInstanceService.getById(id);
     Assert.notNull(instance, String.format("instance not find id:%s", id));
     if (InstanceStatus.isFinished(instance.getStatus())) {
-      throw new SchedulerException("The instance has been finished");
+      throw new OpenSPGException("The instance has been finished");
     }
     schedulerExecuteService.executeInstance(id);
     return true;
   }
 
   @Override
-  public Page<List<SchedulerInstance>> searchInstances(SchedulerInstanceQuery query) {
+  public List<SchedulerInstance> searchInstances(SchedulerInstance query) {
     return schedulerInstanceService.query(query);
   }
 
   @Override
-  public Page<List<SchedulerTask>> searchTasks(SchedulerTaskQuery query) {
+  public List<SchedulerTask> searchTasks(SchedulerTask query) {
     return schedulerTaskService.query(query);
   }
 }

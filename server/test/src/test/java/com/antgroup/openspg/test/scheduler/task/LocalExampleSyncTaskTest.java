@@ -14,10 +14,10 @@ package com.antgroup.openspg.test.scheduler.task;
 
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.common.util.DateTimeUtils;
-import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
-import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
-import com.antgroup.openspg.server.common.model.scheduler.MergeMode;
-import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.MergeMode;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;

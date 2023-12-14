@@ -14,9 +14,7 @@
 package com.antgroup.openspg.common.util;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import org.apache.commons.lang3.Validate;
 
 /** DateTime tools */
 public class DateTimeUtils {
@@ -32,9 +30,6 @@ public class DateTimeUtils {
 
   /** Date to String by yyyy-MM-dd HH:mm:ss */
   public static String getDate2LongStr(Date date) {
-    if (date == null) {
-      return "";
-    }
     return getDate2Str(YYYY_MM_DD_HH_MM_SS1, date);
   }
 
@@ -43,16 +38,6 @@ public class DateTimeUtils {
     if (date == null) {
       return "";
     }
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-    return simpleDateFormat.format(date);
-  }
-
-  /** Date add time by calendarField */
-  public static Date add(Date date, int calendarField, int amount) {
-    Validate.notNull(date, "The date must not be null", new Object[0]);
-    Calendar c = Calendar.getInstance();
-    c.setTime(date);
-    c.add(calendarField, amount);
-    return c.getTime();
+    return new SimpleDateFormat(format).format(date);
   }
 }

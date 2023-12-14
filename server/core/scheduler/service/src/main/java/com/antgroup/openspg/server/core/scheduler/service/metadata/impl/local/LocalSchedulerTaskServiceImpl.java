@@ -13,10 +13,8 @@
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
 import com.antgroup.openspg.common.util.CommonUtils;
-import com.antgroup.openspg.server.common.model.base.Page;
-import com.antgroup.openspg.server.common.model.exception.SchedulerException;
-import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
+import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.google.common.collect.Lists;
@@ -85,7 +83,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   public SchedulerTask getById(Long id) {
     SchedulerTask oldTask = tasks.get(id);
     if (oldTask == null) {
-      throw new SchedulerException("not find id {}", id);
+      throw new OpenSPGException("not find id {}", id);
     }
     SchedulerTask task = new SchedulerTask();
     BeanUtils.copyProperties(oldTask, task);
@@ -93,10 +91,8 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   }
 
   @Override
-  public Page<List<SchedulerTask>> query(SchedulerTaskQuery record) {
-    Page<List<SchedulerTask>> page = new Page<>();
+  public List<SchedulerTask> query(SchedulerTask record) {
     List<SchedulerTask> taskList = Lists.newArrayList();
-    page.setData(taskList);
     for (Long key : tasks.keySet()) {
       SchedulerTask task = tasks.get(key);
 
@@ -112,10 +108,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
       BeanUtils.copyProperties(task, target);
       taskList.add(target);
     }
-    page.setPageNo(1);
-    page.setPageSize(taskList.size());
-    page.setTotal(Long.valueOf(taskList.size()));
-    return page;
+    return taskList;
   }
 
   @Override

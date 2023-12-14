@@ -12,8 +12,6 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata;
 
-import com.antgroup.openspg.server.common.model.base.Page;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import java.util.List;
 
@@ -35,9 +33,9 @@ public interface SchedulerInstanceService {
   /** get By instanceId */
   SchedulerInstance getByUniqueId(String instanceId);
 
-  /** query By Condition，query all if pageNo is null */
-  Page<List<SchedulerInstance>> query(SchedulerInstanceQuery record);
+  /** query By Condition */
+  List<SchedulerInstance> query(SchedulerInstance record);
 
   /** get Not Finish Instance */
-  List<SchedulerInstance> getNotFinishInstance(SchedulerInstanceQuery record);
+  List<SchedulerInstance> getNotFinishInstance(SchedulerInstance record);
 }

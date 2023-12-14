@@ -12,9 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata;
 
-import com.antgroup.openspg.server.common.model.base.Page;
-import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import java.util.List;
 
@@ -36,8 +34,8 @@ public interface SchedulerTaskService {
   /** get By id */
   SchedulerTask getById(Long id);
 
-  /** query By Condition，query all if pageNo is null */
-  Page<List<SchedulerTask>> query(SchedulerTaskQuery record);
+  /** query By Condition */
+  List<SchedulerTask> query(SchedulerTask record);
 
   /** query By InstanceId And Type */
   SchedulerTask queryByInstanceIdAndType(Long instanceId, String type);

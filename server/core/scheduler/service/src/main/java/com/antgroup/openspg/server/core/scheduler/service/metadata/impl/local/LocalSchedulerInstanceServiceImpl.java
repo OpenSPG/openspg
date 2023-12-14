@@ -13,10 +13,8 @@
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
 import com.antgroup.openspg.common.util.CommonUtils;
-import com.antgroup.openspg.server.common.model.base.Page;
-import com.antgroup.openspg.server.common.model.exception.SchedulerException;
-import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
+import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
@@ -45,7 +43,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     for (Long id : instances.keySet()) {
       SchedulerInstance instance = instances.get(id);
       if (uniqueId.equals(instance.getUniqueId())) {
-        throw new SchedulerException("uniqueId {} already existed", uniqueId);
+        throw new OpenSPGException("uniqueId {} already existed", uniqueId);
       }
     }
     Long id = maxId.incrementAndGet();
@@ -88,7 +86,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   public SchedulerInstance getById(Long id) {
     SchedulerInstance oldInstance = instances.get(id);
     if (oldInstance == null) {
-      throw new SchedulerException("not find id {}", id);
+      throw new OpenSPGException("not find id {}", id);
     }
     SchedulerInstance instance = new SchedulerInstance();
     BeanUtils.copyProperties(oldInstance, instance);
@@ -109,10 +107,8 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   }
 
   @Override
-  public Page<List<SchedulerInstance>> query(SchedulerInstanceQuery record) {
-    Page<List<SchedulerInstance>> page = new Page<>();
+  public List<SchedulerInstance> query(SchedulerInstance record) {
     List<SchedulerInstance> instanceList = Lists.newArrayList();
-    page.setData(instanceList);
     for (Long key : instances.keySet()) {
       SchedulerInstance instance = instances.get(key);
       if (!CommonUtils.compare(instance.getId(), record.getId(), CommonUtils.EQ)
@@ -137,15 +133,12 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
       BeanUtils.copyProperties(instance, target);
       instanceList.add(target);
     }
-    page.setPageNo(1);
-    page.setPageSize(instanceList.size());
-    page.setTotal(Long.valueOf(instanceList.size()));
-    return page;
+    return instanceList;
   }
 
   @Override
-  public List<SchedulerInstance> getNotFinishInstance(SchedulerInstanceQuery record) {
-    List<SchedulerInstance> instanceList = query(record).getData();
+  public List<SchedulerInstance> getNotFinishInstance(SchedulerInstance record) {
+    List<SchedulerInstance> instanceList = query(record);
     instanceList =
         instanceList.stream()
             .filter(s -> !InstanceStatus.isFinished(s.getStatus()))

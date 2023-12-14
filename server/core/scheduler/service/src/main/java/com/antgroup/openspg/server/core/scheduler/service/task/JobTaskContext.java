@@ -14,8 +14,8 @@
 /** Alipay.com Inc. Copyright (c) 2004-2021 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.task;
 
+import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.common.util.DateTimeUtils;
-import com.antgroup.openspg.common.util.IpUtils;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -75,7 +75,7 @@ public class JobTaskContext {
     StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
     int dstOffset = 0;
     log.append("(")
-        .append(IpUtils.IP_LIST)
+        .append(CommonUtils.IP_LIST)
         .append(")：")
         .append(message)
         .append(System.getProperty("line.separator"));

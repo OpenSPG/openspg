@@ -12,8 +12,6 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata;
 
-import com.antgroup.openspg.server.common.model.base.Page;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import java.util.List;
 
@@ -32,6 +30,6 @@ public interface SchedulerJobService {
   /** get By id */
   SchedulerJob getById(Long id);
 
-  /** query By Condition，query all if pageNo is null */
-  Page<List<SchedulerJob>> query(SchedulerJobQuery record);
+  /** query By Condition */
+  List<SchedulerJob> query(SchedulerJob record);
 }

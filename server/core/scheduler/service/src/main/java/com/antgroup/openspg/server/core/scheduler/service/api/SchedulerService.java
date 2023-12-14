@@ -12,10 +12,6 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.api;
 
-import com.antgroup.openspg.server.common.model.base.Page;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -45,7 +41,7 @@ public interface SchedulerService {
   SchedulerJob getJobById(Long id);
 
   /** search Jobs */
-  Page<List<SchedulerJob>> searchJobs(SchedulerJobQuery query);
+  List<SchedulerJob> searchJobs(SchedulerJob query);
 
   /** get Instance By id */
   SchedulerInstance getInstanceById(Long id);
@@ -63,8 +59,8 @@ public interface SchedulerService {
   Boolean triggerInstance(Long id);
 
   /** search Instances */
-  Page<List<SchedulerInstance>> searchInstances(SchedulerInstanceQuery query);
+  List<SchedulerInstance> searchInstances(SchedulerInstance query);
 
   /** search Tasks */
-  Page<List<SchedulerTask>> searchTasks(SchedulerTaskQuery query);
+  List<SchedulerTask> searchTasks(SchedulerTask query);
 }

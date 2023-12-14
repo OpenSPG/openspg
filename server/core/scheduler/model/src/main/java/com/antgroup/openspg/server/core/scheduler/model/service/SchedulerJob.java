@@ -14,10 +14,10 @@ package com.antgroup.openspg.server.core.scheduler.model.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
-import com.antgroup.openspg.server.common.model.scheduler.LifeCycle;
-import com.antgroup.openspg.server.common.model.scheduler.MergeMode;
-import com.antgroup.openspg.server.common.model.scheduler.Status;
-import com.antgroup.openspg.server.common.model.scheduler.TranslateType;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.MergeMode;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Status;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TranslateType;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;

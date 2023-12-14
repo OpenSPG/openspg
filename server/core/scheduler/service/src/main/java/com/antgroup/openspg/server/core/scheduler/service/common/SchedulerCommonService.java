@@ -12,8 +12,8 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.common;
 
-import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
-import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import java.util.Date;
@@ -24,7 +24,7 @@ public interface SchedulerCommonService {
 
   /** set Instance To Finish */
   void setInstanceFinish(
-      SchedulerInstance instance, InstanceStatus instanceStatus, TaskStatus taskStatus);
+          SchedulerInstance instance, InstanceStatus instanceStatus, TaskStatus taskStatus);
 
   /** generate Once Instance */
   SchedulerInstance generateOnceInstance(SchedulerJob job);

@@ -14,9 +14,9 @@ package com.antgroup.openspg.server.core.scheduler.service.task;
 
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.common.util.DateTimeUtils;
-import com.antgroup.openspg.server.common.model.exception.SchedulerException;
-import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
-import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
+import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -163,7 +163,7 @@ public abstract class JobTaskTemplate implements JobTask {
 
     if (schedulerTaskService.replace(task) <= 0) {
       log.error("finally replace task error task:{}", task);
-      throw new SchedulerException("finally replace task error task {}", task);
+      throw new OpenSPGException("finally replace task error task {}", task);
     }
   }
 
@@ -230,7 +230,7 @@ public abstract class JobTaskTemplate implements JobTask {
     updateTask.setBeginTime(new Date());
     if (schedulerTaskService.replace(updateTask) <= 0) {
       task.setStatus(TaskStatus.ERROR);
-      throw new SchedulerException("replace task error task {}", updateTask);
+      throw new OpenSPGException("replace task error task {}", updateTask);
     }
     context.setTaskFinish(true);
   }

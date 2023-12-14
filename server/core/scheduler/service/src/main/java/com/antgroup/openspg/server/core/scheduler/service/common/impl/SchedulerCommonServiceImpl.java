@@ -13,17 +13,15 @@
 package com.antgroup.openspg.server.core.scheduler.service.common.impl;
 
 import com.antgroup.openspg.common.util.CommonUtils;
-import com.antgroup.openspg.server.common.model.exception.SchedulerException;
-import com.antgroup.openspg.server.common.model.scheduler.InstanceStatus;
-import com.antgroup.openspg.server.common.model.scheduler.TaskStatus;
+import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
 import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
-import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
-import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerConstant;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
@@ -48,6 +46,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
+  public static final String UNDERLINE_SEPARATOR = "_";
+
   @Autowired SchedulerJobService schedulerJobService;
   @Autowired SchedulerInstanceService schedulerInstanceService;
   @Autowired SchedulerTaskService schedulerTaskService;
@@ -55,7 +55,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
   @Override
   public void setInstanceFinish(
-      SchedulerInstance instance, InstanceStatus instanceStatus, TaskStatus taskStatus) {
+          SchedulerInstance instance, InstanceStatus instanceStatus, TaskStatus taskStatus) {
     SchedulerInstance updateInstance = new SchedulerInstance();
     updateInstance.setId(instance.getId());
     updateInstance.setStatus(instanceStatus);
@@ -66,7 +66,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
     Long updateNum = schedulerInstanceService.update(updateInstance);
     if (updateNum <= 0) {
-      throw new SchedulerException("update instance failed {}", updateInstance);
+      throw new OpenSPGException("update instance failed {}", updateInstance);
     }
     stopRunningProcess(instance);
 
@@ -95,7 +95,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
               return;
             }
 
-            type = type.split(SchedulerConstant.UNDERLINE_SEPARATOR)[0];
+            type = type.split(UNDERLINE_SEPARATOR)[0];
             JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
             if (jobTask == null) {
               log.error("stop task is null id:{}", task.getId());
@@ -114,16 +114,16 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
 
   /** check Instance is Running within 24H */
   private void checkInstanceRunning(SchedulerJob job) {
-    SchedulerInstanceQuery query = new SchedulerInstanceQuery();
+    SchedulerInstance query = new SchedulerInstance();
     query.setJobId(job.getId());
     query.setStartCreateTime(DateUtils.addDays(new Date(), -1));
     query.setEndCreateTime(new Date());
-    List<SchedulerInstance> instances = schedulerInstanceService.query(query).getData();
+    List<SchedulerInstance> instances = schedulerInstanceService.query(query);
     instances.stream()
         .forEach(
             instance -> {
               if (!InstanceStatus.isFinished(instance.getStatus())) {
-                throw new SchedulerException(
+                throw new OpenSPGException(
                     "Running instances exist within 24H uniqueId {}", instance.getUniqueId());
               }
             });
@@ -184,7 +184,7 @@ public class SchedulerCommonServiceImpl implements SchedulerCommonService {
     instance.setLifeCycle(job.getLifeCycle());
     instance.setSchedulerDate(schedulerDate);
     instance.setMergeMode(job.getMergeMode());
-    instance.setVersion(SchedulerConstant.DEFAULT_VERSION);
+    instance.setVersion(job.getVersion());
     TaskDag taskDag = TranslatorFactory.getTranslator(job.getTranslateType()).translate(job);
     instance.setTaskDag(taskDag);
 

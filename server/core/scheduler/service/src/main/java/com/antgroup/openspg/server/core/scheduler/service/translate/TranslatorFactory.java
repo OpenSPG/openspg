@@ -14,7 +14,7 @@
 /** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.translate;
 
-import com.antgroup.openspg.server.common.model.scheduler.TranslateType;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TranslateType;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 

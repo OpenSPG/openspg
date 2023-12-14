@@ -18,18 +18,28 @@ import java.beans.PropertyDescriptor;
 import java.io.Closeable;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateUtils;
 import org.quartz.CronExpression;
 
 /** some common tools */
 @Slf4j
 public class CommonUtils {
 
+  public static final String IP_LIST = String.join(",", getLocalIps());
   public static final String EQ = "eq";
   public static final String IN = "in";
   public static final String GT = "gt";
@@ -90,22 +100,15 @@ public class CommonUtils {
     }
   }
 
-  /** Limit remark */
+  /** Limit remark. sub String To Length */
   public static String setRemarkLimit(String oldRemark, StringBuffer appendRemark) {
-    Integer maxLength = 100000;
-    return subStringToLength(appendRemark.append(oldRemark), maxLength, "...");
-  }
-
-  /** sub String To Length */
-  public static String subStringToLength(StringBuffer str, Integer length, String fill) {
-    if (str == null) {
-      return "";
-    }
-    if (length == null || length >= str.length()) {
+    Integer start = 0;
+    Integer length = 100000;
+    StringBuffer str = appendRemark.append(oldRemark);
+    String fill = "...";
+    if (length >= str.length()) {
       return str.toString();
     }
-    int start = 0;
-    fill = (fill == null ? "..." : fill);
     return str.substring(start, length - fill.length()) + fill;
   }
 
@@ -118,23 +121,13 @@ public class CommonUtils {
       new RuntimeException("Cron ParseException", e);
     }
     List<Date> dates = new ArrayList<>();
-    Calendar calendar = Calendar.getInstance();
-    Date today = new Date();
-    calendar.setTime(today);
-    calendar.set(Calendar.HOUR_OF_DAY, 0);
-    calendar.set(Calendar.MINUTE, 0);
-    calendar.set(Calendar.SECOND, 0);
-    calendar.set(Calendar.MILLISECOND, 0);
-
-    Date startDate = calendar.getTime();
-    calendar.add(Calendar.DAY_OF_MONTH, 1);
-    Date endDate = calendar.getTime();
+    Date startDate = DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH);
+    Date endDate = DateUtils.addDays(startDate, 1);
 
     if (expression.isSatisfiedBy(startDate)) {
       dates.add(startDate);
     }
     Date nextDate = expression.getNextValidTimeAfter(startDate);
-
     while (nextDate != null && nextDate.before(endDate)) {
       dates.add(nextDate);
       nextDate = expression.getNextValidTimeAfter(nextDate);
@@ -144,24 +137,20 @@ public class CommonUtils {
   }
 
   /** get Previous ValidTime */
-  public static Date getPreviousValidTime(String cron, Date specifiedTime) {
+  public static Date getPreviousValidTime(String cron, Date date) {
     CronExpression expression = null;
     try {
       expression = new CronExpression(cron);
     } catch (ParseException e) {
       new RuntimeException("Cron ParseException", e);
     }
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(specifiedTime);
 
-    Date endDate =
-        expression.getNextValidTimeAfter(expression.getNextValidTimeAfter(specifiedTime));
-    Long time = 2 * specifiedTime.getTime() - endDate.getTime();
+    Date endDate = expression.getNextValidTimeAfter(expression.getNextValidTimeAfter(date));
+    Long time = 2 * date.getTime() - endDate.getTime();
 
-    Date start = new Date(time);
-    Date nextDate = expression.getNextValidTimeAfter(start);
+    Date nextDate = expression.getNextValidTimeAfter(new Date(time));
     Date preDate = nextDate;
-    while (nextDate != null && nextDate.before(specifiedTime)) {
+    while (nextDate != null && nextDate.before(date)) {
       preDate = nextDate;
       nextDate = expression.getNextValidTimeAfter(nextDate);
     }
@@ -170,8 +159,7 @@ public class CommonUtils {
 
   /** get Unique Id */
   public static String getUniqueId(Long jobId, Date schedulerDate) {
-    return jobId.toString()
-        + DateTimeUtils.getDate2Str(DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, schedulerDate);
+    return jobId + DateTimeUtils.getDate2Str(DateTimeUtils.YYYY_MM_DD_HH_MM_SS2, schedulerDate);
   }
 
   /** content compare key */
@@ -195,5 +183,20 @@ public class CommonUtils {
       return ((Date) key).before((Date) content);
     }
     return false;
+  }
+
+  /** get local ips */
+  public static List<String> getLocalIps() {
+    try {
+      Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+      return Collections.list(networkInterfaces).stream()
+          .flatMap(network -> Collections.list(network.getInetAddresses()).stream())
+          .filter(address -> address instanceof Inet4Address && !address.isLoopbackAddress())
+          .map(InetAddress::getHostAddress)
+          .collect(Collectors.toList());
+    } catch (SocketException e) {
+      log.error("getLocalIps failed.", e);
+    }
+    return new ArrayList<>();
   }
 }
