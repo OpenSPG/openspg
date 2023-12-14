@@ -46,18 +46,24 @@ public class LocalSchedulerHandler implements SchedulerHandler {
       log.warn("ignore execute handlerType:{}", schedulerValue.getHandlerType());
       return;
     }
+    Runnable executeInstances =
+        () -> {
+          try {
+            Long startTime = System.currentTimeMillis();
+            schedulerExecuteService.executeInstances();
+            Long time = System.currentTimeMillis() - startTime;
+            log.info("run ExecuteInstances end time:{}", time);
+          } catch (Exception e) {
+            log.error("run ExecuteInstances Exception", e);
+          }
+        };
 
-    try {
-      log.info("start executeInstances");
-      EXECUTE.scheduleAtFixedRate(
-          new ExecuteInstances(schedulerExecuteService),
-          initialDelay,
-          schedulerValue.getExecuteInstancesPeriod(),
-          schedulerValue.getExecuteInstancesUnit());
-      log.info("end executeInstances");
-    } catch (Exception e) {
-      log.error("executeInstances Exception", e);
-    }
+    log.info("start executeInstances");
+    EXECUTE.scheduleAtFixedRate(
+        executeInstances,
+        initialDelay,
+        schedulerValue.getExecuteInstancesPeriod(),
+        schedulerValue.getExecuteInstancesUnit());
   }
 
   @Override
@@ -68,16 +74,23 @@ public class LocalSchedulerHandler implements SchedulerHandler {
       return;
     }
 
-    try {
-      log.info("start generateInstances");
-      GENERATE.scheduleAtFixedRate(
-          new GenerateInstances(schedulerGenerateService),
-          initialDelay,
-          schedulerValue.getGenerateInstancesPeriod(),
-          schedulerValue.getGenerateInstancesUnit());
-      log.info("end generateInstances");
-    } catch (Exception e) {
-      log.error("generateInstances Exception", e);
-    }
+    Runnable generateInstances =
+        () -> {
+          try {
+            Long startTime = System.currentTimeMillis();
+            schedulerGenerateService.generateInstances();
+            Long time = System.currentTimeMillis() - startTime;
+            log.info("run GenerateInstances end time:{}", time);
+          } catch (Exception e) {
+            log.error("run GenerateInstances Exception", e);
+          }
+        };
+
+    log.info("start generateInstances");
+    GENERATE.scheduleAtFixedRate(
+        generateInstances,
+        initialDelay,
+        schedulerValue.getGenerateInstancesPeriod(),
+        schedulerValue.getGenerateInstancesUnit());
   }
 }
