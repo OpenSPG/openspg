@@ -13,7 +13,6 @@
 package com.antgroup.openspg.server.core.scheduler.model.common;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.collections4.CollectionUtils;
 
 /** Task Dag Model ,Contains nodes and edges */
 @Getter
@@ -38,17 +36,6 @@ public class TaskDag {
   /** dag extend */
   private String extend;
 
-  /** get node by id list */
-  @JSONField(serialize = false)
-  public List<Node> getNode(List<String> ids) {
-    if (CollectionUtils.isEmpty(ids)) {
-      return Lists.newArrayList();
-    }
-    return this.nodes.stream()
-        .filter(node -> ids.contains(node.getId()))
-        .collect(Collectors.toList());
-  }
-
   /** get Next/Pre Nodes */
   public List<Node> getRelatedNodes(String id, boolean next) {
     List<String> idList = Lists.newArrayList();
@@ -58,7 +45,9 @@ public class TaskDag {
         idList.add(next ? edge.getTo() : edge.getFrom());
       }
     }
-    return getNode(idList);
+    return this.nodes.stream()
+        .filter(node -> idList.contains(node.getId()))
+        .collect(Collectors.toList());
   }
 
   @Getter

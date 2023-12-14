@@ -12,7 +12,6 @@
  */
 package com.antgroup.openspg.server.core.scheduler.model.service;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
@@ -101,12 +100,12 @@ public class SchedulerTask extends BaseModel {
     this.title = StringUtils.isNotBlank(node.getName()) ? node.getName() : node.getType();
 
     if (node.getProperties() != null) {
-      this.extension = JSON.parseObject(JSON.toJSONString(node.getProperties()));
+      this.extension = node.getProperties();
     }
 
     StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
-    log.append("Create new Task，Wait for the execution of the preceding node to complete.....")
-        .append(System.getProperty("line.separator"));
+    log.append("Create new Task, Waiting preceding node to complete.....");
+    log.append(System.getProperty("line.separator"));
 
     this.remark = log.toString();
   }

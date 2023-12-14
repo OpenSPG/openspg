@@ -64,12 +64,12 @@ public class SchedulerCommonService {
     updateInstance.setFinishTime(finishTime);
     Long updateNum = schedulerInstanceService.update(updateInstance);
     Assert.isTrue(updateNum > 0, "update instance failed " + updateInstance);
-    stopRunningProcess(instance);
+    stopRunningTasks(instance);
     schedulerTaskService.setStatusByInstanceId(instance.getId(), taskStatus);
   }
 
-  /** stop Running Process */
-  private void stopRunningProcess(SchedulerInstance instance) {
+  /** stop Running Tasks */
+  private void stopRunningTasks(SchedulerInstance instance) {
     List<SchedulerTask> taskList = schedulerTaskService.queryByInstanceId(instance.getId());
     List<SchedulerTask> processList =
         taskList.stream()
@@ -83,6 +83,7 @@ public class SchedulerCommonService {
       if (StringUtils.isBlank(task.getType())) {
         continue;
       }
+
       String type = task.getType().split(UNDERLINE_SEPARATOR)[0];
       JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
       if (jobTask != null && jobTask instanceof JobAsyncTask) {

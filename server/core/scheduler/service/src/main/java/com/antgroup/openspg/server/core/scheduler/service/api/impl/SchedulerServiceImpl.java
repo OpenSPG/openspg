@@ -101,7 +101,6 @@ public class SchedulerServiceImpl implements SchedulerService {
     SchedulerInstance instance = null;
     List<SchedulerInstance> instances = Lists.newArrayList();
     SchedulerJob job = schedulerJobService.getById(id);
-    Assert.notNull(job, String.format("job not find id:%s", id));
 
     if (LifeCycle.REAL_TIME.equals(job.getLifeCycle())) {
       stopJobAllInstance(id);
@@ -144,7 +143,6 @@ public class SchedulerServiceImpl implements SchedulerService {
   @Override
   public Boolean enableJob(Long id) {
     SchedulerJob job = schedulerJobService.getById(id);
-    Assert.notNull(job, String.format("job not find id:%s", id));
     SchedulerJob updateJob = new SchedulerJob();
     updateJob.setId(id);
     updateJob.setStatus(Status.ONLINE);
@@ -161,8 +159,6 @@ public class SchedulerServiceImpl implements SchedulerService {
 
   @Override
   public Boolean disableJob(Long id) {
-    SchedulerJob job = schedulerJobService.getById(id);
-    Assert.notNull(job, String.format("job not find id:%s", id));
     SchedulerJob updateJob = new SchedulerJob();
     updateJob.setId(id);
     updateJob.setStatus(Status.OFFLINE);
