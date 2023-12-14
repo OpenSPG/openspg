@@ -1,0 +1,9 @@
+Define (s:$sType)-[p:$newAlias]->(o:$oType) {
+GraphStructure {
+($sAlias)-[e1:geo_buffer_and_convert_2_s2CellId($sAlias.$sProperty, $distance)]->(cell:STD.S2CellId)<-[e2:$oProperty.concat(
+    "S2CellId")]-($oAlias)
+}
+Rule{
+R1: geo_distance($sAlias.$sProperty, $oAlias.$oProperty) <= $distance
+}
+}

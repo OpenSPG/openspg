@@ -1,0 +1,8 @@
+Define (s:$sType)-[p:$newAlias]->(o:$oType) {
+GraphStructure {
+($sAlias)-[e1:geo_buffer_and_convert_2_s2CellId($sAlias.$sProperty, 0)]->(cell:STD.S2CellId)<-[e2:$oProperty.concat("S2CellId")]-($oAlias)
+}
+Rule{
+R1: geo_is_intersects($sAlias.$sProperty, $oAlias.$oProperty)
+}
+}
