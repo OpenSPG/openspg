@@ -199,16 +199,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
 
     for (SchedulerTask it : waitList) {
       List<TaskDag.Node> preNodes = instance.getTaskDag().getRelatedNodes(it.getNodeId(), false);
-      boolean allFinish = true;
-      for (TaskDag.Node preNode : preNodes) {
-        SchedulerTask preTask =
-            schedulerTaskService.queryByInstanceIdAndType(instance.getId(), preNode.getType());
-        if (!TaskStatus.isFinished(preTask.getStatus())) {
-          allFinish = false;
-          break;
-        }
-      }
-      if (allFinish) {
+      if (checkAllNodesFinished(instance.getId(), preNodes)) {
         SchedulerTask updateTask = new SchedulerTask();
         updateTask.setId(it.getId());
         updateTask.setStatus(TaskStatus.RUNNING);
@@ -219,6 +210,17 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     }
 
     return result;
+  }
+
+  /** check all nodes is finished */
+  private boolean checkAllNodesFinished(Long instanceId, List<TaskDag.Node> nodes) {
+    for (TaskDag.Node node : nodes) {
+      SchedulerTask t = schedulerTaskService.queryByInstanceIdAndType(instanceId, node.getType());
+      if (!TaskStatus.isFinished(t.getStatus())) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /** get All Not Finish Instance */
