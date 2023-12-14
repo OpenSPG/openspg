@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,7 @@ public abstract class JobTaskTemplate implements JobTask {
       }
     } catch (Throwable e) {
       context.getTask().setStatus(TaskStatus.ERROR);
-      context.addTraceLog("Scheduling execute exception：%s", CommonUtils.getExceptionToString(e));
+      context.addTraceLog("Scheduling execute exception：%s", ExceptionUtils.getStackTrace(e));
       log.error("JobTask process error uniqueId:{}", context.getInstance().getUniqueId(), e);
     }
 
@@ -67,7 +68,7 @@ public abstract class JobTaskTemplate implements JobTask {
         setTaskFinish(context);
       }
     } catch (Throwable e) {
-      context.addTraceLog("Scheduling save status error：%s", CommonUtils.getExceptionToString(e));
+      context.addTraceLog("Scheduling save status error：%s", ExceptionUtils.getStackTrace(e));
       log.error("process status error uniqueId:{}", context.getInstance().getUniqueId(), e);
     } finally {
       unlockTask(context, lock);

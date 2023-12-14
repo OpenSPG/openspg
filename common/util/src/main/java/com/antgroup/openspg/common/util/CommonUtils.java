@@ -15,9 +15,6 @@ package com.antgroup.openspg.common.util;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.Closeable;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -46,11 +43,8 @@ public class CommonUtils {
 
   /** merge two bean by discovering differences */
   public static <M> M merge(M dest, M orig) {
-    if (dest == null) {
-      return orig;
-    }
-    if (orig == null) {
-      return dest;
+    if (dest == null || orig == null) {
+      return (dest == null) ? orig : dest;
     }
     try {
       BeanInfo beanInfo = Introspector.getBeanInfo(dest.getClass());
@@ -68,35 +62,6 @@ public class CommonUtils {
       log.error("merge bean exception", e);
     }
     return dest;
-  }
-
-  /** Exception to String */
-  public static String getExceptionToString(Throwable e) {
-    if (e == null) {
-      return "";
-    }
-    StringWriter stringWriter = null;
-    PrintWriter printWriter = null;
-    try {
-      stringWriter = new StringWriter();
-      printWriter = new PrintWriter(stringWriter);
-      e.printStackTrace(printWriter);
-    } finally {
-      close(stringWriter);
-      close(printWriter);
-    }
-    return stringWriter.toString();
-  }
-
-  /** close Closeable */
-  public static void close(Closeable closeable) {
-    if (closeable != null) {
-      try {
-        closeable.close();
-      } catch (Exception e) {
-        log.error("Unable to close ", e);
-      }
-    }
   }
 
   /** Limit remark. sub String To Length */
