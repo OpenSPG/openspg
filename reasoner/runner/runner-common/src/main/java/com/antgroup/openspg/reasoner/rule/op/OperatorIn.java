@@ -16,12 +16,6 @@ import com.ql.util.express.Operator;
 import java.lang.reflect.Array;
 import java.util.List;
 
-/**
- * in op without exception
- *
- * @author chengqiang.cq
- * @version $Id: OperatorIn.java, v 0.1 2022-11-22 14:24 chengqiang.cq Exp $$
- */
 public class OperatorIn extends Operator {
   public OperatorIn(String aName) {
     this.name = aName;

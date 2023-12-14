@@ -27,11 +27,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-/*
- * @Author peilong.zpl
- * @Description ProgressStatus.java //TODO
- * @Date 2021/2/18
- */
 @Slf4j(topic = "userlogger")
 public class ProgressStatus implements Serializable {
   @Getter @Setter private JobStatus status;

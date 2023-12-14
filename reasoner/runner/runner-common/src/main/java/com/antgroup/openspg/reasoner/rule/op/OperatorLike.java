@@ -12,12 +12,6 @@
  */
 package com.antgroup.openspg.reasoner.rule.op;
 
-/**
- * like op without exception
- *
- * @author chengqiang.cq
- * @version $Id: OperatorLike.java, v 0.1 2022-11-20 10:56 chengqiang.cq Exp $$
- */
 public class OperatorLike extends com.ql.util.express.instruction.op.OperatorLike {
   public OperatorLike(String name) {
     super(name);

@@ -50,7 +50,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import scala.Tuple2;
 
-/** @author donghai.ydh@alibaba-inc.com */
 @Slf4j(topic = "userlogger")
 public class OSSClientHelper implements Serializable {
   private transient ObjectStorageClient client;
