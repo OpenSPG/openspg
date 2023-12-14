@@ -31,7 +31,6 @@ import com.antgroup.openspg.server.core.scheduler.service.translate.TranslatorFa
 import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -71,16 +70,11 @@ public class SchedulerCommonService {
   /** stop Running Tasks */
   private void stopRunningTasks(SchedulerInstance instance) {
     List<SchedulerTask> taskList = schedulerTaskService.queryByInstanceId(instance.getId());
-    List<SchedulerTask> processList =
-        taskList.stream()
-            .filter(s -> TaskStatus.isRunning(s.getStatus()))
-            .collect(Collectors.toList());
 
     SchedulerJob job = schedulerJobService.getById(instance.getJobId());
 
-    for (SchedulerTask task : processList) {
-      JobTaskContext context = new JobTaskContext(job, instance, task);
-      if (StringUtils.isBlank(task.getType())) {
+    for (SchedulerTask task : taskList) {
+      if (!TaskStatus.isRunning(task.getStatus()) || StringUtils.isBlank(task.getType())) {
         continue;
       }
 
@@ -88,9 +82,10 @@ public class SchedulerCommonService {
       JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
       if (jobTask != null && jobTask instanceof JobAsyncTask) {
         JobAsyncTask jobAsyncTask = (JobAsyncTask) jobTask;
+        JobTaskContext context = new JobTaskContext(job, instance, task);
         jobAsyncTask.stop(context, task.getResource());
       } else {
-        log.error("task is null or not an instance of JobAsyncTask id: {}", task.getId());
+        log.warn("get bean is null or not instance of JobAsyncTask id: {}", task.getId());
       }
     }
   }
@@ -123,10 +118,9 @@ public class SchedulerCommonService {
     for (Date schedulerDate : executionDates) {
       String uniqueId = CommonUtils.getUniqueId(job.getId(), schedulerDate);
       SchedulerInstance instance = generateInstance(job, uniqueId, schedulerDate);
-      if (instance == null) {
-        continue;
+      if (instance != null) {
+        instances.add(instance);
       }
-      instances.add(instance);
     }
     return instances;
   }

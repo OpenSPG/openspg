@@ -76,14 +76,18 @@ public class CommonUtils {
     return str.substring(start, length - fill.length()) + fill;
   }
 
+  /** get CronExpression */
+  public static CronExpression getCronExpression(String cron) {
+    try {
+      return new CronExpression(cron);
+    } catch (ParseException e) {
+      throw new RuntimeException("Cron ParseException:" + cron, e);
+    }
+  }
+
   /** get Cron Execution Dates By Today */
   public static List<Date> getCronExecutionDatesByToday(String cron) {
-    CronExpression expression = null;
-    try {
-      expression = new CronExpression(cron);
-    } catch (ParseException e) {
-      new RuntimeException("Cron ParseException", e);
-    }
+    CronExpression expression = getCronExpression(cron);
     List<Date> dates = new ArrayList<>();
     Date startDate = DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH);
     Date endDate = DateUtils.addDays(startDate, 1);
@@ -102,13 +106,7 @@ public class CommonUtils {
 
   /** get Previous ValidTime */
   public static Date getPreviousValidTime(String cron, Date date) {
-    CronExpression expression = null;
-    try {
-      expression = new CronExpression(cron);
-    } catch (ParseException e) {
-      new RuntimeException("Cron ParseException", e);
-    }
-
+    CronExpression expression = getCronExpression(cron);
     Date endDate = expression.getNextValidTimeAfter(expression.getNextValidTimeAfter(date));
     Long time = 2 * date.getTime() - endDate.getTime();
 
@@ -134,19 +132,18 @@ public class CommonUtils {
     if (content == null) {
       return false;
     }
-    if (type.equals(EQ)) {
-      return content.equals(key);
+    switch (type) {
+      case EQ:
+        return content.equals(key);
+      case IN:
+        return ((String) content).contains((String) key);
+      case GT:
+        return ((Date) key).after((Date) content);
+      case LT:
+        return ((Date) key).before((Date) content);
+      default:
+        return false;
     }
-    if (type.equals(IN)) {
-      return ((String) content).contains((String) key);
-    }
-    if (type.equals(GT)) {
-      return ((Date) key).after((Date) content);
-    }
-    if (type.equals(LT)) {
-      return ((Date) key).before((Date) content);
-    }
-    return false;
   }
 
   /** get local ips */

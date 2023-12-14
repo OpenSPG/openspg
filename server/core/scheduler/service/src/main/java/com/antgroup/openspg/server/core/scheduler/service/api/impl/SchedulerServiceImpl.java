@@ -12,6 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.api.impl;
 
+import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
@@ -27,14 +28,12 @@ import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInst
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.google.common.collect.Lists;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.CollectionUtils;
-import org.quartz.CronExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -86,35 +85,25 @@ public class SchedulerServiceImpl implements SchedulerService {
     Assert.notNull(job.getMergeMode(), "MergeMode not null");
 
     if (LifeCycle.PERIOD.equals(job.getLifeCycle())) {
-      String cron = job.getSchedulerCron();
-      Assert.hasText(cron, "SchedulerCron not null");
-      try {
-        new CronExpression(cron);
-      } catch (ParseException e) {
-        throw new OpenSPGException("Cron {} ParseException:{}", cron, e.getMessage());
-      }
+      Assert.hasText(job.getSchedulerCron(), "SchedulerCron not null");
+      CommonUtils.getCronExpression(job.getSchedulerCron());
     }
   }
 
   @Override
   public Boolean executeJob(Long id) {
-    SchedulerInstance instance = null;
     List<SchedulerInstance> instances = Lists.newArrayList();
     SchedulerJob job = schedulerJobService.getById(id);
 
     if (LifeCycle.REAL_TIME.equals(job.getLifeCycle())) {
       stopJobAllInstance(id);
-      instance = schedulerCommonService.generateRealTimeInstance(job);
-    }
-    if (LifeCycle.PERIOD.equals(job.getLifeCycle())) {
+      instances.add(schedulerCommonService.generateRealTimeInstance(job));
+    } else if (LifeCycle.PERIOD.equals(job.getLifeCycle())) {
       instances.addAll(schedulerCommonService.generatePeriodInstance(job));
+    } else if (LifeCycle.ONCE.equals(job.getLifeCycle())) {
+      instances.add(schedulerCommonService.generateOnceInstance(job));
     }
-    if (LifeCycle.ONCE.equals(job.getLifeCycle())) {
-      instance = schedulerCommonService.generateOnceInstance(job);
-    }
-    if (instance != null) {
-      instances.add(instance);
-    }
+
     if (CollectionUtils.isEmpty(instances)) {
       return false;
     }

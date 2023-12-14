@@ -75,8 +75,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
 
     for (SchedulerJob job : allJob) {
       try {
-        List<SchedulerInstance> instances = schedulerCommonService.generatePeriodInstance(job);
-        log.info("generate successful jobId:{} size:{}", job.getId(), instances.size());
+        schedulerCommonService.generatePeriodInstance(job);
       } catch (Exception e) {
         log.error("generate error jobId:{}", job.getId(), e);
       }
@@ -133,8 +132,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
   /** execute Instance by all tasks */
   public void executeInstance(SchedulerInstance instance, List<SchedulerTask> tasks) {
     if (InstanceStatus.isFinished(instance.getStatus())) {
-      log.info(
-          "instanceStatus is FINISH slip id:{} status:{}", instance.getId(), instance.getStatus());
+      log.info("instance:{} status is {} ignore execute", instance.getId(), instance.getStatus());
       return;
     }
     tasks.forEach(task -> executeTask(instance, task));
@@ -152,14 +150,12 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
 
       String type = task.getType().split(UNDERLINE_SEPARATOR)[0];
       JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
-      if (jobTask == null) {
-        log.error("get bean error uniqueId:{} taskId:{}", instance.getUniqueId(), task.getId());
-        return;
+      if (jobTask != null) {
+        jobTask.executeEntry(context);
+        executeNextTask(context);
+      } else {
+        log.error("get bean is null uniqueId:{} type:{}", instance.getUniqueId(), type);
       }
-
-      jobTask.executeEntry(context);
-
-      executeNextTask(context);
     } catch (Exception e) {
       log.error("process task error task:{}", task.getId(), e);
     }
@@ -170,42 +166,39 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
     List<TaskDag.Node> nextNodes = instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
+    if (!context.isTaskFinish() || CollectionUtils.isEmpty(nextNodes)) {
+      return;
+    }
     List<SchedulerTask> taskList = Lists.newArrayList();
     for (TaskDag.Node nextNode : nextNodes) {
       taskList.add(
           schedulerTaskService.queryByInstanceIdAndType(instance.getId(), nextNode.getType()));
     }
-    if (context.isTaskFinish() && CollectionUtils.isNotEmpty(taskList)) {
-      SchedulerInstance ins = schedulerInstanceService.getById(instance.getId());
-      Runnable instanceRunnable = () -> executeInstance(ins, taskList);
+    SchedulerInstance ins = schedulerInstanceService.getById(instance.getId());
+    Runnable instanceRunnable = () -> executeInstance(ins, taskList);
 
-      long delay = 10;
-      executorService.schedule(instanceRunnable, delay, TimeUnit.SECONDS);
-      log.info("executeNextTask successful {}", instance.getUniqueId());
-    }
+    long delay = 10;
+    executorService.schedule(instanceRunnable, delay, TimeUnit.SECONDS);
+    log.info("executeNextTask successful {}", instance.getUniqueId());
   }
 
   /** check next task Status is WAIT to RUNNING */
   private List<SchedulerTask> checkAndUpdateWaitStatus(
       SchedulerInstance instance, List<SchedulerTask> tasks) {
-    List<SchedulerTask> result = Lists.newArrayList();
-    List<SchedulerTask> waitList =
-        tasks.stream()
-            .filter(s -> TaskStatus.WAIT.equals(s.getStatus()))
-            .collect(Collectors.toList());
-    if (CollectionUtils.isEmpty(waitList)) {
-      return result;
-    }
 
-    for (SchedulerTask it : waitList) {
-      List<TaskDag.Node> preNodes = instance.getTaskDag().getRelatedNodes(it.getNodeId(), false);
+    List<SchedulerTask> result = Lists.newArrayList();
+    for (SchedulerTask task : tasks) {
+      if (!TaskStatus.WAIT.equals(task.getStatus())) {
+        continue;
+      }
+      List<TaskDag.Node> preNodes = instance.getTaskDag().getRelatedNodes(task.getNodeId(), false);
       if (checkAllNodesFinished(instance.getId(), preNodes)) {
         SchedulerTask updateTask = new SchedulerTask();
-        updateTask.setId(it.getId());
+        updateTask.setId(task.getId());
         updateTask.setStatus(TaskStatus.RUNNING);
         schedulerTaskService.update(updateTask);
-        it.setStatus(TaskStatus.RUNNING);
-        result.add(it);
+        task.setStatus(TaskStatus.RUNNING);
+        result.add(task);
       }
     }
 
