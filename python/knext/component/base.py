@@ -23,6 +23,8 @@ from knext.common.runnable import Runnable
 
 class ComponentTypeEnum(str, Enum):
     Builder = "BUILDER"
+    Reasoner = "REASONER"
+    GraphLearning = "GRAPH_LEARNING"
 
 
 class Component(Runnable, RESTable, ABC):
@@ -30,6 +32,7 @@ class Component(Runnable, RESTable, ABC):
     Base class for all component.
     """
 
+    @property
     def id(self):
         return str(id(self))
 
@@ -46,7 +49,7 @@ class Component(Runnable, RESTable, ABC):
         return self.__class__.__name__
 
     def to_dict(self):
-        return self.__dict__
+        return {"id": self.id, "name": self.name}
 
     def __hash__(self):
         return id(self)
@@ -76,7 +79,6 @@ class Component(Runnable, RESTable, ABC):
                 dag = nx.DiGraph()
                 self.last = True
                 dag.add_node(self)
-                print(dag.nodes)
                 dag_list.append(dag)
             if isinstance(o, Component):
                 dag = nx.DiGraph()

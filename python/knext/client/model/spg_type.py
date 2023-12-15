@@ -13,12 +13,6 @@
 from typing import List, Dict, Union, Optional
 
 from knext import rest
-from knext.core.builder.operator import (
-    Operator,
-    PropertyNormalizeOp,
-    EntityFuseOp,
-    EntityLinkOp,
-)
 from knext.client.model.base import (
     BaseSpgType,
     SpgTypeEnum,
@@ -28,6 +22,7 @@ from knext.client.model.base import (
 )
 from knext.client.model.property import Property
 from knext.client.model.relation import Relation
+from knext.operator.op import LinkOp, FuseOp
 
 
 class EntityType(BaseSpgType):
@@ -40,8 +35,8 @@ class EntityType(BaseSpgType):
     parent_type_name: str
     properties: Dict[str, Property]
     relations: Dict[str, Relation]
-    link_operator: EntityLinkOp
-    fuse_operator: EntityFuseOp
+    link_operator: LinkOp
+    fuse_operator: FuseOp
 
     def __init__(
         self,
@@ -51,8 +46,8 @@ class EntityType(BaseSpgType):
         parent_type_name: str = ROOT_TYPE_UNIQUE_NAME,
         properties: List[Property] = None,
         relations: List[Relation] = None,
-        link_operator: EntityLinkOp = None,
-        fuse_operator: EntityFuseOp = None,
+        link_operator: LinkOp = None,
+        fuse_operator: FuseOp = None,
         **kwargs,
     ):
         super().__init__(
@@ -83,10 +78,10 @@ class EntityType(BaseSpgType):
             return None
         op_name = self._rest_model.advanced_config.link_operator.name
         op_version = self._rest_model.advanced_config.link_operator.version
-        return Operator()._generate_op_config(op_name, op_version)
+        return self.link_operator.to_rest(op_name, op_version)
 
     @link_operator.setter
-    def link_operator(self, link_operator: EntityLinkOp):
+    def link_operator(self, link_operator: LinkOp):
         """Sets the link_operator of this EntityType.
 
 
@@ -102,7 +97,7 @@ class EntityType(BaseSpgType):
         self._rest_model.advanced_config.link_operator.name = link_operator.name
         self._rest_model.advanced_config.link_operator.version = link_operator._version
 
-    def bind_link_operator(self, operator: EntityLinkOp):
+    def bind_link_operator(self, operator: LinkOp):
         """Binds a link operator to this EntityType."""
 
         self.link_operator = operator
@@ -120,10 +115,10 @@ class EntityType(BaseSpgType):
             return None
         op_name = self._rest_model.advanced_config.fuse_operator.name
         op_version = self._rest_model.advanced_config.fuse_operator.version
-        return Operator()._generate_op_config(op_name, op_version)
+        return self.fuse_operator.to_rest(op_name, op_version)
 
     @fuse_operator.setter
-    def fuse_operator(self, fuse_operator: EntityFuseOp):
+    def fuse_operator(self, fuse_operator: FuseOp):
         """Sets the fuse_operator of this EntityType.
 
 
@@ -139,7 +134,7 @@ class EntityType(BaseSpgType):
         self._rest_model.advanced_config.fuse_operator.name = fuse_operator.name
         self._rest_model.advanced_config.fuse_operator.version = fuse_operator._version
 
-    def bind_fuse_operator(self, operator: EntityFuseOp):
+    def bind_fuse_operator(self, operator: FuseOp):
         """Binds a fuse operator to this EntityType."""
 
         self.fuse_operator = operator
@@ -157,7 +152,8 @@ class ConceptType(BaseSpgType):
     parent_type_name: str
     properties: Dict[str, Property]
     relations: Dict[str, Relation]
-    normalize_operator: PropertyNormalizeOp
+    link_operator: LinkOp
+    fuse_operator: FuseOp
     taxonomic_type_name: str
 
     def __init__(
@@ -169,7 +165,7 @@ class ConceptType(BaseSpgType):
         parent_type_name: str = ROOT_TYPE_UNIQUE_NAME,
         properties: List[Property] = None,
         relations: List[Relation] = None,
-        normalize_operator: PropertyNormalizeOp = None,
+        link_operator: LinkOp = None,
         taxonomic_type_name: str = None,
         **kwargs,
     ):
@@ -186,7 +182,7 @@ class ConceptType(BaseSpgType):
         if "rest_model" not in kwargs:
             self.hypernym_predicate = hypernym_predicate
             self.taxonomic_type_name = taxonomic_type_name
-            self.normalize_operator = normalize_operator
+            self.link_operator = link_operator
 
     @property
     def hypernym_predicate(self) -> Optional[HypernymPredicateEnum]:
@@ -238,44 +234,44 @@ class ConceptType(BaseSpgType):
         )
 
     @property
-    def normalize_operator(self):
-        """Gets the normalize_operator of this ConceptType.  # noqa: E501
+    def link_operator(self):
+        """Gets the link_operator of this ConceptType.  # noqa: E501
 
 
-        :return: The normalize_operator of this ConceptType.  # noqa: E501
+        :return: The link_operator of this ConceptType.  # noqa: E501
         :rtype: Operator
         """
         if self._rest_model.advanced_config.normalized_operator is None:
             return None
         op_name = self._rest_model.advanced_config.normalized_operator.name
         op_version = self._rest_model.advanced_config.normalized_operator.version
-        return Operator()._generate_op_config(op_name, op_version)
+        return self.link_operator(op_name, op_version)
 
-    @normalize_operator.setter
-    def normalize_operator(self, normalize_operator: PropertyNormalizeOp):
-        """Sets the normalize_operator of this ConceptType.
+    @link_operator.setter
+    def link_operator(self, link_operator: LinkOp):
+        """Sets the link_operator of this ConceptType.
 
 
-        :param normalize_operator: The normalize_operator of this ConceptType.  # noqa: E501
+        :param link_operator: The link_operator of this ConceptType.  # noqa: E501
         :type: Operator
         """
 
-        if normalize_operator is None:
+        if link_operator is None:
             self._rest_model.advanced_config.normalized_operator = None
             return
         if self._rest_model.advanced_config.normalized_operator is None:
             self._rest_model.advanced_config.normalized_operator = rest.OperatorKey()
         self._rest_model.advanced_config.normalized_operator.name = (
-            normalize_operator.name
+            link_operator.name
         )
         self._rest_model.advanced_config.normalized_operator.version = (
-            normalize_operator._version
+            link_operator._version
         )
 
-    def bind_normalize_operator(self, operator: PropertyNormalizeOp):
+    def bind_link_operator(self, operator: LinkOp):
         """Binds a property normalize operator to this ConceptType."""
 
-        self.normalize_operator = operator
+        self.link_operator = operator
         return self
 
 
@@ -289,7 +285,7 @@ class EventType(BaseSpgType):
     parent_type_name: str
     properties: Dict[str, Property]
     relations: Dict[str, Relation]
-    link_operator: EntityLinkOp
+    link_operator: LinkOp
 
     def __init__(
         self,
@@ -299,7 +295,7 @@ class EventType(BaseSpgType):
         parent_type_name: str = ROOT_TYPE_UNIQUE_NAME,
         properties: List[Property] = None,
         relations: List[Relation] = None,
-        link_operator: EntityLinkOp = None,
+        link_operator: LinkOp = None,
         **kwargs,
     ):
         super().__init__(
@@ -327,10 +323,10 @@ class EventType(BaseSpgType):
             return None
         op_name = self._rest_model.advanced_config.normalized_operator.name
         op_version = self._rest_model.advanced_config.normalized_operator.version
-        return Operator()._generate_op_config(op_name, op_version)
+        return self.link_operator(op_name, op_version)
 
     @link_operator.setter
-    def link_operator(self, link_operator: EntityLinkOp):
+    def link_operator(self, link_operator: LinkOp):
         """Sets the link_operator of this EventType.
 
 
@@ -346,7 +342,7 @@ class EventType(BaseSpgType):
         self._rest_model.advanced_config.link_operator.name = link_operator.name
         self._rest_model.advanced_config.link_operator.version = link_operator._version
 
-    def bind_link_operator(self, operator: EntityLinkOp):
+    def bind_link_operator(self, operator: LinkOp):
         """Binds a link operator to this EventType."""
 
         self.link_operator = operator

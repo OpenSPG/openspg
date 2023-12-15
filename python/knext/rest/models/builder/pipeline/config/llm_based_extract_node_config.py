@@ -58,7 +58,7 @@ class LlmBasedExtractNodeConfig(object):
         self.local_vars_configuration = local_vars_configuration
 
         self._type = None
-        self.discriminator = None
+        self.discriminator = type
 
         self.type = type
 

@@ -61,7 +61,7 @@ class SubGraphMappingNodeConfig(object):
 
         self._type = None
         self._children_node_configs = None
-        self.discriminator = None
+        self.discriminator = type
 
         self.type = type
         if children_node_configs is not None:

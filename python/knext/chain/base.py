@@ -1,22 +1,20 @@
-from typing import Union, Type, List, Sequence, TypeVar, Generic
+from typing import Union, Type, List
 
 import networkx as nx
 
 from knext import rest
+
 from knext.common.restable import RESTable
-from knext.common.runnable import Runnable, Input, Output
+from knext.common.runnable import Runnable
 
 
 class Chain(Runnable, RESTable):
 
-    first: RESTable
-
-    last: RESTable
-
     dag: nx.DiGraph
 
     def invoke(self, input=None, **kwargs):
-        pass
+        from knext.chain.builder_chain import BuilderChain
+        return BuilderChain.from_chain(self).invoke(**kwargs)
 
     @property
     def upstream_types(self) -> Type['RESTable']:
@@ -24,7 +22,7 @@ class Chain(Runnable, RESTable):
 
     @property
     def downstream_types(self) -> Type['RESTable']:
-        return self.last.downstream_types
+        return self._last.downstream_types
 
     @classmethod
     def from_rest(cls, node: rest.Node):
@@ -57,7 +55,7 @@ class Chain(Runnable, RESTable):
                 end_nodes = [
                     node
                     for node, out_degree in self.dag.out_degree()
-                    if out_degree == 0 or node.last
+                    if out_degree == 0 or node._last
                 ]
                 dag = nx.DiGraph(self.dag)
                 if len(end_nodes) > 0:
@@ -70,7 +68,7 @@ class Chain(Runnable, RESTable):
                 end_nodes = [
                     node
                     for node, out_degree in self.dag.out_degree()
-                    if out_degree == 0 or node.last
+                    if out_degree == 0 or node._last
                 ]
                 start_nodes = [
                     node for node, in_degree in o.dag.in_degree() if in_degree == 0

@@ -30,9 +30,9 @@ class LLMBasedExtractor(SPGExtractor):
     """PromptOps"""
     prompt_ops: List[PromptOp]
 
-    spg_type_name: Union[str, SPGTypeHelper] = None
-
-    property_names: List[Union[str, PropertyHelper]] = None
+    # spg_type_name: Union[str, SPGTypeHelper] = None
+    #
+    # property_names: List[Union[str, PropertyHelper]] = None
 
     @property
     def input_types(self) -> Input:
@@ -118,7 +118,7 @@ class UserDefinedExtractor(SPGExtractor):
         #     op_name=self.extract_op.name, params=self.extract_op.params
         # )
         operator_config = {}
-        config = rest.ExtractNodeConfig(
+        config = rest.UserDefinedExtractNodeConfig(
             output_fields=self.output_fields, operator_config=operator_config
         )
 

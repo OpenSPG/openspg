@@ -73,6 +73,9 @@ class BuilderClient(Client):
         python_exec = sys.executable
         python_paths = sys.path
 
+        print(python_exec)
+        print(python_paths)
+
         import os
         import subprocess
         import knext
@@ -80,24 +83,28 @@ class BuilderClient(Client):
         import json
 
         jar_path = os.path.join(knext.__path__[0], f"engine/builder-runner-local-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
-        pipeline = json.dumps(dag_config, ensure_ascii=False)
+        print(jar_path)
+        # pipeline = dag_config.to_dict()
+        # print(pipeline)
+        builder_client = BuilderClient()._rest_client.api_client.sanitize_for_serialization(dag_config)
+        print(builder_client)
         log_file_name = f"{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 
         java_cmd = ['java', '-jar',
                     "-Dcloudext.graphstore.drivers=com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClientDriver",
                     "-Dcloudext.searchengine.drivers=com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchEngineClientDriver",
                     jar_path,
-                    "--projectId", self._project_id,
+                    "--projectId", "1",
                     "--jobName", kwargs.get("job_name", "default_job"),
-                    "--pipeline", pipeline,
+                    "--pipeline", json.dumps(builder_client),
                     "--pythonExec", python_exec,
-                    "--pythonPaths", python_paths,
-                    "--schemaUrl", self._host_addr,
-                    "--parallelism", kwargs.get("parallelism", 1),
+                    "--pythonPaths", ';'.join(python_paths),
+                    "--schemaUrl", "http://localhost:8887",
+                    "--parallelism", kwargs.get("parallelism", "1"),
                     "--alterOperation", kwargs.get("alter_operation", AlterOperationEnum.Upsert),
                     "--logFile", log_file_name
                     ]
-        subprocess.call(java_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        subprocess.call(java_cmd)
 
     def query(self, job_inst_id: int):
         """Query status of a submitted builder job by job inst id."""

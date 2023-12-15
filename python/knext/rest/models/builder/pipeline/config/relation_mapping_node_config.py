@@ -67,7 +67,7 @@ class RelationMappingNodeConfig(object):
         self._relation = None
         self._mapping_filters = None
         self._mapping_configs = None
-        self.discriminator = None
+        self.discriminator = type
 
         self.type = type
         if relation is not None:

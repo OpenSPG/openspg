@@ -12,8 +12,13 @@
 
 from abc import ABC
 from enum import Enum
-from typing import List, Dict, Any, Type
+from typing import List, Dict, Any, Type, Sequence, Union
 
+from knext import rest
+
+from knext.common.restable import RESTable
+from knext.common.runnable import Runnable, Other, Input, Output
+from knext.common.schema_helper import SPGTypeHelper
 from knext.operator.eval_result import EvalResult
 from knext.operator.spg_record import SPGRecord
 
@@ -31,9 +36,14 @@ class BaseOp(ABC):
     The execution logic of the operator needs to be implemented in the `eval` method.
     """
 
+    """Operator name."""
     name: str
+    """Operator description."""
     desc: str = ""
-    bind_to: Type = None
+    """SPG type the operator bind to."""
+    bind_to: Union[str, SPGTypeHelper] = None
+
+    params: Dict[str, str] = None
 
     _registry = {}
     _local_path: str
@@ -49,8 +59,8 @@ class BaseOp(ABC):
             f"{self.__class__.__name__} need to implement `eval` method."
         )
 
-    def handle(self, *inputs) -> Dict[str, Any]:
-        """Only available for Builder in OpenKgEngine to call through the pemja tool."""
+    def _handle(self, *inputs) -> Dict[str, Any]:
+        """Only available for Builder in OpenSPG to call through the pemja tool."""
         pre_input = self._pre_process(*inputs)
         output = self.eval(*pre_input)
         post_output = self._post_process(output)
@@ -94,3 +104,14 @@ class BaseOp(ABC):
             return subclass
         else:
             raise ValueError(f"{name} is not a registered name for {cls.__name__}. ")
+
+    def to_rest(self):
+        return rest.OperatorConfig(file_path=self._local_path,
+                                   module_path="",
+                                   class_name=self.name,
+                                   method="_handle",
+                                   params=self.params,
+                                   )
+
+    def from_rest(cls, node):
+        pass

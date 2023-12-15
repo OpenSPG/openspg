@@ -7,7 +7,7 @@ from knext.common.runnable import Input, Output
 
 from knext.common.schema_helper import SPGTypeHelper, PropertyHelper
 from knext.component.builder.base import Mapping
-from knext.operator.op import LinkOp
+from knext.operator.op import LinkOp, FuseOp
 from knext.operator.spg_record import SPGRecord
 
 
@@ -41,6 +41,8 @@ class SPGTypeMapping(Mapping):
     """
 
     spg_type_name: Union[str, SPGTypeHelper]
+
+    fuse_op: FuseOp = None
 
     mapping: Dict[str, str] = dict()
 

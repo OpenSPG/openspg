@@ -67,7 +67,7 @@ class SpgTypeMappingNodeConfig(object):
         self._spg_type = None
         self._mapping_filters = None
         self._mapping_configs = None
-        self.discriminator = None
+        self.discriminator = type
 
         self.type = type
         if spg_type is not None:

@@ -44,215 +44,128 @@ class OperatorConfig(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        "name": "str",
-        "version": "int",
-        "jar_address": "str",
-        "main_class": "str",
-        "lang_type": "str",
-        "operator_type": "str",
-        "params": "object",
+        'file_path': 'str',
+        'module_path': 'int',
+        'class_name': 'str',
+        'method': 'str',
+        'params': 'object'
     }
 
     attribute_map = {
-        "name": "name",
-        "version": "version",
-        "jar_address": "jarAddress",
-        "main_class": "mainClass",
-        "lang_type": "langType",
-        "operator_type": "operatorType",
-        "params": "params",
+        'file_path': 'filePath',
+        'module_path': 'modulePath',
+        'class_name': 'className',
+        'method': 'method',
+        'params': 'params'
     }
 
-    def __init__(
-        self,
-        name=None,
-        version=None,
-        jar_address=None,
-        main_class=None,
-        lang_type=None,
-        operator_type=None,
-        params=None,
-        local_vars_configuration=None,
-    ):  # noqa: E501
+    def __init__(self, file_path=None, module_path=None, class_name=None, method=None, params=None, local_vars_configuration=None):  # noqa: E501
         """OperatorConfig - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
-        self._name = None
-        self._version = None
-        self._jar_address = None
-        self._main_class = None
-        self._lang_type = None
-        self._operator_type = None
+        self._file_path = None
+        self._module_path = None
+        self._class_name = None
+        self._method = None
         self._params = None
         self.discriminator = None
 
-        if name is not None:
-            self.name = name
-        if version is not None:
-            self.version = version
-        if jar_address is not None:
-            self.jar_address = jar_address
-        if main_class is not None:
-            self.main_class = main_class
-        if lang_type is not None:
-            self.lang_type = lang_type
-        if operator_type is not None:
-            self.operator_type = operator_type
+        if file_path is not None:
+            self.file_path = file_path
+        if module_path is not None:
+            self.module_path = module_path
+        if class_name is not None:
+            self.class_name = class_name
+        if method is not None:
+            self.method = method
         if params is not None:
             self.params = params
 
     @property
-    def name(self):
-        """Gets the name of this OperatorConfig.  # noqa: E501
+    def file_path(self):
+        """Gets the file_path of this OperatorConfig.  # noqa: E501
 
 
-        :return: The name of this OperatorConfig.  # noqa: E501
+        :return: The file_path of this OperatorConfig.  # noqa: E501
         :rtype: str
         """
-        return self._name
+        return self._file_path
 
-    @name.setter
-    def name(self, name):
-        """Sets the name of this OperatorConfig.
+    @file_path.setter
+    def file_path(self, file_path):
+        """Sets the file_path of this OperatorConfig.
 
 
-        :param name: The name of this OperatorConfig.  # noqa: E501
+        :param file_path: The file_path of this OperatorConfig.  # noqa: E501
         :type: str
         """
 
-        self._name = name
+        self._file_path = file_path
 
     @property
-    def version(self):
-        """Gets the version of this OperatorConfig.  # noqa: E501
+    def module_path(self):
+        """Gets the module_path of this OperatorConfig.  # noqa: E501
 
 
-        :return: The version of this OperatorConfig.  # noqa: E501
+        :return: The module_path of this OperatorConfig.  # noqa: E501
         :rtype: int
         """
-        return self._version
+        return self._module_path
 
-    @version.setter
-    def version(self, version):
-        """Sets the version of this OperatorConfig.
+    @module_path.setter
+    def module_path(self, module_path):
+        """Sets the module_path of this OperatorConfig.
 
 
-        :param version: The version of this OperatorConfig.  # noqa: E501
+        :param module_path: The module_path of this OperatorConfig.  # noqa: E501
         :type: int
         """
 
-        self._version = version
+        self._module_path = module_path
 
     @property
-    def jar_address(self):
-        """Gets the jar_address of this OperatorConfig.  # noqa: E501
+    def class_name(self):
+        """Gets the class_name of this OperatorConfig.  # noqa: E501
 
 
-        :return: The jar_address of this OperatorConfig.  # noqa: E501
+        :return: The class_name of this OperatorConfig.  # noqa: E501
         :rtype: str
         """
-        return self._jar_address
+        return self._class_name
 
-    @jar_address.setter
-    def jar_address(self, jar_address):
-        """Sets the jar_address of this OperatorConfig.
+    @class_name.setter
+    def class_name(self, class_name):
+        """Sets the class_name of this OperatorConfig.
 
 
-        :param jar_address: The jar_address of this OperatorConfig.  # noqa: E501
+        :param class_name: The class_name of this OperatorConfig.  # noqa: E501
         :type: str
         """
 
-        self._jar_address = jar_address
+        self._class_name = class_name
 
     @property
-    def main_class(self):
-        """Gets the main_class of this OperatorConfig.  # noqa: E501
+    def method(self):
+        """Gets the method of this OperatorConfig.  # noqa: E501
 
 
-        :return: The main_class of this OperatorConfig.  # noqa: E501
+        :return: The method of this OperatorConfig.  # noqa: E501
         :rtype: str
         """
-        return self._main_class
+        return self._method
 
-    @main_class.setter
-    def main_class(self, main_class):
-        """Sets the main_class of this OperatorConfig.
+    @method.setter
+    def method(self, method):
+        """Sets the method of this OperatorConfig.
 
 
-        :param main_class: The main_class of this OperatorConfig.  # noqa: E501
+        :param method: The method of this OperatorConfig.  # noqa: E501
         :type: str
         """
 
-        self._main_class = main_class
-
-    @property
-    def lang_type(self):
-        """Gets the lang_type of this OperatorConfig.  # noqa: E501
-
-
-        :return: The lang_type of this OperatorConfig.  # noqa: E501
-        :rtype: str
-        """
-        return self._lang_type
-
-    @lang_type.setter
-    def lang_type(self, lang_type):
-        """Sets the lang_type of this OperatorConfig.
-
-
-        :param lang_type: The lang_type of this OperatorConfig.  # noqa: E501
-        :type: str
-        """
-        allowed_values = ["PYTHON", "JAVA"]  # noqa: E501
-        if (
-            self.local_vars_configuration.client_side_validation
-            and lang_type not in allowed_values
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `lang_type` ({0}), must be one of {1}".format(  # noqa: E501
-                    lang_type, allowed_values
-                )
-            )
-
-        self._lang_type = lang_type
-
-    @property
-    def operator_type(self):
-        """Gets the operator_type of this OperatorConfig.  # noqa: E501
-
-
-        :return: The operator_type of this OperatorConfig.  # noqa: E501
-        :rtype: str
-        """
-        return self._operator_type
-
-    @operator_type.setter
-    def operator_type(self, operator_type):
-        """Sets the operator_type of this OperatorConfig.
-
-
-        :param operator_type: The operator_type of this OperatorConfig.  # noqa: E501
-        :type: str
-        """
-        allowed_values = [
-            "KNOWLEDGE_EXTRACT",
-            "ENTITY_LINK",
-            "PROPERTY_NORMALIZE",
-            "ENTITY_FUSE",
-        ]  # noqa: E501
-        if (
-            self.local_vars_configuration.client_side_validation
-            and operator_type not in allowed_values
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `operator_type` ({0}), must be one of {1}".format(  # noqa: E501
-                    operator_type, allowed_values
-                )
-            )
-
-        self._operator_type = operator_type
+        self._method = method
 
     @property
     def params(self):
@@ -282,20 +195,18 @@ class OperatorConfig(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
+                result[attr] = list(map(
+                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
+                    value
+                ))
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
-                )
+                result[attr] = dict(map(
+                    lambda item: (item[0], item[1].to_dict())
+                    if hasattr(item[1], "to_dict") else item,
+                    value.items()
+                ))
             else:
                 result[attr] = value
 

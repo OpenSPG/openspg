@@ -305,7 +305,7 @@ class BaseProperty(ABC):
         """
         if self._rest_model.advanced_config.sub_properties is None:
             return {}
-        from knext.core.schema.model import Property
+        from knext.client.model.property import Property
 
         sub_properties = {}
         for sub_property in self._rest_model.advanced_config.sub_properties:
@@ -683,7 +683,7 @@ class BaseSpgType(ABC):
         :return: The properties of this SpgType.  # noqa: E501
         :rtype: dict
         """
-        from knext.core.schema.model import Property
+        from knext.client.model.property import Property
 
         properties = {}
         for prop in self._rest_model.properties:
@@ -726,7 +726,7 @@ class BaseSpgType(ABC):
         :return: The relations of this SpgType.  # noqa: E501
         :rtype: dict
         """
-        from knext.core.schema.model import Relation
+        from knext.client.model.relation import Relation
 
         relations = {}
         for relation in self._rest_model.relations:
@@ -790,10 +790,10 @@ class BaseSpgType(ABC):
     def by_type_enum(type_enum: str):
         """Reflection from type enum to subclass object of BaseSpgType."""
 
-        import knext
+        import knext.client.model.spg_type as spg_type
 
         class_obj = getattr(
-            knext.client.model.spg_type, f"{SpgTypeEnum(type_enum).name}Type"
+            spg_type, f"{SpgTypeEnum(type_enum).name}Type"
         )
         return class_obj
 

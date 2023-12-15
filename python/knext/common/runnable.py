@@ -10,7 +10,7 @@ Output = TypeVar("Output", covariant=True)
 
 class Runnable(Generic[Input, Output], BaseModel):
 
-    last: bool = False
+    _last: bool = False
 
     @property
     def input_types(self) -> Type[Input]:

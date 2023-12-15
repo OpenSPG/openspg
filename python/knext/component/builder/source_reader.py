@@ -1,6 +1,8 @@
 from abc import ABC
 from typing import Union, List, Dict
 
+from pydantic import Field
+
 from knext import rest
 from knext.common.runnable import Input, Output
 from knext.component.builder.base import SourceReader
@@ -28,7 +30,7 @@ class CsvSourceReader(SourceReader):
     columns: List[str]
     """The starting number of rows read from the CSV file.
     If the CSV file includes a header, it needs to be greater than or equal to 2."""
-    start_row: int
+    start_row: int = Field(ge=1)
 
     @property
     def input_types(self) -> Input:
