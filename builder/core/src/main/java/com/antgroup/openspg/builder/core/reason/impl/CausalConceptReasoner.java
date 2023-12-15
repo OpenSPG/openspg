@@ -67,7 +67,7 @@ public class CausalConceptReasoner implements ConceptReasoner<LogicalCausationSe
       toPropagated.add(advancedRecord);
     }
 
-    // 基于toPropagated开始本轮的事件传导
+    // initiating this round of event propagation based on toPropagated.
     for (BaseAdvancedRecord advancedRecord : toPropagated) {
       List<BaseSPGRecord> leadToRecords = leadTo(advancedRecord, conceptSemantic);
       if (CollectionUtils.isEmpty(leadToRecords)) {
@@ -75,7 +75,7 @@ public class CausalConceptReasoner implements ConceptReasoner<LogicalCausationSe
       }
       results.addAll(leadToRecords);
 
-      // 对leadTo出来的数据进行belongTo判断
+      // Determine the belongTo of the events propagated out.
       for (BaseSPGRecord leadToRecord : leadToRecords) {
         ConceptList conceptList =
             ReasonerProcessorUtils.getConceptList(leadToRecord, builderCatalog);
