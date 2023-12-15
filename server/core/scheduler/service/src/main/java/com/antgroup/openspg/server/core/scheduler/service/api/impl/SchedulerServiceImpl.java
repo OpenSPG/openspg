@@ -36,7 +36,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 /** Scheduler Service implementation class */
@@ -55,7 +54,6 @@ public class SchedulerServiceImpl implements SchedulerService {
   @Autowired SchedulerExecuteService schedulerExecuteService;
 
   @Override
-  @Transactional(rollbackFor = {Exception.class})
   public SchedulerJob submitJob(SchedulerJob job) {
     setJobPropertyDefaultValue(job);
     checkJobPropertyValidity(job);
@@ -93,7 +91,6 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  @Transactional(rollbackFor = {Exception.class})
   public Boolean executeJob(Long jobId) {
     List<SchedulerInstance> instances = Lists.newArrayList();
     SchedulerJob job = schedulerJobService.getById(jobId);
@@ -165,7 +162,6 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  @Transactional(rollbackFor = {Exception.class})
   public Boolean deleteJob(Long jobId) {
     stopJobAllInstance(jobId);
     schedulerJobService.deleteById(jobId);
