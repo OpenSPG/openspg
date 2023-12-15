@@ -17,7 +17,7 @@ import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStat
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
-import com.antgroup.openspg.server.core.scheduler.service.execute.async.AsyncTaskExecuteTemplate;
+import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 

@@ -12,18 +12,19 @@
  */
 
 /** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
-package com.antgroup.openspg.server.core.scheduler.service.execute.sync;
+package com.antgroup.openspg.server.core.scheduler.service.task.async;
 
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
-import com.antgroup.openspg.server.core.scheduler.service.execute.TaskExecuteTemplate;
 
-/** Job Sync task Template class. execute process functions */
-public abstract class SyncTaskExecuteTemplate extends TaskExecuteTemplate
-    implements SyncTaskExecute {
+/** Async scheduler Task, submit/stop task */
+public interface AsyncTaskExecute {
+  /** Async submit task, return null and retry */
+  String submit(JobTaskContext context);
 
-  @Override
-  public final TaskStatus execute(JobTaskContext context) {
-    return submit(context);
-  }
+  /** get task Status */
+  TaskStatus getStatus(JobTaskContext context, String resource);
+
+  /** stop Task */
+  Boolean stop(JobTaskContext context, String resource);
 }

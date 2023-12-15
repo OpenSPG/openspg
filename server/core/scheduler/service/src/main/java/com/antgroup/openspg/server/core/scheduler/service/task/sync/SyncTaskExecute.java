@@ -10,16 +10,16 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-package com.antgroup.openspg.server.core.scheduler.service.execute;
+
+/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
+package com.antgroup.openspg.server.core.scheduler.service.task.sync;
 
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
 
-/** Job Task .execute instance Entry and process task */
-public interface TaskExecute {
-  /** execute Entry */
-  void executeEntry(JobTaskContext context);
+/** Job Sync task, submit task */
+public interface SyncTaskExecute {
 
-  /** execute task */
-  TaskStatus execute(JobTaskContext context);
+  /** Sync submit task */
+  TaskStatus submit(JobTaskContext context);
 }

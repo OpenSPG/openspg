@@ -12,13 +12,13 @@
  */
 
 /** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
-package com.antgroup.openspg.server.core.scheduler.service.execute.async;
+package com.antgroup.openspg.server.core.scheduler.service.task.async;
 
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
-import com.antgroup.openspg.server.core.scheduler.service.execute.TaskExecuteTemplate;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
+import com.antgroup.openspg.server.core.scheduler.service.task.TaskExecuteTemplate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
