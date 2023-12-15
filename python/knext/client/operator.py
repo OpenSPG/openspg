@@ -32,7 +32,10 @@ class OperatorClient(Client):
 
     def __init__(self, host_addr: str = None, project_id: int = None):
         super().__init__(host_addr, project_id)
-        if "KNEXT_ROOT_PATH" in os.environ and "KNEXT_BUILDER_OPERATOR_DIR" in os.environ:
+        if (
+            "KNEXT_ROOT_PATH" in os.environ
+            and "KNEXT_BUILDER_OPERATOR_DIR" in os.environ
+        ):
             self._builder_operator_path = os.path.join(
                 os.environ["KNEXT_ROOT_PATH"], os.environ["KNEXT_BUILDER_OPERATOR_DIR"]
             )

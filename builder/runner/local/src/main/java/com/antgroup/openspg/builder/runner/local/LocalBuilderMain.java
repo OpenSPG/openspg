@@ -14,13 +14,24 @@ import com.antgroup.openspg.builder.model.exception.PipelineConfigException;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.server.api.facade.ApiResponse;
+import com.antgroup.openspg.server.api.facade.client.ConceptFacade;
 import com.antgroup.openspg.server.api.facade.client.SchemaFacade;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.ProjectSchemaRequest;
+import com.antgroup.openspg.server.api.http.client.HttpConceptFacade;
 import com.antgroup.openspg.server.api.http.client.HttpSchemaFacade;
 import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo;
 import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 import org.slf4j.LoggerFactory;
@@ -37,6 +48,7 @@ public class LocalBuilderMain {
   private static final String PARALLELISM_OPTION = "parallelism";
   private static final String ALTER_OPERATION_OPTION = "alterOperation";
   private static final String LOG_FILE_OPTION = "logFile";
+  private static final String LEAD_TO_OPTION = "leadTo";
 
   public static void main(String[] args) {
     CommandLine commandLine = parseArgs(args);
@@ -62,6 +74,7 @@ public class LocalBuilderMain {
     options.addOption(
         ALTER_OPERATION_OPTION, ALTER_OPERATION_OPTION, true, "alter operation, upsert or delete");
     options.addOption(LOG_FILE_OPTION, LOG_FILE_OPTION, true, "log file");
+    options.addOption(LEAD_TO_OPTION, LEAD_TO_OPTION, false, "enable leadTo");
 
     CommandLine commandLine = null;
     HelpFormatter helper = new HelpFormatter();
@@ -95,15 +108,20 @@ public class LocalBuilderMain {
     String alterOperation = commandLine.getOptionValue(ALTER_OPERATION_OPTION);
     RecordAlterOperationEnum alterOperationEnum = RecordAlterOperationEnum.valueOf(alterOperation);
 
+    boolean enableLeadTo = commandLine.hasOption(LEAD_TO_OPTION);
+
     ProjectSchema projectSchema = getProjectSchema(projectId, schemaUrl);
+    Map<SPGTypeIdentifier, ConceptList> conceptLists =
+        getConceptLists(enableLeadTo, projectSchema, pipeline);
     BuilderContext builderContext =
         new BuilderContext()
             .setProjectId(projectId)
             .setJobName(jobName)
-            .setCatalog(new DefaultBuilderCatalog(projectSchema))
+            .setCatalog(new DefaultBuilderCatalog(projectSchema, conceptLists))
             .setPythonExec(pythonExec)
             .setPythonPaths(pythonPaths)
-            .setOperation(alterOperationEnum);
+            .setOperation(alterOperationEnum)
+            .setEnableLeadTo(enableLeadTo);
 
     LocalBuilderRunner runner = new LocalBuilderRunner(parallelism);
     runner.init(pipeline, builderContext);
@@ -126,6 +144,36 @@ public class LocalBuilderMain {
       return response.getData();
     }
     throw new PipelineConfigException("");
+  }
+
+  private static Map<SPGTypeIdentifier, ConceptList> getConceptLists(
+      boolean enableLeadTo, ProjectSchema projectSchema, Pipeline pipeline) {
+    if (!enableLeadTo) {
+      return null;
+    }
+
+    Map<SPGTypeIdentifier, ConceptList> results = new HashMap<>();
+
+    ConceptFacade conceptFacade = new HttpConceptFacade();
+    for (BaseSPGIdentifier identifier : pipeline.schemaUsed()) {
+      if (!(identifier instanceof SPGTypeIdentifier)) {
+        continue;
+      }
+      BaseSPGType spgType = projectSchema.getByName((SPGTypeIdentifier) identifier);
+      for (Property property : spgType.getProperties()) {
+        SPGTypeRef objectTypeRef = property.getObjectTypeRef();
+        if (!objectTypeRef.isConceptType()) {
+          continue;
+        }
+        ApiResponse<ConceptList> response =
+            conceptFacade.queryConcept(
+                new ConceptRequest().setConceptTypeName(objectTypeRef.getName()));
+        if (response.isSuccess()) {
+          results.put(objectTypeRef.getBaseSpgIdentifier(), response.getData());
+        }
+      }
+    }
+    return results;
   }
 
   private static void setUpLogFile(String logFileName) {

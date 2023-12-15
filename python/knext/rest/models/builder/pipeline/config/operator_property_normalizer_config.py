@@ -44,18 +44,24 @@ class OperatorPropertyNormalizerConfig(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'normalizer_type': 'str',
-        'config': 'OperatorConfig',
-        'params': 'str'
+        "normalizer_type": "str",
+        "config": "OperatorConfig",
+        "params": "str",
     }
 
     attribute_map = {
-        'normalizer_type': 'normalizerType',
-        'config': 'config',
-        'params': 'params'
+        "normalizer_type": "normalizerType",
+        "config": "config",
+        "params": "params",
     }
 
-    def __init__(self, normalizer_type=None, config=None, params=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        normalizer_type=None,
+        config=None,
+        params=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """OperatorPropertyNormalizerConfig - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -88,13 +94,22 @@ class OperatorPropertyNormalizerConfig(object):
         :param normalizer_type: The normalizer_type of this OperatorPropertyNormalizerConfig.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and normalizer_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `normalizer_type`, must not be `None`")  # noqa: E501
-        allowed_values = ["OPERATOR", "ID_EQUALS"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and normalizer_type not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and normalizer_type is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `normalizer_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(normalizer_type, allowed_values)
+                "Invalid value for `normalizer_type`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = ["OPERATOR", "ID_EQUALS"]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and normalizer_type not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `normalizer_type` ({0}), must be one of {1}".format(  # noqa: E501
+                    normalizer_type, allowed_values
+                )
             )
 
         self._normalizer_type = normalizer_type
@@ -117,8 +132,12 @@ class OperatorPropertyNormalizerConfig(object):
         :param config: The config of this OperatorPropertyNormalizerConfig.  # noqa: E501
         :type: OperatorConfig
         """
-        if self.local_vars_configuration.client_side_validation and config is None:  # noqa: E501
-            raise ValueError("Invalid value for `config`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and config is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `config`, must not be `None`"
+            )  # noqa: E501
 
         self._config = config
 
@@ -140,8 +159,12 @@ class OperatorPropertyNormalizerConfig(object):
         :param params: The params of this OperatorPropertyNormalizerConfig.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and params is None:  # noqa: E501
-            raise ValueError("Invalid value for `params`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and params is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `params`, must not be `None`"
+            )  # noqa: E501
 
         self._params = params
 
@@ -152,18 +175,20 @@ class OperatorPropertyNormalizerConfig(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

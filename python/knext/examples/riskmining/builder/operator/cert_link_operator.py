@@ -29,7 +29,5 @@ class CertLinkerOperator(LinkOp):
         query = {"match": {"certNum": has_cert}}
         recall_certs = self.search_client.search(query, start=0, size=10)
         if recall_certs is not None and len(recall_certs) > 0:
-            return [
-                SPGRecord('RiskMining.Cert', {'id': recall_certs[0].doc_id})
-            ]
-        return [SPGRecord('RiskMining.Cert', {'id': property})]
+            return [SPGRecord("RiskMining.Cert", {"id": recall_certs[0].doc_id})]
+        return [SPGRecord("RiskMining.Cert", {"id": property})]

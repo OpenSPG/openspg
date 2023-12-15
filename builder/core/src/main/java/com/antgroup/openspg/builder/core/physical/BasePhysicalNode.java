@@ -37,7 +37,6 @@ import lombok.Getter;
  * </ul>
  */
 @Getter
-@AllArgsConstructor
 public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
 
   /** ID of the physical node. */

@@ -1,6 +1,9 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
+import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.google.common.collect.Lists;
 import java.util.List;
 import lombok.Getter;
 
@@ -19,5 +22,10 @@ public class SPGTypeMappingNodeConfig extends BaseMappingNodeConfig {
     this.spgType = spgType;
     this.mappingFilters = mappingFilters;
     this.mappingConfigs = mappingConfigs;
+  }
+
+  @Override
+  public List<BaseSPGIdentifier> getIdentifiers() {
+    return Lists.newArrayList(SPGTypeIdentifier.parse(spgType));
   }
 }

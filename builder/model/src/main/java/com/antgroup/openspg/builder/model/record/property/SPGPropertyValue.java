@@ -27,7 +27,7 @@ public class SPGPropertyValue extends BaseValObj {
   protected static final String SEPARATOR = ",";
 
   /** 原始的属性值 */
-  private final String raw;
+  private String raw;
 
   /** 当该属性类型是非基础类型时，该字段指向属性类型的实例id，由于属性可能是多值，所以这里定义为list */
   private List<String> ids;
@@ -46,5 +46,13 @@ public class SPGPropertyValue extends BaseValObj {
   public void setSingleStd(Object std) {
     stds = new ArrayList<>(1);
     stds.add(std);
+  }
+
+  public void merge(SPGPropertyValue otherValue) {
+    if (raw == null) {
+      raw = otherValue.getRaw();
+    } else {
+      raw = raw + "," + otherValue.getRaw();
+    }
   }
 }

@@ -1,4 +1,3 @@
-
 from knext import rest
 from knext.component.builder.base import SinkWriter
 from knext.operator.spg_record import SPGRecord

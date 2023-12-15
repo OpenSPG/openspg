@@ -13,13 +13,20 @@
 
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.model.pipeline.config.CheckNodeConfig;
+import com.antgroup.openspg.builder.model.pipeline.config.BaseNodeConfig;
+import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.builder.model.record.SPGRecordTypeEnum;
 import java.util.List;
 
-public class CheckProcessor extends BaseProcessor<CheckNodeConfig> {
+public class CheckProcessor extends BaseProcessor<CheckProcessor.CheckNodeConfig> {
+
+  public static class CheckNodeConfig extends BaseNodeConfig {
+    public CheckNodeConfig() {
+      super(NodeTypeEnum.CHECK);
+    }
+  }
 
   private static final String PROCESSOR_NAME = "CHECK";
 
