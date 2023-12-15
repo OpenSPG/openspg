@@ -25,7 +25,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class JobTaskDag {
+public class TaskExecuteDag {
 
   /** dag nodes List */
   private List<Node> nodes = Collections.emptyList();

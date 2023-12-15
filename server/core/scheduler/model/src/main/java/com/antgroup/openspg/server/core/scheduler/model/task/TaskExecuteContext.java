@@ -28,7 +28,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class JobTaskContext {
+public class TaskExecuteContext {
 
   /** Scheduler Job */
   private SchedulerJob job;
@@ -48,7 +48,7 @@ public class JobTaskContext {
   /** task is Finish */
   private boolean taskFinish;
 
-  public JobTaskContext(SchedulerJob job, SchedulerInstance instance, SchedulerTask task) {
+  public TaskExecuteContext(SchedulerJob job, SchedulerInstance instance, SchedulerTask task) {
     task.setRemark(null);
     this.job = job;
     this.instance = instance;

@@ -19,8 +19,8 @@ import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Instance
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import java.util.Date;
@@ -43,7 +43,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   @Autowired SchedulerCommonService schedulerCommonService;
 
   @Override
-  public final void executeEntry(JobTaskContext context) {
+  public final void executeEntry(TaskExecuteContext context) {
     TaskStatus status = null;
     boolean lock = true;
     try {
@@ -63,7 +63,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   }
 
   @Transactional
-  public void processStatus(JobTaskContext context, TaskStatus status, boolean lock) {
+  public void processStatus(TaskExecuteContext context, TaskStatus status, boolean lock) {
     try {
       if (TaskStatus.isFinished(status)) {
         setTaskFinish(context);
@@ -78,7 +78,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   }
 
   /** lock task */
-  private boolean lockTask(JobTaskContext context) {
+  private boolean lockTask(TaskExecuteContext context) {
     SchedulerTask task = context.getTask();
     if (task.getLockTime() == null) {
       if (schedulerTaskService.updateLock(task.getId()) < 1) {
@@ -110,7 +110,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   }
 
   /** unlock task */
-  private void unlockTask(JobTaskContext context, boolean lock) {
+  private void unlockTask(TaskExecuteContext context, boolean lock) {
     if (!lock) {
       return;
     }
@@ -118,12 +118,12 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     context.addTraceLog("Lock released successfully!");
   }
 
-  public void before(JobTaskContext context) {
+  public void before(TaskExecuteContext context) {
     context.addTraceLog("Start process task!");
   }
 
   /** the finally Func */
-  public void finallyFunc(JobTaskContext context) {
+  public void finallyFunc(TaskExecuteContext context) {
     long cost = System.currentTimeMillis() - context.getStartTime();
     context.addTraceLog("Task scheduling completed. cost:%s ms !", cost);
 
@@ -146,12 +146,12 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   }
 
   /** set task to finished */
-  public void setTaskFinish(JobTaskContext context) {
+  public void setTaskFinish(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
     task.setFinishTime(new Date());
 
-    List<JobTaskDag.Node> nextNodes = instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
+    List<TaskExecuteDag.Node> nextNodes = instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
 
     if (CollectionUtils.isEmpty(nextNodes)) {
       List<SchedulerTask> tasks = schedulerTaskService.queryByInstanceId(instance.getId());
@@ -164,7 +164,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   }
 
   /** start next node */
-  private void startNextNode(JobTaskContext context, JobTaskDag taskDag, JobTaskDag.Node nextNode) {
+  private void startNextNode(TaskExecuteContext context, TaskExecuteDag taskDag, TaskExecuteDag.Node nextNode) {
     SchedulerTask task = context.getTask();
 
     if (!checkAllNodesFinished(task, taskDag.getRelatedNodes(nextNode.getId(), false))) {
@@ -201,8 +201,8 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   }
 
   /** check all nodes is finished */
-  private boolean checkAllNodesFinished(SchedulerTask task, List<JobTaskDag.Node> nodes) {
-    for (JobTaskDag.Node node : nodes) {
+  private boolean checkAllNodesFinished(SchedulerTask task, List<TaskExecuteDag.Node> nodes) {
+    for (TaskExecuteDag.Node node : nodes) {
       SchedulerTask t =
           schedulerTaskService.queryByInstanceIdAndType(
               task.getInstanceId(), node.getTaskComponent());
@@ -215,7 +215,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
 
   /** set instance to finished */
   public void setInstanceFinished(
-      JobTaskContext context, TaskStatus taskStatus, InstanceStatus instanceStatus) {
+          TaskExecuteContext context, TaskStatus taskStatus, InstanceStatus instanceStatus) {
     SchedulerInstance instance = context.getInstance();
     context.addTraceLog(
         "Complete instance,Subsequent task status will all be changed to:%s. instance status set to:%s",

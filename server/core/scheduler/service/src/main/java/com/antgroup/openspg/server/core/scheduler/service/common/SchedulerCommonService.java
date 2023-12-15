@@ -20,8 +20,8 @@ import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
@@ -82,7 +82,7 @@ public class SchedulerCommonService {
       TaskExecute jobTask = SpringContextHolder.getBean(type, TaskExecute.class);
       if (jobTask != null && jobTask instanceof AsyncTaskExecute) {
         AsyncTaskExecute jobAsyncTask = (AsyncTaskExecute) jobTask;
-        JobTaskContext context = new JobTaskContext(job, instance, task);
+        TaskExecuteContext context = new TaskExecuteContext(job, instance, task);
         jobAsyncTask.stop(context, task.getResource());
       } else {
         log.warn("get bean is null or not instance of JobAsyncTask id: {}", task.getId());
@@ -148,14 +148,14 @@ public class SchedulerCommonService {
     instance.setSchedulerDate(schedulerDate);
     instance.setDependence(job.getDependence());
     instance.setVersion(job.getVersion());
-    JobTaskDag taskDag = TranslatorFactory.getTranslator(job.getTranslateType()).translate(job);
+    TaskExecuteDag taskDag = TranslatorFactory.getTranslator(job.getTranslateType()).translate(job);
     instance.setTaskDag(taskDag);
 
     schedulerInstanceService.insert(instance);
     log.info("generateInstance successful jobId:{} uniqueId:{}", job.getId(), uniqueId);
 
-    for (JobTaskDag.Node node : taskDag.getNodes()) {
-      List<JobTaskDag.Node> pres = taskDag.getRelatedNodes(node.getId(), false);
+    for (TaskExecuteDag.Node node : taskDag.getNodes()) {
+      List<TaskExecuteDag.Node> pres = taskDag.getRelatedNodes(node.getId(), false);
       TaskStatus status = CollectionUtils.isEmpty(pres) ? TaskStatus.RUNNING : TaskStatus.WAIT;
       schedulerTaskService.insert(new SchedulerTask(instance, status, node));
     }

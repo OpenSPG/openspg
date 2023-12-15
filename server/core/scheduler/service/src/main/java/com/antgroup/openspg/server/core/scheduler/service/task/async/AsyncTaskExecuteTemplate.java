@@ -16,7 +16,7 @@ package com.antgroup.openspg.server.core.scheduler.service.task.async;
 
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.TaskExecuteTemplate;
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +29,7 @@ public abstract class AsyncTaskExecuteTemplate extends TaskExecuteTemplate
   @Autowired SchedulerTaskService schedulerTaskService;
 
   @Override
-  public final TaskStatus execute(JobTaskContext context) {
+  public final TaskStatus execute(TaskExecuteContext context) {
     SchedulerTask task = context.getTask();
     String resource = task.getResource();
     if (StringUtils.isNotBlank(resource)) {

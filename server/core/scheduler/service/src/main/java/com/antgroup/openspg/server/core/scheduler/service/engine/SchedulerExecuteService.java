@@ -19,8 +19,8 @@ import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
@@ -134,7 +134,7 @@ public class SchedulerExecuteService {
   private void executeTask(SchedulerInstance instance, SchedulerTask task) {
     try {
       SchedulerJob job = schedulerJobService.getById(instance.getJobId());
-      JobTaskContext context = new JobTaskContext(job, instance, task);
+      TaskExecuteContext context = new TaskExecuteContext(job, instance, task);
       if (StringUtils.isBlank(task.getType())) {
         log.error("task type is null uniqueId:{} taskId:{}", instance.getUniqueId(), task.getId());
         return;
@@ -154,15 +154,15 @@ public class SchedulerExecuteService {
   }
 
   /** execute next task */
-  private void executeNextTask(JobTaskContext context) {
+  private void executeNextTask(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
-    List<JobTaskDag.Node> nextNodes = instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
+    List<TaskExecuteDag.Node> nextNodes = instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
     if (!context.isTaskFinish() || CollectionUtils.isEmpty(nextNodes)) {
       return;
     }
     List<SchedulerTask> taskList = Lists.newArrayList();
-    for (JobTaskDag.Node nextNode : nextNodes) {
+    for (TaskExecuteDag.Node nextNode : nextNodes) {
       taskList.add(
           schedulerTaskService.queryByInstanceIdAndType(
               instance.getId(), nextNode.getTaskComponent()));
@@ -184,7 +184,7 @@ public class SchedulerExecuteService {
       if (!TaskStatus.WAIT.equals(task.getStatus())) {
         continue;
       }
-      List<JobTaskDag.Node> preNodes =
+      List<TaskExecuteDag.Node> preNodes =
           instance.getTaskDag().getRelatedNodes(task.getNodeId(), false);
       if (checkAllNodesFinished(instance.getId(), preNodes)) {
         SchedulerTask updateTask = new SchedulerTask();
@@ -200,8 +200,8 @@ public class SchedulerExecuteService {
   }
 
   /** check all nodes is finished */
-  private boolean checkAllNodesFinished(Long instanceId, List<JobTaskDag.Node> nodes) {
-    for (JobTaskDag.Node node : nodes) {
+  private boolean checkAllNodesFinished(Long instanceId, List<TaskExecuteDag.Node> nodes) {
+    for (TaskExecuteDag.Node node : nodes) {
       SchedulerTask t =
           schedulerTaskService.queryByInstanceIdAndType(instanceId, node.getTaskComponent());
       if (!TaskStatus.isFinished(t.getStatus())) {

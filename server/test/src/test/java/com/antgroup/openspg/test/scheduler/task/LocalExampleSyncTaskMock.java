@@ -20,7 +20,7 @@ import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycl
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.task.sync.SyncTaskExecuteTemplate;
@@ -40,7 +40,7 @@ public class LocalExampleSyncTaskMock extends SyncTaskExecuteTemplate {
   @Autowired SchedulerInstanceService schedulerInstanceService;
 
   @Override
-  public TaskStatus submit(JobTaskContext context) {
+  public TaskStatus submit(TaskExecuteContext context) {
     TaskStatus status = getTaskStatus(context);
     if (TaskStatus.isFinished(status)) {
       SchedulerInstance instance = context.getInstance();
@@ -54,7 +54,7 @@ public class LocalExampleSyncTaskMock extends SyncTaskExecuteTemplate {
   }
 
   /** Is pre-check required */
-  private TaskStatus getTaskStatus(JobTaskContext context) {
+  private TaskStatus getTaskStatus(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
 
     long days =
@@ -87,19 +87,19 @@ public class LocalExampleSyncTaskMock extends SyncTaskExecuteTemplate {
   }
 
   /** Skip pre-check */
-  private TaskStatus processBySkip(JobTaskContext context) {
+  private TaskStatus processBySkip(TaskExecuteContext context) {
     context.addTraceLog("No pre-check required");
     return TaskStatus.FINISH;
   }
 
   /** Snapshot instance pre-check */
-  private TaskStatus processBySnapshot(JobTaskContext context) {
+  private TaskStatus processBySnapshot(TaskExecuteContext context) {
     context.addTraceLog("The current task does not depend on the completion of the last instance");
     return TaskStatus.FINISH;
   }
 
   /** Merge instance pre-check */
-  public TaskStatus processByMerge(JobTaskContext context) {
+  public TaskStatus processByMerge(TaskExecuteContext context) {
     context.addTraceLog("The current task depends on the completion of the last instance");
     SchedulerInstance instance = context.getInstance();
     SchedulerJob job = context.getJob();

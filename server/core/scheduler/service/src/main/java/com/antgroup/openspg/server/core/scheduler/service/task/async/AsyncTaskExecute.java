@@ -15,16 +15,16 @@
 package com.antgroup.openspg.server.core.scheduler.service.task.async;
 
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
 
 /** Async scheduler Task, submit/stop task */
 public interface AsyncTaskExecute {
   /** Async submit task, return null and retry */
-  String submit(JobTaskContext context);
+  String submit(TaskExecuteContext context);
 
   /** get task Status */
-  TaskStatus getStatus(JobTaskContext context, String resource);
+  TaskStatus getStatus(TaskExecuteContext context, String resource);
 
   /** stop Task */
-  Boolean stop(JobTaskContext context, String resource);
+  Boolean stop(TaskExecuteContext context, String resource);
 }

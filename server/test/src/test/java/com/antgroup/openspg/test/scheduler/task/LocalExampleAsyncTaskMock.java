@@ -16,7 +16,7 @@ import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycl
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
@@ -26,14 +26,14 @@ import org.springframework.stereotype.Component;
 public class LocalExampleAsyncTaskMock extends AsyncTaskExecuteTemplate {
 
   @Override
-  public String submit(JobTaskContext context) {
+  public String submit(TaskExecuteContext context) {
     String resource = UUID.randomUUID().toString();
     context.addTraceLog("submit a example Task, resource:%s", resource);
     return resource;
   }
 
   @Override
-  public TaskStatus getStatus(JobTaskContext context, String resource) {
+  public TaskStatus getStatus(TaskExecuteContext context, String resource) {
     context.addTraceLog("check example task status, resource:%s", resource);
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
@@ -45,7 +45,7 @@ public class LocalExampleAsyncTaskMock extends AsyncTaskExecuteTemplate {
   }
 
   @Override
-  public Boolean stop(JobTaskContext context, String resource) {
+  public Boolean stop(TaskExecuteContext context, String resource) {
     context.addTraceLog("stop example Task, resource:%s", resource);
     return true;
   }

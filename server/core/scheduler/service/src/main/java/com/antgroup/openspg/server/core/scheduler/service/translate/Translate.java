@@ -15,7 +15,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.translate;
 
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 
 /** scheduler Translate. SchedulerJob to TaskDag */
 public interface Translate {
@@ -26,5 +26,5 @@ public interface Translate {
    * @param job
    * @return
    */
-  JobTaskDag translate(SchedulerJob job);
+  TaskExecuteDag translate(SchedulerJob job);
 }

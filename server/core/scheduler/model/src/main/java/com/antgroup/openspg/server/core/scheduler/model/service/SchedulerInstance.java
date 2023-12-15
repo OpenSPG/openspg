@@ -17,7 +17,7 @@ import com.antgroup.openspg.server.common.model.base.BaseModel;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Dependence;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
@@ -81,7 +81,7 @@ public class SchedulerInstance extends BaseModel {
   private JSONObject extension;
 
   /** task dag Config */
-  private JobTaskDag taskDag;
+  private TaskExecuteDag taskDag;
 
   /** start CreateTime Date For Query */
   private transient Date startCreateTime;

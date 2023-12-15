@@ -13,7 +13,7 @@
 package com.antgroup.openspg.test.scheduler.translate;
 
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.translate.Translate;
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -24,32 +24,32 @@ import org.springframework.stereotype.Component;
 public class LocalExampleTranslateMock implements Translate {
 
   @Override
-  public JobTaskDag translate(SchedulerJob schedulerJob) {
+  public TaskExecuteDag translate(SchedulerJob schedulerJob) {
     return getTaskDag();
   }
 
   /** get Local Example TaskDag */
-  public JobTaskDag getTaskDag() {
+  public TaskExecuteDag getTaskDag() {
 
-    List<JobTaskDag.Node> nodes = Lists.newArrayList();
-    List<JobTaskDag.Edge> edges = Lists.newArrayList();
+    List<TaskExecuteDag.Node> nodes = Lists.newArrayList();
+    List<TaskExecuteDag.Edge> edges = Lists.newArrayList();
 
-    JobTaskDag taskDag = new JobTaskDag();
-    JobTaskDag.Node sync = new JobTaskDag.Node();
+    TaskExecuteDag taskDag = new TaskExecuteDag();
+    TaskExecuteDag.Node sync = new TaskExecuteDag.Node();
     String prdId = "1000001";
     sync.setId(prdId);
     sync.setName("Local Sync Task Example");
     sync.setTaskComponent("localExampleSyncTask");
     nodes.add(sync);
 
-    JobTaskDag.Node async = new JobTaskDag.Node();
+    TaskExecuteDag.Node async = new TaskExecuteDag.Node();
     String dryRunId = "2000001";
     async.setId(dryRunId);
     async.setName("Local Async Task Example");
     async.setTaskComponent("localExampleAsyncTask");
     nodes.add(async);
 
-    JobTaskDag.Edge edge = new JobTaskDag.Edge();
+    TaskExecuteDag.Edge edge = new TaskExecuteDag.Edge();
     edge.setFrom(prdId);
     edge.setTo(dryRunId);
     edges.add(edge);

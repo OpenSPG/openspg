@@ -15,11 +15,11 @@
 package com.antgroup.openspg.server.core.scheduler.service.task.sync;
 
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
 
 /** Job Sync task, submit task */
 public interface SyncTaskExecute {
 
   /** Sync submit task */
-  TaskStatus submit(JobTaskContext context);
+  TaskStatus submit(TaskExecuteContext context);
 }
