@@ -61,7 +61,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
 
     processStatus(context, status, lock);
   }
-  
+
   public void processStatus(TaskExecuteContext context, TaskStatus status, boolean lock) {
     try {
       if (TaskStatus.isFinished(status)) {
