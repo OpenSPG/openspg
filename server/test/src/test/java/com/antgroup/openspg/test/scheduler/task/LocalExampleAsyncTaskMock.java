@@ -28,13 +28,13 @@ public class LocalExampleAsyncTaskMock extends JobAsyncTaskTemplate {
   @Override
   public String submit(JobTaskContext context) {
     String resource = UUID.randomUUID().toString();
-    context.addTraceLog("submit a local dry run Task, resource:%s", resource);
+    context.addTraceLog("submit a example Task, resource:%s", resource);
     return resource;
   }
 
   @Override
   public TaskStatus getStatus(JobTaskContext context, String resource) {
-    context.addTraceLog("check local dry run Task Status, resource:%s", resource);
+    context.addTraceLog("check example task status, resource:%s", resource);
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
     if (LifeCycle.REAL_TIME.equals(instance.getLifeCycle())) {
@@ -46,7 +46,7 @@ public class LocalExampleAsyncTaskMock extends JobAsyncTaskTemplate {
 
   @Override
   public Boolean stop(JobTaskContext context, String resource) {
-    context.addTraceLog("stop local dry run Task, resource:%s", resource);
+    context.addTraceLog("stop example Task, resource:%s", resource);
     return true;
   }
 }
