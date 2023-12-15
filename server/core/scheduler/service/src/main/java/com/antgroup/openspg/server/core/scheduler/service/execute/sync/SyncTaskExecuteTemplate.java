@@ -19,7 +19,8 @@ import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
 import com.antgroup.openspg.server.core.scheduler.service.execute.TaskExecuteTemplate;
 
 /** Job Sync task Template class. execute process functions */
-public abstract class SyncTaskExecuteTemplate extends TaskExecuteTemplate implements SyncTaskExecute {
+public abstract class SyncTaskExecuteTemplate extends TaskExecuteTemplate
+    implements SyncTaskExecute {
 
   @Override
   public final TaskStatus execute(JobTaskContext context) {

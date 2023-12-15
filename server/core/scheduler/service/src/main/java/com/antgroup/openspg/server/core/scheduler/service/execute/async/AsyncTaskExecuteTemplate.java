@@ -17,13 +17,14 @@ package com.antgroup.openspg.server.core.scheduler.service.execute.async;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
-import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.execute.TaskExecuteTemplate;
+import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** Job Async Task Template class. execute process functions */
-public abstract class AsyncTaskExecuteTemplate extends TaskExecuteTemplate implements AsyncTaskExecute {
+public abstract class AsyncTaskExecuteTemplate extends TaskExecuteTemplate
+    implements AsyncTaskExecute {
 
   @Autowired SchedulerTaskService schedulerTaskService;
 
