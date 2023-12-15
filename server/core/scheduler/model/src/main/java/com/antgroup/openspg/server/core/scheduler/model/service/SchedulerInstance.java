@@ -85,7 +85,4 @@ public class SchedulerInstance extends BaseModel {
 
   /** start CreateTime Date For Query */
   private transient Date startCreateTime;
-
-  /** end CreateTime Date For Query */
-  private transient Date endCreateTime;
 }

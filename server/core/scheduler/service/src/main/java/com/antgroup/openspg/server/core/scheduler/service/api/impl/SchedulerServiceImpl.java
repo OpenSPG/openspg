@@ -97,11 +97,11 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     if (LifeCycle.REAL_TIME.equals(job.getLifeCycle())) {
       stopJobAllInstance(id);
-      instances.add(schedulerCommonService.generateRealTimeInstance(job));
+      instances.add(schedulerCommonService.generateInstance(job));
     } else if (LifeCycle.PERIOD.equals(job.getLifeCycle())) {
       instances.addAll(schedulerCommonService.generatePeriodInstance(job));
     } else if (LifeCycle.ONCE.equals(job.getLifeCycle())) {
-      instances.add(schedulerCommonService.generateOnceInstance(job));
+      instances.add(schedulerCommonService.generateInstance(job));
     }
 
     if (CollectionUtils.isEmpty(instances)) {
@@ -116,6 +116,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     return true;
   }
 
+  /** stop all not finish instance by job id */
   private void stopJobAllInstance(Long jobId) {
     SchedulerInstance query = new SchedulerInstance();
     query.setJobId(jobId);
@@ -210,7 +211,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   public Boolean restartInstance(Long id) {
     SchedulerInstance instance = schedulerInstanceService.getById(id);
     SchedulerJob job = schedulerJobService.getById(instance.getJobId());
-    SchedulerInstance reRunInstance = schedulerCommonService.generateOnceInstance(job);
+    SchedulerInstance reRunInstance = schedulerCommonService.generateInstance(job);
     Long instanceId = reRunInstance.getId();
     Runnable instanceRunnable = () -> schedulerExecuteService.executeInstance(instanceId);
     instanceExecutor.execute(instanceRunnable);

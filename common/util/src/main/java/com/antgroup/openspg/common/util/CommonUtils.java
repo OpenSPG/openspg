@@ -38,7 +38,6 @@ public class CommonUtils {
   public static final String IP_LIST = String.join(",", getLocalIps());
   public static final String EQ = "eq";
   public static final String IN = "in";
-  public static final String GT = "gt";
   public static final String LT = "lt";
 
   /** merge two bean by discovering differences */
@@ -137,8 +136,6 @@ public class CommonUtils {
         return content.equals(key);
       case IN:
         return ((String) content).contains((String) key);
-      case GT:
-        return ((Date) key).after((Date) content);
       case LT:
         return ((Date) key).before((Date) content);
       default:

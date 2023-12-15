@@ -95,20 +95,12 @@ public class SchedulerCommonService {
     SchedulerInstance query = new SchedulerInstance();
     query.setJobId(job.getId());
     query.setStartCreateTime(DateUtils.addDays(new Date(), -1));
-    query.setEndCreateTime(new Date());
     List<SchedulerInstance> instances = schedulerInstanceService.query(query);
     for (SchedulerInstance instance : instances) {
       if (!InstanceStatus.isFinished(instance.getStatus())) {
         throw new OpenSPGException("Running instances exist within 24H {}", instance.getUniqueId());
       }
     }
-  }
-
-  /** generate Once Instance */
-  public SchedulerInstance generateOnceInstance(SchedulerJob job) {
-    checkInstanceRunning(job);
-    String uniqueId = job.getId().toString() + System.currentTimeMillis();
-    return generateInstance(job, uniqueId, new Date());
   }
 
   /** generate Period Instance by Cron */
@@ -125,8 +117,8 @@ public class SchedulerCommonService {
     return instances;
   }
 
-  /** generate RealTime Instance */
-  public SchedulerInstance generateRealTimeInstance(SchedulerJob job) {
+  /** generate Once/RealTime Instance */
+  public SchedulerInstance generateInstance(SchedulerJob job) {
     checkInstanceRunning(job);
     String uniqueId = job.getId().toString() + System.currentTimeMillis();
     return generateInstance(job, uniqueId, new Date());
