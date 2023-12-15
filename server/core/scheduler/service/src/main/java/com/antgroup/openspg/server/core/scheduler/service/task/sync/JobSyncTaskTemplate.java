@@ -15,7 +15,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.task.sync;
 
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
-import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
 import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskTemplate;
 
 /** Job Sync task Template class. execute process functions */

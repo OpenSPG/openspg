@@ -10,7 +10,7 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-package com.antgroup.openspg.server.core.scheduler.model.common;
+package com.antgroup.openspg.server.core.scheduler.model.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
@@ -25,7 +25,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class TaskDag {
+public class JobTaskDag {
 
   /** dag nodes List */
   private List<Node> nodes = Collections.emptyList();
@@ -57,11 +57,11 @@ public class TaskDag {
     /** id */
     private String id;
 
-    /** type */
-    private String type;
-
     /** name */
     private String name;
+
+    /** JobTask Component name */
+    private String taskComponent;
 
     /** properties */
     private JSONObject properties;

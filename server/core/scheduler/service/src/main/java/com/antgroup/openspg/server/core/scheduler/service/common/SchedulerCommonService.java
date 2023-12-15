@@ -17,7 +17,7 @@ import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
-import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
+import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -25,7 +25,7 @@ import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInst
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.JobTask;
-import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.JobAsyncTask;
 import com.antgroup.openspg.server.core.scheduler.service.translate.TranslatorFactory;
 import com.google.common.collect.Lists;
@@ -148,14 +148,14 @@ public class SchedulerCommonService {
     instance.setSchedulerDate(schedulerDate);
     instance.setDependence(job.getDependence());
     instance.setVersion(job.getVersion());
-    TaskDag taskDag = TranslatorFactory.getTranslator(job.getTranslateType()).translate(job);
+    JobTaskDag taskDag = TranslatorFactory.getTranslator(job.getTranslateType()).translate(job);
     instance.setTaskDag(taskDag);
 
     schedulerInstanceService.insert(instance);
     log.info("generateInstance successful jobId:{} uniqueId:{}", job.getId(), uniqueId);
 
-    for (TaskDag.Node node : taskDag.getNodes()) {
-      List<TaskDag.Node> pres = taskDag.getRelatedNodes(node.getId(), false);
+    for (JobTaskDag.Node node : taskDag.getNodes()) {
+      List<JobTaskDag.Node> pres = taskDag.getRelatedNodes(node.getId(), false);
       TaskStatus status = CollectionUtils.isEmpty(pres) ? TaskStatus.RUNNING : TaskStatus.WAIT;
       schedulerTaskService.insert(new SchedulerTask(instance, status, node));
     }

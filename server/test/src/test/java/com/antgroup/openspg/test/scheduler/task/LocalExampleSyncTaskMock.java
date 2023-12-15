@@ -22,7 +22,7 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstanc
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
-import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
 import com.antgroup.openspg.server.core.scheduler.service.task.sync.JobSyncTaskTemplate;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;

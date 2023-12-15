@@ -15,7 +15,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.task.async;
 
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
-import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
 
 /** Async scheduler Task, submit/stop task */
 public interface JobAsyncTask {

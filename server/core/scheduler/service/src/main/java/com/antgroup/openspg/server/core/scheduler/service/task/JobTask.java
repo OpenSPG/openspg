@@ -13,6 +13,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.task;
 
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
+import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
 
 /** Job Task .execute instance Entry and process task */
 public interface JobTask {

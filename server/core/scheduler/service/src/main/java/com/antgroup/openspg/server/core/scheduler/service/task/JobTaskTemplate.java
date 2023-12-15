@@ -17,9 +17,10 @@ import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
-import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
+import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import java.util.Date;
@@ -150,7 +151,7 @@ public abstract class JobTaskTemplate implements JobTask {
     SchedulerTask task = context.getTask();
     task.setFinishTime(new Date());
 
-    List<TaskDag.Node> nextNodes = instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
+    List<JobTaskDag.Node> nextNodes = instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
 
     if (CollectionUtils.isEmpty(nextNodes)) {
       List<SchedulerTask> tasks = schedulerTaskService.queryByInstanceId(instance.getId());
@@ -163,14 +164,14 @@ public abstract class JobTaskTemplate implements JobTask {
   }
 
   /** start next node */
-  private void startNextNode(JobTaskContext context, TaskDag taskDag, TaskDag.Node nextNode) {
+  private void startNextNode(JobTaskContext context, JobTaskDag taskDag, JobTaskDag.Node nextNode) {
     SchedulerTask task = context.getTask();
 
     if (!checkAllNodesFinished(task, taskDag.getRelatedNodes(nextNode.getId(), false))) {
       return;
     }
     SchedulerTask nextTask =
-        schedulerTaskService.queryByInstanceIdAndType(task.getInstanceId(), nextNode.getType());
+        schedulerTaskService.queryByInstanceIdAndType(task.getInstanceId(), nextNode.getTaskComponent());
     SchedulerTask updateTask = new SchedulerTask();
     updateTask.setId(nextTask.getId());
     String name = nextNode.getName();
@@ -199,10 +200,10 @@ public abstract class JobTaskTemplate implements JobTask {
   }
 
   /** check all nodes is finished */
-  private boolean checkAllNodesFinished(SchedulerTask task, List<TaskDag.Node> nodes) {
-    for (TaskDag.Node node : nodes) {
+  private boolean checkAllNodesFinished(SchedulerTask task, List<JobTaskDag.Node> nodes) {
+    for (JobTaskDag.Node node : nodes) {
       SchedulerTask t =
-          schedulerTaskService.queryByInstanceIdAndType(task.getInstanceId(), node.getType());
+          schedulerTaskService.queryByInstanceIdAndType(task.getInstanceId(), node.getTaskComponent());
       if (!node.getId().equals(task.getNodeId()) && !TaskStatus.isFinished(t.getStatus())) {
         return false;
       }
