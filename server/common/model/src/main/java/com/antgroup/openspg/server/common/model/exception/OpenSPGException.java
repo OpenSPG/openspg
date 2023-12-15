@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /** This should be a superclass of exceptions arising from OpenSPG code. */
 public class OpenSPGException extends RuntimeException {
-  
+
   public OpenSPGException(
       Throwable cause,
       boolean enableSuppression,
