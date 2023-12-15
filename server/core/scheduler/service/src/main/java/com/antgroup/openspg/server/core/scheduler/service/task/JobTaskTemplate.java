@@ -12,8 +12,8 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.task;
 
-import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.common.util.DateTimeUtils;
+import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
@@ -42,7 +42,7 @@ public abstract class JobTaskTemplate implements JobTask {
   @Autowired SchedulerCommonService schedulerCommonService;
 
   @Override
-  public void executeEntry(JobTaskContext context) {
+  final public void executeEntry(JobTaskContext context) {
     TaskStatus status = null;
     boolean lock = true;
     try {

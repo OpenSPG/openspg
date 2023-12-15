@@ -28,7 +28,7 @@ public abstract class JobAsyncTaskTemplate extends JobTaskTemplate implements Jo
   @Autowired SchedulerTaskService schedulerTaskService;
 
   @Override
-  public TaskStatus process(JobTaskContext context) {
+  final public TaskStatus process(JobTaskContext context) {
     SchedulerTask task = context.getTask();
     String resource = task.getResource();
     if (StringUtils.isNotBlank(resource)) {

@@ -91,12 +91,12 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  public Boolean executeJob(Long id) {
+  public Boolean executeJob(Long jobId) {
     List<SchedulerInstance> instances = Lists.newArrayList();
-    SchedulerJob job = schedulerJobService.getById(id);
+    SchedulerJob job = schedulerJobService.getById(jobId);
 
     if (LifeCycle.REAL_TIME.equals(job.getLifeCycle())) {
-      stopJobAllInstance(id);
+      stopJobAllInstance(jobId);
       instances.add(schedulerCommonService.generateInstance(job));
     } else if (LifeCycle.PERIOD.equals(job.getLifeCycle())) {
       instances.addAll(schedulerCommonService.generatePeriodInstance(job));
@@ -131,10 +131,10 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  public Boolean enableJob(Long id) {
-    SchedulerJob job = schedulerJobService.getById(id);
+  public Boolean enableJob(Long jobId) {
+    SchedulerJob job = schedulerJobService.getById(jobId);
     SchedulerJob updateJob = new SchedulerJob();
-    updateJob.setId(id);
+    updateJob.setId(jobId);
     updateJob.setStatus(Status.ENABLE);
     Long flag = schedulerJobService.update(updateJob);
     if (flag <= 0) {
@@ -142,31 +142,31 @@ public class SchedulerServiceImpl implements SchedulerService {
     }
 
     if (LifeCycle.REAL_TIME.equals(job.getLifeCycle())) {
-      this.executeJob(id);
+      this.executeJob(jobId);
     }
     return true;
   }
 
   @Override
-  public Boolean disableJob(Long id) {
+  public Boolean disableJob(Long jobId) {
     SchedulerJob updateJob = new SchedulerJob();
-    updateJob.setId(id);
+    updateJob.setId(jobId);
     updateJob.setStatus(Status.DISABLE);
     Long flag = schedulerJobService.update(updateJob);
     if (flag <= 0) {
       return false;
     }
 
-    stopJobAllInstance(id);
+    stopJobAllInstance(jobId);
     return true;
   }
 
   @Override
-  public Boolean deleteJob(Long id) {
-    stopJobAllInstance(id);
-    schedulerJobService.deleteById(id);
-    schedulerInstanceService.deleteByJobId(id);
-    schedulerTaskService.deleteByJobId(id);
+  public Boolean deleteJob(Long jobId) {
+    stopJobAllInstance(jobId);
+    schedulerJobService.deleteById(jobId);
+    schedulerInstanceService.deleteByJobId(jobId);
+    schedulerTaskService.deleteByJobId(jobId);
     return true;
   }
 
@@ -177,8 +177,8 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  public SchedulerJob getJobById(Long id) {
-    return schedulerJobService.getById(id);
+  public SchedulerJob getJobById(Long jobId) {
+    return schedulerJobService.getById(jobId);
   }
 
   @Override
@@ -187,44 +187,44 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  public SchedulerInstance getInstanceById(Long id) {
-    return schedulerInstanceService.getById(id);
+  public SchedulerInstance getInstanceById(Long instanceId) {
+    return schedulerInstanceService.getById(instanceId);
   }
 
   @Override
-  public Boolean stopInstance(Long id) {
-    SchedulerInstance instance = schedulerInstanceService.getById(id);
+  public Boolean stopInstance(Long instanceId) {
+    SchedulerInstance instance = schedulerInstanceService.getById(instanceId);
     schedulerCommonService.setInstanceFinish(
         instance, InstanceStatus.TERMINATE, TaskStatus.TERMINATE);
     return true;
   }
 
   @Override
-  public Boolean setFinishInstance(Long id) {
-    SchedulerInstance instance = schedulerInstanceService.getById(id);
+  public Boolean setFinishInstance(Long instanceId) {
+    SchedulerInstance instance = schedulerInstanceService.getById(instanceId);
     schedulerCommonService.setInstanceFinish(
         instance, InstanceStatus.SET_FINISH, TaskStatus.SET_FINISH);
     return true;
   }
 
   @Override
-  public Boolean restartInstance(Long id) {
-    SchedulerInstance instance = schedulerInstanceService.getById(id);
+  public Boolean restartInstance(Long instanceId) {
+    SchedulerInstance instance = schedulerInstanceService.getById(instanceId);
     SchedulerJob job = schedulerJobService.getById(instance.getJobId());
     SchedulerInstance reRunInstance = schedulerCommonService.generateInstance(job);
-    Long instanceId = reRunInstance.getId();
-    Runnable instanceRunnable = () -> schedulerExecuteService.executeInstance(instanceId);
+    Long id = reRunInstance.getId();
+    Runnable instanceRunnable = () -> schedulerExecuteService.executeInstance(id);
     instanceExecutor.execute(instanceRunnable);
     return true;
   }
 
   @Override
-  public Boolean triggerInstance(Long id) {
-    SchedulerInstance instance = schedulerInstanceService.getById(id);
+  public Boolean triggerInstance(Long instanceId) {
+    SchedulerInstance instance = schedulerInstanceService.getById(instanceId);
     if (InstanceStatus.isFinished(instance.getStatus())) {
       throw new OpenSPGException("The instance has been finished");
     }
-    schedulerExecuteService.executeInstance(id);
+    schedulerExecuteService.executeInstance(instanceId);
     return true;
   }
 

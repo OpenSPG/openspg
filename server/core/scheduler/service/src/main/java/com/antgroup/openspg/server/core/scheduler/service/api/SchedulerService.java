@@ -23,40 +23,40 @@ public interface SchedulerService {
   SchedulerJob submitJob(SchedulerJob job);
 
   /** execute Job */
-  Boolean executeJob(Long id);
+  Boolean executeJob(Long jobId);
 
   /** enable Job */
-  Boolean enableJob(Long id);
+  Boolean enableJob(Long jobId);
 
   /** disable Job */
-  Boolean disableJob(Long id);
+  Boolean disableJob(Long jobId);
 
   /** delete Job */
-  Boolean deleteJob(Long id);
+  Boolean deleteJob(Long jobId);
 
   /** update Job */
   boolean updateJob(SchedulerJob job);
 
   /** get Job By id */
-  SchedulerJob getJobById(Long id);
+  SchedulerJob getJobById(Long jobId);
 
   /** search Jobs */
   List<SchedulerJob> searchJobs(SchedulerJob query);
 
   /** get Instance By id */
-  SchedulerInstance getInstanceById(Long id);
+  SchedulerInstance getInstanceById(Long instanceId);
 
   /** stop Instance */
-  Boolean stopInstance(Long id);
+  Boolean stopInstance(Long instanceId);
 
   /** set Instance To Finish */
-  Boolean setFinishInstance(Long id);
+  Boolean setFinishInstance(Long instanceId);
 
   /** restart Instance */
-  Boolean restartInstance(Long id);
+  Boolean restartInstance(Long instanceId);
 
   /** trigger Instance */
-  Boolean triggerInstance(Long id);
+  Boolean triggerInstance(Long instanceId);
 
   /** search Instances */
   List<SchedulerInstance> searchInstances(SchedulerInstance query);
