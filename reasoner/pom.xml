@@ -28,6 +28,8 @@
     <module>common</module>
     <module>udf</module>
     <module>lube-api</module>
+    <module>lube-logical</module>
+    <module>lube-physical</module>
     <module>warehouse/warehouse-common</module>
     <module>kgdsl-parser</module>
     <module>runner/runner-common</module>
@@ -73,6 +75,16 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-lube-logical</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-lube-physical</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
         <artifactId>reasoner-kgdsl-parser</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -89,7 +101,7 @@
       <dependency>
         <groupId>com.antgroup.openspg.reasoner</groupId>
         <artifactId>reasoner-openspg-catalog</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${project.version}</version>
       </dependency>
 
       <dependency>
