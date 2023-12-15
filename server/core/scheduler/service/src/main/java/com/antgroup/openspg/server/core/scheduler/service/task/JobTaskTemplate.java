@@ -12,7 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.task;
 
-import com.antgroup.openspg.common.util.CommonUtils;
+import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
@@ -136,7 +136,7 @@ public abstract class JobTaskTemplate implements JobTask {
     task.setGmtModified(old.getGmtModified());
     task.setExecuteNum(old.getExecuteNum() + 1);
     context.getTraceLog().insert(0, System.getProperty("line.separator"));
-    task.setRemark(CommonUtils.setRemarkLimit(old.getRemark(), context.getTraceLog()));
+    task.setRemark(SchedulerUtils.setRemarkLimit(old.getRemark(), context.getTraceLog()));
     task.setLockTime(null);
 
     if (schedulerTaskService.replace(task) <= 0) {

@@ -12,7 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.common;
 
-import com.antgroup.openspg.common.util.CommonUtils;
+import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
@@ -106,9 +106,9 @@ public class SchedulerCommonService {
   /** generate Period Instance by Cron */
   public List<SchedulerInstance> generatePeriodInstance(SchedulerJob job) {
     List<SchedulerInstance> instances = Lists.newArrayList();
-    List<Date> executionDates = CommonUtils.getCronExecutionDatesByToday(job.getSchedulerCron());
+    List<Date> executionDates = SchedulerUtils.getCronExecutionDatesByToday(job.getSchedulerCron());
     for (Date schedulerDate : executionDates) {
-      String uniqueId = CommonUtils.getUniqueId(job.getId(), schedulerDate);
+      String uniqueId = SchedulerUtils.getUniqueId(job.getId(), schedulerDate);
       SchedulerInstance instance = generateInstance(job, uniqueId, schedulerDate);
       if (instance != null) {
         instances.add(instance);
@@ -146,7 +146,7 @@ public class SchedulerCommonService {
     instance.setGmtModified(new Date());
     instance.setLifeCycle(job.getLifeCycle());
     instance.setSchedulerDate(schedulerDate);
-    instance.setMergeMode(job.getMergeMode());
+    instance.setDependence(job.getDependence());
     instance.setVersion(job.getVersion());
     TaskDag taskDag = TranslatorFactory.getTranslator(job.getTranslateType()).translate(job);
     instance.setTaskDag(taskDag);

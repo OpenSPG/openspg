@@ -12,7 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
-import com.antgroup.openspg.common.util.CommonUtils;
+import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
@@ -53,7 +53,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
     if (record.getGmtModified() != null && !old.getGmtModified().equals(record.getGmtModified())) {
       return 0L;
     }
-    record = CommonUtils.merge(old, record);
+    record = SchedulerUtils.merge(old, record);
     record.setGmtModified(new Date());
     jobs.put(id, record);
     return id;
@@ -75,13 +75,13 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
     List<SchedulerJob> jobList = Lists.newArrayList();
     for (Long key : jobs.keySet()) {
       SchedulerJob job = jobs.get(key);
-      if (!CommonUtils.compare(job.getId(), record.getId(), CommonUtils.EQ)
-          || !CommonUtils.compare(job.getCreateUser(), record.getCreateUser(), CommonUtils.EQ)
-          || !CommonUtils.compare(job.getTranslateType(), record.getTranslateType(), CommonUtils.EQ)
-          || !CommonUtils.compare(job.getLifeCycle(), record.getLifeCycle(), CommonUtils.EQ)
-          || !CommonUtils.compare(job.getStatus(), record.getStatus(), CommonUtils.EQ)
-          || !CommonUtils.compare(job.getMergeMode(), record.getMergeMode(), CommonUtils.EQ)
-          || !CommonUtils.compare(job.getName(), record.getName(), CommonUtils.IN)) {
+      if (!SchedulerUtils.compare(job.getId(), record.getId(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(job.getCreateUser(), record.getCreateUser(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(job.getTranslateType(), record.getTranslateType(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(job.getLifeCycle(), record.getLifeCycle(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(job.getStatus(), record.getStatus(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(job.getDependence(), record.getDependence(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(job.getName(), record.getName(), SchedulerUtils.IN)) {
         continue;
       }
 

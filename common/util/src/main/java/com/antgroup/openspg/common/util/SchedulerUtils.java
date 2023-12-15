@@ -33,7 +33,7 @@ import org.quartz.CronExpression;
 
 /** some common tools */
 @Slf4j
-public class CommonUtils {
+public class SchedulerUtils {
 
   public static final String IP_LIST = String.join(",", getLocalIps());
   public static final String EQ = "eq";

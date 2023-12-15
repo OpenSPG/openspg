@@ -19,9 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.antgroup.openspg.common.util.thread.ThreadUtils;
 import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo;
 import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap;
+import com.antgroup.openspg.server.arks.sofaboot.Application;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Dependence;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
-import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.MergeMode;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Status;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TranslateType;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
@@ -30,7 +31,6 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.api.SchedulerService;
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecuteService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
-import com.antgroup.openspg.test.sofaboot.SofaBootTestApplication;
 import java.util.Comparator;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
@@ -41,7 +41,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 /** Scheduler Service Test */
 @SpringBootTest(
-    classes = SofaBootTestApplication.class,
+    classes = Application.class,
     webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class SchedulerServiceImplTest {
 
@@ -70,7 +70,7 @@ class SchedulerServiceImplTest {
     job.setCreateUser("test");
     job.setLifeCycle(LifeCycle.ONCE);
     job.setTranslateType(TranslateType.LOCAL_EXAMPLE);
-    job.setMergeMode(MergeMode.DEPENDENT);
+    job.setDependence(Dependence.DEPENDENT);
     job = schedulerService.submitJob(job);
     Long jobId = job.getId();
     assertTrue(jobId > 0);
@@ -180,7 +180,7 @@ class SchedulerServiceImplTest {
     job.setLifeCycle(LifeCycle.PERIOD);
     job.setSchedulerCron("0 0 * * * ?");
     job.setTranslateType(TranslateType.LOCAL_EXAMPLE);
-    job.setMergeMode(MergeMode.DEPENDENT);
+    job.setDependence(Dependence.DEPENDENT);
     job = schedulerService.submitJob(job);
     Long jobId = job.getId();
     assertTrue(jobId > 0);
@@ -279,7 +279,7 @@ class SchedulerServiceImplTest {
     job.setCreateUser("test");
     job.setLifeCycle(LifeCycle.REAL_TIME);
     job.setTranslateType(TranslateType.LOCAL_EXAMPLE);
-    job.setMergeMode(MergeMode.DEPENDENT);
+    job.setDependence(Dependence.DEPENDENT);
     job = schedulerService.submitJob(job);
     Long jobId = job.getId();
     assertTrue(jobId > 0);

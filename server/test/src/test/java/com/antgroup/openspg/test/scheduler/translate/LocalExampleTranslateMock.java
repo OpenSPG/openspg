@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 /** scheduler Translate Local implementation class. SchedulerJob to TaskDag */
 @Component("localExampleTranslate")
-public class LocalExampleTranslateTest implements Translate {
+public class LocalExampleTranslateMock implements Translate {
 
   @Override
   public TaskDag translate(SchedulerJob schedulerJob) {

@@ -14,8 +14,8 @@ package com.antgroup.openspg.server.core.scheduler.model.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Dependence;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
-import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.MergeMode;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Status;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TranslateType;
 import java.util.Date;
@@ -59,8 +59,8 @@ public class SchedulerJob extends BaseModel {
   /** job Status：ONLINE,OFFLINE */
   private Status status;
 
-  /** Dependent upstream partition-MERGE，independent-SNAPSHOT */
-  private MergeMode mergeMode;
+  /** Dependent pre task completion */
+  private Dependence dependence;
 
   /** Scheduler Cron expression default:0 0 0 * * ? */
   private String schedulerCron;

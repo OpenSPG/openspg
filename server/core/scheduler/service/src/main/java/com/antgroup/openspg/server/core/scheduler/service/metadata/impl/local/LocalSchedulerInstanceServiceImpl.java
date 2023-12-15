@@ -12,7 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
-import com.antgroup.openspg.common.util.CommonUtils;
+import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
@@ -75,7 +75,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     if (record.getGmtModified() != null && !old.getGmtModified().equals(record.getGmtModified())) {
       return 0L;
     }
-    record = CommonUtils.merge(old, record);
+    record = SchedulerUtils.merge(old, record);
     record.setGmtModified(new Date());
     instances.put(id, record);
     return id;
@@ -110,20 +110,20 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     List<SchedulerInstance> instanceList = Lists.newArrayList();
     for (Long key : instances.keySet()) {
       SchedulerInstance instance = instances.get(key);
-      if (!CommonUtils.compare(instance.getId(), record.getId(), CommonUtils.EQ)
-          || !CommonUtils.compare(instance.getProjectId(), record.getProjectId(), CommonUtils.EQ)
-          || !CommonUtils.compare(instance.getJobId(), record.getJobId(), CommonUtils.EQ)
-          || !CommonUtils.compare(instance.getUniqueId(), record.getUniqueId(), CommonUtils.EQ)
-          || !CommonUtils.compare(instance.getType(), record.getType(), CommonUtils.EQ)
-          || !CommonUtils.compare(instance.getStatus(), record.getStatus(), CommonUtils.EQ)
-          || !CommonUtils.compare(instance.getLifeCycle(), record.getLifeCycle(), CommonUtils.EQ)
-          || !CommonUtils.compare(instance.getMergeMode(), record.getMergeMode(), CommonUtils.EQ)
-          || !CommonUtils.compare(instance.getVersion(), record.getVersion(), CommonUtils.EQ)) {
+      if (!SchedulerUtils.compare(instance.getId(), record.getId(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(instance.getProjectId(), record.getProjectId(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(instance.getJobId(), record.getJobId(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(instance.getUniqueId(), record.getUniqueId(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(instance.getType(), record.getType(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(instance.getStatus(), record.getStatus(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(instance.getLifeCycle(), record.getLifeCycle(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(instance.getDependence(), record.getDependence(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(instance.getVersion(), record.getVersion(), SchedulerUtils.EQ)) {
         continue;
       }
 
       Date create = instance.getGmtCreate();
-      if (!CommonUtils.compare(create, record.getStartCreateTime(), CommonUtils.LT)) {
+      if (!SchedulerUtils.compare(create, record.getStartCreateTime(), SchedulerUtils.LT)) {
         continue;
       }
 

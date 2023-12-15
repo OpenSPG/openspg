@@ -12,11 +12,11 @@
  */
 package com.antgroup.openspg.test.scheduler.task;
 
-import com.antgroup.openspg.common.util.CommonUtils;
+import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
-import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.MergeMode;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Dependence;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 
 /** Local Sync Task Example: Pre Check Task */
 @Component("localExampleSyncTask")
-public class LocalExampleSyncTaskTest extends JobSyncTaskTemplate {
+public class LocalExampleSyncTaskMock extends JobSyncTaskTemplate {
 
   /** scheduler max days */
   private static final long SCHEDULER_MAX_DAYS = 5;
@@ -79,7 +79,7 @@ public class LocalExampleSyncTaskTest extends JobSyncTaskTemplate {
       return processBySkip(context);
     }
 
-    if (MergeMode.INDEPENDENT.name().equals(instance.getMergeMode())) {
+    if (Dependence.INDEPENDENT.name().equals(instance.getDependence())) {
       return processBySnapshot(context);
     } else {
       return processByMerge(context);
@@ -104,8 +104,8 @@ public class LocalExampleSyncTaskTest extends JobSyncTaskTemplate {
     SchedulerInstance instance = context.getInstance();
     SchedulerJob job = context.getJob();
     Date preSchedulerDate =
-        CommonUtils.getPreviousValidTime(job.getSchedulerCron(), instance.getSchedulerDate());
-    String preUniqueId = CommonUtils.getUniqueId(job.getId(), preSchedulerDate);
+        SchedulerUtils.getPreviousValidTime(job.getSchedulerCron(), instance.getSchedulerDate());
+    String preUniqueId = SchedulerUtils.getUniqueId(job.getId(), preSchedulerDate);
     SchedulerInstance pre = schedulerInstanceService.getByUniqueId(preUniqueId);
 
     if (null == pre || InstanceStatus.isFinished(pre.getStatus())) {

@@ -12,7 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
-import com.antgroup.openspg.common.util.CommonUtils;
+import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -63,7 +63,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
     if (record.getGmtModified() != null && !old.getGmtModified().equals(record.getGmtModified())) {
       return 0L;
     }
-    record = CommonUtils.merge(old, record);
+    record = SchedulerUtils.merge(old, record);
     record.setGmtModified(new Date());
     tasks.put(id, record);
     return id;
@@ -95,11 +95,11 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
     for (Long key : tasks.keySet()) {
       SchedulerTask task = tasks.get(key);
 
-      if (!CommonUtils.compare(task.getId(), record.getId(), CommonUtils.EQ)
-          || !CommonUtils.compare(task.getType(), record.getType(), CommonUtils.EQ)
-          || !CommonUtils.compare(task.getTitle(), record.getTitle(), CommonUtils.IN)
-          || !CommonUtils.compare(task.getJobId(), record.getJobId(), CommonUtils.EQ)
-          || !CommonUtils.compare(task.getInstanceId(), record.getInstanceId(), CommonUtils.EQ)) {
+      if (!SchedulerUtils.compare(task.getId(), record.getId(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(task.getType(), record.getType(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(task.getTitle(), record.getTitle(), SchedulerUtils.IN)
+          || !SchedulerUtils.compare(task.getJobId(), record.getJobId(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(task.getInstanceId(), record.getInstanceId(), SchedulerUtils.EQ)) {
         continue;
       }
 

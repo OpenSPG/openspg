@@ -14,9 +14,9 @@ package com.antgroup.openspg.server.core.scheduler.model.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Dependence;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
-import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.MergeMode;
 import com.antgroup.openspg.server.core.scheduler.model.common.TaskDag;
 import java.util.Date;
 import lombok.Getter;
@@ -68,8 +68,8 @@ public class SchedulerInstance extends BaseModel {
   /** job Life Cycle：PERIOD,ONCE,REAL_TIME Enum:LifeCycle */
   private LifeCycle lifeCycle;
 
-  /** Dependent Pre schedulerDate-MERGE，independent-SNAPSHOT */
-  private MergeMode mergeMode;
+  /** Dependent pre task completion */
+  private Dependence dependence;
 
   /** scheduler Date */
   private Date schedulerDate;

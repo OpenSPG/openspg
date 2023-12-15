@@ -12,7 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.api.impl;
 
-import com.antgroup.openspg.common.util.CommonUtils;
+import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
@@ -82,11 +82,11 @@ public class SchedulerServiceImpl implements SchedulerService {
     Assert.hasText(job.getCreateUser(), "CreateUser not null");
     Assert.notNull(job.getLifeCycle(), "LifeCycle not null");
     Assert.notNull(job.getTranslateType(), "TranslateType not null");
-    Assert.notNull(job.getMergeMode(), "MergeMode not null");
+    Assert.notNull(job.getDependence(), "MergeMode not null");
 
     if (LifeCycle.PERIOD.equals(job.getLifeCycle())) {
       Assert.hasText(job.getSchedulerCron(), "SchedulerCron not null");
-      CommonUtils.getCronExpression(job.getSchedulerCron());
+      SchedulerUtils.getCronExpression(job.getSchedulerCron());
     }
   }
 

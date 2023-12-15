@@ -24,7 +24,7 @@
   <dependencies>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>infra-dao</artifactId>
+      <artifactId>arks-sofaboot</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -37,31 +37,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
-    </dependency>
-    <!-- sofa -->
-    <dependency>
-      <groupId>com.alipay.sofa</groupId>
-      <artifactId>healthcheck-sofa-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.alipay.sofa</groupId>
-      <artifactId>startup-sofa-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.alipay.sofa</groupId>
-      <artifactId>rpc-sofa-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.alipay.sofa</groupId>
-      <artifactId>test-sofa-boot-starter</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

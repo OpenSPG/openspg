@@ -40,8 +40,8 @@ public interface SchedulerEnum {
     REAL_TIME
   }
 
-  /** Merge Mode Enum */
-  enum MergeMode {
+  /** Dependence Enum */
+  enum Dependence {
     DEPENDENT,
     INDEPENDENT
   }

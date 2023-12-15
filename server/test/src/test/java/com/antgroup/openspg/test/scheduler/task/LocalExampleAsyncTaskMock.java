@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 /** Local Async Task Example */
 @Component("localExampleAsyncTask")
-public class LocalExampleAsyncTaskTest extends JobAsyncTaskTemplate {
+public class LocalExampleAsyncTaskMock extends JobAsyncTaskTemplate {
 
   @Override
   public String submit(JobTaskContext context) {
