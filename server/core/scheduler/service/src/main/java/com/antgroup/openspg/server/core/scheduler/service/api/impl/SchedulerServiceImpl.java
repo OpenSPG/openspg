@@ -13,7 +13,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.api.impl;
 
 import com.antgroup.openspg.common.util.SchedulerUtils;
-import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Status;
@@ -222,7 +222,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   public Boolean triggerInstance(Long instanceId) {
     SchedulerInstance instance = schedulerInstanceService.getById(instanceId);
     if (InstanceStatus.isFinished(instance.getStatus())) {
-      throw new OpenSPGException("The instance has been finished");
+      throw new SchedulerException("The instance has been finished");
     }
     schedulerExecuteService.executeInstance(instanceId);
     return true;

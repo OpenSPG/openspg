@@ -22,8 +22,8 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstanc
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;
+import com.antgroup.openspg.server.core.scheduler.service.execute.sync.SyncTaskExecuteTemplate;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
-import com.antgroup.openspg.server.core.scheduler.service.task.sync.JobSyncTaskTemplate;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 
 /** Local Sync Task Example: Pre Check Task */
 @Component("localExampleSyncTask")
-public class LocalExampleSyncTaskMock extends JobSyncTaskTemplate {
+public class LocalExampleSyncTaskMock extends SyncTaskExecuteTemplate {
 
   /** scheduler max days */
   private static final long SCHEDULER_MAX_DAYS = 5;

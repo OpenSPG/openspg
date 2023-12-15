@@ -12,23 +12,23 @@
  */
 
 /** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
-package com.antgroup.openspg.server.core.scheduler.service.task.async;
+package com.antgroup.openspg.server.core.scheduler.service.execute.async;
 
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
-import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskTemplate;
+import com.antgroup.openspg.server.core.scheduler.service.execute.TaskExecuteTemplate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** Job Async Task Template class. execute process functions */
-public abstract class JobAsyncTaskTemplate extends JobTaskTemplate implements JobAsyncTask {
+public abstract class AsyncTaskExecuteTemplate extends TaskExecuteTemplate implements AsyncTaskExecute {
 
   @Autowired SchedulerTaskService schedulerTaskService;
 
   @Override
-  public final TaskStatus process(JobTaskContext context) {
+  public final TaskStatus execute(JobTaskContext context) {
     SchedulerTask task = context.getTask();
     String resource = task.getResource();
     if (StringUtils.isNotBlank(resource)) {

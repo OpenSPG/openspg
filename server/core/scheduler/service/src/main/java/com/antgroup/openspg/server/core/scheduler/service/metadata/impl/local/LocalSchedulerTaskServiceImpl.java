@@ -13,7 +13,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
 import com.antgroup.openspg.common.util.SchedulerUtils;
-import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
@@ -82,7 +82,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   public SchedulerTask getById(Long id) {
     SchedulerTask oldTask = tasks.get(id);
     if (oldTask == null) {
-      throw new OpenSPGException("not find id {}", id);
+      throw new SchedulerException("not find id {}", id);
     }
     SchedulerTask task = new SchedulerTask();
     BeanUtils.copyProperties(oldTask, task);

@@ -13,7 +13,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.common;
 
 import com.antgroup.openspg.common.util.SchedulerUtils;
-import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
@@ -22,11 +22,11 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
 import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
+import com.antgroup.openspg.server.core.scheduler.service.execute.TaskExecute;
+import com.antgroup.openspg.server.core.scheduler.service.execute.async.AsyncTaskExecute;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
-import com.antgroup.openspg.server.core.scheduler.service.task.JobTask;
-import com.antgroup.openspg.server.core.scheduler.service.task.async.JobAsyncTask;
 import com.antgroup.openspg.server.core.scheduler.service.translate.TranslatorFactory;
 import com.google.common.collect.Lists;
 import java.util.Date;
@@ -79,9 +79,9 @@ public class SchedulerCommonService {
       }
 
       String type = task.getType().split(UNDERLINE_SEPARATOR)[0];
-      JobTask jobTask = SpringContextHolder.getBean(type, JobTask.class);
-      if (jobTask != null && jobTask instanceof JobAsyncTask) {
-        JobAsyncTask jobAsyncTask = (JobAsyncTask) jobTask;
+      TaskExecute jobTask = SpringContextHolder.getBean(type, TaskExecute.class);
+      if (jobTask != null && jobTask instanceof AsyncTaskExecute) {
+        AsyncTaskExecute jobAsyncTask = (AsyncTaskExecute) jobTask;
         JobTaskContext context = new JobTaskContext(job, instance, task);
         jobAsyncTask.stop(context, task.getResource());
       } else {
@@ -98,7 +98,7 @@ public class SchedulerCommonService {
     List<SchedulerInstance> instances = schedulerInstanceService.query(query);
     for (SchedulerInstance instance : instances) {
       if (!InstanceStatus.isFinished(instance.getStatus())) {
-        throw new OpenSPGException("Running instances exist within 24H {}", instance.getUniqueId());
+        throw new SchedulerException("Running {} exist within 24H", instance.getUniqueId());
       }
     }
   }

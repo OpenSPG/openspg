@@ -10,11 +10,11 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-package com.antgroup.openspg.server.core.scheduler.service.task;
+package com.antgroup.openspg.server.core.scheduler.service.execute;
 
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.common.util.SchedulerUtils;
-import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
+import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /** JobTask Template class. execute before,process,finally and other functions */
 @Slf4j
-public abstract class JobTaskTemplate implements JobTask {
+public abstract class TaskExecuteTemplate implements TaskExecute {
 
   /** lock max time */
   public static final Integer LOCK_TIME_MINUTES = 15;
@@ -50,7 +50,7 @@ public abstract class JobTaskTemplate implements JobTask {
       lock = lockTask(context);
       if (lock) {
         before(context);
-        status = process(context);
+        status = execute(context);
         context.getTask().setStatus(status);
       }
     } catch (Throwable e) {
@@ -141,7 +141,7 @@ public abstract class JobTaskTemplate implements JobTask {
     task.setLockTime(null);
 
     if (schedulerTaskService.replace(task) <= 0) {
-      throw new OpenSPGException("finally replace task error task {}", task);
+      throw new SchedulerException("finally replace task error task {}", task);
     }
   }
 
@@ -185,7 +185,7 @@ public abstract class JobTaskTemplate implements JobTask {
     updateTask.setBeginTime(new Date());
     if (schedulerTaskService.replace(updateTask) <= 0) {
       task.setStatus(TaskStatus.ERROR);
-      throw new OpenSPGException("replace task error task {}", updateTask);
+      throw new SchedulerException("replace task error task {}", updateTask);
     }
     context.setTaskFinish(true);
   }

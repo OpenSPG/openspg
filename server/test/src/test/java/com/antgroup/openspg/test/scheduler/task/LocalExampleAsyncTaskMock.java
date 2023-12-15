@@ -17,13 +17,13 @@ import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStat
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
-import com.antgroup.openspg.server.core.scheduler.service.task.async.JobAsyncTaskTemplate;
+import com.antgroup.openspg.server.core.scheduler.service.execute.async.AsyncTaskExecuteTemplate;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 /** Local Async Task Example */
 @Component("localExampleAsyncTask")
-public class LocalExampleAsyncTaskMock extends JobAsyncTaskTemplate {
+public class LocalExampleAsyncTaskMock extends AsyncTaskExecuteTemplate {
 
   @Override
   public String submit(JobTaskContext context) {

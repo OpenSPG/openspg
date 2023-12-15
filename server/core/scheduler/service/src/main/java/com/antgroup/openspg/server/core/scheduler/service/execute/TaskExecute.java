@@ -10,21 +10,16 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
-/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
-package com.antgroup.openspg.server.core.scheduler.service.task.async;
+package com.antgroup.openspg.server.core.scheduler.service.execute;
 
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
 
-/** Async scheduler Task, submit/stop task */
-public interface JobAsyncTask {
-  /** Async submit task, return null and retry */
-  String submit(JobTaskContext context);
+/** Job Task .execute instance Entry and process task */
+public interface TaskExecute {
+  /** execute Entry */
+  void executeEntry(JobTaskContext context);
 
-  /** get task Status */
-  TaskStatus getStatus(JobTaskContext context, String resource);
-
-  /** stop Task */
-  Boolean stop(JobTaskContext context, String resource);
+  /** execute task */
+  TaskStatus execute(JobTaskContext context);
 }

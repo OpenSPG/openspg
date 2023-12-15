@@ -10,16 +10,12 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
+package com.antgroup.openspg.server.common.model.exception;
 
-/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
-package com.antgroup.openspg.server.core.scheduler.service.task.sync;
+/** Scheduler exception */
+public class SchedulerException extends OpenSPGException {
 
-import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskContext;
-
-/** Job Sync task, submit task */
-public interface JobSyncTask {
-
-  /** Sync submit task */
-  TaskStatus submit(JobTaskContext context);
+  public SchedulerException(String message, Object... args) {
+    super(null, true, true, message, args);
+  }
 }
