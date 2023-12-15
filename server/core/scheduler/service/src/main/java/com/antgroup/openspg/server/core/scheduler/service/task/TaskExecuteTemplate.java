@@ -61,8 +61,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
 
     processStatus(context, status, lock);
   }
-
-  @Transactional
+  
   public void processStatus(TaskExecuteContext context, TaskStatus status, boolean lock) {
     try {
       if (TaskStatus.isFinished(status)) {
@@ -146,6 +145,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   }
 
   /** set task to finished */
+  @Transactional(rollbackFor = {Exception.class})
   public void setTaskFinish(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
