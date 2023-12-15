@@ -77,7 +77,8 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
       SchedulerJob job = jobs.get(key);
       if (!SchedulerUtils.compare(job.getId(), record.getId(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(job.getCreateUser(), record.getCreateUser(), SchedulerUtils.EQ)
-          || !SchedulerUtils.compare(job.getTranslateType(), record.getTranslateType(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(
+              job.getTranslateType(), record.getTranslateType(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(job.getLifeCycle(), record.getLifeCycle(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(job.getStatus(), record.getStatus(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(job.getDependence(), record.getDependence(), SchedulerUtils.EQ)

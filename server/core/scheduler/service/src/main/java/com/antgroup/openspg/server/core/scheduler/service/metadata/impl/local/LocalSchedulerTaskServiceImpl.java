@@ -99,7 +99,8 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
           || !SchedulerUtils.compare(task.getType(), record.getType(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(task.getTitle(), record.getTitle(), SchedulerUtils.IN)
           || !SchedulerUtils.compare(task.getJobId(), record.getJobId(), SchedulerUtils.EQ)
-          || !SchedulerUtils.compare(task.getInstanceId(), record.getInstanceId(), SchedulerUtils.EQ)) {
+          || !SchedulerUtils.compare(
+              task.getInstanceId(), record.getInstanceId(), SchedulerUtils.EQ)) {
         continue;
       }
 

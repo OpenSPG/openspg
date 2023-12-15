@@ -35,7 +35,7 @@ import org.quartz.CronExpression;
 @Slf4j
 public class SchedulerUtils {
 
-  public static final String IP_LIST = String.join(",", getLocalIps());
+  public static final String IPS = String.join(",", getLocalIps());
   public static final String EQ = "eq";
   public static final String IN = "in";
   public static final String LT = "lt";

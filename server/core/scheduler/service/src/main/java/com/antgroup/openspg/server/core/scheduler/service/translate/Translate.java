@@ -14,8 +14,8 @@
 /** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.translate;
 
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
+import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
 
 /** scheduler Translate. SchedulerJob to TaskDag */
 public interface Translate {

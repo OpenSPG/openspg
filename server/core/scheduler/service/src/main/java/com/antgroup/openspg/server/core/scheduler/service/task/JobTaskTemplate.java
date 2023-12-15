@@ -43,7 +43,7 @@ public abstract class JobTaskTemplate implements JobTask {
   @Autowired SchedulerCommonService schedulerCommonService;
 
   @Override
-  final public void executeEntry(JobTaskContext context) {
+  public final void executeEntry(JobTaskContext context) {
     TaskStatus status = null;
     boolean lock = true;
     try {
@@ -171,7 +171,8 @@ public abstract class JobTaskTemplate implements JobTask {
       return;
     }
     SchedulerTask nextTask =
-        schedulerTaskService.queryByInstanceIdAndType(task.getInstanceId(), nextNode.getTaskComponent());
+        schedulerTaskService.queryByInstanceIdAndType(
+            task.getInstanceId(), nextNode.getTaskComponent());
     SchedulerTask updateTask = new SchedulerTask();
     updateTask.setId(nextTask.getId());
     String name = nextNode.getName();
@@ -203,7 +204,8 @@ public abstract class JobTaskTemplate implements JobTask {
   private boolean checkAllNodesFinished(SchedulerTask task, List<JobTaskDag.Node> nodes) {
     for (JobTaskDag.Node node : nodes) {
       SchedulerTask t =
-          schedulerTaskService.queryByInstanceIdAndType(task.getInstanceId(), node.getTaskComponent());
+          schedulerTaskService.queryByInstanceIdAndType(
+              task.getInstanceId(), node.getTaskComponent());
       if (!node.getId().equals(task.getNodeId()) && !TaskStatus.isFinished(t.getStatus())) {
         return false;
       }

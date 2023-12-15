@@ -111,14 +111,19 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     for (Long key : instances.keySet()) {
       SchedulerInstance instance = instances.get(key);
       if (!SchedulerUtils.compare(instance.getId(), record.getId(), SchedulerUtils.EQ)
-          || !SchedulerUtils.compare(instance.getProjectId(), record.getProjectId(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(
+              instance.getProjectId(), record.getProjectId(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(instance.getJobId(), record.getJobId(), SchedulerUtils.EQ)
-          || !SchedulerUtils.compare(instance.getUniqueId(), record.getUniqueId(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(
+              instance.getUniqueId(), record.getUniqueId(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(instance.getType(), record.getType(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(instance.getStatus(), record.getStatus(), SchedulerUtils.EQ)
-          || !SchedulerUtils.compare(instance.getLifeCycle(), record.getLifeCycle(), SchedulerUtils.EQ)
-          || !SchedulerUtils.compare(instance.getDependence(), record.getDependence(), SchedulerUtils.EQ)
-          || !SchedulerUtils.compare(instance.getVersion(), record.getVersion(), SchedulerUtils.EQ)) {
+          || !SchedulerUtils.compare(
+              instance.getLifeCycle(), record.getLifeCycle(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(
+              instance.getDependence(), record.getDependence(), SchedulerUtils.EQ)
+          || !SchedulerUtils.compare(
+              instance.getVersion(), record.getVersion(), SchedulerUtils.EQ)) {
         continue;
       }
 

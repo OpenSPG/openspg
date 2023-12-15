@@ -66,13 +66,12 @@ public class JobTaskContext {
    * @date 2020/9/14 09:26
    */
   public void addTraceLog(String message, Object... args) {
-    message = String.format(message, args);
-    StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
     int dstOffset = 0;
+    StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
     log.append("(")
-        .append(SchedulerUtils.IP_LIST)
-        .append(")：")
-        .append(message)
+        .append(SchedulerUtils.IPS)
+        .append("): ")
+        .append(String.format(message, args))
         .append(System.getProperty("line.separator"));
 
     traceLog.insert(dstOffset, log);

@@ -12,8 +12,8 @@
  */
 package com.antgroup.openspg.test.scheduler.translate;
 
-import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
+import com.antgroup.openspg.server.core.scheduler.model.task.JobTaskDag;
 import com.antgroup.openspg.server.core.scheduler.service.translate.Translate;
 import com.google.common.collect.Lists;
 import java.util.List;

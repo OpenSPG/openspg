@@ -22,7 +22,7 @@ import com.antgroup.openspg.server.core.scheduler.service.task.JobTaskTemplate;
 public abstract class JobSyncTaskTemplate extends JobTaskTemplate implements JobSyncTask {
 
   @Override
-  final public TaskStatus process(JobTaskContext context) {
+  public final TaskStatus process(JobTaskContext context) {
     return submit(context);
   }
 }
