@@ -70,10 +70,10 @@
       <groupId>com.antgroup.openspg.reasoner</groupId>
       <artifactId>reasoner-warehouse-common</artifactId>
     </dependency>
-    <!--        <dependency>-->
-    <!--            <groupId>com.antgroup.openspg.reasoner</groupId>-->
-    <!--            <artifactId>reasoner-akg-catalog</artifactId>-->
-    <!--        </dependency>-->
+    <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-openspg-catalog</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>

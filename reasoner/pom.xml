@@ -86,6 +86,11 @@
         <artifactId>reasoner-runner-common</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-openspg-catalog</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+      </dependency>
 
       <dependency>
         <groupId>org.antlr</groupId>

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.reasoner.catalog;
 
-import com.antgroup.openspg.reasoner.catalog.impl.KGCatalog;
+import com.antgroup.openspg.reasoner.catalog.impl.OpenSPGCatalog;
 import com.antgroup.openspg.reasoner.catalog.impl.KgSchemaConnectionInfo;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
@@ -27,17 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 @Slf4j(topic = "userlogger")
 public class CatalogFactory {
 
-  /**
-   * create catalog
-   *
-   * @param params
-   * @return
-   */
-  public static Catalog createCatalog(Map<String, Object> params) {
-    return createCatalog(
-        new KgDslParser(), params, KgSchemaConnectionInfo.DEFAULT_CONNECTION_INFO());
-  }
-
   public static Catalog createCatalog(Map<String, Object> params, KgSchemaConnectionInfo connInfo) {
     return createCatalog(new KgDslParser(), params, connInfo);
   }
@@ -50,10 +39,10 @@ public class CatalogFactory {
     }
 
     if (connInfo == null) {
-      connInfo = KgSchemaConnectionInfo.DEFAULT_CONNECTION_INFO();
+      throw new RuntimeException("SchemaConnectionInfo is null");
     }
     Catalog catalog =
-        new KGCatalog(Long.parseLong(String.valueOf(params.getOrDefault("projId", 0L))), connInfo);
+        new OpenSPGCatalog(Long.parseLong(String.valueOf(params.getOrDefault("projId", 0L))), connInfo, null);
     catalog.init();
     return catalog;
   }
