@@ -64,7 +64,7 @@ public class SchedulerExecuteService {
   public void generateInstances() {
     SchedulerJob record = new SchedulerJob();
     record.setLifeCycle(SchedulerEnum.LifeCycle.PERIOD);
-    record.setStatus(SchedulerEnum.Status.ONLINE);
+    record.setStatus(SchedulerEnum.Status.ENABLE);
     List<SchedulerJob> allJob = schedulerJobService.query(record);
     log.info("getAllPeriodJob successful size:{}", allJob.size());
 

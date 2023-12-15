@@ -42,14 +42,14 @@ public interface SchedulerEnum {
 
   /** Merge Mode Enum */
   enum MergeMode {
-    MERGE,
-    SNAPSHOT
+    DEPENDENT,
+    INDEPENDENT
   }
 
   /** Status Enum */
   enum Status {
-    ONLINE,
-    OFFLINE
+    ENABLE,
+    DISABLE
   }
 
   /** Task Status Enum */

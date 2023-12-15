@@ -16,7 +16,6 @@ package com.antgroup.openspg.common.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/** DateTime tools */
 public class DateTimeUtils {
 
   public static final String YYYY_MM_DD1 = "yyyyMMdd";

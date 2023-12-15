@@ -79,7 +79,7 @@ public class LocalExampleSyncTaskTest extends JobSyncTaskTemplate {
       return processBySkip(context);
     }
 
-    if (MergeMode.SNAPSHOT.name().equals(instance.getMergeMode())) {
+    if (MergeMode.INDEPENDENT.name().equals(instance.getMergeMode())) {
       return processBySnapshot(context);
     } else {
       return processByMerge(context);

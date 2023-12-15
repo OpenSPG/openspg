@@ -70,7 +70,7 @@ class SchedulerServiceImplTest {
     job.setCreateUser("test");
     job.setLifeCycle(LifeCycle.ONCE);
     job.setTranslateType(TranslateType.LOCAL_EXAMPLE);
-    job.setMergeMode(MergeMode.MERGE);
+    job.setMergeMode(MergeMode.DEPENDENT);
     job = schedulerService.submitJob(job);
     Long jobId = job.getId();
     assertTrue(jobId > 0);
@@ -84,7 +84,7 @@ class SchedulerServiceImplTest {
     // step 3: offline job
     assertTrue(schedulerService.disableJob(jobId));
     job = schedulerService.getJobById(jobId);
-    assertEquals(Status.OFFLINE, job.getStatus());
+    assertEquals(Status.DISABLE, job.getStatus());
     SchedulerInstance instanceQuery = new SchedulerInstance();
     instanceQuery.setJobId(jobId);
     List<SchedulerInstance> notFinishInstances =
@@ -95,7 +95,7 @@ class SchedulerServiceImplTest {
     // step 4: online Job
     assertTrue(schedulerService.enableJob(jobId));
     job = schedulerService.getJobById(jobId);
-    assertEquals(Status.ONLINE, job.getStatus());
+    assertEquals(Status.ENABLE, job.getStatus());
     ThreadUtils.sleep(100);
 
     // step 5: update Job
@@ -180,7 +180,7 @@ class SchedulerServiceImplTest {
     job.setLifeCycle(LifeCycle.PERIOD);
     job.setSchedulerCron("0 0 * * * ?");
     job.setTranslateType(TranslateType.LOCAL_EXAMPLE);
-    job.setMergeMode(MergeMode.MERGE);
+    job.setMergeMode(MergeMode.DEPENDENT);
     job = schedulerService.submitJob(job);
     Long jobId = job.getId();
     assertTrue(jobId > 0);
@@ -200,7 +200,7 @@ class SchedulerServiceImplTest {
     // step 3: offline Period job
     assertTrue(schedulerService.disableJob(jobId));
     job = schedulerService.getJobById(jobId);
-    assertEquals(Status.OFFLINE, job.getStatus());
+    assertEquals(Status.DISABLE, job.getStatus());
     List<SchedulerInstance> notFinishInstances =
         schedulerInstanceService.getNotFinishInstance(instanceQuery);
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
@@ -209,7 +209,7 @@ class SchedulerServiceImplTest {
     // step 4: online Period Job
     assertTrue(schedulerService.enableJob(jobId));
     job = schedulerService.getJobById(jobId);
-    assertEquals(Status.ONLINE, job.getStatus());
+    assertEquals(Status.ENABLE, job.getStatus());
     ThreadUtils.sleep(100);
 
     // step 5: execute Job
@@ -279,7 +279,7 @@ class SchedulerServiceImplTest {
     job.setCreateUser("test");
     job.setLifeCycle(LifeCycle.REAL_TIME);
     job.setTranslateType(TranslateType.LOCAL_EXAMPLE);
-    job.setMergeMode(MergeMode.MERGE);
+    job.setMergeMode(MergeMode.DEPENDENT);
     job = schedulerService.submitJob(job);
     Long jobId = job.getId();
     assertTrue(jobId > 0);
@@ -299,7 +299,7 @@ class SchedulerServiceImplTest {
     // step 3: offline RealTime job
     assertTrue(schedulerService.disableJob(jobId));
     job = schedulerService.getJobById(jobId);
-    assertEquals(Status.OFFLINE, job.getStatus());
+    assertEquals(Status.DISABLE, job.getStatus());
     List<SchedulerInstance> notFinishInstances =
         schedulerInstanceService.getNotFinishInstance(instanceQuery);
     assertTrue(CollectionUtils.isEmpty(notFinishInstances));
@@ -308,7 +308,7 @@ class SchedulerServiceImplTest {
     // step 4: online RealTime Job
     assertTrue(schedulerService.enableJob(jobId));
     job = schedulerService.getJobById(jobId);
-    assertEquals(Status.ONLINE, job.getStatus());
+    assertEquals(Status.ENABLE, job.getStatus());
     notFinishInstances = schedulerInstanceService.getNotFinishInstance(instanceQuery);
     assertEquals(1, notFinishInstances.size());
     ThreadUtils.sleep(100);

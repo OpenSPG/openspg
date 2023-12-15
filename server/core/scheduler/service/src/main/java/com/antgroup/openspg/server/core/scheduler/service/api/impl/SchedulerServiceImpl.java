@@ -70,7 +70,7 @@ public class SchedulerServiceImpl implements SchedulerService {
       job.setGmtCreate(new Date());
     }
 
-    job.setStatus(Status.ONLINE);
+    job.setStatus(Status.ENABLE);
     job.setVersion(DEFAULT_VERSION);
   }
 
@@ -135,7 +135,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     SchedulerJob job = schedulerJobService.getById(id);
     SchedulerJob updateJob = new SchedulerJob();
     updateJob.setId(id);
-    updateJob.setStatus(Status.ONLINE);
+    updateJob.setStatus(Status.ENABLE);
     Long flag = schedulerJobService.update(updateJob);
     if (flag <= 0) {
       return false;
@@ -151,7 +151,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   public Boolean disableJob(Long id) {
     SchedulerJob updateJob = new SchedulerJob();
     updateJob.setId(id);
-    updateJob.setStatus(Status.OFFLINE);
+    updateJob.setStatus(Status.DISABLE);
     Long flag = schedulerJobService.update(updateJob);
     if (flag <= 0) {
       return false;
