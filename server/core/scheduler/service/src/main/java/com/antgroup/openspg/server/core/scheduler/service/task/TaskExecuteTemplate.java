@@ -151,7 +151,8 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     SchedulerTask task = context.getTask();
     task.setFinishTime(new Date());
 
-    List<TaskExecuteDag.Node> nextNodes = instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
+    List<TaskExecuteDag.Node> nextNodes =
+        instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
 
     if (CollectionUtils.isEmpty(nextNodes)) {
       List<SchedulerTask> tasks = schedulerTaskService.queryByInstanceId(instance.getId());
@@ -164,7 +165,8 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   }
 
   /** start next node */
-  private void startNextNode(TaskExecuteContext context, TaskExecuteDag taskDag, TaskExecuteDag.Node nextNode) {
+  private void startNextNode(
+      TaskExecuteContext context, TaskExecuteDag taskDag, TaskExecuteDag.Node nextNode) {
     SchedulerTask task = context.getTask();
 
     if (!checkAllNodesFinished(task, taskDag.getRelatedNodes(nextNode.getId(), false))) {
@@ -215,7 +217,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
 
   /** set instance to finished */
   public void setInstanceFinished(
-          TaskExecuteContext context, TaskStatus taskStatus, InstanceStatus instanceStatus) {
+      TaskExecuteContext context, TaskStatus taskStatus, InstanceStatus instanceStatus) {
     SchedulerInstance instance = context.getInstance();
     context.addTraceLog(
         "Complete instance,Subsequent task status will all be changed to:%s. instance status set to:%s",

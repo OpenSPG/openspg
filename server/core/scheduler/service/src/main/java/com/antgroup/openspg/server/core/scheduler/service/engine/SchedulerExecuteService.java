@@ -157,7 +157,8 @@ public class SchedulerExecuteService {
   private void executeNextTask(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
-    List<TaskExecuteDag.Node> nextNodes = instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
+    List<TaskExecuteDag.Node> nextNodes =
+        instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
     if (!context.isTaskFinish() || CollectionUtils.isEmpty(nextNodes)) {
       return;
     }

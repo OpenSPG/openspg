@@ -40,8 +40,7 @@ public class TaskExecuteDag {
   public List<Node> getRelatedNodes(String id, boolean next) {
     List<String> idList = Lists.newArrayList();
     for (Edge edge : edges) {
-      boolean select = (next && edge.getFrom().equals(id)) || (!next && edge.getTo().equals(id));
-      if (select) {
+      if ((next && edge.getFrom().equals(id)) || (!next && edge.getTo().equals(id))) {
         idList.add(next ? edge.getTo() : edge.getFrom());
       }
     }
