@@ -94,7 +94,7 @@ class SPGTypeMapping(Mapping):
 
     def to_rest(self):
         """
-        Transforms `EntityMappingComponent` to REST model `MappingNodeConfig`.
+        Transforms `SPGTypeMapping` to REST model `MappingNodeConfig`.
         """
         schema = {}
         # TODO generate schema with link_strategy

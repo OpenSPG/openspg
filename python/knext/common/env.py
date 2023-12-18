@@ -43,6 +43,7 @@ def init_env():
         os.environ[CFG_PREFIX + "ROOT_PATH"] = str(root_path.resolve())
 
     load_operator()
+    load_builder_job()
 
 
 def get_config():
@@ -112,3 +113,18 @@ def load_operator():
         )
 
         register_from_package(builder_operator_path, BaseOp)
+
+
+def load_builder_job():
+    from knext.client.model.builder_job import BuilderJob
+    if not BuilderJob._has_registered and (
+            "KNEXT_ROOT_PATH" in os.environ
+            and "KNEXT_BUILDER_JOB_DIR" in os.environ
+    ):
+
+        from knext.common.class_register import register_from_package
+        builder_operator_path = os.path.join(
+            os.environ["KNEXT_ROOT_PATH"], os.environ["KNEXT_BUILDER_JOB_DIR"]
+        )
+
+        register_from_package(builder_operator_path, BuilderJob)

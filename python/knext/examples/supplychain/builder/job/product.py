@@ -10,11 +10,11 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import (
-    SourceCsvComponent,
-    SinkToKgComponent,
-    EntityMappingComponent,
+from knext.client.model.builder_job import BuilderJob
+from knext.api.component import (
+    CsvSourceReader,
+    KGSinkWriter,
+    SPGTypeMapping,
 )
 from schema.supplychain_schema_helper import SupplyChain
 
@@ -23,19 +23,19 @@ class Product(BuilderJob):
     parallelism = 6
 
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Product.csv",
             columns=["fullname", "belongToIndustry", "hasSupplyChain"],
             start_row=2,
         )
 
         mapping = (
-            EntityMappingComponent(spg_type_name=SupplyChain.Product)
+            SPGTypeMapping(spg_type_name=SupplyChain.Product)
             .add_field("fullname", SupplyChain.Product.id)
             .add_field("belongToIndustry", SupplyChain.Product.belongToIndustry)
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink
 
@@ -44,18 +44,18 @@ class ProductHasSupplyChain(BuilderJob):
     parallelism = 6
 
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Product.csv",
             columns=["fullname", "belongToIndustry", "hasSupplyChain"],
             start_row=2,
         )
 
         mapping = (
-            EntityMappingComponent(spg_type_name="SupplyChain.Product")
+            SPGTypeMapping(spg_type_name="SupplyChain.Product")
             .add_field("fullname", "id")
             .add_field("hasSupplyChain", "hasSupplyChain")
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink

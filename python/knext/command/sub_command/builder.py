@@ -42,21 +42,15 @@ def submit_job(job_names):
 @click.argument("job_names", required=True)
 def execute_job(job_names):
     job_list = [name.strip() for name in job_names.split(",") if name]
-    client = BuilderClient()
 
     for job in job_list:
         builder_job = BuilderJob.by_name(job)()
         builder_chain = builder_job.build()
-        inst = client.execute(
+        builder_chain.invoke(
             builder_chain,
             job_name=job,
             parallelism=builder_job.parallelism,
             alter_operation=builder_job.alter_operation,
-        )
-        click.secho(
-            f"BuilderJob [{job}] has been successfully submitted."
-            f" Use ` knext builder get --id {inst.building_job_inst_id} ` to check job status.",
-            fg="bright_green",
         )
 
 

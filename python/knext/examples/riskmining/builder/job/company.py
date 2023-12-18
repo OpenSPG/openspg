@@ -10,11 +10,11 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import EntityMappingComponent
-from knext.core.builder.job.model.component import (
-    SourceCsvComponent,
-    SinkToKgComponent,
+from knext.client.model.builder_job import BuilderJob
+from knext.api.component import SPGTypeMapping
+from knext.api.component import (
+    CsvSourceReader,
+    KGSinkWriter,
     RelationMappingComponent,
 )
 from schema.riskmining_schema_helper import RiskMining
@@ -22,27 +22,27 @@ from schema.riskmining_schema_helper import RiskMining
 
 class Company(BuilderJob):
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Company.csv",
             columns=["id", "name", "phone"],
             start_row=2,
         )
 
         mapping = (
-            EntityMappingComponent(spg_type_name=RiskMining.Company)
+            SPGTypeMapping(spg_type_name=RiskMining.Company)
             .add_field("id", RiskMining.Company.id)
             .add_field("name", RiskMining.Company.name)
             .add_field("phone", RiskMining.Company.hasPhone)
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink
 
 
 class CompanyHasCert(BuilderJob):
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Company_hasCert_Cert.csv",
             columns=["src", "dst"],
             start_row=2,
@@ -58,6 +58,6 @@ class CompanyHasCert(BuilderJob):
             .add_field("dst", "dstId")
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink

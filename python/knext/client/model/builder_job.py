@@ -27,12 +27,13 @@ class BuilderJob:
     The declaration of components and the dependencies between components need to be implemented in `build` method.
     """
 
-    parallelism: int
-    alter_operation: AlterOperationEnum
+    parallelism: int = 1
+    alter_operation: AlterOperationEnum = AlterOperationEnum.Upsert
     lead_to: bool
 
     _registry: Dict[str, Type] = {}
     _local_path: str
+    _has_registered: bool = False
 
     def build(self) -> BuilderChain:
         """All classes as subclass of BuilderJob need to implement this method,

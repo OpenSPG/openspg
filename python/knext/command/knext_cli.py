@@ -16,6 +16,7 @@ import click
 
 from knext.command.sub_command.builder import get_job
 from knext.command.sub_command.builder import submit_job
+from knext.command.sub_command.builder import execute_job
 from knext.command.sub_command.config import edit_config
 from knext.command.sub_command.config import list_config
 from knext.command.sub_command.operator import list_operator
@@ -57,6 +58,7 @@ def builder() -> None:
 
 
 builder.command("submit")(submit_job)
+builder.command("execute")(execute_job)
 builder.command("get")(get_job)
 
 

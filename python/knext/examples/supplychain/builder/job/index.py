@@ -10,27 +10,27 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import (
-    SourceCsvComponent,
-    SinkToKgComponent,
-    EntityMappingComponent,
+from knext.client.model.builder_job import BuilderJob
+from knext.api.component import (
+    CsvSourceReader,
+    KGSinkWriter,
+    SPGTypeMapping,
 )
 from schema.supplychain_schema_helper import SupplyChain
 
 
 class Index(BuilderJob):
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Index.csv", columns=["id"], start_row=2
         )
 
         mapping = (
-            EntityMappingComponent(spg_type_name=SupplyChain.Index)
+            SPGTypeMapping(spg_type_name=SupplyChain.Index)
             .add_field("id", SupplyChain.Index.id)
             .add_field("id", SupplyChain.Index.name)
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink

@@ -10,31 +10,31 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import (
-    SourceCsvComponent,
-    SinkToKgComponent,
-    EntityMappingComponent,
+from knext.client.model.builder_job import BuilderJob
+from knext.api.component import (
+    CsvSourceReader,
+    KGSinkWriter,
+    SPGTypeMapping,
 )
 from schema.supplychain_schema_helper import SupplyChain
 
 
 class Person(BuilderJob):
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Person.csv",
             columns=["id", "name", "age", "legalRep"],
             start_row=2,
         )
 
         mapping = (
-            EntityMappingComponent(spg_type_name=SupplyChain.Person)
+            SPGTypeMapping(spg_type_name=SupplyChain.Person)
             .add_field("id", SupplyChain.Person.id)
             .add_field("name", SupplyChain.Person.name)
             .add_field("age", SupplyChain.Person.age)
             .add_field("legalRep", SupplyChain.Person.legalRepresentative)
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink

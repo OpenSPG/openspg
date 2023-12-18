@@ -10,11 +10,11 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import EntityMappingComponent
-from knext.core.builder.job.model.component import (
-    SourceCsvComponent,
-    SinkToKgComponent,
+from knext.client.model.builder_job import BuilderJob
+from knext.api.component import SPGTypeMapping
+from knext.api.component import (
+    CsvSourceReader,
+    KGSinkWriter,
     RelationMappingComponent,
 )
 from schema.riskmining_schema_helper import RiskMining
@@ -22,28 +22,28 @@ from schema.riskmining_schema_helper import RiskMining
 
 class Person(BuilderJob):
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Person.csv",
             columns=["id", "name", "age", "hasPhone"],
             start_row=2,
         )
 
         mapping = (
-            EntityMappingComponent(spg_type_name=RiskMining.Person)
+            SPGTypeMapping(spg_type_name=RiskMining.Person)
             .add_field("id", RiskMining.Person.id)
             .add_field("name", RiskMining.Person.name)
             .add_field("age", RiskMining.Person.age)
             .add_field("hasPhone", RiskMining.Person.hasPhone)
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink
 
 
 class PersonFundTrans(BuilderJob):
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Person_fundTrans_Person.csv",
             columns=["src", "dst", "transDate", "transAmt"],
             start_row=2,
@@ -61,14 +61,14 @@ class PersonFundTrans(BuilderJob):
             .add_field("transAmt", "transAmt")
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink
 
 
 class PersonHasDevice(BuilderJob):
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Person_hasDevice_Device.csv",
             columns=["src", "dst"],
             start_row=2,
@@ -84,14 +84,14 @@ class PersonHasDevice(BuilderJob):
             .add_field("dst", "dstId")
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink
 
 
 class PersonHoldShare(BuilderJob):
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Person_holdShare_Company.csv",
             columns=["src", "dst"],
             start_row=2,
@@ -107,6 +107,6 @@ class PersonHoldShare(BuilderJob):
             .add_field("dst", "dstId")
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink

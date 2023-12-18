@@ -10,11 +10,11 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import (
-    SourceCsvComponent,
-    SinkToKgComponent,
-    EntityMappingComponent,
+from knext.client.model.builder_job import BuilderJob
+from knext.api.component import (
+    CsvSourceReader,
+    KGSinkWriter,
+    SPGTypeMapping,
 )
 from schema.supplychain_schema_helper import SupplyChain
 
@@ -23,14 +23,14 @@ class ProductChainEvent(BuilderJob):
     lead_to = True
 
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/ProductChainEvent.csv",
             columns=["id", "name", "subject", "index", "trend"],
             start_row=2,
         )
 
         mapping = (
-            EntityMappingComponent(spg_type_name=SupplyChain.ProductChainEvent)
+            SPGTypeMapping(spg_type_name=SupplyChain.ProductChainEvent)
             .add_field("id", SupplyChain.ProductChainEvent.id)
             .add_field("name", SupplyChain.ProductChainEvent.name)
             .add_field("subject", SupplyChain.ProductChainEvent.subject)
@@ -38,6 +38,6 @@ class ProductChainEvent(BuilderJob):
             .add_field("trend", SupplyChain.ProductChainEvent.trend)
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink

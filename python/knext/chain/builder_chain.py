@@ -30,7 +30,7 @@ class BuilderChain(Chain):
 
     def invoke(self, **kwargs):
         from knext.client.builder import BuilderClient
-        client = BuilderClient(**kwargs)
+        client = BuilderClient()
         client.execute(self, **kwargs)
 
     @classmethod

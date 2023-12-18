@@ -26,13 +26,14 @@ class _ApiExceptionHandler(Group):
     """Echo exceptions."""
 
     def invoke(self, ctx: Context) -> Any:
-        try:
-            return super().invoke(ctx)
-        except ApiException as api:
-            try:
-                body = json.loads(api.body)
-            except JSONDecodeError:
-                raise api
-            click.secho("ERROR: " + body, fg="bright_red")
-        except Exception as e:
-            click.secho("ERROR: " + e.__str__(), fg="bright_red")
+        return super().invoke(ctx)
+        # try:
+        #     return super().invoke(ctx)
+        # except ApiException as api:
+        #     try:
+        #         body = json.loads(api.body)
+        #     except JSONDecodeError:
+        #         raise api
+        #     click.secho("ERROR: " + body, fg="bright_red")
+        # except Exception as e:
+        #     click.secho("ERROR: " + e.__str__(), fg="bright_red")

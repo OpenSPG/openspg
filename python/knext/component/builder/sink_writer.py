@@ -22,7 +22,7 @@ class KGSinkWriter(SinkWriter):
         return None
 
     def to_rest(self):
-        """Transforms `SinkToKgComponent` to REST model `GraphStoreSinkNodeConfig`."""
+        """Transforms `KGSinkWriter` to REST model `GraphStoreSinkNodeConfig`."""
         config = rest.GraphStoreSinkNodeConfig()
         return rest.Node(**super().to_dict(), node_config=config)
 

@@ -28,7 +28,7 @@ class CsvSourceReader(SourceReader):
         start_row: The starting number of rows read from the CSV file.
                     If the CSV file includes a header, it needs to be greater than or equal to 2.
     Examples:
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
                     local_path="./builder/job/data/App.csv",
                     columns=["id", 'riskMark', 'useCert'],
                     start_row=2
@@ -66,7 +66,7 @@ class CsvSourceReader(SourceReader):
         raise NotImplementedError(f"{self.__class__.__name__} does not support being submitted separately.")
 
     def to_rest(self):
-        """Transforms `SourceCsvComponent` to REST model `CsvSourceNodeConfig`."""
+        """Transforms `CsvSourceReader` to REST model `CsvSourceNodeConfig`."""
 
         config = rest.CsvSourceNodeConfig(
             start_row=self.start_row, url=self.local_path, columns=self.columns

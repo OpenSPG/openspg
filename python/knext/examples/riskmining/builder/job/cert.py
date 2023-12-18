@@ -10,30 +10,30 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import (
-    SourceCsvComponent,
-    SinkToKgComponent,
-    EntityMappingComponent,
+from knext.client.model.builder_job import BuilderJob
+from knext.api.component import (
+    CsvSourceReader,
+    KGSinkWriter,
+    SPGTypeMapping,
 )
 from schema.riskmining_schema_helper import RiskMining
 
 
 class Cert(BuilderJob):
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Cert.csv",
             columns=["id", "certNum"],
             start_row=2,
         )
 
         mapping = (
-            EntityMappingComponent(spg_type_name=RiskMining.Cert)
+            SPGTypeMapping(spg_type_name=RiskMining.Cert)
             .add_field("certNum", RiskMining.Cert.id)
             .add_field("certNum", RiskMining.Cert.certNum)
             .add_field("certNum", RiskMining.Cert.name)
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink

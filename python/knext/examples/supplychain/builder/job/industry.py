@@ -10,11 +10,11 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from knext.core.builder.job.builder import BuilderJob
-from knext.core.builder.job.model.component import (
-    SourceCsvComponent,
-    SinkToKgComponent,
-    EntityMappingComponent,
+from knext.client.model.builder_job import BuilderJob
+from knext.api.component import (
+    CsvSourceReader,
+    KGSinkWriter,
+    SPGTypeMapping,
 )
 from schema.supplychain_schema_helper import SupplyChain
 
@@ -23,16 +23,16 @@ class Industry(BuilderJob):
     parallelism = 10
 
     def build(self):
-        source = SourceCsvComponent(
+        source = CsvSourceReader(
             local_path="./builder/job/data/Industry.csv",
             columns=["fullname"],
             start_row=2,
         )
 
-        mapping = EntityMappingComponent(spg_type_name=SupplyChain.Industry).add_field(
+        mapping = SPGTypeMapping(spg_type_name=SupplyChain.Industry).add_field(
             "fullname", SupplyChain.Industry.id
         )
 
-        sink = SinkToKgComponent()
+        sink = KGSinkWriter()
 
         return source >> mapping >> sink

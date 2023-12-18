@@ -9,7 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
+import json
 import os
 
 from knext import rest
@@ -89,11 +89,11 @@ class BuilderClient(Client):
                     jar_path,
                     "--projectId", "2",
                     "--jobName", kwargs.get("job_name", "default_job"),
-                    "--pipeline", pipeline,
+                    "--pipeline", json.dumps(pipeline),
                     "--pythonExec", python_exec,
                     "--pythonPaths", ';'.join(python_paths),
                     "--schemaUrl", "http://localhost:8887",
-                    "--parallelism", kwargs.get("parallelism", "1"),
+                    "--parallelism", str(kwargs.get("parallelism", "1")),
                     "--alterOperation", kwargs.get("alter_operation", AlterOperationEnum.Upsert),
                     "--logFile", log_file_name
                     ]
