@@ -67,9 +67,10 @@ class CsvSourceReader(SourceReader):
 
     def to_rest(self):
         """Transforms `CsvSourceReader` to REST model `CsvSourceNodeConfig`."""
-
+        from pathlib import Path
+        absolute_path = str(Path(self.local_path).resolve())
         config = rest.CsvSourceNodeConfig(
-            start_row=self.start_row, url=self.local_path, columns=self.columns
+            start_row=self.start_row, url=absolute_path, columns=self.columns
         )
         return rest.Node(**super().to_dict(), node_config=config)
 

@@ -96,7 +96,6 @@ class SPGTypeMapping(Mapping):
         """
         Transforms `SPGTypeMapping` to REST model `MappingNodeConfig`.
         """
-        schema = {}
         # TODO generate schema with link_strategy
 
         mapping_filters = [

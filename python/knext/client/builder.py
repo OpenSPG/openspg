@@ -97,6 +97,11 @@ class BuilderClient(Client):
                     "--alterOperation", kwargs.get("alter_operation", AlterOperationEnum.Upsert),
                     "--logFile", log_file_name
                     ]
+
+        print_java_cmd = [cmd if not cmd.startswith('{') else f"'{cmd}'" for cmd in java_cmd]
+        print_java_cmd = [cmd if not cmd.count(';') > 0 else f"'{cmd}'" for cmd in print_java_cmd]
+        print(json.dumps(' '.join(print_java_cmd))[1:-1].replace("'", '"'))
+
         subprocess.call(java_cmd)
 
     def query(self, job_inst_id: int):
