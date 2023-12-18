@@ -35,7 +35,7 @@ public class BuilderJsonUtils {
                     .recognizeSubtypes())
             .registerTypeAdapterFactory(
                 RuntimeTypeAdapterFactory.of(
-                        PropertyNormalizerConfig.class, DEFAULT_TYPE_FIELD_NAME)
+                        BasePropertyNormalizerConfig.class, DEFAULT_TYPE_FIELD_NAME)
                     .registerSubtype(
                         OperatorPropertyNormalizerConfig.class,
                         PropertyNormalizerTypeEnum.OPERATOR.name())

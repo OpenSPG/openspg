@@ -5,11 +5,11 @@ import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import lombok.Getter;
 
 @Getter
-public abstract class PropertyNormalizerConfig extends BaseValObj {
+public abstract class BasePropertyNormalizerConfig extends BaseValObj {
 
   private final PropertyNormalizerTypeEnum normalizerType;
 
-  public PropertyNormalizerConfig(PropertyNormalizerTypeEnum normalizerType) {
+  public BasePropertyNormalizerConfig(PropertyNormalizerTypeEnum normalizerType) {
     this.normalizerType = normalizerType;
   }
 }

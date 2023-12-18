@@ -4,7 +4,7 @@ import com.antgroup.openspg.builder.model.pipeline.enums.PropertyNormalizerTypeE
 import lombok.Getter;
 
 @Getter
-public class OperatorPropertyNormalizerConfig extends PropertyNormalizerConfig {
+public class OperatorPropertyNormalizerConfig extends BasePropertyNormalizerConfig {
 
   private final OperatorConfig operatorConfig;
 
