@@ -29,7 +29,7 @@ jobs:
           cache: 'pip' # caching pip dependencies
       - run: pip install black==22.3.0
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -B install --file pom.xml
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
