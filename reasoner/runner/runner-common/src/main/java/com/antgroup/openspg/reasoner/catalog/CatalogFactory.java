@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.reasoner.catalog;
 
-import com.antgroup.openspg.reasoner.catalog.impl.OpenSPGCatalog;
 import com.antgroup.openspg.reasoner.catalog.impl.KgSchemaConnectionInfo;
+import com.antgroup.openspg.reasoner.catalog.impl.OpenSPGCatalog;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
 import com.antgroup.openspg.reasoner.parser.KgDslParser;
@@ -42,7 +42,8 @@ public class CatalogFactory {
       throw new RuntimeException("SchemaConnectionInfo is null");
     }
     Catalog catalog =
-        new OpenSPGCatalog(Long.parseLong(String.valueOf(params.getOrDefault("projId", 0L))), connInfo, null);
+        new OpenSPGCatalog(
+            Long.parseLong(String.valueOf(params.getOrDefault("projId", 0L))), connInfo, null);
     catalog.init();
     return catalog;
   }

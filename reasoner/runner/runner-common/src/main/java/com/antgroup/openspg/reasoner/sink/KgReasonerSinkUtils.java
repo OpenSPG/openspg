@@ -17,10 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.reasoner.io.model.AbstractTableInfo;
 import com.antgroup.openspg.reasoner.io.model.HiveTableInfo;
-import com.antgroup.openspg.reasoner.io.model.OdpsTableInfo;
-import com.antgroup.openspg.reasoner.progress.DecryptUtils;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
-import java.util.HashMap;
 import java.util.Map;
 
 public class KgReasonerSinkUtils {
@@ -38,28 +35,7 @@ public class KgReasonerSinkUtils {
   /** get sink table info from config */
   public static AbstractTableInfo getSinkTableInfo(Map<String, Object> params) {
     KgReasonerSinkType sinkType = getKgReasonerSinkType(params);
-    if (KgReasonerSinkType.ODPS.equals(sinkType)) {
-      JSONObject outputTableConfig = getOutputTableConfig(params);
-      assert outputTableConfig != null;
-      // odps config
-      JSONObject odpsConfig =
-          outputTableConfig.getJSONArray(KgReasonerSinkType.ODPS.name()).getJSONObject(0);
-      OdpsTableInfo odpsTableInfo = new OdpsTableInfo();
-      odpsTableInfo.setProject(odpsConfig.getString("project"));
-      odpsTableInfo.setTable(odpsConfig.getString("table"));
-      odpsTableInfo.setAccessID(odpsConfig.getString("accessId"));
-      odpsTableInfo.setAccessKey(DecryptUtils.decryptAccessInfo(odpsConfig.getString("accessKey")));
-      odpsTableInfo.setEndPoint(odpsConfig.getString("endPoint"));
-      odpsTableInfo.setTunnelEndPoint(odpsConfig.getString("tunnelEndpoint"));
-      // partition table
-      JSONObject partitionJsonObj = outputTableConfig.getJSONObject("partition");
-      if (null != partitionJsonObj) {
-        Map<String, String> partitionMap = new HashMap<>();
-        partitionJsonObj.forEach((key, value) -> partitionMap.put(key, String.valueOf(value)));
-        odpsTableInfo.setPartition(partitionMap);
-      }
-      return odpsTableInfo;
-    } else if (KgReasonerSinkType.HIVE.equals(sinkType)) {
+    if (KgReasonerSinkType.HIVE.equals(sinkType)) {
       String tableInfoStr = String.valueOf(params.get(ConfigKey.KG_REASONER_SINK_TABLE_INFO));
       return JSON.parseObject(tableInfoStr, HiveTableInfo.class);
     }

@@ -56,16 +56,6 @@ public abstract class AbstractTableInfo implements Serializable {
     return this.getTableInfoKeyString().hashCode();
   }
 
-  /** equals */
-  @Override
-  public boolean equals(Object obj) {
-    if (!(obj instanceof OdpsTableInfo)) {
-      return false;
-    }
-    OdpsTableInfo that = (OdpsTableInfo) obj;
-    return that.getTableInfoKeyString().equals(that.getTableInfoKeyString());
-  }
-
   /** get key */
   @JSONField(serialize = false)
   public String getTableInfoKeyString() {

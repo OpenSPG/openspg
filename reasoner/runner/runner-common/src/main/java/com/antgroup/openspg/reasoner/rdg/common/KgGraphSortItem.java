@@ -21,7 +21,6 @@ import com.antgroup.openspg.reasoner.lube.common.expr.GetField;
 import com.antgroup.openspg.reasoner.lube.common.expr.Ref;
 import com.antgroup.openspg.reasoner.lube.common.expr.UnaryOpExpr;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class KgGraphSortItem implements Comparable<KgGraphSortItem> {
   private final scala.collection.immutable.List<SortItem> sortItems;
@@ -43,7 +42,7 @@ public class KgGraphSortItem implements Comparable<KgGraphSortItem> {
   }
 
   @Override
-  public int compareTo(@NotNull KgGraphSortItem o) {
+  public int compareTo(KgGraphSortItem o) {
     Object[] thisValues = getValues();
     Object[] otherValues = o.getValues();
 

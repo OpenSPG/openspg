@@ -15,10 +15,8 @@ package com.antgroup.openspg.reasoner.rdg.common;
 
 import com.antgroup.openspg.reasoner.common.exception.IllegalArgumentException;
 import java.io.Serializable;
-import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
-@Getter
 public class FoldRepeatEdgeInfo implements Serializable {
   private final String fromEdgeAlias;
   private final String toEdgeAlias;
@@ -37,5 +35,41 @@ public class FoldRepeatEdgeInfo implements Serializable {
     this.toEdgeAlias = toEdgeAlias;
     this.fromVertexAlias = fromVertexAlias;
     this.toVertexAlias = toVertexAlias;
+  }
+
+  /**
+   * Getter method for property <tt>fromEdgeAlias</tt>.
+   *
+   * @return property value of fromEdgeAlias
+   */
+  public String getFromEdgeAlias() {
+    return fromEdgeAlias;
+  }
+
+  /**
+   * Getter method for property <tt>toEdgeAlias</tt>.
+   *
+   * @return property value of toEdgeAlias
+   */
+  public String getToEdgeAlias() {
+    return toEdgeAlias;
+  }
+
+  /**
+   * Getter method for property <tt>fromVertexAlias</tt>.
+   *
+   * @return property value of fromVertexAlias
+   */
+  public String getFromVertexAlias() {
+    return fromVertexAlias;
+  }
+
+  /**
+   * Getter method for property <tt>toVertexAlias</tt>.
+   *
+   * @return property value of toVertexAlias
+   */
+  public String getToVertexAlias() {
+    return toVertexAlias;
   }
 }

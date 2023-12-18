@@ -13,13 +13,13 @@
 
 package com.antgroup.openspg.reasoner.util
 
+import com.antgroup.openspg.reasoner.batching.DynamicBatchSize
 import com.antgroup.openspg.reasoner.common.graph.`type`.GraphItemType
 import com.antgroup.openspg.reasoner.lube.common.pattern._
 import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, Var}
+import com.antgroup.openspg.reasoner.rdg.common.FoldRepeatEdgeInfo
 import org.slf4j.LoggerFactory
 import scala.collection.mutable
-import com.antgroup.openspg.reasoner.batching.DynamicBatchSize
-import com.antgroup.openspg.reasoner.rdg.common.FoldRepeatEdgeInfo
 
 object KgGraphSchema {
   private val logger = LoggerFactory.getLogger(classOf[DynamicBatchSize])

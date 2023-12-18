@@ -46,14 +46,14 @@
       <groupId>com.antgroup.openspg.reasoner</groupId>
       <artifactId>reasoner-lube-api</artifactId>
     </dependency>
-    <!--        <dependency>-->
-    <!--            <groupId>com.antgroup.openspg.reasoner</groupId>-->
-    <!--            <artifactId>reasoner-lube-logical</artifactId>-->
-    <!--        </dependency>-->
-    <!--        <dependency>-->
-    <!--            <groupId>com.antgroup.openspg.reasoner</groupId>-->
-    <!--            <artifactId>reasoner-lube-physical</artifactId>-->
-    <!--        </dependency>-->
+    <dependency>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-lube-logical</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-lube-physical</artifactId>
+    </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.reasoner</groupId>
       <artifactId>reasoner-common</artifactId>
@@ -71,8 +71,8 @@
       <artifactId>reasoner-warehouse-common</artifactId>
     </dependency>
     <dependency>
-        <groupId>com.antgroup.openspg.reasoner</groupId>
-        <artifactId>reasoner-openspg-catalog</artifactId>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-openspg-catalog</artifactId>
     </dependency>
 
     <dependency>
@@ -116,10 +116,6 @@
     <dependency>
       <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.aliyun.odps</groupId>
-      <artifactId>odps-sdk-core</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.protobuf</groupId>
@@ -169,42 +165,6 @@
       </exclusions>
     </dependency>
     <!-- hive end -->
-
-    <dependency>
-      <groupId>com.alipay.cloudsdk</groupId>
-      <artifactId>object-storage-cloud-sdk</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.alipay.cloudsdk</groupId>
-      <artifactId>object-storage-cloud-driver-oss</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.alipay.cloudsdk</groupId>
-      <artifactId>object-storage-cloud-driver-minio</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.alipay.cloudsdk</groupId>
-      <artifactId>object-storage-cloud-driver-s3</artifactId>
-    </dependency>
-
-    <!-- cloud sdk-->
-    <dependency>
-      <groupId>com.alipay.cloudsdk</groupId>
-      <artifactId>cloud-sdk-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.alipay.cloudsdk</groupId>
-      <artifactId>logservice-cloud-sdk</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.alipay.cloudsdk</groupId>
-      <artifactId>logservice-cloud-driver-sls</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.alipay.cloudsdk</groupId>
-      <artifactId>logservice-cloud-driver-kafka</artifactId>
-    </dependency>
-    <!-- cloud sdk end-->
 
   </dependencies>
 </project>

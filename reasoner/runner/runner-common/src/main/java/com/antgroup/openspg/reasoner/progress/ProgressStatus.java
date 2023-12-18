@@ -16,19 +16,15 @@ package com.antgroup.openspg.reasoner.progress;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
 @Slf4j(topic = "userlogger")
-public class ProgressStatus implements Serializable {
+public abstract class ProgressStatus implements Serializable {
   @Getter @Setter private JobStatus status;
   @Getter @Setter private ProgressInfo progressInfo;
   @Getter private String errMsg;
@@ -38,16 +34,6 @@ public class ProgressStatus implements Serializable {
   @Getter private final Map<TimeConsumeType, Long> timeConsumeMap = new HashMap<>();
   private TimeConsumeType nowType;
   private long nowTypeStartMs;
-
-  public static ProgressStatus getProgressStatusFromOSS(String taskKey) {
-    try {
-      String taskStatusData = OSSClientHelper.getInstance().getFileContent(taskKey);
-      return new ProgressStatus(JSON.parseObject(taskStatusData));
-    } catch (Exception e) {
-      log.warn("ProgressStatus::updateProgressStatus failed! " + e.getMessage());
-    }
-    return null;
-  }
 
   public ProgressStatus(JSONObject context) {
     this.instanceId = context.getString("instanceId");
@@ -70,6 +56,15 @@ public class ProgressStatus implements Serializable {
     this.status = JobStatus.pending;
     this.progressInfo.setTotalSteps(totalSteps);
   }
+
+  /** Persistent progress status files */
+  public abstract void persistenceProgressStatus();
+
+  /** Retrieve task status information from storage. */
+  public abstract void refresh();
+
+  /** Reset the exists progress status file */
+  public abstract void reset();
 
   private JobStatus str2Status(String s) {
     if ("ERROR".equals(s)) {
@@ -106,66 +101,6 @@ public class ProgressStatus implements Serializable {
     context.put("timeConsumeMap", this.timeConsumeMap);
     context.put("ts", System.currentTimeMillis() / 1000);
     return JSON.toJSONString(context, true);
-  }
-
-  public void persistenceProgressStatus() {
-    log.info("persistenceProgressStatus: storage is " + this.persistenceWay + " " + this.toJson());
-    if ("oss".equals(this.persistenceWay)) {
-      persistenceProgressToOSS();
-    } else if (this.persistenceWay.startsWith(FileUtil.LOCAL_FILE_PREFIX)) {
-      persistenceLocalFile();
-    } else {
-      log.error("persistenceProgressStatus not support");
-    }
-  }
-
-  private synchronized void persistenceProgressToOSS() {
-    try {
-      OSSClientHelper.getInstance().putFileContent(taskKey, toJson());
-    } catch (Exception e) {
-      log.warn("ProgressStatus::persistenceProgressStatus update failed! " + e.getMessage());
-    }
-  }
-
-  private synchronized void persistenceLocalFile() {
-    try {
-      String filePath = taskKey.substring(FileUtil.LOCAL_FILE_PREFIX.length());
-      File file = new File(filePath);
-      FileOutputStream outputStream = new FileOutputStream(file);
-      outputStream.write(toJson().getBytes(StandardCharsets.UTF_8));
-      outputStream.close();
-    } catch (Exception e) {
-      log.warn("ProgressStatus::persistenceProgressStatus update failed! " + e.getMessage());
-    }
-  }
-
-  /** Retrieve task status information from storage. */
-  public void refresh() {
-    if ("oss".equals(this.persistenceWay)) {
-      String content = null;
-      try {
-        content = OSSClientHelper.getInstance().getFileContent(taskKey);
-        if (StringUtils.isBlank(content)) {
-          return;
-        }
-        JSONObject contentObj = JSONObject.parseObject(content);
-        this.errMsg = contentObj.getString("errMsg");
-        this.progressInfo = contentObj.getObject("progressInfo", ProgressInfo.class);
-        this.status = contentObj.getObject("status", JobStatus.class);
-      } catch (Exception ex) {
-        log.error("content={} refresh error, ", content, ex);
-      }
-    }
-  }
-
-  public void reset() {
-    if ("oss".equals(this.persistenceWay)) {
-      try {
-        OSSClientHelper.getInstance().removeFile(taskKey);
-      } catch (Exception ex) {
-        log.error("reset error, ", ex);
-      }
-    }
   }
 
   public void updateStatus(JobStatus jobStatus, String errMsg) {

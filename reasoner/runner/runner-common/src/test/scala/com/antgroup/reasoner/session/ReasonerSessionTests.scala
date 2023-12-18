@@ -13,7 +13,6 @@
 
 package com.antgroup.reasoner.session
 
-import com.antgroup.openspg.reasoner.catalog.impl.{KGCatalog, KgSchemaConnectionInfo}
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.exception.SchemaException
 import com.antgroup.openspg.reasoner.common.utils.ResourceLoader
@@ -34,10 +33,6 @@ import com.antgroup.openspg.reasoner.util.LoaderUtil
 
 class ReasonerSessionTests extends AnyFunSpec {
 
-  def getKgSchemaConnectionInfo(): KgSchemaConnectionInfo = {
-    KgSchemaConnectionInfo("http://kgengine-1.gz00b.stable.alipay.net", "a8bB6398B6Da9170")
-  }
-
   it("test rule reference") {
     val dsl =
       """
@@ -49,13 +44,13 @@ class ReasonerSessionTests extends AnyFunSpec {
         |		(te) -[pte:travelEndpoint]-> (aa1:CKG.AdministrativeArea)
         |	}
         |  Rule {
-        |    R1('常驻地在杭州'): aa1.id == '中国-浙江省-杭州市'
-        |  	R2('工作日上班时间通勤用户'): dayOfWeek(te.eventTime) in [1, 2, 3, 4, 5]
+        |    R1('LivedInHangzhou'): aa1.id == '中国-浙江省-杭州市'
+        |  	R2('CommutersAtWeekdays'): dayOfWeek(te.eventTime) in [1, 2, 3, 4, 5]
         |            and hourOfDay(te.eventTime) in [6, 7, 8, 9, 10, 17, 18, 19, 20, 21]
-        |    R3('公交地铁'): tm.id in ['bus', 'subway']
-        |    tmCount('出行次数') = group(user).count(te.id)
-        |    R4('出行次数大于3次'): tmCount >= 3
-        |    R5('id不为空'): user.id != ''
+        |    R3('BusAndSubway'): tm.id in ['bus', 'subway']
+        |    tmCount('NumberOfTrips') = group(user).count(te.id)
+        |    R4('TripsOver3'): tmCount >= 3
+        |    R5('idNotNull'): user.id != ''
         |    o = tmCount
         |  }
         |}
@@ -158,7 +153,8 @@ class ReasonerSessionTests extends AnyFunSpec {
     val reverseDirectionPhysicalOpOrder = getPhysicalPlanOrder(subqueryPhysicalOp)
     forwardDirectionPhysicalOpOrder.equals(reverseDirectionPhysicalOpOrder) should equal(true)
     println(forwardDirectionPhysicalOpOrder)
-    forwardDirectionPhysicalOpOrder should equal("Start,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,PatternScan,ExpandInto,Drop,Select")
+    forwardDirectionPhysicalOpOrder should equal(
+      "Start,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,PatternScan,ExpandInto,Drop,Select")
   }
 
   it("multiple_st_edge_test") {
@@ -196,7 +192,8 @@ class ReasonerSessionTests extends AnyFunSpec {
     var subqueryPhysicalOp = physicalOperatorList.head
     val physicalOpOrder = getPhysicalPlanOrder(subqueryPhysicalOp)
     println(physicalOpOrder)
-    physicalOpOrder should equal("Start,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,PatternScan,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,ExpandInto,ExpandInto,Drop,Filter,Drop,Select")
+    physicalOpOrder should equal(
+      "Start,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,PatternScan,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,ExpandInto,ExpandInto,Drop,Filter,Drop,Select")
   }
 
   private def getPhysicalPlanOrder[T <: RDG[T]](physicalOperator: PhysicalOperator[T]) = {
@@ -432,39 +429,6 @@ class ReasonerSessionTests extends AnyFunSpec {
     cnt should equal(3)
   }
 
-  it("test sub query add property with catalog") {
-    val dsl =
-      """
-        |GraphStructure {
-        |    (s:OpenSource.Person)
-        |}
-        |Rule {
-        |
-        |}
-        |Action {
-        |    get(s.installGamblingAppNum)
-        |}
-        |""".stripMargin
-    val catalog = new KGCatalog(638000139L, getKgSchemaConnectionInfo())
-    catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
-    val rst = session.plan(
-      dsl,
-      Map
-        .apply((Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true))
-        .asInstanceOf[Map[String, Object]])
-    val cnt = rst.head.transform[Int] {
-      case (join: Join[EmptyRDG], cnt) => cnt.sum + 1
-      case (_, cnt) =>
-        if (cnt.isEmpty) {
-          0
-        } else {
-          cnt.sum
-        }
-    }
-    cnt should equal(2)
-  }
-
   it("test for filter") {
     val dsl = """Define (s:Company)-[p:mainSupply]->(o:Company) {
                 |  GraphStructure{
@@ -473,13 +437,12 @@ class ReasonerSessionTests extends AnyFunSpec {
                 |  	(otherCompany:Company)-[otherf:fundTrans]->(s)
                 |  }
                 |	Rule {
-                |  	// 计算公司o的转入占比
-                |  	targetTransSum("o转入的金额总数") = group(s,o).sum(f.transAmt)
-                |  	otherTransSum("总共转入金额") = group(s).sum(otherf.transAmt)
+                |  	// Calculate the percentage of transfers into company o.
+                |  	targetTransSum("totalSumOfo") = group(s,o).sum(f.transAmt)
+                |  	otherTransSum = group(s).sum(otherf.transAmt)
                 |
                 |  	transRate = targetTransSum*1.0/(otherTransSum + targetTransSum)
-                |  	//R1("占比必须超过50%"): targetTransSum*1.0/(otherTransSum + targetTransSum) > 0.5
-                |   R1("占比必须超过50%"): transRate > 0.5
+                |   R1("ProportionOver50%"): transRate > 0.5
                 |  }
                 |}
                 |
@@ -522,41 +485,6 @@ class ReasonerSessionTests extends AnyFunSpec {
     cnt should equal(1)
   }
 
-  it("test sub query parse cost benchmark 1") {
-    val dsl =
-      """GraphStructure {
-        |(A:ABM.User)-[:expand_linked_alipay_id(A.id)]->(B:CustFundKG.Alipay|CustFundKG.BankCard|CustFundKG.Default|CustFundKG.Huabei|CustFundKG.Jiebei|CustFundKG.MyBank|CustFundKG.Other|CustFundKG.Yeb|CustFundKG.YIB)-[transOut:transfer|unknown|fundRedeem|fundPurchase|dingqiPurchase|taxRefund|transfer|consume|ylbPurchase|jbRepay|hbRepay|creditCardRepay|withdraw|gkhRepay|yebPurchase|corpCreditRepay|deposit|merchantSettle|ylbRedeem|dingqiRedeem|jbLoan|corpCreditLoan|sceneLoan]->(C), (B)<-[transIn:transfer|unknown|fundRedeem|fundPurchase|dingqiPurchase|taxRefund|transfer|consume|ylbPurchase|jbRepay|hbRepay|creditCardRepay|withdraw|gkhRepay|yebPurchase|corpCreditRepay|deposit|merchantSettle|ylbRedeem|dingqiRedeem|jbLoan|corpCreditLoan|sceneLoan]-(D)
-        |}
-        |Rule {
-        |inSum = group(A,B).sum(transIn.amount)
-        |outSum = group(A,B).sum(transOut.amount)
-        |} Action
-        |{
-        |get(A.id, A.name, A.age, A.gender, B.containerType, inSum, outSum)
-        |}""".stripMargin
-    val catalog = new KGCatalog(308000003L, getKgSchemaConnectionInfo)
-    catalog.init()
-
-    val startTime = System.currentTimeMillis()
-    val session = new EmptySession(new KgDslParser(), catalog)
-    val rst = session.plan(
-      dsl,
-      Map
-        .apply((Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true))
-        .asInstanceOf[Map[String, Object]])
-    val cnt = rst.head.transform[Int] {
-      case (join: Join[EmptyRDG], cnt) => cnt.sum + 1
-      case (_, cnt) =>
-        if (cnt.isEmpty) {
-          0
-        } else {
-          cnt.sum
-        }
-    }
-    val costMs = System.currentTimeMillis() - startTime
-    // scalastyle:off println
-    println(costMs)
-  }
   it("test sub query parse cost benchmark") {
     val dsl =
       """
@@ -1026,7 +954,8 @@ class ReasonerSessionTests extends AnyFunSpec {
     val rst = session.plan(
       dsl,
       Map
-        .apply((Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
+        .apply(
+          (Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
           (Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, false))
         .asInstanceOf[Map[String, Object]])
     val cnt = rst.head.transform[Int] {
@@ -2060,39 +1989,6 @@ class ReasonerSessionTests extends AnyFunSpec {
     cnt should equal(5)
   }
 
-  it("test sub query add predicate with catalog") {
-    val dsl =
-      """
-        |GraphStructure {
-        |    (s:OpenSource.App)-[p:appReleaser]->(o:OpenSource.LegalPerson)
-        |}
-        |Rule {
-        |
-        |}
-        |Action {
-        |    get(o.name)
-        |}
-        |""".stripMargin
-    val catalog = new KGCatalog(638000139L, getKgSchemaConnectionInfo())
-    catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
-    val rst = session.plan(
-      dsl,
-      Map
-        .apply((Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true))
-        .asInstanceOf[Map[String, Object]])
-    val cnt = rst.head.transform[Int] {
-      case (join: Join[EmptyRDG], cnt) => cnt.sum + 1
-      case (_, cnt) =>
-        if (cnt.isEmpty) {
-          0
-        } else {
-          cnt.sum
-        }
-    }
-    cnt should equal(2)
-  }
-
   it("test transitive") {
     val dsl =
       """
@@ -2167,14 +2063,17 @@ class ReasonerSessionTests extends AnyFunSpec {
         .asInstanceOf[Map[String, Object]])
     val cnt = rst.head.transform[Int] {
       case (agg: Aggregate[EmptyRDG], cnt) =>
-        val sum = agg.aggregations.map(a => {
-          a._2 match {
-            case AggIfOpExpr(_,
-            BinaryOpExpr(BAnd, BinaryOpExpr(_, _, _), BinaryOpExpr(_, _, _))) =>
-              1
-            case _ => 0
-          }
-        }).sum
+        val sum = agg.aggregations
+          .map(a => {
+            a._2 match {
+              case AggIfOpExpr(
+                    _,
+                    BinaryOpExpr(BAnd, BinaryOpExpr(_, _, _), BinaryOpExpr(_, _, _))) =>
+                1
+              case _ => 0
+            }
+          })
+          .sum
         cnt.sum + sum
       case (_, cnt) =>
         if (cnt.isEmpty) {
@@ -2185,7 +2084,6 @@ class ReasonerSessionTests extends AnyFunSpec {
     }
     cnt should equal(1)
   }
-
 
   it("test id push down") {
     val dsl =
@@ -2207,9 +2105,8 @@ class ReasonerSessionTests extends AnyFunSpec {
         |    get(A.id, B.id, C.id)
         |}
         |""".stripMargin
-    val schema: Map[String, Set[String]] = Map.apply(
-      "User" -> Set.apply("id"),
-      "User_trans_User" -> Set.empty)
+    val schema: Map[String, Set[String]] =
+      Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
     val session = new EmptySession(new KgDslParser(), catalog)
@@ -2236,103 +2133,6 @@ class ReasonerSessionTests extends AnyFunSpec {
     cnt should equal(2)
   }
 
-//  it("test id push down 2") {
-//    val dsl =
-//      """
-//        |
-//        |GraphStructure {
-//        |  A [User, __start__='true']
-//        |  B,C [User]
-//        |  A->B [trans] as p1
-//        |  B->C [trans] as p2
-//        |  C->A [trans] as p3
-//        |  }
-//        |Rule {
-//        |R1: A.id in $idSet1
-//        |R2: B.id in $idSet2
-//        |R3: C.id in $idSet2
-//        |}
-//        |Action {
-//        |    get(A.id, C.id)
-//        |}
-//        |""".stripMargin
-//    val schema: Map[String, Set[String]] = Map.apply(
-//      "User" -> Set.apply("id"),
-//      "User_trans_User" -> Set.empty)
-//    val catalog = new PropertyGraphCatalog(schema)
-//    catalog.init()
-//    val session = new EmptySession(new KgDslParser(), catalog)
-//    val rst = session.plan(
-//      dsl,
-//      Map
-//        .apply((Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
-//          (Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true))
-//        .asInstanceOf[Map[String, Object]])
-//    val cnt = rst.head.transform[Int] {
-//      case (expandInto: ExpandInto[EmptyRDG], cnt) =>
-//        var ele = expandInto.pattern.getNode("B")
-//        (ele != null) should equal(true)
-//        ele.rule should equal(null)
-//        cnt.sum + 1
-//      case (_, cnt) =>
-//        if (cnt.isEmpty) {
-//          0
-//        } else {
-//          cnt.sum
-//        }
-//    }
-//    cnt should equal(1)
-//  }
-//
-//  it("test id push down 3") {
-//    val dsl =
-//      """
-//        |
-//        |GraphStructure {
-//        |  A [User, __start__='true']
-//        |  B,C [User]
-//        |  A->B [trans] as p1
-//        |  B->C [trans] as p2
-//        |  C->A [trans] as p3
-//        |  }
-//        |Rule {
-//        |R1: A.id in $idSet1
-//        |R2: B.id in $idSet2
-//        |R3: C.id in $idSet2
-//        |}
-//        |Action {
-//        |    get(A.id, C.id)
-//        |}
-//        |""".stripMargin
-//    val schema: Map[String, Set[String]] = Map.apply(
-//      "User" -> Set.apply("id"),
-//      "User_trans_User" -> Set.empty)
-//    val catalog = new PropertyGraphCatalog(schema)
-//    catalog.init()
-//    val session = new EmptySession(new KgDslParser(), catalog)
-//    val rst = session.plan(
-//      dsl,
-//      Map
-//        .apply((Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
-//          (Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true))
-//        .asInstanceOf[Map[String, Object]])
-//    val cnt = rst.head.transform[Int] {
-//      case (expandInto: ExpandInto[EmptyRDG], cnt) =>
-//        var ele = expandInto.pattern.getNode("C")
-//        (ele != null) should equal(true)
-//        ele.rule should equal(null)
-//        cnt.sum + 1
-//      case (_, cnt) =>
-//        if (cnt.isEmpty) {
-//          0
-//        } else {
-//          cnt.sum
-//        }
-//    }
-//    cnt should equal(1)
-//  }
-
-
   it("test id push down 4") {
     val dsl =
       """
@@ -2351,16 +2151,16 @@ class ReasonerSessionTests extends AnyFunSpec {
         |    get(A.id, C.id)
         |}
         |""".stripMargin
-    val schema: Map[String, Set[String]] = Map.apply(
-      "User" -> Set.apply("id"),
-      "User_trans_User" -> Set.empty)
+    val schema: Map[String, Set[String]] =
+      Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
     val session = new EmptySession(new KgDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
-        .apply((Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
+        .apply(
+          (Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
           (Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true))
         .asInstanceOf[Map[String, Object]])
     val cnt = rst.head.transform[Int] {
@@ -2378,7 +2178,6 @@ class ReasonerSessionTests extends AnyFunSpec {
     }
     cnt should equal(1)
   }
-
 
   it("test schema absent test") {
     val dsl =
@@ -2398,9 +2197,8 @@ class ReasonerSessionTests extends AnyFunSpec {
         |    get(A.id, C.id)
         |}
         |""".stripMargin
-    val schema: Map[String, Set[String]] = Map.apply(
-      "User" -> Set.apply("id"),
-      "User_trans_User" -> Set.empty)
+    val schema: Map[String, Set[String]] =
+      Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
     val session = new EmptySession(new KgDslParser(), catalog)
@@ -2408,7 +2206,8 @@ class ReasonerSessionTests extends AnyFunSpec {
       session.plan(
         dsl,
         Map
-          .apply((Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
+          .apply(
+            (Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
             (Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true))
           .asInstanceOf[Map[String, Object]])
     } catch {
@@ -2437,9 +2236,8 @@ class ReasonerSessionTests extends AnyFunSpec {
         |    get(A.id, C.id)
         |}
         |""".stripMargin
-    val schema: Map[String, Set[String]] = Map.apply(
-      "User" -> Set.apply("id"),
-      "User_trans_User" -> Set.empty)
+    val schema: Map[String, Set[String]] =
+      Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
     val session = new EmptySession(new KgDslParser(), catalog)
@@ -2447,7 +2245,8 @@ class ReasonerSessionTests extends AnyFunSpec {
       session.plan(
         dsl,
         Map
-          .apply((Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
+          .apply(
+            (Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
             (Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true))
           .asInstanceOf[Map[String, Object]])
     } catch {

@@ -19,7 +19,6 @@ import com.antgroup.openspg.reasoner.warehouse.common.AbstractGraphLoader;
 import com.antgroup.openspg.reasoner.warehouse.common.VertexSubGraph;
 import com.antgroup.openspg.reasoner.warehouse.common.config.GraphLoaderConfig;
 import java.util.Iterator;
-import org.jetbrains.annotations.NotNull;
 
 public class MockGraphLoader extends AbstractGraphLoader {
   /**
@@ -34,7 +33,6 @@ public class MockGraphLoader extends AbstractGraphLoader {
   @Override
   public void close() throws Exception {}
 
-  @NotNull
   @Override
   public Iterator<VertexSubGraph> iterator() {
     return null;
