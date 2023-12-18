@@ -4,17 +4,26 @@ import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 
 /**
- * 知识构建runner接口，具体实现有flink runner，local runner或者spark runner等
- * 他们负责接收构建的pipeline以及运行时上下文，然后启动任务进行知识构建流程
+ * The specific implementations of BuilderRunner include FlinkRunner, LocalRunner, and SparkRunner.
+ * These runners accept pipeline configurations as well as runtime contexts, and then start the
+ * builder process. It is significant to note that the runner translates the pipeline into an actual
+ * physical execution plan. The physical execution plan within the core module does not encompass
+ * source and sink; it solely comprises the processing of records, while the responsibility for
+ * generating the source and sink is delegated to the specific runner.
  */
 public interface BuilderRunner {
-
-  /** runner的初始化，当初始化异常时则直接抛出异常不再进行构建流程 */
+  /**
+   * Initialization of the runner. If an initialization error occurs, an exception is thrown
+   * directly without proceeding with the builder process.
+   */
   void init(Pipeline pipeline, BuilderContext context) throws BuilderException;
 
-  /** 开始执行runner，即开始知识构建流程，会按照pipeline的定义在具体执行引擎上执行知识构建 */
+  /**
+   * Begin executing the runner, which initiates the knowledge builder process. The builder will be
+   * carried out on the specific execution engine according to the definitions within the pipeline.
+   */
   void execute() throws Exception;
 
-  /** 关闭runner，执行一些资源的清理工作 */
+  /** Shut down the runner and perform some resource cleanup tasks. */
   void close() throws Exception;
 }

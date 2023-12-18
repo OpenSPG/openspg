@@ -6,7 +6,11 @@ import com.antgroup.openspg.builder.model.exception.BuilderRecordException;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import java.util.List;
 
-/** 知识构建executor接口，提供一个默认实现，主要负责初始化物理计划并按批执行 */
+/**
+ * According to the physical execution plan, input a batch of data and output a batch of data after
+ * processing is complete. The physical execution plan mentioned here does not include the source
+ * and sink of the records.
+ */
 public interface BuilderExecutor {
   /**
    * Initialize the executor and initialize the physical execution plan. If an exception is thrown,
