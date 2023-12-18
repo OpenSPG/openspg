@@ -22,10 +22,12 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 /** Scheduler Job Service implementation class: Add, delete, update, and query Jobs */
 @Service
+@ConditionalOnProperty(name = "scheduler.metadata.store.type", havingValue = "local")
 public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
 
   private static ConcurrentHashMap<Long, SchedulerJob> jobs = new ConcurrentHashMap<>();

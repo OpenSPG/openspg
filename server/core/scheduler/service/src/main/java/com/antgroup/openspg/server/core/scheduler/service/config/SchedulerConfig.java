@@ -26,9 +26,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SchedulerConfig {
 
-  @Value("${scheduler.handler.type:}")
-  private String handlerType;
-
   @Value("${scheduler.execute.instances.period:}")
   private String executeInstancesPeriod;
 
@@ -43,10 +40,6 @@ public class SchedulerConfig {
 
   @Value("${scheduler.execute.max.day:}")
   private String executeMaxDay;
-
-  public String getHandlerType() {
-    return handlerType;
-  }
 
   public Long getExecuteInstancesPeriod() {
     if (StringUtils.isBlank(executeInstancesPeriod)) {

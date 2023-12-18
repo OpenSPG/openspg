@@ -26,10 +26,12 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 /** Scheduler Instance Service implementation class: Add, delete, update, and query instances */
 @Service
+@ConditionalOnProperty(name = "scheduler.metadata.store.type", havingValue = "local")
 public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceService {
 
   private static ConcurrentHashMap<Long, SchedulerInstance> instances = new ConcurrentHashMap<>();

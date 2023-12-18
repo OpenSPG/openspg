@@ -23,10 +23,12 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.BeanUtils;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 /** Scheduler Task Service implementation class: Add, delete, update, and query tasks */
 @Service
+@ConditionalOnProperty(name = "scheduler.metadata.store.type", havingValue = "local")
 public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
 
   private static ConcurrentHashMap<Long, SchedulerTask> tasks = new ConcurrentHashMap<>();

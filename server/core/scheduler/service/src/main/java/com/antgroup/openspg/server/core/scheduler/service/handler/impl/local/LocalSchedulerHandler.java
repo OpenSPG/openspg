@@ -20,14 +20,15 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 /** Scheduler Handler Local implementation class. To generate and execute Instances */
 @Service
 @Slf4j
+@ConditionalOnProperty(name = "scheduler.handler.type", havingValue = "local")
 public class LocalSchedulerHandler implements SchedulerHandler {
 
-  private static final String HANDLER_TYPE = "local";
   private static final int corePoolSize = 1;
   private static final long initialDelay = 0;
 
@@ -40,10 +41,6 @@ public class LocalSchedulerHandler implements SchedulerHandler {
   @Override
   @PostConstruct
   public void executeInstances() {
-    if (!HANDLER_TYPE.equalsIgnoreCase(schedulerConfig.getHandlerType())) {
-      log.warn("ignore execute handlerType:{}", schedulerConfig.getHandlerType());
-      return;
-    }
     log.info("start executeInstances");
     EXECUTE.scheduleAtFixedRate(
         new ExecuteRunnable(),
@@ -55,10 +52,6 @@ public class LocalSchedulerHandler implements SchedulerHandler {
   @Override
   @PostConstruct
   public void generateInstances() {
-    if (!HANDLER_TYPE.equalsIgnoreCase(schedulerConfig.getHandlerType())) {
-      log.warn("ignore generate handlerType:{}", schedulerConfig.getHandlerType());
-      return;
-    }
     log.info("start generateInstances");
     GENERATE.scheduleAtFixedRate(
         new GenerateRunnable(),
