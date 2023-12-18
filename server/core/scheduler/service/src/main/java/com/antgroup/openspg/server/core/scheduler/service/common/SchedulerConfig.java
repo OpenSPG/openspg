@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 
 /** Scheduler Common Value */
 @Component
-public class SchedulerValue {
+public class SchedulerConfig {
 
   @Value("${scheduler.handler.type:}")
   private String handlerType;

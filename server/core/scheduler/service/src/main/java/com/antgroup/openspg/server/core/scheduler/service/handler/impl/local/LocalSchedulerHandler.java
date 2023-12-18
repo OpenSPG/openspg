@@ -12,7 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.handler.impl.local;
 
-import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;
+import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerConfig;
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecuteService;
 import com.antgroup.openspg.server.core.scheduler.service.handler.SchedulerHandler;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,7 +34,7 @@ public class LocalSchedulerHandler implements SchedulerHandler {
   private static ScheduledExecutorService EXECUTE = new ScheduledThreadPoolExecutor(corePoolSize);
   private static ScheduledExecutorService GENERATE = new ScheduledThreadPoolExecutor(corePoolSize);
 
-  @Autowired SchedulerValue schedulerValue;
+  @Autowired SchedulerConfig schedulerValue;
   @Autowired SchedulerExecuteService schedulerExecuteService;
 
   @Override

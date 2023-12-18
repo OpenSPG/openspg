@@ -13,7 +13,6 @@
 package com.antgroup.openspg.test.scheduler.task;
 
 import com.antgroup.openspg.common.util.DateTimeUtils;
-import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Dependence;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
@@ -21,7 +20,8 @@ import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStat
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
-import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerValue;
+import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerConfig;
+import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerUtils;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.task.sync.SyncTaskExecuteTemplate;
 import java.util.Date;
@@ -36,7 +36,7 @@ public class LocalExampleSyncTaskMock extends SyncTaskExecuteTemplate {
   /** scheduler max days */
   private static final long SCHEDULER_MAX_DAYS = 5;
 
-  @Autowired SchedulerValue schedulerValue;
+  @Autowired SchedulerConfig schedulerValue;
   @Autowired SchedulerInstanceService schedulerInstanceService;
 
   @Override

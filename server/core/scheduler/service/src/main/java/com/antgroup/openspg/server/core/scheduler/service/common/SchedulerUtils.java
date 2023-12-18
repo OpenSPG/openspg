@@ -10,23 +10,17 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-package com.antgroup.openspg.common.util;
+package com.antgroup.openspg.server.core.scheduler.service.common;
 
+import com.antgroup.openspg.common.util.DateTimeUtils;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
 import org.quartz.CronExpression;
@@ -35,7 +29,6 @@ import org.quartz.CronExpression;
 @Slf4j
 public class SchedulerUtils {
 
-  public static final String IPS = String.join(",", getLocalIps());
   public static final String EQ = "eq";
   public static final String IN = "in";
   public static final String LT = "lt";
@@ -141,20 +134,5 @@ public class SchedulerUtils {
       default:
         return false;
     }
-  }
-
-  /** get local ips */
-  public static List<String> getLocalIps() {
-    try {
-      Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
-      return Collections.list(networkInterfaces).stream()
-          .flatMap(network -> Collections.list(network.getInetAddresses()).stream())
-          .filter(address -> address instanceof Inet4Address && !address.isLoopbackAddress())
-          .map(InetAddress::getHostAddress)
-          .collect(Collectors.toList());
-    } catch (SocketException e) {
-      log.error("getLocalIps failed.", e);
-    }
-    return new ArrayList<>();
   }
 }

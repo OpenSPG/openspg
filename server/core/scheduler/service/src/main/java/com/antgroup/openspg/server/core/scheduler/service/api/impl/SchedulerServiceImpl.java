@@ -12,7 +12,6 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.api.impl;
 
-import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
@@ -23,6 +22,7 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.api.SchedulerService;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
+import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerUtils;
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecuteService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;

@@ -15,7 +15,7 @@
 package com.antgroup.openspg.server.core.scheduler.model.task;
 
 import com.antgroup.openspg.common.util.DateTimeUtils;
-import com.antgroup.openspg.common.util.SchedulerUtils;
+import com.antgroup.openspg.common.util.NetworkAddressUtils;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -69,7 +69,7 @@ public class TaskExecuteContext {
     int dstOffset = 0;
     StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
     log.append("(")
-        .append(SchedulerUtils.IPS)
+        .append(NetworkAddressUtils.LOCAL_IP)
         .append("): ")
         .append(String.format(message, args))
         .append(System.getProperty("line.separator"));

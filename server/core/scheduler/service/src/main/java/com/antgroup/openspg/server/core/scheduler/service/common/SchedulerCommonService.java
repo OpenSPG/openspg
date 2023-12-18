@@ -12,7 +12,6 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.common;
 
-import com.antgroup.openspg.common.util.SchedulerUtils;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
@@ -49,7 +48,7 @@ public class SchedulerCommonService {
   @Autowired SchedulerJobService schedulerJobService;
   @Autowired SchedulerInstanceService schedulerInstanceService;
   @Autowired SchedulerTaskService schedulerTaskService;
-  @Autowired SchedulerValue schedulerValue;
+  @Autowired SchedulerConfig schedulerValue;
 
   /** set Instance To Finish */
   public void setInstanceFinish(
