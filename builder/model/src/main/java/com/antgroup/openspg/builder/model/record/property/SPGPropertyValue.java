@@ -26,13 +26,19 @@ public class SPGPropertyValue extends BaseValObj {
 
   protected static final String SEPARATOR = ",";
 
-  /** 原始的属性值 */
+  /** Raw property value */
   private String raw;
 
-  /** 当该属性类型是非基础类型时，该字段指向属性类型的实例id，由于属性可能是多值，所以这里定义为list */
+  /**
+   * When the property type is not a basic type, this field points to the instance ID of the
+   * property type. Since the property may have multiple values, it is defined here as a list.
+   */
   private List<String> ids;
 
-  /** 属性原始值标准化后的值，由于属性可能是多值，所以这里定义为list */
+  /**
+   * The normalized value of the property's raw value, since the property might have multiple
+   * values, it is defined here as a list.
+   */
   private List<Object> stds;
 
   public SPGPropertyValue(String raw) {
@@ -52,7 +58,7 @@ public class SPGPropertyValue extends BaseValObj {
     if (raw == null) {
       raw = otherValue.getRaw();
     } else {
-      raw = raw + "," + otherValue.getRaw();
+      raw = raw + SEPARATOR + otherValue.getRaw();
     }
   }
 }

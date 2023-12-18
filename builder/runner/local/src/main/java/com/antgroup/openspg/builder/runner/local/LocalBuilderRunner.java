@@ -27,7 +27,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
-/** 本地的知识构建runner，在本地执行构建任务 */
+/**
+ * The local version of the knowledge builder runner, which performs knowledge builder tasks
+ * locally.
+ */
 @Slf4j
 public class LocalBuilderRunner implements BuilderRunner {
 
