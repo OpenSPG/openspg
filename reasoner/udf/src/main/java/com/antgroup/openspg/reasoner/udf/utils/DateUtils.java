@@ -22,7 +22,7 @@ import java.util.TimeZone;
 
 public class DateUtils {
   /** udf time zone */
-  public static TimeZone timeZone = TimeZone.getTimeZone("Asia/Shanghai");
+  public static TimeZone timeZone = TimeZone.getDefault();
 
   public static final String DEFAULT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
   public static final String DEFAULT_DATETIME_FORMAT2 = "yyyyMMdd HH:mm:ss";

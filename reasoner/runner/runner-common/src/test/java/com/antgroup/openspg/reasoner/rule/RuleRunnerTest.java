@@ -17,16 +17,25 @@ import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer;
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser;
+import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import scala.collection.JavaConversions;
 
 public class RuleRunnerTest {
+
+  @Before
+  public void init() {
+    DateUtils.timeZone = TimeZone.getTimeZone("Asia/Shanghai");
+  }
 
   /** test overloading */
   @Test
