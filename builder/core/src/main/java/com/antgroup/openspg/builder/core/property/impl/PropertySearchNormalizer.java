@@ -15,7 +15,6 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.QueryGroup;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -48,7 +47,7 @@ public class PropertySearchNormalizer implements PropertyNormalizer {
         ids.add(searchResult);
       }
     }
-    record.getValue().setStds(Collections.singletonList(ids));
+    record.getValue().setStrStds(ids);
     record.getValue().setIds(ids);
   }
 

@@ -6,7 +6,6 @@ import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PropertyNormalizeException;
 import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
-import java.util.Collections;
 import java.util.List;
 
 public class PropertyIdEqualsNormalizer implements PropertyNormalizer {
@@ -26,7 +25,7 @@ public class PropertyIdEqualsNormalizer implements PropertyNormalizer {
     }
 
     List<String> rawValues = record.getRawValues();
-    record.getValue().setStds(Collections.singletonList(rawValues));
+    record.getValue().setStrStds(rawValues);
     record.getValue().setIds(rawValues);
   }
 }

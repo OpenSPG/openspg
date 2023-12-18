@@ -22,6 +22,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class SPGPropertyValue extends BaseValObj {
 
   protected static final String SEPARATOR = ",";
@@ -52,6 +53,10 @@ public class SPGPropertyValue extends BaseValObj {
   public void setSingleStd(Object std) {
     stds = new ArrayList<>(1);
     stds.add(std);
+  }
+
+  public void setStrStds(List<String> stds) {
+    this.stds = (List) stds;
   }
 
   public void merge(SPGPropertyValue otherValue) {

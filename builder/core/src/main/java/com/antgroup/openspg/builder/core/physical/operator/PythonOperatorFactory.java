@@ -2,10 +2,8 @@ package com.antgroup.openspg.builder.core.physical.operator;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import com.antgroup.openspg.common.util.StringUtils;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +15,7 @@ import pemja.core.PythonInterpreterConfig;
 public class PythonOperatorFactory implements OperatorFactory {
 
   private static volatile PythonInterpreter pythonInterpreter;
-  private final Set<String> operatorObjects = Collections.newSetFromMap(new ConcurrentHashMap<>());
+  private final Map<OperatorConfig, String> operatorObjects = new ConcurrentHashMap<>();
 
   private PythonOperatorFactory() {}
 
@@ -62,22 +60,25 @@ public class PythonOperatorFactory implements OperatorFactory {
 
   @Override
   public Object invoke(OperatorConfig config, Object... input) {
-    return pythonInterpreter.invokeMethod(config.getUniqueKey(), config.getMethod(), input);
+    String pythonObject = operatorObjects.get(config);
+    if (StringUtils.isBlank(pythonObject)) {
+      throw new IllegalStateException();
+    }
+    return pythonInterpreter.invokeMethod(pythonObject, config.getMethod(), input);
   }
 
   private void loadOperatorObject(OperatorConfig config) {
-    String pythonOperatorObject = config.getUniqueKey();
-    if (operatorObjects.contains(pythonOperatorObject)) {
+    if (operatorObjects.containsKey(config)) {
       return;
     }
-
+    String pythonOperatorObject = config.getUniqueKey();
     pythonInterpreter.exec(
         String.format("from %s import %s", config.getModulePath(), config.getClassName()));
     pythonInterpreter.exec(
         String.format(
             "%s=%s(%s)",
             pythonOperatorObject, config.getClassName(), paramToPythonString(config.getParams())));
-    operatorObjects.add(pythonOperatorObject);
+    operatorObjects.put(config, pythonOperatorObject);
   }
 
   private String paramToPythonString(Map<String, String> params) {

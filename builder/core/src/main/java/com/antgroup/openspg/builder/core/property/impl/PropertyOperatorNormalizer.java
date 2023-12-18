@@ -67,7 +67,7 @@ public class PropertyOperatorNormalizer implements PropertyNormalizer {
         ids.add(id);
       }
     }
-    record.getValue().setStds(Collections.singletonList(ids));
+    record.getValue().setStrStds(ids);
     record.getValue().setIds(ids);
   }
 }

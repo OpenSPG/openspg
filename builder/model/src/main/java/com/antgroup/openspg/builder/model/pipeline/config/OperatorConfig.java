@@ -5,11 +5,13 @@ import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import com.google.common.collect.Lists;
 import java.util.Map;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.codec.digest.DigestUtils;
 
 @Getter
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class OperatorConfig extends BaseValObj {
 
   private final String filePath;
@@ -22,10 +24,7 @@ public class OperatorConfig extends BaseValObj {
 
   private final Map<String, String> params;
 
-  @Getter(lazy = true)
-  private final String uniqueKey = genUniqueKey();
-
-  private String genUniqueKey() {
+  public String getUniqueKey() {
     return DigestUtils.md5Hex(
         String.join(
             ";",
