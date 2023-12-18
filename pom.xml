@@ -47,6 +47,8 @@
     <json4s.version>4.0.6</json4s.version>
     <kgreasoner-version>20231018-OPENSOURCE</kgreasoner-version>
     <logback.version>1.2.11</logback.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <scala.binary.version>2.11</scala.binary.version>
     <scala.version>2.11.12</scala.version>
     <spock.version>2.2-M1-groovy-3.0</spock.version>
@@ -455,6 +457,30 @@
             <goals>
               <goal>jar-no-fork</goal>
               <goal>test-jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.scalastyle</groupId>
+        <artifactId>scalastyle-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <configuration>
+          <verbose>false</verbose>
+          <failOnViolation>true</failOnViolation>
+          <includeTestSourceDirectory>false</includeTestSourceDirectory>
+          <failOnWarning>false</failOnWarning>
+          <sourceDirectory>${project.basedir}/src/main/scala</sourceDirectory>
+          <testSourceDirectory>${project.basedir}/src/test/scala</testSourceDirectory>
+          <configLocation>scalastyle-config.xml</configLocation>
+          <outputFile>${project.basedir}/target/scalastyle-output.xml</outputFile>
+          <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
+          <outputEncoding>${project.reporting.outputEncoding}</outputEncoding>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
             </goals>
           </execution>
         </executions>
