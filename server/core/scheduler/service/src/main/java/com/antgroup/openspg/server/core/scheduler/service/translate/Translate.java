@@ -10,8 +10,6 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
-/** Alipay.com Inc. Copyright (c) 2004-2022 All Rights Reserved. */
 package com.antgroup.openspg.server.core.scheduler.service.translate;
 
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
