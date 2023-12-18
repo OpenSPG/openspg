@@ -11,15 +11,12 @@
 # or implied.
 
 import os
-import sys
 
 import click
 
 from knext.command.sub_command.builder import get_job
 from knext.command.sub_command.builder import submit_job
-from knext.command.sub_command.config import GLOBAL_CONFIG, LOCAL_CONFIG, CFG_PREFIX
 from knext.command.sub_command.config import edit_config
-from knext.command.sub_command.config import get_config
 from knext.command.sub_command.config import list_config
 from knext.command.sub_command.operator import list_operator
 from knext.command.sub_command.operator import publish_operator
@@ -34,26 +31,7 @@ from knext.command.sub_command.schema import list_schema
 from knext.command.sub_command.schema import reg_concept_rule
 from knext.command.exception import _ApiExceptionHandler
 from knext import __version__
-
-
-def init_env():
-    """Initialize environment to use command-line tool from inside a project
-    dir. This sets the Scrapy settings module and modifies the Python path to
-    be able to locate the project module.
-    """
-    project_cfg, root_path = get_config()
-
-    if project_cfg.has_section("global"):
-        for cfg in GLOBAL_CONFIG:
-            os.environ[CFG_PREFIX + cfg.upper()] = project_cfg.get("global", cfg)
-
-    if not project_cfg.has_section("local"):
-        click.secho("ERROR: Not in a project directory.")
-        sys.exit()
-    for cfg in LOCAL_CONFIG:
-        os.environ[CFG_PREFIX + cfg.upper()] = project_cfg.get("local", cfg)
-
-    os.environ[CFG_PREFIX + "ROOT_PATH"] = str(root_path.resolve())
+from knext.common.env import init_env, get_config, GLOBAL_CONFIG, CFG_PREFIX
 
 
 @click.group(cls=_ApiExceptionHandler)

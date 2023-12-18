@@ -8,7 +8,7 @@ Input = TypeVar("Input", contravariant=True)
 Output = TypeVar("Output", covariant=True)
 
 
-class Runnable(Generic[Input, Output], BaseModel):
+class Runnable(BaseModel):
 
     _last: bool = False
 

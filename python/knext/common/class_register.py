@@ -38,6 +38,7 @@ def register_from_package(path: str, class_type: Type) -> None:
                         class_type.register(
                             name=class_name, local_path=os.path.join(root, file_name)
                         )(class_obj)
+    class_type._has_registered = True
 
 
 def append_python_path(path: str) -> bool:

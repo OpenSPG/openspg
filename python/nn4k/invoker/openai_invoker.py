@@ -91,6 +91,7 @@ class OpenAIInvoker(NNInvoker):
         config = cls._parse_config(nn_config)
 
         o = cls.__new__(cls)
+        o._nn_config = nn_config
         o._openai_api_key = config["openai_api_key"]
         o._openai_api_base = config["openai_api_base"]
         o._openai_model_name = config["openai_model_name"]

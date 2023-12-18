@@ -1,4 +1,3 @@
-from collections import defaultdict
 from enum import Enum
 from typing import Union, Dict, List, Tuple, Sequence
 

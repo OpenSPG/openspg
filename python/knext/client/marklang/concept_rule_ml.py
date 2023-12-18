@@ -13,7 +13,7 @@
 import re
 
 from knext import rest
-from knext.core.schema import Schema
+from knext.client.schema import SchemaClient
 from knext.client.model.base import SpgTypeEnum
 
 
@@ -31,7 +31,7 @@ class SPGConceptRuleMarkLang:
 
     def __init__(self, filename):
         self.current_line_num = 0
-        self.session = Schema().create_session()
+        self.session = SchemaClient().create_session()
         self.concept_client = rest.ConceptApi()
         self.load_script(filename)
 

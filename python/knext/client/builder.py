@@ -73,30 +73,23 @@ class BuilderClient(Client):
         python_exec = sys.executable
         python_paths = sys.path
 
-        print(python_exec)
-        print(python_paths)
-
         import os
         import subprocess
         import knext
         import datetime
-        import json
 
         jar_path = os.path.join(knext.__path__[0], f"engine/builder-runner-local-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
-        print(jar_path)
-        # pipeline = dag_config.to_dict()
-        # print(pipeline)
-        builder_client = BuilderClient()._rest_client.api_client.sanitize_for_serialization(dag_config)
-        print(builder_client)
+        api_client = BuilderClient()._rest_client.api_client
+        pipeline = api_client.sanitize_for_serialization(dag_config)
         log_file_name = f"{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 
         java_cmd = ['java', '-jar',
                     "-Dcloudext.graphstore.drivers=com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClientDriver",
                     "-Dcloudext.searchengine.drivers=com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchEngineClientDriver",
                     jar_path,
-                    "--projectId", "1",
+                    "--projectId", "2",
                     "--jobName", kwargs.get("job_name", "default_job"),
-                    "--pipeline", json.dumps(builder_client),
+                    "--pipeline", pipeline,
                     "--pythonExec", python_exec,
                     "--pythonPaths", ';'.join(python_paths),
                     "--schemaUrl", "http://localhost:8887",

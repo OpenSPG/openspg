@@ -9,25 +9,14 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
+import os
 from abc import ABC
-from enum import Enum
-from typing import List, Dict, Any, Type, Sequence, Union
+from typing import Dict, Any, Type, Union
 
 from knext import rest
 
-from knext.common.restable import RESTable
-from knext.common.runnable import Runnable, Other, Input, Output
 from knext.common.schema_helper import SPGTypeHelper
 from knext.operator.eval_result import EvalResult
-from knext.operator.spg_record import SPGRecord
-
-
-class OperatorTypeEnum(str, Enum):
-    EntityLinkOp = "ENTITY_LINK"
-    EntityFuseOp = "ENTITY_FUSE"
-    PropertyNormalizeOp = "PROPERTY_NORMALIZE"
-    KnowledgeExtractOp = "KNOWLEDGE_EXTRACT"
 
 
 class BaseOp(ABC):
@@ -49,6 +38,7 @@ class BaseOp(ABC):
     _local_path: str
     _type: str
     _version: int
+    _has_registered: bool = False
 
     def __init__(self, params: Dict[str, str] = None):
         self.params = params
@@ -69,12 +59,12 @@ class BaseOp(ABC):
     @staticmethod
     def _pre_process(*inputs):
         """Convert data structures in building job into structures in operator before `eval` method."""
-        pass
+        return inputs
 
     @staticmethod
     def _post_process(output: EvalResult) -> Dict[str, Any]:
         """Convert result structures in operator into structures in building job after `eval` method."""
-        pass
+        return output.to_dict()
 
     @classmethod
     def register(cls, name: str, local_path: str):
@@ -86,7 +76,6 @@ class BaseOp(ABC):
         def add_subclass_to_registry(subclass: Type["BaseOp"]):
             subclass.name = name
             subclass._local_path = local_path
-            subclass._type = OperatorTypeEnum[subclass.__base__.__name__]
             if name in cls._registry:
                 raise ValueError(
                     f"Operator [{name}] conflict in {subclass._local_path} and {cls.by_name(name)._local_path}."
@@ -106,12 +95,14 @@ class BaseOp(ABC):
             raise ValueError(f"{name} is not a registered name for {cls.__name__}. ")
 
     def to_rest(self):
+        if not hasattr(self, "_local_path"):
+            import inspect
+            self._local_path = inspect.getfile(self.__class__)
+        if not hasattr(self, "name"):
+            self.name = self.__class__.__name__
         return rest.OperatorConfig(file_path=self._local_path,
-                                   module_path="",
+                                   module_path=os.path.splitext(os.path.basename(self._local_path))[0],
                                    class_name=self.name,
                                    method="_handle",
                                    params=self.params,
                                    )
-
-    def from_rest(cls, node):
-        pass

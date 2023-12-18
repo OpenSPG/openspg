@@ -1,5 +1,16 @@
-from abc import ABC
-from typing import Union, List, Dict
+# -*- coding: utf-8 -*-
+# Copyright 2023 Ant Group CO., Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied.
+
+from typing import List, Dict
 
 from pydantic import Field
 
@@ -49,10 +60,10 @@ class CsvSourceReader(SourceReader):
         return self.columns
 
     def invoke(self, input: Input):
-        pass
+        raise NotImplementedError(f"{self.__class__.__name__} does not support being invoked separately.")
 
     def submit(self):
-        pass
+        raise NotImplementedError(f"{self.__class__.__name__} does not support being submitted separately.")
 
     def to_rest(self):
         """Transforms `SourceCsvComponent` to REST model `CsvSourceNodeConfig`."""
@@ -64,4 +75,6 @@ class CsvSourceReader(SourceReader):
 
     @classmethod
     def from_rest(cls, node: rest.Node):
-        return cls()
+        return cls(local_path=node.node_config.url,
+                   columns=node.node_config.columns,
+                   start_row=node.node_config.start_row)

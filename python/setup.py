@@ -70,7 +70,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "knext=knext.client.knext_cli:_main",
+            "knext=knext.command.knext_cli:_main",
         ]
     },
     include_package_data=True,

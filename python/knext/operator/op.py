@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import List, Dict, Any, Union
+from typing import List, Dict, Any
 
 from knext.operator.base import BaseOp
 from knext.operator.eval_result import EvalResult
@@ -12,14 +12,14 @@ class ExtractOp(BaseOp, ABC):
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
 
-    def invoke(self, record: Dict[str, str]) -> List[SPGRecord]:
+    def eval(self, record: Dict[str, str]) -> List[SPGRecord]:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `eval` method."
         )
 
     @staticmethod
     def _pre_process(*inputs):
-        return SPGRecord.from_dict(inputs[0]).properties,
+        return inputs[0],
 
     @staticmethod
     def _post_process(output) -> Dict[str, Any]:
@@ -62,17 +62,15 @@ class FuseOp(BaseOp, ABC):
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
 
-    def eval(
-        self, source_record: SPGRecord, target_records: List[SPGRecord]
-    ) -> List[SPGRecord]:
+    def eval(self, records: List[SPGRecord]) -> List[SPGRecord]:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `eval` method."
         )
 
     @staticmethod
     def _pre_process(*inputs):
-        return SPGRecord.from_dict(inputs[0]), [
-            SPGRecord.from_dict(input) for input in inputs[1]
+        return [
+            SPGRecord.from_dict(input) for input in inputs[0]
         ]
 
     @staticmethod
@@ -90,19 +88,23 @@ class PromptOp(BaseOp, ABC):
 
     template: str
 
-    def build_prompt(self, params: Dict[str, str]) -> str:
+    def __init__(self, **kwargs):
+        super().__init__()
+
+    def build_prompt(self, variables: Dict[str, str]) -> str:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `build_prompt` method."
         )
 
-    def parse_response(
-        self, response: str
-    ) -> List[SPGRecord]:
+    def parse_response(self, response: str) -> List[SPGRecord]:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `parse_response` method."
         )
 
-    def build_params(self, record: Dict[str, str], response: str) -> List[Dict[str, str]]:
+    def build_variables(self, variables: Dict[str, str], response: str) -> List[Dict[str, str]]:
         raise NotImplementedError(
-            f"{self.__class__.__name__} need to implement `build_placeholder` method."
+            f"{self.__class__.__name__} need to implement `build_variables` method."
         )
+
+    def eval(self, *args):
+        pass

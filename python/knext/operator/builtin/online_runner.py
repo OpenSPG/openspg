@@ -1,16 +1,12 @@
 import json
-import sys
 from typing import Dict, List
 
-from knext.common.class_register import register_from_package
-
 from knext.api.operator import ExtractOp
-from knext.operator.base import BaseOp
 from knext.operator.spg_record import SPGRecord
 from nn4k.invoker import LLMInvoker
 
 
-class BuiltInOnlineLLMBasedExtractOp(ExtractOp):
+class _BuiltInOnlineExtractor(ExtractOp):
     def __init__(self, params: Dict[str, str] = None):
         """
 
@@ -18,41 +14,59 @@ class BuiltInOnlineLLMBasedExtractOp(ExtractOp):
             params: {"model_name": "openai", "token": "**"}
         """
         super().__init__(params)
-        model_config = json.loads(params["model_config"])
-        prompt_config = json.loads(params["prompt_config"])
-        register_from_package(params["operator_dir"], BaseOp)
-        self.model = LLMInvoker.from_config(model_config)
-        self.prompt_ops = [BaseOp.by_name(config["className"])(**config["params"]) for config in prompt_config]
+        self.model = self.load_model()
+        self.prompt_ops = self.load_operator()
+
+    def load_model(self):
+        model_config = json.loads(self.params["model_config"])
+        return LLMInvoker.from_config(model_config)
+
+    def load_operator(self):
+        import importlib.util
+        prompt_config = json.loads(self.params["prompt_config"])
+        prompt_ops = []
+        for op_config in prompt_config:
+            # 创建模块规范和模块对象
+            spec = importlib.util.spec_from_file_location(op_config["modulePath"], op_config["filePath"])
+            module = importlib.util.module_from_spec(spec)
+
+            # 加载模块
+            spec.loader.exec_module(module)
+
+            op_clazz = getattr(module, op_config["className"])
+            op_obj = op_clazz.by_template(**op_config["params"])
+            prompt_ops.append(op_obj)
+
+        return prompt_ops
+
 
     def eval(self, record: Dict[str, str]) -> List[SPGRecord]:
 
         # 对于单条数据【record】执行多层抽取
         # 每次抽取都需要执行op.build_prompt()->model.predict()->op.parse_response()流程
         # 且每次抽取后可能得到多条结果，下次抽取需要对多条结果分别进行抽取。
-        record_list = [record]
+        collector = []
+        input_params = [record]
         # 循环所有prompt算子，算子数量决定对单条数据执行几层抽取
-        for index, op in enumerate(self.prompt_ops):
-            extract_result_list = []
+        for op in self.prompt_ops:
+            next_params = []
             # record_list可能有多条数据，对多条数据都要进行抽取
-            while record_list:
-                _record = record_list.pop()
+            for input_param in input_params:
                 # 生成完整query
-                query = op.build_prompt(_record)
+                query = op.build_prompt(input_param)
                 # 模型预测，生成模型输出结果
-                response = self.model.remote_inference(query)
-                # response = self.model[op.name]
+                # response = self.model.remote_inference(query)
+                response = '{"spo": [{"subject": "甲状腺结节", "predicate": "常见症状", "object": "头疼"}]}'
                 # 模型结果的后置处理，可能会拆分成多条数据 List[dict[str, str]]
-                result_list = op.parse_response(response)
-                # 把输入的record和模型输出的result拼成一个新的dict，作为这次抽取最终结果
-                for result in result_list:
-                    _ = _record.copy()
-                    _.update(result)
-                    extract_result_list.append(_)
-            # record_list为空时，执行下一层抽取
-            if index == len(self.prompt_ops) - 1:
-                return extract_result_list
-            else:
-                record_list.extend(extract_result_list)
+                if hasattr(op, "parse_response"):
+                    collector.extend(op.parse_response(response))
+                if hasattr(op, "build_variables"):
+                    next_params.extend(op.build_variables(input_param, response))
+
+            input_params = next_params
+            print(next_params)
+
+        return collector
 
 
 if __name__ == '__main__':

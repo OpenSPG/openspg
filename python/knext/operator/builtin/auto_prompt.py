@@ -10,20 +10,9 @@ from knext.operator.spg_record import SPGRecord
 
 
 class AutoPrompt(PromptOp, ABC):
+    pass
 
-    def build_prompt(self, record: Dict[str, str]) -> str:
-        pass
-
-    def parse_response(self, response: str) -> Union[List[Dict[str, str]], List[SPGRecord]]:
-        pass
-
-    def eval(self, *args):
-        pass
-
-
-class SPOPrompt(PromptOp):
-
-    name: str = ""
+class SPOPrompt(AutoPrompt):
 
     template: str = """
 已知SPO关系包括:[${schema}]。从下列句子中提取定义的这些关系。最终抽取结果以json格式输出。
@@ -35,26 +24,33 @@ input:${input}
     def __init__(self,
                  spg_type_name: Union[str, SPGTypeHelper],
                  property_names: List[Union[str, PropertyHelper]],
-                 custom_prompt: str = None):
+                 custom_prompt: str = None,
+                 **kwargs):
         super().__init__()
-        if custom_prompt:
-            self.template = custom_prompt
-        schema_client = SchemaClient(host_addr="https://localhost:8887", project_id=2)
-        spg_type = schema_client.query_spg_type(spg_type_name=spg_type_name)
-        self.predicate_zh_to_en_name = {}
-        self.predicate_type_zh_to_en_name = {}
-        for k, v in spg_type.properties.items():
-            self.predicate_zh_to_en_name[v.name_zh] = k
-            self.predicate_type_zh_to_en_name[v.name_zh] = v.object_type_name
-        self._render(spg_type, property_names)
+        if kwargs:
+            for key, value in kwargs.items():
+                setattr(self, key, value)
+        else:
+            if custom_prompt:
+                self.template = custom_prompt
+            schema_client = SchemaClient()
+            spg_type = schema_client.query_spg_type(spg_type_name=spg_type_name)
+            self.spg_type_name = spg_type_name
+            self.predicate_zh_to_en_name = {}
+            self.predicate_type_zh_to_en_name = {}
+            for k, v in spg_type.properties.items():
+                self.predicate_zh_to_en_name[v.name_zh] = k
+                self.predicate_type_zh_to_en_name[v.name_zh] = v.object_type_name
+            self._render(spg_type, property_names)
         self.params = {
-            "spg_type_name": spg_type_name,
-            "property_names": property_names,
-            "custom_prompt": 
+            "template": self.template,
+            "spg_type": spg_type_name,
+            "predicate_zh_to_en_name": self.predicate_zh_to_en_name,
+            "predicate_type_zh_to_en_name": self.predicate_type_zh_to_en_name,
         }
 
-    def build_prompt(self, params: Dict[str, str]) -> str:
-        return self.template.replace("${input}", params.get("input"))
+    def build_prompt(self, variables: Dict[str, str]) -> str:
+        return self.template.replace("${input}", variables.get("input"))
 
     def parse_response(self, response: str) -> List[SPGRecord]:
         result = []
@@ -65,7 +61,7 @@ input:${input}
         for spo_item in re_obj.get("spo", []):
             if spo_item["predicate"] not in self.predicate_zh_to_en_name:
                 continue
-            subject_properties = {}
+            subject_properties = {"id": spo_item["subject"], "name": spo_item["subject"]}
             if spo_item["subject"] not in subject:
                 subject[spo_item["subject"]] = subject_properties
             else:
@@ -73,7 +69,6 @@ input:${input}
 
             # 获取属性类型
             spo_en_name = self.predicate_zh_to_en_name[spo_item["predicate"]]
-            spo_type = self.predicate_type_zh_to_en_name[spo_item["predicate"]]
 
             if spo_en_name in subject_properties and len(
                     subject_properties[spo_en_name]
@@ -84,17 +79,17 @@ input:${input}
             else:
                 subject_properties[spo_en_name] = spo_item["object"]
 
-            for k, val in subject.items():
-                subject_entity = SPGRecord(spg_type_name=spo_type, properties=val)
-                result.append(subject_entity)
+            # for k, val in subject.items():
+            subject_entity = SPGRecord(spg_type_name=self.spg_type, properties=subject_properties)
+            result.append(subject_entity)
         return result
 
-    def build_params(self, record: Dict[str, str], response: str) -> List[Dict[str, str]]:
+    def build_variables(self, variables: Dict[str, str], response: str) -> List[Dict[str, str]]:
         re_obj = json.loads(response)
         if "spo" not in re_obj.keys():
             raise ValueError("SPO format error.")
-        re_str = re_obj.get("spo", "")
-        return [{"input": record["input"], "spo": json.loads(re_str)}]
+        re = re_obj.get("spo", [])
+        return [{"input": variables.get("input"), "spo": str(i)} for i in re]
 
     def _render(self, spg_type: BaseSpgType, property_names: List[str]):
         spos = []
@@ -106,3 +101,6 @@ input:${input}
         schema_text = ','.join(spos)
         self.template = self.template.replace("${schema}", schema_text)
 
+    @classmethod
+    def by_template(cls, **kwargs):
+        return cls(spg_type_name="", property_names=[], custom_prompt=None, **kwargs)

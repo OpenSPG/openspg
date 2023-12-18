@@ -14,8 +14,8 @@ import copy
 import re
 from enum import Enum
 
-from knext.core.schema import Schema
-from knext.core.schema.model import (
+from knext.client.schema import SchemaClient
+from knext.client.model.spg_type import (
     EntityType,
     ConceptType,
     EventType,
@@ -96,7 +96,7 @@ class SPGSchemaMarkLang:
     def __init__(self, filename):
         self.schema_file = filename
         self.current_line_num = 0
-        schema = Schema()
+        schema = SchemaClient()
         thing = schema.query_spg_type("Thing")
         for prop in thing.properties:
             self.entity_internal_property.add(prop)
@@ -839,7 +839,7 @@ class SPGSchemaMarkLang:
         """
         Get the schema diff and then sync to graph storage
         """
-        schema = Schema()
+        schema = SchemaClient()
         session = schema.create_session()
 
         # generate the delete list of spg type
@@ -1072,7 +1072,7 @@ class SPGSchemaMarkLang:
         You can import the exported class in your code to obtain the code prompt in IDE
         """
 
-        schema = Schema()
+        schema = SchemaClient()
         session = schema.create_session()
         assert len(self.namespace) > 0, "Schema is invalid"
 
