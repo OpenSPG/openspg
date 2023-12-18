@@ -21,12 +21,14 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
+import com.antgroup.openspg.server.core.scheduler.service.config.SchedulerConfig;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.TaskExecute;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecute;
 import com.antgroup.openspg.server.core.scheduler.service.translate.TranslatorFactory;
+import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +50,7 @@ public class SchedulerCommonService {
   @Autowired SchedulerJobService schedulerJobService;
   @Autowired SchedulerInstanceService schedulerInstanceService;
   @Autowired SchedulerTaskService schedulerTaskService;
-  @Autowired SchedulerConfig schedulerValue;
+  @Autowired SchedulerConfig schedulerConfig;
 
   /** set Instance To Finish */
   public void setInstanceFinish(

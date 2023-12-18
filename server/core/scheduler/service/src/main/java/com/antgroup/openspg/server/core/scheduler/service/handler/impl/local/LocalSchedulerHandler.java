@@ -12,7 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.handler.impl.local;
 
-import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerConfig;
+import com.antgroup.openspg.server.core.scheduler.service.config.SchedulerConfig;
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecuteService;
 import com.antgroup.openspg.server.core.scheduler.service.handler.SchedulerHandler;
 import java.util.concurrent.ScheduledExecutorService;
@@ -34,37 +34,37 @@ public class LocalSchedulerHandler implements SchedulerHandler {
   private static ScheduledExecutorService EXECUTE = new ScheduledThreadPoolExecutor(corePoolSize);
   private static ScheduledExecutorService GENERATE = new ScheduledThreadPoolExecutor(corePoolSize);
 
-  @Autowired SchedulerConfig schedulerValue;
+  @Autowired SchedulerConfig schedulerConfig;
   @Autowired SchedulerExecuteService schedulerExecuteService;
 
   @Override
   @PostConstruct
   public void executeInstances() {
-    if (!HANDLER_TYPE.equalsIgnoreCase(schedulerValue.getHandlerType())) {
-      log.warn("ignore execute handlerType:{}", schedulerValue.getHandlerType());
+    if (!HANDLER_TYPE.equalsIgnoreCase(schedulerConfig.getHandlerType())) {
+      log.warn("ignore execute handlerType:{}", schedulerConfig.getHandlerType());
       return;
     }
     log.info("start executeInstances");
     EXECUTE.scheduleAtFixedRate(
         new ExecuteRunnable(),
         initialDelay,
-        schedulerValue.getExecuteInstancesPeriod(),
-        schedulerValue.getExecuteInstancesUnit());
+        schedulerConfig.getExecuteInstancesPeriod(),
+        schedulerConfig.getExecuteInstancesUnit());
   }
 
   @Override
   @PostConstruct
   public void generateInstances() {
-    if (!HANDLER_TYPE.equalsIgnoreCase(schedulerValue.getHandlerType())) {
-      log.warn("ignore generate handlerType:{}", schedulerValue.getHandlerType());
+    if (!HANDLER_TYPE.equalsIgnoreCase(schedulerConfig.getHandlerType())) {
+      log.warn("ignore generate handlerType:{}", schedulerConfig.getHandlerType());
       return;
     }
     log.info("start generateInstances");
     GENERATE.scheduleAtFixedRate(
         new GenerateRunnable(),
         initialDelay,
-        schedulerValue.getGenerateInstancesPeriod(),
-        schedulerValue.getGenerateInstancesUnit());
+        schedulerConfig.getGenerateInstancesPeriod(),
+        schedulerConfig.getGenerateInstancesUnit());
   }
 
   /** Execute Instances Runnable */

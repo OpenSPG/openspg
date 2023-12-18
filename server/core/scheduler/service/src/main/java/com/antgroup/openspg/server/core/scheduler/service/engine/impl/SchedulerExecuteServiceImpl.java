@@ -22,7 +22,7 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
-import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerConfig;
+import com.antgroup.openspg.server.core.scheduler.service.config.SchedulerConfig;
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecuteService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
@@ -55,7 +55,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
   private ConcurrentHashMap<String, ThreadPoolExecutor> instances = new ConcurrentHashMap<>();
   private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(10);
 
-  @Autowired SchedulerConfig schedulerValue;
+  @Autowired SchedulerConfig schedulerConfig;
   @Autowired SchedulerJobService schedulerJobService;
   @Autowired SchedulerInstanceService schedulerInstanceService;
   @Autowired SchedulerTaskService schedulerTaskService;
@@ -219,7 +219,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
   /** get all not finish instances */
   private List<SchedulerInstance> getAllNotFinishInstances() {
     SchedulerInstance record = new SchedulerInstance();
-    Integer maxDays = schedulerValue.getExecuteMaxDay() + 1;
+    Integer maxDays = schedulerConfig.getExecuteMaxDay() + 1;
     Date startDate = DateUtils.addDays(new Date(), -maxDays);
     record.setStartCreateTime(startDate);
     List<SchedulerInstance> allInstance = schedulerInstanceService.getNotFinishInstance(record);

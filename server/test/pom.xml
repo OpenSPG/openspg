@@ -23,10 +23,6 @@
   <artifactId>test</artifactId>
   <dependencies>
     <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>arks-sofaboot</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
     </dependency>
@@ -55,6 +51,18 @@
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>core-scheduler-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>infra-dao</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
     </dependency>
   </dependencies>
 </project>

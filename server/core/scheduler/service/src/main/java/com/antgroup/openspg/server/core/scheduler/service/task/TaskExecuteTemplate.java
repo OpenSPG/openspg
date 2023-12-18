@@ -21,8 +21,8 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
-import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerUtils;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
+import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 /** JobTask Template class. execute before,process,finally and other functions */
 @Slf4j
@@ -145,7 +144,6 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   }
 
   /** set task to finished */
-  @Transactional(rollbackFor = {Exception.class})
   public void setTaskFinish(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();

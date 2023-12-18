@@ -15,7 +15,7 @@
  * Ant Group
  * Copyright (c) 2004-2022 All Rights Reserved.
  */
-package com.antgroup.openspg.server.core.scheduler.service.common;
+package com.antgroup.openspg.server.core.scheduler.service.config;
 
 import com.antgroup.openspg.common.util.StringUtils;
 import java.util.concurrent.TimeUnit;

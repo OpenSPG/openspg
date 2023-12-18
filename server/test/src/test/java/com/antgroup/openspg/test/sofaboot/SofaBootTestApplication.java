@@ -18,13 +18,19 @@ import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-/*@Configuration
+@Configuration
 @SpringBootApplication
 @ComponentScan(basePackages = "com.antgroup.openspg")
 @ImportResource({"classpath*:spring/*.xml"})
 @PropertySource(value = "classpath:config/application.properties")
-@EnableScheduling*/
+@EnableScheduling
 public class SofaBootTestApplication {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SofaBootTestApplication.class);

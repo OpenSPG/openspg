@@ -20,10 +20,10 @@ import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStat
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
-import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerConfig;
-import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerUtils;
+import com.antgroup.openspg.server.core.scheduler.service.config.SchedulerConfig;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
 import com.antgroup.openspg.server.core.scheduler.service.task.sync.SyncTaskExecuteTemplate;
+import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class LocalExampleSyncTaskMock extends SyncTaskExecuteTemplate {
   /** scheduler max days */
   private static final long SCHEDULER_MAX_DAYS = 5;
 
-  @Autowired SchedulerConfig schedulerValue;
+  @Autowired SchedulerConfig schedulerConfig;
   @Autowired SchedulerInstanceService schedulerInstanceService;
 
   @Override
@@ -60,7 +60,7 @@ public class LocalExampleSyncTaskMock extends SyncTaskExecuteTemplate {
     long days =
         TimeUnit.MILLISECONDS.toDays(
             System.currentTimeMillis() - instance.getGmtCreate().getTime());
-    Integer lastDays = schedulerValue.getExecuteMaxDay();
+    Integer lastDays = schedulerConfig.getExecuteMaxDay();
     if (days > SCHEDULER_MAX_DAYS) {
       context.addTraceLog(
           "The pre-check has not passed for more than %s days. It will not be scheduled after more than %s days",
