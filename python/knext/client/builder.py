@@ -97,6 +97,7 @@ class BuilderClient(Client):
                     "--alterOperation", kwargs.get("alter_operation", AlterOperationEnum.Upsert),
                     "--logFile", log_file_name
                     ]
+        print(' '.join(java_cmd))
         subprocess.call(java_cmd)
 
     def query(self, job_inst_id: int):
