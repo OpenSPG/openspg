@@ -1,0 +1,32 @@
+namespace Medical1
+
+Symptom(症状): EntityType
+
+Drug(药品): EntityType
+
+Indicator(医学指征): EntityType
+
+BodyPart(人体部位): ConceptType
+    hypernymPredicate: isA
+
+HospitalDepartment(医院科室): ConceptType
+    hypernymPredicate: isA
+
+Disease(疾病): EntityType
+    properties:
+        complication(并发症): Disease
+            constraint: MultiValue
+        commonSymptom(常见症状): Symptom
+            constraint: MultiValue
+        applicableDrug(适用药品): Drug
+            constraint: MultiValue
+        department(就诊科室): HospitalDepartment
+            constraint: MultiValue
+        diseaseSite(发病部位): BodyPart
+            constraint: MultiValue
+    relations:
+        abnormal(异常指征): Indicator
+            properties:
+                range(指标范围): Text
+                color(颜色): Text
+                shape(性状): Text
