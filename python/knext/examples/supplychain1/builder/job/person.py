@@ -9,25 +9,30 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
+
+from knext.api.component import (
+    CsvSourceReader,
+    KGSinkWriter,
+    SPGTypeMapping,
+)
 from knext.client.model.builder_job import BuilderJob
-from knext.component.builder import CsvSourceReader, SPGTypeMapping, KGSinkWriter
-from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
+from knext.examples.supplychain.schema.supplychain_schema_helper import SupplyChain
 
 
-class App(BuilderJob):
+class Person(BuilderJob):
     def build(self):
         source = CsvSourceReader(
-            local_path="./builder/job/data/App.csv",
-            columns=["id", "riskMark", "useCert"],
+            local_path="./builder/job/data/Person.csv",
+            columns=["id", "name", "age", "legalRep"],
             start_row=2,
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.App.__typename__)
-            .add_field("id", RiskMining.App.id)
-            .add_field("id", RiskMining.App.name)
-            .add_field("riskMark", RiskMining.App.riskMark)
-            .add_field("useCert", RiskMining.App.useCert)
+            SPGTypeMapping(spg_type_name=SupplyChain.Person.__typename__)
+            .add_field("id", SupplyChain.Person.id)
+            .add_field("name", SupplyChain.Person.name)
+            .add_field("age", SupplyChain.Person.age)
+            .add_field("legalRep", SupplyChain.Person.legalRepresentative)
         )
 
         sink = KGSinkWriter()

@@ -16,7 +16,7 @@ from knext.api.component import (
     KGSinkWriter,
     SPGTypeMapping,
 )
-from schema.riskmining_schema_helper import RiskMining
+from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
 
 
 class Device(BuilderJob):
@@ -28,7 +28,7 @@ class Device(BuilderJob):
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.Device)
+            SPGTypeMapping(spg_type_name=RiskMining.Device.__typename__)
             .add_field("id", RiskMining.Device.id)
             .add_field("umid", RiskMining.Device.umid)
             .add_field("umid", RiskMining.Device.name)

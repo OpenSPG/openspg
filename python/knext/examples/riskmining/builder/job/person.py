@@ -15,9 +15,9 @@ from knext.api.component import SPGTypeMapping
 from knext.api.component import (
     CsvSourceReader,
     KGSinkWriter,
-    RelationMappingComponent,
+    RelationMapping
 )
-from schema.riskmining_schema_helper import RiskMining
+from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
 
 
 class Person(BuilderJob):
@@ -29,7 +29,7 @@ class Person(BuilderJob):
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.Person)
+            SPGTypeMapping(spg_type_name=RiskMining.Person.__typename__)
             .add_field("id", RiskMining.Person.id)
             .add_field("name", RiskMining.Person.name)
             .add_field("age", RiskMining.Person.age)
@@ -50,10 +50,10 @@ class PersonFundTrans(BuilderJob):
         )
 
         mapping = (
-            RelationMappingComponent(
-                subject_name=RiskMining.Person,
+            RelationMapping(
+                subject_name=RiskMining.Person.__typename__,
                 predicate_name="fundTrans",
-                object_name=RiskMining.Person,
+                object_name=RiskMining.Person.__typename__,
             )
             .add_field("src", "srcId")
             .add_field("dst", "dstId")
@@ -75,10 +75,10 @@ class PersonHasDevice(BuilderJob):
         )
 
         mapping = (
-            RelationMappingComponent(
-                subject_name=RiskMining.Person,
+            RelationMapping(
+                subject_name=RiskMining.Person.__typename__,
                 predicate_name="hasDevice",
-                object_name=RiskMining.Device,
+                object_name=RiskMining.Device.__typename__,
             )
             .add_field("src", "srcId")
             .add_field("dst", "dstId")
@@ -98,10 +98,10 @@ class PersonHoldShare(BuilderJob):
         )
 
         mapping = (
-            RelationMappingComponent(
-                subject_name=RiskMining.Person,
+            RelationMapping(
+                subject_name=RiskMining.Person.__typename__,
                 predicate_name="holdShare",
-                object_name=RiskMining.Company,
+                object_name=RiskMining.Company.__typename__,
             )
             .add_field("src", "srcId")
             .add_field("dst", "dstId")

@@ -16,21 +16,26 @@ from knext.api.component import (
     KGSinkWriter,
     SPGTypeMapping,
 )
-from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
+from knext.examples.supplychain.schema.supplychain_schema_helper import SupplyChain
 
 
-class TaxOfRiskApp(BuilderJob):
+class ProductChainEvent(BuilderJob):
+    lead_to = True
+
     def build(self):
         source = CsvSourceReader(
-            local_path="./builder/job/data/TaxOfRiskApp.csv",
-            columns=["id"],
+            local_path="./builder/job/data/ProductChainEvent.csv",
+            columns=["id", "name", "subject", "index", "trend"],
             start_row=2,
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.TaxOfRiskApp.__typename__)
-            .add_field("id", RiskMining.TaxOfRiskApp.id)
-            .add_field("id", RiskMining.TaxOfRiskApp.name)
+            SPGTypeMapping(spg_type_name=SupplyChain.ProductChainEvent.__typename__)
+            .add_field("id", SupplyChain.ProductChainEvent.id)
+            .add_field("name", SupplyChain.ProductChainEvent.name)
+            .add_field("subject", SupplyChain.ProductChainEvent.subject)
+            .add_field("index", SupplyChain.ProductChainEvent.index)
+            .add_field("trend", SupplyChain.ProductChainEvent.trend)
         )
 
         sink = KGSinkWriter()

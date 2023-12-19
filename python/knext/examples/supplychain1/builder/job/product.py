@@ -11,28 +11,28 @@
 # or implied.
 
 from knext.client.model.builder_job import BuilderJob
-from knext.api.component import SPGTypeMapping
 from knext.api.component import (
     CsvSourceReader,
     KGSinkWriter,
+    SPGTypeMapping,
 )
-from knext.component.builder import RelationMapping
-from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
+from knext.examples.supplychain.schema.supplychain_schema_helper import SupplyChain
 
 
-class Company(BuilderJob):
+class Product(BuilderJob):
+    parallelism = 6
+
     def build(self):
         source = CsvSourceReader(
-            local_path="./builder/job/data/Company.csv",
-            columns=["id", "name", "phone"],
+            local_path="./builder/job/data/Product.csv",
+            columns=["fullname", "belongToIndustry", "hasSupplyChain"],
             start_row=2,
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.Company.__typename__)
-            .add_field("id", RiskMining.Company.id)
-            .add_field("name", RiskMining.Company.name)
-            .add_field("phone", RiskMining.Company.hasPhone)
+            SPGTypeMapping(spg_type_name=SupplyChain.Product.__typename__)
+            .add_field("fullname", SupplyChain.Product.id)
+            .add_field("belongToIndustry", SupplyChain.Product.belongToIndustry)
         )
 
         sink = KGSinkWriter()
@@ -40,22 +40,20 @@ class Company(BuilderJob):
         return source >> mapping >> sink
 
 
-class CompanyHasCert(BuilderJob):
+class ProductHasSupplyChain(BuilderJob):
+    parallelism = 6
+
     def build(self):
         source = CsvSourceReader(
-            local_path="./builder/job/data/Company_hasCert_Cert.csv",
-            columns=["src", "dst"],
+            local_path="./builder/job/data/Product.csv",
+            columns=["fullname", "belongToIndustry", "hasSupplyChain"],
             start_row=2,
         )
 
         mapping = (
-            RelationMapping(
-                subject_name=RiskMining.Company.__typename__,
-                predicate_name="hasCert",
-                object_name=RiskMining.Cert.__typename__,
-            )
-            .add_field("src", "srcId")
-            .add_field("dst", "dstId")
+            SPGTypeMapping(spg_type_name="SupplyChain.Product")
+            .add_field("fullname", "id")
+            .add_field("hasSupplyChain", "hasSupplyChain")
         )
 
         sink = KGSinkWriter()

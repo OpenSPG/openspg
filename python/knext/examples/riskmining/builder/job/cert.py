@@ -11,12 +11,8 @@
 # or implied.
 
 from knext.client.model.builder_job import BuilderJob
-from knext.api.component import (
-    CsvSourceReader,
-    KGSinkWriter,
-    SPGTypeMapping,
-)
-from schema.riskmining_schema_helper import RiskMining
+from knext.component.builder import CsvSourceReader, SPGTypeMapping, KGSinkWriter
+from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
 
 
 class Cert(BuilderJob):
@@ -28,7 +24,7 @@ class Cert(BuilderJob):
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.Cert)
+            SPGTypeMapping(spg_type_name=RiskMining.Cert.__typename__)
             .add_field("certNum", RiskMining.Cert.id)
             .add_field("certNum", RiskMining.Cert.certNum)
             .add_field("certNum", RiskMining.Cert.name)

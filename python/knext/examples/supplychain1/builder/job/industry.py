@@ -9,25 +9,28 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
+
+from knext.api.component import (
+    CsvSourceReader,
+    KGSinkWriter,
+    SPGTypeMapping,
+)
 from knext.client.model.builder_job import BuilderJob
-from knext.component.builder import CsvSourceReader, SPGTypeMapping, KGSinkWriter
-from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
+from knext.examples.supplychain.schema.supplychain_schema_helper import SupplyChain
 
 
-class App(BuilderJob):
+class Industry(BuilderJob):
+    parallelism = 10
+
     def build(self):
         source = CsvSourceReader(
-            local_path="./builder/job/data/App.csv",
-            columns=["id", "riskMark", "useCert"],
+            local_path="./builder/job/data/Industry.csv",
+            columns=["fullname"],
             start_row=2,
         )
 
-        mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.App.__typename__)
-            .add_field("id", RiskMining.App.id)
-            .add_field("id", RiskMining.App.name)
-            .add_field("riskMark", RiskMining.App.riskMark)
-            .add_field("useCert", RiskMining.App.useCert)
+        mapping = SPGTypeMapping(spg_type_name=SupplyChain.Industry.__typename__).add_field(
+            "fullname", SupplyChain.Industry.id
         )
 
         sink = KGSinkWriter()

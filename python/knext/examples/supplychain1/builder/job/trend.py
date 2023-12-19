@@ -11,23 +11,24 @@
 # or implied.
 
 from knext.client.model.builder_job import BuilderJob
-from knext.component.builder import CsvSourceReader, SPGTypeMapping, KGSinkWriter
-from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
+from knext.api.component import (
+    CsvSourceReader,
+    KGSinkWriter,
+    SPGTypeMapping,
+)
+from knext.examples.supplychain.schema.supplychain_schema_helper import SupplyChain
 
 
-class Cert(BuilderJob):
+class Trend(BuilderJob):
     def build(self):
         source = CsvSourceReader(
-            local_path="./builder/job/data/Cert.csv",
-            columns=["id", "certNum"],
-            start_row=2,
+            local_path="./builder/job/data/Trend.csv", columns=["id"], start_row=2
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.Cert.__typename__)
-            .add_field("certNum", RiskMining.Cert.id)
-            .add_field("certNum", RiskMining.Cert.certNum)
-            .add_field("certNum", RiskMining.Cert.name)
+            SPGTypeMapping(spg_type_name=SupplyChain.Trend.__typename__)
+            .add_field("id", SupplyChain.Trend.id)
+            .add_field("id", SupplyChain.Trend.name)
         )
 
         sink = KGSinkWriter()
