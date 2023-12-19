@@ -5,4 +5,6 @@ import spock.lang.Specification
 class VertexRecordConvertorTest extends Specification {
 
 
+
+
 }
