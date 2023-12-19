@@ -32,6 +32,7 @@
     <module>lube-physical</module>
     <module>warehouse/warehouse-common</module>
     <module>kgdsl-parser</module>
+    <module>runner/runner-common</module>
     <module>catalog/openspg-catalog</module>
   </modules>
 
@@ -85,6 +86,16 @@
       <dependency>
         <groupId>com.antgroup.openspg.reasoner</groupId>
         <artifactId>reasoner-kgdsl-parser</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-warehouse-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-runner-common</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -252,6 +263,12 @@
         <artifactId>odps-sdk-commons</artifactId>
         <version>${odps.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>3.8.0</version>
+        <scope>provided</scope>
+      </dependency>
 
       <!-- parquet start -->
       <dependency>
@@ -302,93 +319,6 @@
         </exclusions>
       </dependency>
       <!-- hive end -->
-
-      <!-- cloud sdk-->
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>cloud-sdk-common</artifactId>
-        <version>1.2.1.20221206</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>logservice-cloud-sdk</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>logservice-cloud-driver-sls</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>logservice-cloud-driver-kafka</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
-      </dependency>
-      <!-- objectstorage sdk层依赖，定义接口和模型 -->
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>object-storage-cloud-sdk</artifactId>
-        <version>2.0.0.20221213-SNAPSHOT</version>
-      </dependency>
-      <!-- objectstorage oss driver层依赖，接口实现 -->
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>object-storage-cloud-driver-oss</artifactId>
-        <version>2.0.0.20221115-SNAPSHOT</version>
-      </dependency>
-      <!-- objectstorage minio driver层依赖，接口实现 -->
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>object-storage-cloud-driver-minio</artifactId>
-        <version>2.0.0.20221115-SNAPSHOT</version>
-      </dependency>
-      <!-- objectstorage s3 driver层依赖，接口实现 -->
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>object-storage-cloud-driver-s3</artifactId>
-        <version>2.0.0.20221213-SNAPSHOT</version>
-        <exclusions>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport-classes-epoll</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-common</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http2</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <!-- cloud sdk end-->
 
       <dependency>
         <groupId>com.opencsv</groupId>
