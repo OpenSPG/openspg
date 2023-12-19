@@ -71,7 +71,7 @@ public class PythonOperatorFactory implements OperatorFactory {
     if (operatorObjects.containsKey(config)) {
       return;
     }
-    String pythonOperatorObject = config.getUniqueKey();
+    String pythonOperatorObject = config.getClassName() + "_" + config.getUniqueKey();
     pythonInterpreter.exec(
         String.format("from %s import %s", config.getModulePath(), config.getClassName()));
     pythonInterpreter.exec(
