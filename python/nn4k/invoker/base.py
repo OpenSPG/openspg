@@ -73,12 +73,19 @@ class LLMInvoker(NNInvoker):
         pass
 
     def local_inference(self, data, **kwargs):
-        self._nn_executor.inference(data, **kwargs)
+        return self._nn_executor.inference(data, **kwargs)
 
     def init_local_model(self):
         name = self._nn_config.get("nn_name")
         version = self._nn_config.get("nn_version")
         self._nn_executor: LLMExecutor = self.hub.get_model_executor(name, version)
+
+    def _publish_executors(self):
+        from nn4k.executor.hugging_face import HfLLMExecutor
+
+        if "nn_name" in self._nn_config:
+            executor = HfLLMExecutor.from_config(self._nn_config)
+            self.hub.publish(executor, executor._nn_name, executor._nn_version)
 
     @classmethod
     def from_config(cls, nn_config: Union[str, dict]):
@@ -89,6 +96,7 @@ class LLMInvoker(NNInvoker):
 
             o = cls.__new__(cls)
             o._nn_config = nn_config
+            o._publish_executors()
             return o
         elif nn_config.get("invoker_type", "LLM") == "OpenAI":
             from nn4k.invoker.openai_invoker import OpenAIInvoker
