@@ -520,12 +520,12 @@
               <sortProperties>true</sortProperties>
             </sortPom>
           </pom>
-          <python>
-            <includes>
-              <include>**/*.py</include>
-            </includes>
-            <black/>
-          </python>
+          <!--          <python>-->
+          <!--            <includes>-->
+          <!--              <include>**/*.py</include>-->
+          <!--            </includes>-->
+          <!--            <black/>-->
+          <!--          </python>-->
           <yaml>
             <includes>
               <include>**/*.yaml</include>
