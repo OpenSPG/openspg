@@ -2,8 +2,8 @@ package com.antgroup.openspg.builder.core.property;
 
 import com.antgroup.openspg.builder.core.property.impl.PropertyIdEqualsNormalizer;
 import com.antgroup.openspg.builder.core.property.impl.PropertyOperatorNormalizer;
-import com.antgroup.openspg.builder.model.pipeline.config.OperatorPropertyNormalizerConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.BasePropertyNormalizerConfig;
+import com.antgroup.openspg.builder.model.pipeline.config.OperatorPropertyNormalizerConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.PropertyNormalizerTypeEnum;
 
 public class PropertyNormalizerFactory {
