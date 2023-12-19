@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright 2023 Ant Group CO., Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -10,8 +9,6 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-# Copyright (c) Antfin, Inc. All rights reserved.
-import json
 import os
 from abc import ABC
 from typing import Union
@@ -85,13 +82,9 @@ class LLMInvoker(NNInvoker):
 
     @classmethod
     def from_config(cls, nn_config: Union[str, dict]):
-        try:
-            if isinstance(nn_config, str):
-                with open(nn_config, "r") as f:
-                    nn_config = json.load(f)
-        except:
-            raise ValueError("cannot decode config file")
+        from nn4k.utils.config_parsing import preprocess_config
 
+        nn_config = preprocess_config(nn_config)
         if nn_config.get("invoker_type", "LLM") == "LLM":
 
             o = cls.__new__(cls)
