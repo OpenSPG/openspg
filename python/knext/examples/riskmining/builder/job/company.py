@@ -15,9 +15,9 @@ from knext.api.component import SPGTypeMapping
 from knext.api.component import (
     CsvSourceReader,
     KGSinkWriter,
-    RelationMappingComponent,
 )
-from schema.riskmining_schema_helper import RiskMining
+from knext.component.builder import RelationMapping
+from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
 
 
 class Company(BuilderJob):
@@ -29,7 +29,7 @@ class Company(BuilderJob):
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.Company)
+            SPGTypeMapping(spg_type_name=RiskMining.Company.__typename__)
             .add_field("id", RiskMining.Company.id)
             .add_field("name", RiskMining.Company.name)
             .add_field("phone", RiskMining.Company.hasPhone)
@@ -49,10 +49,10 @@ class CompanyHasCert(BuilderJob):
         )
 
         mapping = (
-            RelationMappingComponent(
-                subject_name=RiskMining.Company,
+            RelationMapping(
+                subject_name=RiskMining.Company.__typename__,
                 predicate_name="hasCert",
-                object_name=RiskMining.Cert,
+                object_name=RiskMining.Cert.__typename__,
             )
             .add_field("src", "srcId")
             .add_field("dst", "dstId")

@@ -16,7 +16,7 @@ from knext.api.component import (
     KGSinkWriter,
     SPGTypeMapping,
 )
-from schema.riskmining_schema_helper import RiskMining
+from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
 
 
 class TaxOfRiskApp(BuilderJob):
@@ -28,7 +28,7 @@ class TaxOfRiskApp(BuilderJob):
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.TaxOfRiskApp)
+            SPGTypeMapping(spg_type_name=RiskMining.TaxOfRiskApp.__typename__)
             .add_field("id", RiskMining.TaxOfRiskApp.id)
             .add_field("id", RiskMining.TaxOfRiskApp.name)
         )
