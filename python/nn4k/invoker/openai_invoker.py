@@ -20,9 +20,7 @@ class OpenAIInvoker(NNInvoker):
         from nn4k.utils.config_parsing import get_string_field
         from nn4k.utils.config_parsing import get_positive_int_field
 
-        openai_api_key = get_string_field(
-            nn_config, "openai_api_key", "openai api key"
-        )
+        openai_api_key = get_string_field(nn_config, "openai_api_key", "openai api key")
         openai_api_base = get_string_field(
             nn_config, "openai_api_base", "openai api base"
         )

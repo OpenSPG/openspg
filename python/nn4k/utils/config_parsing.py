@@ -24,12 +24,14 @@ def preprocess_config(nn_config: Union[str, dict]) -> dict:
         raise ValueError("cannot decode config file")
     return nn_config
 
+
 def get_field(nn_config: dict, name: str, text: str) -> Any:
     value = nn_config.get(name)
     if value is None:
         message = "%s %r not found" % (text, name)
         raise ValueError(message)
     return value
+
 
 def get_string_field(nn_config: dict, name: str, text: str) -> str:
     value = get_field(nn_config, name, text)
@@ -39,6 +41,7 @@ def get_string_field(nn_config: dict, name: str, text: str) -> str:
         raise TypeError(message)
     return value
 
+
 def get_int_field(nn_config: dict, name: str, text: str) -> int:
     value = get_field(nn_config, name, text)
     if not isinstance(value, int):
@@ -46,6 +49,7 @@ def get_int_field(nn_config: dict, name: str, text: str) -> int:
         message += "%r is invalid" % (value,)
         raise TypeError(message)
     return value
+
 
 def get_positive_int_field(nn_config: dict, name: str, text: str) -> int:
     value = get_int_field(nn_config, name, text)
