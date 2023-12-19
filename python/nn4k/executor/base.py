@@ -68,13 +68,3 @@ class LLMExecutor(NNExecutor):
         The entry point of inference. Usually for local invokers or model services.
         """
         raise NotImplementedError()
-
-
-class HfLLMExecutor(NNExecutor):
-
-    pass
-
-
-class DeepKeExecutor(NNExecutor):
-
-    pass
