@@ -135,7 +135,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     task.setGmtModified(old.getGmtModified());
     task.setExecuteNum(old.getExecuteNum() + 1);
     context.getTraceLog().insert(0, System.getProperty("line.separator"));
-    task.setRemark(SchedulerUtils.setRemarkLimit(old.getRemark(), context.getTraceLog()));
+    task.setTraceLog(SchedulerUtils.setRemarkLimit(old.getTraceLog(), context.getTraceLog()));
     task.setLockTime(null);
 
     if (schedulerTaskService.replace(task) <= 0) {

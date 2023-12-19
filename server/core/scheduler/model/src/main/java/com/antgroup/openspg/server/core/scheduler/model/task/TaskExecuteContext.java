@@ -48,7 +48,7 @@ public class TaskExecuteContext {
   private boolean taskFinish;
 
   public TaskExecuteContext(SchedulerJob job, SchedulerInstance instance, SchedulerTask task) {
-    task.setRemark(null);
+    task.setTraceLog(null);
     this.job = job;
     this.instance = instance;
     this.task = task;

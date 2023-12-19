@@ -65,8 +65,8 @@ public class SchedulerTask extends BaseModel {
   /** estimate Finish Time */
   private Date estimateFinishTime;
 
-  /** remark */
-  private String remark;
+  /** traceLog */
+  private String traceLog;
 
   /** lock Time */
   private Date lockTime;
@@ -107,6 +107,6 @@ public class SchedulerTask extends BaseModel {
     log.append("Create new Task, Waiting preceding node to complete.....");
     log.append(System.getProperty("line.separator"));
 
-    this.remark = log.toString();
+    this.traceLog = log.toString();
   }
 }
