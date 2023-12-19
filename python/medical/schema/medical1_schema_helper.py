@@ -17,8 +17,8 @@ class Medical1:
 		description = "description"
 		id = "id"
 		name = "name"
-		alias = "alias"
 		stdId = "stdId"
+		alias = "alias"
 
 		def __init__(self):
 			pass
@@ -28,11 +28,11 @@ class Medical1:
 		description = "description"
 		id = "id"
 		name = "name"
-		complication = "complication"
-		department = "department"
-		applicableDrug = "applicableDrug"
 		diseaseSite = "diseaseSite"
+		complication = "complication"
+		applicableDrug = "applicableDrug"
 		commonSymptom = "commonSymptom"
+		department = "department"
 
 		def __init__(self):
 			pass
@@ -51,8 +51,8 @@ class Medical1:
 		description = "description"
 		id = "id"
 		name = "name"
-		stdId = "stdId"
 		alias = "alias"
+		stdId = "stdId"
 
 		def __init__(self):
 			pass
