@@ -18,8 +18,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ContextManagement {
+  private static final Logger log = LoggerFactory.getLogger(ContextManagement.class);
 
   private TaskRecord taskRecord = null;
 
