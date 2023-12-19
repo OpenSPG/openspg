@@ -34,7 +34,7 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.builder</groupId>
-      <artifactId>test</artifactId>
+      <artifactId>builder-test</artifactId>
     </dependency>
   </dependencies>
 </project>

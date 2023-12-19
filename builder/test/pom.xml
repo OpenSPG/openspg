@@ -11,5 +11,10 @@
 
   <artifactId>builder-test</artifactId>
 
-
+  <dependencies>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>test</artifactId>
+    </dependency>
+  </dependencies>
 </project>
