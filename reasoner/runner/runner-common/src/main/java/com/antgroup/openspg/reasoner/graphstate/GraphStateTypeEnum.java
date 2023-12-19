@@ -17,8 +17,5 @@ public enum GraphStateTypeEnum {
   /** rocksdb */
   ROCKSDB,
   /** memory */
-  MEMORY,
-
-  /** kgstate */
-  KGSTATE,
+  MEMORY
 }

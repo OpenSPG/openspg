@@ -15,54 +15,54 @@ package com.antgroup.openspg.reasoner.graphstate;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
-import com.antgroup.openspg.reasoner.graphstate.impl.KgStateSourceGraphState;
+import com.antgroup.openspg.reasoner.graphstate.impl.GraphStoreGraphState;
 import com.antgroup.openspg.reasoner.warehouse.common.AbstractGraphLoader;
 import java.util.HashSet;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class KgstateGraphStateTest {
+public class GraphStoreGraphStateTest {
   @Test
   public void testReadVertex() {
-    KgStateSourceGraphState kgStateSourceGraphState = new KgStateSourceGraphState();
+    GraphStoreGraphState graphStoreGraphState = new GraphStoreGraphState();
     AbstractGraphLoader abstractGraphLoader = new MockGraphLoader(null);
-    kgStateSourceGraphState.setKgStateGraphQuery(abstractGraphLoader);
+    graphStoreGraphState.setGraphStoreQuery(abstractGraphLoader);
     IVertex<IVertexId, IProperty> v =
-        kgStateSourceGraphState.getVertex(IVertexId.from("abc", "Test"), null);
+        graphStoreGraphState.getVertex(IVertexId.from("abc", "Test"), null);
     Assert.assertTrue(v != null);
 
     IVertex<IVertexId, IProperty> v1 =
-        kgStateSourceGraphState.getVertex(IVertexId.from("abc2", "Test"), null);
+        graphStoreGraphState.getVertex(IVertexId.from("abc2", "Test"), null);
     Assert.assertTrue(v1 == null);
   }
 
   @Test
   public void testException() {
-    KgStateSourceGraphState kgStateSourceGraphState = new KgStateSourceGraphState();
+    GraphStoreGraphState graphStoreGraphState = new GraphStoreGraphState();
 
     try {
-      kgStateSourceGraphState.getVertexIterator(new HashSet<>());
+      graphStoreGraphState.getVertexIterator(new HashSet<>());
       Assert.fail();
     } catch (Exception e) {
       Assert.assertTrue(true);
     }
 
     try {
-      kgStateSourceGraphState.getVertexIterator(vertex1 -> vertex1.getId().equals("abc"));
+      graphStoreGraphState.getVertexIterator(vertex1 -> vertex1.getId().equals("abc"));
       Assert.fail();
     } catch (Exception e) {
       Assert.assertTrue(true);
     }
 
     try {
-      kgStateSourceGraphState.getEdgeIterator(new HashSet<>());
+      graphStoreGraphState.getEdgeIterator(new HashSet<>());
       Assert.fail();
     } catch (Exception e) {
       Assert.assertTrue(true);
     }
 
     try {
-      kgStateSourceGraphState.getEdgeIterator(edge1 -> edge1.getSourceId().equals("abc"));
+      graphStoreGraphState.getEdgeIterator(edge1 -> edge1.getSourceId().equals("abc"));
       Assert.fail();
     } catch (Exception e) {
       Assert.assertTrue(true);

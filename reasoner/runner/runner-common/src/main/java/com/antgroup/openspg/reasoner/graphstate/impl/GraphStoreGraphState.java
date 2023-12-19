@@ -27,18 +27,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 
 /**
- * Graph State based on KgState The multi-version vertex is implemented through the multi-version
- * property The multi-version edge is implemented through multiple edges
+ * Graph State based on Graph Store The multi-version vertex is implemented through the
+ * multi-version property The multi-version edge is implemented through multiple edges
  */
 @Slf4j(topic = "userlogger")
-public class KgStateSourceGraphState extends MemGraphState {
-  private AbstractGraphLoader kgStateGraphQuery;
+public class GraphStoreGraphState extends MemGraphState {
+  private AbstractGraphLoader graphStoreQuery;
 
   @Override
   public void init(Map<String, String> param) {}
 
-  public void setKgStateGraphQuery(AbstractGraphLoader kgStateGraphQuery) {
-    this.kgStateGraphQuery = kgStateGraphQuery;
+  public void setGraphStoreQuery(AbstractGraphLoader graphStoreQuery) {
+    this.graphStoreQuery = graphStoreQuery;
   }
 
   @Override
@@ -46,11 +46,11 @@ public class KgStateSourceGraphState extends MemGraphState {
     if (vertexMap.containsKey(id)) {
       return super.getVertex(id, version);
     }
-    log.info("KgStateSourceGraphState begin query " + id.toString());
-    // query from kgstate
-    VertexSubGraph vertexSubGraph = kgStateGraphQuery.queryOneHotGraphState(id);
+    log.info("GraphStoreGraphState begin query " + id.toString());
+    // query from graph store
+    VertexSubGraph vertexSubGraph = graphStoreQuery.queryOneHotGraphState(id);
     if (vertexSubGraph == null) {
-      log.warn("KgStateSourceGraphState query id " + id.toString() + " not found");
+      log.warn("GraphStoreGraphState query id " + id.toString() + " not found");
       vertexMap.put(id, null);
       return null;
     }
@@ -64,23 +64,23 @@ public class KgStateSourceGraphState extends MemGraphState {
 
   @Override
   public Iterator<IVertex<IVertexId, IProperty>> getVertexIterator(Set<String> vertexType) {
-    throw new NotImplementedException("not support getVertexIterator in KgStateSourceGraph");
+    throw new NotImplementedException("not support getVertexIterator in GraphStoreGraphState");
   }
 
   @Override
   public Iterator<IVertex<IVertexId, IProperty>> getVertexIterator(
       Predicate<IVertex<IVertexId, IProperty>> filter) {
-    throw new NotImplementedException("not support getVertexIterator in KgStateSourceGraph");
+    throw new NotImplementedException("not support getVertexIterator in GraphStoreGraphState");
   }
 
   @Override
   public Iterator<IEdge<IVertexId, IProperty>> getEdgeIterator(Set<String> edgeType) {
-    throw new NotImplementedException("not support getEdgeIterator in KgStateSourceGraph");
+    throw new NotImplementedException("not support getEdgeIterator in GraphStoreGraphState");
   }
 
   @Override
   public Iterator<IEdge<IVertexId, IProperty>> getEdgeIterator(
       Predicate<IEdge<IVertexId, IProperty>> filter) {
-    throw new NotImplementedException("not support getEdgeIterator in KgStateSourceGraph");
+    throw new NotImplementedException("not support getEdgeIterator in GraphStoreGraphState");
   }
 }
