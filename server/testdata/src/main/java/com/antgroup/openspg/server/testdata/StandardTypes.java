@@ -1,6 +1,6 @@
-package com.antgroup.openspg.server;
+package com.antgroup.openspg.server.testdata;
 
-import static com.antgroup.openspg.server.TestCommons.THING;
+import static com.antgroup.openspg.server.testdata.TestCommons.THING;
 
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.constraint.RegularConstraint;

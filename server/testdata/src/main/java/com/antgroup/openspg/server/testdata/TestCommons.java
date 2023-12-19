@@ -1,4 +1,4 @@
-package com.antgroup.openspg.server;
+package com.antgroup.openspg.server.testdata;
 
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;

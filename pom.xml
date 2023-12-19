@@ -61,12 +61,12 @@
       <!-- openspg start -->
       <dependency>
         <groupId>com.antgroup.openspg.builder</groupId>
-        <artifactId>builder-test</artifactId>
+        <artifactId>builder-testdata</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
-        <artifactId>test</artifactId>
+        <artifactId>testdata</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

@@ -1,8 +1,8 @@
-package com.antgroup.openspg.server;
+package com.antgroup.openspg.server.testdata;
 
-import static com.antgroup.openspg.server.StandardTypes.CHINA_MOBILE;
-import static com.antgroup.openspg.server.TestCommons.*;
-import static com.antgroup.openspg.server.TestCommons.THING;
+import static com.antgroup.openspg.server.testdata.StandardTypes.CHINA_MOBILE;
+import static com.antgroup.openspg.server.testdata.TestCommons.*;
+import static com.antgroup.openspg.server.testdata.TestCommons.THING;
 
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
@@ -47,7 +47,10 @@ public class RiskMiningSchema {
       new EntityType(
           new BasicInfo<>(newSPGTypeIdentifier("Cert")),
           THING,
-          Lists.newArrayList(newProperty("certNum", "证书编号", TEXT)),
+          Lists.newArrayList(
+              newProperty("id", "id", TEXT),
+              newProperty("name", "name", TEXT),
+              newProperty("certNum", "证书编号", TEXT)),
           Lists.newArrayList(),
           new SPGTypeAdvancedConfig());
 
@@ -56,6 +59,8 @@ public class RiskMiningSchema {
           new BasicInfo<>(newSPGTypeIdentifier("App")),
           THING,
           Lists.newArrayList(
+              newProperty("id", "id", TEXT),
+              newProperty("name", "name", TEXT),
               newProperty("riskMark", "风险标记", TEXT),
               newProperty("useCert", "使用证书", CERT),
               newProperty("belongTo", "属于", TAX_OF_RISK_APP)),
@@ -66,7 +71,10 @@ public class RiskMiningSchema {
       new EntityType(
           new BasicInfo<>(newSPGTypeIdentifier("Company")),
           THING,
-          Lists.newArrayList(newProperty("hasPhone", "电话号码", CHINA_MOBILE)),
+          Lists.newArrayList(
+              newProperty("id", "id", TEXT),
+              newProperty("name", "name", TEXT),
+              newProperty("hasPhone", "电话号码", CHINA_MOBILE)),
           Lists.newArrayList(newRelation("hasCert", "拥有证书", CERT)),
           new SPGTypeAdvancedConfig());
 
@@ -79,7 +87,10 @@ public class RiskMiningSchema {
           new BasicInfo<>(newSPGTypeIdentifier("Device")),
           THING,
           Lists.newArrayList(
-              newProperty("umid", "设备umid", TEXT), newProperty("install", "安装", APP)),
+              newProperty("id", "id", TEXT),
+              newProperty("name", "name", TEXT),
+              newProperty("umid", "设备umid", TEXT),
+              newProperty("install", "安装", APP)),
           Lists.newArrayList(),
           new SPGTypeAdvancedConfig());
 
@@ -88,6 +99,8 @@ public class RiskMiningSchema {
           new BasicInfo<>(newSPGTypeIdentifier("Person")),
           THING,
           Lists.newArrayList(
+              newProperty("id", "id", TEXT),
+              newProperty("name", "name", TEXT),
               newProperty("age", "年龄", LONG),
               newProperty("hasPhone", "电话号码", CHINA_MOBILE),
               newProperty("belongTo", "属于", TAX_OF_RISK_USER)),

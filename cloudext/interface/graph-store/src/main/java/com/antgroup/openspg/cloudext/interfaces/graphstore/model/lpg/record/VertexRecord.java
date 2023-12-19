@@ -14,10 +14,9 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.VertexType;
-import com.antgroup.openspg.server.api.facade.ApiConstants;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +25,7 @@ import lombok.Setter;
  * VertexType} in <tt>LPG</tt>, identified by vertex id <tt>(id)</tt>.
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class VertexRecord extends BaseLPGRecord {
 
   @Setter private String vertexType;
@@ -43,18 +43,5 @@ public class VertexRecord extends BaseLPGRecord {
     Map<String, Object> otherProperties = toPropertyMap();
     otherProperties.put(VertexType.ID, id);
     return otherProperties;
-  }
-
-  public Map<String, Map<Long, Object>> toPropertyMapWithIdAndVersion() {
-    Map<String, Object> otherProperties = toPropertyMapWithId();
-
-    Map<String, Map<Long, Object>> results = new HashMap<>(otherProperties.size());
-    otherProperties.forEach(
-        (key, value) -> {
-          Map<Long, Object> propertyVersion = new HashMap<>(1);
-          propertyVersion.put(ApiConstants.DEFAULT_VERSION, value);
-          results.put(key, propertyVersion);
-        });
-    return results;
   }
 }
