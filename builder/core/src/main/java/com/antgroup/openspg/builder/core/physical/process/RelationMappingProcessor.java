@@ -9,7 +9,7 @@ import com.antgroup.openspg.builder.model.pipeline.config.RelationMappingNodeCon
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BuilderRecord;
 import com.antgroup.openspg.builder.model.record.RelationRecord;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.EdgeRecordConvertor;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.EdgeRecordConvertor;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.identifier.RelationIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;

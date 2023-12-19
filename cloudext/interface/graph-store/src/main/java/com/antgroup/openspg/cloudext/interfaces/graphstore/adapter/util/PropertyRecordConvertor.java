@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor;
+package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util;
 
 import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
 import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
@@ -29,6 +29,7 @@ import org.apache.commons.collections4.MapUtils;
 /** Convertor for {@link LPGPropertyRecord} and {@link SPGPropertyRecord}. */
 public class PropertyRecordConvertor {
 
+  /** Convert the SPG record to an LPG record. */
   public static List<LPGPropertyRecord> toLPGProperties(
       List<? extends BasePropertyRecord> propertyRecords) {
     List<LPGPropertyRecord> resultProperties = new ArrayList<>(propertyRecords.size());
@@ -45,6 +46,7 @@ public class PropertyRecordConvertor {
     return resultProperties;
   }
 
+  /** Convert the LPG record to an SPG record. */
   public static List<SPGPropertyRecord> toSPGProperties(
       Map<String, String> properties, BaseSPGType spgType) {
     if (MapUtils.isEmpty(properties)) {
@@ -64,6 +66,7 @@ public class PropertyRecordConvertor {
     return spgPropertyRecords;
   }
 
+  /** Convert the LPG record to an SPG record. */
   public static List<SPGSubPropertyRecord> toSPGProperties(
       Map<String, String> properties, Property spgProperty) {
     if (!spgProperty.hasSubProperty()) {

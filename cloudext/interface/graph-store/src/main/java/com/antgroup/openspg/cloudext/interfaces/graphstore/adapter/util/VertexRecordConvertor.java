@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor;
+package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util;
 
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.ConceptRecord;
@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
  */
 public class VertexRecordConvertor {
 
+  /** Convert the SPG record to an LPG record. */
   public static VertexRecord toVertexRecord(BaseAdvancedRecord advancedRecord) {
     return new VertexRecord(
         advancedRecord.getId(),
@@ -46,6 +47,10 @@ public class VertexRecordConvertor {
         PropertyRecordConvertor.toLPGProperties(advancedRecord.getProperties()));
   }
 
+  /**
+   * Convert the SPG property record to an LPG record, which is currently used only for standard
+   * types, as a standard type will automatically generate an LPG record based on the property.
+   */
   public static List<VertexRecord> toVertexRecords(SPGPropertyRecord propertyRecord) {
     if (propertyRecord.isBasicType()) {
       throw GraphStoreException.unexpectedSPGPropertyRecordType(propertyRecord);
@@ -57,6 +62,10 @@ public class VertexRecordConvertor {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Convert the LPG record to an SPG record, mainly used in the mapping or reasoning process of
+   * knowledge builder.
+   */
   public static BaseAdvancedRecord toAdvancedRecord(
       BaseSPGType baseSpgType, String bizId, Map<String, String> properties) {
     BaseAdvancedRecord advancedRecord = null;

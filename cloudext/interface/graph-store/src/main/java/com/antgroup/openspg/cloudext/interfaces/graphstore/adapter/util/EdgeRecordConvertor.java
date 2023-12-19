@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor;
+package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util;
 
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.RelationRecord;
@@ -19,7 +19,6 @@ import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
-import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.server.common.model.exception.GraphStoreException;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +28,7 @@ import java.util.stream.Collectors;
 /** Convertor for {@link EdgeRecord} and {@link RelationRecord}. */
 public class EdgeRecordConvertor {
 
+  /** Convert the SPG record to an LPG record. */
   public static EdgeRecord toEdgeRecord(RelationRecord relationRecord) {
     Relation relationType = relationRecord.getRelationType();
     return new EdgeRecord(
@@ -42,19 +42,9 @@ public class EdgeRecordConvertor {
   }
 
   /**
-   * Convert {@link SPGPropertyRecord} in {@link BaseAdvancedRecord} into edge records.
-   * Specifically, {@link BaseAdvancedRecord#getName()}, {@link BaseAdvancedRecord#getId()}, {@link
-   * SPGPropertyRecord#getName()}, {@link SPGTypeRef#getName()} from {@link SPGPropertyRecord}, and
-   * be assigned to start vertex's type name, start vertex's ID, edge label, and end vertex's type
-   * name of {@link EdgeRecord}s. And end vertex's IDs of {@link EdgeRecord}s will be split from
-   * {@link SPGPropertyRecord#getValue()}
-   *
-   * @param advancedRecord advanced record, such as {@link
-   *     com.antgroup.openspg.builder.model.record.EventRecord EventRecord}, {@link
-   *     com.antgroup.openspg.builder.model.record.EntityRecord EntityRecord} and {@link
-   *     com.antgroup.openspg.builder.model.record.ConceptRecord ConceptRecord}.
-   * @param spgPropertyRecord record of <tt>SPG</tt> property.
-   * @return a list of {@link EdgeRecord}s
+   * For an advanced SPG record, when one of its property types is also an advanced type, an edge
+   * will be created between the current instance and the instance corresponding to that property
+   * value.
    */
   public static List<EdgeRecord> toEdgeRecords(
       BaseAdvancedRecord advancedRecord, SPGPropertyRecord spgPropertyRecord) {
@@ -77,6 +67,10 @@ public class EdgeRecordConvertor {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Convert the LPG record to an SPG record, mainly used in the mapping or reasoning process of
+   * knowledge builder.
+   */
   public static RelationRecord toRelationRecord(
       Relation relationType, String srcId, String dstId, Map<String, String> properties) {
     return new RelationRecord(
