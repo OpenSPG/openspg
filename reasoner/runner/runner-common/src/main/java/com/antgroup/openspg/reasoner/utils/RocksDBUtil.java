@@ -18,11 +18,10 @@ import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.type.MapType2IdFactory;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import java.nio.ByteBuffer;
-import lombok.extern.slf4j.Slf4j;
 import scala.Tuple2;
 
-@Slf4j(topic = "userlogger")
 public class RocksDBUtil {
+
   private static final String PLACEHOLDER = "\01";
 
   public static final String VERTEX_FLAG = "V";

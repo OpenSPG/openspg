@@ -30,11 +30,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
-@Slf4j(topic = "userlogger")
 public class IoFactory {
+  private static final Logger log = LoggerFactory.getLogger(IoFactory.class);
 
   private static final Map<AbstractTableInfo, Tuple2<String, Object>> SESSION_MAP = new HashMap<>();
 

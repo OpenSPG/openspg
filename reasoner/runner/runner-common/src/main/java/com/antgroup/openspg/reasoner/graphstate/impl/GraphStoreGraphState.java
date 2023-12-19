@@ -23,15 +23,17 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Graph State based on Graph Store The multi-version vertex is implemented through the
  * multi-version property The multi-version edge is implemented through multiple edges
  */
-@Slf4j(topic = "userlogger")
 public class GraphStoreGraphState extends MemGraphState {
+  private static final Logger log = LoggerFactory.getLogger(GraphStoreGraphState.class);
+
   private AbstractGraphLoader graphStoreQuery;
 
   @Override

@@ -25,11 +25,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
-@Slf4j(topic = "userlogger")
 public class SinkRelationImpl {
+  private static final Logger log = LoggerFactory.getLogger(SinkRelationImpl.class);
   private final GraphState<IVertexId> graphState;
   private final int taskIndex;
 

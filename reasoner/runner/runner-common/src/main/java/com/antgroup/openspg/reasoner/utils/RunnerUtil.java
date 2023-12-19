@@ -86,14 +86,15 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 import scala.collection.JavaConversions;
 
-@Slf4j(topic = "userlogger")
 public class RunnerUtil {
+  private static final Logger log = LoggerFactory.getLogger(RunnerUtil.class);
 
   /** kg id is global id property */
   public static final String KG_REASONER_PROPERTY_GLOBAL_ID = "kgId";

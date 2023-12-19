@@ -27,15 +27,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j(topic = "userlogger")
 public class HiveWriterSession {
+  private static final Logger log = LoggerFactory.getLogger(HiveWriterSession.class);
+
   private final HiveTableInfo hiveTableInfo;
   private Connection connection;
 

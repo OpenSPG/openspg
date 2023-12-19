@@ -21,15 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j(topic = "userlogger")
 public class KgReasonerCsvWriter {
 
   private static final Map<String, CSVWriter> CSV_WRITER_MAP = new ConcurrentHashMap<>();
 
   public static void write(String file, Object[] data) {
-    // log.info("KgReasonerCsvWriter,file=" + file + ",data=" + Arrays.toString(data));
     CSVWriter writer =
         CSV_WRITER_MAP.computeIfAbsent(
             file,

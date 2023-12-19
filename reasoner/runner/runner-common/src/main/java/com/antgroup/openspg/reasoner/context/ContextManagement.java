@@ -17,10 +17,8 @@ import com.antgroup.openspg.reasoner.task.TaskRecord;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
-@Slf4j(topic = "userlogger")
 public class ContextManagement {
 
   private TaskRecord taskRecord = null;

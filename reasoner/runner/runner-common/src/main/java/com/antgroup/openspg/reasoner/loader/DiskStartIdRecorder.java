@@ -28,9 +28,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j(topic = "userlogger")
 public class DiskStartIdRecorder extends MemStartIdRecoder {
 
   private final String id;

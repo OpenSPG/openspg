@@ -15,10 +15,12 @@ package com.antgroup.openspg.reasoner.batching;
 import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j(topic = "userlogger")
 public class DynamicBatchSize {
+  private static final Logger log = LoggerFactory.getLogger(DynamicBatchSize.class);
+
   private final List<Integer> costs = new ArrayList<>();
   private final List<Long> batchSizes = new ArrayList<>();
   private long preBatchTime = 0;

@@ -21,11 +21,12 @@ import com.antgroup.openspg.reasoner.parser.KgDslParser;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.utils.SimpleObjSerde;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j(topic = "userlogger")
 public class CatalogFactory {
+  private static final Logger log = LoggerFactory.getLogger(CatalogFactory.class);
 
   public static Catalog createCatalog(Map<String, Object> params, KgSchemaConnectionInfo connInfo) {
     return createCatalog(new KgDslParser(), params, connInfo);

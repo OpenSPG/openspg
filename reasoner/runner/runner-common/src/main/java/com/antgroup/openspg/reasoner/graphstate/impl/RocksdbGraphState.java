@@ -41,21 +41,23 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.rocksdb.ReadOptions;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
 import org.rocksdb.RocksIterator;
 import org.rocksdb.WriteOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 /**
  * GraphState based on Rocksdb vertex key is V_TYPEID_ID_PLACEHOLDER_WINDOWS, value is vertex
  * property edge key is E_EDGETYPE_DIRECTION_VERTEXID_WINDOW, value is edges
  */
-@Slf4j(topic = "userlogger")
 public class RocksdbGraphState implements GraphState<IVertexId> {
+  private static final Logger log = LoggerFactory.getLogger(RocksdbGraphState.class);
+
   public final transient RocksDB rocksDB;
   private final transient IRocksDBGraphStateHelper helper;
 

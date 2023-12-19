@@ -21,10 +21,12 @@ import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j(topic = "userlogger")
 public abstract class ProgressStatus implements Serializable {
+  private static final Logger log = LoggerFactory.getLogger(ProgressStatus.class);
+
   @Getter @Setter private JobStatus status;
   @Getter @Setter private ProgressInfo progressInfo;
   @Getter private String errMsg;

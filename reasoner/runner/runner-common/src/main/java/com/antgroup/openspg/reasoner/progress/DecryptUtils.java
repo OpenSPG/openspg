@@ -17,10 +17,11 @@ import java.security.Key;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Slf4j(topic = "userlogger")
 public class DecryptUtils implements Serializable {
+  private static final Logger log = LoggerFactory.getLogger(DecryptUtils.class);
 
   private static final String key = "triedthisfunctio";
 

@@ -31,20 +31,14 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.Stack;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
-/**
- * This class implements an iterator that combines edges into a path. taking as input a map of
- * schema and edges.
- *
- * <p>example1: schema is [A -E1-> B, B -E2-> C], edgeMap is {E1:[a1_b1, a1_b2], E2:[b1_c1, b1_c2]}
- * output is {E1:[a1_b1],E2:[b1_c1]}, {E1:[a1_b1],E2:[b1_c2]}
- */
-@Slf4j
 public class EdgeCombinationIterator implements Iterator<KgGraph<IVertexId>> {
+  private static final Logger log = LoggerFactory.getLogger(EdgeCombinationIterator.class);
 
   private final Map<String, Map<IVertexId, IVertex<IVertexId, IProperty>>> alias2VertexMap;
   private final Map<String, Set<IEdge<IVertexId, IProperty>>> alias2EdgeMap;

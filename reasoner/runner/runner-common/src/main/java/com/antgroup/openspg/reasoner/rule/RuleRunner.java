@@ -34,11 +34,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
-@Slf4j(topic = "userlogger")
 public class RuleRunner {
+  private static final Logger log = LoggerFactory.getLogger(RuleRunner.class);
 
   private static Cache<String, Map<String, Object>> contextCache =
       CacheBuilder.newBuilder().maximumSize(100).expireAfterWrite(24, TimeUnit.HOURS).build();
