@@ -31,4 +31,17 @@ public class DateTimeUtils {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(YYYY_MM_DD1);
     return simpleDateFormat.format(new Date());
   }
+
+  /** Date to String by yyyy-MM-dd HH:mm:ss */
+  public static String getDate2LongStr(Date date) {
+    return getDate2Str(YYYY_MM_DD_HH_MM_SS1, date);
+  }
+
+  /** Date to String by format */
+  public static String getDate2Str(String format, Date date) {
+    if (date == null) {
+      return "";
+    }
+    return new SimpleDateFormat(format).format(date);
+  }
 }
