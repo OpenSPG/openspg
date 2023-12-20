@@ -13,10 +13,7 @@
 
 package com.antgroup.openspg.builder.model.pipeline;
 
-import com.antgroup.openspg.builder.model.pipeline.config.BaseMappingNodeConfig;
-import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,15 +31,4 @@ public class Pipeline extends BaseValObj {
 
   /** The list of edge in the pipeline. */
   private final List<Edge> edges;
-
-  public List<BaseSPGIdentifier> schemaUsed() {
-    List<BaseSPGIdentifier> results = new ArrayList<>();
-    for (Node node : nodes) {
-      if (node.getNodeConfig() instanceof BaseMappingNodeConfig) {
-        BaseMappingNodeConfig nodeConfig = (BaseMappingNodeConfig) node.getNodeConfig();
-        results.addAll(nodeConfig.getIdentifiers());
-      }
-    }
-    return results;
-  }
 }

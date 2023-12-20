@@ -120,6 +120,6 @@ public class Property extends BaseSpoTriple
 
   @Override
   public String toString() {
-    return getName();
+    return String.format("%s[%s]", getName(), getObjectTypeRef().getName());
   }
 }

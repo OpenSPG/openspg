@@ -3,6 +3,8 @@ package com.antgroup.openspg.builder.core.reason;
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
 import com.antgroup.openspg.builder.core.reason.impl.CausalConceptReasoner;
 import com.antgroup.openspg.builder.core.reason.impl.InductiveConceptReasoner;
+import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
@@ -29,11 +31,16 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
     }
   }
 
-  private final InductiveConceptReasoner inductiveConceptReasoner;
-  private final CausalConceptReasoner causalConceptReasoner;
+  private InductiveConceptReasoner inductiveConceptReasoner;
+  private CausalConceptReasoner causalConceptReasoner;
 
   public ReasonProcessor() {
     super("", "", null);
+  }
+
+  @Override
+  public void doInit(BuilderContext context) throws BuilderException {
+    super.doInit(context);
     Catalog catalog = buildCatalog();
     GraphState<IVertexId> graphState =
         buildGraphState(context.getCatalog().getGraphStoreConnInfo());
