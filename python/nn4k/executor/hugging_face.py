@@ -76,6 +76,18 @@ class HfLLMExecutor(NNExecutor):
         return self._nn_model
 
     def inference(self, data, **kwargs):
+        if "max_input_length" in kwargs:
+            max_input_length = kwargs.pop("max_input_length")
+        else:
+            max_input_length = 1024
+        if "max_output_length" in kwargs:
+            max_output_length = kwargs.pop("max_output_length")
+        else:
+            max_output_length = 1024
+        if "do_sample" in kwargs:
+            do_sample = kwargs.pop("do_sample")
+        else:
+            do_sample = False
         nn_tokenizer = self._get_tokenizer()
         nn_model = self._get_model()
         input_ids = nn_tokenizer(
@@ -84,14 +96,15 @@ class HfLLMExecutor(NNExecutor):
             return_token_type_ids=False,
             return_tensors="pt",
             truncation=True,
-            max_length=64,
+            max_length=max_input_length,
         ).to(self._nn_device)
         output_ids = nn_model.generate(
             **input_ids,
-            max_new_tokens=1024,
-            do_sample=False,
+            max_new_tokens=max_output_length,
+            do_sample=do_sample,
             eos_token_id=nn_tokenizer.eos_token_id,
-            pad_token_id=nn_tokenizer.pad_token_id
+            pad_token_id=nn_tokenizer.pad_token_id,
+            **kwargs
         )
         outputs = [
             nn_tokenizer.decode(
@@ -99,10 +112,4 @@ class HfLLMExecutor(NNExecutor):
             )
             for idx, output_id in enumerate(output_ids)
         ]
-
-        outputs = [
-            nn_tokenizer.decode(output_id[:], skip_special_tokens=True)
-            for idx, output_id in enumerate(output_ids)
-        ]
-
         return outputs
