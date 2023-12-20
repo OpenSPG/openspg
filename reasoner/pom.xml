@@ -34,6 +34,7 @@
     <module>kgdsl-parser</module>
     <module>runner/runner-common</module>
     <module>catalog/openspg-catalog</module>
+    <module>runner/local-runner</module>
   </modules>
 
   <properties>
@@ -101,6 +102,16 @@
       <dependency>
         <groupId>com.antgroup.openspg.reasoner</groupId>
         <artifactId>reasoner-openspg-catalog</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-warehouse-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-local-runner</artifactId>
         <version>${project.version}</version>
       </dependency>
 
