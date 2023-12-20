@@ -1,10 +1,5 @@
 package com.antgroup.openspg.builder.core.reason;
 
-import com.antgroup.kg.reasoner.catalog.impl.OpenKgCatalog;
-import com.antgroup.kg.reasoner.common.graph.vertex.IVertexId;
-import com.antgroup.kg.reasoner.graphstate.GraphState;
-import com.antgroup.kg.reasoner.graphstate.impl.CloudExtGraphState;
-import com.antgroup.kg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
 import com.antgroup.openspg.builder.core.reason.impl.CausalConceptReasoner;
 import com.antgroup.openspg.builder.core.reason.impl.InductiveConceptReasoner;
@@ -16,6 +11,11 @@ import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
+import com.antgroup.openspg.reasoner.catalog.impl.OpenSPGCatalog;
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.graphstate.GraphState;
+import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
+import com.antgroup.openspg.reasoner.warehouse.cloudext.CloudExtGraphState;
 import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.google.common.collect.Lists;
 import java.util.*;
@@ -85,8 +85,8 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
   }
 
   private Catalog buildCatalog() {
-    OpenKgCatalog catalog =
-        new OpenKgCatalog(context.getProjectId(), null, context.getCatalog().getProjectSchema());
+    Catalog catalog =
+        new OpenSPGCatalog(context.getProjectId(), null, context.getCatalog().getProjectSchema());
     catalog.init();
     return catalog;
   }

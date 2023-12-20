@@ -14,7 +14,7 @@
 package com.antgroup.openspg.server.biz.common.impl;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
-import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.api.facade.SchemaJsonUtils;
 import com.antgroup.openspg.server.api.facade.dto.common.request.SearchEngineIndexRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.response.SearchEngineIndexResponse;
 import com.antgroup.openspg.server.biz.common.SearchEngineManager;
@@ -38,6 +38,6 @@ public class SearchEngineManagerImpl implements SearchEngineManager {
         (SearchEngineConnectionInfo) searchEngineClient.getConnInfo();
     return new SearchEngineIndexResponse()
         .setIndexName(convertedIndexName)
-        .setConnInfo(JSON.serialize(connInfo));
+        .setConnInfo(SchemaJsonUtils.serialize(connInfo));
   }
 }

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.http.server;
 
-import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.api.facade.SchemaJsonUtils;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +28,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
   @Override
   public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
     GsonHttpMessageConverter gsonHttpMessageConverter = new GsonHttpMessageConverter();
-    gsonHttpMessageConverter.setGson(JSON.gson);
+    gsonHttpMessageConverter.setGson(SchemaJsonUtils.gson);
     gsonHttpMessageConverter.setSupportedMediaTypes(
         Collections.singletonList(MediaType.APPLICATION_JSON));
     converters.add(0, gsonHttpMessageConverter);

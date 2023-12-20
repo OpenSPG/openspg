@@ -68,14 +68,6 @@
         <table tableName="kg_sys_lock" domainObjectName="SysLockDO">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
         </table>
-        <table tableName="kg_operator_overview" domainObjectName="OperatorOverviewDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
-        </table>
-        <table tableName="kg_operator_version" domainObjectName="OperatorVersionDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
-        </table>
         <table tableName="kg_ontology_entity" domainObjectName="OntologyDO">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
         </table>
@@ -99,22 +91,6 @@
         </table>
         <table tableName="kg_ontology_release" domainObjectName="ReleaseDO">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
-        </table>
-        <table tableName="kg_spg_job_info" domainObjectName="SPGJobInfoDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
-        </table>
-        <table tableName="kg_spg_job_inst" domainObjectName="SPGJobInstDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
-        </table>
-        <table tableName="kg_schedule_job_info" domainObjectName="JobInfoDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
-        </table>
-        <table tableName="kg_schedule_job_inst" domainObjectName="JobInstDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
         </table>
     </context>
 </generatorConfiguration>

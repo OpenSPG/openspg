@@ -13,11 +13,6 @@
 
 package com.antgroup.openspg.builder.core.reason;
 
-import com.antgroup.kg.reasoner.common.graph.edge.IEdge;
-import com.antgroup.kg.reasoner.common.graph.property.IProperty;
-import com.antgroup.kg.reasoner.common.graph.vertex.IVertex;
-import com.antgroup.kg.reasoner.common.graph.vertex.IVertexId;
-import com.antgroup.kg.reasoner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.builder.core.runtime.BuilderCatalog;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
@@ -35,6 +30,11 @@ import com.antgroup.openspg.core.schema.model.semantic.SystemPredicateEnum;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
+import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
+import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

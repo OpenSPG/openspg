@@ -1,17 +1,17 @@
 package com.antgroup.openspg.builder.core.reason.impl;
 
-import com.antgroup.kg.reasoner.common.graph.vertex.IVertexId;
-import com.antgroup.kg.reasoner.graphstate.GraphState;
-import com.antgroup.kg.reasoner.local.KGReasonerLocalRunner;
-import com.antgroup.kg.reasoner.local.model.LocalReasonerResult;
-import com.antgroup.kg.reasoner.local.model.LocalReasonerTask;
-import com.antgroup.kg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.builder.core.reason.ConceptReasoner;
 import com.antgroup.openspg.builder.core.reason.ReasonerProcessorUtils;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.graphstate.GraphState;
+import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
+import com.antgroup.openspg.reasoner.runner.local.KGReasonerLocalRunner;
+import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
+import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.google.common.collect.Lists;
 import java.util.List;
 import lombok.Setter;

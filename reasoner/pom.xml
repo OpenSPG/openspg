@@ -31,10 +31,11 @@
     <module>lube-logical</module>
     <module>lube-physical</module>
     <module>warehouse/warehouse-common</module>
+    <module>warehouse/cloudext-warehouse</module>
     <module>kgdsl-parser</module>
     <module>runner/runner-common</module>
-    <module>catalog/openspg-catalog</module>
     <module>runner/local-runner</module>
+    <module>catalog/openspg-catalog</module>
   </modules>
 
   <properties>
@@ -91,11 +92,6 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.reasoner</groupId>
-        <artifactId>reasoner-warehouse-common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.reasoner</groupId>
         <artifactId>reasoner-runner-common</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -107,6 +103,11 @@
       <dependency>
         <groupId>com.antgroup.openspg.reasoner</groupId>
         <artifactId>reasoner-warehouse-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-cloudext-warehouse</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

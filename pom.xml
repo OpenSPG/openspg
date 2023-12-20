@@ -70,6 +70,16 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-local-runner</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-cloudext-warehouse</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
         <artifactId>common-model</artifactId>
         <version>${project.version}</version>
@@ -111,27 +121,7 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.cloudext</groupId>
-        <artifactId>cloudext-interface-object-store</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.cloudext</groupId>
-        <artifactId>cloudext-interface-table-store</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.cloudext</groupId>
-        <artifactId>cloudext-impl-object-store-local</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.cloudext</groupId>
-        <artifactId>cloudext-impl-table-store-local</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
