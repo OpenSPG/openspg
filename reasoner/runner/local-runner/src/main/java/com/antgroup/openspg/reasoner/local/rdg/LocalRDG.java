@@ -728,7 +728,7 @@ public class LocalRDG extends RDG<LocalRDG> {
 
   private void shuffleAndGroup(String vertexAlias, boolean merge) {
     if (vertexAlias.equals(this.kgGraphSchema.rootAlias())) {
-      // 当前KgGraph的根Alias和需要shuffler的根Alias相同，不需要做任何事情
+      // The current root Alias of KgGraph is the same as the root Alias that requires shuffling; no action is needed.
       return;
     }
 
