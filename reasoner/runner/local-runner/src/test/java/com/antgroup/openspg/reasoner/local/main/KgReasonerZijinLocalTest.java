@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.reasoner.local.main;
 
-import com.antgroup.openspg.reasoner.catalog.CatalogFactory;
-import com.antgroup.openspg.reasoner.catalog.impl.KgSchemaConnectionInfo;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
@@ -164,121 +162,6 @@ public class KgReasonerZijinLocalTest {
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     Assert.assertEquals(1, result.getRows().size());
-  }
-
-  @Test
-  public void test21() {
-    String dsl =
-        "//1 先定义流入资金总数\n"
-            + "Define (s:CustFundKG.Account)-[p:total_in_trans_num]->(o:Int) {\n"
-            + "    GraphStructure {\n"
-            + "       (s)-[:expand_linked_alipay_id(s.id)]-> (B:CustFundKG.Alipay|CustFundKG.BankCard|CustFundKG.Default|CustFundKG.Huabei|CustFundKG.Jiebei|CustFundKG.MyBank|CustFundKG.Other|CustFundKG.Yeb|CustFundKG.YIB)<-[transIn:transfer|unknown|fundRedeem|fundPurchase|dingqiPurchase|taxRefund|transfer|consume|ylbPurchase|jbRepay|hbRepay|creditCardRepay|withdraw|gkhRepay|yebPurchase|corpCreditRepay|deposit|merchantSettle|ylbRedeem|dingqiRedeem|jbLoan|corpCreditLoan|sceneLoan]-(C)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "        o = group(s,B).count(transIn)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "//2 定义整百流入笔数\n"
-            + "Define (s:CustFundKG.Account)-[p:multiples_hundred_in_trans_num]->(o:Int) {\n"
-            + "    GraphStructure {\n"
-            + "       (s)-[:expand_linked_alipay_id(s.id)]-> (B:CustFundKG.Alipay|CustFundKG.BankCard|CustFundKG.Default|CustFundKG.Huabei|CustFundKG.Jiebei|CustFundKG.MyBank|CustFundKG.Other|CustFundKG.Yeb|CustFundKG.YIB)<-[transIn:transfer|unknown|fundRedeem|fundPurchase|dingqiPurchase|taxRefund|transfer|consume|ylbPurchase|jbRepay|hbRepay|creditCardRepay|withdraw|gkhRepay|yebPurchase|corpCreditRepay|deposit|merchantSettle|ylbRedeem|dingqiRedeem|jbLoan|corpCreditLoan|sceneLoan]-(C)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "    \tR1(\"必须是整百交易\"): transIn.amount % 100*100 == 0\n"
-            + "        o = group(s).count(transIn)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "// 判断是否汇聚赌博\n"
-            + "Define (s:CustFundKG.Account)-[p:is_pooling_gambling_funds]->(o:Boolean) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "        R0(\"存在流入和整百资金\"): s.multiples_hundred_in_trans_num != null && s.total_in_trans_num != null\n"
-            + "    \tR1(\"流入整百金额笔数大于24比\"): s.multiples_hundred_in_trans_num > 24\n"
-            + "        R2(\"整百交易占比大于2%\"): s.multiples_hundred_in_trans_num*1.0 /s.total_in_trans_num > 0.02\n"
-            + "        o = rule_value(R0 && R1 && R2, true, false)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "//获取结果\n"
-            + "GraphStructure {\n"
-            + "\ts [CustFundKG.Account]\n"
-            + "}\n"
-            + "Rule {\n"
-            + "}\n"
-            + "Action{\n"
-            + "\tget(s.id, s.is_pooling_gambling_funds, s.multiples_hundred_in_trans_num, s.total_in_trans_num)\n"
-            + "}";
-
-    LocalReasonerTask task = new LocalReasonerTask();
-    task.setExecutorTimeoutMs(60 * 1000 * 100);
-    task.setDsl(dsl);
-
-    Map<String, Object> dslParams = new HashMap<>();
-    // use test catalog
-    dslParams.put("projId", "308000003");
-    Catalog catalog =
-        CatalogFactory.createCatalog(
-            dslParams,
-            new KgSchemaConnectionInfo("http://kgengine.stable.alipay.net", "ba15431974C4ABBb"));
-    task.setCatalog(catalog);
-
-    task.setGraphLoadClass(
-        "com.antgroup.openspg.reasoner.local.main.KgReasonerZijinLocalTest$GraphLoader");
-
-    // enable subquery
-    Map<String, Object> params = new HashMap<>();
-    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
-    task.setParams(params);
-
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
-    LocalReasonerResult result = runner.run(task);
-    System.out.println(result);
-    Assert.assertEquals(2, result.getRows().size());
-  }
-
-  @Test
-  public void test2() {
-    String dsl =
-        "GraphStructure {\n"
-            + "(B:CustFundKG.Alipay|CustFundKG.BankCard|CustFundKG.Huabei|CustFundKG.Yeb|CustFundKG.YIB|CustFundKG.Other|CustFundKG.Jiebei|CustFundKG.MyBank)-[t:consume|transfer]->(C)\n"
-            + "}\n"
-            + "Rule {\n"
-            + "hour = hourOfDay(t.payDate*1000)\n"
-            + "//R1(\"凌晨交易\"): hour <=5 && hour >=0\n"
-            + "}\n"
-            + "Action {\n"
-            + "  get(B.id, t.payDate, hour) \n"
-            + "}";
-
-    LocalReasonerTask task = new LocalReasonerTask();
-    task.setExecutorTimeoutMs(60 * 1000 * 100);
-    task.setDsl(dsl);
-
-    Map<String, Object> dslParams = new HashMap<>();
-    // use test catalog
-    dslParams.put("projId", "308000003");
-    Catalog catalog =
-        CatalogFactory.createCatalog(
-            dslParams,
-            new KgSchemaConnectionInfo("http://kgengine.stable.alipay.net", "ba15431974C4ABBb"));
-    task.setCatalog(catalog);
-
-    task.setGraphLoadClass(
-        "com.antgroup.openspg.reasoner.local.main.KgReasonerZijinLocalTest$GraphLoader");
-
-    // enable subquery
-    Map<String, Object> params = new HashMap<>();
-    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
-    task.setParams(params);
-
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
-    LocalReasonerResult result = runner.run(task);
-    System.out.println(result);
-    Assert.assertEquals(2, result.getRows().size());
   }
 
   public static class GraphLoader extends AbstractLocalGraphLoader {
