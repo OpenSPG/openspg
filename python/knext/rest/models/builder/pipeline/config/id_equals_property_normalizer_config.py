@@ -56,7 +56,7 @@ class IdEqualsPropertyNormalizerConfig(object):
         self.local_vars_configuration = local_vars_configuration
 
         self._normalizer_type = None
-        self.discriminator = None
+        self.discriminator = normalizer_type
 
         self.normalizer_type = normalizer_type
 

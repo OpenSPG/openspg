@@ -57,7 +57,7 @@ class OperatorPropertyNormalizerConfig(object):
 
     def __init__(
         self,
-        normalizer_type=None,
+        normalizer_type="OPERATOR",
         config=None,
         params=None,
         local_vars_configuration=None,
@@ -70,7 +70,7 @@ class OperatorPropertyNormalizerConfig(object):
         self._normalizer_type = None
         self._config = None
         self._params = None
-        self.discriminator = None
+        self.discriminator = normalizer_type
 
         self.normalizer_type = normalizer_type
         self.config = config

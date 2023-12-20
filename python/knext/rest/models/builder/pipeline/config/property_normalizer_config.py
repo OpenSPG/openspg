@@ -47,6 +47,11 @@ class PropertyNormalizerConfig(object):
 
     attribute_map = {"normalizer_type": "normalizerType"}
 
+    discriminator_value_class_map = {
+        "ID_EQUALS": "IdEqualsPropertyNormalizerConfig",
+        "OPERATOR": "OperatorPropertyNormalizerConfig",
+    }
+
     def __init__(
         self, normalizer_type=None, local_vars_configuration=None
     ):  # noqa: E501
@@ -97,6 +102,14 @@ class PropertyNormalizerConfig(object):
             )
 
         self._normalizer_type = normalizer_type
+
+    def get_real_child_model(self, data):
+        """Returns the child model by discriminator"""
+        if "@type" in data:
+            child_type = data.get("@type")
+            real_child_model = self.discriminator_value_class_map.get(child_type)
+            return real_child_model
+        return None
 
     def to_dict(self):
         """Returns the model properties as a dict"""
