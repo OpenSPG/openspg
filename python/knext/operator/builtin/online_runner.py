@@ -7,6 +7,7 @@ from nn4k.invoker import LLMInvoker
 
 
 class _BuiltInOnlineExtractor(ExtractOp):
+
     def __init__(self, params: Dict[str, str] = None):
         """
 
@@ -34,7 +35,7 @@ class _BuiltInOnlineExtractor(ExtractOp):
             spec.loader.exec_module(module)
 
             op_clazz = getattr(module, op_config["className"])
-            op_obj = op_clazz.by_template(**op_config["params"])
+            op_obj = op_clazz(**op_config["params"])
             prompt_ops.append(op_obj)
 
         return prompt_ops
@@ -55,8 +56,9 @@ class _BuiltInOnlineExtractor(ExtractOp):
                 # 生成完整query
                 query = op.build_prompt(input_param)
                 # 模型预测，生成模型输出结果
-                # response = self.model.remote_inference(query)
-                response = '{"spo": [{"subject": "甲状腺结节", "predicate": "常见症状", "object": "头疼"}]}'
+                response = self.model.remote_inference(query)
+                # response = "test"
+                # response = '{"spo": [{"subject": "甲状腺结节", "predicate": "常见症状", "object": "头疼"}]}'
                 # 模型结果的后置处理，可能会拆分成多条数据 List[dict[str, str]]
                 if hasattr(op, "parse_response"):
                     collector.extend(op.parse_response(response))
@@ -64,8 +66,6 @@ class _BuiltInOnlineExtractor(ExtractOp):
                     next_params.extend(op.build_variables(input_param, response))
 
             input_params = next_params
-            print(next_params)
-
         return collector
 
 

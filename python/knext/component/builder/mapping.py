@@ -96,7 +96,6 @@ class SPGTypeMapping(Mapping):
         """
         Transforms `SPGTypeMapping` to REST model `MappingNodeConfig`.
         """
-        # TODO generate schema with link_strategy
 
         mapping_filters = [
             rest.MappingFilter(column_name=name, column_value=value)
@@ -263,7 +262,6 @@ class SubGraphMapping(Mapping):
         pass
 
     def to_rest(self) -> rest.Node:
-        # TODO generate schema with link_strategy
 
         mapping_filters = [
             rest.MappingFilter(column_name=name, column_value=value)
@@ -287,3 +285,11 @@ class SubGraphMapping(Mapping):
 
     def submit(self):
         pass
+
+
+if __name__ == '__main__':
+    SubGraphMapping(subject_type="Medical.Disease")\
+        .add_field("id", "id")\
+        .add_field("name", "name")\
+        .add_field("bodyPart", "bodyPart")\
+        .add_object_type(object_type="Medical.BodyPart")

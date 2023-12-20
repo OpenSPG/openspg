@@ -68,14 +68,14 @@ class BuilderClient(Client):
         """
 
         dag_config = builder_chain.to_rest()
-
+        import os
         import sys
+        import knext
         python_exec = sys.executable
         python_paths = sys.path
+        sys.path.append(os.path.join(knext.__path__[0], "/operator/builtin"))
 
-        import os
         import subprocess
-        import knext
         import datetime
 
         jar_path = os.path.join(knext.__path__[0], f"engine/builder-runner-local-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
@@ -87,12 +87,12 @@ class BuilderClient(Client):
                     "-Dcloudext.graphstore.drivers=com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClientDriver",
                     "-Dcloudext.searchengine.drivers=com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchEngineClientDriver",
                     jar_path,
-                    "--projectId", "2",
+                    "--projectId", os.environ.get("KNEXT_PROJECT_ID"),
                     "--jobName", kwargs.get("job_name", "default_job"),
                     "--pipeline", json.dumps(pipeline),
                     "--pythonExec", python_exec,
                     "--pythonPaths", ';'.join(python_paths),
-                    "--schemaUrl", "http://localhost:8887",
+                    "--schemaUrl", os.environ.get("KNEXT_HOST_ADDR"),
                     "--parallelism", str(kwargs.get("parallelism", "1")),
                     "--alterOperation", kwargs.get("alter_operation", AlterOperationEnum.Upsert),
                     "--logFile", log_file_name

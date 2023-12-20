@@ -59,10 +59,10 @@ class LLMBasedExtractor(SPGExtractor):
         params = {}
         params["model_config"] = json.dumps(self.llm._nn_config)
         api_client = OperatorClient()._rest_client.api_client
-        params["prompt_config"] = json.dumps([api_client.sanitize_for_serialization(op.to_rest()) for op in self.prompt_ops])
+        params["prompt_config"] = json.dumps([api_client.sanitize_for_serialization(op.to_rest()) for op in self.prompt_ops], ensure_ascii=False)
         from knext.operator.builtin.online_runner import _BuiltInOnlineExtractor
         extract_op = _BuiltInOnlineExtractor(params)
-        config = rest.ExtractNodeConfig(
+        config = rest.UserDefinedExtractNodeConfig(
             output_fields=self.output_fields, operator_config=extract_op.to_rest()
         )
 

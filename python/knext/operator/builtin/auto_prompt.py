@@ -24,29 +24,24 @@ input:${input}
     def __init__(self,
                  spg_type_name: Union[str, SPGTypeHelper],
                  property_names: List[Union[str, PropertyHelper]],
-                 custom_prompt: str = None,
-                 **kwargs):
+                 custom_prompt: str = None):
         super().__init__()
-        if kwargs:
-            for key, value in kwargs.items():
-                setattr(self, key, value)
-        else:
-            if custom_prompt:
-                self.template = custom_prompt
-            schema_client = SchemaClient()
-            spg_type = schema_client.query_spg_type(spg_type_name=spg_type_name)
-            self.spg_type_name = spg_type_name
-            self.predicate_zh_to_en_name = {}
-            self.predicate_type_zh_to_en_name = {}
-            for k, v in spg_type.properties.items():
-                self.predicate_zh_to_en_name[v.name_zh] = k
-                self.predicate_type_zh_to_en_name[v.name_zh] = v.object_type_name
-            self._render(spg_type, property_names)
+
+        if custom_prompt:
+            self.template = custom_prompt
+        schema_client = SchemaClient()
+        spg_type = schema_client.query_spg_type(spg_type_name=spg_type_name)
+        self.spg_type_name = spg_type_name
+        self.predicate_zh_to_en_name = {}
+        self.predicate_type_zh_to_en_name = {}
+        for k, v in spg_type.properties.items():
+            self.predicate_zh_to_en_name[v.name_zh] = k
+            self.predicate_type_zh_to_en_name[v.name_zh] = v.object_type_name
+        self._render(spg_type, property_names)
         self.params = {
-            "template": self.template,
-            "spg_type": spg_type_name,
-            "predicate_zh_to_en_name": self.predicate_zh_to_en_name,
-            "predicate_type_zh_to_en_name": self.predicate_type_zh_to_en_name,
+            "spg_type_name": spg_type_name,
+            "property_names": property_names,
+            "custom_prompt": custom_prompt,
         }
 
     def build_prompt(self, variables: Dict[str, str]) -> str:
@@ -80,7 +75,7 @@ input:${input}
                 subject_properties[spo_en_name] = spo_item["object"]
 
             # for k, val in subject.items():
-            subject_entity = SPGRecord(spg_type_name=self.spg_type, properties=subject_properties)
+            subject_entity = SPGRecord(spg_type_name=self.spg_type_name, properties=subject_properties)
             result.append(subject_entity)
         return result
 
@@ -100,7 +95,3 @@ input:${input}
             spos.append(f'{spg_type.name_zh}({spg_type.desc or spg_type.name_zh})-{prop.name_zh}-{prop.object_type_name_zh}')
         schema_text = ','.join(spos)
         self.template = self.template.replace("${schema}", schema_text)
-
-    @classmethod
-    def by_template(cls, **kwargs):
-        return cls(spg_type_name="", property_names=[], custom_prompt=None, **kwargs)
