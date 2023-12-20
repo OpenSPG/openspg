@@ -37,10 +37,6 @@
       <artifactId>biz-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>biz-reasoner</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-ui</artifactId>
     </dependency>

@@ -19,9 +19,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
+@Accessors(chain = true)
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class SPGPropertyValue extends BaseValObj {
 

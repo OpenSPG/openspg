@@ -29,10 +29,6 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>biz-reasoner</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>biz-schema</artifactId>
     </dependency>
     <dependency>
@@ -71,7 +67,6 @@
         <version>2.5.7</version>
         <configuration>
           <includeSystemScope>true</includeSystemScope>
-          <outputDirectory>../../dev/release/openspg/target</outputDirectory>
           <classifier>executable</classifier>
         </configuration>
         <executions>

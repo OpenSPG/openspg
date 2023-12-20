@@ -36,12 +36,8 @@
 
   <modules>
     <module>interface/graph-store</module>
-    <module>interface/object-store</module>
-    <module>interface/table-store</module>
     <module>interface/search-engine</module>
     <module>impl/graph-store/tugraph</module>
-    <module>impl/object-store/local</module>
-    <module>impl/table-store/local</module>
     <module>impl/search-engine/elasticsearch</module>
   </modules>
 

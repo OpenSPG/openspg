@@ -35,6 +35,9 @@ public interface IVertexId extends Serializable, Comparable<IVertexId> {
   /** get kgstate internal id */
   long getInternalId();
 
+  /** get biz id */
+  String getBizId();
+
   /** get vertex type id */
   long getTypeId();
 

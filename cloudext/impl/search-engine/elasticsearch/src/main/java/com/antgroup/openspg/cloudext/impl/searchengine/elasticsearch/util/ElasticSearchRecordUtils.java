@@ -32,7 +32,7 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.QueryGroup;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.TermQuery;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.api.facade.SchemaJsonUtils;
 import com.dtflys.forest.http.ForestResponse;
 import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
@@ -93,7 +93,8 @@ public class ElasticSearchRecordUtils {
       throw new RuntimeException("mGetIdxRecords error, errorMsg=" + response.getContent());
     }
 
-    EsDocs esDocs = JSON.deserialize(response.getContent(), new TypeToken<EsDocs>() {}.getType());
+    EsDocs esDocs =
+        SchemaJsonUtils.deserialize(response.getContent(), new TypeToken<EsDocs>() {}.getType());
     return esDocs.toIdxRecord();
   }
 
@@ -119,7 +120,7 @@ public class ElasticSearchRecordUtils {
     if (StringUtils.isBlank(hits)) {
       return Collections.emptyList();
     }
-    EsHits esHits = JSON.deserialize(hits, new TypeToken<EsHits>() {}.getType());
+    EsHits esHits = SchemaJsonUtils.deserialize(hits, new TypeToken<EsHits>() {}.getType());
     return esHits.toIdxRecord();
   }
 
