@@ -123,41 +123,7 @@ public class LocalRunnerMain {
   }
 
   private static LocalReasonerTask parseArgs(String[] args) {
-    Options options = new Options();
-
-    Option optDsl = new Option("q", "query", true, "query dsl string");
-    optDsl.setRequired(true);
-    options.addOption(optDsl);
-
-    Option optOutputFile = new Option("o", "output", true, "output file");
-    optOutputFile.setRequired(false);
-    options.addOption(optOutputFile);
-
-    Option optSchemaUri = new Option("s", "schema_uri", true, "provide schema uri");
-    optSchemaUri.setRequired(true);
-    options.addOption(optSchemaUri);
-
-    Option optSchemaToken = new Option("st", "schema_token", true, "provide schema token");
-    optSchemaToken.setRequired(true);
-    options.addOption(optSchemaToken);
-
-    Option optGraphStateClass =
-        new Option("g", "graph_state_class", true, "graph state class name");
-    optGraphStateClass.setRequired(true);
-    options.addOption(optGraphStateClass);
-
-    Option optGraphStateUrl = new Option("gs", "graph_state_url", true, "graph state url");
-    optGraphStateUrl.setRequired(false);
-    options.addOption(optGraphStateUrl);
-
-    Option optStartIdList = new Option("start", "start_id_list", true, "start id json list");
-    optStartIdList.setRequired(true);
-    options.addOption(optStartIdList);
-
-    Option optParamsJson =
-        new Option("params", "param_map_json_str", true, "parameter map json string");
-    optParamsJson.setRequired(false);
-    options.addOption(optParamsJson);
+    Options options = getOptions();
 
     CommandLineParser parser = new DefaultParser();
     HelpFormatter formatter = new HelpFormatter();
@@ -223,5 +189,44 @@ public class LocalRunnerMain {
     task.addStartId(startIdList);
     task.setParams(params);
     return task;
+  }
+
+  private static Options getOptions() {
+    Options options = new Options();
+
+    Option optDsl = new Option("q", "query", true, "query dsl string");
+    optDsl.setRequired(true);
+    options.addOption(optDsl);
+
+    Option optOutputFile = new Option("o", "output", true, "output file");
+    optOutputFile.setRequired(false);
+    options.addOption(optOutputFile);
+
+    Option optSchemaUri = new Option("s", "schema_uri", true, "provide schema uri");
+    optSchemaUri.setRequired(true);
+    options.addOption(optSchemaUri);
+
+    Option optSchemaToken = new Option("st", "schema_token", true, "provide schema token");
+    optSchemaToken.setRequired(true);
+    options.addOption(optSchemaToken);
+
+    Option optGraphStateClass =
+        new Option("g", "graph_state_class", true, "graph state class name");
+    optGraphStateClass.setRequired(true);
+    options.addOption(optGraphStateClass);
+
+    Option optGraphStateUrl = new Option("gs", "graph_state_url", true, "graph state url");
+    optGraphStateUrl.setRequired(false);
+    options.addOption(optGraphStateUrl);
+
+    Option optStartIdList = new Option("start", "start_id_list", true, "start id json list");
+    optStartIdList.setRequired(true);
+    options.addOption(optStartIdList);
+
+    Option optParamsJson =
+        new Option("params", "param_map_json_str", true, "parameter map json string");
+    optParamsJson.setRequired(false);
+    options.addOption(optParamsJson);
+    return options;
   }
 }
