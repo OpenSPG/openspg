@@ -23,12 +23,14 @@ import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
+import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.antgroup.openspg.reasoner.utils.SimpleObjSerde;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
 import scala.Tuple2;
@@ -427,7 +429,8 @@ public class LocalRunnerTest {
             + "Rule {\n"
             + "}\n"
             + "Action {\n"
-            + "\tget(s.id, s.is_trans_raise_more_after_down, s.cur_trans_multiple, s.last_trans_multiple, s.last_last_month_num, s.last_month_num, s.cur_month_num)\n"
+            + "\tget(s.id, s.is_trans_raise_more_after_down, s.cur_trans_multiple, s.last_trans_multiple, s"
+            + ".last_last_month_num, s.last_month_num, s.cur_month_num)\n"
             + "}\n";
     LocalReasonerTask task = new LocalReasonerTask();
     task.setDsl(dsl);
@@ -447,9 +450,8 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("1", "CustFundKG.Account")));
 
-    LocalRunnerMain.main(
-        new String[] {new String(Base64.getEncoder().encode(JSON.toJSONBytes(task)))});
-    LocalReasonerResult result = LocalRunnerMain.result;
+    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
     System.out.println("##########################");
@@ -514,9 +516,8 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("保险产品", "InsProduct.Product")));
 
-    LocalRunnerMain.main(
-        new String[] {new String(Base64.getEncoder().encode(JSON.toJSONBytes(task)))});
-    LocalReasonerResult result = LocalRunnerMain.result;
+    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
     System.out.println("##########################");
@@ -578,9 +579,8 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("1", "CustFundKG.Account")));
 
-    LocalRunnerMain.main(
-        new String[] {new String(Base64.getEncoder().encode(JSON.toJSONBytes(task)))});
-    LocalReasonerResult result = LocalRunnerMain.result;
+    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
     System.out.println("##########################");
@@ -653,9 +653,8 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("1", "CustFundKG.Account")));
 
-    LocalRunnerMain.main(
-        new String[] {new String(Base64.getEncoder().encode(JSON.toJSONBytes(task)))});
-    LocalReasonerResult result = LocalRunnerMain.result;
+    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
     System.out.println("##########################");
@@ -741,9 +740,8 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("black_app_1", "Pkg")));
 
-    LocalRunnerMain.main(
-        new String[] {new String(Base64.getEncoder().encode(JSON.toJSONBytes(task)))});
-    LocalReasonerResult result = LocalRunnerMain.result;
+    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
     System.out.println("##########################");
@@ -784,9 +782,8 @@ public class LocalRunnerTest {
     task.getParams().put(ConfigKey.KG_REASONER_CATALOG, SimpleObjSerde.ser(catalog));
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("user1", "ABM.User")));
 
-    LocalRunnerMain.main(
-        new String[] {new String(Base64.getEncoder().encode(JSON.toJSONBytes(task)))});
-    LocalReasonerResult result = LocalRunnerMain.result;
+    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
     System.out.println("##########################");
@@ -875,9 +872,8 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("S", "CustFundKG.Account")));
 
-    LocalRunnerMain.main(
-        new String[] {new String(Base64.getEncoder().encode(JSON.toJSONBytes(task)))});
-    LocalReasonerResult result = LocalRunnerMain.result;
+    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
     System.out.println("##########################");
@@ -896,11 +892,8 @@ public class LocalRunnerTest {
             + "Action {\n"
             + "    get(s.id)\n"
             + "}";
-    LocalReasonerTask task = new LocalReasonerTask();
-    task.setDsl(nearbyDsl);
-    task.setGraphLoadClass(
-        "com.antgroup.openspg.reasoner.runner.local.loader.TestSpatioTemporalGraphLoader");
 
+    Map<String, Object> params = new HashMap<>();
     Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
     schema.put(
         "PE.JiuZhi",
@@ -911,17 +904,31 @@ public class LocalRunnerTest {
         Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
     Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
     catalog.init();
-    task.getParams().put(ConfigKey.KG_REASONER_CATALOG, SimpleObjSerde.ser(catalog));
-    task.getParams().put(Constants.START_ALIAS, "s");
-    task.setStartIdList(Lists.newArrayList(new Tuple2<>("MOCK1", "PE.JiuZhi")));
+
+    params.put(ConfigKey.KG_REASONER_CATALOG, SimpleObjSerde.ser(catalog));
+    params.put(Constants.START_ALIAS, "s");
+
+    String outputFile = "/tmp/local/runner/" + UUID.randomUUID() + ".csv";
 
     LocalRunnerMain.main(
-        new String[] {new String(Base64.getEncoder().encode(JSON.toJSONBytes(task)))});
-    LocalReasonerResult result = LocalRunnerMain.result;
-    System.out.println("##########################");
-    System.out.println(result);
-    System.out.println("##########################");
-    Assert.assertEquals(1, result.getRows().size());
+        new String[] {
+          "-q",
+          nearbyDsl,
+          "-o",
+          outputFile,
+          "-g",
+          "com.antgroup.openspg.reasoner.runner.local.loader.TestSpatioTemporalGraphLoader",
+          "-s",
+          "s",
+          "-st",
+          "st",
+          "-start",
+          "[[\"MOCK1\",\"PE.JiuZhi\"]]",
+          "-params",
+          JSON.toJSONString(params)
+        });
+    List<String[]> rst = RunnerUtil.loadCsvFile(outputFile);
+    Assert.assertEquals(2, rst.size());
     clear();
   }
 
