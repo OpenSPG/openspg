@@ -61,7 +61,6 @@ public class CsvFileSourceReader extends BaseSourceReader<CsvSourceNodeConfig> {
         poll = queue.poll();
       }
 
-      // 如果拿到的是空，则说明队列中确实没有了，则breaks
       if (poll == null) {
         break;
       }
