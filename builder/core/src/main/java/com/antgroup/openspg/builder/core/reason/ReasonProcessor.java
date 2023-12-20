@@ -1,6 +1,8 @@
 package com.antgroup.openspg.builder.core.reason;
 
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
+import com.antgroup.openspg.builder.core.property.RecordNormalizer;
+import com.antgroup.openspg.builder.core.property.RecordNormalizerImpl;
 import com.antgroup.openspg.builder.core.reason.impl.CausalConceptReasoner;
 import com.antgroup.openspg.builder.core.reason.impl.InductiveConceptReasoner;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
@@ -31,6 +33,7 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
     }
   }
 
+  private RecordNormalizer recordNormalizer;
   private InductiveConceptReasoner inductiveConceptReasoner;
   private CausalConceptReasoner causalConceptReasoner;
 
@@ -53,6 +56,9 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
     this.causalConceptReasoner.setBuilderCatalog(context.getCatalog());
     this.causalConceptReasoner.setGraphState(graphState);
     this.causalConceptReasoner.setInductiveConceptReasoner(inductiveConceptReasoner);
+
+    this.recordNormalizer = new RecordNormalizerImpl();
+    this.recordNormalizer.init(context);
   }
 
   @Override
@@ -73,6 +79,10 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
 
       // perform inductive and causal reasoning logic on the input advancedRecord
       results.addAll(reasoning(advancedRecord, conceptList));
+    }
+
+    for (BaseRecord baseRecord : results) {
+      recordNormalizer.propertyNormalize((BaseSPGRecord) baseRecord);
     }
     return results;
   }

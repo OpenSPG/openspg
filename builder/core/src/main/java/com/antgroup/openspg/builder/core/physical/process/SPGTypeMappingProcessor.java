@@ -15,6 +15,7 @@ package com.antgroup.openspg.builder.core.physical.process;
 
 import com.antgroup.openspg.builder.core.property.RecordNormalizer;
 import com.antgroup.openspg.builder.core.property.RecordNormalizerImpl;
+import com.antgroup.openspg.builder.core.property.impl.PropertySearchNormalizer;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.BuilderRecordException;
@@ -47,6 +48,7 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
     SPGTypeIdentifier identifier = SPGTypeIdentifier.parse(config.getSpgType());
     this.spgType = (BaseSPGType) loadSchema(identifier, context.getCatalog());
     this.recordNormalizer = new RecordNormalizerImpl(config.getMappingConfigs());
+    this.recordNormalizer.setDefaultPropertyNormalizer(new PropertySearchNormalizer());
     this.recordNormalizer.init(context);
   }
 

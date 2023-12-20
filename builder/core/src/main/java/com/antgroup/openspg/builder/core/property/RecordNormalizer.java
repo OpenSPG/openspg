@@ -10,4 +10,6 @@ public interface RecordNormalizer {
   void init(BuilderContext context) throws BuilderException;
 
   void propertyNormalize(BaseSPGRecord spgRecord) throws PropertyNormalizeException;
+
+  void setDefaultPropertyNormalizer(PropertyNormalizer defaultPropertyNormalizer);
 }
