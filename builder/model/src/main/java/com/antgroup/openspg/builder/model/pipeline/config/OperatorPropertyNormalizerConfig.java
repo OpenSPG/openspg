@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public class OperatorPropertyNormalizerConfig extends BasePropertyNormalizerConfig {
 
-  private final OperatorConfig operatorConfig;
+  private final OperatorConfig config;
 
   public OperatorPropertyNormalizerConfig(OperatorConfig config) {
     super(PropertyNormalizerTypeEnum.OPERATOR);
-    this.operatorConfig = config;
+    this.config = config;
   }
 }
