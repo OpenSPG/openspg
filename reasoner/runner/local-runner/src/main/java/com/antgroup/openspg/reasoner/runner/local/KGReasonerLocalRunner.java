@@ -57,7 +57,7 @@ public class KGReasonerLocalRunner {
       return doRun(task);
     } catch (Throwable e) {
       log.error("KGReasonerLocalRunner,error", e);
-      return new LocalReasonerResult("KGReasonerLocalRunner,error " + e.getMessage());
+      return new LocalReasonerResult("KGReasonerLocalRunner,error:" + e.getMessage());
     }
   }
 
@@ -179,11 +179,23 @@ public class KGReasonerLocalRunner {
     String graphLoadClass = task.getGraphLoadClass();
     MemGraphState memGraphState = new MemGraphState();
     AbstractLocalGraphLoader graphLoader;
-    try {
-      graphLoader =
-          (AbstractLocalGraphLoader) Class.forName(graphLoadClass).getConstructor().newInstance();
-    } catch (Exception e) {
-      throw new RuntimeException("can not create graph loader from name " + graphLoadClass, e);
+    if (StringUtils.isEmpty(task.getGraphStateInitString())) {
+      try {
+        graphLoader =
+            (AbstractLocalGraphLoader) Class.forName(graphLoadClass).getConstructor().newInstance();
+      } catch (Exception e) {
+        throw new RuntimeException("can not create graph loader from name " + graphLoadClass, e);
+      }
+    } else {
+      try {
+        graphLoader =
+            (AbstractLocalGraphLoader)
+                Class.forName(graphLoadClass)
+                    .getConstructor(String.class)
+                    .newInstance(task.getGraphStateInitString());
+      } catch (Exception e) {
+        throw new RuntimeException("can not create graph loader from name " + graphLoadClass, e);
+      }
     }
     graphLoader.setGraphState(memGraphState);
     graphLoader.load();
