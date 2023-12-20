@@ -58,21 +58,28 @@ class OpenAIInvoker(NNInvoker):
         return o
 
     def _create_prompt(self, input, **kwargs):
-        prompt = input
+        if isinstance(input, list):
+            prompt = input
+        else:
+            prompt = [input]
         return prompt
 
     def _create_output(self, input, prompt, completion, **kwargs):
-        output = prompt + completion.choices[0].text
+        output = [choice.text for choice in completion.choices]
         return output
 
     def remote_inference(self, input, **kwargs):
         import openai
 
+        if "max_output_length" in kwargs:
+            max_output_length = kwargs.pop("max_output_length")
+        else:
+            max_output_length = self._openai_max_tokens
         prompt = self._create_prompt(input, **kwargs)
         completion = openai.Completion.create(
             model=self._openai_model_name,
             prompt=prompt,
-            max_tokens=self._openai_max_tokens,
+            max_tokens=max_output_length,
         )
         output = self._create_output(input, prompt, completion, **kwargs)
         return output
