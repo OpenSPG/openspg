@@ -1,24 +1,22 @@
-import json
+
 from typing import Dict, List
 
-from knext.operator.op import PromptOp
-from knext.operator.spg_record import SPGRecord
+from knext.api.operator import PromptOp
 
 
-class IndicatorNER(PromptOp):
+class IndicatorREL(PromptOp):
     template = """
 请根据给定文本和文本中的指标，理解这些指标之间的关联关系，以json格式输出
 #####
 输出格式:
 [{{"subject": "XXX", "predicate": "包含", "object": ["XXX", "XXX"]}}, {{"subject": "XXX", "predicate": "包含", "object": ["XXX", "XXX"]}}]
 文本: 
-{input}
+${input}
 指标: 
-{ner}
+${ner}
 """
 
-
-    def build_prompt(self, record: Dict[str, str]):
+    def build_prompt(self, variables: Dict[str, str]) -> str:
         """
         record: {
         "input": "济南市财政收入质量及自给能力均较好，但土地出让收入大幅下降致综合财力明显下滑。济南市财政收入质量及自给能力均较好，但土地出让收入大幅下降致综合
@@ -30,13 +28,14 @@ class IndicatorNER(PromptOp):
         "hasA": "财政收入质量,财政自给能力,土地出让收入....."
     }
         """
-        return self.template.format(**record)
+        return self.template\
+            .replace("${input}", variables.get("input"))\
+            .replace("${ner}", variables.get("ner"))
 
-
-    def generate_placeholder(
-            self, record: Dict[str, str], response: str
+    def build_next_variables(
+            self, variables: Dict[str, str], response: str
     ) -> List[Dict[str, str]]:
         """
         response: "[{'subject': '一般公共预算收入', 'predicate': '包含', 'object': ['税收收入']}, {'subject': '税收收入', 'predicate': '包含', 'object': ['留抵退税']}, {'subject': '政府性基金收入', 'predicate': '包含', 'object': ['土地出让收入', '转移性收入']}, {'subject': '综合财力', 'predicate': '包含', 'object': ['一般公共预算收入', '政府性基金收入']}]"
         """
-        return [{"input": record["input"], "ner": record["ner"], "rel": response}]
+        return [{"input": variables["input"], "ner": variables["ner"], "rel": response}]

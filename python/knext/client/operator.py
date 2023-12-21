@@ -21,10 +21,11 @@ from knext.operator.base import BaseOp
 
 
 class OperatorTypeEnum(str, Enum):
-    EntityLinkOp = "ENTITY_LINK"
-    EntityFuseOp = "ENTITY_FUSE"
-    PropertyNormalizeOp = "PROPERTY_NORMALIZE"
-    KnowledgeExtractOp = "KNOWLEDGE_EXTRACT"
+    LinkOp = "LINK"
+    FuseOp = "FUSE"
+    PredictOp = "PREDICT"
+    ExtractOp = "EXTRACT"
+    PromptOp = "PROMPT"
 
 
 class OperatorClient(Client):
@@ -68,10 +69,10 @@ class OperatorClient(Client):
         op._version = add_response.latest_version
 
         if op.bind_to is not None:
-            from knext.core.schema import Schema
+            from knext.client.schema import SchemaClient
             from knext.client.model.base import SpgTypeEnum
 
-            schema_session = Schema().create_session()
+            schema_session = SchemaClient().create_session()
             spg_type = schema_session.get(op.bind_to)
             if spg_type.spg_type_enum in [SpgTypeEnum.Entity, SpgTypeEnum.Event]:
                 spg_type.bind_link_operator(op)

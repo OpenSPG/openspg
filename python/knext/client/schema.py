@@ -47,7 +47,7 @@ class SchemaClient(Client):
         self, subject_name: str, predicate_name: str, object_name: str
     ) -> Relation:
         """Query relation type by s_p_o name."""
-        rest_model = self._rest_client.schema_query_relation_type_get(
+        rest_model = self._rest_client.schema_query_relation_get(
             subject_name, predicate_name, object_name
         )
         return Relation(

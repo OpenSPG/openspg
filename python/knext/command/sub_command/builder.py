@@ -46,12 +46,7 @@ def execute_job(job_names):
     for job in job_list:
         builder_job = BuilderJob.by_name(job)()
         builder_chain = builder_job.build()
-        builder_chain.invoke(
-            builder_chain,
-            job_name=job,
-            parallelism=builder_job.parallelism,
-            alter_operation=builder_job.alter_operation,
-        )
+        builder_chain.invoke(builder_chain)
 
 
 @click.option("--id", help="Unique id of submitted builder job.")

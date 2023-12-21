@@ -1,0 +1,7 @@
+{
+    "invoker_type": "OpenAI",
+    "openai_api_key": "EMPTY",
+    "openai_api_base": "http://localhost:38000/v1",
+    "openai_model_name": "vicuna-7b-v1.5",
+    "openai_max_tokens": 1000
+}

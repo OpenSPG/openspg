@@ -13,30 +13,47 @@
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import (
     CSVReader,
-    UserDefinedExtractor,
-    SPGTypeMapping,
     KGWriter
 )
-from knext.operator.base import BaseOp
+from knext.component.builder import LLMBasedExtractor, SubGraphMapping
+from knext.operator.builtin.auto_prompt import SPOPrompt
+from nn4k.invoker import LLMInvoker
 
 
 class Disease(BuilderJob):
     def build(self):
+        """
+        1. 定义输入源，CSV文件
+        """
         source = CSVReader(
-            local_path="./builder/job/data/Disease.csv",
-            columns=["id", "content"],
+            local_path="job/data/Disease.csv",
+            columns=["id", "input"],
             start_row=2,
         )
 
+        """
+        2. 定义大模型抽取组件，从长文本中抽取Medical.Disease类型实体
+        """
 
-        # from operator.disease_extractor import DiseaseExtractor
-        extract = UserDefinedExtractor(output_fields=["id", "name"], extract_op=BaseOp.by_name('DiseaseExtractor')({"config": "1"}))
-
-        mapping = SPGTypeMapping(spg_type_name="Medical.Disease").add_field("id", "id").add_field("name", "name")
+        extract = LLMBasedExtractor(llm=LLMInvoker.from_config("openai_infer.json"),
+                                    prompt_ops=[SPOPrompt("Medical.Disease", ["commonSymptom", "applicableDrug"])])
 
         """
-        3. 定义输出到图谱
+        2. 定义子图映射组件
+        """
+        mapping = SubGraphMapping(spg_type_name="Medical.Disease") \
+            .add_mapping_field("id", "id") \
+            .add_mapping_field("name", "name") \
+            .add_mapping_field("commonSymptom", "commonSymptom") \
+            .add_mapping_field("applicableDrug", "applicableDrug")
+
+        """
+        4. 定义输出到图谱
         """
         sink = KGWriter()
 
+        """
+        5. 定义builder_chain
+        """
         return source >> extract >> mapping >> sink
+

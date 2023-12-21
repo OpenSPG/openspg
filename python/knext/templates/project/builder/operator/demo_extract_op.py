@@ -24,14 +24,14 @@
 
 from typing import List, Dict
 
-from knext.core.builder.operator import Vertex
-from knext.core.builder.operator.model.op import KnowledgeExtractOp
+from knext.operator.spg_record import SPGRecord
+from knext.api.operator import ExtractOp
 
 
-class DemoExtractOp(KnowledgeExtractOp):
+class DemoExtractOp(ExtractOp):
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
 
-    def eval(self, record: Dict[str, str]) -> List[Vertex]:
+    def invoke(self, record: Dict[str, str]) -> List[SPGRecord]:
 
-        return [Vertex(properties=record)]
+        return [SPGRecord(properties=record)]
