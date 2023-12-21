@@ -6,7 +6,6 @@ import com.antgroup.openspg.builder.model.exception.FusingException;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseMappingNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.fusing.BaseFusingConfig;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
-import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.VertexRecordConvertor;
 import com.antgroup.openspg.common.util.CollectionsUtils;
@@ -45,9 +44,9 @@ public class SubGraphFusingImpl implements SubGraphFusing {
   }
 
   @Override
-  public List<BaseSPGRecord> subGraphFusing(BaseAdvancedRecord advancedRecord)
+  public List<BaseAdvancedRecord> subGraphFusing(BaseAdvancedRecord advancedRecord)
       throws FusingException {
-    List<BaseSPGRecord> results = new ArrayList<>();
+    List<BaseAdvancedRecord> results = new ArrayList<>();
     for (BasePropertyRecord propertyRecord : advancedRecord.getProperties()) {
       if (propertyRecord.isSemanticProperty()) {
         EntityFusing entityFusing = semanticEntityFusing.get(propertyRecord.getName());
