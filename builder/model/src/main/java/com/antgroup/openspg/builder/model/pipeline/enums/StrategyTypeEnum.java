@@ -1,6 +1,6 @@
 package com.antgroup.openspg.builder.model.pipeline.enums;
 
-public enum OperatorTypeEnum {
+public enum StrategyTypeEnum {
   LINKING,
   FUSING,
   PREDICTING,

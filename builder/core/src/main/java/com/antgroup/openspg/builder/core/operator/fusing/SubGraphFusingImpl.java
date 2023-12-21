@@ -8,10 +8,12 @@ import com.antgroup.openspg.builder.model.pipeline.config.fusing.BaseFusingConfi
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+
+import com.antgroup.openspg.core.schema.model.constraint.Constraint;
+import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import org.apache.commons.collections4.CollectionUtils;
 
 public class SubGraphFusingImpl implements SubGraphFusing {
@@ -62,7 +64,7 @@ public class SubGraphFusingImpl implements SubGraphFusing {
   }
 
   private List<BaseSPGRecord> toSPGRecords(BasePropertyRecord propertyRecord) {
-    return null;
+    List<String> rawValues = propertyRecord.getRawValues();
   }
 
   private void modifyPropertyRecord(
