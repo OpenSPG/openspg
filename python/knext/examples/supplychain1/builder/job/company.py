@@ -12,8 +12,8 @@
 
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import (
-    CsvSourceReader,
-    KGSinkWriter,
+    CSVReader,
+    KGWriter,
     SPGTypeMapping,
     RelationMapping,
 )
@@ -24,7 +24,7 @@ class Company(BuilderJob):
     parallelism = 6
 
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Company.csv",
             columns=["id", "name", "products"],
             start_row=2,
@@ -37,7 +37,7 @@ class Company(BuilderJob):
             .add_field("products", SupplyChain.Company.product)
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink
 
@@ -46,7 +46,7 @@ class CompanyUpdate(BuilderJob):
     parallelism = 6
 
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/CompanyUpdate.csv",
             columns=["id", "name", "products"],
             start_row=2,
@@ -59,14 +59,14 @@ class CompanyUpdate(BuilderJob):
             .add_field("products", SupplyChain.Company.product)
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink
 
 
 class CompanyFundTrans(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Company_fundTrans_Company.csv",
             columns=["src", "dst", "transDate", "transAmt"],
             start_row=2,
@@ -84,6 +84,6 @@ class CompanyFundTrans(BuilderJob):
             .add_field("transAmt", "transAmt")
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink

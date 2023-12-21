@@ -10,13 +10,13 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 from knext.client.model.builder_job import BuilderJob
-from knext.component.builder import CsvSourceReader, SPGTypeMapping, KGSinkWriter
+from knext.component.builder import CSVReader, SPGTypeMapping, KGWriter
 from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
 
 
 class App(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/App.csv",
             columns=["id", "riskMark", "useCert"],
             start_row=2,
@@ -30,6 +30,6 @@ class App(BuilderJob):
             .add_field("useCert", RiskMining.App.useCert)
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink

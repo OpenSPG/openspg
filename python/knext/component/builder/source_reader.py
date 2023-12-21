@@ -19,7 +19,7 @@ from knext.common.runnable import Input, Output
 from knext.component.builder.base import SourceReader
 
 
-class CsvSourceReader(SourceReader):
+class CSVReader(SourceReader):
     """A source component that reading data from CSV file.
 
     Args:
@@ -28,7 +28,7 @@ class CsvSourceReader(SourceReader):
         start_row: The starting number of rows read from the CSV file.
                     If the CSV file includes a header, it needs to be greater than or equal to 2.
     Examples:
-        source = CsvSourceReader(
+        source = CSVReader(
                     local_path="./builder/job/data/App.csv",
                     columns=["id", 'riskMark', 'useCert'],
                     start_row=2
@@ -66,7 +66,7 @@ class CsvSourceReader(SourceReader):
         raise NotImplementedError(f"{self.__class__.__name__} does not support being submitted separately.")
 
     def to_rest(self):
-        """Transforms `CsvSourceReader` to REST model `CsvSourceNodeConfig`."""
+        """Transforms `CSVReader` to REST model `CsvSourceNodeConfig`."""
         from pathlib import Path
         absolute_path = str(Path(self.local_path).resolve())
         config = rest.CsvSourceNodeConfig(

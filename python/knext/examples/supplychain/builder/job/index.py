@@ -12,8 +12,8 @@
 
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import (
-    CsvSourceReader,
-    KGSinkWriter,
+    CSVReader,
+    KGWriter,
     SPGTypeMapping,
 )
 from schema.supplychain_schema_helper import SupplyChain
@@ -21,7 +21,7 @@ from schema.supplychain_schema_helper import SupplyChain
 
 class Index(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Index.csv", columns=["id"], start_row=2
         )
 
@@ -31,6 +31,6 @@ class Index(BuilderJob):
             .add_field("id", SupplyChain.Index.name)
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink

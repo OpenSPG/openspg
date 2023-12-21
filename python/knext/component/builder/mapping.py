@@ -1,5 +1,16 @@
+# -*- coding: utf-8 -*-
+# Copyright 2023 Ant Group CO., Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied.
 from enum import Enum
-from typing import Union, Dict, List, Tuple, Sequence
+from typing import Union, Dict, List, Tuple, Sequence, Optional
 
 from knext import rest
 from knext.common.runnable import Input, Output
@@ -41,7 +52,7 @@ class SPGTypeMapping(Mapping):
 
     spg_type_name: Union[str, SPGTypeHelper]
 
-    fuse_op: FuseOp = None
+    fuse_op: Optional[FuseOp] = None
 
     mapping: Dict[str, str] = dict()
 
@@ -65,11 +76,11 @@ class SPGTypeMapping(Mapping):
     def output_keys(self):
         return self.output_fields
 
-    def add_field(
-        self,
-        source_field: str,
-        target_field: Union[str, PropertyHelper],
-        link_strategy: Union[LinkStrategyEnum, LinkOp] = None,
+    def add_mapping_field(
+            self,
+            source_field: str,
+            target_field: Union[str, PropertyHelper],
+            link_strategy: Union[LinkStrategyEnum, LinkOp] = None,
     ):
         """Adds a field mapping from source data to property of spg_type.
 
@@ -217,14 +228,17 @@ class RelationMapping(Mapping):
 
 
 class SubGraphMapping(Mapping):
-
     spg_type_name: Union[str, SPGTypeHelper]
+
+    fuse_op: Optional[FuseOp] = None
 
     mapping: Dict[str, str] = dict()
 
     filters: List[Tuple[str, str]] = list()
 
     link_strategies: Dict[str, Union[LinkStrategyEnum, LinkOp]] = dict()
+
+    children_nodes: List[Mapping] = list()
 
     @property
     def input_types(self) -> Input:
@@ -242,11 +256,11 @@ class SubGraphMapping(Mapping):
     def output_keys(self):
         return self.output_fields
 
-    def add_field(
-        self,
-        source_field: str,
-        target_field: Union[str, PropertyHelper],
-        link_strategy: Union[LinkStrategyEnum, LinkOp] = None,
+    def add_mapping_field(
+            self,
+            source_field: str,
+            target_field: Union[str, PropertyHelper],
+            link_strategy: Union[LinkStrategyEnum, LinkOp] = None,
     ):
         """Adds a field mapping from source data to property of spg_type.
 
@@ -258,21 +272,33 @@ class SubGraphMapping(Mapping):
         self.link_strategies[target_field] = link_strategy
         return self
 
+    def add_object_type(self, spg_type_name: Union[str, SPGTypeHelper]):
+        node = SPGTypeMapping(spg_type_name=self.spg_type_name,
+                              mapping=self.mapping,
+                              )
+
+        self.spg_type_name = spg_type_name
+        self.mapping = dict()
+        if self.filters:
+            node.filters = self.filters
+            self.filters = list()
+        if self.fuse_op:
+            node.fuse_op = self.fuse_op
+            self.fuse_op = None
+        if self.link_strategies:
+            node.link_strategies = self.link_strategies
+            self.link_strategies = dict()
+
+        self.children_nodes.append(node)
+        return self
+
     def invoke(self, input: Input) -> Sequence[Output]:
         pass
 
     def to_rest(self) -> rest.Node:
-
-        mapping_filters = [
-            rest.MappingFilter(column_name=name, column_value=value)
-            for name, value in self.filters
-        ]
-        mapping_configs = [
-            rest.MappingConfig(source=src_name, target=tgt_names)
-            for src_name, tgt_names in self.mapping.items()
-        ]
-
-        node_configs = []
+        self.add_object_type(None)
+        self.children_nodes.reverse()
+        node_configs = [node.to_rest().node_config for node in self.children_nodes]
 
         config = rest.SubGraphMappingNodeConfig(
             children_node_configs=node_configs,
@@ -285,11 +311,3 @@ class SubGraphMapping(Mapping):
 
     def submit(self):
         pass
-
-
-if __name__ == '__main__':
-    SubGraphMapping(subject_type="Medical.Disease")\
-        .add_field("id", "id")\
-        .add_field("name", "name")\
-        .add_field("bodyPart", "bodyPart")\
-        .add_object_type(object_type="Medical.BodyPart")

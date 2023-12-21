@@ -73,7 +73,7 @@ class BuilderClient(Client):
         import knext
         python_exec = sys.executable
         python_paths = sys.path
-        sys.path.append(os.path.join(knext.__path__[0], "/operator/builtin"))
+        sys.path.append(os.path.join(knext.__path__[0], "operator/builtin"))
 
         import subprocess
         import datetime

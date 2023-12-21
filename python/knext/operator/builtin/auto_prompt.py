@@ -50,9 +50,24 @@ input:${input}
     def parse_response(self, response: str) -> List[SPGRecord]:
         result = []
         subject = {}
-        re_obj = json.loads(response)
+        # re_obj = json.loads(response)
+        re_obj = {
+"spo": [
+{
+"subject": "甲状腺结节",
+"predicate": "常见症状",
+"object": "甲状腺结节"
+},
+{
+"subject": "甲状腺结节",
+"predicate": "适用药品",
+"object": "放射性碘治疗,复方碘口服液(Lugol液),抗甲状腺药物,硫脲类化合物,丙基硫氧嘧啶(PTU),甲基硫氧嘧啶(MTU),咪唑类的甲硫咪唑和卡比马唑"
+}
+]
+}
         if "spo" not in re_obj.keys():
             raise ValueError("SPO format error.")
+        subject_properties = {}
         for spo_item in re_obj.get("spo", []):
             if spo_item["predicate"] not in self.predicate_zh_to_en_name:
                 continue
@@ -75,12 +90,26 @@ input:${input}
                 subject_properties[spo_en_name] = spo_item["object"]
 
             # for k, val in subject.items():
-            subject_entity = SPGRecord(spg_type_name=self.spg_type_name, properties=subject_properties)
-            result.append(subject_entity)
+        subject_entity = SPGRecord(spg_type_name=self.spg_type_name, properties=subject_properties)
+        result.append(subject_entity)
         return result
 
     def build_variables(self, variables: Dict[str, str], response: str) -> List[Dict[str, str]]:
-        re_obj = json.loads(response)
+        # re_obj = json.loads(response)
+        re_obj = {
+"spo": [
+{
+"subject": "甲状腺结节",
+"predicate": "常见症状",
+"object": "甲状腺结节"
+},
+{
+"subject": "甲状腺结节",
+"predicate": "适用药品",
+"object": "放射性碘治疗,复方碘口服液(Lugol液),抗甲状腺药物,硫脲类化合物,丙基硫氧嘧啶(PTU),甲基硫氧嘧啶(MTU),咪唑类的甲硫咪唑和卡比马唑"
+}
+]
+}
         if "spo" not in re_obj.keys():
             raise ValueError("SPO format error.")
         re = re_obj.get("spo", [])

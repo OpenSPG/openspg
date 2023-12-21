@@ -13,8 +13,8 @@
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import SPGTypeMapping
 from knext.api.component import (
-    CsvSourceReader,
-    KGSinkWriter,
+    CSVReader,
+    KGWriter,
 )
 from knext.component.builder import RelationMapping
 from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
@@ -22,7 +22,7 @@ from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
 
 class Company(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Company.csv",
             columns=["id", "name", "phone"],
             start_row=2,
@@ -35,14 +35,14 @@ class Company(BuilderJob):
             .add_field("phone", RiskMining.Company.hasPhone)
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink
 
 
 class CompanyHasCert(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Company_hasCert_Cert.csv",
             columns=["src", "dst"],
             start_row=2,
@@ -58,6 +58,6 @@ class CompanyHasCert(BuilderJob):
             .add_field("dst", "dstId")
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink

@@ -12,9 +12,9 @@
 
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import (
-    CsvSourceReader,
+    CSVReader,
     SubGraphMapping,
-    KGSinkWriter,
+    KGWriter,
     LLMBasedExtractor
 )
 from nn4k.invoker.openai_invoker import OpenAIInvoker
@@ -22,10 +22,9 @@ from nn4k.invoker.openai_invoker import OpenAIInvoker
 
 class Disease(BuilderJob):
     def build(self):
-        """
-        1. 定义输入源，CSV文件，其中CSV文件每一行为一段文本
-        """
-        source = CsvSourceReader(
+
+
+        source = CSVReader(
             local_path="./builder/job/data/Disease.csv",
             columns=["content"],
             start_row=2,
@@ -41,7 +40,7 @@ class Disease(BuilderJob):
         """
         3. 定义输出到图谱
         """
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         """
         4. 完整Pipeline定义
@@ -54,7 +53,7 @@ if __name__ == '__main__':
     """
     1. 定义输入源，CSV文件，其中CSV文件每一行为一段文本
     """
-    source = CsvSourceReader(
+    source = CSVReader(
         local_path="./builder/job/data/Disease.csv",
         columns=["content"],
         start_row=2,
@@ -78,7 +77,7 @@ if __name__ == '__main__':
     """
     3. 定义输出到图谱
     """
-    sink = KGSinkWriter()
+    sink = KGWriter()
 
     """
     4. 完整Pipeline定义

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from knext.core.builder.job.model.builder_job import BuilderJob
-from knext.api.component import CsvSourceReader, SPGTypeMapping, KGSinkWriter
+from knext.api.component import CSVReader, SPGTypeMapping, KGWriter
 from schema.${helper} import ${namespace}
 
 class Demo(BuilderJob):
 
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Demo.csv",
             columns=["id", 'prop'],
             start_row=2
@@ -18,6 +18,6 @@ class Demo(BuilderJob):
         ).add_field("id", ${namespace}.Demo.id) \
             .add_field("prop", ${namespace}.Demo.demoProperty)
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink

@@ -10,12 +10,12 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 from knext.client.model.builder_job import BuilderJob
-from knext.component.builder import CsvSourceReader, SPGTypeMapping, KGSinkWriter
+from knext.component.builder import CSVReader, SPGTypeMapping, KGWriter
 
 
 class BodyPart(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/BodyPart.csv", columns=["id"], start_row=1
         )
 
@@ -23,6 +23,6 @@ class BodyPart(BuilderJob):
             "id", "id"
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink

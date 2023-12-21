@@ -13,8 +13,8 @@
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import SPGTypeMapping
 from knext.api.component import (
-    CsvSourceReader,
-    KGSinkWriter,
+    CSVReader,
+    KGWriter,
     RelationMapping
 )
 from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
@@ -22,7 +22,7 @@ from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
 
 class Person(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Person.csv",
             columns=["id", "name", "age", "hasPhone"],
             start_row=2,
@@ -36,14 +36,14 @@ class Person(BuilderJob):
             .add_field("hasPhone", RiskMining.Person.hasPhone)
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink
 
 
 class PersonFundTrans(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Person_fundTrans_Person.csv",
             columns=["src", "dst", "transDate", "transAmt"],
             start_row=2,
@@ -61,14 +61,14 @@ class PersonFundTrans(BuilderJob):
             .add_field("transAmt", "transAmt")
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink
 
 
 class PersonHasDevice(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Person_hasDevice_Device.csv",
             columns=["src", "dst"],
             start_row=2,
@@ -84,14 +84,14 @@ class PersonHasDevice(BuilderJob):
             .add_field("dst", "dstId")
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink
 
 
 class PersonHoldShare(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Person_holdShare_Company.csv",
             columns=["src", "dst"],
             start_row=2,
@@ -107,6 +107,6 @@ class PersonHoldShare(BuilderJob):
             .add_field("dst", "dstId")
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink
