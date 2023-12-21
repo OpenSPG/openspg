@@ -51,11 +51,15 @@ public class LocalReasonerTask implements Serializable {
   private KgSchemaConnectionInfo connInfo = null;
   private String schemaString = null;
 
-  /** Choose between graphLoadClass or graphState */
+  /** Choose between graphLoadClass and graphState, or specify a class name */
   private String graphLoadClass = null;
 
-  private String graphStateInitString = null;
   private GraphState<IVertexId> graphState = null;
+
+  /** User specified the name of graphstate */
+  private String graphStateClassName = null;
+
+  private String graphStateInitString = null;
 
   /** start id from input */
   private List<Tuple2<String, String>> startIdList;
