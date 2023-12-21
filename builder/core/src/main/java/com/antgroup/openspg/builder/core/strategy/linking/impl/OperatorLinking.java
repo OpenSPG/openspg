@@ -2,10 +2,10 @@ package com.antgroup.openspg.builder.core.strategy.linking.impl;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.core.strategy.linking.PropertyLinking;
-import com.antgroup.openspg.builder.core.strategy.operator.OperatorFactory;
-import com.antgroup.openspg.builder.core.strategy.operator.PythonOperatorFactory;
-import com.antgroup.openspg.builder.core.strategy.operator.protocol.InvokeResultWrapper;
-import com.antgroup.openspg.builder.core.strategy.operator.protocol.PythonRecord;
+import com.antgroup.openspg.builder.core.physical.operator.OperatorFactory;
+import com.antgroup.openspg.builder.core.physical.operator.PythonOperatorFactory;
+import com.antgroup.openspg.builder.core.physical.operator.protocol.InvokeResultWrapper;
+import com.antgroup.openspg.builder.core.physical.operator.protocol.PythonRecord;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.LinkingException;
 import com.antgroup.openspg.builder.model.pipeline.config.linking.OperatorLinkingConfig;

@@ -1,8 +1,8 @@
-package com.antgroup.openspg.builder.core.strategy.operator;
+package com.antgroup.openspg.builder.core.physical.operator;
 
+import com.antgroup.openspg.builder.core.physical.operator.protocol.PythonRecord;
 import com.antgroup.openspg.builder.core.runtime.BuilderCatalog;
 import com.antgroup.openspg.builder.core.strategy.linking.RecordLinking;
-import com.antgroup.openspg.builder.core.strategy.operator.protocol.PythonRecord;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.VertexRecordConvertor;
 import com.antgroup.openspg.common.util.StringUtils;
@@ -13,7 +13,7 @@ import java.util.Map;
 public class PythonRecordConvertor {
 
   public static BaseAdvancedRecord toAdvancedRecord(
-      PythonRecord pythonRecord, RecordLinking recordLinking, BuilderCatalog catalog) {
+          PythonRecord pythonRecord, RecordLinking recordLinking, BuilderCatalog catalog) {
     String recordId = pythonRecord.getId();
     if (StringUtils.isBlank(recordId)) {
       return null;

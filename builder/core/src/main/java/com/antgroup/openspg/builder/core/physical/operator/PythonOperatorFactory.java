@@ -1,4 +1,4 @@
-package com.antgroup.openspg.builder.core.strategy.operator;
+package com.antgroup.openspg.builder.core.physical.operator;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
