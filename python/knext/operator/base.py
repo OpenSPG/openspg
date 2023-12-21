@@ -11,12 +11,11 @@
 # or implied.
 import os
 from abc import ABC
-from typing import Dict, Any, Type, Union
+from typing import Dict, Any, Type
 
 from knext import rest
 
-from knext.common.schema_helper import SPGTypeHelper
-from knext.operator.eval_result import EvalResult
+from knext.operator.invoke_result import InvokeResult
 
 
 class BaseOp(ABC):
@@ -29,30 +28,27 @@ class BaseOp(ABC):
     name: str
     """Operator description."""
     desc: str = ""
-    """SPG type the operator bind to."""
-    bind_to: Union[str, SPGTypeHelper] = None
-
+    """Operator params."""
     params: Dict[str, str] = None
 
     _registry = {}
     _local_path: str
-    _type: str
     _version: int
     _has_registered: bool = False
 
     def __init__(self, params: Dict[str, str] = None):
         self.params = params
 
-    def eval(self, *args):
+    def invoke(self, *args):
         """Used to implement operator execution logic."""
         raise NotImplementedError(
-            f"{self.__class__.__name__} need to implement `eval` method."
+            f"{self.__class__.__name__} need to implement `invoke` method."
         )
 
     def _handle(self, *inputs) -> Dict[str, Any]:
         """Only available for Builder in OpenSPG to call through the pemja tool."""
         pre_input = self._pre_process(*inputs)
-        output = self.eval(*pre_input)
+        output = self.invoke(*pre_input)
         post_output = self._post_process(output)
         return post_output
 
@@ -62,7 +58,7 @@ class BaseOp(ABC):
         return inputs
 
     @staticmethod
-    def _post_process(output: EvalResult) -> Dict[str, Any]:
+    def _post_process(output: InvokeResult) -> Dict[str, Any]:
         """Convert result structures in operator into structures in building job after `eval` method."""
         return output.to_dict()
 
@@ -81,6 +77,9 @@ class BaseOp(ABC):
                     f"Operator [{name}] conflict in {subclass._local_path} and {cls.by_name(name)._local_path}."
                 )
             cls._registry[name] = subclass
+            print(subclass.__bases__)
+            if hasattr(subclass, "bind_to"):
+                subclass.__bases__[0]._bind_schemas[subclass.bind_to] = name
             return subclass
 
         return add_subclass_to_registry

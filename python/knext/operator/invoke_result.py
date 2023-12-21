@@ -16,7 +16,7 @@ from typing import TypeVar, Generic, List, Dict, Any
 T = TypeVar("T")
 
 
-class EvalResult(Generic[T]):
+class InvokeResult(Generic[T]):
     """Data structure in operator, used to represent the results of operator processing.
     Args:
         data: The data after operator process.
@@ -48,7 +48,7 @@ class EvalResult(Generic[T]):
     @staticmethod
     def from_dict(input: Dict[str, Any]):
         """Returns the model from a dict"""
-        return EvalResult(input.get("data"), input.get("traces"), input.get("errors"))
+        return InvokeResult(input.get("data"), input.get("traces"), input.get("errors"))
 
     def __repr__(self):
         """For `print` and `pprint`"""

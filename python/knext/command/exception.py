@@ -27,6 +27,7 @@ class _ApiExceptionHandler(Group):
 
     def invoke(self, ctx: Context) -> Any:
         return super().invoke(ctx)
+        # TODO
         # try:
         #     return super().invoke(ctx)
         # except ApiException as api:

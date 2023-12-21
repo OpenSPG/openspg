@@ -35,6 +35,9 @@ with open(os.path.join(cwd, "knext/__init__.py"), "w") as wf:
 
 __package_name__ = "{package_name}"
 __version__ = "{version}"
+
+from knext.common.env import init_env
+init_env()
 """
     wf.write(content)
 

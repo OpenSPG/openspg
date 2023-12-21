@@ -5,22 +5,21 @@ from knext.operator.op import PromptOp
 from knext.operator.spg_record import SPGRecord
 
 
-class IndicatorNER(PromptOp):
+class IndicatorLOGIC(PromptOp):
     template = """
 请根据给定文本和文本中的指标及其指标关系，梳理逻辑链，以json格式输出
 #####
 输出格式:
-[{{"subject": "XXX", "predicate": "顺承", "object": ["XXX", "XXX"]}}, {{"subject": "XXX", "predicate": "顺承", "object": ["XXX", "XXX"]}}]
+[{"subject": "XXX", "predicate": "顺承", "object": ["XXX", "XXX"]}, {"subject": "XXX", "predicate": "顺承", "object": ["XXX", "XXX"]}]
 文本: 
-{input}
+${input}
 指标: 
-{ner}
+${ner}
 指标关系: 
-{rel}
+${rel}
 """
 
-
-    def build_prompt(self, record: Dict[str, str]):
+    def build_prompt(self, variables: Dict[str, str]):
         """
         record: {
         "input": "济南市财政收入质量及自给能力均较好，但土地出让收入大幅下降致综合财力明显下滑。济南市财政收入质量及自给能力均较好，但土地出让收入大幅下降致综合
@@ -33,7 +32,10 @@ class IndicatorNER(PromptOp):
         "hasA": "财政收入质量,财政自给能力,土地出让收入....."
     }
         """
-        return self.template.format(**record)
+        return self.template\
+            .replace("${input}", variables.get("input"))\
+            .replace("${ner}", variables.get("ner"))\
+            .replace("${rel}", variables.get("rel"))
 
     def parse_response(
             self, response: str
@@ -56,5 +58,3 @@ class IndicatorNER(PromptOp):
             logic_result.append(SPGRecord("FEL.State", properties=properties))
 
         return logic_result
-
-

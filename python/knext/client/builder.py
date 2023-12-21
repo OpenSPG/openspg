@@ -55,17 +55,6 @@ class BuilderClient(Client):
         )
 
     def execute(self, builder_chain: BuilderChain, **kwargs):
-        """
-          --projectId 2 \
-  --jobName "TaxOfRiskApp" \
-  --pipeline "{\"nodes\":[{\"id\":\"1\",\"name\":\"csv\",\"nodeConfig\":{\"@type\":\"CSV_SOURCE\",\"startRow\":2,\"url\":\"./src/test/resources/TaxOfRiskApp.csv\",\"columns\":[\"id\"],\"type\":\"CSV_SOURCE\"}},{\"id\":\"2\",\"name\":\"mapping\",\"nodeConfig\":{\"@type\":\"SPG_TYPE_MAPPING\",\"spgType\":\"RiskMining.TaxOfRiskUser\",\"mappingFilters\":[],\"mappingConfigs\":[],\"type\":\"SPG_TYPE_MAPPING\"}},{\"id\":\"3\",\"name\":\"sink\",\"nodeConfig\":{\"@type\":\"GRAPH_SINK\",\"type\":\"GRAPH_SINK\"}}],\"edges\":[{\"from\":\"1\",\"to\":\"2\"},{\"from\":\"2\",\"to\":\"3\"}]}" \
-  --pythonExec "/usr/local/bin/python3.9" \
-  --pythonPaths "/usr/local/lib/python3.9/site-packages;./python" \
-  --schemaUrl "http://localhost:8887" \
-  --parallelism "1" \
-  --alterOperation "UPSERT" \
-  --logFile TaxOfRiskApp.log
-        """
 
         dag_config = builder_chain.to_rest()
         import os
@@ -87,7 +76,7 @@ class BuilderClient(Client):
                     "-Dcloudext.graphstore.drivers=com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClientDriver",
                     "-Dcloudext.searchengine.drivers=com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchEngineClientDriver",
                     jar_path,
-                    "--projectId", os.environ.get("KNEXT_PROJECT_ID"),
+                    "--projectId", self._project_id,
                     "--jobName", kwargs.get("job_name", "default_job"),
                     "--pipeline", json.dumps(pipeline),
                     "--pythonExec", python_exec,
