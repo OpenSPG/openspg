@@ -13,7 +13,7 @@ import java.util.Map;
 public class PythonRecordConvertor {
 
   public static BaseAdvancedRecord toAdvancedRecord(
-          PythonRecord pythonRecord, RecordLinking recordLinking, BuilderCatalog catalog) {
+      PythonRecord pythonRecord, RecordLinking recordLinking, BuilderCatalog catalog) {
     String recordId = pythonRecord.getId();
     if (StringUtils.isBlank(recordId)) {
       return null;
