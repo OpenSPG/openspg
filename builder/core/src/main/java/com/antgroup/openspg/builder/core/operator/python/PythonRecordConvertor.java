@@ -1,10 +1,11 @@
 package com.antgroup.openspg.builder.core.operator.python;
 
+import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 
 public class PythonRecordConvertor {
 
-  public static BaseSPGRecord toSPGRecord(PythonRecord pythonRecord) {
+  public static BaseAdvancedRecord toSPGRecord(PythonRecord pythonRecord) {
     return null;
   }
 

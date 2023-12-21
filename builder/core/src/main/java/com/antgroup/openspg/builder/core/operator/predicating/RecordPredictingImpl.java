@@ -4,10 +4,14 @@ import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PredictingException;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseMappingNodeConfig;
-import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
+import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyValue;
+import com.antgroup.openspg.core.schema.model.predicate.Property;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
 public class RecordPredictingImpl implements RecordPredicting {
@@ -28,15 +32,48 @@ public class RecordPredictingImpl implements RecordPredicting {
 
     for (BaseMappingNodeConfig.PredictingConfig predicatingConfig : predicatingConfigs) {
       PropertyPredicting propertyPredicating =
-          PropertyPredictingFactory.getPropertyPredicating(
-              predicatingConfig.getPredictingConfig());
+          PropertyPredictingFactory.getPropertyPredicating(predicatingConfig.getPredictingConfig());
       propertyPredicating.init(context);
       semanticPropertyPredicating.put(predicatingConfig.getTarget(), propertyPredicating);
     }
   }
 
   @Override
-  public void propertyPredicating(BaseSPGRecord spgRecord) throws PredictingException {
-    // todo
+  public void propertyPredicating(BaseAdvancedRecord advancedRecord) throws PredictingException {
+    Map<String, Property> propertyMap = advancedRecord.getSpgType().getPropertyMap();
+    for (Map.Entry<String, PropertyPredicting> entry : semanticPropertyPredicating.entrySet()) {
+      String propertyKey = entry.getKey();
+      PropertyPredicting predicting = entry.getValue();
+
+      Property property = propertyMap.get(propertyKey);
+      if (property == null) {
+        continue;
+      }
+
+      List<BaseAdvancedRecord> predictedRecords = predicting.propertyPredicting(advancedRecord);
+      if (CollectionUtils.isEmpty(predictedRecords)) {
+        continue;
+      }
+
+      SPGPropertyValue value = null;
+      if (property.isMultiValue()) {
+        List<String> bizIds =
+            predictedRecords.stream()
+                .map(BaseAdvancedRecord::getId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        value = new SPGPropertyValue(String.join(",", bizIds));
+        value.setStrStds(bizIds);
+        value.setIds(bizIds);
+      } else {
+        BaseAdvancedRecord firstPredictedRecord = predictedRecords.get(0);
+
+        value = new SPGPropertyValue(firstPredictedRecord.getId());
+        value.setSingleStd(firstPredictedRecord.getId());
+        value.setSingleId(firstPredictedRecord.getId());
+      }
+      advancedRecord.addSpgProperties(new SPGPropertyRecord(property, value));
+    }
   }
 }

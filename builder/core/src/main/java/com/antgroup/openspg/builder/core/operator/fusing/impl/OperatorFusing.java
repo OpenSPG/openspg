@@ -1,16 +1,16 @@
 package com.antgroup.openspg.builder.core.operator.fusing.impl;
 
 import com.antgroup.openspg.builder.core.operator.OperatorFactory;
-import com.antgroup.openspg.builder.core.operator.python.PythonRecordConvertor;
 import com.antgroup.openspg.builder.core.operator.fusing.EntityFusing;
 import com.antgroup.openspg.builder.core.operator.python.InvokeResultWrapper;
 import com.antgroup.openspg.builder.core.operator.python.PythonOperatorFactory;
 import com.antgroup.openspg.builder.core.operator.python.PythonRecord;
+import com.antgroup.openspg.builder.core.operator.python.PythonRecordConvertor;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.FusingException;
 import com.antgroup.openspg.builder.model.pipeline.config.fusing.OperatorFusingConfig;
-import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
+import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +40,7 @@ public class OperatorFusing implements EntityFusing {
   }
 
   @Override
-  public List<BaseSPGRecord> entityFusing(List<BaseSPGRecord> records) throws FusingException {
+  public List<BaseAdvancedRecord> entityFusing(List<BaseAdvancedRecord> records) throws FusingException {
     List<PythonRecord> pythonRecords =
         CollectionsUtils.listMap(records, PythonRecordConvertor::toPythonRecord);
     InvokeResultWrapper<List<PythonRecord>> invokeResultWrapper = null;

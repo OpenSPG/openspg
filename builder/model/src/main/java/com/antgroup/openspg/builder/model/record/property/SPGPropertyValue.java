@@ -57,6 +57,11 @@ public class SPGPropertyValue extends BaseValObj {
     stds.add(std);
   }
 
+  public void setSingleId(String id) {
+    ids = new ArrayList<>(1);
+    ids.add(id);
+  }
+
   public void setStrStds(List<String> stds) {
     this.stds = (List) stds;
   }

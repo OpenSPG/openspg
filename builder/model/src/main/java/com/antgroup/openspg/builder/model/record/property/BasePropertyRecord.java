@@ -42,14 +42,18 @@ public abstract class BasePropertyRecord extends BaseValObj {
 
   public List<String> getRawValues() {
     List<String> rawValues = null;
-    Constraint constraint = getConstraint();
     String rawValue = value.getRaw();
-    if (constraint != null && constraint.contains(ConstraintTypeEnum.MULTI_VALUE)) {
+    if (isMultiValue()) {
       rawValues = Arrays.stream(rawValue.split(",")).collect(Collectors.toList());
     } else {
       rawValues = new ArrayList<>(1);
       rawValues.add(rawValue);
     }
     return rawValues;
+  }
+
+  public boolean isMultiValue() {
+    Constraint constraint = getConstraint();
+    return constraint != null && constraint.contains(ConstraintTypeEnum.MULTI_VALUE);
   }
 }

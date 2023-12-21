@@ -8,16 +8,16 @@ import com.antgroup.openspg.builder.model.pipeline.config.fusing.BaseFusingConfi
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
-
+import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.VertexRecordConvertor;
+import com.antgroup.openspg.common.util.CollectionsUtils;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import java.util.*;
-
-import com.antgroup.openspg.core.schema.model.constraint.Constraint;
-import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
-import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
+import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
 public class SubGraphFusingImpl implements SubGraphFusing {
 
+  private BuilderContext context;
   private final List<BaseMappingNodeConfig.MappingConfig> mappingConfigs;
   private final Map<String, EntityFusing> semanticEntityFusing;
 
@@ -28,6 +28,7 @@ public class SubGraphFusingImpl implements SubGraphFusing {
 
   @Override
   public void init(BuilderContext context) throws BuilderException {
+    this.context = context;
     if (CollectionUtils.isEmpty(mappingConfigs)) {
       return;
     }
@@ -53,8 +54,8 @@ public class SubGraphFusingImpl implements SubGraphFusing {
         if (entityFusing == null) {
           continue;
         }
-        List<BaseSPGRecord> propertySPGRecords = toSPGRecords(propertyRecord);
-        List<BaseSPGRecord> fusedRecords = entityFusing.entityFusing(propertySPGRecords);
+        List<BaseAdvancedRecord> advancedRecords = toAdvancedRecords(propertyRecord);
+        List<BaseAdvancedRecord> fusedRecords = entityFusing.entityFusing(advancedRecords);
         modifyPropertyRecord(propertyRecord, fusedRecords);
         results.addAll(fusedRecords);
       }
@@ -63,10 +64,34 @@ public class SubGraphFusingImpl implements SubGraphFusing {
     return results;
   }
 
-  private List<BaseSPGRecord> toSPGRecords(BasePropertyRecord propertyRecord) {
+  private List<BaseAdvancedRecord> toAdvancedRecords(BasePropertyRecord propertyRecord) {
     List<String> rawValues = propertyRecord.getRawValues();
+    BaseSPGType spgType =
+        context.getCatalog().getSPGType(propertyRecord.getObjectTypeRef().getBaseSpgIdentifier());
+    return CollectionsUtils.listMap(
+        rawValues,
+        rawValue -> {
+          Map<String, String> properties = new HashMap<>(2);
+          properties.put("id", rawValue);
+          properties.put("name", rawValue);
+          return VertexRecordConvertor.toAdvancedRecord(spgType, rawValue, properties);
+        });
   }
 
   private void modifyPropertyRecord(
-      BasePropertyRecord propertyRecord, List<BaseSPGRecord> fusedRecord) {}
+      BasePropertyRecord propertyRecord, List<BaseAdvancedRecord> fusedRecord) {
+    if (!propertyRecord.isMultiValue()) {
+      BaseAdvancedRecord advancedRecord = fusedRecord.get(0);
+      String bizId = advancedRecord.getId();
+      propertyRecord.getValue().setSingleStd(bizId);
+      propertyRecord.getValue().setSingleId(bizId);
+    } else {
+      List<String> bizIds = fusedRecord.stream()
+              .map(BaseAdvancedRecord::getId)
+              .distinct()
+              .collect(Collectors.toList());
+      propertyRecord.getValue().setStrStds(bizIds);
+      propertyRecord.getValue().setIds(bizIds);
+    }
+  }
 }

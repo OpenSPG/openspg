@@ -15,6 +15,8 @@ package com.antgroup.openspg.core.schema.model.predicate;
 
 import com.antgroup.openspg.core.schema.model.BaseSpoTriple;
 import com.antgroup.openspg.core.schema.model.BasicInfo;
+import com.antgroup.openspg.core.schema.model.constraint.Constraint;
+import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
 import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTripleIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
@@ -106,6 +108,11 @@ public class Property extends BaseSpoTriple
         subjectTypeRef.getBasicInfo().getName(),
         basicInfo.getName(),
         objectTypeRef.getBasicInfo().getName());
+  }
+
+  public boolean isMultiValue() {
+    Constraint constraint = getConstraint();
+    return constraint != null && constraint.contains(ConstraintTypeEnum.MULTI_VALUE);
   }
 
   public PropertyRef toRef() {
