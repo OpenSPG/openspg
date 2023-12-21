@@ -22,7 +22,7 @@ public class SchemaException extends OpenSPGException {
     super(cause, true, true, messagePattern, args);
   }
 
-  private SchemaException(String messagePattern, Object... args) {
+  public SchemaException(String messagePattern, Object... args) {
     this(null, messagePattern, args);
   }
 

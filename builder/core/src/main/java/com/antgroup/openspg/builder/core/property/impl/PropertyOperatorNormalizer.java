@@ -33,7 +33,7 @@ public class PropertyOperatorNormalizer implements PropertyNormalizer {
   @Override
   public void init(BuilderContext context) throws BuilderException {
     operatorFactory.init(context);
-    operatorFactory.loadOperator(normalizerConfig.getOperatorConfig());
+    operatorFactory.loadOperator(normalizerConfig.getConfig());
   }
 
   @Override
@@ -47,7 +47,7 @@ public class PropertyOperatorNormalizer implements PropertyNormalizer {
         Map<String, Object> result =
             (Map<String, Object>)
                 operatorFactory.invoke(
-                    normalizerConfig.getOperatorConfig(), rawValue, new HashMap<>(0));
+                    normalizerConfig.getConfig(), rawValue, new HashMap<>(0));
         invokeResultWrapper =
             mapper.convertValue(
                 result, new TypeReference<InvokeResultWrapper<List<InvokeResult>>>() {});

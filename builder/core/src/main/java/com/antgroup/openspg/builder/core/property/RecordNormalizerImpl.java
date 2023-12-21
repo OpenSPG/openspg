@@ -1,16 +1,18 @@
 package com.antgroup.openspg.builder.core.property;
 
 import com.antgroup.openspg.builder.core.property.impl.BasicPropertyNormalizer;
-import com.antgroup.openspg.builder.core.property.impl.PropertySearchNormalizer;
+import com.antgroup.openspg.builder.core.property.impl.PropertyIdEqualsNormalizer;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.PropertyNormalizeException;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseMappingNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 
 public class RecordNormalizerImpl implements RecordNormalizer {
@@ -18,13 +20,18 @@ public class RecordNormalizerImpl implements RecordNormalizer {
   private final List<BaseMappingNodeConfig.MappingConfig> mappingConfigs;
   private final BasicPropertyNormalizer basicPropertyNormalizer;
   private final Map<String, PropertyNormalizer> semanticPropertyNormalizers;
-  private final PropertyNormalizer defaultPropertyNormalizer;
+
+  @Setter
+  private PropertyNormalizer defaultPropertyNormalizer = PropertyIdEqualsNormalizer.INSTANCE;
 
   public RecordNormalizerImpl(List<BaseMappingNodeConfig.MappingConfig> mappingConfigs) {
     this.mappingConfigs = mappingConfigs;
     this.basicPropertyNormalizer = new BasicPropertyNormalizer();
     this.semanticPropertyNormalizers = new HashMap<>(mappingConfigs.size());
-    this.defaultPropertyNormalizer = new PropertySearchNormalizer();
+  }
+
+  public RecordNormalizerImpl() {
+    this(Collections.emptyList());
   }
 
   @Override

@@ -31,24 +31,30 @@ import scala.Tuple2;
 
 @Data
 public class LocalReasonerTask implements Serializable {
-  /** task id */
   private static final long serialVersionUID = 8591924774057455987L;
 
+  /** task id */
   private String id = "";
+
+  /** output file name */
+  private String outputFile = null;
+
   /** Choose between dsl or dslDagList */
   private String dsl = null;
 
   private List<PhysicalOperator<LocalRDG>> dslDagList = null;
   private LocalReasonerSession session = null;
 
-  /** pass catalog to runner or provide schema connection info */
+  /** pass catalog to runner or provide schema connection info or provide schema string */
   private Catalog catalog = null;
 
   private KgSchemaConnectionInfo connInfo = null;
+  private String schemaString = null;
 
   /** Choose between graphLoadClass or graphState */
   private String graphLoadClass = null;
 
+  private String graphStateInitString = null;
   private GraphState<IVertexId> graphState = null;
 
   /** start id from input */
@@ -73,4 +79,11 @@ public class LocalReasonerTask implements Serializable {
 
   /** execution information recorder, for debug */
   private IExecutionRecorder executionRecorder = null;
+
+  /** add start id */
+  public void addStartId(List<List<String>> startIdList) {
+    for (List<String> item : startIdList) {
+      this.startIdList.add(new Tuple2<>(item.get(0), item.get(1)));
+    }
+  }
 }

@@ -72,6 +72,7 @@ public class LocalBuilderRunner implements BuilderRunner {
 
     if (context.isEnableLeadTo()) {
       reasonProcessor = new ReasonProcessor();
+      reasonProcessor.init(context);
     }
   }
 

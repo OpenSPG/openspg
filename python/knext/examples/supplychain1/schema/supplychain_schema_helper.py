@@ -21,17 +21,17 @@ class SupplyChain:
 		description = "description"
 		id = "id"
 		name = "name"
-		fundTrans6Month = "fundTrans6Month"
-		fundTrans3Month = "fundTrans3Month"
-		fundTrans1Month = "fundTrans1Month"
-		cashflowDiff6Month = "cashflowDiff6Month"
 		fundTrans1MonthIn = "fundTrans1MonthIn"
-		product = "product"
-		totalTransInAmt = "totalTransInAmt"
-		fundTrans3MonthIn = "fundTrans3MonthIn"
 		fundTrans6MonthIn = "fundTrans6MonthIn"
-		cashflowDiff3Month = "cashflowDiff3Month"
+		fundTrans1Month = "fundTrans1Month"
+		fundTrans3Month = "fundTrans3Month"
+		cashflowDiff6Month = "cashflowDiff6Month"
+		fundTrans3MonthIn = "fundTrans3MonthIn"
+		fundTrans6Month = "fundTrans6Month"
 		cashflowDiff1Month = "cashflowDiff1Month"
+		totalTransInAmt = "totalTransInAmt"
+		product = "product"
+		cashflowDiff3Month = "cashflowDiff3Month"
 
 		def __init__(self):
 			pass
@@ -41,12 +41,12 @@ class SupplyChain:
 		description = "description"
 		id = "id"
 		name = "name"
+		trend = "trend"
+		subject = "subject"
 		eventTime = "eventTime"
+		leadTo = "leadTo"
 		index = "index"
 		belongTo = "belongTo"
-		subject = "subject"
-		leadTo = "leadTo"
-		trend = "trend"
 
 		def __init__(self):
 			pass
@@ -67,8 +67,8 @@ class SupplyChain:
 		description = "description"
 		id = "id"
 		name = "name"
-		stdId = "stdId"
 		alias = "alias"
+		stdId = "stdId"
 
 		def __init__(self):
 			pass
@@ -79,8 +79,8 @@ class SupplyChain:
 		id = "id"
 		name = "name"
 		certNo = "certNo"
-		age = "age"
 		legalRepresentative = "legalRepresentative"
+		age = "age"
 
 		def __init__(self):
 			pass
@@ -90,10 +90,10 @@ class SupplyChain:
 		description = "description"
 		id = "id"
 		name = "name"
-		alias = "alias"
-		hasSupplyChain = "hasSupplyChain"
-		stdId = "stdId"
 		belongToIndustry = "belongToIndustry"
+		hasSupplyChain = "hasSupplyChain"
+		alias = "alias"
+		stdId = "stdId"
 
 		def __init__(self):
 			pass
@@ -103,11 +103,11 @@ class SupplyChain:
 		description = "description"
 		id = "id"
 		name = "name"
+		index = "index"
+		belongTo = "belongTo"
+		trend = "trend"
 		eventTime = "eventTime"
 		subject = "subject"
-		trend = "trend"
-		belongTo = "belongTo"
-		index = "index"
 
 		def __init__(self):
 			pass
@@ -117,8 +117,8 @@ class SupplyChain:
 		description = "description"
 		id = "id"
 		name = "name"
-		stdId = "stdId"
 		alias = "alias"
+		stdId = "stdId"
 
 		def __init__(self):
 			pass

@@ -1,8 +1,12 @@
 package com.antgroup.openspg.builder.core.reason;
 
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
+import com.antgroup.openspg.builder.core.property.RecordNormalizer;
+import com.antgroup.openspg.builder.core.property.RecordNormalizerImpl;
 import com.antgroup.openspg.builder.core.reason.impl.CausalConceptReasoner;
 import com.antgroup.openspg.builder.core.reason.impl.InductiveConceptReasoner;
+import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
@@ -29,11 +33,17 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
     }
   }
 
-  private final InductiveConceptReasoner inductiveConceptReasoner;
-  private final CausalConceptReasoner causalConceptReasoner;
+  private RecordNormalizer recordNormalizer;
+  private InductiveConceptReasoner inductiveConceptReasoner;
+  private CausalConceptReasoner causalConceptReasoner;
 
   public ReasonProcessor() {
     super("", "", null);
+  }
+
+  @Override
+  public void doInit(BuilderContext context) throws BuilderException {
+    super.doInit(context);
     Catalog catalog = buildCatalog();
     GraphState<IVertexId> graphState =
         buildGraphState(context.getCatalog().getGraphStoreConnInfo());
@@ -46,6 +56,9 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
     this.causalConceptReasoner.setBuilderCatalog(context.getCatalog());
     this.causalConceptReasoner.setGraphState(graphState);
     this.causalConceptReasoner.setInductiveConceptReasoner(inductiveConceptReasoner);
+
+    this.recordNormalizer = new RecordNormalizerImpl();
+    this.recordNormalizer.init(context);
   }
 
   @Override
@@ -66,6 +79,10 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
 
       // perform inductive and causal reasoning logic on the input advancedRecord
       results.addAll(reasoning(advancedRecord, conceptList));
+    }
+
+    for (BaseRecord baseRecord : results) {
+      recordNormalizer.propertyNormalize((BaseSPGRecord) baseRecord);
     }
     return results;
   }

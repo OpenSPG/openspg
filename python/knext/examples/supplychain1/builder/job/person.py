@@ -17,6 +17,7 @@ from knext.api.component import (
 )
 from knext.client.model.builder_job import BuilderJob
 from knext.examples.supplychain.schema.supplychain_schema_helper import SupplyChain
+from knext.operator.base import BaseOp
 
 
 class Person(BuilderJob):
@@ -32,7 +33,7 @@ class Person(BuilderJob):
             .add_field("id", SupplyChain.Person.id)
             .add_field("name", SupplyChain.Person.name)
             .add_field("age", SupplyChain.Person.age)
-            .add_field("legalRep", SupplyChain.Person.legalRepresentative)
+            .add_field("legalRep", SupplyChain.Person.legalRepresentative, BaseOp.by_name('CompanyLinkerOperator')())
         )
 
         sink = KGWriter()

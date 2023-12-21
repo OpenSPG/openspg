@@ -14,13 +14,11 @@ import com.antgroup.openspg.builder.model.exception.PipelineConfigException;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
+import com.antgroup.openspg.core.schema.model.SchemaException;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
-import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.server.api.facade.ApiResponse;
 import com.antgroup.openspg.server.api.facade.client.ConceptFacade;
 import com.antgroup.openspg.server.api.facade.client.SchemaFacade;
@@ -111,8 +109,7 @@ public class LocalBuilderMain {
     boolean enableLeadTo = commandLine.hasOption(LEAD_TO_OPTION);
 
     ProjectSchema projectSchema = getProjectSchema(projectId, schemaUrl);
-    Map<SPGTypeIdentifier, ConceptList> conceptLists =
-        getConceptLists(enableLeadTo, projectSchema, pipeline);
+    Map<SPGTypeIdentifier, ConceptList> conceptLists = getConceptLists(enableLeadTo, projectSchema);
     BuilderContext builderContext =
         new BuilderContext()
             .setProjectId(projectId)
@@ -147,7 +144,7 @@ public class LocalBuilderMain {
   }
 
   private static Map<SPGTypeIdentifier, ConceptList> getConceptLists(
-      boolean enableLeadTo, ProjectSchema projectSchema, Pipeline pipeline) {
+      boolean enableLeadTo, ProjectSchema projectSchema) {
     if (!enableLeadTo) {
       return null;
     }
@@ -155,22 +152,16 @@ public class LocalBuilderMain {
     Map<SPGTypeIdentifier, ConceptList> results = new HashMap<>();
 
     ConceptFacade conceptFacade = new HttpConceptFacade();
-    for (BaseSPGIdentifier identifier : pipeline.schemaUsed()) {
-      if (!(identifier instanceof SPGTypeIdentifier)) {
+    for (BaseSPGType spgType : projectSchema.getSpgTypes()) {
+      if (!spgType.isConceptType()) {
         continue;
       }
-      BaseSPGType spgType = projectSchema.getByName((SPGTypeIdentifier) identifier);
-      for (Property property : spgType.getProperties()) {
-        SPGTypeRef objectTypeRef = property.getObjectTypeRef();
-        if (!objectTypeRef.isConceptType()) {
-          continue;
-        }
-        ApiResponse<ConceptList> response =
-            conceptFacade.queryConcept(
-                new ConceptRequest().setConceptTypeName(objectTypeRef.getName()));
-        if (response.isSuccess()) {
-          results.put(objectTypeRef.getBaseSpgIdentifier(), response.getData());
-        }
+      ApiResponse<ConceptList> response =
+          conceptFacade.queryConcept(new ConceptRequest().setConceptTypeName(spgType.getName()));
+      if (response.isSuccess()) {
+        results.put(spgType.getBaseSpgIdentifier(), response.getData());
+      } else {
+        throw new SchemaException("get schema error");
       }
     }
     return results;
