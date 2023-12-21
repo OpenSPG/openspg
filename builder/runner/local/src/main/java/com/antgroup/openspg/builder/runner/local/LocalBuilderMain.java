@@ -54,7 +54,7 @@ public class LocalBuilderMain {
       run(commandLine);
     } catch (Throwable e) {
       log.error("unknown exception.", e);
-      System.exit(0);
+      System.exit(1);
     }
   }
 
