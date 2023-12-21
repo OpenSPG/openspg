@@ -1,8 +1,7 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
+import com.antgroup.openspg.builder.model.pipeline.config.predicating.BasePredicatingConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
-import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -24,12 +23,13 @@ public abstract class BaseMappingNodeConfig extends BaseNodeConfig {
   public static class MappingConfig {
     private final String source;
     private final String target;
-    private final BasePropertyNormalizerConfig normalizerConfig;
+    private final BaseOperatorConfig operatorConfig;
   }
 
-  public abstract List<BaseSPGIdentifier> getIdentifiers();
-
-  public List<MappingConfig> getMappingConfigs() {
-    throw new UnsupportedOperationException();
+  @Getter
+  @AllArgsConstructor
+  public static class PredicatingConfig {
+    private final String target;
+    private final BasePredicatingConfig predicatingConfig;
   }
 }

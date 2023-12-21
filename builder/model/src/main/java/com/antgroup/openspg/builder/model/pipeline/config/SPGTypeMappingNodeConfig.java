@@ -1,9 +1,7 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
+import com.antgroup.openspg.builder.model.pipeline.config.fusing.BaseFusingConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
-import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
-import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
-import com.google.common.collect.Lists;
 import java.util.List;
 import lombok.Getter;
 
@@ -16,16 +14,21 @@ public class SPGTypeMappingNodeConfig extends BaseMappingNodeConfig {
 
   private final List<MappingConfig> mappingConfigs;
 
+  private final BaseFusingConfig subjectFusingConfig;
+
+  private final List<PredicatingConfig> predicatingConfigs;
+
   public SPGTypeMappingNodeConfig(
-      String spgType, List<MappingFilter> mappingFilters, List<MappingConfig> mappingConfigs) {
+      String spgType,
+      List<MappingFilter> mappingFilters,
+      List<MappingConfig> mappingConfigs,
+      BaseFusingConfig subjectFusingConfig,
+      List<PredicatingConfig> predicatingConfigs) {
     super(NodeTypeEnum.SPG_TYPE_MAPPING);
     this.spgType = spgType;
     this.mappingFilters = mappingFilters;
     this.mappingConfigs = mappingConfigs;
-  }
-
-  @Override
-  public List<BaseSPGIdentifier> getIdentifiers() {
-    return Lists.newArrayList(SPGTypeIdentifier.parse(spgType));
+    this.subjectFusingConfig = subjectFusingConfig;
+    this.predicatingConfigs = predicatingConfigs;
   }
 }

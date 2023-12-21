@@ -1,13 +1,21 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderCatalog;
+import com.antgroup.openspg.builder.model.exception.BuilderRecordException;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseMappingNodeConfig;
+import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BuilderRecord;
+import com.antgroup.openspg.builder.model.record.RelationRecord;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.EdgeRecordConvertor;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.VertexRecordConvertor;
+import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.BaseOntology;
 import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.RelationIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGIdentifierTypeEnum;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,8 +57,8 @@ public abstract class BaseMappingProcessor<T extends BaseMappingNodeConfig>
     return true;
   }
 
-  protected static BuilderRecord mapping(
-      BuilderRecord record, List<BaseMappingNodeConfig.MappingConfig> mappingConfigs) {
+  protected static <T extends BaseMappingNodeConfig.MappingConfig> BuilderRecord mapping(
+      BuilderRecord record, List<T> mappingConfigs) {
     if (CollectionUtils.isEmpty(mappingConfigs)) {
       // if empty, perform mapping with the same name
       return record;
@@ -66,5 +74,22 @@ public abstract class BaseMappingProcessor<T extends BaseMappingNodeConfig>
       }
     }
     return record.withNewProps(newProps);
+  }
+
+  public static BaseAdvancedRecord toSPGRecord(BuilderRecord record, BaseSPGType spgType) {
+    String bizId = record.getPropValue("id");
+    if (StringUtils.isBlank(bizId)) {
+      throw new BuilderRecordException("");
+    }
+    return VertexRecordConvertor.toAdvancedRecord(spgType, bizId, record.getProps());
+  }
+
+  public static RelationRecord toSPGRecord(BuilderRecord record, Relation relation) {
+    String srcId = record.getPropValue("srcId");
+    String dstId = record.getPropValue("dstId");
+    if (StringUtils.isBlank(srcId) || StringUtils.isBlank(dstId)) {
+      throw new BuilderRecordException("");
+    }
+    return EdgeRecordConvertor.toRelationRecord(relation, srcId, dstId, record.getProps());
   }
 }

@@ -28,11 +28,11 @@ class Medical1:
 		description = "description"
 		id = "id"
 		name = "name"
-		diseaseSite = "diseaseSite"
-		complication = "complication"
 		applicableDrug = "applicableDrug"
+		diseaseSite = "diseaseSite"
 		commonSymptom = "commonSymptom"
 		department = "department"
+		complication = "complication"
 
 		def __init__(self):
 			pass

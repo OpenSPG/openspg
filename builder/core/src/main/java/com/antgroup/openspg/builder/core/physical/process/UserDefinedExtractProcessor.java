@@ -1,9 +1,9 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.core.physical.operator.OperatorFactory;
-import com.antgroup.openspg.builder.core.physical.operator.PythonOperatorFactory;
-import com.antgroup.openspg.builder.core.physical.operator.protocol.InvokeResult;
-import com.antgroup.openspg.builder.core.physical.operator.protocol.InvokeResultWrapper;
+import com.antgroup.openspg.builder.core.operator.OperatorFactory;
+import com.antgroup.openspg.builder.core.operator.python.PythonOperatorFactory;
+import com.antgroup.openspg.builder.core.operator.python.PythonRecord;
+import com.antgroup.openspg.builder.core.operator.python.InvokeResultWrapper;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.UserDefinedExtractNodeConfig;
@@ -45,14 +45,14 @@ public class UserDefinedExtractProcessor
           (Map<String, Object>)
               operatorFactory.invoke(config.getOperatorConfig(), builderRecord.getProps());
 
-      InvokeResultWrapper<List<InvokeResult>> invokeResultWrapper =
+      InvokeResultWrapper<List<PythonRecord>> invokeResultWrapper =
           mapper.convertValue(
-              result, new TypeReference<InvokeResultWrapper<List<InvokeResult>>>() {});
+              result, new TypeReference<InvokeResultWrapper<List<PythonRecord>>>() {});
       if (invokeResultWrapper == null || CollectionUtils.isEmpty(invokeResultWrapper.getData())) {
         continue;
       }
 
-      for (InvokeResult data : invokeResultWrapper.getData()) {
+      for (PythonRecord data : invokeResultWrapper.getData()) {
         results.add(
             new BuilderRecord(
                 null, SPGTypeIdentifier.parse(data.getSpgTypeName()), data.getProperties()));

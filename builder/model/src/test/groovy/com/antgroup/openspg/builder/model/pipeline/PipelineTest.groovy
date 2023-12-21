@@ -2,6 +2,7 @@ package com.antgroup.openspg.builder.model.pipeline
 
 import com.antgroup.openspg.builder.model.BuilderJsonUtils
 import com.antgroup.openspg.builder.model.pipeline.config.*
+import com.antgroup.openspg.builder.model.pipeline.config.linking.OperatorLinkingConfig
 import spock.lang.Specification
 
 class PipelineTest extends Specification {
@@ -11,7 +12,7 @@ class PipelineTest extends Specification {
         Node node1 = new Node("1", "csv", new CsvSourceNodeConfig(
                 "./data/TaxOfRiskApp.csv", 2, ["id"]));
         Node node2 = new Node("2", "mapping",
-                new SPGTypeMappingNodeConfig("RiskMining.TaxOfRiskUser", [], []));
+                new SPGTypeMappingNodeConfig("RiskMining.TaxOfRiskUser", [], [], subjectFusingConfig, predicatingConfigs));
         Node node3 = new Node("3", "sink", new GraphStoreSinkNodeConfig());
 
 
@@ -34,11 +35,11 @@ class PipelineTest extends Specification {
 
                         ],
                         [
-                                new BaseMappingNodeConfig.MappingConfig("id", "id", null),
-                                new BaseMappingNodeConfig.MappingConfig("id", "name", null),
-                                new BaseMappingNodeConfig.MappingConfig("riskMark", "riskMark", null),
-                                new BaseMappingNodeConfig.MappingConfig("useCert", "userCert",
-                                        new OperatorPropertyNormalizerConfig(
+                                new BaseMappingNodeConfig.MappingFusingConfig("id", "id", null),
+                                new BaseMappingNodeConfig.MappingFusingConfig("id", "name", null),
+                                new BaseMappingNodeConfig.MappingFusingConfig("riskMark", "riskMark", null),
+                                new BaseMappingNodeConfig.MappingFusingConfig("useCert", "userCert",
+                                        new OperatorLinkingConfig(
                                                 new OperatorConfig(
                                                         "examples/riskmining/builder/operator/cert_link_operator.py",
                                                         "cert_link_operator",
@@ -49,7 +50,7 @@ class PipelineTest extends Specification {
                                         )
                                 )
 
-                        ]));
+                        ], subjectFusingConfig, predicatingConfigs));
         Node node3 = new Node("3", "sink", new GraphStoreSinkNodeConfig());
 
 

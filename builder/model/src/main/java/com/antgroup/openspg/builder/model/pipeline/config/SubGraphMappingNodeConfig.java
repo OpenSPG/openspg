@@ -1,26 +1,34 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
+import com.antgroup.openspg.builder.model.pipeline.config.fusing.BaseFusingConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
-import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.Getter;
 
 @Getter
 public class SubGraphMappingNodeConfig extends BaseMappingNodeConfig {
 
-  private final List<BaseMappingNodeConfig> childrenNodeConfigs;
+  private final String spgType;
 
-  public SubGraphMappingNodeConfig(List<BaseMappingNodeConfig> childrenNodeConfigs) {
+  private final List<MappingFilter> mappingFilters;
+
+  private final List<MappingConfig> mappingConfigs;
+
+  private final BaseFusingConfig subjectFusingConfig;
+
+  private final List<PredicatingConfig> predicatingConfigs;
+
+  public SubGraphMappingNodeConfig(
+      String spgType,
+      List<MappingFilter> mappingFilters,
+      List<MappingConfig> mappingConfigs,
+      BaseFusingConfig subjectFusingConfig,
+      List<PredicatingConfig> predicatingConfigs) {
     super(NodeTypeEnum.SUBGRAPH_MAPPING);
-    this.childrenNodeConfigs = childrenNodeConfigs;
-  }
-
-  @Override
-  public List<BaseSPGIdentifier> getIdentifiers() {
-    return childrenNodeConfigs.stream()
-        .flatMap(x -> x.getIdentifiers().stream())
-        .distinct()
-        .collect(Collectors.toList());
+    this.spgType = spgType;
+    this.mappingFilters = mappingFilters;
+    this.mappingConfigs = mappingConfigs;
+    this.subjectFusingConfig = subjectFusingConfig;
+    this.predicatingConfigs = predicatingConfigs;
   }
 }

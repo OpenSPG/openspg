@@ -101,7 +101,7 @@ public class PhysicalPlan implements Serializable {
         return new RelationMappingProcessor(
             node.getId(), node.getName(), (RelationMappingNodeConfig) node.getNodeConfig());
       case SUBGRAPH_MAPPING:
-        return new SubgraphMappingProcessor(
+        return new SubGraphMappingProcessor(
             node.getId(), node.getName(), (SubGraphMappingNodeConfig) node.getNodeConfig());
       default:
         throw new IllegalArgumentException("illegal type=" + node.getType());
