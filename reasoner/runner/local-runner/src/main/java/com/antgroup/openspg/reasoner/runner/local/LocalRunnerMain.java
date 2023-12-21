@@ -217,7 +217,7 @@ public class LocalRunnerMain {
     task.setDsl(dsl);
     task.setOutputFile(outputFile);
     task.setConnInfo(new KgSchemaConnectionInfo(schemaUri, schemaToken));
-    task.setGraphLoadClass(graphStateClass);
+    task.setGraphStateClassName(graphStateClass);
     task.setGraphStateInitString(graphStateUrl);
     task.setStartIdList(new ArrayList<>());
     task.addStartId(startIdList);

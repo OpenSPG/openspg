@@ -176,26 +176,28 @@ public class KGReasonerLocalRunner {
       return graphState;
     }
 
-    String graphLoadClass = task.getGraphLoadClass();
-    MemGraphState memGraphState = new MemGraphState();
-    AbstractLocalGraphLoader graphLoader;
-    if (StringUtils.isEmpty(task.getGraphStateInitString())) {
+    String graphStateClass = task.getGraphStateClassName();
+    if (StringUtils.isNotEmpty(graphStateClass)) {
       try {
-        graphLoader =
-            (AbstractLocalGraphLoader) Class.forName(graphLoadClass).getConstructor().newInstance();
-      } catch (Exception e) {
-        throw new RuntimeException("can not create graph loader from name " + graphLoadClass, e);
-      }
-    } else {
-      try {
-        graphLoader =
-            (AbstractLocalGraphLoader)
-                Class.forName(graphLoadClass)
+        graphState =
+            (GraphState<IVertexId>)
+                Class.forName(graphStateClass)
                     .getConstructor(String.class)
                     .newInstance(task.getGraphStateInitString());
       } catch (Exception e) {
-        throw new RuntimeException("can not create graph loader from name " + graphLoadClass, e);
+        throw new RuntimeException("can not create graph state from name " + graphStateClass, e);
       }
+      return graphState;
+    }
+
+    String graphLoadClass = task.getGraphLoadClass();
+    MemGraphState memGraphState = new MemGraphState();
+    AbstractLocalGraphLoader graphLoader;
+    try {
+      graphLoader =
+          (AbstractLocalGraphLoader) Class.forName(graphLoadClass).getConstructor().newInstance();
+    } catch (Exception e) {
+      throw new RuntimeException("can not create graph loader from name " + graphLoadClass, e);
     }
     graphLoader.setGraphState(memGraphState);
     graphLoader.load();
