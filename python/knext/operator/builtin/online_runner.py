@@ -56,8 +56,8 @@ class _BuiltInOnlineExtractor(ExtractOp):
                 # 生成完整query
                 query = op.build_prompt(input_param)
                 # 模型预测，生成模型输出结果
-                response = self.model.remote_inference(query)
-                # response = "test"
+                # response = self.model.remote_inference(query)
+                response = "test"
                 # response = '{"spo": [{"subject": "甲状腺结节", "predicate": "常见症状", "object": "头疼"}]}'
                 # 模型结果的后置处理，可能会拆分成多条数据 List[dict[str, str]]
                 if hasattr(op, "parse_response"):
@@ -66,6 +66,7 @@ class _BuiltInOnlineExtractor(ExtractOp):
                     next_params.extend(op.build_variables(input_param, response))
 
             input_params = next_params
+        print(collector)
         return collector
 
 

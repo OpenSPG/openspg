@@ -25,8 +25,6 @@ class LLMBasedExtractor(SPGExtractor):
 
     """
 
-    """All output column names after knowledge extraction processing."""
-    output_fields: List[str]
     """Knowledge extract operator of this component."""
     llm: NNInvoker
     """PromptOps"""
@@ -63,7 +61,7 @@ class LLMBasedExtractor(SPGExtractor):
         from knext.operator.builtin.online_runner import _BuiltInOnlineExtractor
         extract_op = _BuiltInOnlineExtractor(params)
         config = rest.UserDefinedExtractNodeConfig(
-            output_fields=self.output_fields, operator_config=extract_op.to_rest()
+            operator_config=extract_op.to_rest()
         )
 
         return rest.Node(**super().to_dict(), node_config=config)

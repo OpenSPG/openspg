@@ -1,41 +1,52 @@
-# from knext.operator.builtin.auto_prompt import SPOPrompt
-#
-# spo_prompt = SPOPrompt(
-#     spg_type_name="Medical.Disease",
-#     property_names=["diseaseSite", "commonSymptom"],custom_prompt="${schema}, ${input}")
-#
-# print(spo_prompt.to_rest())
-from knext.component.builder import CsvSourceReader, UserDefinedExtractor, KGSinkWriter, SPGTypeMapping, \
-    LLMBasedExtractor
-from knext.operator.base import BaseOp
-from nn4k.invoker import LLMInvoker
 
-source = CsvSourceReader(
+from knext.component.builder import CSVReader, KGWriter, LLMBasedExtractor, SubGraphMapping
+from nn4k.invoker import LLMInvoker
+from knext.api.operator import SPOPrompt
+
+"""
+1. 定义输入源，CSV文件
+"""
+source = CSVReader(
     local_path="job/data/Disease.csv",
-    columns=["id", "content"],
+    columns=["id", "input"],
     start_row=2,
 )
 
 """
-2. 指定SPG知识映射组件，设置抽取算子，从长文本中抽取多种实体类型
+2. 定义大模型抽取组件，从长文本中抽取Medical.Disease类型实体
 """
 
-
-# from operator.disease_extractor import DiseaseExtractor
-# extract = UserDefinedExtractor(output_fields=["id", "name"], extract_op=BaseOp.by_name('DiseaseExtractor')({"config": "1"}))
-from knext.operator.builtin.auto_prompt import SPOPrompt
-extract = LLMBasedExtractor(output_fields=["id", "name"],
-                            llm=LLMInvoker.from_config("openai_infer.json"),
+extract = LLMBasedExtractor(llm=LLMInvoker.from_config("openai_infer.json"),
                             prompt_ops=[SPOPrompt("Medical1.Disease", ["commonSymptom", "applicableDrug"])])
 
-mapping = SPGTypeMapping(spg_type_name="Medical1.Disease").add_field("id", "id").add_field("name", "name")
+"""
+2. 定义子图映射组件
+"""
+mapping = SubGraphMapping(spg_type_name="Medical1.Disease")\
+    .add_mapping_field("id", "id")\
+    .add_mapping_field("name", "name")\
+    .add_mapping_field("commonSymptom", "commonSymptom")\
+    .add_mapping_field("applicableDrug", "applicableDrug")\
+    .add_object_type("Medical1.Symptom") \
+    .add_mapping_field("commonSymptom", "id") \
+    .add_mapping_field("commonSymptom", "name") \
+    .add_object_type("Medical1.Drug") \
+    .add_mapping_field("applicableDrug", "id") \
+    .add_mapping_field("applicableDrug", "name")
+
 
 """
-3. 定义输出到图谱
+4. 定义输出到图谱
 """
-sink = KGSinkWriter()
+sink = KGWriter()
 
+"""
+5. 定义builder_chain
+"""
 builder_chain = source >> extract >> mapping >> sink
 
-print(builder_chain.invoke())
-
+"""
+5. 执行builder_chain，或发布成平台任务
+"""
+builder_chain.invoke()
+# builder_chain.submit()

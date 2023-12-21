@@ -12,8 +12,8 @@
 
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import (
-    CsvSourceReader,
-    KGSinkWriter,
+    CSVReader,
+    KGWriter,
     SPGTypeMapping,
 )
 from knext.examples.supplychain.schema.supplychain_schema_helper import SupplyChain
@@ -21,7 +21,7 @@ from knext.examples.supplychain.schema.supplychain_schema_helper import SupplyCh
 
 class TaxOfCompanyEvent(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/TaxOfCompanyEvent.csv",
             columns=["id"],
             start_row=2,
@@ -33,6 +33,6 @@ class TaxOfCompanyEvent(BuilderJob):
             .add_field("name", SupplyChain.TaxOfCompanyEvent.name)
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink

@@ -11,13 +11,13 @@
 # or implied.
 
 from knext.client.model.builder_job import BuilderJob
-from knext.component.builder import CsvSourceReader, SPGTypeMapping, KGSinkWriter
+from knext.component.builder import CSVReader, SPGTypeMapping, KGWriter
 from knext.examples.riskmining.schema.riskmining_schema_helper import RiskMining
 
 
 class Cert(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Cert.csv",
             columns=["id", "certNum"],
             start_row=2,
@@ -30,6 +30,6 @@ class Cert(BuilderJob):
             .add_field("certNum", RiskMining.Cert.name)
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink

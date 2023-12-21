@@ -12,8 +12,8 @@
 
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import (
-    CsvSourceReader,
-    KGSinkWriter,
+    CSVReader,
+    KGWriter,
     SPGTypeMapping,
 )
 from schema.supplychain_schema_helper import SupplyChain
@@ -23,7 +23,7 @@ class Industry(BuilderJob):
     parallelism = 10
 
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Industry.csv",
             columns=["fullname"],
             start_row=2,
@@ -33,6 +33,6 @@ class Industry(BuilderJob):
             "fullname", SupplyChain.Industry.id
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink

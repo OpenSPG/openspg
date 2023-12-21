@@ -4,18 +4,18 @@ from knext.component.builder.extractor import (
     SPGExtractor,
 )
 from knext.component.builder.mapping import SPGTypeMapping, RelationMapping, SubGraphMapping, Mapping
-from knext.component.builder.source_reader import CsvSourceReader, SourceReader
-from knext.component.builder.sink_writer import KGSinkWriter, SinkWriter
+from knext.component.builder.source_reader import CSVReader, SourceReader
+from knext.component.builder.sink_writer import KGWriter, SinkWriter
 
 
 __all__ = [
     "UserDefinedExtractor",
     "LLMBasedExtractor",
-    "CsvSourceReader",
+    "CSVReader",
     "SPGTypeMapping",
     "RelationMapping",
     "SubGraphMapping",
-    "KGSinkWriter",
+    "KGWriter",
     "SPGExtractor",
     "Mapping",
     "SourceReader",

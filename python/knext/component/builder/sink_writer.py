@@ -3,13 +3,13 @@ from knext.component.builder.base import SinkWriter
 from knext.operator.spg_record import SPGRecord
 
 
-class KGSinkWriter(SinkWriter):
+class KGWriter(SinkWriter):
     """The Sink Component that writing data to KG storage.
 
     Args:
         None
     Examples:
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
     """
 
@@ -22,7 +22,7 @@ class KGSinkWriter(SinkWriter):
         return None
 
     def to_rest(self):
-        """Transforms `KGSinkWriter` to REST model `GraphStoreSinkNodeConfig`."""
+        """Transforms `KGWriter` to REST model `GraphStoreSinkNodeConfig`."""
         config = rest.GraphStoreSinkNodeConfig()
         return rest.Node(**super().to_dict(), node_config=config)
 

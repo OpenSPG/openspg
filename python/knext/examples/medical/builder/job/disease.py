@@ -12,17 +12,17 @@
 
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import (
-    CsvSourceReader,
+    CSVReader,
     UserDefinedExtractor,
     SPGTypeMapping,
-    KGSinkWriter
+    KGWriter
 )
 from knext.operator.base import BaseOp
 
 
 class Disease(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Disease.csv",
             columns=["id", "content"],
             start_row=2,
@@ -37,6 +37,6 @@ class Disease(BuilderJob):
         """
         3. 定义输出到图谱
         """
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> extract >> mapping >> sink

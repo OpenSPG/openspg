@@ -11,8 +11,8 @@
 # or implied.
 
 from knext.api.component import (
-    CsvSourceReader,
-    KGSinkWriter,
+    CSVReader,
+    KGWriter,
     SPGTypeMapping,
 )
 from knext.client.model.builder_job import BuilderJob
@@ -21,7 +21,7 @@ from knext.examples.supplychain.schema.supplychain_schema_helper import SupplyCh
 
 class Person(BuilderJob):
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Person.csv",
             columns=["id", "name", "age", "legalRep"],
             start_row=2,
@@ -35,6 +35,6 @@ class Person(BuilderJob):
             .add_field("legalRep", SupplyChain.Person.legalRepresentative)
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink

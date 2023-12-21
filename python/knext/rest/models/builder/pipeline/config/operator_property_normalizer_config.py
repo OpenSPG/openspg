@@ -159,13 +159,6 @@ class OperatorPropertyNormalizerConfig(object):
         :param params: The params of this OperatorPropertyNormalizerConfig.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation and params is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `params`, must not be `None`"
-            )  # noqa: E501
-
         self._params = params
 
     def to_dict(self):

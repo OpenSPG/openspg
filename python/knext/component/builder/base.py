@@ -6,13 +6,13 @@ from knext.component.base import Component
 
 
 class ComponentTypeEnum(str, Enum):
-    CsvSourceReader = "CSV_SOURCE"
+    CSVReader = "CSV_SOURCE"
     LLMBasedExtractor = "LLM_BASED_EXTRACT"
     UserDefinedExtractor = "USER_DEFINED_EXTRACT"
     SPGTypeMapping = "SPG_TYPE_MAPPING"
     RelationMapping = "RELATION_MAPPING"
     SubGraphMapping = "SUBGRAPH_MAPPING"
-    KGSinkWriter = "GRAPH_SINK"
+    KGWriter = "GRAPH_SINK"
 
 
 class BuilderComponent(Component, ABC):

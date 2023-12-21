@@ -12,8 +12,8 @@
 
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import (
-    CsvSourceReader,
-    KGSinkWriter,
+    CSVReader,
+    KGWriter,
     SPGTypeMapping,
 )
 from knext.examples.supplychain.schema.supplychain_schema_helper import SupplyChain
@@ -23,7 +23,7 @@ class Product(BuilderJob):
     parallelism = 6
 
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Product.csv",
             columns=["fullname", "belongToIndustry", "hasSupplyChain"],
             start_row=2,
@@ -35,7 +35,7 @@ class Product(BuilderJob):
             .add_field("belongToIndustry", SupplyChain.Product.belongToIndustry)
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink
 
@@ -44,7 +44,7 @@ class ProductHasSupplyChain(BuilderJob):
     parallelism = 6
 
     def build(self):
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="./builder/job/data/Product.csv",
             columns=["fullname", "belongToIndustry", "hasSupplyChain"],
             start_row=2,
@@ -56,6 +56,6 @@ class ProductHasSupplyChain(BuilderJob):
             .add_field("hasSupplyChain", "hasSupplyChain")
         )
 
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         return source >> mapping >> sink
