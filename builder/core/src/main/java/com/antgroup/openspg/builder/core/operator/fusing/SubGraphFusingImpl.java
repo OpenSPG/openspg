@@ -61,7 +61,9 @@ public class SubGraphFusingImpl implements SubGraphFusing {
     return results;
   }
 
-  private List<BaseSPGRecord> toSPGRecords(BasePropertyRecord propertyRecord) {}
+  private List<BaseSPGRecord> toSPGRecords(BasePropertyRecord propertyRecord) {
+    return null;
+  }
 
   private void modifyPropertyRecord(
       BasePropertyRecord propertyRecord, List<BaseSPGRecord> fusedRecord) {}

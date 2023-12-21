@@ -1,16 +1,16 @@
 package com.antgroup.openspg.builder.model.pipeline.config.predicating;
 
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
-import com.antgroup.openspg.builder.model.pipeline.enums.PredicatingTypeEnum;
+import com.antgroup.openspg.builder.model.pipeline.enums.PredictingTypeEnum;
 import lombok.Getter;
 
 @Getter
-public class OperatorPredicatingConfig extends BasePredicatingConfig {
+public class OperatorPredictingConfig extends BasePredictingConfig {
 
   private final OperatorConfig operatorConfig;
 
-  public OperatorPredicatingConfig(OperatorConfig operatorConfig) {
-    super(PredicatingTypeEnum.OPERATOR);
+  public OperatorPredictingConfig(OperatorConfig operatorConfig) {
+    super(PredictingTypeEnum.OPERATOR);
     this.operatorConfig = operatorConfig;
   }
 }

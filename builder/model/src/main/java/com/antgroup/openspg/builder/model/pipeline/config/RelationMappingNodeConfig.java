@@ -13,17 +13,17 @@ public class RelationMappingNodeConfig extends BaseMappingNodeConfig {
 
   private final List<MappingConfig> mappingConfigs;
 
-  private final List<PredicatingConfig> predicatingConfigs;
+  private final List<PredictingConfig> predictingConfigs;
 
   public RelationMappingNodeConfig(
       String relation,
       List<MappingFilter> mappingFilters,
       List<MappingConfig> mappingConfigs,
-      List<PredicatingConfig> predicatingConfigs) {
+      List<PredictingConfig> predictingConfigs) {
     super(NodeTypeEnum.RELATION_MAPPING);
     this.relation = relation;
     this.mappingFilters = mappingFilters;
     this.mappingConfigs = mappingConfigs;
-    this.predicatingConfigs = predicatingConfigs;
+    this.predictingConfigs = predictingConfigs;
   }
 }

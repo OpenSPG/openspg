@@ -16,19 +16,19 @@ public class SubGraphMappingNodeConfig extends BaseMappingNodeConfig {
 
   private final BaseFusingConfig subjectFusingConfig;
 
-  private final List<PredicatingConfig> predicatingConfigs;
+  private final List<PredictingConfig> predictingConfigs;
 
   public SubGraphMappingNodeConfig(
       String spgType,
       List<MappingFilter> mappingFilters,
       List<MappingConfig> mappingConfigs,
       BaseFusingConfig subjectFusingConfig,
-      List<PredicatingConfig> predicatingConfigs) {
+      List<PredictingConfig> predictingConfigs) {
     super(NodeTypeEnum.SUBGRAPH_MAPPING);
     this.spgType = spgType;
     this.mappingFilters = mappingFilters;
     this.mappingConfigs = mappingConfigs;
     this.subjectFusingConfig = subjectFusingConfig;
-    this.predicatingConfigs = predicatingConfigs;
+    this.predictingConfigs = predictingConfigs;
   }
 }

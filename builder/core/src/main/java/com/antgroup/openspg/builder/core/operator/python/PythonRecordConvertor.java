@@ -4,7 +4,11 @@ import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 
 public class PythonRecordConvertor {
 
-  public static BaseSPGRecord toSPGRecord(PythonRecord pythonRecord) {}
+  public static BaseSPGRecord toSPGRecord(PythonRecord pythonRecord) {
+    return null;
+  }
 
-  public static PythonRecord toPythonRecord(BaseSPGRecord spgRecord) {}
+  public static PythonRecord toPythonRecord(BaseSPGRecord spgRecord) {
+    return null;
+  }
 }

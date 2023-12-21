@@ -5,6 +5,7 @@ import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.FusingException;
 import com.antgroup.openspg.builder.model.pipeline.config.fusing.BaseFusingConfig;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class SubjectFusingImpl implements SubjectFusing {
   public void init(BuilderContext context) throws BuilderException {}
 
   @Override
-  public List<BaseSPGRecord> subjectFusing(List<BaseAdvancedRecord> advancedRecords)
+  public List<BaseRecord> subjectFusing(List<BaseAdvancedRecord> advancedRecords)
       throws FusingException {
     return null;
   }

@@ -1,6 +1,6 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
-import com.antgroup.openspg.builder.model.pipeline.config.predicating.BasePredicatingConfig;
+import com.antgroup.openspg.builder.model.pipeline.config.predicating.BasePredictingConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,8 +28,8 @@ public abstract class BaseMappingNodeConfig extends BaseNodeConfig {
 
   @Getter
   @AllArgsConstructor
-  public static class PredicatingConfig {
+  public static class PredictingConfig {
     private final String target;
-    private final BasePredicatingConfig predicatingConfig;
+    private final BasePredictingConfig predictingConfig;
   }
 }

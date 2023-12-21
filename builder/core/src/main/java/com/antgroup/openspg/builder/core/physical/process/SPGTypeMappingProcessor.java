@@ -18,8 +18,8 @@ import com.antgroup.openspg.builder.core.operator.fusing.SubjectFusingImpl;
 import com.antgroup.openspg.builder.core.operator.linking.RecordLinking;
 import com.antgroup.openspg.builder.core.operator.linking.RecordLinkingImpl;
 import com.antgroup.openspg.builder.core.operator.linking.impl.SearchBasedLinking;
-import com.antgroup.openspg.builder.core.operator.predicating.RecordPredicating;
-import com.antgroup.openspg.builder.core.operator.predicating.RecordPredicatingImpl;
+import com.antgroup.openspg.builder.core.operator.predicating.RecordPredicting;
+import com.antgroup.openspg.builder.core.operator.predicating.RecordPredictingImpl;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.SPGTypeMappingNodeConfig;
@@ -37,7 +37,7 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
 
   private BaseSPGType spgType;
   private RecordLinking recordLinking;
-  private RecordPredicating recordPredicating;
+  private RecordPredicting recordPredicating;
   private SubjectFusing subjectFusing;
 
   public SPGTypeMappingProcessor(String id, String name, SPGTypeMappingNodeConfig config) {
@@ -58,7 +58,7 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
     this.subjectFusing = new SubjectFusingImpl(config.getSubjectFusingConfig());
     this.subjectFusing.init(context);
 
-    this.recordPredicating = new RecordPredicatingImpl(config.getPredicatingConfigs());
+    this.recordPredicating = new RecordPredictingImpl(config.getPredictingConfigs());
     this.recordPredicating.init(context);
   }
 

@@ -1,7 +1,7 @@
 package com.antgroup.openspg.builder.core.operator.predicating.impl;
 
 import com.antgroup.openspg.builder.core.operator.OperatorFactory;
-import com.antgroup.openspg.builder.core.operator.predicating.PropertyPredicating;
+import com.antgroup.openspg.builder.core.operator.predicating.PropertyPredicting;
 import com.antgroup.openspg.builder.core.operator.python.InvokeResultWrapper;
 import com.antgroup.openspg.builder.core.operator.python.PythonOperatorFactory;
 import com.antgroup.openspg.builder.core.operator.python.PythonRecord;
@@ -9,8 +9,8 @@ import com.antgroup.openspg.builder.core.operator.python.PythonRecordConvertor;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.FusingException;
-import com.antgroup.openspg.builder.model.exception.PredicatingException;
-import com.antgroup.openspg.builder.model.pipeline.config.predicating.OperatorPredicatingConfig;
+import com.antgroup.openspg.builder.model.exception.PredictingException;
+import com.antgroup.openspg.builder.model.pipeline.config.predicating.OperatorPredictingConfig;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -23,13 +23,13 @@ import org.apache.commons.collections4.CollectionUtils;
 
 @Slf4j
 @SuppressWarnings("unchecked")
-public class OperatorPredicating implements PropertyPredicating {
+public class OperatorPredicting implements PropertyPredicting {
 
   private static final ObjectMapper mapper = new ObjectMapper();
-  private final OperatorPredicatingConfig predicatingConfig;
+  private final OperatorPredictingConfig predicatingConfig;
   private final OperatorFactory operatorFactory;
 
-  public OperatorPredicating(OperatorPredicatingConfig predicatingConfig) {
+  public OperatorPredicting(OperatorPredictingConfig predicatingConfig) {
     this.predicatingConfig = predicatingConfig;
     this.operatorFactory = PythonOperatorFactory.getInstance();
   }
@@ -41,7 +41,7 @@ public class OperatorPredicating implements PropertyPredicating {
   }
 
   @Override
-  public List<BaseSPGRecord> propertyPredicating(BaseSPGRecord record) throws PredicatingException {
+  public List<BaseSPGRecord> propertyPredicting(BaseSPGRecord record) throws PredictingException {
     PythonRecord pythonRecord = PythonRecordConvertor.toPythonRecord(record);
     InvokeResultWrapper<List<PythonRecord>> invokeResultWrapper = null;
     try {
