@@ -2,6 +2,8 @@ package com.antgroup.openspg.builder.core.operator.fusing.impl;
 
 import com.antgroup.openspg.builder.core.operator.OperatorFactory;
 import com.antgroup.openspg.builder.core.operator.fusing.EntityFusing;
+import com.antgroup.openspg.builder.core.operator.linking.RecordLinking;
+import com.antgroup.openspg.builder.core.operator.linking.RecordLinkingImpl;
 import com.antgroup.openspg.builder.core.operator.python.InvokeResultWrapper;
 import com.antgroup.openspg.builder.core.operator.python.PythonOperatorFactory;
 import com.antgroup.openspg.builder.core.operator.python.PythonRecord;
@@ -24,23 +26,31 @@ import org.apache.commons.collections4.CollectionUtils;
 @SuppressWarnings("unchecked")
 public class OperatorFusing implements EntityFusing {
 
+  private BuilderContext context;
   private static final ObjectMapper mapper = new ObjectMapper();
   private final OperatorFusingConfig fusingConfig;
   private final OperatorFactory operatorFactory;
+  private final RecordLinking recordLinking;
 
   public OperatorFusing(OperatorFusingConfig fusingConfig) {
     this.fusingConfig = fusingConfig;
     this.operatorFactory = PythonOperatorFactory.getInstance();
+    this.recordLinking = new RecordLinkingImpl();
   }
 
   @Override
   public void init(BuilderContext context) throws BuilderException {
+    this.context = context;
+
+    recordLinking.init(context);
+
     operatorFactory.init(context);
     operatorFactory.loadOperator(fusingConfig.getOperatorConfig());
   }
 
   @Override
-  public List<BaseAdvancedRecord> entityFusing(List<BaseAdvancedRecord> records) throws FusingException {
+  public List<BaseAdvancedRecord> entityFusing(List<BaseAdvancedRecord> records)
+      throws FusingException {
     List<PythonRecord> pythonRecords =
         CollectionsUtils.listMap(records, PythonRecordConvertor::toPythonRecord);
     InvokeResultWrapper<List<PythonRecord>> invokeResultWrapper = null;
@@ -59,6 +69,8 @@ public class OperatorFusing implements EntityFusing {
     if (invokeResultWrapper == null || CollectionUtils.isEmpty(invokeResultWrapper.getData())) {
       return Collections.emptyList();
     }
-    return CollectionsUtils.listMap(invokeResultWrapper.getData(), PythonRecordConvertor::toSPGRecord);
+    return CollectionsUtils.listMap(
+        invokeResultWrapper.getData(),
+        r -> PythonRecordConvertor.toAdvancedRecord(r, recordLinking, context.getCatalog()));
   }
 }

@@ -16,10 +16,12 @@ package com.antgroup.openspg.builder.core.operator.python;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /** Python operator entity */
 @Getter
 @Setter
+@Accessors(chain = true)
 public class PythonRecord {
 
   private String spgTypeName;

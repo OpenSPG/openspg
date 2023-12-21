@@ -14,6 +14,7 @@
 package com.antgroup.openspg.builder.model.record;
 
 import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyValue;
 import com.antgroup.openspg.core.schema.model.type.WithSPGTypeEnum;
 import java.util.HashMap;
 import java.util.List;
@@ -45,5 +46,14 @@ public abstract class BaseSPGRecord extends BaseRecord implements WithSPGTypeEnu
       stdPropertyValueMap.put(propertyRecord.getName(), propertyRecord.getValue().getStds());
     }
     return stdPropertyValueMap;
+  }
+
+  public Map<String, String> getStdStrPropertyValueMap() {
+    Map<String, String> stdStrPropertyValueMap = new HashMap<>(getProperties().size());
+    for (BasePropertyRecord propertyRecord : getProperties()) {
+      SPGPropertyValue value = propertyRecord.getValue();
+      stdStrPropertyValueMap.put(propertyRecord.getName(), value.getStdValue());
+    }
+    return stdStrPropertyValueMap;
   }
 }
