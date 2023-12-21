@@ -54,8 +54,5 @@ public class SPGPropertyRecord extends BasePropertyRecord implements WithSPGType
     return getProperty().getObjectTypeRef().getSpgTypeEnum();
   }
 
-  public void setStdAndIdFromRaw() {
-
-
-  }
+  public void setStdAndIdFromRaw() {}
 }

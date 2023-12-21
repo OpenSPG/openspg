@@ -4,8 +4,8 @@ import com.antgroup.openspg.builder.model.pipeline.config.*;
 import com.antgroup.openspg.builder.model.pipeline.config.linking.BaseLinkingConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.linking.IdEqualsLinkingConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.linking.OperatorLinkingConfig;
-import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.enums.LinkingTypeEnum;
+import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
@@ -37,14 +37,9 @@ public class BuilderJsonUtils {
                     .registerSubtype(GraphStoreSinkNodeConfig.class, NodeTypeEnum.GRAPH_SINK.name())
                     .recognizeSubtypes())
             .registerTypeAdapterFactory(
-                RuntimeTypeAdapterFactory.of(
-                        BaseLinkingConfig.class, DEFAULT_TYPE_FIELD_NAME)
-                    .registerSubtype(
-                        OperatorLinkingConfig.class,
-                        LinkingTypeEnum.OPERATOR.name())
-                    .registerSubtype(
-                        IdEqualsLinkingConfig.class,
-                        LinkingTypeEnum.ID_EQUALS.name())
+                RuntimeTypeAdapterFactory.of(BaseLinkingConfig.class, DEFAULT_TYPE_FIELD_NAME)
+                    .registerSubtype(OperatorLinkingConfig.class, LinkingTypeEnum.OPERATOR.name())
+                    .registerSubtype(IdEqualsLinkingConfig.class, LinkingTypeEnum.ID_EQUALS.name())
                     .recognizeSubtypes())
             .create();
   }

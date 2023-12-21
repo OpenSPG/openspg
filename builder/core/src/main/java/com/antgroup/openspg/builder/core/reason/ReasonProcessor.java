@@ -1,11 +1,11 @@
 package com.antgroup.openspg.builder.core.reason;
 
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
-import com.antgroup.openspg.builder.core.operator.linking.RecordLinking;
-import com.antgroup.openspg.builder.core.operator.linking.RecordLinkingImpl;
 import com.antgroup.openspg.builder.core.reason.impl.CausalConceptReasoner;
 import com.antgroup.openspg.builder.core.reason.impl.InductiveConceptReasoner;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.core.strategy.linking.RecordLinking;
+import com.antgroup.openspg.builder.core.strategy.linking.RecordLinkingImpl;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;

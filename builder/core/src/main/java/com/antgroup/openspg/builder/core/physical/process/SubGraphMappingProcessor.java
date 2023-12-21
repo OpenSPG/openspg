@@ -1,12 +1,12 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.core.operator.fusing.SubGraphFusing;
-import com.antgroup.openspg.builder.core.operator.fusing.SubGraphFusingImpl;
-import com.antgroup.openspg.builder.core.operator.fusing.SubjectFusing;
-import com.antgroup.openspg.builder.core.operator.fusing.SubjectFusingImpl;
-import com.antgroup.openspg.builder.core.operator.predicating.RecordPredicting;
-import com.antgroup.openspg.builder.core.operator.predicating.RecordPredictingImpl;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.core.strategy.fusing.SubGraphFusing;
+import com.antgroup.openspg.builder.core.strategy.fusing.SubGraphFusingImpl;
+import com.antgroup.openspg.builder.core.strategy.fusing.SubjectFusing;
+import com.antgroup.openspg.builder.core.strategy.fusing.SubjectFusingImpl;
+import com.antgroup.openspg.builder.core.strategy.predicting.RecordPredicting;
+import com.antgroup.openspg.builder.core.strategy.predicting.RecordPredictingImpl;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.SubGraphMappingNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
@@ -16,7 +16,10 @@ import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class SubGraphMappingProcessor extends BaseMappingProcessor<SubGraphMappingNodeConfig> {
 
   private BaseSPGType spgType;
@@ -62,7 +65,7 @@ public class SubGraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
         advancedRecords.add(advancedRecord);
       }
     }
-    return subjectFusing.subjectFusing(advancedRecords);
+    return (List) subjectFusing.subjectFusing(advancedRecords);
   }
 
   @Override

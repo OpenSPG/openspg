@@ -1,9 +1,9 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.core.operator.linking.RecordLinking;
-import com.antgroup.openspg.builder.core.operator.linking.RecordLinkingImpl;
-import com.antgroup.openspg.builder.core.operator.linking.impl.SearchBasedLinking;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.core.strategy.linking.RecordLinking;
+import com.antgroup.openspg.builder.core.strategy.linking.RecordLinkingImpl;
+import com.antgroup.openspg.builder.core.strategy.linking.impl.SearchBasedLinking;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.RelationMappingNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;

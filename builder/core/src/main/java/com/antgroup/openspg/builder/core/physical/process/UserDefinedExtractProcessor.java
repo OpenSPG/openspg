@@ -1,10 +1,10 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
-import com.antgroup.openspg.builder.core.operator.OperatorFactory;
-import com.antgroup.openspg.builder.core.operator.python.PythonOperatorFactory;
-import com.antgroup.openspg.builder.core.operator.python.PythonRecord;
-import com.antgroup.openspg.builder.core.operator.python.InvokeResultWrapper;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.core.strategy.operator.OperatorFactory;
+import com.antgroup.openspg.builder.core.strategy.operator.PythonOperatorFactory;
+import com.antgroup.openspg.builder.core.strategy.operator.protocol.InvokeResultWrapper;
+import com.antgroup.openspg.builder.core.strategy.operator.protocol.PythonRecord;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.config.UserDefinedExtractNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
