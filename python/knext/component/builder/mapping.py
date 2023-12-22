@@ -17,7 +17,7 @@ from knext.common.runnable import Input, Output
 
 from knext.common.schema_helper import SPGTypeHelper, PropertyHelper
 from knext.component.builder.base import Mapping
-from knext.operator.op import LinkOp, FuseOp
+from knext.operator.op import LinkOp, FuseOp, PredictOp
 from knext.operator.spg_record import SPGRecord
 
 
@@ -52,13 +52,15 @@ class SPGTypeMapping(Mapping):
 
     spg_type_name: Union[str, SPGTypeHelper]
 
-    fuse_op: Optional[FuseOp] = None
-
     mapping: Dict[str, str] = dict()
 
     filters: List[Tuple[str, str]] = list()
 
-    link_strategies: Dict[str, Union[LinkStrategyEnum, LinkOp]] = dict()
+    subject_fuse_strategy: Optional[FuseOp] = None
+
+    object_link_strategies: Dict[str, Union[LinkStrategyEnum, LinkOp]] = dict()
+
+    predicate_predict_strategies: Dict[str, PredictOp] = dict()
 
     @property
     def input_types(self) -> Input:
@@ -76,11 +78,15 @@ class SPGTypeMapping(Mapping):
     def output_keys(self):
         return self.output_fields
 
+    def set_fuse_strategy(self, fuse_strategy: FuseOp):
+        self.subject_fuse_strategy = fuse_strategy
+        return self
+
     def add_mapping_field(
-            self,
-            source_field: str,
-            target_field: Union[str, PropertyHelper],
-            link_strategy: Union[LinkStrategyEnum, LinkOp] = None,
+        self,
+        source_field: str,
+        target_field: Union[str, PropertyHelper],
+        link_strategy: Union[LinkStrategyEnum, LinkOp] = None,
     ):
         """Adds a field mapping from source data to property of spg_type.
 
@@ -89,7 +95,15 @@ class SPGTypeMapping(Mapping):
         :return: self
         """
         self.mapping[target_field] = source_field
-        self.link_strategies[target_field] = link_strategy
+        self.object_link_strategies[target_field] = link_strategy
+        return self
+
+    def add_predicting_field(
+        self,
+        field: Union[str, PropertyHelper],
+        predict_strategy: PredictOp = None,
+    ):
+        self.predicate_predict_strategies[field] = predict_strategy
         return self
 
     def add_filter(self, column_name: str, column_value: str):
@@ -105,7 +119,7 @@ class SPGTypeMapping(Mapping):
 
     def to_rest(self):
         """
-        Transforms `SPGTypeMapping` to REST model `MappingNodeConfig`.
+        Transforms `SPGTypeMapping` to REST model `SpgTypeMappingNodeConfig`.
         """
 
         mapping_filters = [
@@ -114,29 +128,64 @@ class SPGTypeMapping(Mapping):
         ]
         mapping_configs = []
         for tgt_name, src_name in self.mapping.items():
-            link_strategy = self.link_strategies.get(tgt_name, None)
+            link_strategy = self.object_link_strategies.get(tgt_name, None)
             if isinstance(link_strategy, LinkOp):
-                property_normalizer = rest.OperatorPropertyNormalizerConfig(
-                    config=link_strategy.to_rest()
+                strategy_config = rest.OperatorLinkingConfig(
+                    operator_config=link_strategy.to_rest()
                 )
             elif link_strategy == LinkStrategyEnum.IDEquals:
-                property_normalizer = rest.IdEqualsPropertyNormalizerConfig()
+                strategy_config = rest.IdEqualsLinkingConfig()
             elif not link_strategy:
-                property_normalizer = None
+                strategy_config = None
             else:
-                raise ValueError(f"Invalid link_strategy {link_strategy}")
+                raise ValueError(f"Invalid link_strategy [{link_strategy}].")
             mapping_configs.append(
                 rest.MappingConfig(
                     source=src_name,
                     target=tgt_name,
-                    normalizer_config=property_normalizer,
+                    strategy_config=strategy_config,
                 )
             )
+
+        predicting_configs = []
+        for predict_strategy in self.predicate_predict_strategies:
+            if isinstance(predict_strategy, PredictOp):
+                strategy_config = rest.OperatorPredictingConfig(
+                    operator_config=predict_strategy.to_rest()
+                )
+            elif not predict_strategy:
+                # if self.spg_type_name in PredictOp._bind_schemas:
+                #     op_name = PredictOp._bind_schemas[self.spg_type_name]
+                #     op = PredictOp.by_name(op_name)()
+                #     strategy_config = op.to_rest()
+                # else:
+                strategy_config = None
+            else:
+                raise ValueError(f"Invalid predict_strategy [{predict_strategy}].")
+            predicting_configs.append(
+                strategy_config
+            )
+
+        if isinstance(self.subject_fuse_strategy, FuseOp):
+            fusing_config = rest.OperatorFusingConfig(
+                operator_config=self.fuse_strategy.to_rest()
+            )
+        elif not self.subject_fuse_strategy:
+            if self.spg_type_name in FuseOp._bind_schemas:
+                op_name = FuseOp._bind_schemas[self.spg_type_name]
+                op = FuseOp.by_name(op_name)()
+                fusing_config = op.to_rest()
+            else:
+                fusing_config = None
+        else:
+            raise ValueError(f"Invalid fuse_strategy [{self.subject_fuse_strategy}].")
 
         config = rest.SpgTypeMappingNodeConfig(
             spg_type=self.spg_type_name,
             mapping_filters=mapping_filters,
             mapping_configs=mapping_configs,
+            subject_fusing_config=fusing_config,
+            predicting_configs=predicting_configs
         )
         return rest.Node(**super().to_dict(), node_config=config)
 
@@ -176,7 +225,7 @@ class RelationMapping(Mapping):
 
     filters: List[Tuple[str, str]] = list()
 
-    def add_field(self, source_field: str, target_field: str):
+    def add_mapping_field(self, source_field: str, target_field: str):
         """Adds a field mapping from source data to property of spg_type.
 
         :param source_field: The source field to be mapped.
@@ -230,15 +279,16 @@ class RelationMapping(Mapping):
 class SubGraphMapping(Mapping):
     spg_type_name: Union[str, SPGTypeHelper]
 
-    fuse_op: Optional[FuseOp] = None
-
     mapping: Dict[str, str] = dict()
 
     filters: List[Tuple[str, str]] = list()
 
-    link_strategies: Dict[str, Union[LinkStrategyEnum, LinkOp]] = dict()
+    subject_fuse_strategy: Optional[FuseOp] = None
 
-    children_nodes: List[Mapping] = list()
+    predicate_predict_strategies: Dict[str, PredictOp] = dict()
+
+    object_fuse_strategies: Dict[str, FuseOp] = dict()
+
 
     @property
     def input_types(self) -> Input:
@@ -256,11 +306,15 @@ class SubGraphMapping(Mapping):
     def output_keys(self):
         return self.output_fields
 
+    def set_fuse_strategy(self, fuse_strategy: FuseOp):
+        self.subject_fuse_strategy = fuse_strategy
+        return self
+
     def add_mapping_field(
-            self,
-            source_field: str,
-            target_field: Union[str, PropertyHelper],
-            link_strategy: Union[LinkStrategyEnum, LinkOp] = None,
+        self,
+        source_field: str,
+        target_field: Union[str, PropertyHelper],
+        fuse_strategy: FuseOp = None,
     ):
         """Adds a field mapping from source data to property of spg_type.
 
@@ -269,44 +323,95 @@ class SubGraphMapping(Mapping):
         :return: self
         """
         self.mapping[target_field] = source_field
-        self.link_strategies[target_field] = link_strategy
+        self.object_fuse_strategies[target_field] = fuse_strategy
         return self
 
-    def add_object_type(self, spg_type_name: Union[str, SPGTypeHelper]):
-        node = SPGTypeMapping(spg_type_name=self.spg_type_name,
-                              mapping=self.mapping,
-                              )
-
-        self.spg_type_name = spg_type_name
-        self.mapping = dict()
-        if self.filters:
-            node.filters = self.filters
-            self.filters = list()
-        if self.fuse_op:
-            node.fuse_op = self.fuse_op
-            self.fuse_op = None
-        if self.link_strategies:
-            node.link_strategies = self.link_strategies
-            self.link_strategies = dict()
-
-        self.children_nodes.append(node)
+    def add_predicting_field(
+        self,
+        target_field: Union[str, PropertyHelper],
+        predict_strategy: PredictOp = None,
+    ):
+        self.predict_strategies[target_field] = predict_strategy
         return self
 
-    def invoke(self, input: Input) -> Sequence[Output]:
-        pass
+    def add_filter(self, column_name: str, column_value: str):
+        """Adds data filtering rule.
+        Only the column that meets `column_name=column_value` will execute the mapping.
 
-    def to_rest(self) -> rest.Node:
-        self.add_object_type(None)
-        self.children_nodes.reverse()
-        node_configs = [node.to_rest().node_config for node in self.children_nodes]
+        :param column_name: The column name to be filtered.
+        :param column_value: The column value to be filtered.
+        :return: self
+        """
+        self.filters.append((column_name, column_value))
+        return self
+
+    def to_rest(self):
+        """
+        Transforms `SubGraphMapping` to REST model `SpgTypeMappingNodeConfig`.
+        """
+
+        mapping_filters = [
+            rest.MappingFilter(column_name=name, column_value=value)
+            for name, value in self.filters
+        ]
+        mapping_configs = []
+        for tgt_name, src_name in self.mapping.items():
+            fuse_strategy = self.object_fuse_strategies.get(tgt_name, None)
+            if isinstance(fuse_strategy, FuseOp):
+                strategy_config = rest.OperatorFusingConfig(
+                    operator_config=fuse_strategy.to_rest()
+                )
+            elif not self.subject_fuse_strategy:
+                strategy_config = rest.NewInstanceFusingConfig(
+                )
+            else:
+                raise ValueError(f"Invalid fuse_strategy [{fuse_strategy}].")
+            mapping_configs.append(
+                rest.MappingConfig(
+                    source=src_name,
+                    target=tgt_name,
+                    strategy_config=strategy_config,
+                )
+            )
+
+        predicting_configs = []
+        for predict_strategy in self.predicate_predict_strategies:
+            if isinstance(predict_strategy, PredictOp):
+                strategy_config = rest.OperatorPredictingConfig(
+                    operator_config=predict_strategy.to_rest()
+                )
+            elif not predict_strategy:
+                strategy_config = None
+            else:
+                raise ValueError(f"Invalid predict_strategy [{predict_strategy}].")
+            predicting_configs.append(
+                strategy_config
+            )
+
+        if isinstance(self.subject_fuse_strategy, FuseOp):
+            fusing_config = rest.OperatorFusingConfig(
+                operator_config=self.fuse_strategy.to_rest()
+            )
+        elif not self.subject_fuse_strategy:
+            fusing_config = rest.NewInstanceFusingConfig(
+                )
+        else:
+            raise ValueError(f"Invalid fuse_strategy [{self.subject_fuse_strategy}].")
 
         config = rest.SubGraphMappingNodeConfig(
-            children_node_configs=node_configs,
+            spg_type=self.spg_type_name,
+            mapping_filters=mapping_filters,
+            mapping_configs=mapping_configs,
+            subject_fusing_config=fusing_config,
+            predicting_configs=predicting_configs
         )
         return rest.Node(**super().to_dict(), node_config=config)
 
     @classmethod
     def from_rest(cls, node: rest.Node):
+        pass
+
+    def invoke(self, input: Input) -> Sequence[Output]:
         pass
 
     def submit(self):

@@ -40,8 +40,7 @@ class _BuiltInOnlineExtractor(ExtractOp):
 
         return prompt_ops
 
-
-    def eval(self, record: Dict[str, str]) -> List[SPGRecord]:
+    def invoke(self, record: Dict[str, str]) -> List[SPGRecord]:
 
         # 对于单条数据【record】执行多层抽取
         # 每次抽取都需要执行op.build_prompt()->model.predict()->op.parse_response()流程

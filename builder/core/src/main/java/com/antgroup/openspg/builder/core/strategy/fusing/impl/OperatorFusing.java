@@ -1,14 +1,14 @@
 package com.antgroup.openspg.builder.core.strategy.fusing.impl;
 
-import com.antgroup.openspg.builder.core.runtime.BuilderContext;
-import com.antgroup.openspg.builder.core.strategy.fusing.EntityFusing;
-import com.antgroup.openspg.builder.core.strategy.linking.RecordLinking;
-import com.antgroup.openspg.builder.core.strategy.linking.RecordLinkingImpl;
 import com.antgroup.openspg.builder.core.physical.operator.OperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.PythonOperatorFactory;
 import com.antgroup.openspg.builder.core.physical.operator.PythonRecordConvertor;
 import com.antgroup.openspg.builder.core.physical.operator.protocol.InvokeResultWrapper;
 import com.antgroup.openspg.builder.core.physical.operator.protocol.PythonRecord;
+import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.core.strategy.fusing.EntityFusing;
+import com.antgroup.openspg.builder.core.strategy.linking.RecordLinking;
+import com.antgroup.openspg.builder.core.strategy.linking.RecordLinkingImpl;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.FusingException;
 import com.antgroup.openspg.builder.model.pipeline.config.fusing.OperatorFusingConfig;

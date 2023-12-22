@@ -1,5 +1,5 @@
 
-from knext.component.builder import CSVReader, KGWriter, LLMBasedExtractor, SubGraphMapping
+from knext.component.builder import CSVReader, KGWriter, LLMBasedExtractor, SubGraphMapping, SPGTypeMapping
 from nn4k.invoker import LLMInvoker
 from knext.api.operator import SPOPrompt
 
@@ -19,20 +19,12 @@ source = CSVReader(
 extract = LLMBasedExtractor(llm=LLMInvoker.from_config("openai_infer.json"),
                             prompt_ops=[SPOPrompt("Medical1.Disease", ["commonSymptom", "applicableDrug"])])
 
-"""
-2. 定义子图映射组件
-"""
+
 mapping = SubGraphMapping(spg_type_name="Medical1.Disease")\
     .add_mapping_field("id", "id")\
     .add_mapping_field("name", "name")\
     .add_mapping_field("commonSymptom", "commonSymptom")\
-    .add_mapping_field("applicableDrug", "applicableDrug")\
-    .add_object_type("Medical1.Symptom") \
-    .add_mapping_field("commonSymptom", "id") \
-    .add_mapping_field("commonSymptom", "name") \
-    .add_object_type("Medical1.Drug") \
-    .add_mapping_field("applicableDrug", "id") \
-    .add_mapping_field("applicableDrug", "name")
+    .add_mapping_field("applicableDrug", "applicableDrug")
 
 
 """
