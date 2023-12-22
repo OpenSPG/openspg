@@ -1,0 +1,15 @@
+wget==3.2
+pytest==7.4.2
+retrying==1.3.4
+tabulate==0.9.0
+jieba==0.42.1
+nltk==3.8.1
+tqdm==4.66.1
+elasticsearch==8.10.0
+six==1.16.0
+click==8.1.7
+dateutils==0.6.12
+
+numpy==1.24.4
+scipy==1.10.1
+scikit-learn==1.3.1
