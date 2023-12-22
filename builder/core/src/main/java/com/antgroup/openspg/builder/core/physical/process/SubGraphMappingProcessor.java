@@ -5,6 +5,9 @@ import com.antgroup.openspg.builder.core.strategy.fusing.SubGraphFusing;
 import com.antgroup.openspg.builder.core.strategy.fusing.SubGraphFusingImpl;
 import com.antgroup.openspg.builder.core.strategy.fusing.SubjectFusing;
 import com.antgroup.openspg.builder.core.strategy.fusing.SubjectFusingImpl;
+import com.antgroup.openspg.builder.core.strategy.linking.RecordLinking;
+import com.antgroup.openspg.builder.core.strategy.linking.RecordLinkingImpl;
+import com.antgroup.openspg.builder.core.strategy.linking.impl.IdEqualsLinking;
 import com.antgroup.openspg.builder.core.strategy.predicting.RecordPredicting;
 import com.antgroup.openspg.builder.core.strategy.predicting.RecordPredictingImpl;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
@@ -26,6 +29,7 @@ public class SubGraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
   private SubGraphFusing subGraphFusing;
   private RecordPredicting recordPredicating;
   private SubjectFusing subjectFusing;
+  private RecordLinking recordLinking;
 
   public SubGraphMappingProcessor(String id, String name, SubGraphMappingNodeConfig config) {
     super(id, name, config);
@@ -37,6 +41,10 @@ public class SubGraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
 
     SPGTypeIdentifier identifier = SPGTypeIdentifier.parse(config.getSpgType());
     this.spgType = (BaseSPGType) loadSchema(identifier, context.getCatalog());
+
+    this.recordLinking = new RecordLinkingImpl();
+    this.recordLinking.setDefaultPropertyLinking(IdEqualsLinking.INSTANCE);
+    this.recordLinking.init(context);
 
     this.subGraphFusing = new SubGraphFusingImpl(config.getMappingConfigs());
     this.subGraphFusing.init(context);
@@ -61,6 +69,7 @@ public class SubGraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
       BaseAdvancedRecord advancedRecord = toSPGRecord(mappedRecord, spgType);
       if (advancedRecord != null) {
         List<BaseAdvancedRecord> fusedRecords = subGraphFusing.subGraphFusing(advancedRecord);
+        fusedRecords.forEach(r -> recordLinking.propertyLinking(r));
         recordPredicating.propertyPredicating(advancedRecord);
         advancedRecords.addAll(fusedRecords);
       }
