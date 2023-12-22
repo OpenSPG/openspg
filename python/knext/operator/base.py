@@ -77,7 +77,6 @@ class BaseOp(ABC):
                     f"Operator [{name}] conflict in {subclass._local_path} and {cls.by_name(name)._local_path}."
                 )
             cls._registry[name] = subclass
-            print(subclass.__bases__)
             if hasattr(subclass, "bind_to"):
                 subclass.__bases__[0]._bind_schemas[subclass.bind_to] = name
             return subclass

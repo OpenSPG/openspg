@@ -50,18 +50,11 @@ from knext.rest.models.builder.pipeline.config.base_node_config import BaseNodeC
 from knext.rest.models.builder.pipeline.config.csv_source_node_config import (
     CsvSourceNodeConfig,
 )
-from knext.rest.models.builder.pipeline.config.extract_node_config import (
-    ExtractNodeConfig,
-)
 from knext.rest.models.builder.pipeline.config.graph_store_sink_node_config import (
     GraphStoreSinkNodeConfig,
 )
 from knext.rest.models.builder.pipeline.config.mapping_config import MappingConfig
 from knext.rest.models.builder.pipeline.config.mapping_filter import MappingFilter
-from knext.rest.models.builder.pipeline.config.mapping_node_config import (
-    MappingNodeConfig,
-)
-from knext.rest.models.builder.pipeline.config.mapping_schema import MappingSchema
 from knext.rest.models.builder.pipeline.config.operator_config import OperatorConfig
 from knext.rest.models.builder.pipeline.edge import Edge
 from knext.rest.models.builder.pipeline.node import Node
@@ -193,17 +186,8 @@ from knext.rest.models.schema.type.spg_type_ref import SpgTypeRef
 from knext.rest.models.schema.type.spg_type_ref_basic_info import SpgTypeRefBasicInfo
 from knext.rest.models.schema.type.standard_type import StandardType
 from knext.rest.models.schema.type.standard_type_basic_info import StandardTypeBasicInfo
-from knext.rest.models.builder.pipeline.config.id_equals_property_normalizer_config import (
-    IdEqualsPropertyNormalizerConfig,
-)
 from knext.rest.models.builder.pipeline.config.llm_based_extract_node_config import (
     LlmBasedExtractNodeConfig,
-)
-from knext.rest.models.builder.pipeline.config.operator_property_normalizer_config import (
-    OperatorPropertyNormalizerConfig,
-)
-from knext.rest.models.builder.pipeline.config.property_normalizer_config import (
-    PropertyNormalizerConfig,
 )
 from knext.rest.models.builder.pipeline.config.relation_mapping_node_config import (
     RelationMappingNodeConfig,
@@ -217,3 +201,13 @@ from knext.rest.models.builder.pipeline.config.sub_graph_mapping_node_config imp
 from knext.rest.models.builder.pipeline.config.user_defined_extract_node_config import (
     UserDefinedExtractNodeConfig,
 )
+from knext.rest.models.builder.pipeline.config.base_fusing_config import BaseFusingConfig
+from knext.rest.models.builder.pipeline.config.base_linking_config import BaseLinkingConfig
+from knext.rest.models.builder.pipeline.config.base_predicting_config import BasePredictingConfig
+from knext.rest.models.builder.pipeline.config.base_strategy_config import BaseStrategyConfig
+from knext.rest.models.builder.pipeline.config.id_equals_linking_config import IdEqualsLinkingConfig
+from knext.rest.models.builder.pipeline.config.operator_fusing_config import OperatorFusingConfig
+from knext.rest.models.builder.pipeline.config.operator_linking_config import OperatorLinkingConfig
+from knext.rest.models.builder.pipeline.config.operator_predicting_config import OperatorPredictingConfig
+from knext.rest.models.builder.pipeline.config.predicting_config import PredictingConfig
+from knext.rest.models.builder.pipeline.config.new_instance_fusing_config import NewInstanceFusingConfig

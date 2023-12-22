@@ -43,28 +43,49 @@ class SubGraphMappingNodeConfig(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"type": "str", "children_node_configs": "list[BaseNodeConfig]"}
+    openapi_types = {
+        'type': 'str',
+        'spg_type': 'str',
+        'mapping_filters': 'list[MappingFilter]',
+        'mapping_configs': 'list[MappingConfig]',
+        'subject_fusing_config': 'BaseFusingConfig',
+        'predicting_configs': 'list[PredictingConfig]'
+    }
 
-    attribute_map = {"type": "type", "children_node_configs": "childrenNodeConfigs"}
+    attribute_map = {
+        'type': 'type',
+        'spg_type': 'spgType',
+        'mapping_filters': 'mappingFilters',
+        'mapping_configs': 'mappingConfigs',
+        'subject_fusing_config': 'subjectFusingConfig',
+        'predicting_configs': 'predictingConfigs'
+    }
 
-    def __init__(
-        self,
-        type="SUBGRAPH_MAPPING",
-        children_node_configs=None,
-        local_vars_configuration=None,
-    ):  # noqa: E501
+    def __init__(self, type='SUBGRAPH_MAPPING', spg_type=None, mapping_filters=None, mapping_configs=None, subject_fusing_config=None, predicting_configs=None, local_vars_configuration=None):  # noqa: E501
         """SubGraphMappingNodeConfig - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
         self.local_vars_configuration = local_vars_configuration
 
         self._type = None
-        self._children_node_configs = None
+        self._spg_type = None
+        self._mapping_filters = None
+        self._mapping_configs = None
+        self._subject_fusing_config = None
+        self._predicting_configs = None
         self.discriminator = type
 
         self.type = type
-        if children_node_configs is not None:
-            self.children_node_configs = children_node_configs
+        if spg_type is not None:
+            self.spg_type = spg_type
+        if mapping_filters is not None:
+            self.mapping_filters = mapping_filters
+        if mapping_configs is not None:
+            self.mapping_configs = mapping_configs
+        if subject_fusing_config is not None:
+            self.subject_fusing_config = subject_fusing_config
+        if predicting_configs is not None:
+            self.predicting_configs = predicting_configs
 
     @property
     def type(self):
@@ -84,53 +105,121 @@ class SubGraphMappingNodeConfig(object):
         :param type: The type of this SubGraphMappingNodeConfig.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation and type is None
-        ):  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and type is None:  # noqa: E501
+            raise ValueError("Invalid value for `type`, must not be `None`")  # noqa: E501
+        allowed_values = ["CSV_SOURCE", "SPG_TYPE_MAPPING", "RELATION_MAPPING", "SUBGRAPH_MAPPING", "USER_DEFINED_EXTRACT", "LLM_BASED_EXTRACT", "GRAPH_SINK"]  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and type not in allowed_values:  # noqa: E501
             raise ValueError(
-                "Invalid value for `type`, must not be `None`"
-            )  # noqa: E501
-        allowed_values = [
-            "CSV_SOURCE",
-            "SPG_TYPE_MAPPING",
-            "RELATION_MAPPING",
-            "SUBGRAPH_MAPPING",
-            "USER_DEFINED_EXTRACT",
-            "LLM_BASED_EXTRACT",
-            "GRAPH_SINK",
-        ]  # noqa: E501
-        if (
-            self.local_vars_configuration.client_side_validation
-            and type not in allowed_values
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `type` ({0}), must be one of {1}".format(  # noqa: E501
-                    type, allowed_values
-                )
+                "Invalid value for `type` ({0}), must be one of {1}"  # noqa: E501
+                .format(type, allowed_values)
             )
 
         self._type = type
 
     @property
-    def children_node_configs(self):
-        """Gets the children_node_configs of this SubGraphMappingNodeConfig.  # noqa: E501
+    def spg_type(self):
+        """Gets the spg_type of this SubGraphMappingNodeConfig.  # noqa: E501
 
 
-        :return: The children_node_configs of this SubGraphMappingNodeConfig.  # noqa: E501
-        :rtype: list[BaseNodeConfig]
+        :return: The spg_type of this SubGraphMappingNodeConfig.  # noqa: E501
+        :rtype: str
         """
-        return self._children_node_configs
+        return self._spg_type
 
-    @children_node_configs.setter
-    def children_node_configs(self, children_node_configs):
-        """Sets the children_node_configs of this SubGraphMappingNodeConfig.
+    @spg_type.setter
+    def spg_type(self, spg_type):
+        """Sets the spg_type of this SubGraphMappingNodeConfig.
 
 
-        :param children_node_configs: The children_node_configs of this SubGraphMappingNodeConfig.  # noqa: E501
-        :type: list[BaseNodeConfig]
+        :param spg_type: The spg_type of this SubGraphMappingNodeConfig.  # noqa: E501
+        :type: str
         """
 
-        self._children_node_configs = children_node_configs
+        self._spg_type = spg_type
+
+    @property
+    def mapping_filters(self):
+        """Gets the mapping_filters of this SubGraphMappingNodeConfig.  # noqa: E501
+
+
+        :return: The mapping_filters of this SubGraphMappingNodeConfig.  # noqa: E501
+        :rtype: list[MappingFilter]
+        """
+        return self._mapping_filters
+
+    @mapping_filters.setter
+    def mapping_filters(self, mapping_filters):
+        """Sets the mapping_filters of this SubGraphMappingNodeConfig.
+
+
+        :param mapping_filters: The mapping_filters of this SubGraphMappingNodeConfig.  # noqa: E501
+        :type: list[MappingFilter]
+        """
+
+        self._mapping_filters = mapping_filters
+
+    @property
+    def mapping_configs(self):
+        """Gets the mapping_configs of this SubGraphMappingNodeConfig.  # noqa: E501
+
+
+        :return: The mapping_configs of this SubGraphMappingNodeConfig.  # noqa: E501
+        :rtype: list[MappingConfig]
+        """
+        return self._mapping_configs
+
+    @mapping_configs.setter
+    def mapping_configs(self, mapping_configs):
+        """Sets the mapping_configs of this SubGraphMappingNodeConfig.
+
+
+        :param mapping_configs: The mapping_configs of this SubGraphMappingNodeConfig.  # noqa: E501
+        :type: list[MappingConfig]
+        """
+
+        self._mapping_configs = mapping_configs
+
+    @property
+    def subject_fusing_config(self):
+        """Gets the subject_fusing_config of this SubGraphMappingNodeConfig.  # noqa: E501
+
+
+        :return: The subject_fusing_config of this SubGraphMappingNodeConfig.  # noqa: E501
+        :rtype: BaseFusingConfig
+        """
+        return self._subject_fusing_config
+
+    @subject_fusing_config.setter
+    def subject_fusing_config(self, subject_fusing_config):
+        """Sets the subject_fusing_config of this SubGraphMappingNodeConfig.
+
+
+        :param subject_fusing_config: The subject_fusing_config of this SubGraphMappingNodeConfig.  # noqa: E501
+        :type: BaseFusingConfig
+        """
+
+        self._subject_fusing_config = subject_fusing_config
+
+    @property
+    def predicting_configs(self):
+        """Gets the predicting_configs of this SubGraphMappingNodeConfig.  # noqa: E501
+
+
+        :return: The predicting_configs of this SubGraphMappingNodeConfig.  # noqa: E501
+        :rtype: list[PredictingConfig]
+        """
+        return self._predicting_configs
+
+    @predicting_configs.setter
+    def predicting_configs(self, predicting_configs):
+        """Sets the predicting_configs of this SubGraphMappingNodeConfig.
+
+
+        :param predicting_configs: The predicting_configs of this SubGraphMappingNodeConfig.  # noqa: E501
+        :type: list[PredictingConfig]
+        """
+
+        self._predicting_configs = predicting_configs
 
     def to_dict(self):
         """Returns the model properties as a dict"""
@@ -139,20 +228,18 @@ class SubGraphMappingNodeConfig(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
+                result[attr] = list(map(
+                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
+                    value
+                ))
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
-                )
+                result[attr] = dict(map(
+                    lambda item: (item[0], item[1].to_dict())
+                    if hasattr(item[1], "to_dict") else item,
+                    value.items()
+                ))
             else:
                 result[attr] = value
 
