@@ -42,10 +42,10 @@ public class RecordLinkingImpl implements RecordLinking {
       return;
     }
     for (BaseMappingNodeConfig.MappingConfig mappingConfig : mappingConfigs) {
-      if (mappingConfig.getOperatorConfig() != null) {
+      if (mappingConfig.getStrategyConfig() != null) {
         PropertyLinking propertyLinking =
             PropertyLinkingFactory.getPropertyLinking(
-                (BaseLinkingConfig) mappingConfig.getOperatorConfig());
+                (BaseLinkingConfig) mappingConfig.getStrategyConfig());
         propertyLinking.init(context);
         semanticPropertyLinking.put(mappingConfig.getTarget(), propertyLinking);
       }

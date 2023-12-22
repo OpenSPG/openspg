@@ -23,7 +23,7 @@ public abstract class BaseMappingNodeConfig extends BaseNodeConfig {
   public static class MappingConfig {
     private final String source;
     private final String target;
-    private final BaseStrategyConfig operatorConfig;
+    private final BaseStrategyConfig strategyConfig;
   }
 
   @Getter

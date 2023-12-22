@@ -9,10 +9,7 @@ import com.antgroup.openspg.builder.model.pipeline.config.linking.IdEqualsLinkin
 import com.antgroup.openspg.builder.model.pipeline.config.linking.OperatorLinkingConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.predicting.BasePredictingConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.predicting.OperatorPredictingConfig;
-import com.antgroup.openspg.builder.model.pipeline.enums.FusingTypeEnum;
-import com.antgroup.openspg.builder.model.pipeline.enums.LinkingTypeEnum;
-import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
-import com.antgroup.openspg.builder.model.pipeline.enums.PredictingTypeEnum;
+import com.antgroup.openspg.builder.model.pipeline.enums.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
@@ -58,6 +55,12 @@ public class BuilderJsonUtils {
                 RuntimeTypeAdapterFactory.of(BasePredictingConfig.class, DEFAULT_TYPE_FIELD_NAME)
                     .registerSubtype(
                         OperatorPredictingConfig.class, PredictingTypeEnum.OPERATOR.name())
+                    .recognizeSubtypes())
+            .registerTypeAdapterFactory(
+                RuntimeTypeAdapterFactory.of(BaseStrategyConfig.class, "strategyType")
+                    .registerSubtype(BaseLinkingConfig.class, StrategyTypeEnum.LINKING.name())
+                    .registerSubtype(BaseFusingConfig.class, StrategyTypeEnum.FUSING.name())
+                    .registerSubtype(BasePredictingConfig.class, StrategyTypeEnum.PREDICTING.name())
                     .recognizeSubtypes())
             .create();
   }

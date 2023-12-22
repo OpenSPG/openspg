@@ -33,10 +33,10 @@ public class SubGraphFusingImpl implements SubGraphFusing {
     }
 
     for (BaseMappingNodeConfig.MappingConfig mappingConfig : mappingConfigs) {
-      if (mappingConfig.getOperatorConfig() != null) {
+      if (mappingConfig.getStrategyConfig() != null) {
         EntityFusing entityFusing =
             EntityFusingFactory.getEntityFusing(
-                (BaseFusingConfig) mappingConfig.getOperatorConfig());
+                (BaseFusingConfig) mappingConfig.getStrategyConfig());
         entityFusing.init(context);
         semanticEntityFusing.put(mappingConfig.getTarget(), entityFusing);
       }
