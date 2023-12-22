@@ -52,7 +52,7 @@ public class OperatorPredicting implements PropertyPredicting {
   @Override
   public List<BaseAdvancedRecord> propertyPredicting(BaseAdvancedRecord record)
       throws PredictingException {
-    PythonRecord pythonRecord = PythonRecordConvertor.toPythonRecord(record);
+    Map<String, Object> pythonRecord = PythonRecordConvertor.toPythonRecord(record).toMap();
     InvokeResultWrapper<List<PythonRecord>> invokeResultWrapper = null;
     try {
       Map<String, Object> result =
