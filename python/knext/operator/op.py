@@ -52,7 +52,7 @@ class LinkOp(BaseOp, ABC):
 
     bind_to: SPGTypeName
 
-    _bind_schemas: Dict[SPGTypeName, str] = {}
+    bind_schemas: Dict[SPGTypeName, str] = {}
 
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
@@ -81,7 +81,7 @@ class FuseOp(BaseOp, ABC):
 
     bind_to: SPGTypeName
 
-    _bind_schemas: Dict[SPGTypeName, str] = {}
+    bind_schemas: Dict[SPGTypeName, str] = {}
 
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
@@ -95,7 +95,7 @@ class FuseOp(BaseOp, ABC):
     def _pre_process(*inputs):
         return [
             SPGRecord.from_dict(input) for input in inputs[0]
-        ]
+        ],
 
     @staticmethod
     def _post_process(output) -> Dict[str, Any]:
@@ -134,7 +134,7 @@ class PredictOp(BaseOp, ABC):
 
     bind_to: Tuple[SPGTypeName, PropertyName, SPGTypeName]
 
-    _bind_schemas: Dict[Tuple[SPGTypeName, PropertyName], str] = {}
+    bind_schemas: Dict[Tuple[SPGTypeName, PropertyName], str] = {}
 
     def invoke(self, subject_record: SPGRecord) -> List[SPGRecord]:
         raise NotImplementedError(
@@ -145,7 +145,7 @@ class PredictOp(BaseOp, ABC):
     def _pre_process(*inputs):
         return [
             SPGRecord.from_dict(input) for input in inputs[0]
-        ]
+        ],
 
     @staticmethod
     def _post_process(output) -> Dict[str, Any]:

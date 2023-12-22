@@ -1,0 +1,12 @@
+namespace Financial
+
+Indicator(指标概念): ConceptType
+    hypernymPredicate: isA
+
+State(状态): ConceptType
+    desc: 指标状态
+    properties:
+        causeOf(导致): State
+            desc: 状态顺承关系
+        derivedFrom(指标): Indicator
+            desc: 状态的指标

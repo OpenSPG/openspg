@@ -22,29 +22,18 @@ class IndicatorNER(PromptOp):
     def parse_response(
         self, response: str
     ) -> List[SPGRecord]:
-        # output_list = json.loads(response)
-        #
-        # ner_result = []
-        # # IF hasA
-        # for output in output_list:
-        #     # {'财政': ['财政收入....}
-        #     for k, v in output.items():
-        #         # '财政', ['财政收入....]
-        #         ner_result.append(SPGRecord("FEL.Indicator", properties={"id": k, "name": k, "hasA": ','.join(v)}))
-        #
-        # # ELSE isA
-        # # TODO 通过属性isA支持
-        # for output in output_list:
-        #     # {'财政': ['财政收入....}
-        #     for k, v in output.items():
-        #         # '财政', ['财政收入....]
-        #         for _v in v:
-        #             # '财政收入....'
-        #             ner_result.append(SPGRecord("FEL.Indicator", properties={"id": f'{k}-{_v}', "name": _v}))
         print("##########IndicatorNER###########")
-        ner_result = [SPGRecord(spg_type_name="Financial.Indicator", properties={"id": "土地出让收入", "name": "土地出让收入"})]
-        print(ner_result)
-        print("##########IndicatorNER###########")
+        response = "[{'财政': ['财政收入质量', '财政自给能力', '土地出让收入', '一般公共预算收入', '留抵退税', '税收收入', '税收收入/一般公共预算收入', '一般公共预算支出', '财政自给率', '政府性基金收入', '转移性收入', '综合财力']}]"
+
+        output_list = json.loads(response.replace("'", "\""))
+        ner_result = []
+        # IF hasA
+        for output in output_list:
+            # {'财政': ['财政收入....}
+            for category, indicator_list in output.items():
+                # '财政', ['财政收入....]
+                for indicator in indicator_list:
+                    ner_result.append(SPGRecord("Financial.Indicator", properties={"id": indicator, "name": indicator}))
         return ner_result
 
     def build_next_variables(
@@ -53,5 +42,6 @@ class IndicatorNER(PromptOp):
         """
         response: "[{'subject': '一般公共预算收入', 'predicate': '包含', 'object': ['税收收入']}, {'subject': '税收收入', 'predicate': '包含', 'object': ['留抵退税']}, {'subject': '政府性基金收入', 'predicate': '包含', 'object': ['土地出让收入', '转移性收入']}, {'subject': '综合财力', 'predicate': '包含', 'object': ['一般公共预算收入', '政府性基金收入']}]"
         """
-        response = ""
+        response = "[{'财政': ['财政收入质量', '财政自给能力', '土地出让收入', '一般公共预算收入', '留抵退税', '税收收入', '税收收入/一般公共预算收入', '一般公共预算支出', '财政自给率', '政府性基金收入', '转移性收入', '综合财力']}]"
+
         return [{"input": variables["input"], "ner": response}]

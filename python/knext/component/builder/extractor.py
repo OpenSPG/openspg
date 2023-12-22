@@ -9,7 +9,7 @@ from knext import rest
 from knext.operator.op import PromptOp, ExtractOp
 
 # try:
-from nn4k.invoker.base import LLMInvoker, NNInvoker  # noqa: F403
+from nn4k.invoker.base import NNInvoker  # noqa: F403
 
 # except ImportError:
 #     pass
@@ -54,7 +54,7 @@ class LLMBasedExtractor(SPGExtractor):
 
     def to_rest(self):
         """Transforms `LLMBasedExtractor` to REST model `ExtractNodeConfig`."""
-        params = {}
+        params = dict()
         params["model_config"] = json.dumps(self.llm._nn_config)
         api_client = OperatorClient()._rest_client.api_client
         params["prompt_config"] = json.dumps([api_client.sanitize_for_serialization(op.to_rest()) for op in self.prompt_ops], ensure_ascii=False)
@@ -117,7 +117,7 @@ class UserDefinedExtractor(SPGExtractor):
         """Transforms `UserDefinedExtractor` to REST model `ExtractNodeConfig`."""
         operator_config = self.extract_op.to_rest()
         config = rest.UserDefinedExtractNodeConfig(
-            output_fields=self.output_fields, operator_config=operator_config
+            operator_config=operator_config
         )
 
         return rest.Node(**super().to_dict(), node_config=config)

@@ -14,6 +14,8 @@ class IndicatorFuse(FuseOp):
         self.search_client = SearchClient("Financial.Indicator")
 
     def invoke(self, subject_records: List[SPGRecord]) -> List[SPGRecord]:
+        print("##########IndicatorFuse###########")
+        print(subject_records)
         fused_records = []
         for record in subject_records:
             query = {"match": {"name": record.get_property("name", "")}}

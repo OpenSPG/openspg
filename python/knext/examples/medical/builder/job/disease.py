@@ -13,10 +13,11 @@
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import (
     CSVReader,
+    LLMBasedExtractor,
+    SubGraphMapping,
     KGWriter
 )
-from knext.component.builder import LLMBasedExtractor, SubGraphMapping
-from knext.operator.builtin.auto_prompt import SPOPrompt
+from knext.api.operator import SPOPrompt
 from nn4k.invoker import LLMInvoker
 
 
@@ -26,17 +27,26 @@ class Disease(BuilderJob):
         1. 定义输入源，CSV文件
         """
         source = CSVReader(
-            local_path="job/data/Disease.csv",
-            columns=["id", "input"],
-            start_row=2,
+            local_path="builder/job/data/Disease.csv",
+            columns=["input"],
+            start_row=1,
         )
 
         """
         2. 定义大模型抽取组件，从长文本中抽取Medical.Disease类型实体
         """
-
-        extract = LLMBasedExtractor(llm=LLMInvoker.from_config("openai_infer.json"),
-                                    prompt_ops=[SPOPrompt("Medical.Disease", ["commonSymptom", "applicableDrug"])])
+        extract = LLMBasedExtractor(
+            llm=LLMInvoker.from_config("builder/model/openai_infer.json"),
+            prompt_ops=[SPOPrompt(
+                spg_type_name="Medical.Disease",
+                property_names=[
+                    "complication",
+                    "commonSymptom",
+                    "applicableDrug",
+                    "department",
+                    "diseaseSite",
+                ])]
+        )
 
         """
         2. 定义子图映射组件
@@ -44,8 +54,11 @@ class Disease(BuilderJob):
         mapping = SubGraphMapping(spg_type_name="Medical.Disease") \
             .add_mapping_field("id", "id") \
             .add_mapping_field("name", "name") \
+            .add_mapping_field("complication", "complication") \
             .add_mapping_field("commonSymptom", "commonSymptom") \
-            .add_mapping_field("applicableDrug", "applicableDrug")
+            .add_mapping_field("applicableDrug", "applicableDrug") \
+            .add_mapping_field("department", "department") \
+            .add_mapping_field("diseaseSite", "diseaseSite")
 
         """
         4. 定义输出到图谱
@@ -56,4 +69,3 @@ class Disease(BuilderJob):
         5. 定义builder_chain
         """
         return source >> extract >> mapping >> sink
-

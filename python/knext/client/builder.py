@@ -36,7 +36,7 @@ class BuilderClient(Client):
     def submit(self, job_name: str):
         """Submit an asynchronous builder job to the server by name."""
         job = BuilderJob.by_name(job_name)()
-        builder_chain = job.build()
+        builder_chain = BuilderChain.from_chain(job.build())
         dag_config = builder_chain.to_rest()
 
         params = {

@@ -43,10 +43,11 @@ ${rel}
         """
         response: "[{\"subject\": \"土地出让收入大幅下降\", \"predicate\": \"顺承\", \"object\": [\"综合财力明显下滑\"]}]"
         """
+        print("##########IndicatorLOGIC###########")
+        response = "[{\"subject\": \"土地出让收入大幅下降\", \"predicate\": \"顺承\", \"object\": [\"综合财力明显下滑\"]}]"
         output_list = json.loads(response)
 
         logic_result = []
-        # IF hasA
         for output in output_list:
             properties = {}
             for k, v in output.items():
@@ -55,6 +56,6 @@ ${rel}
                     properties["name"] = k
                 elif k == "object":
                     properties["causeOf"] = ','.join(v)
-            logic_result.append(SPGRecord("FEL.State", properties=properties))
+            logic_result.append(SPGRecord("Financial.State", properties=properties))
 
         return logic_result

@@ -9,15 +9,18 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-from knext.operator.op import BaseOp, LinkOp, ExtractOp, FuseOp, PromptOp
+
+from knext.operator.op import LinkOp, ExtractOp, FuseOp, PromptOp, PredictOp
+from knext.operator.spg_record import SPGRecord
 from knext.operator.builtin.auto_prompt import SPOPrompt
 
 
 __all__ = [
-    "BaseOp",
     "ExtractOp",
     "LinkOp",
     "FuseOp",
     "PromptOp",
+    "PredictOp",
     "SPOPrompt",
+    "SPGRecord",
 ]

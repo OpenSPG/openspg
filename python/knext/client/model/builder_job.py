@@ -70,3 +70,7 @@ class BuilderJob:
             return subclass
         else:
             raise ValueError(f"{name} is not a registered name for {cls.__name__}. ")
+
+    @classmethod
+    def has_registered(cls):
+        return cls._has_registered

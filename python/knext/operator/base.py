@@ -78,7 +78,7 @@ class BaseOp(ABC):
                 )
             cls._registry[name] = subclass
             if hasattr(subclass, "bind_to"):
-                subclass.__bases__[0]._bind_schemas[subclass.bind_to] = name
+                subclass.__bases__[0].bind_schemas[subclass.bind_to] = name
             return subclass
 
         return add_subclass_to_registry
@@ -104,3 +104,7 @@ class BaseOp(ABC):
                                    method="_handle",
                                    params=self.params,
                                    )
+
+    @property
+    def has_registered(self):
+        return self._has_registered
