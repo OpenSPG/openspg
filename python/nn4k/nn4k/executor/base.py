@@ -36,8 +36,14 @@ class LLMExecutor(NNExecutor):
             nn_config
         """
 
-        # TODO
-        pass
+        if "nn_name" in nn_config:
+            from nn4k.executor.hugging_face import HfLLMExecutor
+
+            return HfLLMExecutor.from_config(nn_config)
+        else:
+            o = cls.__new__(cls)
+            o._nn_config = nn_config
+            return o
 
     @abstractmethod
     def execute_sft(self, args=None, callbacks=None, **kwargs):
@@ -68,13 +74,3 @@ class LLMExecutor(NNExecutor):
         The entry point of inference. Usually for local invokers or model services.
         """
         raise NotImplementedError()
-
-
-class HfLLMExecutor(NNExecutor):
-
-    pass
-
-
-class DeepKeExecutor(NNExecutor):
-
-    pass

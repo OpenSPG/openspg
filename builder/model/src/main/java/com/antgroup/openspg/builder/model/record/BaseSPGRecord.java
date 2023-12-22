@@ -40,14 +40,6 @@ public abstract class BaseSPGRecord extends BaseRecord implements WithSPGTypeEnu
     return rawPropertyValueMap;
   }
 
-  public Map<String, Object> getStdPropertyValueMap() {
-    Map<String, Object> stdPropertyValueMap = new HashMap<>(getProperties().size());
-    for (BasePropertyRecord propertyRecord : getProperties()) {
-      stdPropertyValueMap.put(propertyRecord.getName(), propertyRecord.getValue().getStds());
-    }
-    return stdPropertyValueMap;
-  }
-
   public Map<String, String> getStdStrPropertyValueMap() {
     Map<String, String> stdStrPropertyValueMap = new HashMap<>(getProperties().size());
     for (BasePropertyRecord propertyRecord : getProperties()) {

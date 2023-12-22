@@ -51,8 +51,8 @@ public class OperatorFusing implements EntityFusing {
   @Override
   public List<BaseAdvancedRecord> entityFusing(List<BaseAdvancedRecord> records)
       throws FusingException {
-    List<PythonRecord> pythonRecords =
-        CollectionsUtils.listMap(records, PythonRecordConvertor::toPythonRecord);
+    List<Map<String, Object>> pythonRecords =
+        CollectionsUtils.listMap(records, r -> PythonRecordConvertor.toPythonRecord(r).toMap());
     InvokeResultWrapper<List<PythonRecord>> invokeResultWrapper = null;
     try {
       Map<String, Object> result =

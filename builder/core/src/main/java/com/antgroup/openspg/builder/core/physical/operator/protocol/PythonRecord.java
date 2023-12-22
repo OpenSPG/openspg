@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.builder.core.physical.operator.protocol;
 
+import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,5 +30,12 @@ public class PythonRecord {
 
   public String getId() {
     return properties.get("id");
+  }
+
+  public Map<String, Object> toMap() {
+    Map<String, Object> results = new HashMap<>(2);
+    results.put("spgTypeName", spgTypeName);
+    results.put("properties", properties);
+    return results;
   }
 }

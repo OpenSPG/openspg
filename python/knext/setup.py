@@ -26,7 +26,11 @@ license = ""
 with open(os.path.join(cwd, "LICENSE"), "r") as rf:
     line = rf.readline()
     while line:
-        license += "# " + line.strip() + "\n"
+        line = line.strip()
+        if line:
+            license += "# " + line + "\n"
+        else:
+            license += "#\n"
         line = rf.readline()
 
 # Generate knext.__init__.py
