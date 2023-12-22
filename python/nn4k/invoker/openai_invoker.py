@@ -9,7 +9,6 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from typing import Any
 from typing import Union
 
 from nn4k.invoker import NNInvoker
@@ -17,62 +16,18 @@ from nn4k.invoker import NNInvoker
 
 class OpenAIInvoker(NNInvoker):
     @classmethod
-    def _preprocess_config(cls, nn_config: Union[str, dict]) -> dict:
-        try:
-            if isinstance(nn_config, str):
-                with open(nn_config, "r") as f:
-                    nn_config = json.load(f)
-        except:
-            raise ValueError("cannot decode config file")
-        return nn_config
-
-    @classmethod
-    def _get_field(cls, nn_config: dict, name: str, text: str) -> Any:
-        value = nn_config.get(name)
-        if value is None:
-            message = "%s %r not found" % (text, name)
-            raise ValueError(message)
-        return value
-
-    @classmethod
-    def _get_string_field(cls, nn_config: dict, name: str, text: str) -> str:
-        value = cls._get_field(nn_config, name, text)
-        if not isinstance(value, str):
-            message = "%s %r must be string; " % (text, name)
-            message += "%r is invalid" % (value,)
-            raise TypeError(message)
-        return value
-
-    @classmethod
-    def _get_int_field(cls, nn_config: dict, name: str, text: str) -> int:
-        value = cls._get_field(nn_config, name, text)
-        if not isinstance(value, int):
-            message = "%s %r must be integer; " % (text, name)
-            message += "%r is invalid" % (value,)
-            raise TypeError(message)
-        return value
-
-    @classmethod
-    def _get_positive_int_field(cls, nn_config: dict, name: str, text: str) -> int:
-        value = cls._get_int_field(nn_config, name, text)
-        if value <= 0:
-            message = "%s %r must be positive integer; " % (text, name)
-            message += "%r is invalid" % (value,)
-            raise ValueError(message)
-        return value
-
-    @classmethod
     def _parse_config(cls, nn_config: dict) -> dict:
-        openai_api_key = cls._get_string_field(
-            nn_config, "openai_api_key", "openai api key"
-        )
-        openai_api_base = cls._get_string_field(
+        from nn4k.utils.config_parsing import get_string_field
+        from nn4k.utils.config_parsing import get_positive_int_field
+
+        openai_api_key = get_string_field(nn_config, "openai_api_key", "openai api key")
+        openai_api_base = get_string_field(
             nn_config, "openai_api_base", "openai api base"
         )
-        openai_model_name = cls._get_string_field(
+        openai_model_name = get_string_field(
             nn_config, "openai_model_name", "openai model name"
         )
-        openai_max_tokens = cls._get_positive_int_field(
+        openai_max_tokens = get_positive_int_field(
             nn_config, "openai_max_tokens", "openai max tokens"
         )
         config = dict(
@@ -86,8 +41,9 @@ class OpenAIInvoker(NNInvoker):
     @classmethod
     def from_config(cls, nn_config: Union[str, dict]):
         import openai
+        from nn4k.utils.config_parsing import preprocess_config
 
-        nn_config = cls._preprocess_config(nn_config)
+        nn_config = preprocess_config(nn_config)
         config = cls._parse_config(nn_config)
 
         o = cls.__new__(cls)
@@ -102,21 +58,28 @@ class OpenAIInvoker(NNInvoker):
         return o
 
     def _create_prompt(self, input, **kwargs):
-        prompt = input
+        if isinstance(input, list):
+            prompt = input
+        else:
+            prompt = [input]
         return prompt
 
     def _create_output(self, input, prompt, completion, **kwargs):
-        output = prompt + completion.choices[0].text
+        output = [choice.text for choice in completion.choices]
         return output
 
     def remote_inference(self, input, **kwargs):
         import openai
 
+        if "max_output_length" in kwargs:
+            max_output_length = kwargs.pop("max_output_length")
+        else:
+            max_output_length = self._openai_max_tokens
         prompt = self._create_prompt(input, **kwargs)
         completion = openai.Completion.create(
             model=self._openai_model_name,
             prompt=prompt,
-            max_tokens=self._openai_max_tokens,
+            max_tokens=max_output_length,
         )
         output = self._create_output(input, prompt, completion, **kwargs)
         return output
