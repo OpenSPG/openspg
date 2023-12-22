@@ -49,16 +49,21 @@ class HfLLMExecutor(NNExecutor):
             revision = self._nn_version
             use_fast_tokenizer = False
             device = self._nn_config.get("nn_device")
+            trust_remote_code = self._nn_config.get("nn_trust_remote_code", False)
             if device is None:
                 device = "cuda" if torch.cuda.is_available() else "cpu"
             tokenizer = AutoTokenizer.from_pretrained(
-                model_path, use_fast=use_fast_tokenizer, revision=revision
+                model_path,
+                use_fast=use_fast_tokenizer,
+                revision=revision,
+                trust_remote_code=trust_remote_code,
             )
             model = AutoModelForCausalLM.from_pretrained(
                 model_path,
                 low_cpu_mem_usage=True,
                 torch_dtype=torch.float16,
                 revision=revision,
+                trust_remote_code=trust_remote_code,
             )
             model.to(device)
             self._nn_device = device
