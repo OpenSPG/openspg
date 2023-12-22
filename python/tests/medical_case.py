@@ -1,9 +1,10 @@
 from typing import Dict, List
 
 from knext.client.model.builder_job import BuilderJob
-from knext.component.builder import CsvSourceReader, LLMBasedExtractor, KGSinkWriter
-from knext.component.builder.mapping import SubGraphMapping
+from knext.component.builder import CSVReader, LLMBasedExtractor, KGWriter
+from knext.component.builder.mapping import SubGraphMapping, SPGTypeMapping
 from knext.examples.medical.schema.medical_schema_helper import Medical
+from knext.operator.builtin.auto_prompt import SPOPrompt
 from knext.operator.op import PromptOp
 from knext.operator.spg_record import SPGRecord
 from nn4k.invoker import NNInvoker, LLMInvoker
@@ -90,32 +91,21 @@ class Disease(BuilderJob):
         """
         1. 定义输入源，CSV文件，其中CSV文件每一行为一段文本
         """
-        source = CsvSourceReader(
-            local_path="./builder/job/data/Disease.csv",
+        source = CSVReader(
+            local_path="Disease.csv",
             columns=["content"],
             start_row=2,
         )
 
-
-        """
-            [
-            SPGRecord(spg_type_name="Medical.Disease", properties={"id": "甲状腺结节", "name": "甲状腺结节", "description": "这是病", "body_part": "甲状腺,123"}),
-            SPGRecord(spg_type_name="Medical.BodyPart", properties={"id": "甲状腺", "name": "甲状腺"})
-            ]
-        """
-
-        extract = LLMBasedExtractor(llm=OpenAIInvoker.from_config("./config.json"), prompt_ops=[DiseaseREPromptOp])
+        spo_prompt = SPOPrompt(
+            spg_type_name=Medical.Disease,
+            property_names=[Medical.Disease.bodyPart, Medical.Disease.commonSymptom])
+        extract = LLMBasedExtractor(llm=OpenAIInvoker.from_config("./config.json"), prompt_ops=[])
 
         """
         2. 指定SPG知识映射组件，设置抽取算子，从长文本中抽取多种实体类型
         """
 
-        mapping = SubGraphMapping()\
-            .add_pattern()
-            .subject_type('Medical.Disease')\
-            .add_field('body_part', Medical.Disease.bodyPart, link_strategy="ID_EQUAL")\
-            .object_type('Medical.BodyPart')\
-            .sub
 
         # mapping_schema = [
         #     {
@@ -141,10 +131,18 @@ class Disease(BuilderJob):
         """
         3. 定义输出到图谱
         """
-        sink = KGSinkWriter()
+        sink = KGWriter()
 
         """
         4. 完整Pipeline定义
         """
 
-        return source >> extract >> mapping >> sink
+        return source >> mapping >> sink
+
+
+d = Disease()
+chain = d.build()
+
+print(chain)
+
+chain.invoke()

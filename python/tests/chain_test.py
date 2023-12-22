@@ -1,33 +1,8 @@
-import networkx as nx
-import matplotlib.pyplot as plt
+import json
 
-from knext.api.component import SPGTypeMapping
-from knext.api.component import KGSinkWriter
-from knext.api.component import CsvSourceReader
+response_str = "[{'财政': ['财政收入质量', '财政自给能力', '土地出让收入', '一般公共预算收入', '留抵退税', '税收收入', '税收收入/一般公共预算收入', '一般公共预算支出', '财政自给率', '政府性基金收入', '转移性收入', '综合财力']}]"
 
-if __name__ == '__main__':
-    source = CsvSourceReader(
-        local_path="./builder/job/data/BodyPart.csv", columns=["id"], start_row=1
-    )
+response_str = response_str.replace("'", "\"")
 
-    mapping1 = SPGTypeMapping(spg_type_name="Medical.BodyPart").add_field(
-        "id", "Medical.BodyPart.id"
-    )
+output_list = json.loads(response_str)
 
-    mapping2 = SPGTypeMapping(spg_type_name="Medical.BodyPart").add_field(
-        "id", "Medical.BodyPart.id1"
-    )
-
-    sink = KGSinkWriter()
-    sink2 = KGSinkWriter()
-
-    builder_chain = source >> mapping1 >> sink2
-
-    print(builder_chain.dag)
-
-    # G = builder_chain.dag
-    # # 绘制图形
-    # # nx.draw(G, with_labels=True, arrows=True)
-    #
-    # # 显示图形
-    # plt.show()

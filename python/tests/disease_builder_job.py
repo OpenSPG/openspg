@@ -1,9 +1,9 @@
 from knext.client.model.builder_job import BuilderJob
 from knext.component.builder import (
-    CsvSourceReader,
+    CSVReader,
     SPGTypeMapping,
     LLMBasedExtractor,
-    KGSinkWriter,
+    KGWriter,
 )
 
 
@@ -13,7 +13,7 @@ class Disease(BuilderJob):
         """
         1. 定义输入源，CSV文件，其中CSV文件每一行为一段文本
         """
-        source = CsvSourceReader(
+        source = CSVReader(
             local_path="Disease.csv",
             columns=["content"],
             start_row=2,
@@ -29,7 +29,7 @@ class Disease(BuilderJob):
         """
         3. 定义输出到图谱
         """
-        sink = SinkToKgComponent()
+        sink = KGWriter()
 
         """
         4. 完整Pipeline定义
