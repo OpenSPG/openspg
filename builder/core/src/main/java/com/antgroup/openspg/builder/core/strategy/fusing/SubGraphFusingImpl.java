@@ -1,6 +1,7 @@
 package com.antgroup.openspg.builder.core.strategy.fusing;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.core.strategy.linking.RecordLinking;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.FusingException;
 import com.antgroup.openspg.builder.model.pipeline.config.BaseMappingNodeConfig;
@@ -19,10 +20,13 @@ public class SubGraphFusingImpl implements SubGraphFusing {
   private BuilderContext context;
   private final List<BaseMappingNodeConfig.MappingConfig> mappingConfigs;
   private final Map<String, EntityFusing> semanticEntityFusing;
+  private final RecordLinking recordLinking;
 
-  public SubGraphFusingImpl(List<BaseMappingNodeConfig.MappingConfig> mappingConfigs) {
+  public SubGraphFusingImpl(
+      List<BaseMappingNodeConfig.MappingConfig> mappingConfigs, RecordLinking recordLinking) {
     this.mappingConfigs = mappingConfigs;
     this.semanticEntityFusing = new HashMap<>(mappingConfigs.size());
+    this.recordLinking = recordLinking;
   }
 
   @Override
@@ -54,6 +58,7 @@ public class SubGraphFusingImpl implements SubGraphFusing {
           continue;
         }
         List<BaseAdvancedRecord> advancedRecords = toAdvancedRecords(propertyRecord);
+        advancedRecords.forEach(recordLinking::propertyLinking);
         List<BaseAdvancedRecord> fusedRecords = entityFusing.entityFusing(advancedRecords);
         modifyPropertyRecord(propertyRecord, fusedRecords);
         results.addAll(fusedRecords);

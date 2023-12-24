@@ -46,7 +46,7 @@ public class SubGraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
     this.recordLinking.setDefaultPropertyLinking(IdEqualsLinking.INSTANCE);
     this.recordLinking.init(context);
 
-    this.subGraphFusing = new SubGraphFusingImpl(config.getMappingConfigs());
+    this.subGraphFusing = new SubGraphFusingImpl(config.getMappingConfigs(), recordLinking);
     this.subGraphFusing.init(context);
 
     this.subjectFusing = new SubjectFusingImpl(config.getSubjectFusingConfig());
