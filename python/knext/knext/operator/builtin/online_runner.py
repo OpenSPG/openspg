@@ -52,14 +52,12 @@ class _BuiltInOnlineExtractor(ExtractOp):
                         query = op.build_prompt(input_param)
                         # response = self.model.remote_inference(query)
                         response = "test"
-                        if hasattr(op, "parse_response"):
-                            collector.extend(op.parse_response(response))
-                        if hasattr(op, "build_variables"):
-                            next_params.extend(op.build_variables(input_param, response))
+                        collector.extend(op.parse_response(response))
+                        next_params.extend(op.build_next_variables(input_param, response))
                         break
                     except Exception as e:
                         retry_times += 1
                         raise e
             input_params = next_params
-
+        print(collector)
         return collector

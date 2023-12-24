@@ -52,8 +52,8 @@ ${rel}
             properties = {}
             for k, v in output.items():
                 if k == "subject":
-                    properties["id"] = k
-                    properties["name"] = k
+                    properties["id"] = v
+                    properties["name"] = v
                 elif k == "object":
                     properties["causeOf"] = ','.join(v)
             logic_result.append(SPGRecord("Financial.State", properties=properties))

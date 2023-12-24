@@ -15,7 +15,7 @@ class StateAndIndicator(BuilderJob):
 
     def build(self):
         source = CSVReader(
-            local_path="/Users/jier/openspg/python/knext/examples/financial/builder/job/data/document.csv",
+            local_path="/Users/jier/openspg/python/knext/knext/examples/financial/builder/job/data/document.csv",
             columns=["input"],
             start_row=2
         )
@@ -23,7 +23,7 @@ class StateAndIndicator(BuilderJob):
         from knext.examples.financial.builder.operator.IndicatorNER import IndicatorNER
         from knext.examples.financial.builder.operator.IndicatorREL import IndicatorREL
         from knext.examples.financial.builder.operator.IndicatorLOGIC import IndicatorLOGIC
-        extract = LLMBasedExtractor(llm=LLMInvoker.from_config("/Users/jier/openspg/python/knext/examples/financial/builder/model/openai_infer.json"),
+        extract = LLMBasedExtractor(llm=LLMInvoker.from_config("/Users/jier/openspg/python/knext/knext/examples/financial/builder/model/openai_infer.json"),
                                     prompt_ops=[IndicatorNER(), IndicatorREL(), IndicatorLOGIC()]
                                     )
 

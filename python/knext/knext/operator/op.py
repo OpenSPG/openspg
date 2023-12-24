@@ -121,10 +121,10 @@ class PromptOp(BaseOp, ABC):
         )
 
     def parse_response(self, response: str) -> List[SPGRecord]:
-        pass
+        return []
 
     def build_next_variables(self, variables: Dict[str, str], response: str) -> List[Dict[str, str]]:
-        pass
+        return []
 
     def invoke(self, *args):
         pass

@@ -75,16 +75,19 @@ class UserDefinedExtractor(SPGExtractor):
     """A Process Component that transforming unstructured data into structured data.
 
     Examples:
-        extract = UserDefinedExtractor(
-                    output_fields=["id", 'riskMark', 'useCert']
-                ).set_operator("DemoExtractOp")
+        extract_1 = UserDefinedExtractor(
+                    extract_op=DemoExtractOp(params={"config": "1"})
+                )
+
+        extract_2 = UserDefinedExtractor().set_operator(
+                    op_name="DemoExtractOp",
+                    params={"config": "2"}
+                )
 
     """
 
-    """All output column names after knowledge extraction processing."""
-    output_fields: List[str]
     """Knowledge extract operator of this component."""
-    extract_op: ExtractOp
+    extract_op: ExtractOp = None
 
     @property
     def input_types(self) -> Input:
@@ -114,7 +117,7 @@ class UserDefinedExtractor(SPGExtractor):
         raise NotImplementedError(f"{self.__class__.__name__} does not support being submitted separately.")
 
     def to_rest(self):
-        """Transforms `UserDefinedExtractor` to REST model `ExtractNodeConfig`."""
+        """Transforms `UserDefinedExtractor` to REST model `UserDefinedExtractNodeConfig`."""
         operator_config = self.extract_op.to_rest()
         config = rest.UserDefinedExtractNodeConfig(
             operator_config=operator_config
