@@ -134,7 +134,7 @@ class PredictOp(BaseOp, ABC):
 
     bind_to: Tuple[SPGTypeName, PropertyName, SPGTypeName]
 
-    bind_schemas: Dict[Tuple[SPGTypeName, PropertyName], str] = {}
+    bind_schemas: Dict[Tuple[SPGTypeName, PropertyName, SPGTypeName], str] = {}
 
     def invoke(self, subject_record: SPGRecord) -> List[SPGRecord]:
         raise NotImplementedError(
@@ -143,9 +143,7 @@ class PredictOp(BaseOp, ABC):
 
     @staticmethod
     def _pre_process(*inputs):
-        return [
-            SPGRecord.from_dict(input) for input in inputs[0]
-        ],
+        return SPGRecord.from_dict(inputs[0]),
 
     @staticmethod
     def _post_process(output) -> Dict[str, Any]:

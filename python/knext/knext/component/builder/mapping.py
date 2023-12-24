@@ -422,8 +422,9 @@ class SubGraphMapping(Mapping):
                     operator_config=predicting_strategy.to_rest()
                 )
             elif not predicting_strategy:
-                if (self.spg_type_name, predicate_name) in PredictOp.bind_schemas:
-                    op_name = PredictOp.bind_schemas[(self.spg_type_name, predicate_name)]
+                object_type_name = spg_type.properties[predicate_name].object_type_name
+                if (self.spg_type_name, predicate_name, object_type_name) in PredictOp.bind_schemas:
+                    op_name = PredictOp.bind_schemas[(self.spg_type_name, predicate_name, object_type_name)]
                     op = PredictOp.by_name(op_name)()
                     strategy_config = rest.OperatorPredictingConfig(
                         operator_config=op.to_rest()
@@ -434,7 +435,7 @@ class SubGraphMapping(Mapping):
                 raise ValueError(f"Invalid predicting_strategy [{predicting_strategy}].")
             if strategy_config:
                 predicting_configs.append(
-                    strategy_config
+                    rest.PredictingConfig(target=predicate_name,predicting_config=strategy_config)
                 )
 
         if isinstance(self.subject_fusing_strategy, FuseOp):
