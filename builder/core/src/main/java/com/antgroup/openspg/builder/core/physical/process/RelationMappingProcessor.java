@@ -16,19 +16,21 @@ import java.util.List;
 
 public class RelationMappingProcessor extends BaseMappingProcessor<RelationMappingNodeConfig> {
 
+  private final RelationIdentifier identifier;
   private Relation relation;
   private RecordLinking recordLinking;
 
   public RelationMappingProcessor(String id, String name, RelationMappingNodeConfig config) {
     super(id, name, config);
+    this.identifier = RelationIdentifier.parse(config.getRelation());
   }
 
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
     super.doInit(context);
 
-    RelationIdentifier identifier = RelationIdentifier.parse(config.getRelation());
     this.relation = (Relation) loadSchema(identifier, context.getCatalog());
+
     this.recordLinking = new RecordLinkingImpl(config.getMappingConfigs());
     this.recordLinking.setDefaultPropertyLinking(new SearchBasedLinking());
     this.recordLinking.init(context);
@@ -39,28 +41,16 @@ public class RelationMappingProcessor extends BaseMappingProcessor<RelationMappi
     List<BaseRecord> spgRecords = new ArrayList<>(inputs.size());
     for (BaseRecord baseRecord : inputs) {
       BuilderRecord record = (BuilderRecord) baseRecord;
-      RelationRecord relationRecord =
-          relationRecordMapping(record, relation, config, recordLinking);
-      if (relationRecord != null) {
-        spgRecords.add(relationRecord);
+      if (isFiltered(record, config.getMappingFilters(), identifier)) {
+        continue;
       }
+
+      BuilderRecord mappedRecord = mapping(record, config.getMappingConfigs());
+      RelationRecord relationRecord = toSPGRecord(mappedRecord, relation);
+      recordLinking.linking(relationRecord);
+      spgRecords.add(relationRecord);
     }
     return spgRecords;
-  }
-
-  private static RelationRecord relationRecordMapping(
-      BuilderRecord record,
-      Relation relation,
-      RelationMappingNodeConfig mappingConfig,
-      RecordLinking recordLinking) {
-    if (isFiltered(record, mappingConfig.getMappingFilters())) {
-      return null;
-    }
-
-    BuilderRecord mappedRecord = mapping(record, mappingConfig.getMappingConfigs());
-    RelationRecord relationRecord = toSPGRecord(mappedRecord, relation);
-    recordLinking.linking(relationRecord);
-    return relationRecord;
   }
 
   @Override

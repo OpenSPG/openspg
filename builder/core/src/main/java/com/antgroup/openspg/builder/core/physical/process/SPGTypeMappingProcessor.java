@@ -36,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMappingNodeConfig> {
 
+  private final SPGTypeIdentifier identifier;
   private BaseSPGType spgType;
   private RecordLinking recordLinking;
   private RecordPredicting recordPredicting;
@@ -43,13 +44,13 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
 
   public SPGTypeMappingProcessor(String id, String name, SPGTypeMappingNodeConfig config) {
     super(id, name, config);
+    this.identifier = SPGTypeIdentifier.parse(config.getSpgType());
   }
 
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
     super.doInit(context);
 
-    SPGTypeIdentifier identifier = SPGTypeIdentifier.parse(config.getSpgType());
     this.spgType = (BaseSPGType) loadSchema(identifier, context.getCatalog());
 
     this.recordLinking = new RecordLinkingImpl(config.getMappingConfigs());
@@ -68,7 +69,7 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
     List<BaseAdvancedRecord> advancedRecords = new ArrayList<>(inputs.size());
     for (BaseRecord baseRecord : inputs) {
       BuilderRecord record = (BuilderRecord) baseRecord;
-      if (isFiltered(record, config.getMappingFilters())) {
+      if (isFiltered(record, config.getMappingFilters(), identifier)) {
         continue;
       }
 
