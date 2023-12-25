@@ -58,8 +58,8 @@ public class SubGraphFusingImpl implements SubGraphFusing {
           continue;
         }
         List<BaseAdvancedRecord> advancedRecords = toAdvancedRecords(propertyRecord);
-        advancedRecords.forEach(recordLinking::propertyLinking);
-        List<BaseAdvancedRecord> fusedRecords = entityFusing.entityFusing(advancedRecords);
+        advancedRecords.forEach(recordLinking::linking);
+        List<BaseAdvancedRecord> fusedRecords = entityFusing.fusing(advancedRecords);
         modifyPropertyRecord(propertyRecord, fusedRecords);
         results.addAll(fusedRecords);
       }

@@ -37,7 +37,7 @@ public class OperatorLinking implements PropertyLinking {
   }
 
   @Override
-  public void propertyLinking(BasePropertyRecord record) throws LinkingException {
+  public void linking(BasePropertyRecord record) throws LinkingException {
     List<String> rawValues = record.getRawValues();
 
     List<String> ids = new ArrayList<>(rawValues.size());

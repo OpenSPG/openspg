@@ -13,7 +13,7 @@ public class BasicPropertyLinking implements PropertyLinking {
   public void init(BuilderContext context) throws BuilderException {}
 
   @Override
-  public void propertyLinking(BasePropertyRecord record) throws LinkingException {
+  public void linking(BasePropertyRecord record) throws LinkingException {
     SPGTypeRef objectTypeRef = record.getObjectTypeRef();
     if (!objectTypeRef.isBasicType()) {
       throw new IllegalStateException();

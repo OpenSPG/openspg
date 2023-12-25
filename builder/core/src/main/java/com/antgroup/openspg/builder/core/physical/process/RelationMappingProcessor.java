@@ -59,7 +59,7 @@ public class RelationMappingProcessor extends BaseMappingProcessor<RelationMappi
 
     BuilderRecord mappedRecord = mapping(record, mappingConfig.getMappingConfigs());
     RelationRecord relationRecord = toSPGRecord(mappedRecord, relation);
-    recordLinking.propertyLinking(relationRecord);
+    recordLinking.linking(relationRecord);
     return relationRecord;
   }
 

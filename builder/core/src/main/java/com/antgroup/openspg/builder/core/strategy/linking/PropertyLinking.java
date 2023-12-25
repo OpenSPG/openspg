@@ -11,5 +11,5 @@ public interface PropertyLinking {
   void init(BuilderContext context) throws BuilderException;
 
   /** Input an SPG property record and link the property value. */
-  void propertyLinking(BasePropertyRecord record) throws LinkingException;
+  void linking(BasePropertyRecord record) throws LinkingException;
 }

@@ -18,7 +18,7 @@ class BasicPropertyNormalizerTest extends Specification {
         def propertyRecord = new SPGPropertyRecord(property, new SPGPropertyValue(rawValue))
 
         expect:
-        normalizer.propertyLinking(propertyRecord)
+        normalizer.linking(propertyRecord)
         propertyRecord.getValue().getStds() == expectValues
 
         where:
@@ -33,7 +33,7 @@ class BasicPropertyNormalizerTest extends Specification {
         def propertyRecord = new SPGPropertyRecord(property, new SPGPropertyValue(rawValue))
 
         when:
-        normalizer.propertyLinking(propertyRecord)
+        normalizer.linking(propertyRecord)
         propertyRecord.getValue().getStds()
 
         then:
@@ -50,7 +50,7 @@ class BasicPropertyNormalizerTest extends Specification {
         def subPropertyRecord = new SPGSubPropertyRecord(subProperty, new SPGPropertyValue(rawValue))
 
         expect:
-        normalizer.propertyLinking(subPropertyRecord)
+        normalizer.linking(subPropertyRecord)
         subPropertyRecord.getValue().getStds() == expectValues
 
         where:

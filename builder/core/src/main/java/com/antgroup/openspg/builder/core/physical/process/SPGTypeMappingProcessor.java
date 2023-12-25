@@ -38,7 +38,7 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
 
   private BaseSPGType spgType;
   private RecordLinking recordLinking;
-  private RecordPredicting recordPredicating;
+  private RecordPredicting recordPredicting;
   private SubjectFusing subjectFusing;
 
   public SPGTypeMappingProcessor(String id, String name, SPGTypeMappingNodeConfig config) {
@@ -59,8 +59,8 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
     this.subjectFusing = new SubjectFusingImpl(config.getSubjectFusingConfig());
     this.subjectFusing.init(context);
 
-    this.recordPredicating = new RecordPredictingImpl(config.getPredictingConfigs());
-    this.recordPredicating.init(context);
+    this.recordPredicting = new RecordPredictingImpl(config.getPredictingConfigs());
+    this.recordPredicting.init(context);
   }
 
   @Override
@@ -75,12 +75,12 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
       BuilderRecord mappedRecord = mapping(record, config.getMappingConfigs());
       BaseAdvancedRecord advancedRecord = toSPGRecord(mappedRecord, spgType);
       if (advancedRecord != null) {
-        recordLinking.propertyLinking(advancedRecord);
-        recordPredicating.propertyPredicating(advancedRecord);
+        recordLinking.linking(advancedRecord);
+        recordPredicting.predicting(advancedRecord);
         advancedRecords.add(advancedRecord);
       }
     }
-    return (List) subjectFusing.subjectFusing(advancedRecords);
+    return (List) subjectFusing.fusing(advancedRecords);
   }
 
   @Override

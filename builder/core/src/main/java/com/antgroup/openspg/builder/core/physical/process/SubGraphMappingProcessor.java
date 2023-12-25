@@ -69,12 +69,12 @@ public class SubGraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
       BaseAdvancedRecord advancedRecord = toSPGRecord(mappedRecord, spgType);
       if (advancedRecord != null) {
         List<BaseAdvancedRecord> fusedRecords = subGraphFusing.subGraphFusing(advancedRecord);
-        fusedRecords.forEach(r -> recordLinking.propertyLinking(r));
-        recordPredicating.propertyPredicating(advancedRecord);
+        fusedRecords.forEach(r -> recordLinking.linking(r));
+        recordPredicating.predicting(advancedRecord);
         advancedRecords.addAll(fusedRecords);
       }
     }
-    return (List) subjectFusing.subjectFusing(advancedRecords);
+    return (List) subjectFusing.fusing(advancedRecords);
   }
 
   @Override

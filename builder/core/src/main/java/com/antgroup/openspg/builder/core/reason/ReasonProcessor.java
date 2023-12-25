@@ -82,7 +82,7 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
     }
 
     for (BaseRecord baseRecord : results) {
-      recordNormalizer.propertyLinking((BaseSPGRecord) baseRecord);
+      recordNormalizer.linking((BaseSPGRecord) baseRecord);
     }
     return results;
   }

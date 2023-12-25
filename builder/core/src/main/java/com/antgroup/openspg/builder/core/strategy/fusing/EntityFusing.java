@@ -12,5 +12,5 @@ public interface EntityFusing {
   void init(BuilderContext context) throws BuilderException;
 
   /** Input a list of SPG records, fuse and return the final result. */
-  List<BaseAdvancedRecord> entityFusing(List<BaseAdvancedRecord> records) throws FusingException;
+  List<BaseAdvancedRecord> fusing(List<BaseAdvancedRecord> records) throws FusingException;
 }

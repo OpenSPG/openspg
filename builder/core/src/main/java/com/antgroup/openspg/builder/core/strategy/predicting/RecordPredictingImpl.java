@@ -39,7 +39,7 @@ public class RecordPredictingImpl implements RecordPredicting {
   }
 
   @Override
-  public void propertyPredicating(BaseAdvancedRecord advancedRecord) throws PredictingException {
+  public void predicting(BaseAdvancedRecord advancedRecord) throws PredictingException {
     Map<String, Property> propertyMap = advancedRecord.getSpgType().getPropertyMap();
     for (Map.Entry<String, PropertyPredicting> entry : semanticPropertyPredicating.entrySet()) {
       String propertyKey = entry.getKey();
@@ -50,7 +50,7 @@ public class RecordPredictingImpl implements RecordPredicting {
         continue;
       }
 
-      List<BaseAdvancedRecord> predictedRecords = predicting.propertyPredicting(advancedRecord);
+      List<BaseAdvancedRecord> predictedRecords = predicting.predicting(advancedRecord);
       if (CollectionUtils.isEmpty(predictedRecords)) {
         continue;
       }

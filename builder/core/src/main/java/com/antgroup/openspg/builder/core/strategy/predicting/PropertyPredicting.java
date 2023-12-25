@@ -12,5 +12,5 @@ public interface PropertyPredicting {
   void init(BuilderContext context) throws BuilderException;
 
   /** Input an SPG property record and predict the property value. */
-  List<BaseAdvancedRecord> propertyPredicting(BaseAdvancedRecord record) throws PredictingException;
+  List<BaseAdvancedRecord> predicting(BaseAdvancedRecord record) throws PredictingException;
 }
