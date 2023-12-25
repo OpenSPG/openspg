@@ -33,7 +33,7 @@ class Chain(Runnable, RESTable):
 
     @property
     def downstream_types(self) -> Type['RESTable']:
-        return self._last.downstream_types
+        return self.last.downstream_types
 
     @classmethod
     def from_rest(cls, node: rest.Node):

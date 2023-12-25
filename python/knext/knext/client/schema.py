@@ -10,8 +10,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-import os
-from typing import List
+from typing import List, Dict
 
 from knext import rest
 from knext.client.base import Client
@@ -86,6 +85,10 @@ class SchemaClient(Client):
                     self._spg_types[spg_type_name] = type_class(
                         name=spg_type_name, rest_model=spg_type
                     )
+
+        @property
+        def spg_types(self) -> Dict[str, BaseSpgType]:
+            return self._spg_types
 
         def get(self, spg_type_name) -> BaseSpgType:
             """Get SPG type by name from project schema."""

@@ -3,32 +3,47 @@
 # PLEASE DO NOT MODIFY THIS FILE!!!
 #
 
+from knext.common.schema_helper import SPGTypeHelper, PropertyHelper
+
+
 class Financial:
-	def __init__(self):
-		self.Indicator = self.Indicator()
-		self.State = self.State()
 
-	class Indicator:
-		__typename__ = "Financial.Indicator"
-		description = "description"
-		id = "id"
-		name = "name"
-		alias = "alias"
-		stdId = "stdId"
+    class Indicator(SPGTypeHelper):
+        __type_name__ = "Financial.Indicator"
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+        alias = PropertyHelper("alias")
+        stdId = PropertyHelper("stdId")
 
-		def __init__(self):
-			pass
+    class State(SPGTypeHelper):
+        __type_name__ = "Financial.State"
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+        stdId = PropertyHelper("stdId")
+        derivedFrom = PropertyHelper("derivedFrom")
+        causeOf = PropertyHelper("causeOf")
+        alias = PropertyHelper("alias")
 
-	class State:
-		__typename__ = "Financial.State"
-		description = "description"
-		id = "id"
-		name = "name"
-		stdId = "stdId"
-		derivedFrom = "derivedFrom"
-		causeOf = "causeOf"
-		alias = "alias"
+    Indicator = Indicator("Financial.Indicator")
+    State = State("Financial.State")
 
-		def __init__(self):
-			pass
 
+if __name__ == '__main__':
+    from knext.common.template import render_template
+    data = {
+        "namespace": "Financial",
+        "spg_types": [
+            {
+                "name": "Indicator",
+                "properties": ["description", "id", "name", "alias", "stdId"]
+            },
+            {
+                "name": "State",
+                "properties": ["description", "id", "name", "alias", "stdId", "derivedFrom", "causeOf"]
+            }
+        ]
+    }
+
+    render_template("/knext/templates/schema_helper/${project}_schema_helper.py.tmpl", **data)

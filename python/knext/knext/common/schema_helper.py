@@ -1,7 +1,7 @@
 from abc import ABC
 
 
-class SchemaHelper(ABC):
+class SchemaHelper(ABC, str):
 
     __type_name__: str
 

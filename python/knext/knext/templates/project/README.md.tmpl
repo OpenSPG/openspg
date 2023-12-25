@@ -1,6 +1,6 @@
 
 ```bash
-knext project create --name ${project_name} --namespace ${namespace} --desc ${description}
+knext project create --name {{project_name}} --namespace {{namespace}} --desc {{description}}
 ```
 
 ```bash
@@ -8,11 +8,7 @@ knext schema commit
 ```
 
 ```bash
-knext operator publish DemoExtractOp
-```
-
-```bash
-knext builder submit Demo
+knext builder execute Demo
 ```
 
 ```bash

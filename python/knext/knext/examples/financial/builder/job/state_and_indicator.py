@@ -9,6 +9,8 @@ from knext.api.component import (
 )
 from nn4k.invoker import LLMInvoker
 
+from knext.examples.financial.schema.financial_schema_helper import Financial
+
 
 class StateAndIndicator(BuilderJob):
 
@@ -26,15 +28,15 @@ class StateAndIndicator(BuilderJob):
                                     prompt_ops=[IndicatorNER(), IndicatorREL(), IndicatorLOGIC()]
                                     )
 
-        state_mapping = SubGraphMapping(spg_type_name="Financial.State")\
-            .add_mapping_field("id", "id") \
-            .add_mapping_field("name", "name") \
-            .add_mapping_field("causeOf", "causeOf") \
-            .add_predicting_field("derivedFrom")
+        state_mapping = SubGraphMapping(spg_type_name=Financial.State.name)\
+            .add_mapping_field("id", Financial.State.id) \
+            .add_mapping_field("name", Financial.State.name) \
+            .add_mapping_field("causeOf", Financial.State.causeOf) \
+            .add_predicting_field(Financial.State.derivedFrom)
 
-        indicator_mapping = SubGraphMapping(spg_type_name="Financial.Indicator")\
-            .add_mapping_field("id", "id") \
-            .add_mapping_field("name", "name")
+        indicator_mapping = SubGraphMapping(spg_type_name=Financial.Indicator)\
+            .add_mapping_field("id", Financial.Indicator.id) \
+            .add_mapping_field("name", Financial.Indicator.name)
 
         sink = KGWriter()
 

@@ -14,9 +14,9 @@ from typing import List
 
 import requests
 
-from knext.core.builder.operator import Vertex
-from knext.core.builder.operator.model.op import EntityLinkOp
-from knext.core.wrapper.search_client import SearchClient
+from knext.api.record import SPGRecord
+from knext.api.operator import LinkOp
+from knext.client.search import SearchClient
 
 
 def llm_infer(word, recall):
@@ -35,7 +35,7 @@ def llm_infer(word, recall):
         return "null"
 
 
-class CompanyLinkerOperator(EntityLinkOp):
+class CompanyLinkerOperator(LinkOp):
     bind_to = "SupplyChain.Company"
 
     def __init__(self):
@@ -43,7 +43,7 @@ class CompanyLinkerOperator(EntityLinkOp):
         self.search_client = SearchClient("SupplyChain.Company")
         self.enable_llm = False
 
-    def eval(self, property: str, record: Vertex) -> List[Vertex]:
+    def eval(self, property: str, record: SPGRecord) -> List[SPGRecord]:
         company_name = property
         query = {"match": {"name": company_name}}
         recalls = self.search_client.search(query, start=0, size=30)
@@ -57,11 +57,11 @@ class CompanyLinkerOperator(EntityLinkOp):
 
         if company_name == recalls[0].properties["name"]:
             # If the result of Top1 is the same as the attribute value, then returned directly
-            return [Vertex(biz_id=recalls[0].doc_id, vertex_type="SupplyChain.Company")]
+            return [SPGRecord(spg_type_name="SupplyChain.Company", properties={"id": recalls[0].doc_id})]
 
             # Perform fine-ranking on coarse recall results by calling LLM
         if not self.enable_llm:
-            return [Vertex(biz_id=recalls[0].doc_id, vertex_type="SupplyChain.Company")]
+            return [SPGRecord(spg_type_name="SupplyChain.Company", properties={"id": recalls[0].doc_id})]
         recall_dict = {}
         for item in recalls:
             recall_dict[item.properties["name"]] = item.doc_id
@@ -71,8 +71,9 @@ class CompanyLinkerOperator(EntityLinkOp):
         llm_result = llm_infer(company_name, recall_str)
         if len(llm_result) > 0 and llm_result != "null":
             return [
-                Vertex(
-                    biz_id=recall_dict[llm_result], vertex_type="SupplyChain.Company"
+                SPGRecord(
+                    spg_type_name="SupplyChain.Company",
+                    properties={"id": recall_dict[llm_result]}
                 )
             ]
         return []

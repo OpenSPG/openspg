@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from knext.core.builder.job.model.builder_job import BuilderJob
+from knext.client.model.builder_job import BuilderJob
 from knext.api.component import CSVReader, SPGTypeMapping, KGWriter
-from schema.${helper} import ${namespace}
+from schema.{{helper}} import {{namespace}}
+
 
 class Demo(BuilderJob):
 
@@ -14,9 +15,9 @@ class Demo(BuilderJob):
         )
 
         mapping = SPGTypeMapping(
-            spg_type_name=${namespace}.Demo
-        ).add_field("id", ${namespace}.Demo.id) \
-            .add_field("prop", ${namespace}.Demo.demoProperty)
+            spg_type_name={{namespace}}.Demo
+        ).add_field("id", {{namespace}}.Demo.id) \
+            .add_field("prop", {{namespace}}.Demo.demoProperty)
 
         sink = KGWriter()
 

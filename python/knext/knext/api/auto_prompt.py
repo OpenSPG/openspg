@@ -10,16 +10,9 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from typing import List, Dict
-
-from knext.operator.spg_record import SPGRecord
-from knext.api.operator import ExtractOp
+from knext.operator.builtin.auto_prompt import REPrompt
 
 
-class DemoExtractOp(ExtractOp):
-    def __init__(self, params: Dict[str, str] = None):
-        super().__init__(params)
-
-    def invoke(self, record: Dict[str, str]) -> List[SPGRecord]:
-
-        return [SPGRecord(properties=record)]
+__all__ = [
+    "REPrompt",
+]
