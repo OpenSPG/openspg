@@ -9,10 +9,10 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from nn4k.executor import NNExecutor
+from nn4k.executor import LLMExecutor
 
 
-class HfLLMExecutor(NNExecutor):
+class HfLLMExecutor(LLMExecutor):
     @classmethod
     def _parse_config(cls, nn_config: dict) -> dict:
         from nn4k.utils.config_parsing import get_string_field
