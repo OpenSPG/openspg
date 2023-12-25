@@ -109,7 +109,7 @@ class SPGConceptRuleMarkLang:
                 predicate_name = "belongTo"
                 object_type = f"{self.namespace}.{self.src_concept[0]}"
                 object_name = self.src_concept[1]
-                assert object_type in self.session._spg_types, self.error_msg(
+                assert object_type in self.session.spg_types, self.error_msg(
                     f"{object_type} not found in schema"
                 )
 
@@ -118,7 +118,7 @@ class SPGConceptRuleMarkLang:
                     concept_type.spg_type_enum == SpgTypeEnum.Concept
                 ), self.error_msg(f"{object_type} is not concept type")
 
-                for spg_type in self.session._spg_types.values():
+                for spg_type in self.session.spg_types.values():
                     for relation_name in spg_type.relations:
                         if relation_name.startswith(f"belongTo_{object_type}"):
                             subject_type = spg_type.name

@@ -10,19 +10,20 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-import re
-import string
-from os import PathLike
+import os
 from pathlib import Path
+from shutil import copystat, copy2
 from typing import Any, Union
+from jinja2 import Environment, FileSystemLoader
+from stat import S_IWUSR as OWNER_WRITE_PERMISSION
 
 
-def render_templatefile(path: Union[str, PathLike], **kwargs: Any) -> None:
-    path_obj = Path(path)
-    raw = path_obj.read_text("utf8")
+def render_template(root: Union[str, os.PathLike], file: Union[str, os.PathLike], **kwargs: Any) -> None:
+    env = Environment(loader=FileSystemLoader(root))
+    template = env.get_template(str(file))
+    content = template.render(kwargs)
 
-    content = string.Template(raw).substitute(**kwargs)
-
+    path_obj = Path(root) / file
     render_path = path_obj.with_suffix("") if path_obj.suffix == ".tmpl" else path_obj
 
     if path_obj.suffix == ".tmpl":
@@ -31,17 +32,29 @@ def render_templatefile(path: Union[str, PathLike], **kwargs: Any) -> None:
     render_path.write_text(content, "utf8")
 
 
-CAMELCASE_INVALID_CHARS = re.compile(r"[^a-zA-Z\d]")
+def copytree(src: Path, dst: Path, project_name: str):
+    import knext
+    template_dir = os.path.join(knext.__path__[0], 'templates')
+    src = Path(template_dir) / src
+    names = [x.name for x in src.iterdir()]
+
+    if not dst.exists():
+        dst.mkdir(parents=True)
+
+    for name in names:
+        _name = name.replace("${project}", project_name)
+        src_name = src / name
+        dst_name = dst / _name
+        if src_name.is_dir():
+            copytree(src_name, dst_name, project_name)
+        else:
+            copy2(src_name, dst_name)
+            _make_writable(dst_name)
+
+    copystat(src, dst)
+    _make_writable(dst)
 
 
-def string_camelcase(string: str) -> str:
-    """Convert a word  to its CamelCase version and remove invalid chars
-
-    >>> string_camelcase('lost-pound')
-    'LostPound'
-
-    >>> string_camelcase('missing_images')
-    'MissingImages'
-
-    """
-    return CAMELCASE_INVALID_CHARS.sub("", string.title())
+def _make_writable(path):
+    current_permissions = os.stat(path).st_mode
+    os.chmod(path, current_permissions | OWNER_WRITE_PERMISSION)

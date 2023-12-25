@@ -270,6 +270,8 @@ class ApiClient(object):
             return tuple(self.sanitize_for_serialization(sub_obj) for sub_obj in obj)
         elif isinstance(obj, (datetime.datetime, datetime.date)):
             return obj.isoformat()
+        # elif hasattr(obj, "__type_name__"):
+        #     return obj.__type_name__
 
         if isinstance(obj, dict):
             obj_dict = obj

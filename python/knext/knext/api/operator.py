@@ -11,8 +11,6 @@
 # or implied.
 
 from knext.operator.op import LinkOp, ExtractOp, FuseOp, PromptOp, PredictOp
-from knext.operator.spg_record import SPGRecord
-from knext.operator.builtin.auto_prompt import SPOPrompt
 
 
 __all__ = [
@@ -21,6 +19,4 @@ __all__ = [
     "FuseOp",
     "PromptOp",
     "PredictOp",
-    "SPOPrompt",
-    "SPGRecord",
 ]

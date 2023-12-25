@@ -17,7 +17,7 @@ from knext.api.component import (
     SubGraphMapping,
     KGWriter
 )
-from knext.api.operator import SPOPrompt
+from knext.api.operator import REPrompt
 from nn4k.invoker import LLMInvoker
 
 
@@ -37,7 +37,7 @@ class Disease(BuilderJob):
         """
         extract = LLMBasedExtractor(
             llm=LLMInvoker.from_config("builder/model/openai_infer.json"),
-            prompt_ops=[SPOPrompt(
+            prompt_ops=[REPrompt(
                 spg_type_name="Medical.Disease",
                 property_names=[
                     "complication",

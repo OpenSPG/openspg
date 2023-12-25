@@ -10,21 +10,18 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-import os
 import re
 import string
 import sys
 from configparser import ConfigParser
 from pathlib import Path
-from shutil import copy2, copystat
-from stat import S_IWUSR as OWNER_WRITE_PERMISSION
 from typing import Optional
 
 import click
 from tabulate import tabulate
 
 from knext import rest
-from knext.common.template import render_templatefile
+from knext.common.template import copytree, render_template
 
 TEMPLATES_TO_RENDER = (
     (".knext.cfg.tmpl",),
@@ -134,16 +131,13 @@ def create_project(
     )
     project = client.project_create_post(project_create_request=project_create_request)
 
-    import knext
-
-    templates_dir = Path(knext.__path__[0]) / "templates/project"
-    _copytree(Path(templates_dir), project_dir.resolve(), namespace.lower())
+    copytree(Path("project"), project_dir.resolve(), namespace.lower())
     for paths in TEMPLATES_TO_RENDER:
         tplfile = Path(
-            project_dir,
             *(string.Template(s).substitute(project=namespace.lower()) for s in paths),
         )
-        render_templatefile(
+        render_template(
+            project_dir,
             tplfile,
             project_name=name,
             namespace=namespace,
@@ -159,28 +153,3 @@ def create_project(
         + f"  cd {project_dir}",
         fg="bright_green",
     )
-
-
-def _copytree(src: Path, dst: Path, project_name: str):
-    names = [x.name for x in src.iterdir()]
-
-    if not dst.exists():
-        dst.mkdir(parents=True)
-
-    for name in names:
-        _name = name.replace("${project}", project_name)
-        src_name = src / name
-        dst_name = dst / _name
-        if src_name.is_dir():
-            _copytree(src_name, dst_name, project_name)
-        else:
-            copy2(src_name, dst_name)
-            _make_writable(dst_name)
-
-    copystat(src, dst)
-    _make_writable(dst)
-
-
-def _make_writable(path):
-    current_permissions = os.stat(path).st_mode
-    os.chmod(path, current_permissions | OWNER_WRITE_PERMISSION)
