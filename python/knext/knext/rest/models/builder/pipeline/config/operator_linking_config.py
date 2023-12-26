@@ -54,7 +54,7 @@ class OperatorLinkingConfig(object):
         'operator_config': 'operatorConfig'
     }
 
-    def __init__(self, strategy_type='LINKING', linking_type=None, operator_config=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, strategy_type='LINKING', linking_type='OPERATOR', operator_config=None, local_vars_configuration=None):  # noqa: E501
         """OperatorLinkingConfig - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
