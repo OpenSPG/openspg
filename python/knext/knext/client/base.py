@@ -17,7 +17,7 @@ from knext import rest
 
 class Client(ABC):
 
-    _rest_client = rest.BaseApi
+    _rest_client: rest.BaseApi
 
     def __init__(self, host_addr: str = None, project_id: int = None):
         self._host_addr = host_addr or os.environ.get("KNEXT_HOST_ADDR")

@@ -17,6 +17,7 @@ class IndicatorPredict(PredictOp):
         print("##########IndicatorPredict###########")
         query = {"match": {"name": subject_record.get_property("name", "")}}
         recall_records = self.search_client.search(query, start=0, size=10)
+        print(recall_records)
         if recall_records is not None and len(recall_records) > 0:
             rerank_record = SPGRecord(
                 "Financial.Indicator",
@@ -25,5 +26,6 @@ class IndicatorPredict(PredictOp):
                     "name": recall_records[0].properties.get("name", ""),
                 },
             )
+            print([rerank_record])
             return [rerank_record]
         return []

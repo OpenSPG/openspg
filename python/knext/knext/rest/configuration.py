@@ -68,7 +68,7 @@ class Configuration(object):
 
     def __init__(
         self,
-        host="http://localhost:8887",
+        host=None,
         api_key=None,
         api_key_prefix=None,
         username=None,
@@ -76,7 +76,8 @@ class Configuration(object):
         discard_unknown_keys=False,
     ):
         """Constructor"""
-        self.host = os.environ.get("KNEXT_HOST_ADDR") or host
+        from knext import lib
+        self.host = os.environ.get("KNEXT_HOST_ADDR") or host or lib.LOCAL_SCHEMA_URL
         """Default Base url
         """
         self.temp_folder_path = None

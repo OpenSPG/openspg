@@ -25,7 +25,7 @@ class StateAndIndicator(BuilderJob):
         )
 
         state_mapping = (
-            SubGraphMapping(spg_type_name=Financial.State.name)
+            SubGraphMapping(spg_type_name=Financial.State)
             .add_mapping_field("id", Financial.State.id)
             .add_mapping_field("name", Financial.State.name)
             .add_mapping_field("causeOf", Financial.State.causeOf)
