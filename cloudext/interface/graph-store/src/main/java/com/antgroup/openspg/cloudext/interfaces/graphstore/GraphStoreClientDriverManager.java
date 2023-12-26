@@ -14,7 +14,6 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore;
 
 import com.antgroup.openspg.common.util.DriverManagerUtils;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.antgroup.openspg.server.common.model.exception.CloudExtException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
@@ -41,12 +40,12 @@ public class GraphStoreClientDriverManager {
     log.info("registerDriver: {}", driver);
   }
 
-  public static GraphStoreClient getClient(GraphStoreConnectionInfo config) {
+  public static GraphStoreClient getClient(String connUrl) {
     for (GraphStoreClientDriver driver : registeredDrivers) {
-      if (driver.acceptsConfig(config)) {
-        return driver.connect(config);
+      if (driver.acceptsConfig(connUrl)) {
+        return driver.connect(connUrl);
       }
     }
-    throw CloudExtException.driverNotExist(config);
+    throw CloudExtException.driverNotExist(connUrl);
   }
 }

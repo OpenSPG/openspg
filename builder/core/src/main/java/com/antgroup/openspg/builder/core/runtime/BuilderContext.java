@@ -31,6 +31,8 @@ public class BuilderContext implements Serializable {
 
   private String pythonExec;
   private String pythonPaths;
+  private String graphStoreUrl;
+  private String searchEngineUrl;
 
   private int batchSize = 1;
   private int parallelism = 1;

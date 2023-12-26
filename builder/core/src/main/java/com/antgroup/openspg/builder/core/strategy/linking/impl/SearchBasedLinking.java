@@ -24,8 +24,7 @@ public class SearchBasedLinking implements PropertyLinking {
 
   @Override
   public void init(BuilderContext context) throws BuilderException {
-    searchEngineClient =
-        SearchEngineClientDriverManager.getClient(context.getCatalog().getSearchEngineConnInfo());
+    searchEngineClient = SearchEngineClientDriverManager.getClient(context.getSearchEngineUrl());
   }
 
   @Override

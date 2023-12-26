@@ -56,10 +56,8 @@ public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfi
 
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
-    graphStoreClient =
-        GraphStoreClientDriverManager.getClient(context.getCatalog().getGraphStoreConnInfo());
-    searchEngineClient =
-        SearchEngineClientDriverManager.getClient(context.getCatalog().getSearchEngineConnInfo());
+    graphStoreClient = GraphStoreClientDriverManager.getClient(context.getGraphStoreUrl());
+    searchEngineClient = SearchEngineClientDriverManager.getClient(context.getSearchEngineUrl());
     checkProcessor = new CheckProcessor();
     checkProcessor.init(context);
   }

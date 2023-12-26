@@ -6,8 +6,6 @@ import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
 import java.io.Serializable;
 
 public interface BuilderCatalog extends Serializable {
@@ -21,8 +19,4 @@ public interface BuilderCatalog extends Serializable {
   Relation getRelation(RelationIdentifier identifier);
 
   ConceptList getConceptList(SPGTypeIdentifier conceptType);
-
-  SearchEngineConnectionInfo getSearchEngineConnInfo();
-
-  GraphStoreConnectionInfo getGraphStoreConnInfo();
 }
