@@ -32,11 +32,6 @@ public class TuGraphStoreClientDriver extends CachedCloudExtClientDriver<GraphSt
   }
 
   @Override
-  public GraphStoreClient connect(String url) {
-    return null;
-  }
-
-  @Override
   protected GraphStoreClient innerConnect(String connInfo) {
     return new TuGraphStoreClient(connInfo, new DefaultLPGTypeNameConvertor());
   }

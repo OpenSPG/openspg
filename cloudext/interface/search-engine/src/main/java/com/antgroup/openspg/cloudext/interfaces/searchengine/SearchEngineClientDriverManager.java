@@ -42,13 +42,13 @@ public class SearchEngineClientDriverManager {
     log.info("registerDriver: {}", driver);
   }
 
-  public static SearchEngineClient getClient(String url) {
-    UriComponents uriComponents = UriComponentsBuilder.fromUriString(url).build();
+  public static SearchEngineClient getClient(String connUrl) {
+    UriComponents uriComponents = UriComponentsBuilder.fromUriString(connUrl).build();
     for (SearchEngineClientDriver driver : registeredDrivers) {
       if (driver.acceptsConfig(uriComponents.getScheme())) {
-        return driver.connect(url);
+        return driver.connect(connUrl);
       }
     }
-    throw CloudExtException.driverNotExist(url);
+    throw CloudExtException.driverNotExist(connUrl);
   }
 }

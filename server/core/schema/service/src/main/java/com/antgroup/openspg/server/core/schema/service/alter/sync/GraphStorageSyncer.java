@@ -29,8 +29,6 @@ public class GraphStorageSyncer extends BaseSchemaSyncer {
   public void syncSchema(Long projectId, SPGSchemaAlterCmd schemaEditCmd) {
     GraphStoreClient graphStoreClient =
         GraphStoreClientDriverManager.getClient(appEnvConfig.getGraphStoreUrl());
-    if (null != graphStoreClient) {
-      graphStoreClient.alterSchema(schemaEditCmd);
-    }
+    graphStoreClient.alterSchema(schemaEditCmd);
   }
 }
