@@ -2,3 +2,4 @@ initdb.sql
 data-h2.sql
 mybatis-generator-config.xml
 application-default.properties
+reasoner.sh
