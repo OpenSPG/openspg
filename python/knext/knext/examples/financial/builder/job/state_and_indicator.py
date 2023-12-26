@@ -4,7 +4,7 @@ from knext.client.model.builder_job import BuilderJob
 from knext.api.component import CSVReader, LLMBasedExtractor, KGWriter, SubGraphMapping
 from nn4k.invoker import LLMInvoker
 
-from knext.examples.financial.schema.financial_schema_helper import Financial
+from schema.financial_schema_helper import Financial
 
 
 class StateAndIndicator(BuilderJob):

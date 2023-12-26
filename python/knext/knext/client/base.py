@@ -12,8 +12,16 @@
 import os
 from abc import ABC
 
+from knext import rest
+
 
 class Client(ABC):
+
+    _rest_client = rest.BaseApi
+
     def __init__(self, host_addr: str = None, project_id: int = None):
         self._host_addr = host_addr or os.environ.get("KNEXT_HOST_ADDR")
         self._project_id = project_id or os.environ.get("KNEXT_PROJECT_ID")
+
+    def serialize(self, obj):
+        return self._rest_client.api_client.sanitize_for_serialization(obj)

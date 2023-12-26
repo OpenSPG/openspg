@@ -51,14 +51,6 @@ class CSVReader(SourceReader):
     def output_types(self) -> Output:
         return Dict[str, str]
 
-    @property
-    def input_keys(self):
-        return None
-
-    @property
-    def output_keys(self):
-        return self.columns
-
     def invoke(self, input: Input):
         raise NotImplementedError(
             f"{self.__class__.__name__} does not support being invoked separately."

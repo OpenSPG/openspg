@@ -77,8 +77,11 @@ class LinkOp(BaseOp, ABC):
 
 
 class FuseOp(BaseOp, ABC):
-    """Base class for all entity fuse operators."""
+    """
+    Base class for all entity fuse operators.
+    """
 
+    """"""
     bind_to: SPGTypeName
 
     bind_schemas: Dict[SPGTypeName, str] = {}

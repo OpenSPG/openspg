@@ -70,14 +70,6 @@ class SPGTypeMapping(Mapping):
     def output_types(self) -> Output:
         return SPGRecord
 
-    @property
-    def input_keys(self):
-        return None
-
-    @property
-    def output_keys(self):
-        return self.output_fields
-
     def set_fusing_strategy(self, fusing_strategy: FuseOp):
         """"""
         self.subject_fusing_strategy = fusing_strategy
@@ -340,14 +332,6 @@ class SubGraphMapping(Mapping):
     @property
     def output_types(self) -> Output:
         return SPGRecord
-
-    @property
-    def input_keys(self):
-        return None
-
-    @property
-    def output_keys(self):
-        return self.output_fields
 
     def set_fusing_strategy(self, fusing_strategy: FuseOp):
         self.subject_fusing_strategy = fusing_strategy

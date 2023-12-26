@@ -1,6 +1,9 @@
 import unittest
 
-from knext.component.builder import UserDefinedExtractor
+from keras.src.engine.base_preprocessing_layer import PreprocessingLayer
+from langchain.memory import ConversationKGMemory
+
+from knext.component.builder import UserDefinedExtractor, LLMBasedExtractor
 
 
 class TestUserDefinedExtractor(unittest.TestCase):

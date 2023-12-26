@@ -2,23 +2,30 @@
 
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import CSVReader, SPGTypeMapping, KGWriter
-from schema.{{helper}} import {{namespace}}
+try:
+    from schema.{{helper}} import {{namespace}}
+except:
+    pass
 
 
-class Demo(BuilderJob):
+class Company(BuilderJob):
 
     def build(self):
         source = CSVReader(
-            local_path="./builder/job/data/Demo.csv",
-            columns=["id", 'prop'],
+            local_path="./builder/job/data/Company.csv",
+            columns=["id", "name", "province", "city", "district"],
             start_row=2
         )
 
+        from operator.demo_extract_op import
+        extract = UserDefinedExtractor()
+
         mapping = SPGTypeMapping(
-            spg_type_name={{namespace}}.Demo
-        ).add_field("id", {{namespace}}.Demo.id) \
-            .add_field("prop", {{namespace}}.Demo.demoProperty)
+            spg_type_name={{namespace}}.Company
+        ).add_field("id", {{namespace}}.Company.id) \
+        .add_field("name", {{namespace}}.Company.name) \
+        .add_field("address", {{namespace}}.Company.address)
 
         sink = KGWriter()
 
-        return source >> mapping >> sink
+        return source >> extract >> mapping >> sink

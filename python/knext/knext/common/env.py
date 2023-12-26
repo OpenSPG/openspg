@@ -102,7 +102,7 @@ def get_cfg_files():
 
 def load_operator():
     from knext.operator.base import BaseOp
-
+    from knext.operator import builtin
     if not BaseOp._has_registered and (
         "KNEXT_ROOT_PATH" in os.environ and "KNEXT_BUILDER_OPERATOR_DIR" in os.environ
     ):
@@ -114,6 +114,7 @@ def load_operator():
         )
 
         register_from_package(builder_operator_path, BaseOp)
+        sys.path.append(builtin.__path__[0])
 
 
 def load_builder_job():

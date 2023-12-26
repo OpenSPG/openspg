@@ -40,6 +40,7 @@ from knext.rest.api.table_store_api import TableStoreApi
 
 # import ApiClient
 from knext.rest.api_client import ApiClient
+from knext.rest.api_client import BaseApi
 from knext.rest.configuration import Configuration
 from knext.rest.exceptions import ApiException
 from knext.rest.exceptions import ApiKeyError

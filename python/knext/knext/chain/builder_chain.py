@@ -22,10 +22,6 @@ class BuilderChain(Chain):
     def output_types(self):
         return None
 
-    @classmethod
-    def from_config(cls):
-        return cls()
-
     def invoke(self, **kwargs):
         from knext.client.builder import BuilderClient
 
