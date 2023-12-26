@@ -17,7 +17,6 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriver;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.impl.DefaultIdxNameConvertor;
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
 
 public class ElasticSearchEngineClientDriver implements SearchEngineClientDriver {
 
@@ -31,7 +30,7 @@ public class ElasticSearchEngineClientDriver implements SearchEngineClientDriver
   }
 
   @Override
-  public SearchEngineClient connect(SearchEngineConnectionInfo connInfo) {
-    return new ElasticSearchEngineClient(connInfo, new DefaultIdxNameConvertor());
+  public SearchEngineClient connect(String url) {
+    return new ElasticSearchEngineClient(url, new DefaultIdxNameConvertor());
   }
 }

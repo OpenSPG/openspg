@@ -22,42 +22,19 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexId;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.graphstate.model.MergeTypeEnum;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 public class CloudExtGraphState extends MemGraphState {
 
-  private UriComponents uriComponents;
-  private BaseLPGGraphStoreClient lpgGraphStoreClient;
+  private final BaseLPGGraphStoreClient lpgGraphStoreClient;
 
   public CloudExtGraphState(String connUrl) {
-    uriComponents = UriComponentsBuilder.fromUriString(connUrl).build();
-    Map<String, String> params = new HashMap<>();
-    params.put("host", String.format("%s:%s", uriComponents.getHost(), uriComponents.getPort()));
-    params.put("accessId", "admin");
-    params.put("accessKey", "73@TuGraph");
-    params.put("graphName", "default");
-    params.put("timeout", "60000");
-
-    GraphStoreConnectionInfo connInfo = new GraphStoreConnectionInfo();
-    connInfo.setScheme(uriComponents.getScheme());
-    connInfo.setParams((Map) params);
     lpgGraphStoreClient =
-        (BaseLPGGraphStoreClient) GraphStoreClientDriverManager.getClient(connInfo);
-  }
-
-  public CloudExtGraphState(Map<String, String> params) {
-    GraphStoreConnectionInfo connInfo = new GraphStoreConnectionInfo();
-    connInfo.setScheme(params.getOrDefault("cloudext.graphstore.schema", "tugraph"));
-    connInfo.setParams(Collections.unmodifiableMap(params));
-    lpgGraphStoreClient =
-        (BaseLPGGraphStoreClient) GraphStoreClientDriverManager.getClient(connInfo);
+        (BaseLPGGraphStoreClient) GraphStoreClientDriverManager.getClient(connUrl);
   }
 
   @Override

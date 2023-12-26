@@ -14,15 +14,20 @@
 package com.antgroup.openspg.server.core.schema.service.alter.sync;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClient;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClientDriverManager;
 import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 
 @Slf4j
 public class GraphStorageSyncer extends BaseSchemaSyncer {
 
+  @Value(value = "cloudext.graphstore.url")
+  private String graphStoreUrl;
+
   @Override
   public void syncSchema(Long projectId, SPGSchemaAlterCmd schemaEditCmd) {
-    GraphStoreClient graphStoreClient = dataSourceService.buildSharedKgStoreClient();
+    GraphStoreClient graphStoreClient = GraphStoreClientDriverManager.getClient(graphStoreUrl);
     if (null != graphStoreClient) {
       graphStoreClient.alterSchema(schemaEditCmd);
     }

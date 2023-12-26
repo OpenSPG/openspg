@@ -20,7 +20,6 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.warehouse.cloudext.CloudExtGraphState;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.google.common.collect.Lists;
 import java.util.*;
 
@@ -45,8 +44,7 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
   public void doInit(BuilderContext context) throws BuilderException {
     super.doInit(context);
     Catalog catalog = buildCatalog();
-    GraphState<IVertexId> graphState =
-        buildGraphState(context.getCatalog().getGraphStoreConnInfo());
+    GraphState<IVertexId> graphState = buildGraphState(context.getGraphStoreUrl());
     this.inductiveConceptReasoner = new InductiveConceptReasoner();
     this.inductiveConceptReasoner.setCatalog(catalog);
     this.inductiveConceptReasoner.setGraphState(graphState);
@@ -108,11 +106,8 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
     return catalog;
   }
 
-  private GraphState<IVertexId> buildGraphState(GraphStoreConnectionInfo connInfo) {
-    Map<String, Object> params = new HashMap<>();
-    params.put("cloudext.graphstore.schema", connInfo.getScheme());
-    params.putAll(connInfo.getParams());
-    return new CloudExtGraphState((Map) params);
+  private GraphState<IVertexId> buildGraphState(String graphStoreUrl) {
+    return new CloudExtGraphState(graphStoreUrl);
   }
 
   @Override
