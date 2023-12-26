@@ -25,7 +25,7 @@ class NNInvoker(ABC):
     - Interfaces starting with "submit_" means submitting a batch task to a remote execution engine.
     - Interfaces starting with "remote_" means querying a remote service for some results.
     - Interfaces starting with "local_"  means running something locally.
-            Must call `init_local_model` before calling any local_xxx interface.
+            Must call `warmup_local_model` before calling any local_xxx interface.
     """
 
     hub = SimpleNNHub()
@@ -75,17 +75,17 @@ class LLMInvoker(NNInvoker):
     def local_inference(self, data, **kwargs):
         return self._nn_executor.inference(data, **kwargs)
 
-    def init_local_model(self):
+    def warmup_local_model(self):
         name = self._nn_config.get("nn_name")
         version = self._nn_config.get("nn_version")
-        self._nn_executor: LLMExecutor = self.hub.get_model_executor(name, version)
-
-    def _publish_executors(self):
-        from nn4k.executor.hugging_face import HfLLMExecutor
-
-        if "nn_name" in self._nn_config:
-            executor = HfLLMExecutor.from_config(self._nn_config)
-            self.hub.publish(executor, executor._nn_name, executor._nn_version)
+        executor = self.hub.get_model_executor(name, version)
+        if executor is None:
+            message = "model %r version %r " % (name, version)
+            message += "is not found in the model hub"
+            raise RuntimeError(message)
+        self._nn_executor: LLMExecutor = executor
+        self._nn_executor.load_model()
+        self._nn_executor.warmup_inference()
 
     @classmethod
     def from_config(cls, nn_config: Union[str, dict]):
@@ -96,7 +96,6 @@ class LLMInvoker(NNInvoker):
 
             o = cls.__new__(cls)
             o._nn_config = nn_config
-            o._publish_executors()
             return o
         elif nn_config.get("invoker_type", "LLM") == "OpenAI":
             from nn4k.invoker.openai_invoker import OpenAIInvoker

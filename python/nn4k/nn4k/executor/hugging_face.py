@@ -29,27 +29,30 @@ class HfLLMExecutor(LLMExecutor):
     def from_config(cls, nn_config: dict):
         config = cls._parse_config(nn_config)
 
-        o = cls.__new__(cls)
-        o._nn_config = nn_config
-        o._nn_name = config["nn_name"]
-        o._nn_version = config["nn_version"]
-        o._nn_device = None
-        o._nn_tokenizer = None
-        o._nn_model = None
+        model = None
+        tokenizer = None
+        init_args = nn_config
+        kwargs = config
+        executor = cls(model=model, tokenizer=tokenizer, init_args=init_args, **kwargs)
+        return executor
 
-        return o
+    def execute_sft(self, args=None, callbacks=None, **kwargs):
+        return super().execute_sft(args=args, callbacks=callbacks, **kwargs)
 
-    def _load_model(self):
+    def execute_rl_tuning(self, args=None, callbacks=None, **kwargs):
+        return super().execute_rl_tuning(args=args, callbacks=callbacks, **kwargs)
+
+    def load_model(self, **kwargs):
         import torch
         from transformers import AutoTokenizer
         from transformers import AutoModelForCausalLM
 
-        if self._nn_model is None:
-            model_path = self._nn_name
-            revision = self._nn_version
+        if self._model is None:
+            model_path = self.kwargs["nn_name"]
+            revision = self.kwargs["nn_version"]
             use_fast_tokenizer = False
-            device = self._nn_config.get("nn_device")
-            trust_remote_code = self._nn_config.get("nn_trust_remote_code", False)
+            device = self.init_args.get("nn_device")
+            trust_remote_code = self.init_args.get("nn_trust_remote_code", False)
             if device is None:
                 device = "cuda" if torch.cuda.is_available() else "cpu"
             tokenizer = AutoTokenizer.from_pretrained(
@@ -67,18 +70,8 @@ class HfLLMExecutor(LLMExecutor):
             )
             model.to(device)
             self._nn_device = device
-            self._nn_tokenizer = tokenizer
-            self._nn_model = model
-
-    def _get_tokenizer(self):
-        if self._nn_model is None:
-            self._load_model()
-        return self._nn_tokenizer
-
-    def _get_model(self):
-        if self._nn_model is None:
-            self._load_model()
-        return self._nn_model
+            self._tokenizer = tokenizer
+            self._model = model
 
     def inference(self, data, **kwargs):
         if "max_input_length" in kwargs:
@@ -93,9 +86,9 @@ class HfLLMExecutor(LLMExecutor):
             do_sample = kwargs.pop("do_sample")
         else:
             do_sample = False
-        nn_tokenizer = self._get_tokenizer()
-        nn_model = self._get_model()
-        input_ids = nn_tokenizer(
+        model = self.model
+        tokenizer = self.tokenizer
+        input_ids = tokenizer(
             data,
             padding=True,
             return_token_type_ids=False,
@@ -103,16 +96,16 @@ class HfLLMExecutor(LLMExecutor):
             truncation=True,
             max_length=max_input_length,
         ).to(self._nn_device)
-        output_ids = nn_model.generate(
+        output_ids = model.generate(
             **input_ids,
             max_new_tokens=max_output_length,
             do_sample=do_sample,
-            eos_token_id=nn_tokenizer.eos_token_id,
-            pad_token_id=nn_tokenizer.pad_token_id,
+            eos_token_id=tokenizer.eos_token_id,
+            pad_token_id=tokenizer.pad_token_id,
             **kwargs
         )
         outputs = [
-            nn_tokenizer.decode(
+            tokenizer.decode(
                 output_id[len(input_ids["input_ids"][idx]) :], skip_special_tokens=True
             )
             for idx, output_id in enumerate(output_ids)

@@ -97,9 +97,17 @@ class SimpleNNHub(NNHub):
         self._add_executor(model_executor, name, version)
         return version
 
+    def _create_model_executor(self, cls, init_args, kwargs, weights):
+        raise NotImplementedError()
+
     def get_model_executor(
         self, name: str, version: str = None
     ) -> Optional[NNExecutor]:
         if self._model_executors.get(name) is None:
             return None
-        return self._model_executors.get(name).get(version)
+        executor = self._model_executors.get(name).get(version)
+        if isinstance(executor, NNExecutor):
+            return executor
+        cls, init_args, kwargs, weights = executor
+        executor = self._create_model_executor(cls, init_args, kwargs, weights)
+        return executor

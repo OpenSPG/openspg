@@ -21,11 +21,49 @@ class NNExecutor(ABC):
     def from_config(cls, nn_config, **kwargs):
         pass
 
-    def __init__(self, backend_model, backend_tokenizer, init_args, **kwargs):
-        self.backend_model = backend_model
-        self.backend_tokenizer = backend_tokenizer
-        self.init_args = init_args
-        self.kwargs = kwargs
+    def __init__(self, model=None, tokenizer=None, init_args=None, **kwargs):
+        self._model = model
+        self._tokenizer = tokenizer
+        self._init_args = init_args
+        self._kwargs = kwargs
+
+    @property
+    def model(self):
+        """
+        Return the model object managed by this executor.
+
+        :raises RuntimeError: if the model is not loaded yet
+        """
+        if self._model is None:
+            message = "model is not loaded yet"
+            raise RuntimeError(message)
+        return self._model
+
+    @property
+    def tokenizer(self):
+        """
+        Return the tokenizer object managed by this executor.
+
+        :raises RuntimeError: if the tokenizer is not loaded yet
+        """
+        if self._tokenizer is None:
+            message = "tokenizer is not loaded yet"
+            raise RuntimeError(message)
+        return self._tokenizer
+
+    @property
+    def init_args(self):
+        """
+        Return the `init_args` passed to the executor constructor.
+        """
+        return self._init_args
+
+    @property
+    def kwargs(self):
+        """
+        Return the `kwargs` passed to the executor constructor.
+        """
+        return self._kwargs
 
 
 class LLMExecutor(NNExecutor):
@@ -74,3 +112,21 @@ class LLMExecutor(NNExecutor):
         The entry point of inference. Usually for local invokers or model services.
         """
         raise NotImplementedError()
+
+    @abstractmethod
+    def load_model(self, **kwargs):
+        """
+        Implement model loading logic in derived executor classes.
+
+        Implementer should initialize `self._model` and `self._tokenizer` to non-None
+        values according to `self._init_args`, `self._kwargs` and `kwargs`.
+
+        This method will be called by several entry methods in executors and invokers.
+        """
+        raise NotImplementedError()
+
+    def warmup_inference(self, **kwargs):
+        """
+        Implement model warming up logic for inference in derived executor classes.
+        """
+        pass
