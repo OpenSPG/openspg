@@ -131,7 +131,7 @@ public class TuGraphStoreClient extends BaseLPGGraphStoreClient {
   }
 
   private TuGraphDbRpcClient initTuGraphClient(UriComponents uriComponents) {
-    String host = uriComponents.getHost();
+    String host = String.format("%s:%s", uriComponents.getHost(), uriComponents.getPort());
     String accessId = uriComponents.getQueryParams().getFirst(ApiConstants.ACCESS_ID);
     String accessKey = uriComponents.getQueryParams().getFirst(ApiConstants.ACCESS_KEY);
     TuGraphDbRpcClient client = null;

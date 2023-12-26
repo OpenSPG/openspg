@@ -24,7 +24,7 @@ class CertLinkerOperator(LinkOp):
         super().__init__()
         self.search_client = SearchClient("RiskMining.Cert")
 
-    def eval(self, property: str, record: SPGRecord) -> List[SPGRecord]:
+    def invoke(self, property: str, record: SPGRecord) -> List[SPGRecord]:
         has_cert = property
         query = {"match": {"certNum": has_cert}}
         recall_certs = self.search_client.search(query, start=0, size=10)
