@@ -18,10 +18,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="byName">
 
-    <bean id="appEnvConfig" class="com.antgroup.openspg.server.common.service.config.AppEnvConfig">
-        <property name="enableSearchEngine" value="${builder.search-engine.enable}"/>
-        <property name="builderOperatorPythonExec" value="${builder.operator.python.exec}"/>
-        <property name="builderOperatorPythonPaths" value="${builder.operator.python.paths}"/>
-        <property name="schemaUri" value="${schema.uri}:${server.port}"/>
-    </bean>
+  <bean id="appEnvConfig" class="com.antgroup.openspg.server.common.service.config.AppEnvConfig">
+    <property name="schemaUri" value="${schema.uri}:${server.port}"/>
+  </bean>
 </beans>
