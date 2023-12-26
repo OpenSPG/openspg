@@ -43,18 +43,24 @@ class OperatorFusingConfig(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'strategy_type': 'str',
-        'fusing_type': 'str',
-        'operator_config': 'OperatorConfig'
+        "strategy_type": "str",
+        "fusing_type": "str",
+        "operator_config": "OperatorConfig",
     }
 
     attribute_map = {
-        'strategy_type': 'strategyType',
-        'fusing_type': 'fusingType',
-        'operator_config': 'operatorConfig'
+        "strategy_type": "strategyType",
+        "fusing_type": "fusingType",
+        "operator_config": "operatorConfig",
     }
 
-    def __init__(self, strategy_type='FUSING', fusing_type='OPERATOR', operator_config=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        strategy_type="FUSING",
+        fusing_type="OPERATOR",
+        operator_config=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """OperatorFusingConfig - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -88,13 +94,22 @@ class OperatorFusingConfig(object):
         :param strategy_type: The strategy_type of this OperatorFusingConfig.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and strategy_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `strategy_type`, must not be `None`")  # noqa: E501
-        allowed_values = ["LINKING", "FUSING", "PREDICTING"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and strategy_type not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and strategy_type is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `strategy_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(strategy_type, allowed_values)
+                "Invalid value for `strategy_type`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = ["LINKING", "FUSING", "PREDICTING"]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and strategy_type not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `strategy_type` ({0}), must be one of {1}".format(  # noqa: E501
+                    strategy_type, allowed_values
+                )
             )
 
         self._strategy_type = strategy_type
@@ -117,13 +132,21 @@ class OperatorFusingConfig(object):
         :param fusing_type: The fusing_type of this OperatorFusingConfig.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and fusing_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `fusing_type`, must not be `None`")  # noqa: E501
-        allowed_values = ["OPERATOR", "NEW_INSTANCE"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and fusing_type not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and fusing_type is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `fusing_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(fusing_type, allowed_values)
+                "Invalid value for `fusing_type`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = ["OPERATOR", "NEW_INSTANCE"]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and fusing_type not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `fusing_type` ({0}), must be one of {1}".format(  # noqa: E501
+                    fusing_type, allowed_values
+                )
             )
 
         self._fusing_type = fusing_type
@@ -156,18 +179,20 @@ class OperatorFusingConfig(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

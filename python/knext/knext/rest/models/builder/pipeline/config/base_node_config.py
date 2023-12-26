@@ -46,8 +46,15 @@ class BaseNodeConfig(object):
     openapi_types = {"type": "str"}
 
     attribute_map = {"type": "type"}
-    allowed_values = ["CSV_SOURCE", "SPG_TYPE_MAPPING", "RELATION_MAPPING", "SUBGRAPH_MAPPING", "USER_DEFINED_EXTRACT",
-                      "LLM_BASED_EXTRACT", "GRAPH_SINK"]  # noqa: E501
+    allowed_values = [
+        "CSV_SOURCE",
+        "SPG_TYPE_MAPPING",
+        "RELATION_MAPPING",
+        "SUBGRAPH_MAPPING",
+        "USER_DEFINED_EXTRACT",
+        "LLM_BASED_EXTRACT",
+        "GRAPH_SINK",
+    ]  # noqa: E501
     discriminator_value_class_map = {
         "CSV_SOURCE": "CsvSourceNodeConfig",
         "SPG_TYPE_MAPPING": "SpgTypeMappingNodeConfig",

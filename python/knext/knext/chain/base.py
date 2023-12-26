@@ -25,14 +25,15 @@ class Chain(Runnable, RESTable):
 
     def invoke(self, input=None, **kwargs):
         from knext.chain.builder_chain import BuilderChain
+
         return BuilderChain.from_chain(self).invoke(**kwargs)
 
     @property
-    def upstream_types(self) -> Type['RESTable']:
+    def upstream_types(self) -> Type["RESTable"]:
         return self.first.upstream_types
 
     @property
-    def downstream_types(self) -> Type['RESTable']:
+    def downstream_types(self) -> Type["RESTable"]:
         return self.last.downstream_types
 
     @classmethod

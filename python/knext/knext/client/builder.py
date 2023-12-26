@@ -60,6 +60,7 @@ class BuilderClient(Client):
         import os
         import sys
         import knext
+
         python_exec = sys.executable
         python_paths = sys.path
         sys.path.append(os.path.join(knext.__path__[0], "operator/builtin"))
@@ -67,29 +68,47 @@ class BuilderClient(Client):
         import subprocess
         import datetime
 
-        jar_path = os.path.join(knext.__path__[0], f"engine/builder-runner-local-0.0.1-SNAPSHOT-jar-with-dependencies.jar")
+        jar_path = os.path.join(
+            knext.__path__[0],
+            f"engine/builder-runner-local-0.0.1-SNAPSHOT-jar-with-dependencies.jar",
+        )
         api_client = BuilderClient()._rest_client.api_client
         pipeline = api_client.sanitize_for_serialization(dag_config)
         log_file_name = f"{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 
-        java_cmd = ['java', '-jar',
-                    "-Dcloudext.graphstore.drivers=com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClientDriver",
-                    "-Dcloudext.searchengine.drivers=com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchEngineClientDriver",
-                    jar_path,
-                    "--projectId", self._project_id,
-                    "--jobName", kwargs.get("job_name", "default_job"),
-                    "--pipeline", json.dumps(pipeline),
-                    "--pythonExec", python_exec,
-                    "--pythonPaths", ';'.join(python_paths),
-                    "--schemaUrl", os.environ.get("KNEXT_HOST_ADDR"),
-                    "--parallelism", str(kwargs.get("parallelism", "1")),
-                    "--alterOperation", kwargs.get("alter_operation", AlterOperationEnum.Upsert),
-                    "--logFile", log_file_name
-                    ]
+        java_cmd = [
+            "java",
+            "-jar",
+            "-Dcloudext.graphstore.drivers=com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClientDriver",
+            "-Dcloudext.searchengine.drivers=com.antgroup.openspg.cloudext.impl.searchengine.elasticsearch.ElasticSearchEngineClientDriver",
+            jar_path,
+            "--projectId",
+            self._project_id,
+            "--jobName",
+            kwargs.get("job_name", "default_job"),
+            "--pipeline",
+            json.dumps(pipeline),
+            "--pythonExec",
+            python_exec,
+            "--pythonPaths",
+            ";".join(python_paths),
+            "--schemaUrl",
+            os.environ.get("KNEXT_HOST_ADDR"),
+            "--parallelism",
+            str(kwargs.get("parallelism", "1")),
+            "--alterOperation",
+            kwargs.get("alter_operation", AlterOperationEnum.Upsert),
+            "--logFile",
+            log_file_name,
+        ]
 
-        print_java_cmd = [cmd if not cmd.startswith('{') else f"'{cmd}'" for cmd in java_cmd]
-        print_java_cmd = [cmd if not cmd.count(';') > 0 else f"'{cmd}'" for cmd in print_java_cmd]
-        print(json.dumps(' '.join(print_java_cmd))[1:-1].replace("'", '"'))
+        print_java_cmd = [
+            cmd if not cmd.startswith("{") else f"'{cmd}'" for cmd in java_cmd
+        ]
+        print_java_cmd = [
+            cmd if not cmd.count(";") > 0 else f"'{cmd}'" for cmd in print_java_cmd
+        ]
+        print(json.dumps(" ".join(print_java_cmd))[1:-1].replace("'", '"'))
 
         subprocess.call(java_cmd)
 

@@ -36,20 +36,21 @@ import lombok.extern.slf4j.Slf4j;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMappingNodeConfig> {
 
+  private final SPGTypeIdentifier identifier;
   private BaseSPGType spgType;
   private RecordLinking recordLinking;
-  private RecordPredicting recordPredicating;
+  private RecordPredicting recordPredicting;
   private SubjectFusing subjectFusing;
 
   public SPGTypeMappingProcessor(String id, String name, SPGTypeMappingNodeConfig config) {
     super(id, name, config);
+    this.identifier = SPGTypeIdentifier.parse(config.getSpgType());
   }
 
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
     super.doInit(context);
 
-    SPGTypeIdentifier identifier = SPGTypeIdentifier.parse(config.getSpgType());
     this.spgType = (BaseSPGType) loadSchema(identifier, context.getCatalog());
 
     this.recordLinking = new RecordLinkingImpl(config.getMappingConfigs());
@@ -59,8 +60,8 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
     this.subjectFusing = new SubjectFusingImpl(config.getSubjectFusingConfig());
     this.subjectFusing.init(context);
 
-    this.recordPredicating = new RecordPredictingImpl(config.getPredictingConfigs());
-    this.recordPredicating.init(context);
+    this.recordPredicting = new RecordPredictingImpl(config.getPredictingConfigs());
+    this.recordPredicting.init(context);
   }
 
   @Override
@@ -68,19 +69,19 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
     List<BaseAdvancedRecord> advancedRecords = new ArrayList<>(inputs.size());
     for (BaseRecord baseRecord : inputs) {
       BuilderRecord record = (BuilderRecord) baseRecord;
-      if (isFiltered(record, config.getMappingFilters())) {
+      if (isFiltered(record, config.getMappingFilters(), identifier)) {
         continue;
       }
 
       BuilderRecord mappedRecord = mapping(record, config.getMappingConfigs());
       BaseAdvancedRecord advancedRecord = toSPGRecord(mappedRecord, spgType);
       if (advancedRecord != null) {
-        recordLinking.propertyLinking(advancedRecord);
-        recordPredicating.propertyPredicating(advancedRecord);
+        recordLinking.linking(advancedRecord);
+        recordPredicting.predicting(advancedRecord);
         advancedRecords.add(advancedRecord);
       }
     }
-    return (List) subjectFusing.subjectFusing(advancedRecords);
+    return (List) subjectFusing.fusing(advancedRecords);
   }
 
   @Override

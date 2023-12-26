@@ -29,10 +29,10 @@ class Company(BuilderJob):
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.Company.__typename__)
-            .add_field("id", RiskMining.Company.id)
-            .add_field("name", RiskMining.Company.name)
-            .add_field("phone", RiskMining.Company.hasPhone)
+            SPGTypeMapping(spg_type_name=RiskMining.Company)
+            .add_mapping_field("id", RiskMining.Company.id)
+            .add_mapping_field("name", RiskMining.Company.name)
+            .add_mapping_field("phone", RiskMining.Company.hasPhone)
         )
 
         sink = KGWriter()
@@ -50,12 +50,12 @@ class CompanyHasCert(BuilderJob):
 
         mapping = (
             RelationMapping(
-                subject_name=RiskMining.Company.__typename__,
+                subject_name=RiskMining.Company,
                 predicate_name="hasCert",
-                object_name=RiskMining.Cert.__typename__,
+                object_name=RiskMining.Cert,
             )
-            .add_field("src", "srcId")
-            .add_field("dst", "dstId")
+            .add_mapping_field("src", "srcId")
+            .add_mapping_field("dst", "dstId")
         )
 
         sink = KGWriter()

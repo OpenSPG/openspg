@@ -60,14 +60,19 @@ class CSVReader(SourceReader):
         return self.columns
 
     def invoke(self, input: Input):
-        raise NotImplementedError(f"{self.__class__.__name__} does not support being invoked separately.")
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support being invoked separately."
+        )
 
     def submit(self):
-        raise NotImplementedError(f"{self.__class__.__name__} does not support being submitted separately.")
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support being submitted separately."
+        )
 
     def to_rest(self):
         """Transforms `CSVReader` to REST model `CsvSourceNodeConfig`."""
         from pathlib import Path
+
         absolute_path = str(Path(self.local_path).resolve())
         config = rest.CsvSourceNodeConfig(
             start_row=self.start_row, url=absolute_path, columns=self.columns
@@ -76,6 +81,8 @@ class CSVReader(SourceReader):
 
     @classmethod
     def from_rest(cls, node: rest.Node):
-        return cls(local_path=node.node_config.url,
-                   columns=node.node_config.columns,
-                   start_row=node.node_config.start_row)
+        return cls(
+            local_path=node.node_config.url,
+            columns=node.node_config.columns,
+            start_row=node.node_config.start_row,
+        )

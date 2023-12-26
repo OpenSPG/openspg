@@ -26,7 +26,7 @@ public class PythonRecordConvertor {
     }
     BaseAdvancedRecord advancedRecord =
         VertexRecordConvertor.toAdvancedRecord(spgType, recordId, pythonRecord.getProperties());
-    recordLinking.propertyLinking(advancedRecord);
+    recordLinking.linking(advancedRecord);
     return advancedRecord;
   }
 

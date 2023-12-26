@@ -53,20 +53,20 @@ public class RecordLinkingImpl implements RecordLinking {
   }
 
   @Override
-  public void propertyLinking(BaseSPGRecord spgRecord) throws LinkingException {
+  public void linking(BaseSPGRecord spgRecord) throws LinkingException {
     for (BasePropertyRecord propertyRecord : spgRecord.getProperties()) {
       if (propertyRecord.isSemanticProperty()) {
         PropertyLinking propertyLinking = semanticPropertyLinking.get(propertyRecord.getName());
         if (propertyLinking != null) {
           // we use user-defined normalizer to normalize property value
-          propertyLinking.propertyLinking(propertyRecord);
+          propertyLinking.linking(propertyRecord);
         } else {
           // we use default normalizer to normalize property value
-          defaultPropertyLinking.propertyLinking(propertyRecord);
+          defaultPropertyLinking.linking(propertyRecord);
         }
       } else {
         // we use basic normalizer to normalize property value
-        basicPropertyLinking.propertyLinking(propertyRecord);
+        basicPropertyLinking.linking(propertyRecord);
       }
     }
   }

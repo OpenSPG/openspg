@@ -19,7 +19,10 @@ import lombok.Getter;
 @Getter
 public abstract class BaseExtractNodeConfig extends BaseNodeConfig {
 
-  public BaseExtractNodeConfig(NodeTypeEnum type) {
+  private final OperatorConfig operatorConfig;
+
+  public BaseExtractNodeConfig(NodeTypeEnum type, OperatorConfig operatorConfig) {
     super(type);
+    this.operatorConfig = operatorConfig;
   }
 }

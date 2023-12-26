@@ -89,7 +89,7 @@ public class LocalRunnerTest {
     catalog.init();
     task.setCatalog(catalog);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     Assert.assertEquals(result.getRows().size(), 1);
@@ -143,7 +143,7 @@ public class LocalRunnerTest {
     task.getParams().put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true);
     task.getParams().put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     Assert.assertEquals(result.getRows().size(), 1);
@@ -201,7 +201,7 @@ public class LocalRunnerTest {
     catalog.init();
     task.setCatalog(catalog);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     Assert.assertEquals(result.getRows().size(), 1);
@@ -259,7 +259,7 @@ public class LocalRunnerTest {
     catalog.init();
     task.setCatalog(catalog);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     Assert.assertEquals(result.getRows().size(), 1);
@@ -339,7 +339,7 @@ public class LocalRunnerTest {
     catalog.init();
     task.setCatalog(catalog);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     Assert.assertEquals(result.getRows().size(), 1);
@@ -450,7 +450,7 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("1", "CustFundKG.Account")));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
@@ -516,7 +516,7 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("保险产品", "InsProduct.Product")));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
@@ -579,7 +579,7 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("1", "CustFundKG.Account")));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
@@ -653,7 +653,7 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("1", "CustFundKG.Account")));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
@@ -740,7 +740,7 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("black_app_1", "Pkg")));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
@@ -782,7 +782,7 @@ public class LocalRunnerTest {
     task.getParams().put(ConfigKey.KG_REASONER_CATALOG, SimpleObjSerde.ser(catalog));
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("user1", "ABM.User")));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
@@ -872,7 +872,7 @@ public class LocalRunnerTest {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("S", "CustFundKG.Account")));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
@@ -910,7 +910,7 @@ public class LocalRunnerTest {
 
     String outputFile = "/tmp/local/runner/" + UUID.randomUUID() + ".csv";
 
-    LocalRunnerMain.main(
+    LocalReasonerMain.main(
         new String[] {
           "-q",
           nearbyDsl,

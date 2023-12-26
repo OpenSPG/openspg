@@ -41,7 +41,12 @@ public abstract class BaseMappingProcessor<T extends BaseMappingNodeConfig>
   }
 
   protected static boolean isFiltered(
-      BuilderRecord record, List<BaseMappingNodeConfig.MappingFilter> mappingFilters) {
+      BuilderRecord record,
+      List<BaseMappingNodeConfig.MappingFilter> mappingFilters,
+      BaseSPGIdentifier identifier) {
+    if (record.getIdentifier() != null && !record.getIdentifier().equals(identifier)) {
+      return true;
+    }
     if (CollectionUtils.isEmpty(mappingFilters)) {
       return false;
     }

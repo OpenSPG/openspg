@@ -22,10 +22,12 @@ input:${input}
 "output":
     """
 
-    def __init__(self,
-                 spg_type_name: Union[str, SPGTypeHelper],
-                 property_names: List[Union[str, PropertyHelper]],
-                 custom_prompt: str = None):
+    def __init__(
+        self,
+        spg_type_name: Union[str, SPGTypeHelper],
+        property_names: List[Union[str, PropertyHelper]],
+        custom_prompt: str = None,
+    ):
         super().__init__()
 
         if custom_prompt:
@@ -58,7 +60,10 @@ input:${input}
         for spo_item in re_obj.get("spo", []):
             if spo_item["predicate"] not in self.predicate_zh_to_en_name:
                 continue
-            subject_properties = {"id": spo_item["subject"], "name": spo_item["subject"]}
+            subject_properties = {
+                "id": spo_item["subject"],
+                "name": spo_item["subject"],
+            }
             if spo_item["subject"] not in subject:
                 subject[spo_item["subject"]] = subject_properties
             else:
@@ -68,20 +73,24 @@ input:${input}
             spo_en_name = self.predicate_zh_to_en_name[spo_item["predicate"]]
 
             if spo_en_name in subject_properties and len(
-                    subject_properties[spo_en_name]
+                subject_properties[spo_en_name]
             ):
                 subject_properties[spo_en_name] = (
-                        subject_properties[spo_en_name] + "," + spo_item["object"]
+                    subject_properties[spo_en_name] + "," + spo_item["object"]
                 )
             else:
                 subject_properties[spo_en_name] = spo_item["object"]
 
             # for k, val in subject.items():
-        subject_entity = SPGRecord(spg_type_name=self.spg_type_name, properties=subject_properties)
+        subject_entity = SPGRecord(
+            spg_type_name=self.spg_type_name, properties=subject_properties
+        )
         result.append(subject_entity)
         return result
 
-    def build_variables(self, variables: Dict[str, str], response: str) -> List[Dict[str, str]]:
+    def build_variables(
+        self, variables: Dict[str, str], response: str
+    ) -> List[Dict[str, str]]:
         re_obj = json.loads(response)
         if "spo" not in re_obj.keys():
             raise ValueError("SPO format error.")
@@ -94,6 +103,8 @@ input:${input}
             if property_name in ["id", "name", "description"]:
                 continue
             prop = spg_type.properties.get(property_name)
-            spos.append(f'{spg_type.name_zh}({spg_type.desc or spg_type.name_zh})-{prop.name_zh}-{prop.object_type_name_zh}')
-        schema_text = ','.join(spos)
+            spos.append(
+                f"{spg_type.name_zh}({spg_type.desc or spg_type.name_zh})-{prop.name_zh}-{prop.object_type_name_zh}"
+            )
+        schema_text = ",".join(spos)
         self.template = self.template.replace("${schema}", schema_text)

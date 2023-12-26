@@ -140,7 +140,11 @@ public class LocalBuilderMain {
     if (response.isSuccess()) {
       return response.getData();
     }
-    throw new PipelineConfigException("");
+    throw new PipelineConfigException(
+        "get schema error={}, schemaUrl={}, projectId={}",
+        response.getErrorMsg(),
+        schemaUrl,
+        projectId);
   }
 
   private static Map<SPGTypeIdentifier, ConceptList> getConceptLists(

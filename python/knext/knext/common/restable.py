@@ -25,11 +25,17 @@ class RESTable(ABC):
         return []
 
     def to_rest(self) -> rest.Node:
-        raise NotImplementedError(f"`to_rest` is not currently supported for {self.__class__.__name__}.")
+        raise NotImplementedError(
+            f"`to_rest` is not currently supported for {self.__class__.__name__}."
+        )
 
     @classmethod
     def from_rest(cls, node: rest.Node):
-        raise NotImplementedError(f"`from_rest` is not currently supported for {cls.__name__}.")
+        raise NotImplementedError(
+            f"`from_rest` is not currently supported for {cls.__name__}."
+        )
 
     def submit(self):
-        raise NotImplementedError(f"`submit` is not currently supported for {self.__class__.__name__}.")
+        raise NotImplementedError(
+            f"`submit` is not currently supported for {self.__class__.__name__}."
+        )

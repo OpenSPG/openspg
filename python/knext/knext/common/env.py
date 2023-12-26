@@ -102,12 +102,13 @@ def get_cfg_files():
 
 def load_operator():
     from knext.operator.base import BaseOp
+
     if not BaseOp._has_registered and (
-            "KNEXT_ROOT_PATH" in os.environ
-            and "KNEXT_BUILDER_OPERATOR_DIR" in os.environ
+        "KNEXT_ROOT_PATH" in os.environ and "KNEXT_BUILDER_OPERATOR_DIR" in os.environ
     ):
 
         from knext.common.class_register import register_from_package
+
         builder_operator_path = os.path.join(
             os.environ["KNEXT_ROOT_PATH"], os.environ["KNEXT_BUILDER_OPERATOR_DIR"]
         )
@@ -117,12 +118,13 @@ def load_operator():
 
 def load_builder_job():
     from knext.client.model.builder_job import BuilderJob
+
     if not BuilderJob._has_registered and (
-            "KNEXT_ROOT_PATH" in os.environ
-            and "KNEXT_BUILDER_JOB_DIR" in os.environ
+        "KNEXT_ROOT_PATH" in os.environ and "KNEXT_BUILDER_JOB_DIR" in os.environ
     ):
 
         from knext.common.class_register import register_from_package
+
         builder_operator_path = os.path.join(
             os.environ["KNEXT_ROOT_PATH"], os.environ["KNEXT_BUILDER_JOB_DIR"]
         )

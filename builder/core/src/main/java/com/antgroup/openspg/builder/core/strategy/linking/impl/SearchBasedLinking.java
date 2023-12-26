@@ -29,7 +29,7 @@ public class SearchBasedLinking implements PropertyLinking {
   }
 
   @Override
-  public void propertyLinking(BasePropertyRecord record) throws LinkingException {
+  public void linking(BasePropertyRecord record) throws LinkingException {
     SPGTypeRef objectTypeRef = record.getObjectTypeRef();
 
     List<String> rawValues = record.getRawValues();

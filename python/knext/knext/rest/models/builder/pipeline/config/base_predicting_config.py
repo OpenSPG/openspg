@@ -42,21 +42,23 @@ class BasePredictingConfig(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'strategy_type': 'str',
-        'predicting_type': 'str'
-    }
+    openapi_types = {"strategy_type": "str", "predicting_type": "str"}
 
     attribute_map = {
-        'strategy_type': 'strategyType',
-        'predicting_type': 'predictingType'
+        "strategy_type": "strategyType",
+        "predicting_type": "predictingType",
     }
 
     discriminator_value_class_map = {
         "OPERATOR": "OperatorPredictingConfig",
     }
 
-    def __init__(self, strategy_type='PREDICTING', predicting_type=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        strategy_type="PREDICTING",
+        predicting_type=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """BasePredictingConfig - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -87,13 +89,22 @@ class BasePredictingConfig(object):
         :param strategy_type: The strategy_type of this BasePredictingConfig.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and strategy_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `strategy_type`, must not be `None`")  # noqa: E501
-        allowed_values = ["LINKING", "FUSING", "PREDICTING"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and strategy_type not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and strategy_type is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `strategy_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(strategy_type, allowed_values)
+                "Invalid value for `strategy_type`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = ["LINKING", "FUSING", "PREDICTING"]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and strategy_type not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `strategy_type` ({0}), must be one of {1}".format(  # noqa: E501
+                    strategy_type, allowed_values
+                )
             )
 
         self._strategy_type = strategy_type
@@ -116,13 +127,22 @@ class BasePredictingConfig(object):
         :param predicting_type: The predicting_type of this BasePredictingConfig.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and predicting_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `predicting_type`, must not be `None`")  # noqa: E501
-        allowed_values = ["OPERATOR"]  # noqa: E501
-        if self.local_vars_configuration.client_side_validation and predicting_type not in allowed_values:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and predicting_type is None
+        ):  # noqa: E501
             raise ValueError(
-                "Invalid value for `predicting_type` ({0}), must be one of {1}"  # noqa: E501
-                .format(predicting_type, allowed_values)
+                "Invalid value for `predicting_type`, must not be `None`"
+            )  # noqa: E501
+        allowed_values = ["OPERATOR"]  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and predicting_type not in allowed_values
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `predicting_type` ({0}), must be one of {1}".format(  # noqa: E501
+                    predicting_type, allowed_values
+                )
             )
 
         self._predicting_type = predicting_type
@@ -142,18 +162,20 @@ class BasePredictingConfig(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

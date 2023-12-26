@@ -14,7 +14,6 @@ from knext.chain.base import Chain
 
 
 class BuilderChain(Chain):
-
     @property
     def input_types(self):
         return None
@@ -29,6 +28,7 @@ class BuilderChain(Chain):
 
     def invoke(self, **kwargs):
         from knext.client.builder import BuilderClient
+
         client = BuilderClient()
         client.execute(self, **kwargs)
 
@@ -42,8 +42,5 @@ class BuilderChain(Chain):
             nodes.append(node.to_rest())
         for edge in self.dag.edges:
             edges.append(rest.Edge(_from=edge[0].id, to=edge[1].id))
-        dag_config = rest.Pipeline(
-            nodes=nodes,
-            edges=edges
-        )
+        dag_config = rest.Pipeline(nodes=nodes, edges=edges)
         return dag_config

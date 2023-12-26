@@ -18,8 +18,8 @@ from knext.operator.invoke_result import InvokeResult
 from knext.operator.spg_record import SPGRecord
 
 
-SPGTypeName = TypeVar('SPGTypeName', str, SPGTypeHelper)
-PropertyName = TypeVar('PropertyName', str, PropertyHelper)
+SPGTypeName = TypeVar("SPGTypeName", str, SPGTypeHelper)
+PropertyName = TypeVar("PropertyName", str, PropertyHelper)
 
 
 class ExtractOp(BaseOp, ABC):
@@ -35,7 +35,7 @@ class ExtractOp(BaseOp, ABC):
 
     @staticmethod
     def _pre_process(*inputs):
-        return inputs[0],
+        return (inputs[0],)
 
     @staticmethod
     def _post_process(output) -> Dict[str, Any]:
@@ -93,9 +93,7 @@ class FuseOp(BaseOp, ABC):
 
     @staticmethod
     def _pre_process(*inputs):
-        return [
-            SPGRecord.from_dict(input) for input in inputs[0]
-        ],
+        return ([SPGRecord.from_dict(input) for input in inputs[0]],)
 
     @staticmethod
     def _post_process(output) -> Dict[str, Any]:
@@ -123,7 +121,9 @@ class PromptOp(BaseOp, ABC):
     def parse_response(self, response: str) -> List[SPGRecord]:
         return []
 
-    def build_next_variables(self, variables: Dict[str, str], response: str) -> List[Dict[str, str]]:
+    def build_next_variables(
+        self, variables: Dict[str, str], response: str
+    ) -> List[Dict[str, str]]:
         return []
 
     def invoke(self, *args):
@@ -143,7 +143,7 @@ class PredictOp(BaseOp, ABC):
 
     @staticmethod
     def _pre_process(*inputs):
-        return SPGRecord.from_dict(inputs[0]),
+        return (SPGRecord.from_dict(inputs[0]),)
 
     @staticmethod
     def _post_process(output) -> Dict[str, Any]:

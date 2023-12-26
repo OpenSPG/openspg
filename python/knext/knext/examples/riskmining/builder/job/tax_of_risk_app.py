@@ -28,9 +28,9 @@ class TaxOfRiskApp(BuilderJob):
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.TaxOfRiskApp.__typename__)
-            .add_field("id", RiskMining.TaxOfRiskApp.id)
-            .add_field("id", RiskMining.TaxOfRiskApp.name)
+            SPGTypeMapping(spg_type_name=RiskMining.TaxOfRiskApp)
+            .add_mapping_field("id", RiskMining.TaxOfRiskApp.id)
+            .add_mapping_field("id", RiskMining.TaxOfRiskApp.name)
         )
 
         sink = KGWriter()

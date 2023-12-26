@@ -9,7 +9,7 @@ public interface RecordLinking {
 
   void init(BuilderContext context) throws BuilderException;
 
-  void propertyLinking(BaseSPGRecord spgRecord) throws LinkingException;
+  void linking(BaseSPGRecord spgRecord) throws LinkingException;
 
   void setDefaultPropertyLinking(PropertyLinking defaultPropertyLinking);
 }

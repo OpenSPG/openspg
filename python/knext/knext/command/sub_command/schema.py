@@ -64,8 +64,12 @@ def commit_schema():
         os.environ["KNEXT_SCHEMA_DIR"],
         TEMPLATE_TO_RENDER,
     )
-    copytree(Path("schema_helper"), Path(helper_file).parent, os.environ['KNEXT_PROJECT_DIR'])
-    tplfile = string.Template(helper_file).substitute(project=os.environ['KNEXT_PROJECT_DIR'])
+    copytree(
+        Path("schema_helper"), Path(helper_file).parent, os.environ["KNEXT_PROJECT_DIR"]
+    )
+    tplfile = string.Template(helper_file).substitute(
+        project=os.environ["KNEXT_PROJECT_DIR"]
+    )
     ml.export_schema_python(tplfile)
     if is_altered:
         click.secho("Schema is successfully committed.", fg="bright_green")

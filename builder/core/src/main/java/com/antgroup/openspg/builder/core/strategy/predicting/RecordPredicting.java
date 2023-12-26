@@ -9,5 +9,5 @@ public interface RecordPredicting {
 
   void init(BuilderContext context) throws BuilderException;
 
-  void propertyPredicating(BaseAdvancedRecord advancedRecord) throws PredictingException;
+  void predicting(BaseAdvancedRecord advancedRecord) throws PredictingException;
 }

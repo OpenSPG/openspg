@@ -58,7 +58,9 @@ class SPGTypeMapping(Mapping):
 
     object_linking_strategies: Dict[str, Union[LinkingStrategyEnum, LinkOp]] = dict()
 
-    predicate_predicting_strategies: Dict[str, Union[PredictingStrategyEnum, PredictOp]] = dict()
+    predicate_predicting_strategies: Dict[
+        str, Union[PredictingStrategyEnum, PredictOp]
+    ] = dict()
 
     @property
     def input_types(self) -> Input:
@@ -122,6 +124,7 @@ class SPGTypeMapping(Mapping):
         Transforms `SPGTypeMapping` to REST model `SpgTypeMappingNodeConfig`.
         """
         from knext.client.schema import SchemaClient
+
         client = SchemaClient()
         spg_type = client.query_spg_type(self.spg_type_name)
 
@@ -159,14 +162,19 @@ class SPGTypeMapping(Mapping):
             )
 
         predicting_configs = []
-        for predicate_name, predicting_strategy in self.predicate_predicting_strategies.items():
+        for (
+            predicate_name,
+            predicting_strategy,
+        ) in self.predicate_predicting_strategies.items():
             if isinstance(predicting_strategy, PredictOp):
                 strategy_config = rest.OperatorPredictingConfig(
                     operator_config=predicting_strategy.to_rest()
                 )
             elif not predicting_strategy:
                 if (self.spg_type_name, predicate_name) in PredictOp.bind_schemas:
-                    op_name = PredictOp.bind_schemas[(self.spg_type_name, predicate_name)]
+                    op_name = PredictOp.bind_schemas[
+                        (self.spg_type_name, predicate_name)
+                    ]
                     op = PredictOp.by_name(op_name)()
                     strategy_config = rest.OperatorPredictingConfig(
                         operator_config=op.to_rest()
@@ -174,11 +182,11 @@ class SPGTypeMapping(Mapping):
                 else:
                     strategy_config = None
             else:
-                raise ValueError(f"Invalid predicting_strategy [{predicting_strategy}].")
-            if strategy_config:
-                predicting_configs.append(
-                    strategy_config
+                raise ValueError(
+                    f"Invalid predicting_strategy [{predicting_strategy}]."
                 )
+            if strategy_config:
+                predicting_configs.append(strategy_config)
 
         if isinstance(self.subject_fusing_strategy, FuseOp):
             fusing_config = rest.OperatorFusingConfig(
@@ -188,29 +196,33 @@ class SPGTypeMapping(Mapping):
             if self.spg_type_name in FuseOp.bind_schemas:
                 op_name = FuseOp.bind_schemas[self.spg_type_name]
                 op = FuseOp.by_name(op_name)()
-                fusing_config = rest.OperatorFusingConfig(
-                    operator_config=op.to_rest()
-                )
+                fusing_config = rest.OperatorFusingConfig(operator_config=op.to_rest())
             else:
                 fusing_config = None
         else:
-            raise ValueError(f"Invalid fusing_strategy [{self.subject_fusing_strategy}].")
+            raise ValueError(
+                f"Invalid fusing_strategy [{self.subject_fusing_strategy}]."
+            )
 
         config = rest.SpgTypeMappingNodeConfig(
             spg_type=self.spg_type_name,
             mapping_filters=mapping_filters,
             mapping_configs=mapping_configs,
             subject_fusing_config=fusing_config,
-            predicting_configs=predicting_configs
+            predicting_configs=predicting_configs,
         )
         return rest.Node(**super().to_dict(), node_config=config)
 
     def invoke(self, input: Input) -> Sequence[Output]:
-        raise NotImplementedError(f"`invoke` method is not currently supported for {self.__class__.__name__}.")
+        raise NotImplementedError(
+            f"`invoke` method is not currently supported for {self.__class__.__name__}."
+        )
 
     @classmethod
     def from_rest(cls, node: rest.Node):
-        raise NotImplementedError(f"`invoke` method is not currently supported for {cls.__name__}.")
+        raise NotImplementedError(
+            f"`invoke` method is not currently supported for {cls.__name__}."
+        )
 
     def submit(self):
         pass
@@ -307,7 +319,7 @@ class SubGraphMapping(Mapping):
                  .add_predicting_field(
 
     """
-    
+
     """"""
     spg_type_name: Union[str, SPGTypeHelper]
 
@@ -381,6 +393,7 @@ class SubGraphMapping(Mapping):
         Transforms `SubGraphMapping` to REST model `SpgTypeMappingNodeConfig`.
         """
         from knext.client.schema import SchemaClient
+
         client = SchemaClient()
         spg_type = client.query_spg_type(self.spg_type_name)
 
@@ -416,15 +429,24 @@ class SubGraphMapping(Mapping):
             )
 
         predicting_configs = []
-        for predicate_name, predicting_strategy in self.predicate_predicting_strategies.items():
+        for (
+            predicate_name,
+            predicting_strategy,
+        ) in self.predicate_predicting_strategies.items():
             if isinstance(predicting_strategy, PredictOp):
                 strategy_config = rest.OperatorPredictingConfig(
                     operator_config=predicting_strategy.to_rest()
                 )
             elif not predicting_strategy:
                 object_type_name = spg_type.properties[predicate_name].object_type_name
-                if (self.spg_type_name, predicate_name, object_type_name) in PredictOp.bind_schemas:
-                    op_name = PredictOp.bind_schemas[(self.spg_type_name, predicate_name, object_type_name)]
+                if (
+                    self.spg_type_name,
+                    predicate_name,
+                    object_type_name,
+                ) in PredictOp.bind_schemas:
+                    op_name = PredictOp.bind_schemas[
+                        (self.spg_type_name, predicate_name, object_type_name)
+                    ]
                     op = PredictOp.by_name(op_name)()
                     strategy_config = rest.OperatorPredictingConfig(
                         operator_config=op.to_rest()
@@ -432,10 +454,14 @@ class SubGraphMapping(Mapping):
                 else:
                     strategy_config = None
             else:
-                raise ValueError(f"Invalid predicting_strategy [{predicting_strategy}].")
+                raise ValueError(
+                    f"Invalid predicting_strategy [{predicting_strategy}]."
+                )
             if strategy_config:
                 predicting_configs.append(
-                    rest.PredictingConfig(target=predicate_name,predicting_config=strategy_config)
+                    rest.PredictingConfig(
+                        target=predicate_name, predicting_config=strategy_config
+                    )
                 )
 
         if isinstance(self.subject_fusing_strategy, FuseOp):
@@ -446,20 +472,20 @@ class SubGraphMapping(Mapping):
             if self.spg_type_name in FuseOp.bind_schemas:
                 op_name = FuseOp.bind_schemas[self.spg_type_name]
                 op = FuseOp.by_name(op_name)()
-                fusing_config = rest.OperatorFusingConfig(
-                    operator_config=op.to_rest()
-                )
+                fusing_config = rest.OperatorFusingConfig(operator_config=op.to_rest())
             else:
                 fusing_config = rest.NewInstanceFusingConfig()
         else:
-            raise ValueError(f"Invalid fusing_strategy [{self.subject_fusing_strategy}].")
+            raise ValueError(
+                f"Invalid fusing_strategy [{self.subject_fusing_strategy}]."
+            )
 
         config = rest.SubGraphMappingNodeConfig(
             spg_type=self.spg_type_name,
             mapping_filters=mapping_filters,
             mapping_configs=mapping_configs,
             subject_fusing_config=fusing_config,
-            predicting_configs=predicting_configs
+            predicting_configs=predicting_configs,
         )
         return rest.Node(**super().to_dict(), node_config=config)
 

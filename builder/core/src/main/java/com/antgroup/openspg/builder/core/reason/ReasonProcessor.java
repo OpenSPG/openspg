@@ -82,7 +82,7 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
     }
 
     for (BaseRecord baseRecord : results) {
-      recordNormalizer.propertyLinking((BaseSPGRecord) baseRecord);
+      recordNormalizer.linking((BaseSPGRecord) baseRecord);
     }
     return results;
   }
@@ -109,13 +109,10 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
   }
 
   private GraphState<IVertexId> buildGraphState(GraphStoreConnectionInfo connInfo) {
-    CloudExtGraphState cloudExtGraphState = new CloudExtGraphState();
-
     Map<String, Object> params = new HashMap<>();
     params.put("cloudext.graphstore.schema", connInfo.getScheme());
     params.putAll(connInfo.getParams());
-    cloudExtGraphState.init((Map) Collections.unmodifiableMap(params));
-    return cloudExtGraphState;
+    return new CloudExtGraphState((Map) params);
   }
 
   @Override

@@ -305,6 +305,11 @@
         <artifactId>jgrapht-core</artifactId>
         <version>1.4.0</version>
       </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>5.3.25</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -520,12 +525,12 @@
               <sortProperties>true</sortProperties>
             </sortPom>
           </pom>
-          <!--          <python>-->
-          <!--            <includes>-->
-          <!--              <include>**/*.py</include>-->
-          <!--            </includes>-->
-          <!--            <black/>-->
-          <!--          </python>-->
+          <python>
+            <includes>
+              <include>**/*.py</include>
+            </includes>
+            <black/>
+          </python>
           <yaml>
             <includes>
               <include>**/*.yaml</include>

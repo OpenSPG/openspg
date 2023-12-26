@@ -1,4 +1,3 @@
-
 import unittest
 
 from knext.component.builder import UserDefinedExtractor
@@ -30,5 +29,5 @@ class TestLLMBasedExtractor(unittest.TestCase):
         """Test execute"""
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

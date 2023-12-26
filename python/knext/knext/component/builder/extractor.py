@@ -47,22 +47,31 @@ class LLMBasedExtractor(SPGExtractor):
         return self.output_fields
 
     def invoke(self, input: Input) -> Sequence[Output]:
-        raise NotImplementedError(f"{self.__class__.__name__} does not support being invoked separately.")
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support being invoked separately."
+        )
 
     def submit(self):
-        raise NotImplementedError(f"{self.__class__.__name__} does not support being submitted separately.")
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support being submitted separately."
+        )
 
     def to_rest(self):
         """Transforms `LLMBasedExtractor` to REST model `ExtractNodeConfig`."""
         params = dict()
         params["model_config"] = json.dumps(self.llm._nn_config)
         api_client = OperatorClient()._rest_client.api_client
-        params["prompt_config"] = json.dumps([api_client.sanitize_for_serialization(op.to_rest()) for op in self.prompt_ops], ensure_ascii=False)
-        from knext.operator.builtin.online_runner import _BuiltInOnlineExtractor
-        extract_op = _BuiltInOnlineExtractor(params)
-        config = rest.UserDefinedExtractNodeConfig(
-            operator_config=extract_op.to_rest()
+        params["prompt_config"] = json.dumps(
+            [
+                api_client.sanitize_for_serialization(op.to_rest())
+                for op in self.prompt_ops
+            ],
+            ensure_ascii=False,
         )
+        from knext.operator.builtin.online_runner import _BuiltInOnlineExtractor
+
+        extract_op = _BuiltInOnlineExtractor(params)
+        config = rest.UserDefinedExtractNodeConfig(operator_config=extract_op.to_rest())
 
         return rest.Node(**super().to_dict(), node_config=config)
 
@@ -111,17 +120,19 @@ class UserDefinedExtractor(SPGExtractor):
         return self
 
     def invoke(self, input: Input) -> Sequence[Output]:
-        raise NotImplementedError(f"{self.__class__.__name__} does not support being invoked separately.")
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support being invoked separately."
+        )
 
     def submit(self):
-        raise NotImplementedError(f"{self.__class__.__name__} does not support being submitted separately.")
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support being submitted separately."
+        )
 
     def to_rest(self):
         """Transforms `UserDefinedExtractor` to REST model `UserDefinedExtractNodeConfig`."""
         operator_config = self.extract_op.to_rest()
-        config = rest.UserDefinedExtractNodeConfig(
-            operator_config=operator_config
-        )
+        config = rest.UserDefinedExtractNodeConfig(operator_config=operator_config)
 
         return rest.Node(**super().to_dict(), node_config=config)
 
