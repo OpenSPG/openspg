@@ -9,7 +9,8 @@ import com.antgroup.openspg.builder.model.pipeline.enums.FusingTypeEnum;
 public class EntityFusingFactory {
 
   public static EntityFusing getEntityFusing(BaseFusingConfig config) {
-    FusingTypeEnum fusingType = config.getFusingType();
+    FusingTypeEnum fusingType =
+        config == null ? FusingTypeEnum.NEW_INSTANCE : config.getFusingType();
     switch (fusingType) {
       case OPERATOR:
         return new OperatorFusing((OperatorFusingConfig) config);

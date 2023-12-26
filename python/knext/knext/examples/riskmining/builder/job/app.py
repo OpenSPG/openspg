@@ -23,11 +23,11 @@ class App(BuilderJob):
         )
 
         mapping = (
-            SPGTypeMapping(spg_type_name=RiskMining.App.__typename__)
-            .add_field("id", RiskMining.App.id)
-            .add_field("id", RiskMining.App.name)
-            .add_field("riskMark", RiskMining.App.riskMark)
-            .add_field("useCert", RiskMining.App.useCert)
+            SPGTypeMapping(spg_type_name=RiskMining.App)
+            .add_mapping_field("id", RiskMining.App.id)
+            .add_mapping_field("id", RiskMining.App.name)
+            .add_mapping_field("riskMark", RiskMining.App.riskMark)
+            .add_mapping_field("useCert", RiskMining.App.useCert)
         )
 
         sink = KGWriter()
