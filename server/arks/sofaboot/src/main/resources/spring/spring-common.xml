@@ -20,5 +20,7 @@
 
   <bean id="appEnvConfig" class="com.antgroup.openspg.server.common.service.config.AppEnvConfig">
     <property name="schemaUri" value="${schema.uri}:${server.port}"/>
+    <property name="graphStoreUrl" value="${cloudext.graphstore.url}"/>
+    <property name="searchEngineUrl" value="${cloudext.searchengine.url}"/>
   </bean>
 </beans>

@@ -18,19 +18,19 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientD
 import com.antgroup.openspg.server.api.facade.dto.common.request.SearchEngineIndexRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.response.SearchEngineIndexResponse;
 import com.antgroup.openspg.server.biz.common.SearchEngineManager;
-import org.springframework.beans.factory.annotation.Value;
+import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SearchEngineManagerImpl implements SearchEngineManager {
 
-  @Value("cloudext.searchengine.url")
-  private String searchEngineUrl;
+  @Autowired private AppEnvConfig appEnvConfig;
 
   @Override
   public SearchEngineIndexResponse queryIndex(SearchEngineIndexRequest request) {
     SearchEngineClient searchEngineClient =
-        SearchEngineClientDriverManager.getClient(searchEngineUrl);
+        SearchEngineClientDriverManager.getClient(appEnvConfig.getSearchEngineUrl());
 
     String convertedIndexName =
         searchEngineClient.getIdxNameConvertor().convertIdxName(request.getSpgType());

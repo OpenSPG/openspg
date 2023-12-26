@@ -16,17 +16,17 @@ package com.antgroup.openspg.server.core.schema.service.alter.sync;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
 import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
-import org.springframework.beans.factory.annotation.Value;
+import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SearchEngineSyncer extends BaseSchemaSyncer {
 
-  @Value(value = "cloudext.searchengine.url")
-  private String searchEngineUrl;
+  @Autowired private AppEnvConfig appEnvConfig;
 
   @Override
   public void syncSchema(Long projectId, SPGSchemaAlterCmd schemaEditCmd) {
     SearchEngineClient searchEngineClient =
-        SearchEngineClientDriverManager.getClient(searchEngineUrl);
+        SearchEngineClientDriverManager.getClient(appEnvConfig.getSearchEngineUrl());
     searchEngineClient.alterSchema(schemaEditCmd);
   }
 }
