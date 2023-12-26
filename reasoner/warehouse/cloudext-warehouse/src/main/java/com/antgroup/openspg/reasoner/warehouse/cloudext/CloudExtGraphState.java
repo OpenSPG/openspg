@@ -27,21 +27,42 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 public class CloudExtGraphState extends MemGraphState {
 
+  private UriComponents uriComponents;
   private BaseLPGGraphStoreClient lpgGraphStoreClient;
+
+  public CloudExtGraphState(String connUrl) {
+    uriComponents = UriComponentsBuilder.fromUriString(connUrl).build();
+    Map<String, String> params = new HashMap<>();
+    params.put("host", String.format("%s:%s", uriComponents.getHost(), uriComponents.getPort()));
+    params.put("accessId", "admin");
+    params.put("accessKey", "73@TuGraph");
+    params.put("graphName", "default");
+    params.put("timeout", "60000");
+
+    GraphStoreConnectionInfo connInfo = new GraphStoreConnectionInfo();
+    connInfo.setScheme(uriComponents.getScheme());
+    connInfo.setParams((Map) params);
+    lpgGraphStoreClient =
+        (BaseLPGGraphStoreClient) GraphStoreClientDriverManager.getClient(connInfo);
+  }
+
+  public CloudExtGraphState(Map<String, String> params) {
+    GraphStoreConnectionInfo connInfo = new GraphStoreConnectionInfo();
+    connInfo.setScheme(params.getOrDefault("cloudext.graphstore.schema", "tugraph"));
+    connInfo.setParams(Collections.unmodifiableMap(params));
+    lpgGraphStoreClient =
+        (BaseLPGGraphStoreClient) GraphStoreClientDriverManager.getClient(connInfo);
+  }
 
   @Override
   public void init(Map<String, String> param) {
     super.init(param);
-
-    GraphStoreConnectionInfo connInfo = new GraphStoreConnectionInfo();
-    connInfo.setScheme(param.getOrDefault("cloudext.graphstore.schema", "tugraph"));
-    connInfo.setParams(Collections.unmodifiableMap(param));
-    lpgGraphStoreClient =
-        (BaseLPGGraphStoreClient) GraphStoreClientDriverManager.getClient(connInfo);
   }
 
   @Override

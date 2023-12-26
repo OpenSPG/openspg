@@ -14,7 +14,7 @@ import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
-import com.antgroup.openspg.reasoner.runner.local.KGReasonerLocalRunner;
+import com.antgroup.openspg.reasoner.runner.local.LocalReasonerRunner;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.google.common.collect.Lists;
@@ -105,7 +105,7 @@ public class CausalConceptReasoner implements ConceptReasoner<LogicalCausationSe
     reasonerTask.setDsl(leadTo.getLogicalRule().getContent());
     reasonerTask.setStartIdList(Lists.newArrayList(Tuple2.apply(record.getId(), record.getName())));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult reasonerResult = runner.run(reasonerTask);
     return ReasonerProcessorUtils.toSpgRecords(reasonerResult, builderCatalog);
   }

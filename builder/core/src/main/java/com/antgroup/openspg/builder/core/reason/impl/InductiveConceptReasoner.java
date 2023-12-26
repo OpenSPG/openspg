@@ -9,7 +9,7 @@ import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
-import com.antgroup.openspg.reasoner.runner.local.KGReasonerLocalRunner;
+import com.antgroup.openspg.reasoner.runner.local.LocalReasonerRunner;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.google.common.collect.Lists;
@@ -34,7 +34,7 @@ public class InductiveConceptReasoner implements ConceptReasoner<DynamicTaxonomy
       reasonerTask.setDsl(conceptSemantic.getLogicalRule().getContent());
       reasonerTask.setStartIdList(Lists.newArrayList(getTupleFrom(advancedRecord)));
 
-      KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+      LocalReasonerRunner runner = new LocalReasonerRunner();
       LocalReasonerResult reasonerResult = runner.run(reasonerTask);
       ReasonerProcessorUtils.setBelongToProperty(reasonerResult, advancedRecord);
     }

@@ -7,7 +7,6 @@ from nn4k.invoker import LLMInvoker
 
 
 class _BuiltInOnlineExtractor(ExtractOp):
-
     def __init__(self, params: Dict[str, str] = None):
         """
 
@@ -25,10 +24,13 @@ class _BuiltInOnlineExtractor(ExtractOp):
 
     def load_operator(self):
         import importlib.util
+
         prompt_config = json.loads(self.params["prompt_config"])
         prompt_ops = []
         for op_config in prompt_config:
-            spec = importlib.util.spec_from_file_location(op_config["modulePath"], op_config["filePath"])
+            spec = importlib.util.spec_from_file_location(
+                op_config["modulePath"], op_config["filePath"]
+            )
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
 
@@ -53,7 +55,9 @@ class _BuiltInOnlineExtractor(ExtractOp):
                         # response = self.model.remote_inference(query)
                         response = "test"
                         collector.extend(op.parse_response(response))
-                        next_params.extend(op.build_next_variables(input_param, response))
+                        next_params.extend(
+                            op.build_next_variables(input_param, response)
+                        )
                         break
                     except Exception as e:
                         retry_times += 1

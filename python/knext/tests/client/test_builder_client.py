@@ -1,4 +1,3 @@
-
 import unittest
 
 from knext.client.builder import BuilderClient
@@ -17,5 +16,5 @@ class TestBuilderClient(unittest.TestCase):
         """Test execute"""
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

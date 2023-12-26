@@ -17,8 +17,7 @@ public class NewInstanceFusing implements EntityFusing {
   public void init(BuilderContext context) throws BuilderException {}
 
   @Override
-  public List<BaseAdvancedRecord> fusing(List<BaseAdvancedRecord> records)
-      throws FusingException {
+  public List<BaseAdvancedRecord> fusing(List<BaseAdvancedRecord> records) throws FusingException {
     return records;
   }
 }

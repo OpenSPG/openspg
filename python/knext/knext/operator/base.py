@@ -95,15 +95,17 @@ class BaseOp(ABC):
     def to_rest(self):
         if not hasattr(self, "_local_path"):
             import inspect
+
             self._local_path = inspect.getfile(self.__class__)
         if not hasattr(self, "name"):
             self.name = self.__class__.__name__
-        return rest.OperatorConfig(file_path=self._local_path,
-                                   module_path=os.path.splitext(os.path.basename(self._local_path))[0],
-                                   class_name=self.name,
-                                   method="_handle",
-                                   params=self.params,
-                                   )
+        return rest.OperatorConfig(
+            file_path=self._local_path,
+            module_path=os.path.splitext(os.path.basename(self._local_path))[0],
+            class_name=self.name,
+            method="_handle",
+            params=self.params,
+        )
 
     @property
     def has_registered(self):

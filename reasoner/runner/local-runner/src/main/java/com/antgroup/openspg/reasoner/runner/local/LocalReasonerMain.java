@@ -42,7 +42,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
-public class LocalRunnerMain {
+public class LocalReasonerMain {
 
   /** KGReasoner main */
   public static void main(String[] args) {
@@ -50,7 +50,7 @@ public class LocalRunnerMain {
     if (null == task) {
       System.exit(1);
     }
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     if (null == result) {
       log.error("local runner return null");

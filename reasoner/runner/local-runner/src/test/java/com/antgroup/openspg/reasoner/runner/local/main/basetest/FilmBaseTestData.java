@@ -19,7 +19,7 @@ import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog;
-import com.antgroup.openspg.reasoner.runner.local.KGReasonerLocalRunner;
+import com.antgroup.openspg.reasoner.runner.local.LocalReasonerRunner;
 import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphLoader;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
@@ -149,7 +149,7 @@ public class FilmBaseTestData {
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("root", "Film")));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     List<String[]> rst = new ArrayList<>();
     for (Object[] r : result.getRows()) {

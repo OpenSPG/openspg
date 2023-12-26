@@ -49,7 +49,7 @@ import scala.Tuple2;
 import scala.collection.JavaConversions;
 
 @Slf4j
-public class KGReasonerLocalRunner {
+public class LocalReasonerRunner {
 
   /** run dsl task on local runner */
   public LocalReasonerResult run(LocalReasonerTask task) {

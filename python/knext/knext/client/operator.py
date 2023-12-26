@@ -122,5 +122,5 @@ class OperatorClient(Client):
             module_path=op.__module__,
             class_name=op.name,
             method="_handle",
-            params=params
+            params=params,
         )

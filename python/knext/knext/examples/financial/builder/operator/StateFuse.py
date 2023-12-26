@@ -20,7 +20,13 @@ class StateFuse(FuseOp):
             query = {"match": {"name": record.get_property("name", "")}}
             recall_records = self.search_client.search(query, start=0, size=10)
             if recall_records is not None and len(recall_records) > 0:
-                rerank_record = SPGRecord("Financial.State", {"id": recall_records[0].doc_id, "name": recall_records[0].properties.get("name", "")})
+                rerank_record = SPGRecord(
+                    "Financial.State",
+                    {
+                        "id": recall_records[0].doc_id,
+                        "name": recall_records[0].properties.get("name", ""),
+                    },
+                )
                 fused_records.append(rerank_record)
             fused_records.append(record)
         return fused_records

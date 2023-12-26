@@ -261,9 +261,7 @@ class ConceptType(BaseSpgType):
             return
         if self._rest_model.advanced_config.normalized_operator is None:
             self._rest_model.advanced_config.normalized_operator = rest.OperatorKey()
-        self._rest_model.advanced_config.normalized_operator.name = (
-            link_operator.name
-        )
+        self._rest_model.advanced_config.normalized_operator.name = link_operator.name
         self._rest_model.advanced_config.normalized_operator.version = (
             link_operator._version
         )

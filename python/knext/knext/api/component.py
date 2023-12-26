@@ -12,7 +12,11 @@
 
 from knext.component.builder.source_reader import CSVReader
 from knext.component.builder.extractor import UserDefinedExtractor, LLMBasedExtractor
-from knext.component.builder.mapping import SPGTypeMapping, RelationMapping, SubGraphMapping
+from knext.component.builder.mapping import (
+    SPGTypeMapping,
+    RelationMapping,
+    SubGraphMapping,
+)
 from knext.component.builder.sink_writer import KGWriter
 
 

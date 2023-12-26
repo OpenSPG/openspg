@@ -201,13 +201,31 @@ from knext.rest.models.builder.pipeline.config.sub_graph_mapping_node_config imp
 from knext.rest.models.builder.pipeline.config.user_defined_extract_node_config import (
     UserDefinedExtractNodeConfig,
 )
-from knext.rest.models.builder.pipeline.config.base_fusing_config import BaseFusingConfig
-from knext.rest.models.builder.pipeline.config.base_linking_config import BaseLinkingConfig
-from knext.rest.models.builder.pipeline.config.base_predicting_config import BasePredictingConfig
-from knext.rest.models.builder.pipeline.config.base_strategy_config import BaseStrategyConfig
-from knext.rest.models.builder.pipeline.config.id_equals_linking_config import IdEqualsLinkingConfig
-from knext.rest.models.builder.pipeline.config.operator_fusing_config import OperatorFusingConfig
-from knext.rest.models.builder.pipeline.config.operator_linking_config import OperatorLinkingConfig
-from knext.rest.models.builder.pipeline.config.operator_predicting_config import OperatorPredictingConfig
+from knext.rest.models.builder.pipeline.config.base_fusing_config import (
+    BaseFusingConfig,
+)
+from knext.rest.models.builder.pipeline.config.base_linking_config import (
+    BaseLinkingConfig,
+)
+from knext.rest.models.builder.pipeline.config.base_predicting_config import (
+    BasePredictingConfig,
+)
+from knext.rest.models.builder.pipeline.config.base_strategy_config import (
+    BaseStrategyConfig,
+)
+from knext.rest.models.builder.pipeline.config.id_equals_linking_config import (
+    IdEqualsLinkingConfig,
+)
+from knext.rest.models.builder.pipeline.config.operator_fusing_config import (
+    OperatorFusingConfig,
+)
+from knext.rest.models.builder.pipeline.config.operator_linking_config import (
+    OperatorLinkingConfig,
+)
+from knext.rest.models.builder.pipeline.config.operator_predicting_config import (
+    OperatorPredictingConfig,
+)
 from knext.rest.models.builder.pipeline.config.predicting_config import PredictingConfig
-from knext.rest.models.builder.pipeline.config.new_instance_fusing_config import NewInstanceFusingConfig
+from knext.rest.models.builder.pipeline.config.new_instance_fusing_config import (
+    NewInstanceFusingConfig,
+)

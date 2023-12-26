@@ -57,11 +57,21 @@ class CompanyLinkerOperator(LinkOp):
 
         if company_name == recalls[0].properties["name"]:
             # If the result of Top1 is the same as the attribute value, then returned directly
-            return [SPGRecord(spg_type_name="SupplyChain.Company", properties={"id": recalls[0].doc_id})]
+            return [
+                SPGRecord(
+                    spg_type_name="SupplyChain.Company",
+                    properties={"id": recalls[0].doc_id},
+                )
+            ]
 
             # Perform fine-ranking on coarse recall results by calling LLM
         if not self.enable_llm:
-            return [SPGRecord(spg_type_name="SupplyChain.Company", properties={"id": recalls[0].doc_id})]
+            return [
+                SPGRecord(
+                    spg_type_name="SupplyChain.Company",
+                    properties={"id": recalls[0].doc_id},
+                )
+            ]
         recall_dict = {}
         for item in recalls:
             recall_dict[item.properties["name"]] = item.doc_id
@@ -73,7 +83,7 @@ class CompanyLinkerOperator(LinkOp):
             return [
                 SPGRecord(
                     spg_type_name="SupplyChain.Company",
-                    properties={"id": recall_dict[llm_result]}
+                    properties={"id": recall_dict[llm_result]},
                 )
             ]
         return []

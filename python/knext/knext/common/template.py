@@ -18,7 +18,9 @@ from jinja2 import Environment, FileSystemLoader
 from stat import S_IWUSR as OWNER_WRITE_PERMISSION
 
 
-def render_template(root: Union[str, os.PathLike], file: Union[str, os.PathLike], **kwargs: Any) -> None:
+def render_template(
+    root: Union[str, os.PathLike], file: Union[str, os.PathLike], **kwargs: Any
+) -> None:
     env = Environment(loader=FileSystemLoader(root))
     template = env.get_template(str(file))
     content = template.render(kwargs)
@@ -34,7 +36,8 @@ def render_template(root: Union[str, os.PathLike], file: Union[str, os.PathLike]
 
 def copytree(src: Path, dst: Path, project_name: str):
     import knext
-    template_dir = os.path.join(knext.__path__[0], 'templates')
+
+    template_dir = os.path.join(knext.__path__[0], "templates")
     src = Path(template_dir) / src
     names = [x.name for x in src.iterdir()]
 

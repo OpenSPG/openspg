@@ -238,8 +238,8 @@ class SPGSchemaMarkLang:
             else:
                 ns_type_class = type_class
             assert (
-                    type_class not in self.keyword_type
-                    and type_class not in self.internal_type
+                type_class not in self.keyword_type
+                and type_class not in self.internal_type
             ), self.error_msg(f"{type_class} is not a valid inheritable type")
             assert ns_type_class in self.types, self.error_msg(
                 f"{type_class} not found, please define it first"
@@ -307,8 +307,8 @@ class SPGSchemaMarkLang:
                 "Invalid hypernym predicate, expect isA or locateAt"
             )
             assert (
-                    self.parsing_register[RegisterUnit.Type].spg_type_enum
-                    == SpgTypeEnum.Concept
+                self.parsing_register[RegisterUnit.Type].spg_type_enum
+                == SpgTypeEnum.Concept
             ), self.error_msg("Hypernym predicate is available for concept type only")
 
             if meta_value == "isA":
@@ -371,7 +371,7 @@ class SPGSchemaMarkLang:
                 "Only concept/event types could define sequential relation"
             )
             assert (
-                    subject_type.spg_type_enum == object_type.spg_type_enum
+                subject_type.spg_type_enum == object_type.spg_type_enum
             ), self.error_msg(
                 f'"{predicate_class}" should keep the same type with "{subject_type.name.split(".")[1]}"'
             )
@@ -418,24 +418,24 @@ class SPGSchemaMarkLang:
                 )
 
         assert (
-                f"{self.namespace}.{predicate_class}" in self.types
-                or predicate_class in self.internal_type
+            f"{self.namespace}.{predicate_class}" in self.types
+            or predicate_class in self.internal_type
         ), self.error_msg(f"{predicate_class} is illegal")
         assert predicate_name not in self.entity_internal_property, self.error_msg(
             f"property {predicate_name} is the default property of type"
         )
         if self.parsing_register[RegisterUnit.Relation] is not None:
             assert (
-                    predicate_name
-                    not in self.parsing_register[RegisterUnit.Relation].sub_properties
+                predicate_name
+                not in self.parsing_register[RegisterUnit.Relation].sub_properties
             ), self.error_msg(
                 f'Property "{predicate_name}" is duplicated under the relation '
                 f"{self.parsing_register[RegisterUnit.Relation].name}"
             )
         else:
             assert (
-                    predicate_name
-                    not in self.parsing_register[RegisterUnit.Type].properties
+                predicate_name
+                not in self.parsing_register[RegisterUnit.Type].properties
             ), self.error_msg(
                 f'Property "{predicate_name}" is duplicated under the type {type_name[type_name.index(".") + 1:]}'
             )
@@ -453,8 +453,8 @@ class SPGSchemaMarkLang:
             )
 
         if (
-                "." not in predicate_class
-                and predicate_class not in BasicTypeEnum.__members__
+            "." not in predicate_class
+            and predicate_class not in BasicTypeEnum.__members__
         ):
             predicate_class = f"{self.namespace}.{predicate_class}"
 
@@ -471,9 +471,9 @@ class SPGSchemaMarkLang:
             # predicate is property
             predicate = Property(name=predicate_name, object_type_name=predicate_class)
             if (
-                    self.parsing_register[RegisterUnit.Type].spg_type_enum
-                    == SpgTypeEnum.Event
-                    and predicate_name == "subject"
+                self.parsing_register[RegisterUnit.Type].spg_type_enum
+                == SpgTypeEnum.Event
+                and predicate_name == "subject"
             ):
                 assert predicate_class not in self.internal_type, self.error_msg(
                     f"The subject of event type only allows entity/concept type"
@@ -487,7 +487,7 @@ class SPGSchemaMarkLang:
                     for subject_type in subject_types:
                         subject_type = subject_type.strip()
                         assert (
-                                subject_type not in BasicTypeEnum.__members__
+                            subject_type not in BasicTypeEnum.__members__
                         ), self.error_msg(
                             f"{predicate_class} is illegal for subject in event type"
                         )
@@ -515,8 +515,8 @@ class SPGSchemaMarkLang:
                 f"{predicate_class} is illegal"
             )
             assert (
-                    f"{predicate_name}_{predicate_class}"
-                    not in self.parsing_register[RegisterUnit.Type].relations
+                f"{predicate_name}_{predicate_class}"
+                not in self.parsing_register[RegisterUnit.Type].relations
             ), self.error_msg(
                 f'Relation "{match.group()}" is duplicated under the type {type_name[type_name.index(".") + 1:]}'
             )
@@ -673,8 +673,8 @@ class SPGSchemaMarkLang:
             elif self.parsing_register[RegisterUnit.Relation] is not None:
                 predicate = self.parsing_register[RegisterUnit.Relation]
             head = (
-                    f"Define (s:{subject_name})-[p:{predicate.name}]->(o:{predicate.object_type_name})"
-                    + " {\n"
+                f"Define (s:{subject_name})-[p:{predicate.name}]->(o:{predicate.object_type_name})"
+                + " {\n"
             )
             rule = head + rule
             rule += "\n}"
@@ -721,8 +721,8 @@ class SPGSchemaMarkLang:
                     self.rule_quote_open = False
                     if len(right_strip_line) > 2:
                         self.rule_quote_predicate.logical_rule += right_strip_line[
-                                                                  : len(right_strip_line) - 2
-                                                                  ]
+                            : len(right_strip_line) - 2
+                        ]
                     self.rule_quote_predicate.logical_rule = self.complete_rule(
                         self.rule_quote_predicate.logical_rule
                     )
@@ -869,8 +869,8 @@ class SPGSchemaMarkLang:
 
                 # if class of type changed then recreate the type
                 if (
-                        new_type.spg_type_enum != old_type.spg_type_enum
-                        or new_type.parent_type_name != old_type.parent_type_name
+                    new_type.spg_type_enum != old_type.spg_type_enum
+                    or new_type.parent_type_name != old_type.parent_type_name
                 ):
                     inherited_type = self.get_inherited_type(new_type.name)
                     assert not inherited_type, self.error_msg(
@@ -893,8 +893,8 @@ class SPGSchemaMarkLang:
                     need_update = True
 
                 if (
-                        new_type.spg_type_enum == SpgTypeEnum.Concept
-                        and new_type.hypernym_predicate != old_type.hypernym_predicate
+                    new_type.spg_type_enum == SpgTypeEnum.Concept
+                    and new_type.hypernym_predicate != old_type.hypernym_predicate
                 ):
                     old_type.hypernym_predicate = new_type.hypernym_predicate
                     old_type.relations[new_type.hypernym_predicate] = copy.deepcopy(
@@ -913,14 +913,14 @@ class SPGSchemaMarkLang:
 
                 for prop in old_type.properties:
                     if (
-                            not old_type.properties[prop].inherited
-                            and prop not in new_type.properties
-                            and not self.is_internal_property(prop, new_type.spg_type_enum)
+                        not old_type.properties[prop].inherited
+                        and prop not in new_type.properties
+                        and not self.is_internal_property(prop, new_type.spg_type_enum)
                     ):
                         assert (
-                                prop != "subject"
-                                and old_type.properties[prop].property_group
-                                != PropertyGroupEnum.Subject
+                            prop != "subject"
+                            and old_type.properties[prop].property_group
+                            != PropertyGroupEnum.Subject
                         ), self.error_msg(
                             "The subject property of event type cannot be deleted"
                         )
@@ -935,9 +935,9 @@ class SPGSchemaMarkLang:
                     inherited_type = self.get_inherited_type(new_type.name)
 
                     if (
-                            prop not in old_type.properties
-                            and not self.is_internal_property(prop, new_type.spg_type_enum)
-                            and not o.inherited
+                        prop not in old_type.properties
+                        and not self.is_internal_property(prop, new_type.spg_type_enum)
+                        and not o.inherited
                     ):
                         assert inherited_type is None, self.error_msg(
                             f'"{new_type.name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!'
@@ -948,8 +948,8 @@ class SPGSchemaMarkLang:
                         print(f"Create property: [{new_type.name}] {prop}")
 
                     elif (
-                            old_type.properties[prop].object_type_name
-                            != new_type.properties[prop].object_type_name
+                        old_type.properties[prop].object_type_name
+                        != new_type.properties[prop].object_type_name
                     ):
                         assert inherited_type is None, self.error_msg(
                             f'"{new_type.name} was inherited by other type, such as "{inherited_type}". Prohibit property alteration!'
@@ -966,8 +966,8 @@ class SPGSchemaMarkLang:
                         print(f"Recreate property: [{new_type.name}] {prop}")
 
                     elif (
-                            old_type.properties[prop].sub_properties
-                            != new_type.properties[prop].sub_properties
+                        old_type.properties[prop].sub_properties
+                        != new_type.properties[prop].sub_properties
                     ):
                         need_update = self.diff_sub_property(
                             new_type.properties[prop].sub_properties,
@@ -999,17 +999,17 @@ class SPGSchemaMarkLang:
                 for relation in new_type.relations:
                     p_name = relation.split("_")[0]
                     if (
-                            relation not in old_type.relations
-                            or old_type.relations[relation].object_type_name
-                            != new_type.relations[relation].object_type_name
+                        relation not in old_type.relations
+                        or old_type.relations[relation].object_type_name
+                        != new_type.relations[relation].object_type_name
                     ):
                         old_type.add_relation(new_type.relations[relation])
                         need_update = True
                         print(f"Create relation: [{new_type.name}] {p_name}")
 
                     elif (
-                            old_type.relations[relation].sub_properties
-                            != new_type.relations[relation].sub_properties
+                        old_type.relations[relation].sub_properties
+                        != new_type.relations[relation].sub_properties
                     ):
                         need_update = self.diff_sub_property(
                             new_type.relations[relation].sub_properties,
@@ -1045,13 +1045,13 @@ class SPGSchemaMarkLang:
                         # skip the inherited and semantic relation
                         continue
                     if (
-                            relation not in new_type.relations
-                            and not o.inherited
-                            and not o.is_dynamic
-                            and not (
+                        relation not in new_type.relations
+                        and not o.inherited
+                        and not o.is_dynamic
+                        and not (
                             new_type.spg_type_enum == SpgTypeEnum.Concept
                             and p_name in ["isA", "locateAt"]
-                    )
+                        )
                     ):
                         old_type.relations[
                             relation
@@ -1081,13 +1081,17 @@ class SPGSchemaMarkLang:
         for spg_type_name in sorted(session.spg_types):
             if spg_type_name.startswith("STD.") or spg_type_name in self.internal_type:
                 continue
-            spg_types.append({"name": spg_type_name.split('.')[1],
-                              "properties": [prop for prop in session.get(spg_type_name).properties]})
+            spg_types.append(
+                {
+                    "name": spg_type_name.split(".")[1],
+                    "properties": [
+                        prop for prop in session.get(spg_type_name).properties
+                    ],
+                }
+            )
 
-        metadata = {
-            "namespace": self.namespace,
-            "spg_types": spg_types
-        }
+        metadata = {"namespace": self.namespace, "spg_types": spg_types}
 
         from knext.common.template import render_template
+
         render_template(Path(filename).parent, Path(filename).name, **metadata)

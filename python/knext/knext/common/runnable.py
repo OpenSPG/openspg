@@ -33,7 +33,9 @@ class Runnable(BaseModel):
         return
 
     def invoke(self, input: Input) -> Sequence[Output]:
-        raise NotImplementedError(f"`invoke` is not currently supported for {self.__class__.__name__}.")
+        raise NotImplementedError(
+            f"`invoke` is not currently supported for {self.__class__.__name__}."
+        )
 
     def __rshift__(self, other: Other):
         raise NotImplementedError("To be implemented in subclass")

@@ -11,12 +11,7 @@
 # or implied.
 
 from knext.client.model.builder_job import BuilderJob
-from knext.api.component import (
-    CSVReader,
-    LLMBasedExtractor,
-    SubGraphMapping,
-    KGWriter
-)
+from knext.api.component import CSVReader, LLMBasedExtractor, SubGraphMapping, KGWriter
 from knext.api.operator import REPrompt
 from nn4k.invoker import LLMInvoker
 
@@ -37,28 +32,33 @@ class Disease(BuilderJob):
         """
         extract = LLMBasedExtractor(
             llm=LLMInvoker.from_config("builder/model/openai_infer.json"),
-            prompt_ops=[REPrompt(
-                spg_type_name="Medical.Disease",
-                property_names=[
-                    "complication",
-                    "commonSymptom",
-                    "applicableDrug",
-                    "department",
-                    "diseaseSite",
-                ])]
+            prompt_ops=[
+                REPrompt(
+                    spg_type_name="Medical.Disease",
+                    property_names=[
+                        "complication",
+                        "commonSymptom",
+                        "applicableDrug",
+                        "department",
+                        "diseaseSite",
+                    ],
+                )
+            ],
         )
 
         """
         2. 定义子图映射组件
         """
-        mapping = SubGraphMapping(spg_type_name="Medical.Disease") \
-            .add_mapping_field("id", "id") \
-            .add_mapping_field("name", "name") \
-            .add_mapping_field("complication", "complication") \
-            .add_mapping_field("commonSymptom", "commonSymptom") \
-            .add_mapping_field("applicableDrug", "applicableDrug") \
-            .add_mapping_field("department", "department") \
+        mapping = (
+            SubGraphMapping(spg_type_name="Medical.Disease")
+            .add_mapping_field("id", "id")
+            .add_mapping_field("name", "name")
+            .add_mapping_field("complication", "complication")
+            .add_mapping_field("commonSymptom", "commonSymptom")
+            .add_mapping_field("applicableDrug", "applicableDrug")
+            .add_mapping_field("department", "department")
             .add_mapping_field("diseaseSite", "diseaseSite")
+        )
 
         """
         4. 定义输出到图谱

@@ -792,9 +792,7 @@ class BaseSpgType(ABC):
 
         import knext.client.model.spg_type as spg_type
 
-        class_obj = getattr(
-            spg_type, f"{SpgTypeEnum(type_enum).name}Type"
-        )
+        class_obj = getattr(spg_type, f"{SpgTypeEnum(type_enum).name}Type")
         return class_obj
 
     def to_dict(self):

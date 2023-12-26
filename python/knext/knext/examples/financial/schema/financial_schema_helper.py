@@ -7,7 +7,6 @@ from knext.common.schema_helper import SPGTypeHelper, PropertyHelper
 
 
 class Financial:
-
     class Indicator(SPGTypeHelper):
         __type_name__ = "Financial.Indicator"
         description = PropertyHelper("description")
@@ -30,20 +29,31 @@ class Financial:
     State = State("Financial.State")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from knext.common.template import render_template
+
     data = {
         "namespace": "Financial",
         "spg_types": [
             {
                 "name": "Indicator",
-                "properties": ["description", "id", "name", "alias", "stdId"]
+                "properties": ["description", "id", "name", "alias", "stdId"],
             },
             {
                 "name": "State",
-                "properties": ["description", "id", "name", "alias", "stdId", "derivedFrom", "causeOf"]
-            }
-        ]
+                "properties": [
+                    "description",
+                    "id",
+                    "name",
+                    "alias",
+                    "stdId",
+                    "derivedFrom",
+                    "causeOf",
+                ],
+            },
+        ],
     }
 
-    render_template("/knext/templates/schema_helper/${project}_schema_helper.py.tmpl", **data)
+    render_template(
+        "/knext/templates/schema_helper/${project}_schema_helper.py.tmpl", **data
+    )
