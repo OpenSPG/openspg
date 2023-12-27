@@ -9,20 +9,10 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
 import re
 from enum import Enum
 from pathlib import Path
 
-from knext.client.schema import SchemaClient
-from knext.client.model.spg_type import (
-    EntityType,
-    ConceptType,
-    EventType,
-    StandardType,
-    Property,
-    Relation,
-)
 from knext.client.model.base import (
     HypernymPredicateEnum,
     BasicTypeEnum,
@@ -31,6 +21,15 @@ from knext.client.model.base import (
     SpgTypeEnum,
     PropertyGroupEnum,
 )
+from knext.client.model.spg_type import (
+    EntityType,
+    ConceptType,
+    EventType,
+    StandardType,
+    Property,
+    Relation,
+)
+from knext.client.schema import SchemaClient
 
 
 class IndentLevel(Enum):
@@ -210,7 +209,7 @@ class SPGSchemaMarkLang:
             self.current_parsing_level += 1
 
     def error_msg(self, msg):
-        return f"Line# {self.current_line_num}: {msg}"
+        return f"Line# {self.current_line_num}: {msg} (Please refer https://spg.openkg.cn/tutorial/spgschema for details)"
 
     def get_type_name_with_ns(self, type_name: str):
         if "." in type_name:
@@ -448,7 +447,7 @@ class SPGSchemaMarkLang:
         if "." not in predicate_class:
             predicate_class_ns = f"{self.namespace}.{predicate_class}"
         assert predicate_class_ns in self.types, self.error_msg(
-            f"{predicate_class} is illegal"
+            f"{predicate_class} is illegal, please ensure that it appears in this schema."
         )
         object_type = self.types[predicate_class_ns]
 
@@ -522,7 +521,7 @@ class SPGSchemaMarkLang:
 
         if cur_type.spg_type_enum == SpgTypeEnum.Concept:
             assert "#" in predicate_name, self.error_msg(
-                "Concept type only accept following categories of property/relation: #INC/#CAU/#SYNANT/#IND/#USE/#SEQ"
+                "Concept type only accept following categories of relation: INC#/CAU#/SYNANT#/IND#/USE#/SEQ#"
             )
 
         if "#" in predicate_name:
@@ -535,14 +534,14 @@ class SPGSchemaMarkLang:
                 )
 
         assert (
-            f"{self.namespace}.{predicate_class}" in self.types
+            self.get_type_name_with_ns(predicate_class) in self.types
             or predicate_class in self.internal_type
-        ), self.error_msg(f"{predicate_class} is illegal")
+        ), self.error_msg(f"{predicate_class} is illegal, please ensure that it appears in this schema.")
         assert predicate_name not in self.entity_internal_property, self.error_msg(
             f"property {predicate_name} is the default property of type"
         )
         if predicate_class not in self.internal_type:
-            predicate_type = self.types[f"{self.namespace}.{predicate_class}"]
+            predicate_type = self.types[self.get_type_name_with_ns(predicate_class)]
             if predicate_type is not None:
                 if cur_type.spg_type_enum == SpgTypeEnum.Concept:
                     assert (
@@ -595,7 +594,7 @@ class SPGSchemaMarkLang:
 
         if self.parsing_register[RegisterUnit.SubProperty]:
             # predicate is sub property
-            predicate = Property(name=predicate_name, object_type_name=predicate_class)
+            predicate = Property(name=predicate_name, name_zh=predicate_name_zh, object_type_name=predicate_class)
             if self.parsing_register[RegisterUnit.Property] is not None:
                 self.parsing_register[RegisterUnit.Property].add_sub_property(predicate)
             elif self.parsing_register[RegisterUnit.Relation] is not None:
@@ -604,7 +603,7 @@ class SPGSchemaMarkLang:
 
         elif self.parsing_register[RegisterUnit.Property]:
             # predicate is property
-            predicate = Property(name=predicate_name, object_type_name=predicate_class)
+            predicate = Property(name=predicate_name, name_zh=predicate_name_zh, object_type_name=predicate_class)
             if (
                 self.parsing_register[RegisterUnit.Type].spg_type_enum
                 == SpgTypeEnum.Event
@@ -630,11 +629,11 @@ class SPGSchemaMarkLang:
                         if "." not in subject_type:
                             subject_type = f"{self.namespace}.{predicate_class}"
                         assert subject_type in self.types, self.error_msg(
-                            f"{predicate_class} is illegal"
+                            f"{predicate_class} is illegal, please ensure that it appears in this schema."
                         )
 
                         subject_predicate = Property(
-                            name=f"subject{subject_type}", object_type_name=subject_type
+                            name=f"subject{subject_type}", name_zh=predicate_name_zh, object_type_name=subject_type
                         )
                         subject_predicate.property_group = PropertyGroupEnum.Subject
                         self.parsing_register[RegisterUnit.Type].add_property(
@@ -647,7 +646,7 @@ class SPGSchemaMarkLang:
         else:
             # predicate is relation
             assert predicate_class in self.types, self.error_msg(
-                f"{predicate_class} is illegal"
+                f"{predicate_class} is illegal, please ensure that it appears in this schema."
             )
             assert (
                 f"{predicate_name}_{predicate_class}"
@@ -680,9 +679,9 @@ class SPGSchemaMarkLang:
 
         if property_meta == "desc" and len(meta_value) > 0:
             if self.parsing_register[RegisterUnit.SubProperty] is not None:
-                self.parsing_register[RegisterUnit.SubProperty].desc = meta_value
+                self.parsing_register[RegisterUnit.SubProperty].desc = meta_value.strip()
             elif self.parsing_register[RegisterUnit.Property] is not None:
-                self.parsing_register[RegisterUnit.Property].desc = meta_value
+                self.parsing_register[RegisterUnit.Property].desc = meta_value.strip()
 
         elif property_meta == "constraint":
             if self.parsing_register[RegisterUnit.SubProperty] is not None:
