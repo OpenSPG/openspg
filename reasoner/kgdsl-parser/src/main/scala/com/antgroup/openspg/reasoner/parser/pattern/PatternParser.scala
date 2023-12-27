@@ -151,12 +151,13 @@ class PatternParser extends Serializable {
           Map.empty),
         false))
     }
-    MatchBlock(List.apply(parseSourceBlock(pathMaps)), pathMaps)
+    parseSourceAndMatchBlock(Map.empty, pathMaps)
   }
 
-  def parseSourceBlock(patterns: Map[String, GraphPath]): SourceBlock = {
-    var nodesProp: Map[String, IRNode] = Map.empty
-    var edgesProp: Map[String, IREdge] = Map.empty
+  def parseSourceAndMatchBlock(refFieldsMap: Map[String, Set[String]],
+                               patterns: Map[String, GraphPath]): MatchBlock = {
+    val nodesProp = new mutable.HashMap[String, IRNode]()
+    val edgesProp = new mutable.HashMap[String, IREdge]()
     patterns.foreach(path => {
       path._2.graphPattern.nodes.foreach(node => {
         nodesProp += (node._1 -> IRNode(node._1, Set.empty))
@@ -167,7 +168,50 @@ class PatternParser extends Serializable {
         })
       })
     })
-    SourceBlock(KG(nodesProp, edgesProp))
+
+    val patternMaps = patterns.map(pattern => {
+      val nodeMaps = pattern._2.graphPattern.nodes.keySet
+        .map(nodeAlias => {
+          if (!nodesProp.contains(nodeAlias)) {
+            nodesProp += (nodeAlias -> IRNode(nodeAlias, Set.empty))
+          }
+          if (refFieldsMap.contains(nodeAlias)) {
+            val irNode = nodesProp(nodeAlias).copy(fields =
+              nodesProp(nodeAlias).fields ++ refFieldsMap(nodeAlias))
+            nodesProp.put(nodeAlias, irNode)
+            nodeAlias -> refFieldsMap(nodeAlias)
+          } else {
+            nodeAlias -> Set.empty[String]
+          }
+        })
+        .filter(_ != null)
+        .toMap
+      val edgeMaps = pattern._2.graphPattern.edges
+        .map(edgeSet => {
+          edgeSet._2
+            .map(edge => {
+              if (!edgesProp.contains(edge.alias)) {
+                edgesProp +=
+                  (edge.alias -> IREdge(edge.alias, Set.empty))
+              }
+              if (refFieldsMap.contains(edge.alias)) {
+                val irEdge = edgesProp(edge.alias).copy(fields =
+                  edgesProp(edge.alias).fields ++ refFieldsMap(edge.alias))
+                edgesProp.put(edge.alias, irEdge)
+                edge.alias -> refFieldsMap(edge.alias)
+              } else {
+                edge.alias -> Set.empty[String]
+              }
+            })
+            .filter(_ != null)
+        })
+        .flatten
+      val updatedGraphPattern =
+        pattern._2.graphPattern.copy(properties = (nodeMaps ++ edgeMaps))
+      pattern._1 -> pattern._2.copy(graphPattern = updatedGraphPattern)
+    })
+
+    MatchBlock(List.apply(SourceBlock(KG(nodesProp.toMap, edgesProp.toMap))), patternMaps)
   }
   def parseGraphStructureBody(
       ctx: Graph_structure_bodyContext,

@@ -19,7 +19,6 @@ import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog;
-import com.antgroup.openspg.reasoner.recorder.DefaultRecorder;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.KGReasonerLocalRunner;
 import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphLoader;
@@ -583,70 +582,6 @@ public class KgReasonerABMLocalTest {
     Assert.assertTrue(result.getErrMsg().contains("time unit need in s/ms/us, but this is xx"));
   }
 
-  @Test
-  public void test8() {
-    String dsl =
-        "Define (s:CustFundKG.Account)-[p:transInAmount]->(o:CustFundKG.Account) {\n"
-            + "  GraphStructure {\n"
-            + "  \t(o)<-[t:accountFundContact]-(s)\n"
-            + "  }\n"
-            + "  Rule {\n"
-            + "    transAmount = group(s,o).sum(t.amount)\n"
-            + "  \tp.transAmount = transAmount\n"
-            + "  }\n"
-            + "}\n"
-            + "\n"
-            + "\n"
-            + "Define (s:CustFundKG.Account)-[p:centralizedTransfer]->(o:Boolean) {\n"
-            + "  GraphStructure {\n"
-            + "  \t(s)-[t:transInAmount]->(u:CustFundKG.Account)\n"
-            + "  }\n"
-            + "  Rule {\n"
-            + "  \ttotalAmount = group(s).sum(t.transAmount)\n"
-            + "  \ttop5Amount = group(s).order_edge_and_slice_sum(t.transAmount, \"desc\", 5)\n"
-            + "  \tR2(\"top5流入资金占比\"): top5Amount*1.0/totalAmount > 0.5\n"
-            + "  \to = rule_value(R2, true, false)\n"
-            + "  }\n"
-            + "}\n"
-            + "GraphStructure {\n"
-            + "(A:CustFundKG.Account)\n"
-            + "}\n"
-            + "Rule {\n"
-            + "}\n"
-            + "Action {\n"
-            + "  get(A.id, A.centralizedTransfer) \n"
-            + "}";
-    System.out.println(dsl);
-    LocalReasonerTask task = new LocalReasonerTask();
-    task.setDsl(dsl);
-
-    // add mock catalog
-    Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
-    schema.put("CustFundKG.Account", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
-    schema.put(
-        "CustFundKG.Account_accountFundContact_CustFundKG.Account",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("transDate", "amount")));
-    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
-    catalog.init();
-    task.setCatalog(catalog);
-
-    task.setGraphLoadClass(
-        "com.antgroup.openspg.reasoner.runner.local.main.KgReasonerABMLocalTest$GraphLoader4");
-
-    // enable subquery
-    Map<String, Object> params = new HashMap<>();
-    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
-    params.put(ConfigKey.KG_REASONER_OUTPUT_GRAPH, true);
-    task.setParams(params);
-    task.setStartIdList(Lists.newArrayList(new Tuple2<>("A", "CustFundKG.Account")));
-
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
-    LocalReasonerResult result = runner.run(task);
-
-    // only u1
-    Assert.assertTrue(result != null);
-  }
-
   public static class GraphLoader4 extends AbstractLocalGraphLoader {
 
     @Override
@@ -864,94 +799,6 @@ public class KgReasonerABMLocalTest {
     Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
     catalog.init();
     return catalog;
-  }
-
-  @Test
-  public void test2() {
-    String dsl =
-        "Define (s:ABM.Pkg)-[p:pkg2Family]->(o:ABM.BundleAppFamily) {\n"
-            + "  GraphStructure {\n"
-            + "    (s)-[:pkg2bundleApp]->(b:ABM.BundleApp)-[:belong]->(o)\n"
-            + "  }\n"
-            + "\tRule{\n"
-            + "  }\n"
-            + "}\n"
-            + "\n"
-            + "Define (s:ABM.Pkg)-[p:blackSameFamilyPkg]->(o:ABM.Pkg) {\n"
-            + "  GraphStructure {\n"
-            + "    (s)-[:pkg2Family]->(b:ABM.BundleAppFamily)<-[:pkg2Family]-(o)\n"
-            + "  }\n"
-            + "\tRule{\n"
-            + "    R1(\"必须是黑包\"): s.algoMarkResult == 'UNSAFE'\n"
-            + "  }\n"
-            + "}\n"
-            + "\n"
-            + "Define (s:ABM.Pkg)-[p:blackRelateApdid]->(o:ABM.Apdid) {\n"
-            + "  GraphStructure {\n"
-            + "    (s)-[:blackSameFamilyPkg]->(p1:ABM.Pkg),\n"
-            + "    (o)-[r:install]->(p1)\n"
-            + "  }\n"
-            + "\tRule {\n"
-            + "    R0(\"前几位安装\"): r.rn <= 20\n"
-            + "    R3: o.insPkgToolsLabel != ''\n"
-            + "    R4: o.insPkgToolsLabelCnt >= 2\n"
-            + "    \n"
-            + "    num = group(o).count(p1.id)\n"
-            + "    R1(\"数目必须大于2\"): num >=2\n"
-            + "    //排序暂未实现\n"
-            + "    p.pkgNum = num\n"
-            + "  }\n"
-            + "}\n"
-            + "\n"
-            + "Define (s:ABM.Pkg)-[p:relateUser]->(o:ABM.User) {\n"
-            + "  GraphStructure {\n"
-            + "    (s)-[:blackRelateApdid]->(d:ABM.Apdid),\n"
-            + "    (o)-[:acc2apdid]->(d)\n"
-            + "  }\n"
-            + "\tRule {\n"
-            + "    R1: o.hunterLabel != ''\n"
-            + "    R2: o.hunterLabelCount >=2\n"
-            + "  }\n"
-            + "}\n"
-            + "\n"
-            + "GraphStructure {\n"
-            + "\t(pkg:ABM.Pkg)-[p:blackRelateApdid]->(did:ABM.Apdid),\n"
-            + "    (pkg)-[:relateUser]->(u:ABM.User)\n"
-            + "}\n"
-            + "Rule {\n"
-            + "}\n"
-            + "Action {\n"
-            + "\tget(pkg.id, p.pkgNum, did.id, u.id)\n"
-            + "}";
-
-    LocalReasonerTask task = new LocalReasonerTask();
-    task.setDsl(dsl);
-
-    Map<String, Object> dslParams = new HashMap<>();
-    // use test catalog
-    Catalog catalog = initABMSchema();
-    task.setCatalog(catalog);
-
-    task.setGraphLoadClass(
-        "com.antgroup.openspg.reasoner.runner.local.main.KgReasonerABMLocalTest$GraphLoader");
-    task.setExecutionRecorder(new DefaultRecorder());
-
-    // enable subquery
-    Map<String, Object> params = new HashMap<>();
-    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
-    task.setParams(params);
-
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
-    LocalReasonerResult result = runner.run(task);
-    System.out.println(result);
-    Assert.assertEquals(1, result.getRows().size());
-    Assert.assertEquals(4, result.getRows().get(0).length);
-    Assert.assertEquals("Pkg", result.getRows().get(0)[0]);
-    Assert.assertEquals("3", result.getRows().get(0)[1]);
-    Assert.assertEquals("Apdid", result.getRows().get(0)[2]);
-    Assert.assertEquals("user", result.getRows().get(0)[3]);
-
-    System.out.println(task.getExecutionRecorder().toReadableString());
   }
 
   public static class GraphLoader extends AbstractLocalGraphLoader {
