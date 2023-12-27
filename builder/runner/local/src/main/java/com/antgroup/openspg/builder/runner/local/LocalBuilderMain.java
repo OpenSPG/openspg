@@ -47,8 +47,8 @@ public class LocalBuilderMain {
   private static final String ALTER_OPERATION_OPTION = "alterOperation";
   private static final String LOG_FILE_OPTION = "logFile";
   private static final String LEAD_TO_OPTION = "leadTo";
-  private static final String GRAPH_STORE_URL = "graphStoreUrl";
-  private static final String SEARCH_ENGINE_URL = "searchEngineUrl";
+  private static final String GRAPH_STORE_URL_OPTION = "graphStoreUrl";
+  private static final String SEARCH_ENGINE_URL_OPTION = "searchEngineUrl";
 
   public static void main(String[] args) {
     CommandLine commandLine = parseArgs(args);
@@ -75,8 +75,8 @@ public class LocalBuilderMain {
         ALTER_OPERATION_OPTION, ALTER_OPERATION_OPTION, true, "alter operation, upsert or delete");
     options.addOption(LOG_FILE_OPTION, LOG_FILE_OPTION, true, "log file");
     options.addOption(LEAD_TO_OPTION, LEAD_TO_OPTION, false, "enable leadTo");
-    options.addRequiredOption(GRAPH_STORE_URL, GRAPH_STORE_URL, true, "graph store url");
-    options.addRequiredOption(SEARCH_ENGINE_URL, SEARCH_ENGINE_URL, true, "search engine url");
+    options.addRequiredOption(GRAPH_STORE_URL_OPTION, GRAPH_STORE_URL_OPTION, true, "graph store url");
+    options.addRequiredOption(SEARCH_ENGINE_URL_OPTION, SEARCH_ENGINE_URL_OPTION, true, "search engine url");
 
     CommandLine commandLine = null;
     HelpFormatter helper = new HelpFormatter();
@@ -112,8 +112,8 @@ public class LocalBuilderMain {
 
     boolean enableLeadTo = commandLine.hasOption(LEAD_TO_OPTION);
 
-    String graphStoreUrl = commandLine.getOptionValue(GRAPH_STORE_URL);
-    String searchEngineUrl = commandLine.getOptionValue(SEARCH_ENGINE_URL);
+    String graphStoreUrl = commandLine.getOptionValue(GRAPH_STORE_URL_OPTION);
+    String searchEngineUrl = commandLine.getOptionValue(SEARCH_ENGINE_URL_OPTION);
 
     ProjectSchema projectSchema = getProjectSchema(projectId, schemaUrl);
     Map<SPGTypeIdentifier, ConceptList> conceptLists = getConceptLists(enableLeadTo, projectSchema);

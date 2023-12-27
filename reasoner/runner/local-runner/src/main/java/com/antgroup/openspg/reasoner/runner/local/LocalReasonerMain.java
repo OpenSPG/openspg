@@ -36,7 +36,6 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
@@ -129,46 +128,45 @@ public class LocalReasonerMain {
     HelpFormatter formatter = new HelpFormatter();
     CommandLine cmd;
 
+    Long projectId;
     String dsl;
     String outputFile;
     String schemaUri;
-    String schemaToken;
     String graphStateClass;
     String graphStateUrl;
     List<List<String>> startIdList;
-    Map<String, Object> params = null;
+    Map<String, Object> params = new HashMap<>(3);
     try {
       cmd = parser.parse(options, args);
-      dsl = cmd.getOptionValue("q");
+
+      projectId = Long.parseLong(cmd.getOptionValue(PROJECT_ID_OPTION));
+
+      dsl = cmd.getOptionValue(QUERY_OPTION);
       if (StringUtils.isEmpty(dsl)) {
         throw new ParseException("please provide query dsl!");
       }
-      outputFile = cmd.getOptionValue("o");
+      outputFile = cmd.getOptionValue(OUTPUT_OPTION);
       if (StringUtils.isEmpty(outputFile)) {
         outputFile = null;
       }
-      schemaUri = cmd.getOptionValue("s");
+      schemaUri = cmd.getOptionValue(SCHEMA_URL_OPTION);
       if (StringUtils.isEmpty(schemaUri)) {
         throw new ParseException("please provide openspg schema uri!");
       }
-      schemaToken = cmd.getOptionValue("st");
-      if (StringUtils.isEmpty(schemaToken)) {
-        throw new ParseException("please provide openspg schema api token!");
-      }
-      graphStateClass = cmd.getOptionValue("g");
+      graphStateClass = cmd.getOptionValue(GRAPH_STATE_CLASS_OPTION);
       if (StringUtils.isEmpty(graphStateClass)) {
         throw new ParseException("please provide graph state class name!");
       }
-      graphStateUrl = cmd.getOptionValue("gs");
+      graphStateUrl = cmd.getOptionValue(GRAPH_STORE_URL_OPTION);
       if (StringUtils.isEmpty(graphStateUrl)) {
         graphStateUrl = null;
       }
-      String startIdListJson = cmd.getOptionValue("start");
+      String startIdListJson = cmd.getOptionValue(START_ID_OPTION);
       if (StringUtils.isEmpty(startIdListJson)) {
         throw new ParseException("please provide start id");
       }
       startIdList = JSON.parseObject(startIdListJson, new TypeReference<List<List<String>>>() {});
-      String paramsJson = cmd.getOptionValue("params");
+      String paramsJson = cmd.getOptionValue(PARAMs_OPTION);
       if (StringUtils.isNotEmpty(paramsJson)) {
         params = new HashMap<>(JSON.parseObject(paramsJson));
       }
@@ -182,51 +180,38 @@ public class LocalReasonerMain {
     task.setId(UUID.randomUUID().toString());
     task.setDsl(dsl);
     task.setOutputFile(outputFile);
-    task.setConnInfo(new KgSchemaConnectionInfo(schemaUri, schemaToken));
+    task.setConnInfo(new KgSchemaConnectionInfo(schemaUri, ""));
     task.setGraphStateClassName(graphStateClass);
     task.setGraphStateInitString(graphStateUrl);
     task.setStartIdList(new ArrayList<>());
     task.addStartId(startIdList);
+    params.put("projId", projectId);
     task.setParams(params);
     return task;
   }
 
+  private static final String PROJECT_ID_OPTION = "projectId";
+  private static final String QUERY_OPTION = "query";
+  private static final String OUTPUT_OPTION = "output";
+  private static final String SCHEMA_URL_OPTION = "schemaUrl";
+  private static final String GRAPH_STATE_CLASS_OPTION = "graphStateClass";
+  private static final String GRAPH_STORE_URL_OPTION = "graphStoreUrl";
+  private static final String START_ID_OPTION = "startIdList";
+  private static final String PARAMs_OPTION = "params";
+
   private static Options getOptions() {
     Options options = new Options();
 
-    Option optDsl = new Option("q", "query", true, "query dsl string");
-    optDsl.setRequired(true);
-    options.addOption(optDsl);
-
-    Option optOutputFile = new Option("o", "output", true, "output file");
-    optOutputFile.setRequired(false);
-    options.addOption(optOutputFile);
-
-    Option optSchemaUri = new Option("s", "schema_uri", true, "provide schema uri");
-    optSchemaUri.setRequired(true);
-    options.addOption(optSchemaUri);
-
-    Option optSchemaToken = new Option("st", "schema_token", true, "provide schema token");
-    optSchemaToken.setRequired(true);
-    options.addOption(optSchemaToken);
-
-    Option optGraphStateClass =
-        new Option("g", "graph_state_class", true, "graph state class name");
-    optGraphStateClass.setRequired(true);
-    options.addOption(optGraphStateClass);
-
-    Option optGraphStateUrl = new Option("gs", "graph_state_url", true, "graph state url");
-    optGraphStateUrl.setRequired(false);
-    options.addOption(optGraphStateUrl);
-
-    Option optStartIdList = new Option("start", "start_id_list", true, "start id json list");
-    optStartIdList.setRequired(true);
-    options.addOption(optStartIdList);
-
-    Option optParamsJson =
-        new Option("params", "param_map_json_str", true, "parameter map json string");
-    optParamsJson.setRequired(false);
-    options.addOption(optParamsJson);
+    options.addRequiredOption(PROJECT_ID_OPTION, PROJECT_ID_OPTION, true, "project id");
+    options.addRequiredOption(QUERY_OPTION, QUERY_OPTION, true, "query dsl string");
+    options.addOption(OUTPUT_OPTION, OUTPUT_OPTION, true, "output file name");
+    options.addRequiredOption(SCHEMA_URL_OPTION, SCHEMA_URL_OPTION, true, "schema url");
+    options.addRequiredOption(
+        GRAPH_STATE_CLASS_OPTION, GRAPH_STATE_CLASS_OPTION, true, "graph state class name");
+    options.addRequiredOption(
+        GRAPH_STORE_URL_OPTION, GRAPH_STORE_URL_OPTION, true, "graph store url");
+    options.addOption(START_ID_OPTION, START_ID_OPTION, true, "start id list");
+    options.addOption(PARAMs_OPTION, PARAMs_OPTION, true, "params");
     return options;
   }
 }
