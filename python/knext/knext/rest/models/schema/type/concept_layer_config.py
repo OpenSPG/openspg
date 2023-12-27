@@ -85,7 +85,7 @@ class ConceptLayerConfig(object):
         :param hypernym_predicate: The hypernym_predicate of this ConceptLayerConfig.  # noqa: E501
         :type: str
         """
-        allowed_values = [None, "isA", "locateAt"]  # noqa: E501
+        allowed_values = [None, "isA", "locateAt", "mannerOf"]  # noqa: E501
         if (
             self.local_vars_configuration.client_side_validation
             and hypernym_predicate not in allowed_values

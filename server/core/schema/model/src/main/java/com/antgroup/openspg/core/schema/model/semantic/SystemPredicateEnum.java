@@ -23,6 +23,8 @@ public enum SystemPredicateEnum {
 
   LOCATE_AT("locateAt", "位于", PredicateFunctionEnum.HYPERNYM, PredicateScopeEnum.CONCEPT),
 
+  MANNER_OF("mannerOf", "是...的方式", PredicateFunctionEnum.HYPERNYM, PredicateScopeEnum.CONCEPT),
+
   ORIGINAL_PROPERTY(
       "originalPropertyOf", "原始属性", PredicateFunctionEnum.SEMANTIC, PredicateScopeEnum.PROPERTY),
 
