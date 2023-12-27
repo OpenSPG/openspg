@@ -127,7 +127,11 @@ class PromptOp(BaseOp, ABC):
     def build_next_variables(
         self, variables: Dict[str, str], response: str
     ) -> List[Dict[str, str]]:
-        return []
+        variables.update({f"{self.__class__.__name__}": response})
+        print("LLM(Output): ")
+        print("----------------------")
+        print([variables])
+        return [variables]
 
     def invoke(self, *args):
         pass

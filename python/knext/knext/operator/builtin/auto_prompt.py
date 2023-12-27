@@ -99,6 +99,7 @@ input:${input}
 
     def _render(self, spg_type: BaseSpgType, property_names: List[str]):
         spos = []
+        repeat_desc = []
         for property_name in property_names:
             if property_name in ["id", "name", "description"]:
                 continue
@@ -108,11 +109,11 @@ input:${input}
             if object_type:
                 object_desc = object_type.desc
             spos.append(
-                f"{spg_type.name_zh}({spg_type.desc or spg_type.name_zh})"
-                f"-{prop.name_zh}({prop.desc or prop.name_zh})"
+                f"{spg_type.name_zh}" + (f"({spg_type.desc or spg_type.name_zh})" if spg_type.name_zh not in repeat_desc else "") +
+                f"-{prop.name_zh}({prop.desc or prop.name_zh})" 
                 f"-{prop.object_type_name_zh}({object_desc or prop.object_type_name_zh})"
             )
-        schema_text = "[" + ",".join(spos) + "]"
+        schema_text = "\n[" + ",\n".join(spos) + "]\n"
         self.template = self.template.replace("${schema}", schema_text)
 
 
