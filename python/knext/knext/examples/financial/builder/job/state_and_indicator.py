@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from schema.financial_schema_helper import Financial
+from knext.examples.financial.schema.financial_schema_helper import Financial
 
 from knext.api.component import CSVReader, LLMBasedExtractor, KGWriter, SubGraphMapping
 from knext.client.model.builder_job import BuilderJob

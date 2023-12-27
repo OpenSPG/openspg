@@ -16,7 +16,8 @@ class AutoPrompt(PromptOp, ABC):
 class REPrompt(AutoPrompt):
 
     template: str = """
-已知SPO关系包括:${schema}。从下列句子中提取定义的这些关系。最终抽取结果以json格式输出。
+已知SPO关系包括:${schema}
+从下列句子中提取定义的这些关系。最终抽取结果以json格式输出。
 input:${input}
 输出格式为:{"spo":[{"subject":,"predicate":,"object":},]}
 "output":
@@ -110,10 +111,11 @@ input:${input}
                 object_desc = object_type.desc
             spos.append(
                 f"{spg_type.name_zh}" + (f"({spg_type.desc or spg_type.name_zh})" if spg_type.name_zh not in repeat_desc else "") +
-                f"-{prop.name_zh}({prop.desc or prop.name_zh})" 
-                f"-{prop.object_type_name_zh}({object_desc or prop.object_type_name_zh})"
+                f"-{prop.name_zh}" + (f"({prop.desc or prop.name_zh})" if prop.name_zh not in repeat_desc else "") +
+                f"-{prop.object_type_name_zh}" + (f"({object_desc or prop.object_type_name_zh})" if prop.object_type_name_zh not in repeat_desc else "")
             )
-        schema_text = "\n[" + ",\n".join(spos) + "]\n"
+            repeat_desc.extend([spg_type.name_zh, prop.name_zh, prop.object_type_name_zh])
+        schema_text = "\n[" + ",\n".join(spos) + "]"
         self.template = self.template.replace("${schema}", schema_text)
 
 

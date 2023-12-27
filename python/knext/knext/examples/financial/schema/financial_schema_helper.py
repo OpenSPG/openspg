@@ -20,6 +20,42 @@ from knext.common.schema_helper import SPGTypeHelper, PropertyHelper
 
 class Financial:
     
+    class AdministrativeArea(SPGTypeHelper):
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+        alias = PropertyHelper("alias")
+        stdId = PropertyHelper("stdId")
+    
+    class AreaRiskEvent(SPGTypeHelper):
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+        subject = PropertyHelper("subject")
+        eventTime = PropertyHelper("eventTime")
+        object = PropertyHelper("object")
+    
+    class Company(SPGTypeHelper):
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+        establishDate = PropertyHelper("establishDate")
+        legalPerson = PropertyHelper("legalPerson")
+        orgCertNo = PropertyHelper("orgCertNo")
+        regCapital = PropertyHelper("regCapital")
+        regArea = PropertyHelper("regArea")
+        businessScope = PropertyHelper("businessScope")
+    
+    class CompanyEvent(SPGTypeHelper):
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+        happenedTime = PropertyHelper("happenedTime")
+        subject = PropertyHelper("subject")
+        eventTime = PropertyHelper("eventTime")
+        location = PropertyHelper("location")
+        object = PropertyHelper("object")
+    
     class Indicator(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
@@ -27,32 +63,19 @@ class Financial:
         alias = PropertyHelper("alias")
         stdId = PropertyHelper("stdId")
     
-    class Organization(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
-        name = PropertyHelper("name")
-    
-    class RegionalEconomicIndicatorEvent(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
-        name = PropertyHelper("name")
-        source = PropertyHelper("source")
-        eventTime = PropertyHelper("eventTime")
-        date = PropertyHelper("date")
-        region = PropertyHelper("region")
-        subject = PropertyHelper("subject")
-    
     class State(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
-        causeOf = PropertyHelper("causeOf")
         alias = PropertyHelper("alias")
         stdId = PropertyHelper("stdId")
         derivedFrom = PropertyHelper("derivedFrom")
+        causes = PropertyHelper("causes")
     
+    AdministrativeArea = AdministrativeArea("Financial.AdministrativeArea")
+    AreaRiskEvent = AreaRiskEvent("Financial.AreaRiskEvent")
+    Company = Company("Financial.Company")
+    CompanyEvent = CompanyEvent("Financial.CompanyEvent")
     Indicator = Indicator("Financial.Indicator")
-    Organization = Organization("Financial.Organization")
-    RegionalEconomicIndicatorEvent = RegionalEconomicIndicatorEvent("Financial.RegionalEconomicIndicatorEvent")
     State = State("Financial.State")
     

@@ -42,6 +42,6 @@ ${rel}
                     properties["id"] = v
                     properties["name"] = v
                 elif k == "object":
-                    properties["causeOf"] = ",".join(v)
+                    properties["causes"] = ",".join(v)
             logic_result.append(SPGRecord("Financial.State", properties=properties))
         return logic_result

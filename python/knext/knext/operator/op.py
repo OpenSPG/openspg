@@ -89,10 +89,19 @@ class FuseOp(BaseOp, ABC):
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
 
-    def invoke(self, records: List[SPGRecord]) -> List[SPGRecord]:
+    def link(self, subject_records: List[SPGRecord]) -> List[SPGRecord]:
         raise NotImplementedError(
-            f"{self.__class__.__name__} need to implement `invoke` method."
+            f"{self.__class__.__name__} need to implement `link` method."
         )
+
+    def merge(self, subject_records: List[SPGRecord], target_records: List[SPGRecord]) -> List[SPGRecord]:
+        raise NotImplementedError(
+            f"{self.__class__.__name__} need to implement `merge` method."
+        )
+
+    def invoke(self, records: List[SPGRecord]) -> List[SPGRecord]:
+        linked_records = self.link(records)
+        return self.merge(records, linked_records)
 
     @staticmethod
     def _pre_process(*inputs):
