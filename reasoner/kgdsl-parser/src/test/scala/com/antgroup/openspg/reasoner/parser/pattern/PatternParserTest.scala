@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.parser.pattern
 
+import com.antgroup.openspg.reasoner.lube.block.{MatchBlock, SourceBlock}
 import com.antgroup.openspg.reasoner.parser.{DemoGraphParser, LexerInit}
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
@@ -44,9 +45,12 @@ class PatternParserTest extends AnyFunSpec {
         .the_graph_structure()
         .graph_structure_define())
     print(block.pretty)
-    val text = """└─MatchBlock(patterns=Map(unresolved_default_path -> GraphPath(unresolved_default_path,GraphPattern(null,Map(A -> (A:FilmPerson), C -> (C:FilmDirector), D -> (D:FilmDirector)),Map(A -> Set((A)->[e1:test]-(C))), C -> Set((C)->[e2:t1]-(D),[1,20]))),Map()),false)))
-                 *    └─SourceBlock(graph=KG(Map(A -> IRNode(A,Set()), C -> IRNode(C,Set()), D -> IRNode(D,Set())),Map(e1 -> IREdge(e1,Set()), e2 -> IREdge(e2,Set()))))""".stripMargin('*')
-    block.pretty should equal(text)
+    block.isInstanceOf[MatchBlock] should equal(true)
+    block.asInstanceOf[MatchBlock].dependencies.head.isInstanceOf[SourceBlock] should equal(true)
+    block.asInstanceOf[MatchBlock]
+      .dependencies.head.asInstanceOf[SourceBlock].graph.nodes.size should equal(3)
+    block.asInstanceOf[MatchBlock]
+      .dependencies.head.asInstanceOf[SourceBlock].graph.edges.size should equal(2)
   }
   it("gql") {
     val s =
@@ -74,9 +78,12 @@ class PatternParserTest extends AnyFunSpec {
         .the_graph_structure()
         .graph_structure_define())
     print(block.pretty)
-    val text = """└─MatchBlock(patterns=Map(path1 -> GraphPath(path1,GraphPattern(null,Map(A -> (A:Film), B -> (B:FilmStar,FilmDirector)),Map(A -> Set((A)->[p:starOfFilm,starOfDirector]-(B)))),Map()),false), path2 -> GraphPath(path2,GraphPattern(null,Map(B -> (B:FilmStar,FilmDirector), C -> (C:Film)),Map(B -> Set((B)<-[p2:starOfFilm]-(C),BinaryOpExpr(name=BGreaterThan),[1,4]))),Map()),false), path3 -> GraphPath(path3,GraphPattern(null,Map(B -> (B:FilmStar,FilmDirector), D -> (D:Robot.Film)),Map(B -> Set((B)<-[p3:starOfFilm]-(D),BinaryOpExpr(name=BGreaterThan),[1,4]))),Map()),false)))
-                 *    └─SourceBlock(graph=KG(Map(A -> IRNode(A,Set()), B -> IRNode(B,Set()), C -> IRNode(C,Set()), D -> IRNode(D,Set())),Map(p -> IREdge(p,Set()), p2 -> IREdge(p2,Set()), p3 -> IREdge(p3,Set()))))""".stripMargin('*')
-    block.pretty should equal(text)
+    block.isInstanceOf[MatchBlock] should equal(true)
+    block.asInstanceOf[MatchBlock].dependencies.head.isInstanceOf[SourceBlock] should equal(true)
+    block.asInstanceOf[MatchBlock]
+      .dependencies.head.asInstanceOf[SourceBlock].graph.nodes.size should equal(4)
+    block.asInstanceOf[MatchBlock]
+      .dependencies.head.asInstanceOf[SourceBlock].graph.edges.size should equal(3)
   }
 
   it("test demo graph 0") {

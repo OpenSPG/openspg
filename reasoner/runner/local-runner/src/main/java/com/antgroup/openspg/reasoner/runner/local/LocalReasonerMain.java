@@ -13,6 +13,13 @@
 
 package com.antgroup.openspg.reasoner.runner.local;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.ConsoleAppender;
+import ch.qos.logback.core.FileAppender;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.antgroup.openspg.reasoner.catalog.impl.KgSchemaConnectionInfo;
@@ -27,7 +34,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -36,6 +42,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 
 @Slf4j
 public class LocalReasonerMain {
@@ -58,6 +65,7 @@ public class LocalReasonerMain {
     if (StringUtils.isNotEmpty(task.getOutputFile())) {
       writeOutputFile(result, task.getOutputFile());
     }
+    System.exit(0);
   }
 
   private static void writeOutputFile(LocalReasonerResult result, String file) {
@@ -136,6 +144,9 @@ public class LocalReasonerMain {
     try {
       cmd = parser.parse(options, args);
 
+      String logFileName = cmd.getOptionValue(LOG_FILE_OPTION);
+      setUpLogFile(logFileName);
+
       projectId = Long.parseLong(cmd.getOptionValue(PROJECT_ID_OPTION));
 
       dsl = cmd.getOptionValue(QUERY_OPTION);
@@ -196,6 +207,7 @@ public class LocalReasonerMain {
   private static final String GRAPH_STORE_URL_OPTION = "graphStoreUrl";
   private static final String START_ID_OPTION = "startIdList";
   private static final String PARAMs_OPTION = "params";
+  private static final String LOG_FILE_OPTION = "logFile";
 
   private static Options getOptions() {
     Options options = new Options();
@@ -210,6 +222,55 @@ public class LocalReasonerMain {
         GRAPH_STORE_URL_OPTION, GRAPH_STORE_URL_OPTION, true, "graph store url");
     options.addOption(START_ID_OPTION, START_ID_OPTION, true, "start id list");
     options.addOption(PARAMs_OPTION, PARAMs_OPTION, true, "params");
+    options.addOption(LOG_FILE_OPTION, LOG_FILE_OPTION, true, "log file name");
     return options;
+  }
+
+  private static void setUpLogFile(String logFileName) {
+    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+    loggerContext.reset();
+
+    PatternLayoutEncoder patternLayoutEncoder = new PatternLayoutEncoder();
+    patternLayoutEncoder.setPattern("%d [%X{traceId}] [%X{rpcId}] [%t] %-5p %c{2} - %m%n");
+    patternLayoutEncoder.setContext(loggerContext);
+    patternLayoutEncoder.start();
+
+    FileAppender<ILoggingEvent> fileAppender = null;
+    if (StringUtils.isNotBlank(logFileName)) {
+      fileAppender = new FileAppender<>();
+      fileAppender.setFile(logFileName);
+      fileAppender.setEncoder(patternLayoutEncoder);
+      fileAppender.setContext(loggerContext);
+      fileAppender.setAppend(false);
+      fileAppender.start();
+    }
+
+    ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<>();
+    consoleAppender.setEncoder(patternLayoutEncoder);
+    consoleAppender.setContext(loggerContext);
+    consoleAppender.start();
+
+    Logger brpcLogger = loggerContext.getLogger("com.baidu.brpc");
+    brpcLogger.setLevel(Level.ERROR);
+    brpcLogger.setAdditive(false);
+    if (fileAppender != null) {
+      brpcLogger.addAppender(fileAppender);
+    }
+    brpcLogger.addAppender(consoleAppender);
+
+    Logger dtflysLogger = loggerContext.getLogger("com.dtflys.forest");
+    dtflysLogger.setLevel(Level.ERROR);
+    dtflysLogger.setAdditive(false);
+    if (fileAppender != null) {
+      dtflysLogger.addAppender(fileAppender);
+    }
+    dtflysLogger.addAppender(consoleAppender);
+
+    Logger rootLogger = loggerContext.getLogger("root");
+    if (fileAppender != null) {
+      rootLogger.addAppender(fileAppender);
+    }
+    rootLogger.addAppender(consoleAppender);
+    rootLogger.setLevel(Level.INFO);
   }
 }

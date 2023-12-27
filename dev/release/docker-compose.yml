@@ -10,12 +10,8 @@ services:
             - mysql
             - tugraph
         command: [
-            '--cloudext.repository.impl.jdbc.host=mysql',
-            '--builder.operator.python.exec=/usr/bin/python3.8',
-            '--builder.operator.python.paths=/usr/lib/python3.8/site-packages;/usr/local/lib/python3.8/dist-packages;'
+            '--server.repository.impl.jdbc.host=mysql',
         ]
-        environment:
-            - PYTHONPATH=/usr/lib/python3.8/site-packages:/usr/local/lib/python3.8/dist-packages
 
     mysql:
         restart: always

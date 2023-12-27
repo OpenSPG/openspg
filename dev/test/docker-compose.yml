@@ -10,7 +10,7 @@ services:
             TZ: Asia/Shanghai
             LANG: C.UTF-8
         volumes:
-            - "./mysql/sqlscript:/docker-entrypoint-initdb.d"
+            - "../release/mysql/sql:/docker-entrypoint-initdb.d"
         ports:
             - "3306:3306"
         command: [

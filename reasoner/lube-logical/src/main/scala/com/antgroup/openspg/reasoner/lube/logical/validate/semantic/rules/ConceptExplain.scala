@@ -70,7 +70,12 @@ object ConceptExplain extends Explain {
                   graph.getTargetType(ele.label, "belongTo", Direction.IN),
                   null)))
             newProps.+=((conceptAlias, Set.empty))
-            newProps.+=((ele.alias, Set.apply(Constants.NODE_ID_KEY)))
+
+            if (newProps.contains(ele.alias)) {
+              newProps.+=((ele.alias, Set.apply(Constants.NODE_ID_KEY) ++ newProps(ele.alias)))
+            } else {
+              newProps.+=((ele.alias, Set.apply(Constants.NODE_ID_KEY)))
+            }
             val connAlias = s"E_${conceptAlias}"
             val connection = new PatternConnection(
               connAlias,

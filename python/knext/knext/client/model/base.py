@@ -52,6 +52,7 @@ class ConstraintTypeEnum(str, Enum):
 class HypernymPredicateEnum(str, Enum):
     IsA = "isA"
     LocateAt = "locateAt"
+    MannerOf = "mannerOf"
 
 
 class AlterOperationEnum(str, Enum):
