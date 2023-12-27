@@ -38,31 +38,6 @@ PRIMARY KEY(`id`),
 KEY `idx_status`(`status`)
 ) DEFAULT CHARSET = utf8mb4 COMMENT = '业务域表';
 
-CREATE TABLE `kg_data_source` (
-`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
-`gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
-`gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-`unique_name` varchar(64) NOT NULL comment '唯一名称',
-`type` varchar(32) NOT NULL comment '类型 ',
-`conn_info` text NOT NULL comment '链接信息',
-`physical_info` text DEFAULT NULL comment '物理信息',
-PRIMARY KEY(`id`),
-UNIQUE KEY `uk_unique_name`(`unique_name`)
-) DEFAULT CHARSET = utf8mb4 COMMENT = '数据源信息';
-
-CREATE TABLE `kg_data_source_usage` (
-`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
-`gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
-`gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-`data_source_name` varchar(64) NOT NULL comment '数据源名称',
-`usage_type` varchar(32) NOT NULL comment '数据源使用场景',
-`is_default` tinyint(3) unsigned NOT NULL comment '是否默认资源',
-`mount_object_id` varchar(32) NOT NULL comment '挂载对象Id',
-`mount_object_type` varchar(16) NOT NULL comment '挂载对象类型',
-PRIMARY KEY(`id`),
-KEY `idx_object_id`(`mount_object_id`, `usage_type`)
-) DEFAULT CHARSET = utf8mb4 COMMENT = '资源与服务视图关系表';
-
 CREATE TABLE `kg_sys_lock` (
 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
 `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
@@ -72,30 +47,6 @@ CREATE TABLE `kg_sys_lock` (
 PRIMARY KEY(`id`),
 UNIQUE KEY `uk_mname`(`method_name`)
 ) DEFAULT CHARSET = utf8mb4 COMMENT = '系统内置表，用于分布式锁实现';
-
-CREATE TABLE `kg_operator_overview` (
-`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
-`name` varchar(256) NOT NULL comment '算子名称',
-`type` varchar(64) NOT NULL comment '算子类型',
-`gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
-`gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-`description` varchar(2048) NOT NULL comment '算子描述',
-`lang` varchar(64) DEFAULT NULL comment '算子开发语言',
-PRIMARY KEY(`id`),
-UNIQUE KEY `uk_name`(`name`)
-) DEFAULT CHARSET = utf8mb4 COMMENT = '算子总览表';
-
-CREATE TABLE `kg_operator_version` (
-`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
-`overview_id` bigint(20) unsigned NOT NULL comment '算子总览id',
-`main_class` varchar(256) DEFAULT NULL comment '主类',
-`jar_address` varchar(1024) DEFAULT NULL comment 'jar包地址',
-`gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
-`gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-`version` int(11) unsigned NOT NULL comment '版本',
-PRIMARY KEY(`id`),
-KEY `idx_overview_id`(`overview_id`)
-) DEFAULT CHARSET = utf8mb4 COMMENT = '算子具体版本信息';
 
 CREATE TABLE `kg_ontology_entity` (
 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
@@ -264,89 +215,8 @@ PRIMARY KEY(`id`),
 UNIQUE KEY `uk_project_version`(`project_id`, `version`)
 ) DEFAULT CHARSET = utf8mb4 COMMENT = '本体建模发布版本';
 
-CREATE TABLE `kg_spg_job_info` (
-`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
-`gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
-`gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-`name` varchar(64) NOT NULL comment '任务名称',
-`type` varchar(20) NOT NULL comment '任务类型',
-`content` text NOT NULL comment '任务内容',
-`project_id` bigint(20) NOT NULL comment '项目ID',
-`cron` varchar(20) DEFAULT NULL comment 'cron表达式，null时则为单次调度',
-`status` varchar(20) NOT NULL comment '状态',
-`ext_info` varchar(1024) DEFAULT NULL comment '扩展字段',
-`external_job_info_id` varchar(64) DEFAULT NULL comment '外部调度任务Id',
-PRIMARY KEY(`id`),
-KEY `idx_project_id`(`project_id`),
-UNIQUE KEY `idx_external_job_info_id`(`external_job_info_id`)
-) DEFAULT CHARSET = utf8mb4 COMMENT = '图谱任务定义';
-
-CREATE TABLE `kg_spg_job_inst` (
-`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
-`gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
-`gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-`job_id` bigint(20) NOT NULL comment '任务id',
-`type` varchar(20) NOT NULL comment '任务类型',
-`project_id` bigint(20) NOT NULL comment '项目ID',
-`status` varchar(20) NOT NULL comment '状态',
-`start_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP comment '开始时间',
-`end_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP comment '结束时间',
-`result` text DEFAULT NULL comment '调度实例运行日志',
-`progress` text DEFAULT NULL comment '运行进度',
-`log_info` text DEFAULT NULL comment '调度实例运行日志',
-`external_job_inst_id` varchar(64) DEFAULT NULL comment '外部调度实例Id',
-PRIMARY KEY(`id`),
-KEY `idx_project_id`(`project_id`),
-KEY `idx_job_id`(`job_id`),
-UNIQUE KEY `idx_external_job_inst_id`(`external_job_inst_id`)
-) DEFAULT CHARSET = utf8mb4 COMMENT = '图谱任务定义';
-
-CREATE TABLE `kg_schedule_job_info` (
-`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
-`gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
-`gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-`name` varchar(64) NOT NULL comment '任务名称',
-`type` varchar(20) NOT NULL comment '任务类型',
-`cron` varchar(20) DEFAULT NULL comment 'cron表达式，null时则为单次调度',
-`status` varchar(20) NOT NULL comment '状态',
-`idempotent_id` varchar(64) DEFAULT NULL comment '幂等键，即业务jobId',
-PRIMARY KEY(`id`),
-UNIQUE KEY `idx_idempotent_id`(`idempotent_id`)
-) DEFAULT CHARSET = utf8mb4 COMMENT = '调度任务定义';
-
-CREATE TABLE `kg_schedule_job_inst` (
-`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
-`gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
-`gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-`job_id` bigint(20) NOT NULL comment '调度任务id',
-`type` varchar(20) NOT NULL comment '任务类型',
-`status` varchar(20) NOT NULL comment '状态',
-`result` text DEFAULT NULL comment '运行结果',
-`host` varchar(32) DEFAULT NULL comment '运行机器',
-`trace_id` varchar(32) DEFAULT NULL comment '任务最近一次运行的trace_id',
-`idempotent_id` varchar(64) DEFAULT NULL comment '幂等键，即业务jobInstId',
-PRIMARY KEY(`id`),
-KEY `idx_job_id`(`job_id`),
-UNIQUE KEY `idx_idempotent_id`(`idempotent_id`)
-) DEFAULT CHARSET = utf8mb4 COMMENT = '调度任务实例';
-
 INSERT INTO kg_biz_domain (`id`,`gmt_create`,`gmt_modified`,`name`,`status`,`description`,`global_config`) VALUES(1,'2023-09-01 00:00:00','2023-09-01 00:00:00','defaultTenant','VALID','',null);
 INSERT INTO kg_project_info (`id`,`name`,`description`,`status`,`gmt_create`,`gmt_modified`,`namespace`,`biz_domain_id`) VALUES(1,'defaultProject','defaultProject','VALID','2023-09-01 00:00:00','2023-09-01 00:00:00','DEFAULT',1);
-
-INSERT INTO kg_data_source (`id`,`gmt_create`,`gmt_modified`,`unique_name`,`type`,`conn_info`,`physical_info`) VALUES(1,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_tugraph','GRAPH_STORE','{"scheme":"tugraph","params":{"graphName":"default","timeout":5000,"host":"tugraph:9090","accessId":"admin","accessKey":"73@TuGraph"}}',null);
-INSERT INTO kg_data_source (`id`,`gmt_create`,`gmt_modified`,`unique_name`,`type`,`conn_info`,`physical_info`) VALUES(2,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_operator','OBJECT_STORE','{"scheme":"local","params":{"localDir":"/objectStore/operator"}}',null);
-INSERT INTO kg_data_source (`id`,`gmt_create`,`gmt_modified`,`unique_name`,`type`,`conn_info`,`physical_info`) VALUES(3,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_tmpfile','OBJECT_STORE','{"scheme":"local","params":{"localDir":"/objectStore/tmpfile"}}',null);
-INSERT INTO kg_data_source (`id`,`gmt_create`,`gmt_modified`,`unique_name`,`type`,`conn_info`,`physical_info`) VALUES(4,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_elasticsearch','SEARCH_ENGINE','{"scheme":"elasticsearch","params":{"host":"elasticsearch","scheme":"http","port":"9200"}}',null);
-INSERT INTO kg_data_source (`id`,`gmt_create`,`gmt_modified`,`unique_name`,`type`,`conn_info`,`physical_info`) VALUES(5,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_scheduler','JOB_SCHEDULER','{"scheme":"local",params:{}}',null);
-INSERT INTO kg_data_source (`id`,`gmt_create`,`gmt_modified`,`unique_name`,`type`,`conn_info`,`physical_info`) VALUES(6,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_computing','COMPUTING','{"scheme":"local",params:{}}',null);
-INSERT INTO kg_data_source (`id`,`gmt_create`,`gmt_modified`,`unique_name`,`type`,`conn_info`,`physical_info`) VALUES(7,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_table_store','TABLE_STORE','{"scheme":"local",params:{"localDir":"/tableStore"}}',null);
-INSERT INTO kg_data_source_usage (`id`,`gmt_create`,`gmt_modified`,`data_source_name`,`usage_type`,`is_default`,`mount_object_id`,`mount_object_type`) VALUES(1,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_tugraph','KG_STORE',1,'-1','PROJECT');
-INSERT INTO kg_data_source_usage (`id`,`gmt_create`,`gmt_modified`,`data_source_name`,`usage_type`,`is_default`,`mount_object_id`,`mount_object_type`) VALUES(2,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_operator','OPERATOR_STORE',1,'-1','PROJECT');
-INSERT INTO kg_data_source_usage (`id`,`gmt_create`,`gmt_modified`,`data_source_name`,`usage_type`,`is_default`,`mount_object_id`,`mount_object_type`) VALUES(3,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_tmpfile','FILE_STORE',1,'-1','PROJECT');
-INSERT INTO kg_data_source_usage (`id`,`gmt_create`,`gmt_modified`,`data_source_name`,`usage_type`,`is_default`,`mount_object_id`,`mount_object_type`) VALUES(4,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_elasticsearch','SEARCH',1,'-1','PROJECT');
-INSERT INTO kg_data_source_usage (`id`,`gmt_create`,`gmt_modified`,`data_source_name`,`usage_type`,`is_default`,`mount_object_id`,`mount_object_type`) VALUES(5,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_scheduler','JOB_SCHEDULER',1,'-1','PROJECT');
-INSERT INTO kg_data_source_usage (`id`,`gmt_create`,`gmt_modified`,`data_source_name`,`usage_type`,`is_default`,`mount_object_id`,`mount_object_type`) VALUES(6,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_computing','COMPUTING',1,'-1','PROJECT');
-INSERT INTO kg_data_source_usage (`id`,`gmt_create`,`gmt_modified`,`data_source_name`,`usage_type`,`is_default`,`mount_object_id`,`mount_object_type`) VALUES(7,'2023-09-01 00:00:00','2023-09-01 00:00:00','local_table_store','TABLE_STORE',1,'-1','PROJECT');
 
 INSERT INTO kg_ontology_entity (`id`,`original_id`,`name`,`name_zh`,`entity_category`,`layer`,`description`,`description_zh`,`status`,`with_index`,`scope`,`version`,`version_status`,`gmt_create`,`gmt_modified`,`transformer_id`,`operator_config`,`config`,`unique_name`) VALUES(1,1,'Thing','事物','ADVANCED','EXTENSION','Base class for all schema types, all of which inherit the type either directly or indirectly','所有schema类型的基类，它们都直接或者间接继承该类型','1','TRUE','PUBLIC',44,'ONLINE','2023-09-01 00:00:00','2023-09-01 00:00:00',0,null,null,'Thing');
 INSERT INTO kg_ontology_entity (`id`,`original_id`,`name`,`name_zh`,`entity_category`,`layer`,`description`,`description_zh`,`status`,`with_index`,`scope`,`version`,`version_status`,`gmt_create`,`gmt_modified`,`transformer_id`,`operator_config`,`config`,`unique_name`) VALUES(2,2,'Text','文本','BASIC','CORE','Data type: Text','基本数据类型-文本','1','TRUE','PUBLIC',0,'ONLINE','2023-09-01 00:00:00','2023-09-01 00:00:00',0,null,'{"constrains":[{"id":"REQUIRE","name":"Required","nameZh":"值非空","value":null},{"id":"UNIQUE","name":"Unique","nameZh":"值唯一","value":null},{"id":"ENUM","name":"Enum","nameZh":"枚举","value":null},{"id":"MULTIVALUE","name":"Multi value","nameZh":"多值","value":null},{"id":"REGULAR","name":"Regular match","nameZh":"正则匹配","value":null}]}','Text');
