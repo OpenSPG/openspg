@@ -30,6 +30,8 @@ import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -78,7 +80,8 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
       if (advancedRecord != null) {
         recordLinking.linking(advancedRecord);
         recordPredicting.predicting(advancedRecord);
-        List<BaseAdvancedRecord> subjectFusedRecord = subjectFusing.fusing(advancedRecord);
+        List<BaseAdvancedRecord> subjectFusedRecord =
+            subjectFusing.fusing(Lists.newArrayList(advancedRecord));
         advancedRecords.addAll(subjectFusedRecord);
       }
     }

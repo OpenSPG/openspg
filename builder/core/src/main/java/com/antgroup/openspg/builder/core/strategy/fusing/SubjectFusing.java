@@ -10,5 +10,5 @@ public interface SubjectFusing {
 
   void init(BuilderContext context) throws BuilderException;
 
-  List<BaseAdvancedRecord> fusing(BaseAdvancedRecord advancedRecord) throws FusingException;
+  List<BaseAdvancedRecord> fusing(List<BaseAdvancedRecord> advancedRecords) throws FusingException;
 }

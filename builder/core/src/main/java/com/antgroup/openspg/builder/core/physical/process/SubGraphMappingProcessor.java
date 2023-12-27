@@ -60,6 +60,7 @@ public class SubGraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
   @Override
   public List<BaseRecord> process(List<BaseRecord> inputs) {
     List<BaseAdvancedRecord> advancedRecords = new ArrayList<>(inputs.size());
+    List<BaseAdvancedRecord> subjectRecords = new ArrayList<>(inputs.size());
     for (BaseRecord baseRecord : inputs) {
       BuilderRecord record = (BuilderRecord) baseRecord;
       if (isFiltered(record, config.getMappingFilters(), identifier)) {
@@ -75,10 +76,11 @@ public class SubGraphMappingProcessor extends BaseMappingProcessor<SubGraphMappi
 
         recordLinking.linking(advancedRecord);
         recordPredicating.predicting(advancedRecord);
-        List<BaseAdvancedRecord> subjectFusedRecord = subjectFusing.fusing(advancedRecord);
-        advancedRecords.addAll(subjectFusedRecord);
+        subjectRecords.add(advancedRecord);
       }
     }
+    List<BaseAdvancedRecord> subjectFusedRecord = subjectFusing.fusing(subjectRecords);
+    advancedRecords.addAll(subjectFusedRecord);
     return (List) advancedRecords;
   }
 

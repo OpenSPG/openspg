@@ -75,8 +75,10 @@ public class LocalBuilderMain {
         ALTER_OPERATION_OPTION, ALTER_OPERATION_OPTION, true, "alter operation, upsert or delete");
     options.addOption(LOG_FILE_OPTION, LOG_FILE_OPTION, true, "log file");
     options.addOption(LEAD_TO_OPTION, LEAD_TO_OPTION, false, "enable leadTo");
-    options.addRequiredOption(GRAPH_STORE_URL_OPTION, GRAPH_STORE_URL_OPTION, true, "graph store url");
-    options.addRequiredOption(SEARCH_ENGINE_URL_OPTION, SEARCH_ENGINE_URL_OPTION, true, "search engine url");
+    options.addRequiredOption(
+        GRAPH_STORE_URL_OPTION, GRAPH_STORE_URL_OPTION, true, "graph store url");
+    options.addRequiredOption(
+        SEARCH_ENGINE_URL_OPTION, SEARCH_ENGINE_URL_OPTION, true, "search engine url");
 
     CommandLine commandLine = null;
     HelpFormatter helper = new HelpFormatter();
