@@ -72,12 +72,27 @@ class SPGSchemaMarkLang:
     concept_internal_property = {"stdId", "alias"}
     keyword_type = {"EntityType", "ConceptType", "EventType", "StandardType"}
     semantic_rel = {
-        "SYNANT": ["synonym", "antonym", "symbolOf", "distinctFrom", "definedAs", "locatedNear", "similarTo", "etymologicallyRelatedTo"],
+        "SYNANT": [
+            "synonym",
+            "antonym",
+            "symbolOf",
+            "distinctFrom",
+            "definedAs",
+            "locatedNear",
+            "similarTo",
+            "etymologicallyRelatedTo",
+        ],
         "CAU": ["leadTo", "causes", "obstructedBy", "createdBy", "causesDesire"],
-        "SEQ": ["happenedBefore", "hasSubevent", "hasFirstSubevent", "hasLastSubevent", "hasPrerequisite"],
+        "SEQ": [
+            "happenedBefore",
+            "hasSubevent",
+            "hasFirstSubevent",
+            "hasLastSubevent",
+            "hasPrerequisite",
+        ],
         "IND": ["belongTo"],
         "INC": ["isPartOf", "hasA", "madeOf", "derivedFrom", "hasContext"],
-        "USE": ["usedFor", "capableOf", "receivesAction", "motivatedByGoal"]
+        "USE": ["usedFor", "capableOf", "receivesAction", "motivatedByGoal"],
     }
     semantic_rel_zh = {
         "synonym": "同义",
@@ -107,7 +122,7 @@ class SPGSchemaMarkLang:
         "usedFor": "用于",
         "capableOf": "能够",
         "receivesAction": "接受动作",
-        "motivatedByGoal": "目标驱动"
+        "motivatedByGoal": "目标驱动",
     }
     parsing_register = {
         RegisterUnit.Type: None,
@@ -249,9 +264,9 @@ class SPGSchemaMarkLang:
             elif type_class == "StandardType":
                 spg_type = StandardType(name=f"{type_name}", name_zh=type_name_zh)
                 spg_type.spreadable = False
-                assert (
-                    type_name.startswith("STD.")
-                ), self.error_msg("The name of standard type must start with STD.")
+                assert type_name.startswith("STD."), self.error_msg(
+                    "The name of standard type must start with STD."
+                )
             ns_type_name = self.get_type_name_with_ns(type_name)
             assert ns_type_name not in self.types, self.error_msg(
                 f'Type "{type_name}" is duplicated in the schema'
@@ -319,7 +334,8 @@ class SPGSchemaMarkLang:
         """
 
         match = re.match(
-            r"^(desc|properties|relations|hypernymPredicate|regular|spreadable|relateTo):\s*?(.*)$", expression
+            r"^(desc|properties|relations|hypernymPredicate|regular|spreadable|relateTo):\s*?(.*)$",
+            expression,
         )
         assert match, self.error_msg(
             "Unrecognized expression, expect desc:|properties:|relations:"
@@ -333,8 +349,8 @@ class SPGSchemaMarkLang:
 
         elif type_meta == "properties":
             assert (
-                    self.parsing_register[RegisterUnit.Type].spg_type_enum
-                    != SpgTypeEnum.Concept
+                self.parsing_register[RegisterUnit.Type].spg_type_enum
+                != SpgTypeEnum.Concept
             ), self.error_msg("Concept type does not allow defining properties.")
             self.save_register(
                 RegisterUnit.Property, Property(name="_", object_type_name="Thing")
@@ -369,38 +385,45 @@ class SPGSchemaMarkLang:
 
         elif type_meta == "regular":
             assert (
-                    self.parsing_register[RegisterUnit.Type].spg_type_enum
-                    == SpgTypeEnum.Standard
+                self.parsing_register[RegisterUnit.Type].spg_type_enum
+                == SpgTypeEnum.Standard
             ), self.error_msg("Regular is available for standard type only")
-            self.parsing_register[RegisterUnit.Type].constraint = {"REGULAR": meta_value}
+            self.parsing_register[RegisterUnit.Type].constraint = {
+                "REGULAR": meta_value
+            }
 
         elif type_meta == "spreadable":
             assert (
-                    self.parsing_register[RegisterUnit.Type].spg_type_enum
-                    == SpgTypeEnum.Standard
+                self.parsing_register[RegisterUnit.Type].spg_type_enum
+                == SpgTypeEnum.Standard
             ), self.error_msg("Spreadable is available for standard type only")
-            assert (
-                    meta_value == "True" or meta_value == "False"
-            ), self.error_msg("Spreadable only accept True or False as its value")
+            assert meta_value == "True" or meta_value == "False", self.error_msg(
+                "Spreadable only accept True or False as its value"
+            )
             self.parsing_register[RegisterUnit.Type].spreadable = meta_value == "True"
 
         elif type_meta == "relateTo":
             assert (
-                    self.parsing_register[RegisterUnit.Type].spg_type_enum
-                    == SpgTypeEnum.Concept
+                self.parsing_register[RegisterUnit.Type].spg_type_enum
+                == SpgTypeEnum.Concept
             ), self.error_msg("RelateTo definition is available for concept type only")
             concept_types = meta_value.split(",")
             for concept in concept_types:
                 c = self.get_type_name_with_ns(concept.strip())
                 assert (
-                    c in self.types and self.types[c].spg_type_enum == SpgTypeEnum.Concept
-                ), self.error_msg(f"{concept.strip()} is not a concept type, "
-                                  f"concept type only allow relationships defined between concept types")
+                    c in self.types
+                    and self.types[c].spg_type_enum == SpgTypeEnum.Concept
+                ), self.error_msg(
+                    f"{concept.strip()} is not a concept type, "
+                    f"concept type only allow relationships defined between concept types"
+                )
                 for k in self.semantic_rel:
                     if k == "IND":
                         continue
                     for p in self.semantic_rel[k]:
-                        predicate = Relation(name=p, name_zh=self.semantic_rel_zh[p], object_type_name=c)
+                        predicate = Relation(
+                            name=p, name_zh=self.semantic_rel_zh[p], object_type_name=c
+                        )
                         self.parsing_register[RegisterUnit.Type].add_relation(predicate)
         return
 
@@ -521,11 +544,15 @@ class SPGSchemaMarkLang:
             predicate_type = self.types[f"{self.namespace}.{predicate_class}"]
             if predicate_type is not None:
                 if cur_type.spg_type_enum == SpgTypeEnum.Concept:
-                    assert predicate_type.spg_type_enum == SpgTypeEnum.Concept, self.error_msg(
+                    assert (
+                        predicate_type.spg_type_enum == SpgTypeEnum.Concept
+                    ), self.error_msg(
                         "Concept type only allow relationships that point to themselves"
                     )
                 elif cur_type.spg_type_enum == SpgTypeEnum.Entity:
-                    assert predicate_type.spg_type_enum != SpgTypeEnum.Event, self.error_msg(
+                    assert (
+                        predicate_type.spg_type_enum != SpgTypeEnum.Event
+                    ), self.error_msg(
                         "Relationships of entity types are not allowed to point to event types; "
                         "instead, they are only permitted to point from event types to entity types, "
                         "adhering to the principle of moving from dynamic to static."
@@ -626,8 +653,9 @@ class SPGSchemaMarkLang:
                 not in self.parsing_register[RegisterUnit.Type].relations
             ), self.error_msg(
                 f'Relation "{match.group()}" is duplicated under the type {type_name[type_name.index(".") + 1:]}'
-                if self.parsing_register[RegisterUnit.Type].spg_type_enum != SpgTypeEnum.Concept else
-                f'Relation "{match.group()}" is already defined by keyword relateTo '
+                if self.parsing_register[RegisterUnit.Type].spg_type_enum
+                != SpgTypeEnum.Concept
+                else f'Relation "{match.group()}" is already defined by keyword relateTo '
                 f'under the {type_name[type_name.index(".") + 1:]}'
             )
 
@@ -980,8 +1008,10 @@ class SPGSchemaMarkLang:
                 assert (
                     new_type.spg_type_enum == old_type.spg_type_enum
                     and new_type.parent_type_name == old_type.parent_type_name
-                ), self.error_msg(f"Cannot alter the type definition or its parent type of {new_type.name}. "
-                            "if you still want to make change, please delete it first then re-create it.")
+                ), self.error_msg(
+                    f"Cannot alter the type definition or its parent type of {new_type.name}. "
+                    "if you still want to make change, please delete it first then re-create it."
+                )
 
                 need_update = False
                 if new_type.desc != old_type.desc:
@@ -995,15 +1025,17 @@ class SPGSchemaMarkLang:
                 if new_type.spg_type_enum == SpgTypeEnum.Concept:
                     assert (
                         new_type.hypernym_predicate == old_type.hypernym_predicate
-                    ), self.error_msg(f"Cannot alter the hypernym predicate of {new_type.name}. "
-                                "if you still want to make change, please delete it first then re-create it.")
+                    ), self.error_msg(
+                        f"Cannot alter the hypernym predicate of {new_type.name}. "
+                        "if you still want to make change, please delete it first then re-create it."
+                    )
 
                 if new_type.spg_type_enum == SpgTypeEnum.Standard:
-                    assert (
-                            old_type.spreadable == new_type.spreadable
-                    ), self.error_msg(f"Cannot alter the spreadable value of {new_type.name}. "
-                                      f"if you still want to make change, "
-                                      "please delete the definition first and then re-create it.")
+                    assert old_type.spreadable == new_type.spreadable, self.error_msg(
+                        f"Cannot alter the spreadable value of {new_type.name}. "
+                        f"if you still want to make change, "
+                        "please delete the definition first and then re-create it."
+                    )
 
                     if old_type.constraint != new_type.constraint:
                         old_type.constraint = new_type.constraint
