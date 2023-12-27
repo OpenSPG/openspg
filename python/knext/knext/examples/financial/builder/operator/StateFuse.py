@@ -14,9 +14,10 @@ class StateFuse(FuseOp):
         self.search_client = SearchClient("Financial.State")
 
     def invoke(self, subject_records: List[SPGRecord]) -> List[SPGRecord]:
-        print("##########StateFuse###########")
+        print("####################StateFuse(状态融合)#####################")
         print("StateFuse(Input): ")
-        print(subject_records)
+        print("----------------------")
+        [print(r) for r in subject_records]
         fused_records = []
         for record in subject_records:
             query = {"match": {"name": record.get_property("name", "")}}
@@ -32,6 +33,6 @@ class StateFuse(FuseOp):
                 rerank_record.update_property("name", record.get_property("name"))
                 fused_records.append(rerank_record)
         print("StateFuse(Output): ")
-        print(fused_records)
-        print("##########StateFuse###########")
+        print("----------------------")
+        [print(r) for r in fused_records]
         return fused_records
