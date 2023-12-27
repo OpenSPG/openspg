@@ -12,7 +12,7 @@
 
 from knext.client.model.builder_job import BuilderJob
 from knext.api.component import CSVReader, LLMBasedExtractor, SubGraphMapping, KGWriter
-from knext.api.operator import REPrompt
+from knext.api.auto_prompt import REPrompt
 from nn4k.invoker import LLMInvoker
 
 
@@ -69,3 +69,18 @@ class Disease(BuilderJob):
         5. 定义builder_chain
         """
         return source >> extract >> mapping >> sink
+
+
+if __name__ == '__main__':
+    from knext.api.auto_prompt import REPrompt
+    prompt = REPrompt(
+        spg_type_name="Medical.Disease",
+        property_names=[
+            "complication",
+            "commonSymptom",
+            "applicableDrug",
+            "department",
+            "diseaseSite",
+        ],
+    )
+    print(prompt.template)
