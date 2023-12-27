@@ -500,6 +500,85 @@ class ReasonerSessionTests extends AnyFunSpec {
     cnt should equal(5)
   }
 
+  it("test concept check") {
+    val dsl =
+      """
+        |MATCH (s:`SupplyChain.Industry`/`商贸-资本品商贸`)
+        |RETURN s.id, s.name
+        |""".stripMargin
+    val schema: Map[String, Set[String]] = Map.apply(
+      "SupplyChain.Industry" -> Set.apply("id", "name"),
+      "SupplyChain.Product" -> Set.apply("id", "name"),
+      "SupplyChain.Product_belongTo_SupplyChain.Industry" -> Set.apply("payDate", "bizComment"))
+    val catalog = new PropertyGraphCatalog(schema)
+    catalog.init()
+    val session = new EmptySession(new KgDslParser(), catalog)
+    val rst = session.plan(
+      dsl,
+      Map
+        .apply(
+          (Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
+          (Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true))
+        .asInstanceOf[Map[String, Object]])
+    val cnt = rst.head.transform[Int] {
+      case (expand: ExpandInto[EmptyRDG], cnt) =>
+        cnt.sum + 1
+      case (pattern: PatternScan[EmptyRDG], cnt) =>
+        cnt.sum + 1
+      case (_, cnt) =>
+        if (cnt.isEmpty) {
+          0
+        } else {
+          cnt.sum
+        }
+    }
+    cnt should equal(2)
+  }
+
+
+  it("test concept check 2") {
+    val dsl =
+      """
+        |MATCH
+        |    (u:`RiskMining.TaxOfRiskUser`/`赌博App开发者`)-[:developed]->(app:`RiskMining.TaxOfRiskApp`/`赌博应用`),
+        |    (b:`RiskMining.TaxOfRiskUser`/`赌博App老板`)-[:release]->(app)
+        |RETURN
+        |    u.id, b.id ,app.id""".stripMargin
+    val schema: Map[String, Set[String]] = Map.apply(
+      "RiskMining.TaxOfRiskUser" -> Set.apply("id", "name"),
+      "RiskMining.TaxOfRiskApp" -> Set.apply("id", "name"),
+      "RiskMining.User" -> Set.apply("id", "name"),
+      "RiskMining.App" -> Set.apply("id", "name"),
+      "RiskMining.User_release_RiskMining.App" -> Set.apply("payDate", "bizComment"),
+      "RiskMining.User_developed_RiskMining.App" -> Set.apply("payDate", "bizComment"),
+      "RiskMining.User_belongTo_RiskMining.TaxOfRiskUser" -> Set.apply("payDate", "bizComment"),
+      "RiskMining.App_belongTo_RiskMining.TaxOfRiskApp" -> Set.apply("payDate", "bizComment"))
+    val catalog = new PropertyGraphCatalog(schema)
+    catalog.init()
+    val session = new EmptySession(new KgDslParser(), catalog)
+    val rst = session.plan(
+      dsl,
+      Map
+        .apply(
+          (Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true),
+          (Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true))
+        .asInstanceOf[Map[String, Object]])
+    val cnt = rst.head.transform[Int] {
+      case (expand: ExpandInto[EmptyRDG], cnt) =>
+        cnt.sum + 1
+      case (pattern: PatternScan[EmptyRDG], cnt) =>
+        cnt.sum + 1
+      case (_, cnt) =>
+        if (cnt.isEmpty) {
+          0
+        } else {
+          cnt.sum
+        }
+    }
+    cnt should equal(6)
+  }
+
+
   it("test agg count") {
     val dsl =
       """
