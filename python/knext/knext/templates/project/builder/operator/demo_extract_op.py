@@ -12,14 +12,18 @@
 
 from typing import List, Dict
 
-from knext.operator.spg_record import SPGRecord
+from knext.api.record import SPGRecord
 from knext.api.operator import ExtractOp
 
 
-class DemoExtractOp(ExtractOp):
+class AddressExtractOp(ExtractOp):
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
 
     def invoke(self, record: Dict[str, str]) -> List[SPGRecord]:
+        province = record.get("province", "")
+        city = record.get("city", "")
+        district = record.get("district", "")
 
+        record.update({"address", province + city + district})
         return [SPGRecord(properties=record)]

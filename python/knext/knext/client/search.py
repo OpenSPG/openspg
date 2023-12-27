@@ -10,7 +10,6 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-import json
 import pprint
 from typing import Dict
 
@@ -54,9 +53,10 @@ class SearchClient:
     """
 
     def __init__(self, spg_type: str):
-        # host_addr = f'{conn_info["params"]["scheme"]}://{conn_info["params"]["host"]}:{conn_info["params"]["port"]}'
+        _client = rest.BuilderApi()
+        response = _client.search_engine_index_get(spg_type=spg_type)
 
-        self.index_name = '-'.join(['$' + s for s in spg_type.split('.')])
+        self.index_name = response.index_name
         self.client = Elasticsearch("http://127.0.0.1:9200")
 
     def search(self, query, sort=None, filter=None, start: int = 0, size: int = 10):

@@ -17,8 +17,8 @@ class Company(BuilderJob):
             start_row=2
         )
 
-        from operator.demo_extract_op import
-        extract = UserDefinedExtractor()
+        from operator.address_extract_op import AddressExtractOp
+        extract = UserDefinedExtractor(extract_op=AddressExtractOp())
 
         mapping = SPGTypeMapping(
             spg_type_name={{namespace}}.Company
