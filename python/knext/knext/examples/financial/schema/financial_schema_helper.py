@@ -31,46 +31,46 @@ class Financial:
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
-        subject = PropertyHelper("subject")
         eventTime = PropertyHelper("eventTime")
+        subject = PropertyHelper("subject")
         object = PropertyHelper("object")
-    
+
     class Company(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
-        establishDate = PropertyHelper("establishDate")
-        legalPerson = PropertyHelper("legalPerson")
-        orgCertNo = PropertyHelper("orgCertNo")
-        regCapital = PropertyHelper("regCapital")
         regArea = PropertyHelper("regArea")
+        establishDate = PropertyHelper("establishDate")
+        regCapital = PropertyHelper("regCapital")
         businessScope = PropertyHelper("businessScope")
-    
+        orgCertNo = PropertyHelper("orgCertNo")
+        legalPerson = PropertyHelper("legalPerson")
+
     class CompanyEvent(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
-        happenedTime = PropertyHelper("happenedTime")
         subject = PropertyHelper("subject")
         eventTime = PropertyHelper("eventTime")
-        location = PropertyHelper("location")
         object = PropertyHelper("object")
-    
+        location = PropertyHelper("location")
+        happenedTime = PropertyHelper("happenedTime")
+
     class Indicator(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
         alias = PropertyHelper("alias")
         stdId = PropertyHelper("stdId")
-    
+
     class State(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
-        alias = PropertyHelper("alias")
         stdId = PropertyHelper("stdId")
-        derivedFrom = PropertyHelper("derivedFrom")
         causes = PropertyHelper("causes")
+        alias = PropertyHelper("alias")
+        derivedFrom = PropertyHelper("derivedFrom")
     
     AdministrativeArea = AdministrativeArea("Financial.AdministrativeArea")
     AreaRiskEvent = AreaRiskEvent("Financial.AreaRiskEvent")
