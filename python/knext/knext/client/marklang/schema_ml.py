@@ -348,10 +348,10 @@ class SPGSchemaMarkLang:
             self.parsing_register[RegisterUnit.Type].desc = meta_value
 
         elif type_meta == "properties":
-            assert (
-                self.parsing_register[RegisterUnit.Type].spg_type_enum
-                != SpgTypeEnum.Concept
-            ), self.error_msg("Concept type does not allow defining properties.")
+            # assert (
+            #     self.parsing_register[RegisterUnit.Type].spg_type_enum
+            #     != SpgTypeEnum.Concept
+            # ), self.error_msg("Concept type does not allow defining properties.")
             self.save_register(
                 RegisterUnit.Property, Property(name="_", object_type_name="Thing")
             )

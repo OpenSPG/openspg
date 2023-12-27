@@ -36,14 +36,16 @@ CompanyEvent(公司事件): EventType
 
 
 # 财政-土地出让收入、财政-税收收入
+#
 Indicator(区域经济指标): ConceptType
     hypernymPredicate: isA
 
 # 状态有：土地出让收入大幅下降、综合财力明显下滑
 # 因果关系：土地出让收入大幅下降 -导致-> 综合财力明显下滑
+#
 State(指标状态): ConceptType
     desc: 区域经济指标的状态
-    relations:
+    properties:
         CAU#causes(导致): State
             desc: 区域经济指标的状态之间的因果关系
         INC#derivedFrom(源自于): Indicator
