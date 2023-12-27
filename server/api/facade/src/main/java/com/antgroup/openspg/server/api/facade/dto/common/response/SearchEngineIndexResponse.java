@@ -14,28 +14,14 @@
 package com.antgroup.openspg.server.api.facade.dto.common.response;
 
 import com.antgroup.openspg.server.common.model.base.BaseResponse;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
+@Getter
+@Setter
+@Accessors(chain = true)
 public class SearchEngineIndexResponse extends BaseResponse {
 
-  private String connInfo;
-
   private String indexName;
-
-  public String getConnInfo() {
-    return connInfo;
-  }
-
-  public SearchEngineIndexResponse setConnInfo(String connInfo) {
-    this.connInfo = connInfo;
-    return this;
-  }
-
-  public String getIndexName() {
-    return indexName;
-  }
-
-  public SearchEngineIndexResponse setIndexName(String indexName) {
-    this.indexName = indexName;
-    return this;
-  }
 }

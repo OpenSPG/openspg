@@ -21,4 +21,8 @@ import lombok.Data;
 public class AppEnvConfig implements Serializable {
 
   private String schemaUri;
+
+  private String graphStoreUrl;
+
+  private String searchEngineUrl;
 }

@@ -75,8 +75,8 @@ public class LocalBuilderMain {
         ALTER_OPERATION_OPTION, ALTER_OPERATION_OPTION, true, "alter operation, upsert or delete");
     options.addOption(LOG_FILE_OPTION, LOG_FILE_OPTION, true, "log file");
     options.addOption(LEAD_TO_OPTION, LEAD_TO_OPTION, false, "enable leadTo");
-    options.addOption(GRAPH_STORE_URL, GRAPH_STORE_URL, false, "graph store url");
-    options.addOption(SEARCH_ENGINE_URL, SEARCH_ENGINE_URL, false, "search engine url");
+    options.addRequiredOption(GRAPH_STORE_URL, GRAPH_STORE_URL, true, "graph store url");
+    options.addRequiredOption(SEARCH_ENGINE_URL, SEARCH_ENGINE_URL, true, "search engine url");
 
     CommandLine commandLine = null;
     HelpFormatter helper = new HelpFormatter();
@@ -113,7 +113,7 @@ public class LocalBuilderMain {
     boolean enableLeadTo = commandLine.hasOption(LEAD_TO_OPTION);
 
     String graphStoreUrl = commandLine.getOptionValue(GRAPH_STORE_URL);
-    String searchEngineUrl = commandLine.getOptionValue(GRAPH_STORE_URL);
+    String searchEngineUrl = commandLine.getOptionValue(SEARCH_ENGINE_URL);
 
     ProjectSchema projectSchema = getProjectSchema(projectId, schemaUrl);
     Map<SPGTypeIdentifier, ConceptList> conceptLists = getConceptLists(enableLeadTo, projectSchema);

@@ -17,6 +17,8 @@ import com.antgroup.openspg.common.util.DriverManagerUtils;
 import com.antgroup.openspg.server.common.model.exception.CloudExtException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 public class GraphStoreClientDriverManager {
@@ -41,8 +43,9 @@ public class GraphStoreClientDriverManager {
   }
 
   public static GraphStoreClient getClient(String connUrl) {
+    UriComponents uriComponents = UriComponentsBuilder.fromUriString(connUrl).build();
     for (GraphStoreClientDriver driver : registeredDrivers) {
-      if (driver.acceptsConfig(connUrl)) {
+      if (driver.acceptsConfig(uriComponents.getScheme())) {
         return driver.connect(connUrl);
       }
     }

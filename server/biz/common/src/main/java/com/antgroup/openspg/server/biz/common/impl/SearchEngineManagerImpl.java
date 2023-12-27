@@ -11,22 +11,29 @@
  * or implied.
  */
 
-package com.antgroup.openspg.server.core.schema.service.alter.sync;
+package com.antgroup.openspg.server.biz.common.impl;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
-import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.server.api.facade.dto.common.request.SearchEngineIndexRequest;
+import com.antgroup.openspg.server.api.facade.dto.common.response.SearchEngineIndexResponse;
+import com.antgroup.openspg.server.biz.common.SearchEngineManager;
 import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class SearchEngineSyncer extends BaseSchemaSyncer {
+@Service
+public class SearchEngineManagerImpl implements SearchEngineManager {
 
   @Autowired private AppEnvConfig appEnvConfig;
 
   @Override
-  public void syncSchema(Long projectId, SPGSchemaAlterCmd schemaEditCmd) {
+  public SearchEngineIndexResponse queryIndex(SearchEngineIndexRequest request) {
     SearchEngineClient searchEngineClient =
         SearchEngineClientDriverManager.getClient(appEnvConfig.getSearchEngineUrl());
-    searchEngineClient.alterSchema(schemaEditCmd);
+
+    String convertedIndexName =
+        searchEngineClient.getIdxNameConvertor().convertIdxName(request.getSpgType());
+    return new SearchEngineIndexResponse().setIndexName(convertedIndexName);
   }
 }
