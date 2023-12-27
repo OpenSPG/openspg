@@ -27,6 +27,21 @@ class Financial:
         alias = PropertyHelper("alias")
         stdId = PropertyHelper("stdId")
     
+    class Organization(SPGTypeHelper):
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+    
+    class RegionalEconomicIndicatorEvent(SPGTypeHelper):
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+        source = PropertyHelper("source")
+        eventTime = PropertyHelper("eventTime")
+        date = PropertyHelper("date")
+        region = PropertyHelper("region")
+        subject = PropertyHelper("subject")
+    
     class State(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
@@ -37,5 +52,7 @@ class Financial:
         derivedFrom = PropertyHelper("derivedFrom")
     
     Indicator = Indicator("Financial.Indicator")
+    Organization = Organization("Financial.Organization")
+    RegionalEconomicIndicatorEvent = RegionalEconomicIndicatorEvent("Financial.RegionalEconomicIndicatorEvent")
     State = State("Financial.State")
     

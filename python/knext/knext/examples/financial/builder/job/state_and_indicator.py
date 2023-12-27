@@ -36,8 +36,23 @@ class StateAndIndicator(BuilderJob):
             SubGraphMapping(spg_type_name=Financial.Indicator)
             .add_mapping_field("id", Financial.Indicator.id)
             .add_mapping_field("name", Financial.Indicator.name)
+            # .add_predicting_field(Financial.Indicator.isA)
         )
 
         sink = KGWriter()
 
         return source >> extract >> [state_mapping, indicator_mapping] >> sink
+
+
+if __name__ == '__main__':
+    from knext.api.auto_prompt import EEPrompt
+    prompt = EEPrompt(
+        event_type_name=Financial.RegionalEconomicIndicatorEvent,
+        property_names=[
+            Financial.RegionalEconomicIndicatorEvent.date,
+            Financial.RegionalEconomicIndicatorEvent.region,
+            Financial.RegionalEconomicIndicatorEvent.source,
+            Financial.RegionalEconomicIndicatorEvent.subject,
+        ],
+    )
+    print(prompt.template)
