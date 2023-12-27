@@ -493,9 +493,6 @@ class SPGSchemaMarkLang:
             assert subject_type.spg_type_enum == SpgTypeEnum.Concept, self.error_msg(
                 "Only concept types could define inclusive relation"
             )
-            assert subject_type.name == predicate_class_ns, self.error_msg(
-                "Inclusive relation should be self-referential"
-            )
         elif short_name == "USE":
             assert subject_type.spg_type_enum == SpgTypeEnum.Concept, self.error_msg(
                 "Only concept types could define usage relation"
@@ -715,7 +712,7 @@ class SPGSchemaMarkLang:
         meta_value = match.group(2)
 
         if property_meta == "desc" and len(meta_value) > 0:
-            self.parsing_register[RegisterUnit.Relation].desc = meta_value
+            self.parsing_register[RegisterUnit.Relation].desc = meta_value.strip()
 
         elif property_meta == "properties":
             self.save_register(
