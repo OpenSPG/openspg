@@ -13,15 +13,18 @@ class IndicatorNER(PromptOp):
 [{{"XXX": ["XXX", "XXX"]}}, {{"XXX": ["XXX", "XXX"]}}]
 #####
 文本: 
-{input}
+${input}
 """
 
     def build_prompt(self, variables: Dict[str, str]):
         return self.template.replace("${input}", variables.get("input"))
 
     def parse_response(self, response: str) -> List[SPGRecord]:
-        print("##########IndicatorNER###########")
         response = "[{'财政': ['财政收入质量', '财政自给能力', '土地出让收入', '一般公共预算收入', '留抵退税', '税收收入', '税收收入/一般公共预算收入', '一般公共预算支出', '财政自给率', '政府性基金收入', '转移性收入', '综合财力']}]"
+
+        print("##########IndicatorNER###########")
+        print("IndicatorNER(Input): ")
+        print(response)
 
         output_list = json.loads(response.replace("'", '"'))
         ner_result = []
@@ -37,6 +40,9 @@ class IndicatorNER(PromptOp):
                             properties={"id": indicator, "name": indicator},
                         )
                     )
+        print("IndicatorNER(Output): ")
+        print(ner_result)
+        print("##########IndicatorNER###########")
         return ner_result
 
     def build_next_variables(

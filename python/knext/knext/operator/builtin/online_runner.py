@@ -63,5 +63,4 @@ class _BuiltInOnlineExtractor(ExtractOp):
                         retry_times += 1
                         raise e
             input_params = next_params
-        print(collector)
         return collector

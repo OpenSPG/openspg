@@ -802,7 +802,6 @@ class BaseSpgType(ABC):
         for attr, _ in self.__annotations__.items():
             value = getattr(self, attr)
             if isinstance(value, typing.List):
-                print(value)
                 result[attr] = list(
                     map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
                 )

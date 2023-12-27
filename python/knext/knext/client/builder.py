@@ -85,7 +85,7 @@ class BuilderClient(Client):
         print_java_cmd = [
             cmd if not cmd.count(";") > 0 else f"'{cmd}'" for cmd in print_java_cmd
         ]
-        print(json.dumps(" ".join(print_java_cmd))[1:-1].replace("'", '"'))
+        # print(json.dumps(" ".join(print_java_cmd))[1:-1].replace("'", '"'))
 
         subprocess.call(java_cmd)
 

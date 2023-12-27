@@ -10,3 +10,19 @@ State(状态): ConceptType
             desc: 状态顺承关系
         derivedFrom(指标): Indicator
             desc: 状态的指标
+
+Organization(机构): EntityType
+    desc: 指标发布机构
+
+RegionalEconomicIndicatorEvent(区域经济指标事件): EventType
+    desc: 区域指标
+    properties:
+        subject(主体): Organization
+           desc: 指标发布机构
+        source(来源): Text
+           desc: 指标信息来源
+        region(区域): Text
+            desc: 所在区域
+        date(日期): STD.Date
+            desc: 指标日期
+            constraint: NotNull

@@ -15,6 +15,8 @@ class IndicatorFuse(FuseOp):
 
     def invoke(self, subject_records: List[SPGRecord]) -> List[SPGRecord]:
         print("##########IndicatorFuse###########")
+        print("IndicatorFuse(Input): ")
+        print(subject_records)
         fused_records = []
         for record in subject_records:
             query = {"match": {"name": record.get_property("name", "")}}
@@ -27,6 +29,9 @@ class IndicatorFuse(FuseOp):
                         "name": recall_records[0].properties.get("name", ""),
                     },
                 )
+                rerank_record.update_property("name", record.get_property("name"))
                 fused_records.append(rerank_record)
-            fused_records.append(record)
+        print("IndicatorFuse(Output): ")
+        print(fused_records)
+        print("##########IndicatorFuse###########")
         return fused_records
