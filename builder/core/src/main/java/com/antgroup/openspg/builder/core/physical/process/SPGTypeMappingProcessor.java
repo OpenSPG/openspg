@@ -78,10 +78,11 @@ public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMapping
       if (advancedRecord != null) {
         recordLinking.linking(advancedRecord);
         recordPredicting.predicting(advancedRecord);
-        advancedRecords.add(advancedRecord);
+        List<BaseAdvancedRecord> subjectFusedRecord = subjectFusing.fusing(advancedRecord);
+        advancedRecords.addAll(subjectFusedRecord);
       }
     }
-    return (List) subjectFusing.fusing(advancedRecords);
+    return (List) advancedRecords;
   }
 
   @Override

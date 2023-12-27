@@ -64,7 +64,6 @@ public class SubGraphFusingImpl implements SubGraphFusing {
         results.addAll(fusedRecords);
       }
     }
-    results.add(advancedRecord);
     return results;
   }
 
