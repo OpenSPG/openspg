@@ -334,7 +334,7 @@ class SPGSchemaMarkLang:
         """
 
         match = re.match(
-            r"^(desc|properties|relations|hypernymPredicate|regular|spreadable|relateTo):\s*?(.*)$",
+            r"^(desc|properties|relations|hypernymPredicate|regular|spreadable|autoRelate):\s*?(.*)$",
             expression,
         )
         assert match, self.error_msg(
@@ -402,11 +402,11 @@ class SPGSchemaMarkLang:
             )
             self.parsing_register[RegisterUnit.Type].spreadable = meta_value == "True"
 
-        elif type_meta == "relateTo":
+        elif type_meta == "autoRelate":
             assert (
                 self.parsing_register[RegisterUnit.Type].spg_type_enum
                 == SpgTypeEnum.Concept
-            ), self.error_msg("RelateTo definition is available for concept type only")
+            ), self.error_msg("AutoRelate definition is available for concept type only")
             concept_types = meta_value.split(",")
             for concept in concept_types:
                 c = self.get_type_name_with_ns(concept.strip())
@@ -652,7 +652,7 @@ class SPGSchemaMarkLang:
                 f'Relation "{match.group()}" is duplicated under the type {type_name[type_name.index(".") + 1:]}'
                 if self.parsing_register[RegisterUnit.Type].spg_type_enum
                 != SpgTypeEnum.Concept
-                else f'Relation "{match.group()}" is already defined by keyword relateTo '
+                else f'Relation "{match.group()}" is already defined by keyword autoRelate'
                 f'under the {type_name[type_name.index(".") + 1:]}'
             )
 
