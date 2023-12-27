@@ -26,11 +26,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -128,7 +125,7 @@ public class LocalReasonerMain {
     HelpFormatter formatter = new HelpFormatter();
     CommandLine cmd;
 
-    Long projectId;
+    long projectId;
     String dsl;
     String outputFile;
     String schemaUri;
@@ -162,10 +159,11 @@ public class LocalReasonerMain {
         graphStateUrl = null;
       }
       String startIdListJson = cmd.getOptionValue(START_ID_OPTION);
-      if (StringUtils.isEmpty(startIdListJson)) {
-        throw new ParseException("please provide start id");
+      if (StringUtils.isBlank(startIdListJson)) {
+        startIdList = Collections.emptyList();
+      } else {
+        startIdList = JSON.parseObject(startIdListJson, new TypeReference<List<List<String>>>() {});
       }
-      startIdList = JSON.parseObject(startIdListJson, new TypeReference<List<List<String>>>() {});
       String paramsJson = cmd.getOptionValue(PARAMs_OPTION);
       if (StringUtils.isNotEmpty(paramsJson)) {
         params = new HashMap<>(JSON.parseObject(paramsJson));

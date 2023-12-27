@@ -185,7 +185,7 @@ public class LocalReasonerRunner {
                     .getConstructor(String.class)
                     .newInstance(task.getGraphStateInitString());
       } catch (Exception e) {
-        throw new RuntimeException("can not create graph state from name " + graphStateClass, e);
+        throw new RuntimeException("can not create graph state from " + graphStateClass, e);
       }
       return graphState;
     }

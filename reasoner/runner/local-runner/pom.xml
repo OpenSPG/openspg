@@ -68,7 +68,10 @@
       <groupId>com.antgroup.openspg.reasoner</groupId>
       <artifactId>reasoner-warehouse-common</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-cloudext-warehouse</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-compiler</artifactId>
