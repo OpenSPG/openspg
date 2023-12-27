@@ -446,9 +446,6 @@ class KgDslParser extends ParserInterface {
   }
 
   def parseRule(ctx: The_ruleContext, matchBlock: MatchBlock): Block = {
-    val nodesProp = new mutable.HashMap[String, IRNode]()
-    val edgesProp = new mutable.HashMap[String, IREdge]()
-    var refFieldsMap: Map[String, Set[String]] = Map.empty
     var rules: List[Rule] = List.empty
     if (ctx.rule_expression_body().rule_expression().size() != 0) {
       rules = ctx
@@ -456,6 +453,13 @@ class KgDslParser extends ParserInterface {
         .rule_expression()
         .asScala
         .map(x => exprParser.parseRuleExpression(x)).toList
+    }
+    parseRuleBlock(rules, matchBlock.patterns)
+  }
+
+  def parseRuleBlock(rules: List[Rule], patterns: Map[String, GraphPath]): Block = {
+    var refFieldsMap: Map[String, Set[String]] = Map.empty
+    if (rules.nonEmpty) {
       rules.foreach(rule => {
         val irFields = RuleUtils.getAllInputFieldInRule(rule, Set.empty, Set.empty)
         irFields.foreach {
@@ -470,51 +474,7 @@ class KgDslParser extends ParserInterface {
       })
     }
 
-    val patternMaps = matchBlock.patterns.map(pattern => {
-      val nodeMaps = pattern._2.graphPattern.nodes.keySet
-        .map(nodeAlias => {
-          if (!nodesProp.contains(nodeAlias)) {
-            nodesProp += (nodeAlias -> IRNode(nodeAlias, Set.empty))
-          }
-          if (refFieldsMap.contains(nodeAlias)) {
-            val irNode = nodesProp(nodeAlias).copy(fields =
-              nodesProp(nodeAlias).fields ++ refFieldsMap(nodeAlias))
-            nodesProp.put(nodeAlias, irNode)
-            nodeAlias -> refFieldsMap(nodeAlias)
-          } else {
-            nodeAlias -> Set.empty[String]
-          }
-        })
-        .filter(_ != null)
-        .toMap
-      val edgeMaps = pattern._2.graphPattern.edges
-        .map(edgeSet => {
-          edgeSet._2
-            .map(edge => {
-              if (!edgesProp.contains(edge.alias)) {
-                edgesProp +=
-                  (edge.alias -> IREdge(edge.alias, Set.empty))
-              }
-              if (refFieldsMap.contains(edge.alias)) {
-                val irEdge = edgesProp(edge.alias).copy(fields =
-                  edgesProp(edge.alias).fields ++ refFieldsMap(edge.alias))
-                edgesProp.put(edge.alias, irEdge)
-                edge.alias -> refFieldsMap(edge.alias)
-              } else {
-                edge.alias -> Set.empty[String]
-              }
-            })
-            .filter(_ != null)
-        })
-        .flatten
-      val updatedGraphPattern =
-        pattern._2.graphPattern.copy(properties = (nodeMaps ++ edgeMaps))
-      pattern._1 -> pattern._2.copy(graphPattern = updatedGraphPattern)
-    })
-
-    val updatedMatch = matchBlock.copy(
-      dependencies = List.apply(SourceBlock(KG(nodesProp.toMap, edgesProp.toMap))),
-      patterns = patternMaps)
+    val updatedMatch = patternParser.parseSourceAndMatchBlock(refFieldsMap, patterns)
 
     var ruleInstructs = Map[Rule, Set[Rule]]()
 
@@ -756,8 +716,6 @@ class KgDslParser extends ParserInterface {
       }
     })
 
-    val matchBlock = MatchBlock(List.apply(patternParser.parseSourceBlock(pathMaps)), pathMaps)
-
     if (ctx.element_pattern_where_clause() != null) {
       val trans: PartialFunction[Expr, Expr] = {
         case BinaryOpExpr(name, l, r) =>
@@ -769,14 +727,14 @@ class KgDslParser extends ParserInterface {
       }
       val expr = BottomUp(trans)
         .transform(patternParser.parseElePatternWhereClause(ctx.element_pattern_where_clause()))
-      FilterBlock(
-        List.apply(matchBlock),
-        LogicRule(
-          "anonymous_rule_" + patternParser.getDefaultAliasNum,
-          "anonymous_rule_" + patternParser.getDefaultAliasNum,
-          expr))
+
+      val rule = LogicRule(
+        "anonymous_rule_" + patternParser.getDefaultAliasNum,
+        "anonymous_rule_" + patternParser.getDefaultAliasNum,
+        expr)
+      parseRuleBlock(List.apply(rule), pathMaps)
     } else {
-      matchBlock
+      patternParser.parseSourceAndMatchBlock(Map.empty, pathMaps)
     }
   }
 
