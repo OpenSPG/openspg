@@ -113,7 +113,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
     List<SchedulerInstance> instanceList = Lists.newArrayList();
     for (Long key : instances.keySet()) {
       SchedulerInstance instance = instances.get(key);
-      //Filter instance by fields
+      // Filter instance by fields
       if (!SchedulerUtils.compare(instance.getId(), record.getId(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(
               instance.getProjectId(), record.getProjectId(), SchedulerUtils.EQ)

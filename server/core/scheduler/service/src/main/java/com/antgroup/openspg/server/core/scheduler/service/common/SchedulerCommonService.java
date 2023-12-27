@@ -76,7 +76,7 @@ public class SchedulerCommonService {
     SchedulerJob job = schedulerJobService.getById(instance.getJobId());
 
     for (SchedulerTask task : taskList) {
-      //Filter non-running tasks
+      // Filter non-running tasks
       if (!TaskStatus.isRunning(task.getStatus()) || StringUtils.isBlank(task.getType())) {
         continue;
       }
@@ -89,7 +89,7 @@ public class SchedulerCommonService {
         continue;
       }
 
-      //transform to jobAsyncTask trigger stop
+      // transform to jobAsyncTask trigger stop
       AsyncTaskExecute jobAsyncTask = (AsyncTaskExecute) jobTask;
       TaskExecuteContext context = new TaskExecuteContext(job, instance, task);
       jobAsyncTask.stop(context, task.getResource());

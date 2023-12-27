@@ -19,7 +19,7 @@ import java.util.List;
 
 /** Scheduler Service:submit,execute,delete and other scheduler interfaces */
 public interface SchedulerService {
-  /** to save job. Execute once after saving successfully*/
+  /** to save job. Execute once after saving successfully */
   SchedulerJob submitJob(SchedulerJob job);
 
   /** execute once Job, generate instance */

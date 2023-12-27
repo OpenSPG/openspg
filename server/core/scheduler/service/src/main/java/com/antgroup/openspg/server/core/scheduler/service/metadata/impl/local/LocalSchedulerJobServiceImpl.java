@@ -78,7 +78,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
     for (Long key : jobs.keySet()) {
       SchedulerJob job = jobs.get(key);
 
-      //Filter job by fields
+      // Filter job by fields
       if (!SchedulerUtils.compare(job.getId(), record.getId(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(job.getCreateUser(), record.getCreateUser(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(

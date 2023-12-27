@@ -37,7 +37,7 @@ public abstract class AsyncTaskExecuteTemplate extends TaskExecuteTemplate
     }
 
     context.addTraceLog("The Async task has not been submit! Go to submit");
-    //if resource is blank trigger submit
+    // if resource is blank trigger submit
     resource = submit(context);
     if (StringUtils.isBlank(resource)) {
       return TaskStatus.RUNNING;
