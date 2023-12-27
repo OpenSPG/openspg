@@ -21,7 +21,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-/** Task Dag Model ,Contains nodes and edges */
+/** Task Dag Model ,Contains nodes and edges,scheduler is executed step by step according to DAG */
 @Getter
 @Setter
 @ToString

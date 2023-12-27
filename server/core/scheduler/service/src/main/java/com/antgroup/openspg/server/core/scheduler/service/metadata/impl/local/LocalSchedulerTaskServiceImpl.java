@@ -97,6 +97,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
     for (Long key : tasks.keySet()) {
       SchedulerTask task = tasks.get(key);
 
+      //Filter task by fields
       if (!SchedulerUtils.compare(task.getId(), record.getId(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(task.getType(), record.getType(), SchedulerUtils.EQ)
           || !SchedulerUtils.compare(task.getTitle(), record.getTitle(), SchedulerUtils.IN)

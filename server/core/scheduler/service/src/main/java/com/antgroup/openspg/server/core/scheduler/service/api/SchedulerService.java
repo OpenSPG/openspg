@@ -19,48 +19,48 @@ import java.util.List;
 
 /** Scheduler Service:submit,execute,delete and other scheduler interfaces */
 public interface SchedulerService {
-  /** submit job */
+  /** to save job. Execute once after saving successfully*/
   SchedulerJob submitJob(SchedulerJob job);
 
-  /** execute Job */
+  /** execute once Job, generate instance */
   Boolean executeJob(Long jobId);
 
-  /** enable Job */
+  /** enable Job, set job status to enable */
   Boolean enableJob(Long jobId);
 
-  /** disable Job */
+  /** disable Job, set job status to disable */
   Boolean disableJob(Long jobId);
 
-  /** delete Job */
+  /** delete Job, delete associated instances and tasks together */
   Boolean deleteJob(Long jobId);
 
-  /** update Job */
+  /** update Job fields */
   boolean updateJob(SchedulerJob job);
 
-  /** get Job By id */
+  /** get Job details By id */
   SchedulerJob getJobById(Long jobId);
 
-  /** search Jobs */
+  /** search Jobs by fields */
   List<SchedulerJob> searchJobs(SchedulerJob query);
 
-  /** get Instance By id */
+  /** get Instance details By id */
   SchedulerInstance getInstanceById(Long instanceId);
 
-  /** stop Instance */
+  /** stop Instance, set instance status to terminate */
   Boolean stopInstance(Long instanceId);
 
-  /** set Instance To Finish */
+  /** set Instance To Finish, set instance status to finish */
   Boolean setFinishInstance(Long instanceId);
 
-  /** restart Instance */
+  /** restart Instance, generate a new instance and execute */
   Boolean restartInstance(Long instanceId);
 
-  /** trigger Instance */
+  /** trigger instance to execute once */
   Boolean triggerInstance(Long instanceId);
 
-  /** search Instances */
+  /** search Instances by fields */
   List<SchedulerInstance> searchInstances(SchedulerInstance query);
 
-  /** search Tasks */
+  /** search Tasks by fields */
   List<SchedulerTask> searchTasks(SchedulerTask query);
 }

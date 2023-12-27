@@ -38,7 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-/** Scheduler Service implementation class */
+/** Scheduler Service, Scheduler public sdk, include submit, delete, update execute, etc. */
 @Service
 public class SchedulerServiceImpl implements SchedulerService {
 

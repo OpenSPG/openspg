@@ -12,7 +12,7 @@
  */
 package com.antgroup.openspg.server.common.model.exception;
 
-/** Scheduler exception */
+/** Scheduler exception, Custom exception message */
 public class SchedulerException extends OpenSPGException {
 
   public SchedulerException(String message, Object... args) {

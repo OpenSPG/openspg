@@ -53,7 +53,7 @@ public class LocalExampleSyncTaskMock extends SyncTaskExecuteTemplate {
     return status;
   }
 
-  /** Is pre-check required */
+  /** period instance pre-check, dependent pre task completion */
   private TaskStatus getTaskStatus(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
 
@@ -76,30 +76,25 @@ public class LocalExampleSyncTaskMock extends SyncTaskExecuteTemplate {
     }
     LifeCycle lifeCycle = instance.getLifeCycle();
     if (!LifeCycle.PERIOD.equals(lifeCycle)) {
-      return processBySkip(context);
+      context.addTraceLog("No pre-check required");
+      return TaskStatus.FINISH;
     }
 
     if (Dependence.INDEPENDENT.name().equals(instance.getDependence())) {
-      return processBySnapshot(context);
+      return processByIndependent(context);
     } else {
-      return processByMerge(context);
+      return processByDependent(context);
     }
   }
 
-  /** Skip pre-check */
-  private TaskStatus processBySkip(TaskExecuteContext context) {
-    context.addTraceLog("No pre-check required");
-    return TaskStatus.FINISH;
-  }
-
-  /** Snapshot instance pre-check */
-  private TaskStatus processBySnapshot(TaskExecuteContext context) {
+  /** not dependent pre task completion */
+  private TaskStatus processByIndependent(TaskExecuteContext context) {
     context.addTraceLog("The current task does not depend on the completion of the last instance");
     return TaskStatus.FINISH;
   }
 
-  /** Merge instance pre-check */
-  public TaskStatus processByMerge(TaskExecuteContext context) {
+  /** dependent pre task completion */
+  public TaskStatus processByDependent(TaskExecuteContext context) {
     context.addTraceLog("The current task depends on the completion of the last instance");
     SchedulerInstance instance = context.getInstance();
     SchedulerJob job = context.getJob();

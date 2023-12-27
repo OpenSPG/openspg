@@ -45,7 +45,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/** Scheduler Execute Service implementation class. execute all instances */
+/** Scheduler Execute Service implementation class.generate and execute all instances */
 @Service
 @Slf4j
 public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
@@ -106,6 +106,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
       SchedulerInstance instance = schedulerInstanceService.getById(id);
       List<SchedulerTask> tasks = schedulerTaskService.queryByInstanceId(id);
 
+      // Filter non-running tasks
       List<SchedulerTask> runningTasks =
           tasks.stream()
               .filter(s -> TaskStatus.isRunning(s.getStatus()))
@@ -161,12 +162,14 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
   private void executeNextTask(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
+    // get all next task
     List<TaskExecuteDag.Node> nextNodes =
         instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
     if (!context.isTaskFinish() || CollectionUtils.isEmpty(nextNodes)) {
       return;
     }
     List<SchedulerTask> taskList = Lists.newArrayList();
+    // execute all next task
     for (TaskExecuteDag.Node nextNode : nextNodes) {
       taskList.add(
           schedulerTaskService.queryByInstanceIdAndType(
@@ -191,6 +194,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
       }
       List<TaskExecuteDag.Node> preNodes =
           instance.getTaskDag().getRelatedNodes(task.getNodeId(), false);
+      // If all pre-nodes have completed, set the current task status to Running
       if (checkAllNodesFinished(instance.getId(), preNodes)) {
         SchedulerTask updateTask = new SchedulerTask();
         updateTask.setId(task.getId());

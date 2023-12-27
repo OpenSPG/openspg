@@ -47,6 +47,7 @@ public class TaskExecuteContext {
   /** task is Finish */
   private boolean taskFinish;
 
+  /** constructor , include job,instance and task */
   public TaskExecuteContext(SchedulerJob job, SchedulerInstance instance, SchedulerTask task) {
     task.setTraceLog(null);
     this.job = job;
@@ -57,13 +58,7 @@ public class TaskExecuteContext {
     this.taskFinish = false;
   }
 
-  /**
-   * insert TraceLog
-   *
-   * @param
-   * @return
-   * @date 2020/9/14 09:26
-   */
+  /** insert TraceLog, Fixed adding Date and IP prefix */
   public void addTraceLog(String message, Object... args) {
     int dstOffset = 0;
     StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
