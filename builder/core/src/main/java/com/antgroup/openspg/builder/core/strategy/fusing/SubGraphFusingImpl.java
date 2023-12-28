@@ -83,6 +83,9 @@ public class SubGraphFusingImpl implements SubGraphFusing {
 
   private void modifyPropertyRecord(
       BasePropertyRecord propertyRecord, List<BaseAdvancedRecord> fusedRecord) {
+    if (CollectionUtils.isEmpty(fusedRecord)) {
+      return;
+    }
     if (!propertyRecord.isMultiValue()) {
       BaseAdvancedRecord advancedRecord = fusedRecord.get(0);
       String bizId = advancedRecord.getId();
