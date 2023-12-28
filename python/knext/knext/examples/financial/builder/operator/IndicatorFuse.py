@@ -6,7 +6,6 @@ from knext.operator.spg_record import SPGRecord
 
 
 class IndicatorFuse(FuseOp):
-
     bind_to = "Financial.Indicator"
 
     def __init__(self):
@@ -22,13 +21,14 @@ class IndicatorFuse(FuseOp):
         query = {"match": {"name": subject_record.get_property("name", "")}}
         recall_records = self.search_client.search(query, start=0, size=10)
         if recall_records is not None and len(recall_records) > 0:
-            linked_records.append(SPGRecord(
-                "Financial.Indicator",
-                {
-                    "id": recall_records[0].doc_id,
-                    "name": recall_records[0].properties.get("name", ""),
-                },
-            ))
+            if recall_records[0].properties.get("name") == subject_record.get_property("name"):
+                linked_records.append(SPGRecord(
+                    "Financial.Indicator",
+                    {
+                        "id": recall_records[0].doc_id,
+                        "name": recall_records[0].properties.get("name", ""),
+                    },
+                ))
         return linked_records
 
     def merge(self, subject_record: SPGRecord, linked_records: List[SPGRecord]) -> List[SPGRecord]:
