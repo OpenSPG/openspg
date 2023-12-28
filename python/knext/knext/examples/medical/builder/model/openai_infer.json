@@ -1,7 +1,7 @@
 {
     "invoker_type": "OpenAI",
     "openai_api_key": "EMPTY",
-    "openai_api_base": "http://localhost:38000/v1",
-    "openai_model_name": "vicuna-7b-v1.5",
+    "openai_api_base": "http://localhost:38080/v1",
+    "openai_model_name": "gpt-3.5-turbo",
     "openai_max_tokens": 1000
 }

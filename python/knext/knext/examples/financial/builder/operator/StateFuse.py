@@ -36,14 +36,14 @@ class StateFuse(FuseOp):
     def merge(self, subject_records: List[SPGRecord], target_records: List[SPGRecord]) -> List[SPGRecord]:
         merged_records = []
         for s in subject_records:
-            for t in target_records:
-                merged_records.append(SPGRecord(
-                    "Financial.State",
-                    {
-                        "id": s.get_property("id"),
-                        "name": t.get_property("name", ""),
-                    })
-                )
+            # for t in target_records:
+            merged_records.append(SPGRecord(
+                "Financial.State",
+                {
+                    "id": s.get_property("id"),
+                    "name": s.get_property("name", ""),
+                })
+            )
         print("StateFuse(Output): ")
         print("----------------------")
         [print(r) for r in merged_records]
