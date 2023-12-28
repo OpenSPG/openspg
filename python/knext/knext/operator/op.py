@@ -100,11 +100,11 @@ class FuseOp(BaseOp, ABC):
         )
 
     def invoke(self, subject_records: List[SPGRecord]) -> List[SPGRecord]:
+        merged_records = []
         for record in subject_records:
             linked_records = self.link(record)
-            merged_records = self.merge(record, linked_records)
-            return merged_records
-        return []
+            merged_records.extend(self.merge(record, linked_records))
+        return merged_records
 
     @staticmethod
     def _pre_process(*inputs):
