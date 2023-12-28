@@ -89,19 +89,22 @@ class FuseOp(BaseOp, ABC):
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
 
-    def link(self, subject_records: List[SPGRecord]) -> List[SPGRecord]:
+    def link(self, subject_record: SPGRecord) -> List[SPGRecord]:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `link` method."
         )
 
-    def merge(self, subject_records: List[SPGRecord], target_records: List[SPGRecord]) -> List[SPGRecord]:
+    def merge(self, subject_record: SPGRecord, linked_records: List[SPGRecord]) -> List[SPGRecord]:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `merge` method."
         )
 
-    def invoke(self, records: List[SPGRecord]) -> List[SPGRecord]:
-        linked_records = self.link(records)
-        return self.merge(records, linked_records)
+    def invoke(self, subject_records: List[SPGRecord]) -> List[SPGRecord]:
+        for record in subject_records:
+            linked_records = self.link(record)
+            merged_records = self.merge(record, linked_records)
+            return merged_records
+        return []
 
     @staticmethod
     def _pre_process(*inputs):
@@ -136,6 +139,8 @@ class PromptOp(BaseOp, ABC):
     def build_next_variables(
         self, variables: Dict[str, str], response: str
     ) -> List[Dict[str, str]]:
+        if isinstance(response, list) and len(response) > 0:
+            response = response[0]
         variables.update({f"{self.__class__.__name__}": response})
         print("LLM(Output): ")
         print("----------------------")

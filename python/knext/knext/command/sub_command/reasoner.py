@@ -121,3 +121,22 @@ def query_reasoner_job(id):
             )
         else:
             sys.exit()
+
+
+@click.option("--file", help="Path of DSL file.")
+@click.option("--dsl", help="DSL string enclosed in double quotes.")
+@click.option("--output", help="Output file.")
+def execute_reasoner_job(file, dsl, output=None):
+    """
+    Submit asynchronous reasoner jobs to server by providing DSL file or string.
+    """
+    client = ReasonerClient()
+    if file and not dsl:
+        with open(file, "r") as f:
+            dsl_content = f.read()
+    elif not file and dsl:
+        dsl_content = dsl
+    else:
+        click.secho("ERROR: Please choose either --file or --dsl.", fg="bright_red")
+        sys.exit()
+    client.execute(dsl_content, output)

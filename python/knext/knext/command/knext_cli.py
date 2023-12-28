@@ -26,6 +26,7 @@ from knext.command.sub_command.project import list_project
 from knext.command.sub_command.reasoner import query_reasoner_job
 from knext.command.sub_command.reasoner import run_dsl
 from knext.command.sub_command.reasoner import submit_reasoner_job
+from knext.command.sub_command.reasoner import execute_reasoner_job
 from knext.command.sub_command.schema import commit_schema
 from knext.command.sub_command.schema import diff_schema
 from knext.command.sub_command.schema import list_schema
@@ -110,6 +111,7 @@ def reasoner() -> None:
 reasoner.command("submit")(submit_reasoner_job)
 reasoner.command("query")(run_dsl)
 reasoner.command("get")(query_reasoner_job)
+reasoner.command("execute")(execute_reasoner_job)
 
 if __name__ == "__main__":
     _main()

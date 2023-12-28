@@ -26,7 +26,7 @@ class Financial:
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
-    
+
     class AreaRiskEvent(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
@@ -34,7 +34,7 @@ class Financial:
         subject = PropertyHelper("subject")
         object = PropertyHelper("object")
         eventTime = PropertyHelper("eventTime")
-    
+
     class Company(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
@@ -45,7 +45,7 @@ class Financial:
         regArea = PropertyHelper("regArea")
         establishDate = PropertyHelper("establishDate")
         businessScope = PropertyHelper("businessScope")
-    
+
     class CompanyEvent(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
@@ -55,14 +55,14 @@ class Financial:
         location = PropertyHelper("location")
         happenedTime = PropertyHelper("happenedTime")
         object = PropertyHelper("object")
-    
+
     class Indicator(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
-    
+
     class State(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")

@@ -60,8 +60,9 @@ class _BuiltInOnlineExtractor(ExtractOp):
                         elif op_name == "IndicatorLOGIC":
                             response = '[{"subject": "土地出让收入大幅下降", "predicate": "顺承", "object": ["综合财力明显下滑"]}]'
                         else:
-                            print(query)
+                            print(repr(query))
                             response = self.model.remote_inference(query)
+                            print(response)
                         collector.extend(op.parse_response(response))
                         next_params.extend(
                             op.build_next_variables(input_param, response)

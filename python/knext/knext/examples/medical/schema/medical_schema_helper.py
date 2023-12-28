@@ -24,18 +24,18 @@ class Medical:
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
-        alias = PropertyHelper("alias")
         stdId = PropertyHelper("stdId")
+        alias = PropertyHelper("alias")
     
     class Disease(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
-        department = PropertyHelper("department")
-        complication = PropertyHelper("complication")
         applicableDrug = PropertyHelper("applicableDrug")
-        diseaseSite = PropertyHelper("diseaseSite")
+        department = PropertyHelper("department")
         commonSymptom = PropertyHelper("commonSymptom")
+        diseaseSite = PropertyHelper("diseaseSite")
+        complication = PropertyHelper("complication")
     
     class Drug(SPGTypeHelper):
         description = PropertyHelper("description")
@@ -46,8 +46,8 @@ class Medical:
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
-        alias = PropertyHelper("alias")
         stdId = PropertyHelper("stdId")
+        alias = PropertyHelper("alias")
     
     class Indicator(SPGTypeHelper):
         description = PropertyHelper("description")
