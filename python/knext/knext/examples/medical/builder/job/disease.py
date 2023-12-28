@@ -37,10 +37,10 @@ class Disease(BuilderJob):
                     spg_type_name="Medical.Disease",
                     property_names=[
                         "complication",
-                        # "commonSymptom",
-                        # "applicableDrug",
-                        # "department",
-                        # "diseaseSite",
+                        "commonSymptom",
+                        "applicableDrug",
+                        "department",
+                        "diseaseSite",
                     ],
                 )
             ],
@@ -54,10 +54,10 @@ class Disease(BuilderJob):
             .add_mapping_field("id", "id")
             .add_mapping_field("name", "name")
             .add_mapping_field("complication", "complication")
-            # .add_mapping_field("commonSymptom", "commonSymptom")
-            # .add_mapping_field("applicableDrug", "applicableDrug")
-            # .add_mapping_field("department", "department")
-            # .add_mapping_field("diseaseSite", "diseaseSite")
+            .add_mapping_field("commonSymptom", "commonSymptom")
+            .add_mapping_field("applicableDrug", "applicableDrug")
+            .add_mapping_field("department", "department")
+            .add_mapping_field("diseaseSite", "diseaseSite")
         )
 
         """

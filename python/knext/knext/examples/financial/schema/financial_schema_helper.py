@@ -20,6 +20,42 @@ from knext.common.schema_helper import SPGTypeHelper, PropertyHelper
 
 class Financial:
     
+    class AdministrativeArea(SPGTypeHelper):
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+        stdId = PropertyHelper("stdId")
+        alias = PropertyHelper("alias")
+    
+    class AreaRiskEvent(SPGTypeHelper):
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+        eventTime = PropertyHelper("eventTime")
+        object = PropertyHelper("object")
+        subject = PropertyHelper("subject")
+    
+    class Company(SPGTypeHelper):
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+        orgCertNo = PropertyHelper("orgCertNo")
+        establishDate = PropertyHelper("establishDate")
+        regArea = PropertyHelper("regArea")
+        regCapital = PropertyHelper("regCapital")
+        businessScope = PropertyHelper("businessScope")
+        legalPerson = PropertyHelper("legalPerson")
+    
+    class CompanyEvent(SPGTypeHelper):
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        name = PropertyHelper("name")
+        location = PropertyHelper("location")
+        eventTime = PropertyHelper("eventTime")
+        happenedTime = PropertyHelper("happenedTime")
+        subject = PropertyHelper("subject")
+        object = PropertyHelper("object")
+    
     class Indicator(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
@@ -36,6 +72,10 @@ class Financial:
         derivedFrom = PropertyHelper("derivedFrom")
         stdId = PropertyHelper("stdId")
     
+    AdministrativeArea = AdministrativeArea("Financial.AdministrativeArea")
+    AreaRiskEvent = AreaRiskEvent("Financial.AreaRiskEvent")
+    Company = Company("Financial.Company")
+    CompanyEvent = CompanyEvent("Financial.CompanyEvent")
     Indicator = Indicator("Financial.Indicator")
     State = State("Financial.State")
     
