@@ -406,7 +406,9 @@ class SPGSchemaMarkLang:
             assert (
                 self.parsing_register[RegisterUnit.Type].spg_type_enum
                 == SpgTypeEnum.Concept
-            ), self.error_msg("AutoRelate definition is available for concept type only")
+            ), self.error_msg(
+                "AutoRelate definition is available for concept type only"
+            )
             concept_types = meta_value.split(",")
             for concept in concept_types:
                 c = self.get_type_name_with_ns(concept.strip())
@@ -533,7 +535,9 @@ class SPGSchemaMarkLang:
         assert (
             self.get_type_name_with_ns(predicate_class) in self.types
             or predicate_class in self.internal_type
-        ), self.error_msg(f"{predicate_class} is illegal, please ensure that it appears in this schema.")
+        ), self.error_msg(
+            f"{predicate_class} is illegal, please ensure that it appears in this schema."
+        )
         assert predicate_name not in self.entity_internal_property, self.error_msg(
             f"property {predicate_name} is the default property of type"
         )
@@ -591,7 +595,11 @@ class SPGSchemaMarkLang:
 
         if self.parsing_register[RegisterUnit.SubProperty]:
             # predicate is sub property
-            predicate = Property(name=predicate_name, name_zh=predicate_name_zh, object_type_name=predicate_class)
+            predicate = Property(
+                name=predicate_name,
+                name_zh=predicate_name_zh,
+                object_type_name=predicate_class,
+            )
             if self.parsing_register[RegisterUnit.Property] is not None:
                 self.parsing_register[RegisterUnit.Property].add_sub_property(predicate)
             elif self.parsing_register[RegisterUnit.Relation] is not None:
@@ -600,7 +608,11 @@ class SPGSchemaMarkLang:
 
         elif self.parsing_register[RegisterUnit.Property]:
             # predicate is property
-            predicate = Property(name=predicate_name, name_zh=predicate_name_zh, object_type_name=predicate_class)
+            predicate = Property(
+                name=predicate_name,
+                name_zh=predicate_name_zh,
+                object_type_name=predicate_class,
+            )
             if (
                 self.parsing_register[RegisterUnit.Type].spg_type_enum
                 == SpgTypeEnum.Event
@@ -630,7 +642,9 @@ class SPGSchemaMarkLang:
                         )
 
                         subject_predicate = Property(
-                            name=f"subject{subject_type}", name_zh=predicate_name_zh, object_type_name=subject_type
+                            name=f"subject{subject_type}",
+                            name_zh=predicate_name_zh,
+                            object_type_name=subject_type,
                         )
                         subject_predicate.property_group = PropertyGroupEnum.Subject
                         self.parsing_register[RegisterUnit.Type].add_property(
@@ -676,7 +690,9 @@ class SPGSchemaMarkLang:
 
         if property_meta == "desc" and len(meta_value) > 0:
             if self.parsing_register[RegisterUnit.SubProperty] is not None:
-                self.parsing_register[RegisterUnit.SubProperty].desc = meta_value.strip()
+                self.parsing_register[
+                    RegisterUnit.SubProperty
+                ].desc = meta_value.strip()
             elif self.parsing_register[RegisterUnit.Property] is not None:
                 self.parsing_register[RegisterUnit.Property].desc = meta_value.strip()
 

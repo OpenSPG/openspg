@@ -1,3 +1,14 @@
+# Copyright 2023 Ant Group CO., Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied.
+
 import os
 import sys
 from configparser import ConfigParser
@@ -103,6 +114,7 @@ def get_cfg_files():
 def load_operator():
     from knext.operator.base import BaseOp
     from knext.operator import builtin
+
     if not BaseOp._has_registered and (
         "KNEXT_ROOT_PATH" in os.environ and "KNEXT_BUILDER_OPERATOR_DIR" in os.environ
     ):

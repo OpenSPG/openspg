@@ -1,4 +1,15 @@
 # -*- coding: utf-8 -*-
+# Copyright 2023 Ant Group CO., Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied.
+
 
 from knext.examples.financial.schema.financial_schema_helper import Financial
 
@@ -43,8 +54,9 @@ class StateAndIndicator(BuilderJob):
         return source >> extract >> [state_mapping, indicator_mapping] >> sink
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from knext.api.auto_prompt import REPrompt
+
     prompt = REPrompt(
         spg_type_name=Financial.Company,
         property_names=[
@@ -53,7 +65,7 @@ if __name__ == '__main__':
             Financial.Company.businessScope,
             Financial.Company.establishDate,
             Financial.Company.legalPerson,
-            Financial.Company.regCapital
+            Financial.Company.regCapital,
         ],
     )
     print(prompt.template)

@@ -77,6 +77,7 @@ class Configuration(object):
     ):
         """Constructor"""
         from knext import lib
+
         self.host = os.environ.get("KNEXT_HOST_ADDR") or host or lib.LOCAL_SCHEMA_URL
         """Default Base url
         """

@@ -59,24 +59,38 @@ class BuilderClient(Client):
         import subprocess
         import datetime
         from knext import lib
+
         jar_path = os.path.join(lib.__path__[0], lib.LOCAL_BUILDER_JAR)
         dag_config = builder_chain.to_rest()
         pipeline = self.serialize(dag_config)
         log_file_name = f"{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.log"
 
-        java_cmd = ['java', '-jar',
-                    jar_path,
-                    "--projectId", self._project_id,
-                    "--jobName", kwargs.get("job_name", "default_job"),
-                    "--pipeline", json.dumps(pipeline),
-                    "--pythonExec", sys.executable,
-                    "--pythonPaths", ';'.join(sys.path),
-                    "--schemaUrl", os.environ.get("KNEXT_HOST_ADDR") or lib.LOCAL_SCHEMA_URL,
-                    "--parallelism", str(kwargs.get("parallelism", "1")),
-                    "--alterOperation", kwargs.get("alter_operation", AlterOperationEnum.Upsert),
-                    "--logFile", log_file_name,
-                    "--graphStoreUrl", os.environ.get("KNEXT_GRAPH_STORE_URL") or lib.LOCAL_GRAPH_STORE_URL,
-                    "--searchEngineUrl", os.environ.get("KNEXT_SEARCH_ENGINE_URL") or lib.LOCAL_SEARCH_ENGINE_URL,
+        java_cmd = [
+            "java",
+            "-jar",
+            jar_path,
+            "--projectId",
+            self._project_id,
+            "--jobName",
+            kwargs.get("job_name", "default_job"),
+            "--pipeline",
+            json.dumps(pipeline),
+            "--pythonExec",
+            sys.executable,
+            "--pythonPaths",
+            ";".join(sys.path),
+            "--schemaUrl",
+            os.environ.get("KNEXT_HOST_ADDR") or lib.LOCAL_SCHEMA_URL,
+            "--parallelism",
+            str(kwargs.get("parallelism", "1")),
+            "--alterOperation",
+            kwargs.get("alter_operation", AlterOperationEnum.Upsert),
+            "--logFile",
+            log_file_name,
+            "--graphStoreUrl",
+            os.environ.get("KNEXT_GRAPH_STORE_URL") or lib.LOCAL_GRAPH_STORE_URL,
+            "--searchEngineUrl",
+            os.environ.get("KNEXT_SEARCH_ENGINE_URL") or lib.LOCAL_SEARCH_ENGINE_URL,
         ]
 
         print_java_cmd = [

@@ -71,8 +71,9 @@ class Disease(BuilderJob):
         return source >> extract >> mapping >> sink
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from knext.api.auto_prompt import REPrompt
+
     prompt = REPrompt(
         spg_type_name="Medical.Disease",
         property_names=[

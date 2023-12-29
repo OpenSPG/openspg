@@ -1,3 +1,14 @@
+# Copyright 2023 Ant Group CO., Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied.
+
 import json
 from abc import ABC
 from typing import Union, List, Dict
@@ -75,7 +86,8 @@ input:${input}
             spo_en_name = self.predicate_zh_to_en_name[spo_item["predicate"]]
 
             import re
-            spo_item["object"] = ','.join(re.split('[,，、;；]', spo_item["object"]))
+
+            spo_item["object"] = ",".join(re.split("[,，、;；]", spo_item["object"]))
             if spo_en_name in subject_properties and len(
                 subject_properties[spo_en_name]
             ):
@@ -101,10 +113,27 @@ input:${input}
             if object_type:
                 object_desc = object_type.desc
             spos.append(
-                f"{spg_type.name_zh}" + (f"({spg_type.desc or spg_type.name_zh})" if spg_type.name_zh not in repeat_desc else "") +
-                f"-{prop.name_zh}" + (f"({prop.desc or prop.name_zh})" if prop.name_zh not in repeat_desc else "") +
-                f"-{prop.object_type_name_zh}" + (f"({object_desc or prop.object_type_name_zh})" if prop.object_type_name_zh not in repeat_desc else "")
+                f"{spg_type.name_zh}"
+                + (
+                    f"({spg_type.desc or spg_type.name_zh})"
+                    if spg_type.name_zh not in repeat_desc
+                    else ""
+                )
+                + f"-{prop.name_zh}"
+                + (
+                    f"({prop.desc or prop.name_zh})"
+                    if prop.name_zh not in repeat_desc
+                    else ""
+                )
+                + f"-{prop.object_type_name_zh}"
+                + (
+                    f"({object_desc or prop.object_type_name_zh})"
+                    if prop.object_type_name_zh not in repeat_desc
+                    else ""
+                )
             )
-            repeat_desc.extend([spg_type.name_zh, prop.name_zh, prop.object_type_name_zh])
+            repeat_desc.extend(
+                [spg_type.name_zh, prop.name_zh, prop.object_type_name_zh]
+            )
         schema_text = "\n[" + ",\n".join(spos) + "]"
         self.template = self.template.replace("${schema}", schema_text)

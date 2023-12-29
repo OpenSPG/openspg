@@ -19,14 +19,13 @@ from knext.common.schema_helper import SPGTypeHelper, PropertyHelper
 
 
 class Medical:
-    
     class BodyPart(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
-    
+
     class Disease(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
@@ -36,33 +35,32 @@ class Medical:
         commonSymptom = PropertyHelper("commonSymptom")
         diseaseSite = PropertyHelper("diseaseSite")
         complication = PropertyHelper("complication")
-    
+
     class Drug(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
-    
+
     class HospitalDepartment(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
-    
+
     class Indicator(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
-    
+
     class Symptom(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
-    
+
     BodyPart = BodyPart("Medical.BodyPart")
     Disease = Disease("Medical.Disease")
     Drug = Drug("Medical.Drug")
     HospitalDepartment = HospitalDepartment("Medical.HospitalDepartment")
     Indicator = Indicator("Medical.Indicator")
     Symptom = Symptom("Medical.Symptom")
-    

@@ -94,7 +94,9 @@ class FuseOp(BaseOp, ABC):
             f"{self.__class__.__name__} need to implement `link` method."
         )
 
-    def merge(self, subject_record: SPGRecord, linked_records: List[SPGRecord]) -> List[SPGRecord]:
+    def merge(
+        self, subject_record: SPGRecord, linked_records: List[SPGRecord]
+    ) -> List[SPGRecord]:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `merge` method."
         )
