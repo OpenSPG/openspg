@@ -35,7 +35,7 @@ public class PhysicalPlan implements Serializable {
   /**
    * Translating the logical execution plan into a physical execution plan.
    *
-   * @param logicalPlan: Logical execution plan.
+   * @param logicalPlan: Logical execution plan
    * @return Physical execution plan
    */
   public static PhysicalPlan plan(LogicalPlan logicalPlan) {
