@@ -49,6 +49,11 @@ public class LocalReasonerMain {
 
   /** KGReasoner main */
   public static void main(String[] args) {
+    doMain(args);
+    System.exit(0);
+  }
+
+  public static void doMain(String[] args) {
     LocalReasonerTask task = parseArgs(args);
     if (null == task) {
       System.exit(1);
@@ -65,7 +70,6 @@ public class LocalReasonerMain {
     if (StringUtils.isNotEmpty(task.getOutputFile())) {
       writeOutputFile(result, task.getOutputFile());
     }
-    System.exit(0);
   }
 
   private static void writeOutputFile(LocalReasonerResult result, String file) {
@@ -138,6 +142,7 @@ public class LocalReasonerMain {
     String outputFile;
     String schemaUri;
     String graphStateClass;
+    String graphLoaderClass;
     String graphStateUrl;
     List<List<String>> startIdList;
     Map<String, Object> params = new HashMap<>(3);
@@ -161,10 +166,8 @@ public class LocalReasonerMain {
       if (StringUtils.isEmpty(schemaUri)) {
         throw new ParseException("please provide openspg schema uri!");
       }
+      graphLoaderClass = cmd.getOptionValue(GRAPH_LOADER_CLASS_OPTION);
       graphStateClass = cmd.getOptionValue(GRAPH_STATE_CLASS_OPTION);
-      if (StringUtils.isEmpty(graphStateClass)) {
-        throw new ParseException("please provide graph state class name!");
-      }
       graphStateUrl = cmd.getOptionValue(GRAPH_STORE_URL_OPTION);
       if (StringUtils.isEmpty(graphStateUrl)) {
         graphStateUrl = null;
@@ -190,6 +193,7 @@ public class LocalReasonerMain {
     task.setDsl(dsl);
     task.setOutputFile(outputFile);
     task.setConnInfo(new KgSchemaConnectionInfo(schemaUri, ""));
+    task.setGraphLoadClass(graphLoaderClass);
     task.setGraphStateClassName(graphStateClass);
     task.setGraphStateInitString(graphStateUrl);
     task.setStartIdList(new ArrayList<>());
@@ -204,6 +208,7 @@ public class LocalReasonerMain {
   private static final String OUTPUT_OPTION = "output";
   private static final String SCHEMA_URL_OPTION = "schemaUrl";
   private static final String GRAPH_STATE_CLASS_OPTION = "graphStateClass";
+  private static final String GRAPH_LOADER_CLASS_OPTION = "graphLoaderClass";
   private static final String GRAPH_STORE_URL_OPTION = "graphStoreUrl";
   private static final String START_ID_OPTION = "startIdList";
   private static final String PARAMs_OPTION = "params";
@@ -216,8 +221,10 @@ public class LocalReasonerMain {
     options.addRequiredOption(QUERY_OPTION, QUERY_OPTION, true, "query dsl string");
     options.addOption(OUTPUT_OPTION, OUTPUT_OPTION, true, "output file name");
     options.addRequiredOption(SCHEMA_URL_OPTION, SCHEMA_URL_OPTION, true, "schema url");
-    options.addRequiredOption(
+    options.addOption(
         GRAPH_STATE_CLASS_OPTION, GRAPH_STATE_CLASS_OPTION, true, "graph state class name");
+    options.addOption(
+        GRAPH_LOADER_CLASS_OPTION, GRAPH_LOADER_CLASS_OPTION, true, "graph loader class name");
     options.addRequiredOption(
         GRAPH_STORE_URL_OPTION, GRAPH_STORE_URL_OPTION, true, "graph store url");
     options.addOption(START_ID_OPTION, START_ID_OPTION, true, "start id list");

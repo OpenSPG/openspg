@@ -910,21 +910,23 @@ public class LocalRunnerTest {
 
     String outputFile = "/tmp/local/runner/" + UUID.randomUUID() + ".csv";
 
-    LocalReasonerMain.main(
+    LocalReasonerMain.doMain(
         new String[] {
-          "-q",
+          "--projectId",
+          "2",
+          "--query",
           nearbyDsl,
-          "-o",
+          "--output",
           outputFile,
-          "-g",
+          "--graphLoaderClass",
           "com.antgroup.openspg.reasoner.runner.local.loader.TestSpatioTemporalGraphLoader",
-          "-s",
+          "--graphStoreUrl",
+          "",
+          "--schemaUrl",
           "s",
-          "-st",
-          "st",
-          "-start",
+          "-startIdList",
           "[[\"MOCK1\",\"PE.JiuZhi\"]]",
-          "-params",
+          "--params",
           JSON.toJSONString(params)
         });
     List<String[]> rst = RunnerUtil.loadCsvFile(outputFile);
