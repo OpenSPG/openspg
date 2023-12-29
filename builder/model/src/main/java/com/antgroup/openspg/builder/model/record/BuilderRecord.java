@@ -30,7 +30,7 @@ public class BuilderRecord extends BaseRecord {
   /** record id */
   private final String recordId;
 
-  /** 表示spg类型或者关系 */
+  /** spg type or relation */
   @Setter private BaseSPGIdentifier identifier;
 
   /** Key-value representation of a single data record. */

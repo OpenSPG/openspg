@@ -79,7 +79,6 @@ public class LocalBuilderRunner implements BuilderRunner {
     builderExecutor = new DefaultBuilderExecutor();
     builderExecutor.init(physicalPlan, context);
 
-    // 构建指标统计，并将构建指标输出到log
     builderMetric = new BuilderMetric(context.getJobName());
     builderMetric.reportToLog();
 
