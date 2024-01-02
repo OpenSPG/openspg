@@ -20,7 +20,7 @@ public interface AsyncTaskExecute {
   /** Async submit task, return null and retry */
   String submit(TaskExecuteContext context);
 
-  /** get task Status */
+  /** get task Status by resource */
   TaskStatus getStatus(TaskExecuteContext context, String resource);
 
   /** stop Task */

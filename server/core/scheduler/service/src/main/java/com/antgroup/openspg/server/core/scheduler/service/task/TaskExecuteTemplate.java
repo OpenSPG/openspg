@@ -75,7 +75,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     }
   }
 
-  /** lock task */
+  /** lock task before scheduling */
   private boolean lockTask(TaskExecuteContext context) {
     SchedulerTask task = context.getTask();
     if (task.getLockTime() == null) {
@@ -109,7 +109,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     return true;
   }
 
-  /** unlock task */
+  /** Release lock after scheduling is completed */
   private void unlockTask(TaskExecuteContext context, boolean lock) {
     if (!lock) {
       return;
@@ -204,7 +204,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     return true;
   }
 
-  /** check all nodes is finished */
+  /** Check that all nodes are complete */
   private boolean checkAllNodesFinished(SchedulerTask task, List<TaskExecuteDag.Node> nodes) {
     for (TaskExecuteDag.Node node : nodes) {
       SchedulerTask t =
@@ -217,7 +217,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     return true;
   }
 
-  /** set instance to finished */
+  /** set instance status to finished */
   public void setInstanceFinished(
       TaskExecuteContext context, TaskStatus taskStatus, InstanceStatus instanceStatus) {
     SchedulerInstance instance = context.getInstance();

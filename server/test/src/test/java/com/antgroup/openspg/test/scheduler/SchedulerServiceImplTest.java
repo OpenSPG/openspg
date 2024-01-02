@@ -66,8 +66,8 @@ class SchedulerServiceImplTest {
     // step 1: create Job to submit
     SchedulerJob job = new SchedulerJob();
     job.setProjectId(0L);
-    job.setName("Test Once Job");
-    job.setCreateUser("test");
+    job.setName("Once Job");
+    job.setCreateUser("andy");
     job.setLifeCycle(LifeCycle.ONCE);
     job.setTranslateType(TranslateType.LOCAL_EXAMPLE);
     job.setDependence(Dependence.DEPENDENT);
@@ -175,8 +175,8 @@ class SchedulerServiceImplTest {
     // step 1: create Period Job to submit
     SchedulerJob job = new SchedulerJob();
     job.setProjectId(0L);
-    job.setName("Test Period Job");
-    job.setCreateUser("test");
+    job.setName("Period Job");
+    job.setCreateUser("andy");
     job.setLifeCycle(LifeCycle.PERIOD);
     job.setSchedulerCron("0 0 * * * ?");
     job.setTranslateType(TranslateType.LOCAL_EXAMPLE);
@@ -276,8 +276,8 @@ class SchedulerServiceImplTest {
     // step 1: create RealTime Job to submit
     SchedulerJob job = new SchedulerJob();
     job.setProjectId(0L);
-    job.setName("Test RealTime Job");
-    job.setCreateUser("test");
+    job.setName("RealTime Job");
+    job.setCreateUser("andy");
     job.setLifeCycle(LifeCycle.REAL_TIME);
     job.setTranslateType(TranslateType.LOCAL_EXAMPLE);
     job.setDependence(Dependence.DEPENDENT);
