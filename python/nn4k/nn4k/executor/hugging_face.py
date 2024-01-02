@@ -9,31 +9,36 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from nn4k.executor import LLMExecutor
+import dataclasses
+from dataclasses import dataclass
+from typing import Union, Optional
+
+from nn4k.executor import LLMExecutorConfig, LLMExecutor
+
+
+@dataclass
+class HfLLMExecutorConfig(LLMExecutorConfig):
+    pass
 
 
 class HfLLMExecutor(LLMExecutor):
     @classmethod
-    def _parse_config(cls, nn_config: dict) -> dict:
-        from nn4k.utils.config_parsing import get_string_field
-
-        nn_name = get_string_field(nn_config, "nn_name", "NN model name")
-        nn_version = get_string_field(nn_config, "nn_version", "NN model version")
-        config = dict(
-            nn_name=nn_name,
-            nn_version=nn_version,
-        )
+    def try_parse_config(
+        cls, nn_config: Union[str, dict]
+    ) -> Optional[HfLLMExecutorConfig]:
+        config = super().try_parse_config(nn_config)
+        if config is None:
+            return None
+        config = HfLLMExecutorConfig(**dataclasses.asdict(config))
         return config
 
     @classmethod
-    def from_config(cls, nn_config: dict):
-        config = cls._parse_config(nn_config)
-
+    def _from_config(cls, nn_config: HfLLMExecutorConfig) -> "HfLLMExecutor":
         model = None
         tokenizer = None
         init_args = nn_config
         inference_args = None
-        kwargs = config
+        kwargs = dict()
         executor = cls(
             model=model,
             tokenizer=tokenizer,
@@ -55,11 +60,11 @@ class HfLLMExecutor(LLMExecutor):
         from transformers import AutoModelForCausalLM
 
         if self._model is None:
-            model_path = self.kwargs["nn_name"]
-            revision = self.kwargs["nn_version"]
+            model_path = self.init_args.nn_name
+            revision = self.init_args.nn_version
             use_fast_tokenizer = False
-            device = self.init_args.get("nn_device")
-            trust_remote_code = self.init_args.get("nn_trust_remote_code", False)
+            device = self.init_args.nn_device
+            trust_remote_code = self.init_args.nn_trust_remote_code
             if device is None:
                 device = "cuda" if torch.cuda.is_available() else "cpu"
             tokenizer = AutoTokenizer.from_pretrained(

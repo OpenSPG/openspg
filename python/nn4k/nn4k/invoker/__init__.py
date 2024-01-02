@@ -9,4 +9,11 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from .base import NNInvoker, LLMInvoker
+from .base import NNInvokerConfig, LLMInvokerConfig, NNInvoker, LLMInvoker
+
+NNInvoker.register_invoker_class(LLMInvoker)
+
+from .openai_invoker import OpenAIInvoker
+
+NNInvoker.register_invoker_class(OpenAIInvoker)
+del OpenAIInvoker
