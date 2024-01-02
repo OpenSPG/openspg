@@ -45,12 +45,13 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/** Scheduler Execute Service implementation class.generate and execute all instances */
+/** Scheduler Execute Service implementation class. generate period instance and execute instances */
 @Service
 @Slf4j
 public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
 
   public static final String UNDERLINE_SEPARATOR = "_";
+  public static final long DELAY = 10;
 
   private ConcurrentHashMap<String, ThreadPoolExecutor> instances = new ConcurrentHashMap<>();
   private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(10);
@@ -74,6 +75,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
       return;
     }
 
+    // generate instance for period job
     for (SchedulerJob job : allJob) {
       try {
         schedulerCommonService.generatePeriodInstance(job);
@@ -112,6 +114,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
               .filter(s -> TaskStatus.isRunning(s.getStatus()))
               .collect(Collectors.toList());
 
+      // If no tasks are running, Change next task Status from WAIT to RUNNING
       if (CollectionUtils.isEmpty(runningTasks)) {
         runningTasks = checkAndUpdateWaitStatus(instance, tasks);
       }
@@ -145,6 +148,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
         return;
       }
 
+      // get TaskExecute by type
       String type = task.getType().split(UNDERLINE_SEPARATOR)[0];
       TaskExecute jobTask = SpringContextHolder.getBean(type, TaskExecute.class);
       if (jobTask != null) {
@@ -169,6 +173,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
       return;
     }
     List<SchedulerTask> taskList = Lists.newArrayList();
+
     // execute all next task
     for (TaskExecuteDag.Node nextNode : nextNodes) {
       taskList.add(
@@ -178,8 +183,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     SchedulerInstance ins = schedulerInstanceService.getById(instance.getId());
     Runnable instanceRunnable = () -> executeInstance(ins, taskList);
 
-    long delay = 10;
-    executorService.schedule(instanceRunnable, delay, TimeUnit.SECONDS);
+    executorService.schedule(instanceRunnable, DELAY, TimeUnit.SECONDS);
     log.info("executeNextTask successful {}", instance.getUniqueId());
   }
 

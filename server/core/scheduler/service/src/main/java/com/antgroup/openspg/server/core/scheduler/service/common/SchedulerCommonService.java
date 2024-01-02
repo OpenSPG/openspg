@@ -69,7 +69,7 @@ public class SchedulerCommonService {
     schedulerTaskService.setStatusByInstanceId(instance.getId(), taskStatus);
   }
 
-  /** stop all running tasks */
+  /** stop all running tasks by instance */
   private void stopRunningTasks(SchedulerInstance instance) {
     List<SchedulerTask> taskList = schedulerTaskService.queryByInstanceId(instance.getId());
 
@@ -81,6 +81,7 @@ public class SchedulerCommonService {
         continue;
       }
 
+      // get AsyncTaskExecute by type
       String type = task.getType().split(UNDERLINE_SEPARATOR)[0];
       TaskExecute jobTask = SpringContextHolder.getBean(type, TaskExecute.class);
       boolean isAsyncTask = (jobTask != null && jobTask instanceof AsyncTaskExecute);
@@ -170,6 +171,7 @@ public class SchedulerCommonService {
       schedulerTaskService.insert(new SchedulerTask(instance, status, node));
     }
 
+    //set job last execute time
     SchedulerJob updateJob = new SchedulerJob();
     updateJob.setId(job.getId());
     updateJob.setLastExecuteTime(schedulerDate);

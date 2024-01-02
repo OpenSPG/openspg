@@ -76,6 +76,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
   /** check Job Property is validity */
   private void checkJobPropertyValidity(SchedulerJob job) {
+    // check not Null
     Assert.notNull(job, "job not null");
     Assert.notNull(job.getProjectId(), "ProjectId not null");
     Assert.hasText(job.getName(), "Name not null");
@@ -84,6 +85,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     Assert.notNull(job.getTranslateType(), "TranslateType not null");
     Assert.notNull(job.getDependence(), "MergeMode not null");
 
+    // check scheduler cron
     if (LifeCycle.PERIOD.equals(job.getLifeCycle())) {
       Assert.hasText(job.getSchedulerCron(), "SchedulerCron not null");
       SchedulerUtils.getCronExpression(job.getSchedulerCron());
@@ -95,6 +97,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     List<SchedulerInstance> instances = Lists.newArrayList();
     SchedulerJob job = schedulerJobService.getById(jobId);
 
+    //generate instance by LifeCycle
     if (LifeCycle.REAL_TIME.equals(job.getLifeCycle())) {
       stopJobAllInstance(jobId);
       instances.add(schedulerCommonService.generateInstance(job));
@@ -108,6 +111,7 @@ public class SchedulerServiceImpl implements SchedulerService {
       return false;
     }
 
+    //execute the generated instance
     for (SchedulerInstance ins : instances) {
       Long instanceId = ins.getId();
       Runnable instanceRunnable = () -> schedulerExecuteService.executeInstance(instanceId);
@@ -141,6 +145,7 @@ public class SchedulerServiceImpl implements SchedulerService {
       return false;
     }
 
+    // execute the job after it is enabled
     if (LifeCycle.REAL_TIME.equals(job.getLifeCycle())) {
       this.executeJob(jobId);
     }

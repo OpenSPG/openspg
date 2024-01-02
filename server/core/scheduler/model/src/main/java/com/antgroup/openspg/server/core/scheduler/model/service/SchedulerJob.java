@@ -56,7 +56,7 @@ public class SchedulerJob extends BaseModel {
   /** translate type */
   private TranslateType translateType;
 
-  /** job Status：ONLINE,OFFLINE */
+  /** job Status：ENABLE,DISABLE */
   private Status status;
 
   /** Dependent pre task completion */

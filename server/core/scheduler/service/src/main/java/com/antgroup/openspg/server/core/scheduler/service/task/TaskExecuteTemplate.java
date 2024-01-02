@@ -95,6 +95,8 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
           DateTimeUtils.getDate2LongStr(task.getLockTime()));
       return false;
     }
+
+    // Timeout release lock
     context.addTraceLog(
         "Last lock preempt time：%s, The threshold was exceeded. The current process is executed directly",
         DateTimeUtils.getDate2LongStr(task.getLockTime()));
@@ -132,6 +134,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
       task = old;
     }
 
+    //update task execute num and trace log
     task.setGmtModified(old.getGmtModified());
     task.setExecuteNum(old.getExecuteNum() + 1);
     context.getTraceLog().insert(0, System.getProperty("line.separator"));
@@ -152,6 +155,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     List<TaskExecuteDag.Node> nextNodes =
         instance.getTaskDag().getRelatedNodes(task.getNodeId(), true);
 
+    // Set the instance to complete if all tasks are completed
     if (CollectionUtils.isEmpty(nextNodes)) {
       List<SchedulerTask> tasks = schedulerTaskService.queryByInstanceId(instance.getId());
       if (checkAllTasksFinished(task, tasks)) {
@@ -162,7 +166,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     nextNodes.forEach(node -> startNextNode(context, instance.getTaskDag(), node));
   }
 
-  /** start next node */
+  /** start next wait node */
   private void startNextNode(
       TaskExecuteContext context, TaskExecuteDag taskDag, TaskExecuteDag.Node nextNode) {
     SchedulerTask task = context.getTask();

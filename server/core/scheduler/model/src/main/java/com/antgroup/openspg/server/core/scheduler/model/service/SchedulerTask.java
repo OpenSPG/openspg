@@ -88,7 +88,7 @@ public class SchedulerTask extends BaseModel {
 
   public SchedulerTask() {}
 
-  /** constructor */
+  /** constructor by instance and dag node */
   public SchedulerTask(SchedulerInstance instance, TaskStatus status, TaskExecuteDag.Node node) {
     this.executeNum = 0;
     this.beginTime = new Date();
