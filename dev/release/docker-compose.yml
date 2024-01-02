@@ -1,54 +1,54 @@
 version: "3.7"
 services:
-    openspg:
-        restart: always
-        image: baifuyu/openspg:latest
-        container_name: release-openspg
-        ports:
-            - "8887:8887"
-        depends_on:
-            - mysql
-            - tugraph
-        command: [
-            '--cloudext.repository.impl.jdbc.host=mysql',
-            '--builder.operator.python.exec=/usr/bin/python3.8',
-            '--builder.operator.python.paths=/usr/lib/python3.8/site-packages;/usr/local/lib/python3.8/dist-packages;'
-        ]
-        environment:
-            - PYTHONPATH=/usr/lib/python3.8/site-packages:/usr/local/lib/python3.8/dist-packages
+  server:
+    restart: always
+    image: openspg/openspg-server:latest
+    container_name: release-openspg-server
+    ports:
+      - "8887:8887"
+    depends_on:
+      - mysql
+      - tugraph
+      - elasticsearch
+    command: [
+      '--server.repository.impl.jdbc.host=mysql',
+      '--server.repository.impl.jdbc.password=openspg'
+    ]
 
-    mysql:
-        restart: always
-        image: baifuyu/openspg-mysql:latest
-        container_name: release-openspg-mysql
-        environment:
-            TZ: Asia/Shanghai
-            LANG: C.UTF-8
-        ports:
-            - "3306:3306"
-        command: [
-            '--character-set-server=utf8mb4',
-            '--collation-server=utf8mb4_general_ci'
-        ]
+  mysql:
+    restart: always
+    image: openspg/openspg-mysql:latest
+    container_name: release-openspg-mysql
+    environment:
+      TZ: Asia/Shanghai
+      LANG: C.UTF-8
+      MYSQL_ROOT_PASSWORD: openspg
+      MYSQL_DATABASE: openspg
+    ports:
+      - "3306:3306"
+    command: [
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_general_ci'
+    ]
 
-    tugraph:
-        image: tugraph/tugraph-runtime-centos7:4.0.1
-        container_name: release-openspg-tugraph
-        # default username is admin and default password is 73@TuGraph
-        ports:
-            - "7070:7070"
-            - "9090:9090"
-        command: lgraph_server
+  tugraph:
+    image: tugraph/tugraph-runtime-centos7:4.0.1
+    container_name: release-openspg-tugraph
+    # default username is admin and default password is 73@TuGraph
+    ports:
+      - "7070:7070"
+      - "9090:9090"
+    command: lgraph_server
 
-    elasticsearch:
-        image: elasticsearch:8.5.3
-        container_name: release-openspg-elasticsearch
-        ports:
-            - "9200:9200"
-            - "9300:9300"
-        environment:
-            - discovery.type=single-node
-            - xpack.security.enabled=false
+  elasticsearch:
+    image: elasticsearch:8.5.3
+    container_name: release-openspg-elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
 
 
 

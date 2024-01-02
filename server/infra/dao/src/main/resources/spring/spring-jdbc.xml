@@ -19,10 +19,10 @@
             http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="defaultDataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
-        <property name="url" value="${cloudext.repository.impl.jdbc.url}"/>
-        <property name="username" value="${cloudext.repository.impl.jdbc.username}"/>
-        <property name="password" value="${cloudext.repository.impl.jdbc.password}"/>
-        <property name="driver" value="${cloudext.repository.impl.jdbc.driver}"/>
+        <property name="url" value="${server.repository.impl.jdbc.url}"/>
+        <property name="username" value="${server.repository.impl.jdbc.username}"/>
+        <property name="password" value="${server.repository.impl.jdbc.password}"/>
+        <property name="driver" value="${server.repository.impl.jdbc.driver}"/>
     </bean>
 
     <bean id="transactionManager"

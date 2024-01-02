@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.common.util;
 
-import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.api.facade.SchemaJsonUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -22,7 +22,7 @@ public class JsonUtils {
   public static String toJsonString(Object object) {
     String result = null;
     try {
-      result = JSON.serialize(object);
+      result = SchemaJsonUtils.serialize(object);
     } catch (Exception e) {
       log.error("toJsonString error, object={}", object, e);
       result = StringUtils.toString(object);

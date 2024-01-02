@@ -49,7 +49,7 @@ public class MemGraphState implements GraphState<IVertexId> {
    * vertex map key is s, value is vertex property vertex property is Map<key, Map<longVersion,
    * value>>
    */
-  Map<IVertexId, IProperty> vertexMap = new HashMap<>();
+  protected Map<IVertexId, IProperty> vertexMap = new HashMap<>();
 
   /** in edges map key is s, value is p_o_t */
   Map<IVertexId, Set<Tuple3<String, IVertexId, Long>>> inEdgeMap = new HashMap<>();

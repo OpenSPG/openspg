@@ -13,18 +13,21 @@
 
 package com.antgroup.openspg.builder.model.record;
 
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGSubPropertyRecord;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 
 public class RelationRecord extends BaseSPGRecord {
 
-  private final Relation relationType;
+  @Getter private final Relation relationType;
 
-  private final String srcId;
-  private final String dstId;
+  @Getter private final String srcId;
+  @Getter private final String dstId;
 
   private final List<SPGSubPropertyRecord> properties;
 
@@ -37,25 +40,13 @@ public class RelationRecord extends BaseSPGRecord {
     this.properties = properties;
   }
 
-  public Relation getRelationType() {
-    return relationType;
-  }
-
-  public String getSrcId() {
-    return srcId;
-  }
-
-  public String getDstId() {
-    return dstId;
-  }
-
   public List<SPGSubPropertyRecord> getSubProperties() {
     return properties;
   }
 
   public SPGSubPropertyRecord getSubPropertyRecord(SubProperty property) {
     for (SPGSubPropertyRecord record : getSubProperties()) {
-      if (record.getSubPropertyType().getName().equals(property.getName())) {
+      if (record.getSubProperty().getName().equals(property.getName())) {
         return record;
       }
     }

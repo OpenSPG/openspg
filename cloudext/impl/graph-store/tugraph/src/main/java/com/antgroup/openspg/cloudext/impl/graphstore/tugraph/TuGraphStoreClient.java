@@ -47,7 +47,6 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.oper
 import com.antgroup.openspg.cloudext.interfaces.graphstore.util.TypeNameUtils;
 import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum;
 import com.antgroup.openspg.server.api.facade.ApiConstants;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.antgroup.tugraph.TuGraphDbRpcClient;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -62,6 +61,8 @@ import java.util.stream.Collectors;
 import lgraph.Lgraph;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 public class TuGraphStoreClient extends BaseLPGGraphStoreClient {
@@ -71,15 +72,16 @@ public class TuGraphStoreClient extends BaseLPGGraphStoreClient {
   private final TuGraphDbRpcClient client;
   @Getter private final LPGInternalIdGenerator internalIdGenerator;
   @Getter private final LPGTypeNameConvertor typeNameConvertor;
-  @Getter private final GraphStoreConnectionInfo connInfo;
+  @Getter private final String connUrl;
 
-  public TuGraphStoreClient(
-      GraphStoreConnectionInfo connInfo, LPGTypeNameConvertor typeNameConvertor) {
-    this.connInfo = connInfo;
-    this.graphName = (String) connInfo.getNotNullParam(TuGraphConstants.GRAPH_NAME);
+  public TuGraphStoreClient(String connUrl, LPGTypeNameConvertor typeNameConvertor) {
+    UriComponents uriComponents = UriComponentsBuilder.fromUriString(connUrl).build();
+    this.connUrl = connUrl;
+    this.graphName = uriComponents.getQueryParams().getFirst(TuGraphConstants.GRAPH_NAME);
     this.timeout =
-        Double.parseDouble(String.valueOf(connInfo.getNotNullParam(ApiConstants.TIMEOUT)));
-    this.client = initTuGraphClient(connInfo);
+        Double.parseDouble(
+            String.valueOf(uriComponents.getQueryParams().getFirst(ApiConstants.TIMEOUT)));
+    this.client = initTuGraphClient(uriComponents);
     this.internalIdGenerator = new NoChangedIdGenerator();
     this.typeNameConvertor = typeNameConvertor;
   }
@@ -128,10 +130,10 @@ public class TuGraphStoreClient extends BaseLPGGraphStoreClient {
     }
   }
 
-  private TuGraphDbRpcClient initTuGraphClient(GraphStoreConnectionInfo connInfo) {
-    String host = (String) connInfo.getNotNullParam(ApiConstants.HOST);
-    String accessId = (String) connInfo.getNotNullParam(ApiConstants.ACCESS_ID);
-    String accessKey = (String) connInfo.getNotNullParam(ApiConstants.ACCESS_KEY);
+  private TuGraphDbRpcClient initTuGraphClient(UriComponents uriComponents) {
+    String host = String.format("%s:%s", uriComponents.getHost(), uriComponents.getPort());
+    String accessId = uriComponents.getQueryParams().getFirst(ApiConstants.ACCESS_ID);
+    String accessKey = uriComponents.getQueryParams().getFirst(ApiConstants.ACCESS_KEY);
     TuGraphDbRpcClient client = null;
     try {
       client = new TuGraphDbRpcClient(host, accessId, accessKey);

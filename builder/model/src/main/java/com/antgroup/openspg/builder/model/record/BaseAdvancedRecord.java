@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.builder.model.record;
 
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
@@ -52,7 +54,7 @@ public abstract class BaseAdvancedRecord extends BaseSPGRecord
 
   public SPGPropertyRecord getPropertyRecord(Property property) {
     for (SPGPropertyRecord record : getSpgProperties()) {
-      if (record.getPropertyType().getName().equals(property.getName())) {
+      if (record.getProperty().getName().equals(property.getName())) {
         return record;
       }
     }
@@ -69,7 +71,7 @@ public abstract class BaseAdvancedRecord extends BaseSPGRecord
   public void mergePropertyValue(SPGPropertyRecord otherRecord) {
     boolean find = false;
     for (SPGPropertyRecord existRecord : getSpgProperties()) {
-      if (otherRecord.getPropertyType().equals(existRecord.getPropertyType())) {
+      if (otherRecord.getProperty().equals(existRecord.getProperty())) {
         existRecord.getValue().merge(otherRecord.getValue());
         find = true;
       }
@@ -89,7 +91,7 @@ public abstract class BaseAdvancedRecord extends BaseSPGRecord
 
   public SPGPropertyRecord getPredicateProperty(SystemPredicateEnum predicate) {
     for (SPGPropertyRecord propertyRecord : getSpgProperties()) {
-      if (predicate.getName().equals(propertyRecord.getPropertyType().getName())) {
+      if (predicate.getName().equals(propertyRecord.getProperty().getName())) {
         return propertyRecord;
       }
     }

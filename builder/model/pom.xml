@@ -27,5 +27,21 @@
       <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>core-schema-model</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jgrapht</groupId>
+      <artifactId>jgrapht-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.danilopianini</groupId>
+      <artifactId>gson-extras</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+    </dependency>
   </dependencies>
 </project>

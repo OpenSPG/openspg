@@ -15,7 +15,7 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.
 
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.SPGRecordAlterItem;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.VertexRecordConvertor;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.VertexRecordConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import java.util.List;
