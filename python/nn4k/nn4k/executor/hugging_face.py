@@ -32,8 +32,15 @@ class HfLLMExecutor(LLMExecutor):
         model = None
         tokenizer = None
         init_args = nn_config
+        inference_args = None
         kwargs = config
-        executor = cls(model=model, tokenizer=tokenizer, init_args=init_args, **kwargs)
+        executor = cls(
+            model=model,
+            tokenizer=tokenizer,
+            init_args=init_args,
+            inference_args=inference_args,
+            **kwargs
+        )
         return executor
 
     def execute_sft(self, args=None, callbacks=None, **kwargs):

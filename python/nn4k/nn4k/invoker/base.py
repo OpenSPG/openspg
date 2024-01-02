@@ -38,24 +38,10 @@ class NNInvoker(ABC):
         super().__init__()
         self._nn_executor: NNExecutor = nn_executor
 
-
-class LLMInvoker(NNInvoker):
-    def __init__(self, nn_executor: LLMExecutor) -> None:
-        super().__init__(nn_executor)
-
     def submit_inference(self, submit_mode="k8s"):
         # TODO. maybe like:
         # engine.submit(self._nn_config, "xx_executor.execute_inference()")
         pass
-
-    def submit_sft(self, submit_mode="k8s"):
-        pass
-
-    def submit_rl_tuning(self, submit_mode="k8s"):
-        pass
-
-    # def deploy(cls, args, deploy_mode='k8s'):
-    #     pass
 
     def remote_inference(self, input, **kwargs):
         """
@@ -101,3 +87,14 @@ class LLMInvoker(NNInvoker):
             from nn4k.invoker.openai_invoker import OpenAIInvoker
 
             return OpenAIInvoker.from_config(nn_config)
+
+
+class LLMInvoker(NNInvoker):
+    def __init__(self, nn_executor: LLMExecutor) -> None:
+        super().__init__(nn_executor)
+
+    def submit_sft(self, submit_mode="k8s"):
+        pass
+
+    def submit_rl_tuning(self, submit_mode="k8s"):
+        pass

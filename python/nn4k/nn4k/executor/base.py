@@ -18,13 +18,27 @@ class NNExecutor(ABC):
     """
 
     @classmethod
-    def from_config(cls, nn_config, **kwargs):
-        pass
+    def from_config(cls, nn_config: dict, **kwargs):
+        """
+        Create NNExecutor instances from `nn_config`.
+        """
 
-    def __init__(self, model=None, tokenizer=None, init_args=None, **kwargs):
+        if "nn_name" in nn_config:
+            from nn4k.executor.hugging_face import HfLLMExecutor
+
+            return HfLLMExecutor.from_config(nn_config)
+        else:
+            o = cls.__new__(cls)
+            o._nn_config = nn_config
+            return o
+
+    def __init__(
+        self, model=None, tokenizer=None, init_args=None, inference_args=None, **kwargs
+    ):
         self._model = model
         self._tokenizer = tokenizer
         self._init_args = init_args
+        self._inference_args = inference_args
         self._kwargs = kwargs
 
     @property
@@ -59,45 +73,18 @@ class NNExecutor(ABC):
         return self._init_args
 
     @property
+    def inference_args(self):
+        """
+        Return the `inference_args` passed to the executor constructor.
+        """
+        return self._inference_args
+
+    @property
     def kwargs(self):
         """
         Return the `kwargs` passed to the executor constructor.
         """
         return self._kwargs
-
-
-class LLMExecutor(NNExecutor):
-    @classmethod
-    def from_config(cls, nn_config: dict, **kwargs):
-        """
-        Args:
-            nn_config
-        """
-
-        if "nn_name" in nn_config:
-            from nn4k.executor.hugging_face import HfLLMExecutor
-
-            return HfLLMExecutor.from_config(nn_config)
-        else:
-            o = cls.__new__(cls)
-            o._nn_config = nn_config
-            return o
-
-    @abstractmethod
-    def execute_sft(self, args=None, callbacks=None, **kwargs):
-        """
-        The entry point of SFT execution in a certain pod.
-        """
-        raise NotImplementedError(f"{self.__class__.__name__} does not support SFT.")
-
-    @abstractmethod
-    def execute_rl_tuning(self, args=None, callbacks=None, **kwargs):
-        """
-        The entry point of SFT execution in a certain pod.
-        """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} does not support RL-Tuning."
-        )
 
     def execute_inference(self, args, **kwargs):
         dataset = args.parse_dataset()
@@ -119,7 +106,8 @@ class LLMExecutor(NNExecutor):
         Implement model loading logic in derived executor classes.
 
         Implementer should initialize `self._model` and `self._tokenizer` to non-None
-        values according to `self._init_args`, `self._kwargs` and `kwargs`.
+        values according to `self._init_args`, `self._inference_args`, `self._kwargs`
+        and `kwargs`.
 
         This method will be called by several entry methods in executors and invokers.
         """
@@ -130,3 +118,21 @@ class LLMExecutor(NNExecutor):
         Implement model warming up logic for inference in derived executor classes.
         """
         pass
+
+
+class LLMExecutor(NNExecutor):
+    @abstractmethod
+    def execute_sft(self, args=None, callbacks=None, **kwargs):
+        """
+        The entry point of SFT execution in a certain pod.
+        """
+        raise NotImplementedError(f"{self.__class__.__name__} does not support SFT.")
+
+    @abstractmethod
+    def execute_rl_tuning(self, args=None, callbacks=None, **kwargs):
+        """
+        The entry point of SFT execution in a certain pod.
+        """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support RL-Tuning."
+        )

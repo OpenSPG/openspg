@@ -19,7 +19,9 @@ class NNHub(ABC):
     @abstractmethod
     def publish(
         self,
-        model_executor: Union[NNExecutor, Tuple[Type[NNExecutor], tuple, dict, tuple]],
+        model_executor: Union[
+            NNExecutor, Tuple[Type[NNExecutor], tuple, tuple, dict, tuple]
+        ],
         name: str,
         version: str = None,
     ) -> str:
@@ -27,8 +29,8 @@ class NNHub(ABC):
         Publish a model(executor) to hub.
         Args:
             model_executor: An NNExecutor object, which is pickleable.
-                Or a tuple of (class, args, kwargs, weight_ids) for creating an NNExecutor
-                , while all these 4 augments are pickleable.
+                Or a tuple of (class, init_args, inference_args, kwargs, weight_ids) for creating an NNExecutor
+                , while all these 5 augments are pickleable.
             name: The name of a model, like `llama2`.
                 We do not have a `namespace`. Use a joined name like `alibaba/qwen` to support such features.
             version: Optional. Auto generate a version if this param is not given.
@@ -75,7 +77,7 @@ class SimpleNNHub(NNHub):
 
     def _add_executor(
         self,
-        executor: Union[NNExecutor, Tuple[Type[NNExecutor], tuple, dict, tuple]],
+        executor: Union[NNExecutor, Tuple[Type[NNExecutor], tuple, tuple, dict, tuple]],
         name: str,
         version: str = None,
     ):
@@ -97,7 +99,7 @@ class SimpleNNHub(NNHub):
         self._add_executor(model_executor, name, version)
         return version
 
-    def _create_model_executor(self, cls, init_args, kwargs, weights):
+    def _create_model_executor(self, cls, init_args, inference_args, kwargs, weights):
         raise NotImplementedError()
 
     def get_model_executor(
@@ -108,6 +110,8 @@ class SimpleNNHub(NNHub):
         executor = self._model_executors.get(name).get(version)
         if isinstance(executor, NNExecutor):
             return executor
-        cls, init_args, kwargs, weights = executor
-        executor = self._create_model_executor(cls, init_args, kwargs, weights)
+        cls, init_args, inference_args, kwargs, weights = executor
+        executor = self._create_model_executor(
+            cls, init_args, inference_args, kwargs, weights
+        )
         return executor
