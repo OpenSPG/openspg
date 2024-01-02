@@ -1,3 +1,15 @@
+# -*- coding: utf-8 -*-
+# Copyright 2023 Ant Group CO., Ltd.
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied.
+
 import os
 import sys
 from configparser import ConfigParser
@@ -5,7 +17,7 @@ from pathlib import Path
 from typing import Union, Optional
 
 
-GLOBAL_CONFIG = ["host_addr"]
+GLOBAL_CONFIG = ["host_addr", "graph_store_url", "search_engine_url"]
 LOCAL_CONFIG = [
     "project_name",
     "project_id",
@@ -101,6 +113,9 @@ def get_cfg_files():
 
 
 def load_operator():
+    """
+    Load all operators in [builder_operator_dir].
+    """
     from knext.operator.base import BaseOp
     from knext.operator import builtin
     if not BaseOp._has_registered and (
@@ -118,6 +133,9 @@ def load_operator():
 
 
 def load_builder_job():
+    """
+    Load all builder jobs in [builder_job_dir].
+    """
     from knext.client.model.builder_job import BuilderJob
 
     if not BuilderJob._has_registered and (
