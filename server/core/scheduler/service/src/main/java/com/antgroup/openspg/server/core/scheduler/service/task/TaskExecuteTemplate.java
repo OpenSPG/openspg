@@ -134,7 +134,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
       task = old;
     }
 
-    //update task execute num and trace log
+    // update task execute num and trace log
     task.setGmtModified(old.getGmtModified());
     task.setExecuteNum(old.getExecuteNum() + 1);
     context.getTraceLog().insert(0, System.getProperty("line.separator"));

@@ -171,7 +171,7 @@ public class SchedulerCommonService {
       schedulerTaskService.insert(new SchedulerTask(instance, status, node));
     }
 
-    //set job last execute time
+    // set job last execute time
     SchedulerJob updateJob = new SchedulerJob();
     updateJob.setId(job.getId());
     updateJob.setLastExecuteTime(schedulerDate);

@@ -97,7 +97,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     List<SchedulerInstance> instances = Lists.newArrayList();
     SchedulerJob job = schedulerJobService.getById(jobId);
 
-    //generate instance by LifeCycle
+    // generate instance by LifeCycle
     if (LifeCycle.REAL_TIME.equals(job.getLifeCycle())) {
       stopJobAllInstance(jobId);
       instances.add(schedulerCommonService.generateInstance(job));
@@ -111,7 +111,7 @@ public class SchedulerServiceImpl implements SchedulerService {
       return false;
     }
 
-    //execute the generated instance
+    // execute the generated instance
     for (SchedulerInstance ins : instances) {
       Long instanceId = ins.getId();
       Runnable instanceRunnable = () -> schedulerExecuteService.executeInstance(instanceId);
