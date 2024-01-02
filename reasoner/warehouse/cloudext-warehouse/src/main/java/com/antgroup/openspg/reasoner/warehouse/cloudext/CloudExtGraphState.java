@@ -32,6 +32,7 @@ import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexVersionPro
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexBizId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexId;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.graphstate.model.MergeTypeEnum;
@@ -64,7 +65,8 @@ public class CloudExtGraphState extends MemGraphState {
 
     GraphLPGRecordStruct recordStruct =
         (GraphLPGRecordStruct)
-            lpgGraphStoreClient.queryRecord(new VertexLPGRecordQuery(id.getBizId(), id.getType()));
+            lpgGraphStoreClient.queryRecord(
+                new VertexLPGRecordQuery(((VertexBizId) id).getBizId(), id.getType()));
 
     if (recordStruct.isEmpty()) {
       return null;
@@ -74,7 +76,7 @@ public class CloudExtGraphState extends MemGraphState {
       VertexVersionProperty property =
           new VertexVersionProperty(vertexRecord.toPropertyMapWithIdAndVersion());
       return new Vertex<>(
-          new VertexId(vertexRecord.getId(), vertexRecord.getVertexType()), property);
+          new VertexBizId(vertexRecord.getId(), vertexRecord.getVertexType()), property);
     }
     return null;
   }
@@ -127,7 +129,8 @@ public class CloudExtGraphState extends MemGraphState {
                   new VertexVersionProperty(vertexRecord.toPropertyMapWithIdAndVersion());
               return (IVertex<IVertexId, IProperty>)
                   new Vertex<IVertexId, IProperty>(
-                      new VertexId(vertexRecord.getId(), vertexRecord.getVertexType()), property);
+                      new VertexBizId(vertexRecord.getId(), vertexRecord.getVertexType()),
+                      property);
             })
         .iterator();
   }
@@ -149,7 +152,7 @@ public class CloudExtGraphState extends MemGraphState {
         (GraphLPGRecordStruct)
             lpgGraphStoreClient.queryRecord(
                 new OneHopLPGRecordQuery(
-                    vertexId.getBizId(),
+                    ((VertexBizId) vertexId).getBizId(),
                     vertexId.getType(),
                     types.stream().map(EdgeTypeName::parse).collect(Collectors.toSet()),
                     com.antgroup.openspg.cloudext.interfaces.graphstore.model.Direction.valueOf(
@@ -159,9 +162,9 @@ public class CloudExtGraphState extends MemGraphState {
     List<IEdge<IVertexId, IProperty>> results = new ArrayList<>(edgeRecords.size());
     for (EdgeRecord edgeRecord : edgeRecords) {
       VertexId srcVertexId =
-          new VertexId(edgeRecord.getSrcId(), edgeRecord.getEdgeType().getStartVertexType());
+          new VertexBizId(edgeRecord.getSrcId(), edgeRecord.getEdgeType().getStartVertexType());
       VertexId dstVertexId =
-          new VertexId(edgeRecord.getDstId(), edgeRecord.getEdgeType().getEndVertexType());
+          new VertexBizId(edgeRecord.getDstId(), edgeRecord.getEdgeType().getEndVertexType());
       if (Direction.IN.equals(direction)) {
         // 当是IN边时，这里交换下src和dst，由于图存的方向和kgdsl需要的方向不一致
         VertexId tmp = srcVertexId;

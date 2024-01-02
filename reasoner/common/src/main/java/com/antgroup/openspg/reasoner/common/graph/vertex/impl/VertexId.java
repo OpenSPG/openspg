@@ -24,7 +24,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Comparator;
-import lombok.Getter;
 
 public class VertexId implements IVertexId {
   /**
@@ -34,8 +33,6 @@ public class VertexId implements IVertexId {
    */
   private final byte[] vertexIdBytes;
 
-  @Getter private String bizId;
-
   /** create vertex id */
   public VertexId(long internalId, String type) {
     this.vertexIdBytes = generateIdBytes(internalId, type);
@@ -43,7 +40,6 @@ public class VertexId implements IVertexId {
 
   public VertexId(String bizId, String type) {
     this.vertexIdBytes = generateIdBytes(generateInternalId(bizId, type), type);
-    this.bizId = bizId;
   }
 
   public VertexId(byte[] bytes) {

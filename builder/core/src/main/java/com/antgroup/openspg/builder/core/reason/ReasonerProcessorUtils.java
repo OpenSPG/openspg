@@ -34,6 +34,7 @@ import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexBizId;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,7 +61,7 @@ public class ReasonerProcessorUtils {
     IEdge<IVertexId, IProperty> edge = result.getEdgeList().get(0);
     SPGPropertyRecord propertyRecord =
         new SPGPropertyRecord(
-            belongToProperty, new SPGPropertyValue(edge.getTargetId().getBizId()));
+            belongToProperty, new SPGPropertyValue(((VertexBizId) edge.getTargetId()).getBizId()));
     advancedRecord.mergePropertyValue(propertyRecord);
   }
 
@@ -73,7 +74,7 @@ public class ReasonerProcessorUtils {
     List<BaseSPGRecord> results = new ArrayList<>(vertices.size() + edges.size());
     vertices.forEach(
         vertex -> {
-          IVertexId vertexId = vertex.getId();
+          VertexBizId vertexId = (VertexBizId) vertex.getId();
           Map<String, String> properties = toProps(vertex.getValue());
           BaseSPGType spgType = catalog.getSPGType(SPGTypeIdentifier.parse(vertexId.getType()));
 
@@ -90,8 +91,8 @@ public class ReasonerProcessorUtils {
           RelationRecord relationRecord =
               EdgeRecordConvertor.toRelationRecord(
                   relationType,
-                  edge.getSourceId().getBizId(),
-                  edge.getTargetId().getBizId(),
+                  ((VertexBizId) edge.getSourceId()).getBizId(),
+                  ((VertexBizId) edge.getTargetId()).getBizId(),
                   properties);
           results.add(relationRecord);
         });
