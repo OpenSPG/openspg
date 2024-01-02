@@ -28,13 +28,13 @@ def edit_config(**kwargs):
             if not global_cfg.has_section("global"):
                 global_cfg.add_section("global")
             for arg in args:
-                key, value = arg.split("=")
+                key, value = arg.split("=", 1)
                 global_cfg.set("global", key, value)
                 with open(global_cfg_path, "w") as config_file:
                     global_cfg.write(config_file)
         if option == "local":
             for arg in args:
-                key, value = arg.split("=")
+                key, value = arg.split("=", 1)
                 local_cfg.set("local", key, value)
                 with open(local_cfg_path, "w") as config_file:
                     local_cfg.write(config_file)
