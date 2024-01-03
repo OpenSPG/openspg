@@ -105,4 +105,7 @@ public interface IEdge<K, EV> extends Serializable {
   }
 
   IEdge<K, EV> clone();
+
+  /** reverse edge */
+  IEdge<K, EV> reverse();
 }

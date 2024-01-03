@@ -13,11 +13,14 @@
 
 package com.antgroup.openspg.reasoner.common.graph.edge.impl;
 
+import com.antgroup.openspg.reasoner.common.constants.Constants;
+import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
+
 public class OptionalEdge<K, EV> extends Edge<K, EV> {
 
   /** optional edge */
   public OptionalEdge(K srcId, K targetId) {
-    super(srcId, targetId);
+    super(srcId, targetId, null, 0L, Direction.OUT, Constants.OPTIONAL_EDGE_FLAG);
   }
 
   @Override

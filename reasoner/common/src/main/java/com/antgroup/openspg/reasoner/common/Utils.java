@@ -30,10 +30,12 @@ import com.antgroup.openspg.reasoner.common.types.KTLong$;
 import com.antgroup.openspg.reasoner.common.types.KTObject$;
 import com.antgroup.openspg.reasoner.common.types.KTString$;
 import com.antgroup.openspg.reasoner.common.types.KgType;
+import com.google.common.base.Preconditions;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -327,5 +329,15 @@ public class Utils {
       return false;
     }
     return getForceOutputString(JavaConversions.mapAsJavaMap(params));
+  }
+
+  /** convert kvs to property map */
+  public static Map<String, Object> convert2Property(Object... kvs) {
+    Preconditions.checkArgument(kvs.length % 2 == 0, "The number of config kv should be even.");
+    Map<String, Object> property = new HashMap<>();
+    for (int i = 0; i < kvs.length; i = i + 2) {
+      property.put(String.valueOf(kvs[i]), kvs[i + 1]);
+    }
+    return property;
   }
 }

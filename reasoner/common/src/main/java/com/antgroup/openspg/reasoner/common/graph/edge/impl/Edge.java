@@ -125,6 +125,17 @@ public class Edge<K, EV> implements IEdge<K, EV> {
   }
 
   @Override
+  public Edge<K, EV> reverse() {
+    return new Edge<>(
+        this.targetId,
+        this.sourceId,
+        this.value,
+        this.version,
+        Direction.OUT.equals(this.direction) ? Direction.IN : Direction.OUT,
+        this.type);
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;
