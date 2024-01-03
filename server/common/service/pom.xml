@@ -16,7 +16,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.antgroup.openspg.server</groupId>
-    <artifactId>openspg-server-parent</artifactId>
+    <artifactId>server-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
@@ -33,15 +33,15 @@
       <artifactId>api-http-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-interface-graph-store</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-interface-object-store</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-interface-search-engine</artifactId>
     </dependency>
     <dependency>
@@ -53,7 +53,7 @@
       <artifactId>cloudext-interface-computing</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg</groupId>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-interface-table-store</artifactId>
     </dependency>
     <dependency>

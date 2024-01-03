@@ -28,18 +28,11 @@
   </licenses>
 
   <modules>
-    <module>builder/model</module>
-    <module>builder/core</module>
     <module>common/util</module>
     <module>server</module>
-    <module>cloudext/interface/graph-store</module>
-    <module>cloudext/interface/object-store</module>
-    <module>cloudext/interface/table-store</module>
-    <module>cloudext/interface/search-engine</module>
-    <module>cloudext/impl/graph-store/tugraph</module>
-    <module>cloudext/impl/object-store/local</module>
-    <module>cloudext/impl/table-store/local</module>
-    <module>cloudext/impl/search-engine/elasticsearch</module>
+    <module>reasoner</module>
+    <module>builder</module>
+    <module>cloudext</module>
   </modules>
 
   <properties>
@@ -54,6 +47,8 @@
     <json4s.version>4.0.6</json4s.version>
     <kgreasoner-version>20231018-OPENSOURCE</kgreasoner-version>
     <logback.version>1.2.11</logback.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <scala.binary.version>2.11</scala.binary.version>
     <scala.version>2.11.12</scala.version>
     <spock.version>2.2-M1-groovy-3.0</spock.version>
@@ -85,12 +80,12 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.builder</groupId>
         <artifactId>builder-model</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.builder</groupId>
         <artifactId>builder-core</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -100,42 +95,42 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-interface-graph-store</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-interface-search-engine</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-interface-object-store</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-interface-table-store</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-impl-object-store-local</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-impl-table-store-local</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.antgroup.openspg</groupId>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -310,6 +305,11 @@
         <artifactId>QLExpress</artifactId>
         <version>3.3.2</version>
       </dependency>
+      <dependency>
+        <groupId>commons-cli</groupId>
+        <artifactId>commons-cli</artifactId>
+        <version>1.6.0</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -457,6 +457,30 @@
             <goals>
               <goal>jar-no-fork</goal>
               <goal>test-jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.scalastyle</groupId>
+        <artifactId>scalastyle-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <configuration>
+          <verbose>false</verbose>
+          <failOnViolation>true</failOnViolation>
+          <includeTestSourceDirectory>false</includeTestSourceDirectory>
+          <failOnWarning>false</failOnWarning>
+          <sourceDirectory>${project.basedir}/src/main/scala</sourceDirectory>
+          <testSourceDirectory>${project.basedir}/src/test/scala</testSourceDirectory>
+          <configLocation>scalastyle-config.xml</configLocation>
+          <outputFile>${project.basedir}/target/scalastyle-output.xml</outputFile>
+          <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
+          <outputEncoding>${project.reporting.outputEncoding}</outputEncoding>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
             </goals>
           </execution>
         </executions>

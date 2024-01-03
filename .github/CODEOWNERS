@@ -9,12 +9,11 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-@baifuyu
+@baifuyu @leywar @yixianlzz
 
-/core/spgschema matthew.hyx@antgroup.com fuyu.bfy@antgroup.com
-/core/spgreasoner donghai.ydh@antgroup.com fuyu.bfy@antgroup.com
-/core/spgbuilder fuyu.bfy@antgroup.com
-
-/cloudext fuyu.bfy@antgroup.com
-/python qy266141@antgroup.com matthew.hyx@antgroup.com fuyu.bfy@antgroup.com
+/cloudext fuyu.bfy@antgroup.com leywar.liang@antgroup.com
+/python qy266141@antgroup.com julin.jl@antgroup.com leywar.liang@antgroup.com huaidong.xhd@antgroup.com
+/reasoner donghai.ydh@antgroup.com chengqiang.cq@antgroup.com peilong.zpl@antgroup.com zhizhen.lzz@antgroup.com wangshaofei.wsf@antgroup.com fuyu.bfy@antgroup.com
+/builder fuyu.bfy@antgroup.com leywar.liang@antgroup.com
+/server fuyu.bfy@antgroup.com matthew.hyx@antgroup.com leywar.liang@antgroup.com
 
