@@ -26,7 +26,7 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.Connection;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
 import com.antgroup.openspg.reasoner.lube.common.pattern.PatternElement;
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
-import com.antgroup.openspg.reasoner.rule.RuleRunner;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.collect.Sets;
 import java.io.Serializable;

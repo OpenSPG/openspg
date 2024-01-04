@@ -30,7 +30,7 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.Element;
 import com.antgroup.openspg.reasoner.lube.common.pattern.EntityElement;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
 import com.antgroup.openspg.reasoner.lube.common.pattern.PatternElement;
-import com.antgroup.openspg.reasoner.rule.RuleRunner;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
 import com.google.common.collect.Lists;

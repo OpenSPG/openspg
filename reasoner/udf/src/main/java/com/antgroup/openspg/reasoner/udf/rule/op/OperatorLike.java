@@ -10,18 +10,17 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
+package com.antgroup.openspg.reasoner.udf.rule.op;
 
-package com.antgroup.openspg.reasoner.rule.op;
-
-/** div op without exception return null when exception */
-public class OperatorMultiDiv extends com.ql.util.express.instruction.op.OperatorMultiplyDivide {
-  public OperatorMultiDiv(String name) {
+public class OperatorLike extends com.ql.util.express.instruction.op.OperatorLike {
+  public OperatorLike(String name) {
     super(name);
   }
 
+  @Override
   public Object executeInner(Object[] list) throws Exception {
-    if (!(list[0] instanceof Number) || !(list[1] instanceof Number)) {
-      return null;
+    if (list[0] == null || list[1] == null) {
+      return false;
     } else {
       return executeInner(list[0], list[1]);
     }

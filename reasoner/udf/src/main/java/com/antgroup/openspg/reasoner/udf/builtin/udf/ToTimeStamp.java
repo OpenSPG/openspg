@@ -10,19 +10,19 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-package com.antgroup.openspg.reasoner.rule.op;
 
-public class OperatorLike extends com.ql.util.express.instruction.op.OperatorLike {
-  public OperatorLike(String name) {
-    super(name);
-  }
+package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
-  @Override
-  public Object executeInner(Object[] list) throws Exception {
-    if (list[0] == null || list[1] == null) {
-      return false;
-    } else {
-      return executeInner(list[0], list[1]);
-    }
+import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class ToTimeStamp {
+
+  @UdfDefine(name = "to_timestamp", compatibleName = "ToTimestamp")
+  public String toTimestamp(long curMillSecond) {
+    String format = "yyyy-MM-dd HH:mm:ss";
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+    return simpleDateFormat.format(new Date(curMillSecond));
   }
 }

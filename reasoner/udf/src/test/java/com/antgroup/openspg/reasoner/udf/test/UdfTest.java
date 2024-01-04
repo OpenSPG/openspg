@@ -773,4 +773,13 @@ public class UdfTest {
     value = randomMeta.invoke();
     Assert.assertTrue(value instanceof Long);
   }
+
+  @Test
+  public void testToTimeStamp() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    IUdfMeta toTimestampUdf = mng.getUdfMeta("to_timestamp", Lists.newArrayList(KTLong$.MODULE$));
+    Assert.assertTrue(toTimestampUdf.getCompatibleNames().contains("ToTimestamp"));
+    System.out.println(toTimestampUdf.invoke(1688545587325L));
+    Assert.assertEquals(toTimestampUdf.invoke(1688545587325L), "2023-07-05 16:26:27");
+  }
 }
