@@ -140,7 +140,7 @@ class SimpleNNHub(NNHub):
 
     def get_invoker(self, nn_config: dict) -> Optional["NNInvoker"]:
         from nn4k.invoker import LLMInvoker
-        from nn4k.invoker.openai_invoker import OpenAIInvoker
+        from nn4k.invoker.openai import OpenAIInvoker
         from nn4k.utils.invoker_checking import is_openai_invoker
         from nn4k.utils.invoker_checking import is_local_invoker
 
