@@ -14,7 +14,9 @@
 package com.antgroup.openspg.reasoner.util
 
 import com.antgroup.openspg.reasoner.batching.DynamicBatchSize
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.graph.`type`.GraphItemType
+import com.antgroup.openspg.reasoner.common.graph.edge.Direction
 import com.antgroup.openspg.reasoner.lube.common.pattern._
 import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, Var}
 import com.antgroup.openspg.reasoner.rdg.common.FoldRepeatEdgeInfo
@@ -75,6 +77,34 @@ object KgGraphSchema {
   }
 
   /**
+   * get after joni schema
+   */
+  def getAfterJoinSchema(
+      leftSchema: PartialGraphPattern,
+      rightSchema: PartialGraphPattern): PartialGraphPattern = {
+    val edgeDirectionDiff = getEdgeDirectionDiff(leftSchema, rightSchema)
+    val leftEgeSet = leftSchema.topology.values
+      .flatMap(pcs => { pcs.map(pc => pc) })
+      .filter(pc => !edgeDirectionDiff.contains(pc.alias))
+      .toSet ++
+      rightSchema.topology.values
+        .flatMap(pcs => { pcs.map(pc => pc) })
+        .filter(pc => edgeDirectionDiff.contains(pc.alias))
+        .toSet
+
+    val leftNodeMap = leftEgeSet
+      .flatMap(pc => List(leftSchema.getNode(pc.source), leftSchema.getNode(pc.target)))
+      .map(pe => PatternElement(pe.alias, pe.typeNames, null))
+      .map(pe => (pe.alias, pe))
+      .toMap
+
+    val topology = convert2Topology(leftEgeSet, leftNodeMap)
+    KgGraphSchema.mergeSchema(
+      PartialGraphPattern(leftSchema.rootAlias, leftNodeMap, topology),
+      rightSchema)
+  }
+
+  /**
    * change schema vertex alias
    */
   def schemaAliasMapping(pattern: Pattern, schemaMapping: Map[Var, Var]): PartialGraphPattern = {
@@ -96,50 +126,91 @@ object KgGraphSchema {
       .flatMap(pcs => {
         pcs.map(pc => pc)
       })
-      .map(pc => {
-        var patternConnection = pc.asInstanceOf[PatternConnection]
-        val renameSource = vertexAliasMapping.get(patternConnection.source)
-        if (renameSource.isDefined) {
-          patternConnection = new PatternConnection(
-            patternConnection.alias,
-            renameSource.get,
-            patternConnection.relTypes,
-            patternConnection.target,
-            patternConnection.direction,
-            patternConnection.rule,
-            patternConnection.limit,
-            patternConnection.exists,
-            patternConnection.optional)
-        }
-        val renameTarget = vertexAliasMapping.get(patternConnection.target)
-        if (renameTarget.isDefined) {
-          patternConnection = new PatternConnection(
-            patternConnection.alias,
-            patternConnection.source,
-            patternConnection.relTypes,
-            renameTarget.get,
-            patternConnection.direction,
-            patternConnection.rule,
-            patternConnection.limit,
-            patternConnection.exists,
-            patternConnection.optional)
-        }
-        val renameEdge = edgeAliasMapping.get(patternConnection.alias)
-        if (renameEdge.isDefined) {
-          patternConnection = new PatternConnection(
-            renameEdge.get,
-            patternConnection.source,
-            patternConnection.relTypes,
-            patternConnection.target,
-            patternConnection.direction,
-            patternConnection.rule,
-            patternConnection.limit,
-            patternConnection.exists,
-            patternConnection.optional)
-        }
-        patternConnection
-      })
-      .map(pc => pc.asInstanceOf[Connection])
+      .map {
+        case connection: PatternConnection =>
+          var patternConnection = connection
+          val renameSource = vertexAliasMapping.get(patternConnection.source)
+          if (renameSource.isDefined) {
+            patternConnection = PatternConnection(
+              patternConnection.alias,
+              renameSource.get,
+              patternConnection.relTypes,
+              patternConnection.target,
+              patternConnection.direction,
+              patternConnection.rule,
+              patternConnection.limit,
+              patternConnection.exists,
+              patternConnection.optional)
+          }
+          val renameTarget = vertexAliasMapping.get(patternConnection.target)
+          if (renameTarget.isDefined) {
+            patternConnection = PatternConnection(
+              patternConnection.alias,
+              patternConnection.source,
+              patternConnection.relTypes,
+              renameTarget.get,
+              patternConnection.direction,
+              patternConnection.rule,
+              patternConnection.limit,
+              patternConnection.exists,
+              patternConnection.optional)
+          }
+          val renameEdge = edgeAliasMapping.get(patternConnection.alias)
+          if (renameEdge.isDefined) {
+            patternConnection = PatternConnection(
+              renameEdge.get,
+              patternConnection.source,
+              patternConnection.relTypes,
+              patternConnection.target,
+              patternConnection.direction,
+              patternConnection.rule,
+              patternConnection.limit,
+              patternConnection.exists,
+              patternConnection.optional)
+          }
+          patternConnection
+        case connection: PathConnection =>
+          var pathConnection = connection
+          val renameSource = vertexAliasMapping.get(pathConnection.source)
+          if (renameSource.isDefined) {
+            pathConnection = PathConnection(
+              pathConnection.alias,
+              renameSource.get,
+              pathConnection.relTypes,
+              pathConnection.target,
+              pathConnection.direction,
+              pathConnection.rule,
+              pathConnection.vertexSchemaList,
+              pathConnection.edgeSchemaList)
+          }
+          val renameTarget = vertexAliasMapping.get(pathConnection.target)
+          if (renameTarget.isDefined) {
+            pathConnection = PathConnection(
+              pathConnection.alias,
+              pathConnection.source,
+              pathConnection.relTypes,
+              renameSource.get,
+              pathConnection.direction,
+              pathConnection.rule,
+              pathConnection.vertexSchemaList,
+              pathConnection.edgeSchemaList)
+          }
+          val renameEdge = edgeAliasMapping.get(pathConnection.alias)
+          if (renameEdge.isDefined) {
+            pathConnection = PathConnection(
+              renameEdge.get,
+              pathConnection.source,
+              pathConnection.relTypes,
+              pathConnection.target,
+              pathConnection.direction,
+              pathConnection.rule,
+              pathConnection.vertexSchemaList,
+              pathConnection.edgeSchemaList)
+          }
+          pathConnection
+        case pc =>
+          pc
+      }
       .toSet
 
     val vertexMap = new mutable.HashMap[String, PatternElement]()
@@ -157,6 +228,14 @@ object KgGraphSchema {
           vertexMap.put(renameAlias.get, newPatternElement)
         }
       })
+    val rootRenameAlias = vertexAliasMapping.get(pattern.root.alias)
+    if (rootRenameAlias.isEmpty) {
+      vertexMap.put(pattern.root.alias, pattern.root)
+    } else {
+      val newPatternElement =
+        PatternElement(rootRenameAlias.get, pattern.root.typeNames, pattern.root.rule)
+      vertexMap.put(rootRenameAlias.get, newPatternElement)
+    }
 
     val topology = convert2Topology(patternConnectionSet, vertexMap.toMap)
 
@@ -181,6 +260,37 @@ object KgGraphSchema {
         pcs.map(pc => pc)
       })
       .map(pc => { PatternConnection.insureDirection(addedPattern.root.alias, pc) })
+      .toSet ++
+      existingPattern.topology.values
+        .flatMap(pcs => {
+          pcs.map(pc => pc)
+        })
+        .toSet
+
+    val vertexMap = new mutable.HashMap[String, PatternElement]()
+    addedPattern.topology.values
+      .flatMap(pcs => pcs.map(pc => (pc.source, pc.target)))
+      .flatMap(x => List(x._1, x._2))
+      .foreach(k => vertexMap.put(k, addedPattern.getNode(k)))
+    existingPattern.topology.values
+      .flatMap(pcs => pcs.map(pc => (pc.source, pc.target)))
+      .flatMap(x => List(x._1, x._2))
+      .foreach(k => vertexMap.put(k, existingPattern.getNode(k)))
+    vertexMap.put(addedPattern.root.alias, addedPattern.root)
+
+    val topology = convert2Topology(patternConnectionSet, vertexMap.toMap)
+
+    PartialGraphPattern(addedPattern.root.alias, vertexMap.toMap, topology)
+  }
+
+  /**
+   * merge two schema
+   */
+  def mergeSchema(existingPattern: Pattern, addedPattern: Pattern): PartialGraphPattern = {
+    val patternConnectionSet = addedPattern.topology.values
+      .flatMap(pcs => {
+        pcs.map(pc => pc)
+      })
       .toSet ++
       existingPattern.topology.values
         .flatMap(pcs => {
@@ -311,10 +421,12 @@ object KgGraphSchema {
       patternConnectionSet: Set[Connection],
       vertexMap: Map[String, PatternElement]): Map[String, Set[Connection]] = {
     val topologyOut = patternConnectionSet
+      .map(pc => connectionRemoveRule(pc))
       .groupBy(pc => pc.source)
       .mapValues(list => list)
 
     val topologyIn = patternConnectionSet
+      .map(pc => connectionRemoveRule(pc))
       .groupBy(pc => pc.target)
       .mapValues(list => list)
 
@@ -323,6 +435,45 @@ object KgGraphSchema {
     }
 
     topology.filterKeys(key => vertexMap.contains(key)).view.force
+  }
+
+  def connectionRemoveRule(connection: Connection): Connection = {
+    connection match {
+      case pc: PatternConnection =>
+        PatternConnection(
+          pc.alias,
+          pc.source,
+          pc.relTypes,
+          pc.target,
+          pc.direction,
+          null,
+          pc.limit,
+          pc.exists,
+          pc.optional)
+      case ppc: PathConnection =>
+        PathConnection(
+          ppc.alias,
+          ppc.source,
+          ppc.relTypes,
+          ppc.target,
+          ppc.direction,
+          null,
+          ppc.vertexSchemaList,
+          ppc.edgeSchemaList)
+      case lpc: LinkedPatternConnection =>
+        LinkedPatternConnection(
+          lpc.alias,
+          lpc.source,
+          lpc.relTypes,
+          lpc.funcName,
+          lpc.params,
+          lpc.target,
+          lpc.direction,
+          null,
+          lpc.limit)
+      case _ =>
+        throw UnsupportedOperationException("unknown type " + connection.getClass.getName)
+    }
   }
 
   def getNodesAlias(pattern: Pattern): Set[String] = {
@@ -356,6 +507,56 @@ object KgGraphSchema {
       })
       .filter(pc => { pc.source.equals(vertexAlias) || pc.target.equals(vertexAlias) })
       .toSet
+  }
+
+  def getOverlapSchema(
+      left: PartialGraphPattern,
+      right: PartialGraphPattern): (Set[PatternElement], Set[Connection]) = {
+    val overlapVertexSet = left.nodes.keySet.flatMap(alias => right.nodes.get(alias))
+
+    val leftConnectSet = left.topology.values
+      .flatMap(pcs => {
+        pcs.map(pc => pc)
+      })
+      .toSet
+
+    val overlapConnectSet = right.topology.values
+      .flatMap(pcs => {
+        pcs.map(pc => pc)
+      })
+      .filter(pc => leftConnectSet.contains(pc))
+      .toSet
+    Tuple2(overlapVertexSet, overlapConnectSet)
+  }
+
+  def getEdgeDirectionDiff(
+      left: PartialGraphPattern,
+      right: PartialGraphPattern): Map[String, (Direction, Direction)] = {
+
+    val leftConnectMap = left.topology.values
+      .flatMap(pcs => {
+        pcs.map(pc => pc)
+      })
+      .map(pc => (pc.alias, pc))
+      .toMap
+
+    right.topology.values
+      .flatMap(pcs => {
+        pcs.map(pc => pc)
+      })
+      .filter(pc =>
+        leftConnectMap.contains(pc.alias) && !leftConnectMap
+          .getOrElse(pc.alias, pc)
+          .direction
+          .equals(pc.direction))
+      .map(pc =>
+        (
+          pc.alias,
+          (
+            if (Direction.OUT.equals(pc.direction)) { Direction.IN }
+            else { Direction.OUT },
+            pc.direction)))
+      .toMap
   }
 
 }

@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 
 public class HiveWriterSession {
   private static final Logger log = LoggerFactory.getLogger(HiveWriterSession.class);
-
   private final HiveTableInfo hiveTableInfo;
   private Connection connection;
 

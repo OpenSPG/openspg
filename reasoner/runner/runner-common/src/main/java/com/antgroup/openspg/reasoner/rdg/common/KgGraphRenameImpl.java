@@ -13,6 +13,9 @@
 
 package com.antgroup.openspg.reasoner.rdg.common;
 
+import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
+import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
@@ -22,6 +25,7 @@ import com.antgroup.openspg.reasoner.lube.logical.Var;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import scala.collection.JavaConversions;
 
 public class KgGraphRenameImpl implements Serializable {
@@ -44,27 +48,27 @@ public class KgGraphRenameImpl implements Serializable {
     }
   }
 
+  public boolean needAction() {
+    return !vertexAliasMap.isEmpty() || !edgeAliasMap.isEmpty();
+  }
+
   public KgGraph<IVertexId> rename(KgGraph<IVertexId> value) {
     if (this.vertexAliasMap.isEmpty() && this.edgeAliasMap.isEmpty()) {
       return value;
     }
     KgGraphImpl kgGraph = (KgGraphImpl) value;
+    Map<String, Set<IVertex<IVertexId, IProperty>>> alias2VertexMap = new HashMap<>();
     for (Map.Entry<String, String> entry : this.vertexAliasMap.entrySet()) {
-      kgGraph
-          .getAlias2VertexMap()
-          .put(entry.getValue(), kgGraph.getAlias2VertexMap().remove(entry.getKey()));
+      alias2VertexMap.put(entry.getValue(), kgGraph.getAlias2VertexMap().remove(entry.getKey()));
     }
-    for (Map.Entry<String, String> entry : this.edgeAliasMap.entrySet()) {
-      kgGraph
-          .getAlias2EdgeMap()
-          .put(entry.getValue(), kgGraph.getAlias2EdgeMap().remove(entry.getKey()));
-    }
-    return value;
-  }
+    kgGraph.getAlias2VertexMap().putAll(alias2VertexMap);
 
-  public KgGraph<IVertexId> renameAndRemoveRoot(KgGraph<IVertexId> value, String rootVertexAlias) {
-    KgGraphImpl kgGraph = (KgGraphImpl) rename(value);
-    kgGraph.getAlias2VertexMap().remove(this.vertexAliasMap.get(rootVertexAlias));
-    return kgGraph;
+    Map<String, Set<IEdge<IVertexId, IProperty>>> alias2EdgeMap = new HashMap<>();
+    for (Map.Entry<String, String> entry : this.edgeAliasMap.entrySet()) {
+      alias2EdgeMap.put(entry.getValue(), kgGraph.getAlias2EdgeMap().remove(entry.getKey()));
+    }
+    kgGraph.getAlias2EdgeMap().putAll(alias2EdgeMap);
+
+    return value;
   }
 }

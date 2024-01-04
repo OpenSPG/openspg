@@ -16,7 +16,7 @@ package com.antgroup.openspg.reasoner.utils;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
-import com.antgroup.openspg.reasoner.rule.RuleRunner;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
