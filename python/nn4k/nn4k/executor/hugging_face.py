@@ -9,62 +9,43 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-import dataclasses
-from dataclasses import dataclass
-from typing import Union, Optional
-
-from nn4k.executor import LLMExecutorConfig, LLMExecutor
-
-
-@dataclass
-class HfLLMExecutorConfig(LLMExecutorConfig):
-    pass
+from typing import Union
+from nn4k.executor import LLMExecutor
 
 
 class HfLLMExecutor(LLMExecutor):
     @classmethod
-    def try_parse_config(
-        cls, nn_config: Union[str, dict]
-    ) -> Optional[HfLLMExecutorConfig]:
-        config = super().try_parse_config(nn_config)
-        if config is None:
-            return None
-        config = HfLLMExecutorConfig(**dataclasses.asdict(config))
-        return config
-
-    @classmethod
-    def _from_config(cls, nn_config: HfLLMExecutorConfig) -> "HfLLMExecutor":
-        model = None
-        tokenizer = None
-        init_args = nn_config
-        inference_args = None
-        kwargs = dict()
-        executor = cls(
-            model=model,
-            tokenizer=tokenizer,
-            init_args=init_args,
-            inference_args=inference_args,
-            **kwargs
-        )
+    def from_config(cls, nn_config: dict) -> "HfLLMExecutor":
+        """
+        Create an HfLLMExecutor instance from `nn_config`.
+        """
+        executor = cls(nn_config)
         return executor
 
     def execute_sft(self, args=None, callbacks=None, **kwargs):
-        return super().execute_sft(args=args, callbacks=callbacks, **kwargs)
+        raise NotImplementedError(
+            f"{self.__class__.__name__} will support SFT in the next version."
+        )
 
-    def execute_rl_tuning(self, args=None, callbacks=None, **kwargs):
-        return super().execute_rl_tuning(args=args, callbacks=callbacks, **kwargs)
-
-    def load_model(self, **kwargs):
+    def load_model(self, args=None, **kwargs):
         import torch
         from transformers import AutoTokenizer
         from transformers import AutoModelForCausalLM
+        from nn4k.utils.config_parsing import get_string_field
 
+        nn_config: dict = args or self.init_args
         if self._model is None:
-            model_path = self.init_args.nn_name
-            revision = self.init_args.nn_version
+            nn_name = get_string_field(nn_config, "nn_name", "NN model name")
+            nn_version = nn_config.get("nn_version")
+            if nn_version is not None:
+                nn_version = get_string_field(
+                    nn_config, "nn_version", "NN model version"
+                )
+            model_path = nn_name
+            revision = nn_version
             use_fast_tokenizer = False
-            device = self.init_args.nn_device
-            trust_remote_code = self.init_args.nn_trust_remote_code
+            device = nn_config.get("device")
+            trust_remote_code = nn_config.get("trust_remote_code", False)
             if device is None:
                 device = "cuda" if torch.cuda.is_available() else "cpu"
             tokenizer = AutoTokenizer.from_pretrained(
@@ -81,7 +62,6 @@ class HfLLMExecutor(LLMExecutor):
                 trust_remote_code=trust_remote_code,
             )
             model.to(device)
-            self._nn_device = device
             self._tokenizer = tokenizer
             self._model = model
 
@@ -107,14 +87,14 @@ class HfLLMExecutor(LLMExecutor):
             return_tensors="pt",
             truncation=True,
             max_length=max_input_length,
-        ).to(self._nn_device)
+        ).to(model.device)
         output_ids = model.generate(
             **input_ids,
             max_new_tokens=max_output_length,
             do_sample=do_sample,
             eos_token_id=tokenizer.eos_token_id,
             pad_token_id=tokenizer.pad_token_id,
-            **kwargs
+            **kwargs,
         )
         outputs = [
             tokenizer.decode(

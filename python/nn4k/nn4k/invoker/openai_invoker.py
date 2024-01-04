@@ -9,68 +9,37 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from typing import Union, Optional
-from dataclasses import dataclass, field
-
-from nn4k.invoker import NNInvokerConfig, NNInvoker
-
-
-@dataclass
-class OpenAIInvokerConfig(NNInvokerConfig):
-    openai_api_key: str = field(default=None, metadata={"help": "OpenAI API key"})
-
-    openai_api_base: str = field(default=None, metadata={"help": "OpenAI API base URL"})
-
-    openai_model_name: str = field(
-        default=None, metadata={"help": "name of ChatGPT model"}
-    )
-
-    openai_max_tokens: int = field(
-        default=None, metadata={"help": "maximum number of tokens to generate"}
-    )
+from nn4k.invoker import NNInvoker
 
 
 class OpenAIInvoker(NNInvoker):
-    @classmethod
-    def try_parse_config(
-        cls, nn_config: Union[str, dict]
-    ) -> Optional[OpenAIInvokerConfig]:
-        from nn4k.utils.config_parsing import preprocess_config
+    def __init__(self, nn_config: dict):
+        super().__init__(nn_config)
+
+        import openai
         from nn4k.utils.config_parsing import get_string_field
         from nn4k.utils.config_parsing import get_positive_int_field
 
-        nn_config = preprocess_config(nn_config)
-        invoker_type = nn_config.get("invoker_type")
-        if invoker_type != "OpenAI":
-            return None
-
-        openai_api_key = get_string_field(nn_config, "openai_api_key", "openai api key")
-        openai_api_base = get_string_field(
-            nn_config, "openai_api_base", "openai api base"
+        self.openai_model_name = get_string_field(
+            self.init_args, "nn_name", "openai model name"
         )
-        openai_model_name = get_string_field(
-            nn_config, "openai_model_name", "openai model name"
+        self.openai_api_key = get_string_field(
+            self.init_args, "openai_api_key", "openai api key"
         )
-        openai_max_tokens = get_positive_int_field(
-            nn_config, "openai_max_tokens", "openai max tokens"
+        self.openai_api_base = get_string_field(
+            self.init_args, "openai_api_base", "openai api base"
+        )
+        self.openai_max_tokens = get_positive_int_field(
+            self.init_args, "openai_max_tokens", "openai max tokens"
         )
 
-        config = OpenAIInvokerConfig(
-            openai_api_key=openai_api_key,
-            openai_api_base=openai_api_base,
-            openai_model_name=openai_model_name,
-            openai_max_tokens=openai_max_tokens,
-        )
-        return config
+        openai.api_key = self.openai_api_key
+        openai.api_base = self.openai_api_base
 
     @classmethod
-    def _from_config(cls, nn_config: OpenAIInvokerConfig) -> "OpenAIInvoker":
-        import openai
-
-        o = super()._from_config(nn_config)
-        openai.api_key = o._nn_config.openai_api_key
-        openai.api_base = o._nn_config.openai_api_base
-        return o
+    def from_config(cls, nn_config: dict) -> "OpenAIInvoker":
+        invoker = cls(nn_config)
+        return invoker
 
     def _create_prompt(self, input, **kwargs):
         if isinstance(input, list):
@@ -89,10 +58,10 @@ class OpenAIInvoker(NNInvoker):
         if "max_output_length" in kwargs:
             max_output_length = kwargs.pop("max_output_length")
         else:
-            max_output_length = self._nn_config.openai_max_tokens
+            max_output_length = self.openai_max_tokens
         prompt = self._create_prompt(input, **kwargs)
         completion = openai.Completion.create(
-            model=self._nn_config.openai_model_name,
+            model=self.openai_model_name,
             prompt=prompt,
             max_tokens=max_output_length,
         )

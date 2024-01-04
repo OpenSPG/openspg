@@ -19,9 +19,7 @@ class NNHub(ABC):
     @abstractmethod
     def publish(
         self,
-        model_executor: Union[
-            NNExecutor, Tuple[Type[NNExecutor], tuple, tuple, dict, tuple]
-        ],
+        model_executor: Union[NNExecutor, Tuple[Type[NNExecutor], tuple, dict, tuple]],
         name: str,
         version: str = None,
     ) -> str:
@@ -29,8 +27,8 @@ class NNHub(ABC):
         Publish a model(executor) to hub.
         Args:
             model_executor: An NNExecutor object, which is pickleable.
-                Or a tuple of (class, init_args, inference_args, kwargs, weight_ids) for creating an NNExecutor
-                , while all these 5 augments are pickleable.
+                Or a tuple of (class, init_args, kwargs, weight_ids) for creating an NNExecutor
+                , while all these 4 augments are pickleable.
             name: The name of a model, like `llama2`.
                 We do not have a `namespace`. Use a joined name like `alibaba/qwen` to support such features.
             version: Optional. Auto generate a version if this param is not given.
@@ -44,12 +42,23 @@ class NNHub(ABC):
         self, name: str, version: str = None
     ) -> Optional[NNExecutor]:
         """
-        Get a ModelExecutor instance from Hub.
+        Get an NNExecutor instance from Hub.
         Args:
             name: The name of a model.
             version: The version of a model. Get default version of a model if this param is not given.
         Returns:
             The ModelExecutor Instance. None for NotFound.
+        """
+        pass
+
+    @abstractmethod
+    def get_invoker(self, nn_config: dict) -> Optional["NNInvoker"]:
+        """
+        Get an NNExecutor instance from Hub.
+        Args:
+            nn_config: The config dictionary.
+        Returns:
+            The NNExecutor Instance. None for NotFound.
         """
         pass
 
@@ -68,16 +77,9 @@ class SimpleNNHub(NNHub):
         super().__init__()
         self._model_executors = {}
 
-        # init executor info.
-        # TODO
-        # self._add_executor((DeepKEExecutor, xxx))
-        # self._add_executor((DeepKEExecutor, xxx))
-        # self._add_executor((HF, xxx))
-        # self._add_executor((HF, xxx))
-
     def _add_executor(
         self,
-        executor: Union[NNExecutor, Tuple[Type[NNExecutor], tuple, tuple, dict, tuple]],
+        executor: Union[NNExecutor, Tuple[Type[NNExecutor], tuple, dict, tuple]],
         name: str,
         version: str = None,
     ):
@@ -99,7 +101,7 @@ class SimpleNNHub(NNHub):
         self._add_executor(model_executor, name, version)
         return version
 
-    def _create_model_executor(self, cls, init_args, inference_args, kwargs, weights):
+    def _create_model_executor(self, cls, init_args, kwargs, weights):
         raise NotImplementedError()
 
     def get_model_executor(
@@ -110,8 +112,34 @@ class SimpleNNHub(NNHub):
         executor = self._model_executors.get(name).get(version)
         if isinstance(executor, NNExecutor):
             return executor
-        cls, init_args, inference_args, kwargs, weights = executor
-        executor = self._create_model_executor(
-            cls, init_args, inference_args, kwargs, weights
-        )
+        cls, init_args, kwargs, weights = executor
+        executor = self._create_model_executor(cls, init_args, kwargs, weights)
         return executor
+
+    def _add_local_executor(self, nn_config):
+        from nn4k.executor.hugging_face import HfLLMExecutor
+        from nn4k.utils.config_parsing import get_string_field
+
+        executor = HfLLMExecutor.from_config(nn_config)
+        nn_name = get_string_field(nn_config, "nn_name", "NN model name")
+        nn_version = nn_config.get("nn_version")
+        if nn_version is not None:
+            nn_version = get_string_field(nn_config, "nn_version", "NN model version")
+        self.publish(executor, nn_name, nn_version)
+
+    def get_invoker(self, nn_config: dict) -> Optional["NNInvoker"]:
+        from nn4k.invoker import LLMInvoker
+        from nn4k.invoker.openai_invoker import OpenAIInvoker
+        from nn4k.utils.invoker_checking import is_openai_invoker
+        from nn4k.utils.invoker_checking import is_local_invoker
+
+        if is_openai_invoker(nn_config):
+            invoker = OpenAIInvoker.from_config(nn_config)
+            return invoker
+
+        if is_local_invoker(nn_config):
+            invoker = LLMInvoker.from_config(nn_config)
+            self._add_local_executor(nn_config)
+            return invoker
+
+        return None
