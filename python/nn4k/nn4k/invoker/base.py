@@ -59,6 +59,7 @@ class NNInvoker(ABC):
         """
         from nn4k.nnhub import NNHub
         from nn4k.utils.config_parsing import preprocess_config
+        from nn4k.utils.config_parsing import get_string_field
         from nn4k.utils.class_importing import dynamic_import_class
 
         nn_config = preprocess_config(nn_config)
