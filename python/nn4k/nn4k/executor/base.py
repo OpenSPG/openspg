@@ -106,7 +106,7 @@ class NNExecutor(ABC):
         :type nn_config: str or dict
         :rtype: NNExecutor
         """
-        from nn4k.invoker import NNInvoker
+        from nn4k.nnhub import NNHub
         from nn4k.utils.config_parsing import preprocess_config
         from nn4k.utils.config_parsing import get_string_field
         from nn4k.utils.class_importing import dynamic_import_class
@@ -129,7 +129,8 @@ class NNExecutor(ABC):
         if nn_version is not None:
             nn_version = get_string_field(nn_config, "nn_version", "NN model version")
         if nn_name is not None:
-            executor = NNInvoker.hub.get_model_executor(nn_name, nn_version)
+            hub = NNHub.get_instance()
+            executor = hub.get_model_executor(nn_name, nn_version)
             if executor is not None:
                 return executor
 

@@ -16,6 +16,17 @@ from nn4k.executor import NNExecutor
 
 
 class NNHub(ABC):
+    _hub_instance = None
+
+    @staticmethod
+    def get_instance() -> "NNHub":
+        """
+        Get the NNHub instance. If the instance is not initialized, create a stub `SimpleNNHub`.
+        """
+        if NNHub._hub_instance is None:
+            NNHub._hub_instance = SimpleNNHub()
+        return NNHub._hub_instance
+
     @abstractmethod
     def publish(
         self,

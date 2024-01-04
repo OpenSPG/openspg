@@ -13,7 +13,6 @@ from abc import ABC, abstractmethod
 from typing import Union
 
 from nn4k.executor import LLMExecutor
-from nn4k.nnhub import SimpleNNHub
 
 
 class NNInvoker(ABC):
@@ -25,8 +24,6 @@ class NNInvoker(ABC):
     - Interfaces starting with "local_"  means running something locally.
             Must call `warmup_local_model` before calling any local_xxx interface.
     """
-
-    hub = SimpleNNHub()
 
     def __init__(self, init_args: dict, **kwargs):
         self._init_args = init_args
@@ -60,6 +57,7 @@ class NNInvoker(ABC):
         :rtype: NNInvoker
         :raises RuntimeError: if the NN config is not recognized
         """
+        from nn4k.nnhub import NNHub
         from nn4k.utils.config_parsing import preprocess_config
         from nn4k.utils.class_importing import dynamic_import_class
 
@@ -74,7 +72,8 @@ class NNInvoker(ABC):
             invoker = invoker_class.from_config(nn_config)
             return invoker
 
-        invoker = cls.hub.get_invoker(nn_config)
+        hub = NNHub.get_instance()
+        invoker = hub.get_invoker(nn_config)
         if invoker is not None:
             return invoker
 
@@ -147,6 +146,7 @@ class LLMInvoker(NNInvoker):
         """
         Implement local model warming up logic for local invoker.
         """
+        from nn4k.nnhub import NNHub
         from nn4k.utils.config_parsing import get_string_field
 
         nn_name = get_string_field(self.init_args, "nn_name", "NN model name")
@@ -155,7 +155,8 @@ class LLMInvoker(NNInvoker):
             nn_version = get_string_field(
                 self.init_args, "nn_version", "NN model version"
             )
-        executor = self.hub.get_model_executor(nn_name, nn_version)
+        hub = NNHub.get_instance()
+        executor = hub.get_model_executor(nn_name, nn_version)
         if executor is None:
             message = "model %r version %r " % (nn_name, nn_version)
             message += "is not found in the model hub"
