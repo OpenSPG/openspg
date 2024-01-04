@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.reasoner.recorder;
 
-/** This is an empty recorder */
 public class EmptyRecorder implements IExecutionRecorder {
   @Override
   public String toReadableString() {

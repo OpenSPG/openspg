@@ -40,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import lombok.Getter;
 import scala.collection.JavaConversions;
 
 public class ExtractRelationImpl implements Serializable {
@@ -48,7 +47,7 @@ public class ExtractRelationImpl implements Serializable {
   private static final long serialVersionUID = 3442064493302533370L;
   private final AddPredicate addPredicate;
 
-  @Getter private final String predicate;
+  private final String predicate;
   private final Direction direction;
   private final boolean withReverseEdge;
 
@@ -94,11 +93,15 @@ public class ExtractRelationImpl implements Serializable {
           Constants.EDGE_TO_ID_KEY, Lists.newArrayList("'" + targetEntityElement.id() + "'"));
     } else {
       targetPatternElement = (PatternElement) te;
-      this.propertyRuleMap.put(
-          Constants.EDGE_TO_ID_KEY, Lists.newArrayList(targetPatternElement.alias() + ".id"));
+      if (!this.propertyRuleMap.containsKey(Constants.EDGE_TO_ID_KEY)) {
+        this.propertyRuleMap.put(
+            Constants.EDGE_TO_ID_KEY, Lists.newArrayList(targetPatternElement.alias() + ".id"));
+      }
     }
-    this.propertyRuleMap.put(
-        Constants.EDGE_FROM_ID_KEY, Lists.newArrayList(sourceElement.alias() + ".id"));
+    if (!this.propertyRuleMap.containsKey(Constants.EDGE_FROM_ID_KEY)) {
+      this.propertyRuleMap.put(
+          Constants.EDGE_FROM_ID_KEY, Lists.newArrayList(sourceElement.alias() + ".id"));
+    }
 
     this.sourceElement = sourceElement;
     this.targetEntityElement = targetEntityElement;
@@ -159,5 +162,14 @@ public class ExtractRelationImpl implements Serializable {
   /** need add reverse edge */
   public boolean withReverseEdge() {
     return this.withReverseEdge;
+  }
+
+  /**
+   * Getter method for property <tt>predicate</tt>.
+   *
+   * @return property value of predicate
+   */
+  public String getPredicate() {
+    return predicate;
   }
 }

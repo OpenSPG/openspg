@@ -11,12 +11,17 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.progress;
+package com.antgroup.openspg.reasoner.rdg.common.model;
 
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-public enum TimeConsumeType implements Serializable {
-  WAIT_RESOURCE,
-  LOAD_GRAPH,
-  COMPUTE,
+@Data
+@AllArgsConstructor
+public class JoinItem implements Serializable {
+  private boolean left;
+  private KgGraph<IVertexId> kgGraph;
 }

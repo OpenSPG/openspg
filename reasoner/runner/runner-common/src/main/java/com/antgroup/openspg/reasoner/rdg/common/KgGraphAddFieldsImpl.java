@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.reasoner.rdg.common;
 
-import com.antgroup.openspg.reasoner.common.exception.IllegalArgumentException;
 import com.antgroup.openspg.reasoner.common.graph.type.GraphItemType;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;

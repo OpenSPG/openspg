@@ -10,8 +10,10 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
+
 package com.antgroup.openspg.reasoner.pattern;
 
+import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
@@ -28,6 +30,7 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.PatternElement;
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
+import com.antgroup.openspg.reasoner.warehouse.utils.DebugVertexIdSet;
 import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -75,7 +78,7 @@ public class PatternMatcher implements Serializable {
       Pattern pattern,
       List<String> rootVertexRuleList,
       Map<String, List<String>> dstVertexRuleMap,
-      Map<Connection, List<String>> edgeRuleMap,
+      Map<String, List<String>> edgeRuleMap,
       Map<String, Set<IVertexId>> edgeValidTargetIdSet,
       Rule vertexRule,
       Map<String, List<Rule>> edgeTypeRuleMap,
@@ -103,10 +106,16 @@ public class PatternMatcher implements Serializable {
 
     // check root vertex rules
     Map<String, Object> vertexContext = RunnerUtil.vertexContext(vertex, pattern.root().alias());
-    if (!rootVertexRuleList.isEmpty()) {
-      if (!RuleRunner.getInstance().check(vertexContext, rootVertexRuleList, this.taskId)) {
-        return null;
+    if (!rootVertexRuleList.isEmpty()
+        && !RuleRunner.getInstance().check(vertexContext, rootVertexRuleList, this.taskId)) {
+      if (DebugVertexIdSet.DEBUG_VERTEX_ID_SET.contains(vertex.getId())) {
+        log.info(
+            "PatternMatch check vertex rule false, vertexContext="
+                + JSON.toJSONString(vertexContext)
+                + "rules = "
+                + JSON.toJSONString(rootVertexRuleList));
       }
+      return null;
     }
 
     // start match edges
@@ -123,7 +132,7 @@ public class PatternMatcher implements Serializable {
         new TreeMap<>();
     for (Connection patternConnection : patternConnections) {
       Direction direction = patternConnection.direction();
-      List<String> edgeSpoTypeList = getEdgeSpoTypeList(patternConnection, pattern);
+      List<String> edgeSpoTypeList = getEdgeSpoTypeList(patternConnection, pattern, id.getType());
       for (String edgeType : edgeSpoTypeList) {
         Map<Direction, ArrayList<IEdge<IVertexId, IProperty>>> directionArrayListMap =
             edgeTypeDirectionMap.computeIfAbsent(edgeType, k -> new TreeMap<>());
@@ -159,7 +168,7 @@ public class PatternMatcher implements Serializable {
       String edgeAlias = patternConnection.alias();
       Direction direction = patternConnection.direction();
       ArrayList<IEdge<IVertexId, IProperty>> willMatchEdgeList = new ArrayList<>();
-      for (String edgeType : getEdgeSpoTypeList(patternConnection, pattern)) {
+      for (String edgeType : getEdgeSpoTypeList(patternConnection, pattern, id.getType())) {
         Map<Direction, ArrayList<IEdge<IVertexId, IProperty>>> directionArrayListMap =
             edgeTypeDirectionMap.get(edgeType);
         if (Direction.BOTH.equals(direction)) {
@@ -200,6 +209,21 @@ public class PatternMatcher implements Serializable {
               vertexContext, willMatchEdgeList, patternConnection, pattern, edgeRuleMap, limit);
       if (CollectionUtils.isEmpty(validEdges)) {
         // one edge pattern connection no match
+        if (DebugVertexIdSet.DEBUG_VERTEX_ID_SET.contains(vertex.getId())) {
+          log.info(
+              "PatternMatch edge not match, vertexContext="
+                  + JSON.toJSONString(vertexContext)
+                  + ", willMatchEdgeList="
+                  + JSON.toJSONString(willMatchEdgeList)
+                  + ", patternConnection="
+                  + patternConnections
+                  + ", pattern="
+                  + pattern
+                  + ", edgeRuleMap="
+                  + JSON.toJSONString(edgeRuleMap)
+                  + ", limit="
+                  + limit);
+        }
         return null;
       }
       adjEdges.put(edgeAlias, validEdges);
@@ -219,13 +243,17 @@ public class PatternMatcher implements Serializable {
       ArrayList<IEdge<IVertexId, IProperty>> edgeList,
       Connection patternConnection,
       Pattern pattern,
-      Map<Connection, List<String>> edgeRuleMap,
+      Map<String, List<String>> edgeRuleMap,
       Long limit) {
     ArrayList<IEdge<IVertexId, IProperty>> result = new ArrayList<>();
     long oneTypeEdgeCount = 0;
     for (IEdge<IVertexId, IProperty> edge : edgeList) {
       if (!isEdgeMatch(
-          vertexContext, edge, patternConnection, pattern, edgeRuleMap.get(patternConnection))) {
+          vertexContext,
+          edge,
+          patternConnection,
+          pattern,
+          edgeRuleMap.get(patternConnection.alias()))) {
         continue;
       }
       oneTypeEdgeCount++;
@@ -280,23 +308,23 @@ public class PatternMatcher implements Serializable {
     return true;
   }
 
-  private List<String> getEdgeSpoTypeList(Connection patternConnection, Pattern pattern) {
+  private List<String> getEdgeSpoTypeList(
+      Connection patternConnection, Pattern pattern, String sType) {
     List<String> edgeSpoTypeList = new ArrayList<>();
+    Set<String> sSet = Sets.newHashSet(sType);
     Set<String> pSet =
         Sets.newHashSet(JavaConversions.asJavaCollection(patternConnection.relTypes()));
-    String sourceAlias = patternConnection.source();
-    String targetAlias = patternConnection.target();
-    if (Direction.IN.equals(patternConnection.direction())) {
-      sourceAlias = patternConnection.target();
-      targetAlias = patternConnection.source();
-    }
-    Set<String> sSet =
-        Sets.newHashSet(JavaConversions.asJavaCollection(pattern.getNode(sourceAlias).typeNames()));
     Set<String> oSet =
-        Sets.newHashSet(JavaConversions.asJavaCollection(pattern.getNode(targetAlias).typeNames()));
-    if (Direction.BOTH.equals(patternConnection.direction())) {
-      sSet.addAll(oSet);
-      oSet = sSet;
+        Sets.newHashSet(
+            JavaConversions.asJavaCollection(
+                pattern.getNode(patternConnection.target()).typeNames()));
+    if (Direction.IN.equals(patternConnection.direction())) {
+      Set<String> tmp = sSet;
+      sSet = oSet;
+      oSet = tmp;
+    } else if (Direction.BOTH.equals(patternConnection.direction())) {
+      oSet.add(sType);
+      sSet = oSet;
     }
 
     for (String s : sSet) {
@@ -311,6 +339,7 @@ public class PatternMatcher implements Serializable {
         }
       }
     }
+    edgeSpoTypeList.sort(String::compareTo);
     return edgeSpoTypeList;
   }
 }
