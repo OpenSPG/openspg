@@ -17,11 +17,17 @@ import com.antgroup.openspg.builder.core.physical.operator.protocol.PythonRecord
 import com.antgroup.openspg.builder.core.runtime.BuilderCatalog;
 import com.antgroup.openspg.builder.core.strategy.linking.RecordLinking;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
+import com.antgroup.openspg.builder.model.record.RelationRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.VertexRecordConvertor;
 import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.RelationIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
-import java.util.Map;
+import java.util.*;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 
 public class PythonRecordConvertor {
 
@@ -37,8 +43,36 @@ public class PythonRecordConvertor {
     if (spgType == null) {
       return null;
     }
+
+    Map<String, String> allProperties = pythonRecord.getProperties();
+    if (MapUtils.isEmpty(allProperties)) {
+      allProperties = Collections.emptyMap();
+    }
+
+    List<RelationRecord> relationRecords = new ArrayList<>();
+    Map<String, String> properties = new HashMap<>();
+    for (Map.Entry<String, String> entry : allProperties.entrySet()) {
+      String key = entry.getKey();
+      if (key.contains("#")) {
+        String[] splits = key.split("#");
+        relationRecords.add(
+            new RelationRecord(
+                catalog.getRelation(
+                    new RelationIdentifier(
+                        spgType.getBaseSpgIdentifier(),
+                        new PredicateIdentifier(splits[0]),
+                        SPGTypeIdentifier.parse(splits[1]))),
+                null,
+                entry.getValue(),
+                new ArrayList<>(0)));
+      } else {
+        properties.put(entry.getKey(), entry.getValue());
+      }
+    }
+
     BaseAdvancedRecord advancedRecord =
-        VertexRecordConvertor.toAdvancedRecord(spgType, recordId, pythonRecord.getProperties());
+        VertexRecordConvertor.toAdvancedRecord(spgType, recordId, properties);
+    advancedRecord.setRelationRecords(relationRecords);
     recordLinking.linking(advancedRecord);
     return advancedRecord;
   }
@@ -46,6 +80,15 @@ public class PythonRecordConvertor {
   public static PythonRecord toPythonRecord(BaseAdvancedRecord advancedRecord) {
     Map<String, String> stdStrPropertyValueMap = advancedRecord.getStdStrPropertyValueMap();
     stdStrPropertyValueMap.put("id", advancedRecord.getId());
+    if (CollectionUtils.isNotEmpty(advancedRecord.getRelationRecords())) {
+      for (RelationRecord relationRecord : advancedRecord.getRelationRecords()) {
+        Relation relationType = relationRecord.getRelationType();
+        String relationKey =
+            String.format(
+                "%s#%s", relationType.getName(), relationType.getObjectTypeRef().getName());
+        stdStrPropertyValueMap.put(relationKey, relationRecord.getDstId());
+      }
+    }
     return new PythonRecord()
         .setSpgTypeName(advancedRecord.getName())
         .setProperties(stdStrPropertyValueMap);
