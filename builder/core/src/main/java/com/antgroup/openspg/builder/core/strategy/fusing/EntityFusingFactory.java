@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.builder.core.strategy.fusing;
 
-import com.antgroup.openspg.builder.core.strategy.fusing.impl.OverwriteFusing;
 import com.antgroup.openspg.builder.core.strategy.fusing.impl.OperatorFusing;
+import com.antgroup.openspg.builder.core.strategy.fusing.impl.OverwriteFusing;
 import com.antgroup.openspg.builder.model.pipeline.config.fusing.BaseFusingConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.fusing.OperatorFusingConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.FusingTypeEnum;
