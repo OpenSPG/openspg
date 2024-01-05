@@ -14,79 +14,81 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
-import com.antgroup.openspg.builder.core.strategy.fusing.SubjectFusing;
-import com.antgroup.openspg.builder.core.strategy.fusing.SubjectFusingImpl;
-import com.antgroup.openspg.builder.core.strategy.linking.RecordLinking;
-import com.antgroup.openspg.builder.core.strategy.linking.RecordLinkingImpl;
-import com.antgroup.openspg.builder.core.strategy.linking.impl.SearchBasedLinking;
-import com.antgroup.openspg.builder.core.strategy.predicting.RecordPredicting;
-import com.antgroup.openspg.builder.core.strategy.predicting.RecordPredictingImpl;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
-import com.antgroup.openspg.builder.model.pipeline.config.SPGTypeMappingNodeConfig;
-import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
-import com.antgroup.openspg.builder.model.record.BaseRecord;
-import com.antgroup.openspg.builder.model.record.BuilderRecord;
+import com.antgroup.openspg.builder.model.pipeline.config.SPGTypeMappingNodeConfigs;
+import com.antgroup.openspg.builder.model.record.*;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
-import com.google.common.collect.Lists;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 
 @Slf4j
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class SPGTypeMappingProcessor extends BaseMappingProcessor<SPGTypeMappingNodeConfig> {
+public class SPGTypeMappingProcessor extends BaseProcessor<SPGTypeMappingNodeConfigs> {
 
-  private final SPGTypeIdentifier identifier;
-  private BaseSPGType spgType;
-  private RecordLinking recordLinking;
-  private RecordPredicting recordPredicting;
-  private SubjectFusing subjectFusing;
+  private final List<SPGTypeMappingHelper> mappingHelpers;
 
-  public SPGTypeMappingProcessor(String id, String name, SPGTypeMappingNodeConfig config) {
+  public SPGTypeMappingProcessor(String id, String name, SPGTypeMappingNodeConfigs config) {
     super(id, name, config);
-    this.identifier = SPGTypeIdentifier.parse(config.getSpgType());
+    this.mappingHelpers =
+        config.getMappingNodeConfigs().stream()
+            .map(SPGTypeMappingHelper::new)
+            .collect(Collectors.toList());
   }
 
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
     super.doInit(context);
-
-    this.spgType = (BaseSPGType) loadSchema(identifier, context.getCatalog());
-
-    this.recordLinking = new RecordLinkingImpl(config.getMappingConfigs());
-    this.recordLinking.setDefaultPropertyLinking(new SearchBasedLinking());
-    this.recordLinking.init(context);
-
-    this.subjectFusing = new SubjectFusingImpl(config.getSubjectFusingConfig());
-    this.subjectFusing.init(context);
-
-    this.recordPredicting = new RecordPredictingImpl(config.getPredictingConfigs());
-    this.recordPredicting.init(context);
+    this.mappingHelpers.forEach(x -> x.init(context));
   }
 
   @Override
   public List<BaseRecord> process(List<BaseRecord> inputs) {
-    List<BaseAdvancedRecord> advancedRecords = new ArrayList<>(inputs.size());
+    List<BaseSPGRecord> resultSpgRecords = new ArrayList<>(inputs.size());
+
+    List<BuilderRecord> emptyIdentifierRecords = new ArrayList<>(inputs.size());
+    Map<SPGTypeIdentifier, List<BuilderRecord>> identifierRecords =
+        new HashMap<>(mappingHelpers.size());
     for (BaseRecord baseRecord : inputs) {
       BuilderRecord record = (BuilderRecord) baseRecord;
-      if (isFiltered(record, config.getMappingFilters(), identifier)) {
+      if (record.getIdentifier() == null) {
+        emptyIdentifierRecords.add(record);
+      } else {
+        List<BuilderRecord> existedRecords =
+            identifierRecords.computeIfAbsent(record.getIdentifier(), k -> new ArrayList<>());
+        existedRecords.add(record);
+      }
+    }
+
+    for (SPGTypeMappingHelper mappingHelper : mappingHelpers) {
+      for (BuilderRecord record : emptyIdentifierRecords) {
+        resultSpgRecords.addAll(toSPGRecords(mappingHelper, record));
+      }
+    }
+
+    for (SPGTypeMappingHelper mappingHelper : mappingHelpers) {
+      List<BuilderRecord> identifiedRecords = identifierRecords.get(mappingHelper.getIdentifier());
+      if (CollectionUtils.isEmpty(identifiedRecords)) {
         continue;
       }
 
-      BuilderRecord mappedRecord = mapping(record, config.getMappingConfigs());
-      BaseAdvancedRecord advancedRecord = toSPGRecord(mappedRecord, spgType);
-      if (advancedRecord != null) {
-        recordLinking.linking(advancedRecord);
-        recordPredicting.predicting(advancedRecord);
-        List<BaseAdvancedRecord> subjectFusedRecord =
-            subjectFusing.fusing(Lists.newArrayList(advancedRecord));
-        advancedRecords.addAll(subjectFusedRecord);
+      for (BuilderRecord record : identifiedRecords) {
+        resultSpgRecords.addAll(toSPGRecords(mappingHelper, record));
       }
     }
-    return (List) advancedRecords;
+    return (List) resultSpgRecords;
   }
 
   @Override
   public void close() throws Exception {}
+
+  private List<BaseSPGRecord> toSPGRecords(
+      SPGTypeMappingHelper mappingHelper, BuilderRecord record) {
+    if (mappingHelper.isFiltered(record)) {
+      return Collections.emptyList();
+    }
+
+    return mappingHelper.toSPGRecords(record);
+  }
 }

@@ -50,7 +50,7 @@ public class BuilderJsonUtils {
                     .registerSubtype(
                         RelationMappingNodeConfig.class, NodeTypeEnum.RELATION_MAPPING.name())
                     .registerSubtype(
-                        SubGraphMappingNodeConfig.class, NodeTypeEnum.SUBGRAPH_MAPPING.name())
+                        SPGTypeMappingNodeConfigs.class, NodeTypeEnum.SPG_TYPE_MAPPINGS.name())
                     .registerSubtype(GraphStoreSinkNodeConfig.class, NodeTypeEnum.GRAPH_SINK.name())
                     .recognizeSubtypes())
             .registerTypeAdapterFactory(

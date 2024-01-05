@@ -16,10 +16,67 @@ package com.antgroup.openspg.builder.model.pipeline.config;
 import com.antgroup.openspg.builder.model.pipeline.config.fusing.BaseFusingConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import java.util.List;
+import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
-public class SPGTypeMappingNodeConfig extends BaseMappingNodeConfig {
+public class SPGTypeMappingNodeConfig extends BaseNodeConfig {
+
+  @Getter
+  @AllArgsConstructor
+  public static class MappingFilter {
+    private final String columnName;
+    private final String columnValue;
+  }
+
+  public enum MappingType {
+    PROPERTY,
+    RELATION,
+    SUB_PROPERTY,
+    SUB_RELATION,
+    ;
+  }
+
+  @Getter
+  @AllArgsConstructor
+  @EqualsAndHashCode
+  public static class MappingConfig {
+    private final String source;
+    private final String target;
+    @EqualsAndHashCode.Exclude private final BaseStrategyConfig strategyConfig;
+    private final MappingType mappingType;
+
+    public String getFirstSplit() {
+      return target.split("#")[0];
+    }
+
+    public String getFirst2Split() {
+      String[] splits = target.split("#");
+      return String.format("%s#%s", splits[0], splits[1]);
+    }
+
+    public boolean isPropertyLinking() {
+      return mappingType.equals(MappingType.PROPERTY) && source != null;
+    }
+
+    public boolean isPropertyPredicting() {
+      return mappingType.equals(MappingType.PROPERTY) && source == null;
+    }
+
+    public boolean isRelationLinking() {
+      return mappingType.equals(MappingType.RELATION) && source != null;
+    }
+
+    public boolean isRelationPredicting() {
+      return mappingType.equals(MappingType.RELATION) && source == null;
+    }
+
+    public boolean isSubRelationLinking() {
+      return mappingType.equals(MappingType.SUB_RELATION) && source != null;
+    }
+  }
 
   private final String spgType;
 
@@ -29,19 +86,45 @@ public class SPGTypeMappingNodeConfig extends BaseMappingNodeConfig {
 
   private final BaseFusingConfig subjectFusingConfig;
 
-  private final List<PredictingConfig> predictingConfigs;
-
   public SPGTypeMappingNodeConfig(
       String spgType,
       List<MappingFilter> mappingFilters,
       List<MappingConfig> mappingConfigs,
-      BaseFusingConfig subjectFusingConfig,
-      List<PredictingConfig> predictingConfigs) {
+      BaseFusingConfig subjectFusingConfig) {
     super(NodeTypeEnum.SPG_TYPE_MAPPING);
     this.spgType = spgType;
     this.mappingFilters = mappingFilters;
     this.mappingConfigs = mappingConfigs;
     this.subjectFusingConfig = subjectFusingConfig;
-    this.predictingConfigs = predictingConfigs;
+  }
+
+  public List<MappingConfig> getPropertyLinkingConfigs() {
+    return mappingConfigs.stream()
+        .filter(MappingConfig::isPropertyLinking)
+        .collect(Collectors.toList());
+  }
+
+  public List<MappingConfig> getRelationLinkingConfigs() {
+    return mappingConfigs.stream()
+        .filter(MappingConfig::isRelationLinking)
+        .collect(Collectors.toList());
+  }
+
+  public List<MappingConfig> getPropertyPredictingConfigs() {
+    return mappingConfigs.stream()
+        .filter(MappingConfig::isPropertyPredicting)
+        .collect(Collectors.toList());
+  }
+
+  public List<MappingConfig> getRelationPredictingConfigs() {
+    return mappingConfigs.stream()
+        .filter(MappingConfig::isRelationPredicting)
+        .collect(Collectors.toList());
+  }
+
+  public List<MappingConfig> getSubRelationLinkingConfigs() {
+    return mappingConfigs.stream()
+        .filter(MappingConfig::isSubRelationLinking)
+        .collect(Collectors.toList());
   }
 }

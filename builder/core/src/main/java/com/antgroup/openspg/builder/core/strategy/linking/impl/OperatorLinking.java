@@ -53,6 +53,8 @@ public class OperatorLinking implements PropertyLinking {
   public void linking(BasePropertyRecord record) throws LinkingException {
     List<String> rawValues = record.getRawValues();
 
+    PythonRecord pythonRecord =
+        new PythonRecord().setSpgTypeName("").setProperties(Collections.emptyMap());
     List<String> ids = new ArrayList<>(rawValues.size());
     for (String rawValue : rawValues) {
       InvokeResultWrapper<List<PythonRecord>> invokeResultWrapper = null;
@@ -60,7 +62,7 @@ public class OperatorLinking implements PropertyLinking {
         Map<String, Object> result =
             (Map<String, Object>)
                 operatorFactory.invoke(
-                    linkingConfig.getOperatorConfig(), rawValue, new HashMap<>(0));
+                    linkingConfig.getOperatorConfig(), rawValue, pythonRecord.toMap());
         invokeResultWrapper =
             mapper.convertValue(
                 result, new TypeReference<InvokeResultWrapper<List<PythonRecord>>>() {});

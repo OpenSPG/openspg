@@ -18,26 +18,28 @@ import com.antgroup.openspg.builder.core.strategy.linking.impl.BasicPropertyLink
 import com.antgroup.openspg.builder.core.strategy.linking.impl.IdEqualsLinking;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.exception.LinkingException;
-import com.antgroup.openspg.builder.model.pipeline.config.BaseMappingNodeConfig;
+import com.antgroup.openspg.builder.model.pipeline.config.SPGTypeMappingNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.config.linking.BaseLinkingConfig;
+import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
+import com.antgroup.openspg.builder.model.record.RelationRecord;
 import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyValue;
+import com.antgroup.openspg.core.schema.model.predicate.Relation;
+import java.util.*;
 import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 
 public class RecordLinkingImpl implements RecordLinking {
 
-  private final List<BaseMappingNodeConfig.MappingConfig> mappingConfigs;
+  private final List<SPGTypeMappingNodeConfig.MappingConfig> mappingConfigs;
   private final BasicPropertyLinking basicPropertyLinking;
   private final Map<String, PropertyLinking> semanticPropertyLinking;
 
   @Setter private PropertyLinking defaultPropertyLinking = IdEqualsLinking.INSTANCE;
 
-  public RecordLinkingImpl(List<BaseMappingNodeConfig.MappingConfig> mappingConfigs) {
+  public RecordLinkingImpl(List<SPGTypeMappingNodeConfig.MappingConfig> mappingConfigs) {
     this.mappingConfigs = mappingConfigs;
     this.basicPropertyLinking = new BasicPropertyLinking();
     this.semanticPropertyLinking = new HashMap<>(mappingConfigs.size());
@@ -54,7 +56,7 @@ public class RecordLinkingImpl implements RecordLinking {
     if (CollectionUtils.isEmpty(mappingConfigs)) {
       return;
     }
-    for (BaseMappingNodeConfig.MappingConfig mappingConfig : mappingConfigs) {
+    for (SPGTypeMappingNodeConfig.MappingConfig mappingConfig : mappingConfigs) {
       if (mappingConfig.getStrategyConfig() != null) {
         PropertyLinking propertyLinking =
             PropertyLinkingFactory.getPropertyLinking(
@@ -67,7 +69,8 @@ public class RecordLinkingImpl implements RecordLinking {
 
   @Override
   public void linking(BaseSPGRecord spgRecord) throws LinkingException {
-    for (BasePropertyRecord propertyRecord : spgRecord.getProperties()) {
+    List<BasePropertyRecord> records = new ArrayList<>(spgRecord.getProperties());
+    for (BasePropertyRecord propertyRecord : records) {
       if (propertyRecord.isSemanticProperty()) {
         PropertyLinking propertyLinking = semanticPropertyLinking.get(propertyRecord.getName());
         if (propertyLinking != null) {
@@ -82,5 +85,41 @@ public class RecordLinkingImpl implements RecordLinking {
         basicPropertyLinking.linking(propertyRecord);
       }
     }
+
+    if (!(spgRecord instanceof BaseAdvancedRecord)) {
+      return;
+    }
+    BaseAdvancedRecord advancedRecord = (BaseAdvancedRecord) spgRecord;
+    if (CollectionUtils.isEmpty(advancedRecord.getRelationRecords())) {
+      return;
+    }
+
+    List<RelationRecord> resultRelationRecords = new ArrayList<>();
+    for (RelationRecord record : advancedRecord.getRelationRecords()) {
+      Relation relationType = record.getRelationType();
+      if (relationType.getObjectTypeRef().isAdvancedType()) {
+
+        PropertyLinking propertyLinking =
+            semanticPropertyLinking.get(
+                String.format(
+                    "%s#%s", relationType.getName(), relationType.getObjectTypeRef().getName()));
+        SPGPropertyRecord propertyRecord =
+            new SPGPropertyRecord(relationType, new SPGPropertyValue(record.getDstId()));
+        if (propertyLinking != null) {
+          propertyLinking.linking(propertyRecord);
+        } else {
+          defaultPropertyLinking.linking(propertyRecord);
+        }
+
+        List<String> ids = propertyRecord.getValue().getIds();
+        if (CollectionUtils.isNotEmpty(ids)) {
+          for (String id : ids) {
+            resultRelationRecords.add(
+                new RelationRecord(relationType, record.getSrcId(), id, record.getSubProperties()));
+          }
+        }
+      }
+    }
+    advancedRecord.setRelationRecords(resultRelationRecords);
   }
 }

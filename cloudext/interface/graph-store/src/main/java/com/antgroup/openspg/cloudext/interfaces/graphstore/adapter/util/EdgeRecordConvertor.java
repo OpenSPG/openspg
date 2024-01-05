@@ -19,10 +19,10 @@ import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.server.common.model.exception.GraphStoreException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /** Convertor for {@link EdgeRecord} and {@link RelationRecord}. */
@@ -78,5 +78,53 @@ public class EdgeRecordConvertor {
         srcId,
         dstId,
         PropertyRecordConvertor.toSPGProperties(properties, relationType));
+  }
+
+  public static List<RelationRecord> toRelationRecords(
+      BaseSPGType spgType, Map<String, String> properties) {
+
+    Map<String, Relation> relations = new HashMap<>();
+
+    for (Relation relation : spgType.getRelations()) {
+      SPGTypeRef objectTypeRef = relation.getObjectTypeRef();
+      String relationKey = String.format("%s#%s", relation.getName(), objectTypeRef.getName());
+      relations.put(relationKey, relation);
+    }
+
+    Map<String, String> relationRecords = new HashMap<>();
+    for (Map.Entry<String, String> entry : properties.entrySet()) {
+      String key = entry.getKey();
+      String value = entry.getValue();
+      Relation relation = relations.get(key);
+      if (relation != null) {
+        relationRecords.put(key, value);
+      }
+    }
+
+    Map<String, Map<String, String>> subProperties = new HashMap<>();
+    for (Map.Entry<String, String> entry : properties.entrySet()) {
+      String key = entry.getKey();
+      String[] splits = key.split("#");
+      if (splits.length == 3) {
+        String relationKey = String.format("%s#%s", splits[0], splits[1]);
+        Map<String, String> subPropertiesMap =
+            subProperties.computeIfAbsent(relationKey, k -> new HashMap<>());
+        subPropertiesMap.put(splits[2], entry.getValue());
+      }
+    }
+
+    List<RelationRecord> results = new ArrayList<>(relations.size());
+    for (Map.Entry<String, Relation> entry : relations.entrySet()) {
+      String relationKey = entry.getKey();
+      Relation relation = entry.getValue();
+
+      String dstId = relationRecords.get(relationKey);
+      if (dstId == null) {
+        continue;
+      }
+      Map<String, String> props = subProperties.get(relationKey);
+      results.add(toRelationRecord(relation, null, dstId, props));
+    }
+    return results;
   }
 }

@@ -14,7 +14,7 @@
 package com.antgroup.openspg.builder.model.record;
 
 import com.alibaba.fastjson.JSON;
-import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -30,8 +30,8 @@ public class BuilderRecord extends BaseRecord {
   /** record id */
   private final String recordId;
 
-  /** spg type or relation */
-  @Setter private BaseSPGIdentifier identifier;
+  /** spg type */
+  @Setter private SPGTypeIdentifier identifier;
 
   /** Key-value representation of a single data record. */
   private final Map<String, String> props;

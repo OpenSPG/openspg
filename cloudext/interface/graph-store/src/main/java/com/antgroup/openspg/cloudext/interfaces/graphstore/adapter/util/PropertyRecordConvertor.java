@@ -22,6 +22,7 @@ import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.MapUtils;
@@ -71,6 +72,9 @@ public class PropertyRecordConvertor {
       Map<String, String> properties, Property spgProperty) {
     if (!spgProperty.hasSubProperty()) {
       return new ArrayList<>(0);
+    }
+    if (properties == null) {
+      properties = Collections.emptyMap();
     }
     Map<String, SubProperty> subPropertyMap = spgProperty.getSubPropertyMap();
 

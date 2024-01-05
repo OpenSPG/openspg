@@ -89,15 +89,12 @@ public class LogicalPlan implements Serializable {
       case LLM_BASED_EXTRACT:
         return new LLMBasedExtractNode(
             node.getId(), node.getName(), (LLMBasedExtractNodeConfig) node.getNodeConfig());
-      case SPG_TYPE_MAPPING:
+      case SPG_TYPE_MAPPINGS:
         return new SPGTypeMappingNode(
-            node.getId(), node.getName(), (SPGTypeMappingNodeConfig) node.getNodeConfig());
+            node.getId(), node.getName(), (SPGTypeMappingNodeConfigs) node.getNodeConfig());
       case RELATION_MAPPING:
         return new RelationMappingNode(
             node.getId(), node.getName(), (RelationMappingNodeConfig) node.getNodeConfig());
-      case SUBGRAPH_MAPPING:
-        return new SubGraphMappingNode(
-            node.getId(), node.getName(), (SubGraphMappingNodeConfig) node.getNodeConfig());
       case GRAPH_SINK:
         return new GraphStoreSinkNode(
             node.getId(), node.getName(), (GraphStoreSinkNodeConfig) node.getNodeConfig());

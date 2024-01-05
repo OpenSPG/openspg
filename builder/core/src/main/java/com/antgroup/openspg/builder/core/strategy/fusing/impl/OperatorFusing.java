@@ -27,13 +27,13 @@ import com.antgroup.openspg.builder.model.exception.FusingException;
 import com.antgroup.openspg.builder.model.pipeline.config.fusing.OperatorFusingConfig;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.common.util.CollectionsUtils;
+import com.baidu.brpc.utils.CollectionUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 
 @Slf4j
 @SuppressWarnings("unchecked")

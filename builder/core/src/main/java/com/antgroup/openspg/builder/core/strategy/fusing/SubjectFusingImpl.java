@@ -34,8 +34,8 @@ public class SubjectFusingImpl implements SubjectFusing {
   }
 
   @Override
-  public List<BaseAdvancedRecord> fusing(List<BaseAdvancedRecord> advancedRecords)
+  public List<BaseAdvancedRecord> fusing(List<BaseAdvancedRecord> advancedRecord)
       throws FusingException {
-    return entityFusing.fusing(advancedRecords);
+    return entityFusing.fusing(advancedRecord);
   }
 }
