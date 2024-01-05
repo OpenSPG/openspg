@@ -20,11 +20,11 @@ import com.antgroup.openspg.builder.model.exception.FusingException;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import java.util.List;
 
-public class NewInstanceFusing implements EntityFusing {
+public class OverwriteFusing implements EntityFusing {
 
-  public static final NewInstanceFusing INSTANCE = new NewInstanceFusing();
+  public static final OverwriteFusing INSTANCE = new OverwriteFusing();
 
-  private NewInstanceFusing() {}
+  private OverwriteFusing() {}
 
   @Override
   public void init(BuilderContext context) throws BuilderException {}
