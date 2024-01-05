@@ -36,15 +36,18 @@ class NNHub(ABC):
     ) -> str:
         """
         Publish a model(executor) to hub.
-        Args:
-            model_executor: An NNExecutor object, which is pickleable.
-                Or a tuple of (class, init_args, kwargs, weight_ids) for creating an NNExecutor
-                , while all these 4 augments are pickleable.
-            name: The name of a model, like `llama2`.
-                We do not have a `namespace`. Use a joined name like `alibaba/qwen` to support such features.
-            version: Optional. Auto generate a version if this param is not given.
-        Returns:
-            The published model version.
+
+        :param model_executor: An NNExecutor object, which is pickleable.
+                               Or a tuple of (class, init_args, kwargs, weight_ids) for creating an NNExecutor,
+                               while all these 4 augments are pickleable.
+
+        :param str name: The name of a model, like `llama2`. We do not have a `namespace`.
+                         Use a joined name like `alibaba/qwen` to support such features.
+
+        :param str version: Optional. Auto generate a version if this param is not given.
+
+        :return: The published model version.
+        :rtype: str
         """
         pass
 
@@ -54,11 +57,11 @@ class NNHub(ABC):
     ) -> Optional[NNExecutor]:
         """
         Get an NNExecutor instance from Hub.
-        Args:
-            name: The name of a model.
-            version: The version of a model. Get default version of a model if this param is not given.
-        Returns:
-            The ModelExecutor Instance. None for NotFound.
+
+        :param str name: The name of a model.
+        :param str version: The version of a model. Get default version of a model if this param is not given.
+        :return: The ModelExecutor Instance. None for NotFound.
+        :rtype: Optional[NNExecutor]
         """
         pass
 
@@ -66,10 +69,10 @@ class NNHub(ABC):
     def get_invoker(self, nn_config: dict) -> Optional["NNInvoker"]:
         """
         Get an NNExecutor instance from Hub.
-        Args:
-            nn_config: The config dictionary.
-        Returns:
-            The NNExecutor Instance. None for NotFound.
+
+        :param dict nn_config: The config dictionary.
+        :return: The NNExecutor Instance. None for NotFound.
+        :rtype: Optional[NNInvoker]
         """
         pass
 

@@ -19,7 +19,7 @@ def split_module_class_name(name: str, text: str) -> Tuple[str, str]:
 
     :param name: fully qualified class name, e.g. ``foo.bar.MyClass``
     :type name: str
-    :param text: describe the kind of the class, use in the exception message
+    :param text: describe the kind of the class, used in the exception message
     :type text: str
     :rtype: Tuple[str, str]
     :raises RuntimeError: if `name` is not a fully qualified class name
