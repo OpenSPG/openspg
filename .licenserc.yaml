@@ -20,6 +20,7 @@ header:
     - 'LICENSE'
     - 'NOTICE'
     - 'KNEXT_VERSION'
+    - 'NN4K_VERSION'
     - '**/.*'
     - '**/*.md'
     - '**/*.tmpl'
