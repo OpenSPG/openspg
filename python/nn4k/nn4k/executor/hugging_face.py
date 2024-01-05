@@ -31,21 +31,24 @@ class HfLLMExecutor(LLMExecutor):
         import torch
         from transformers import AutoTokenizer
         from transformers import AutoModelForCausalLM
+        from nn4k.consts import NN_NAME_KEY, NN_NAME_TEXT
+        from nn4k.consts import NN_VERSION_KEY, NN_VERSION_TEXT
+        from nn4k.consts import NN_DEVICE_KEY, NN_TRUST_REMOTE_CODE_KEY
         from nn4k.utils.config_parsing import get_string_field
 
         nn_config: dict = args or self.init_args
         if self._model is None:
-            nn_name = get_string_field(nn_config, "nn_name", "NN model name")
-            nn_version = nn_config.get("nn_version")
+            nn_name = get_string_field(nn_config, NN_NAME_KEY, NN_NAME_TEXT)
+            nn_version = nn_config.get(NN_VERSION_KEY)
             if nn_version is not None:
                 nn_version = get_string_field(
-                    nn_config, "nn_version", "NN model version"
+                    nn_config, NN_VERSION_KEY, NN_VERSION_TEXT
                 )
             model_path = nn_name
             revision = nn_version
             use_fast_tokenizer = False
-            device = nn_config.get("device")
-            trust_remote_code = nn_config.get("trust_remote_code", False)
+            device = nn_config.get(NN_DEVICE_KEY)
+            trust_remote_code = nn_config.get(NN_TRUST_REMOTE_CODE_KEY, False)
             if device is None:
                 device = "cuda" if torch.cuda.is_available() else "cpu"
             tokenizer = AutoTokenizer.from_pretrained(
@@ -65,19 +68,14 @@ class HfLLMExecutor(LLMExecutor):
             self._tokenizer = tokenizer
             self._model = model
 
-    def inference(self, data, **kwargs):
-        if "max_input_length" in kwargs:
-            max_input_length = kwargs.pop("max_input_length")
-        else:
-            max_input_length = 1024
-        if "max_output_length" in kwargs:
-            max_output_length = kwargs.pop("max_output_length")
-        else:
-            max_output_length = 1024
-        if "do_sample" in kwargs:
-            do_sample = kwargs.pop("do_sample")
-        else:
-            do_sample = False
+    def inference(
+        self,
+        data,
+        max_input_length: int = 1024,
+        max_output_length: int = 1024,
+        do_sample: bool = False,
+        **kwargs,
+    ):
         model = self.model
         tokenizer = self.tokenizer
         input_ids = tokenizer(
@@ -96,6 +94,7 @@ class HfLLMExecutor(LLMExecutor):
             pad_token_id=tokenizer.pad_token_id,
             **kwargs,
         )
+
         outputs = [
             tokenizer.decode(
                 output_id[len(input_ids["input_ids"][idx]) :], skip_special_tokens=True

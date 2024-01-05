@@ -97,8 +97,10 @@ class SimpleNNHub(NNHub):
         name: str,
         version: str = None,
     ):
+        from nn4k.consts import NN_VERSION_DEFAULT
+
         if version is None:
-            version = "default"
+            version = NN_VERSION_DEFAULT
         if self._model_executors.get(name) is None:
             self._model_executors[name] = {version: executor}
         else:
@@ -107,11 +109,13 @@ class SimpleNNHub(NNHub):
     def publish(
         self, model_executor: NNExecutor, name: str, version: str = None
     ) -> str:
+        from nn4k.consts import NN_VERSION_DEFAULT
+
         print(
             "WARNING: You are using SimpleNNHub which can only maintain models in memory without data persistence!"
         )
         if version is None:
-            version = "default"
+            version = NN_VERSION_DEFAULT
         self._add_executor(model_executor, name, version)
         return version
 
@@ -131,14 +135,16 @@ class SimpleNNHub(NNHub):
         return executor
 
     def _add_local_executor(self, nn_config):
+        from nn4k.consts import NN_NAME_KEY, NN_NAME_TEXT
+        from nn4k.consts import NN_VERSION_KEY, NN_VERSION_TEXT
         from nn4k.executor.hugging_face import HfLLMExecutor
         from nn4k.utils.config_parsing import get_string_field
 
         executor = HfLLMExecutor.from_config(nn_config)
-        nn_name = get_string_field(nn_config, "nn_name", "NN model name")
-        nn_version = nn_config.get("nn_version")
+        nn_name = get_string_field(nn_config, NN_NAME_KEY, NN_NAME_TEXT)
+        nn_version = nn_config.get(NN_VERSION_KEY)
         if nn_version is not None:
-            nn_version = get_string_field(nn_config, "nn_version", "NN model version")
+            nn_version = get_string_field(nn_config, NN_VERSION_KEY, NN_VERSION_TEXT)
         self.publish(executor, nn_name, nn_version)
 
     def get_invoker(self, nn_config: dict) -> Optional["NNInvoker"]:

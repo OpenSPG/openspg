@@ -19,14 +19,22 @@ def is_openai_invoker(nn_config: dict) -> bool:
     :type nn_config: dict
     :rtype: bool
     """
+    from nn4k.consts import NN_NAME_KEY, NN_NAME_TEXT
+    from nn4k.consts import NN_OPENAI_API_KEY_KEY
+    from nn4k.consts import NN_OPENAI_API_BASE_KEY
+    from nn4k.consts import NN_OPENAI_MAX_TOKENS_KEY
+    from nn4k.consts import NN_OPENAI_GPT4_PREFIX
+    from nn4k.consts import NN_OPENAI_GPT35_PREFIX
     from nn4k.utils.config_parsing import get_string_field
 
-    nn_name = nn_config.get("nn_name")
+    nn_name = nn_config.get(NN_NAME_KEY)
     if nn_name is not None:
-        nn_name = get_string_field(nn_config, "nn_name", "NN name")
-        if nn_name.startswith("gpt-4") or nn_name.startswith("gpt-3.5"):
+        nn_name = get_string_field(nn_config, NN_NAME_KEY, NN_NAME_TEXT)
+        if nn_name.startswith(NN_OPENAI_GPT4_PREFIX) or nn_name.startswith(
+            NN_OPENAI_GPT35_PREFIX
+        ):
             return True
-    keys = ("openai_api_key", "openai_api_base", "openai_max_tokens")
+    keys = (NN_OPENAI_API_KEY_KEY, NN_OPENAI_API_BASE_KEY, NN_OPENAI_MAX_TOKENS_KEY)
     for key in keys:
         if key in nn_config:
             return True
@@ -40,13 +48,15 @@ def is_local_invoker(nn_config: dict) -> bool:
     :type nn_config: dict
     :rtype: bool
     """
+    from nn4k.consts import NN_NAME_KEY, NN_NAME_TEXT
+    from nn4k.consts import NN_LOCAL_HF_MODEL_CONFIG_FILE
     from nn4k.utils.config_parsing import get_string_field
 
-    nn_name = nn_config.get("nn_name")
+    nn_name = nn_config.get(NN_NAME_KEY)
     if nn_name is not None:
-        nn_name = get_string_field(nn_config, "nn_name", "NN name")
+        nn_name = get_string_field(nn_config, NN_NAME_KEY, NN_NAME_TEXT)
         if os.path.isdir(nn_name):
-            file_path = os.path.join(nn_name, "config.json")
+            file_path = os.path.join(nn_name, NN_LOCAL_HF_MODEL_CONFIG_FILE)
             if os.path.isfile(file_path):
                 return True
     return False

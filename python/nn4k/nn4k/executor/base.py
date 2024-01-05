@@ -107,27 +107,30 @@ class NNExecutor(ABC):
         :rtype: NNExecutor
         """
         from nn4k.nnhub import NNHub
+        from nn4k.consts import NN_NAME_KEY, NN_NAME_TEXT
+        from nn4k.consts import NN_VERSION_KEY, NN_VERSION_TEXT
+        from nn4k.consts import NN_EXECUTOR_KEY, NN_EXECUTOR_TEXT
         from nn4k.utils.config_parsing import preprocess_config
         from nn4k.utils.config_parsing import get_string_field
         from nn4k.utils.class_importing import dynamic_import_class
 
         nn_config = preprocess_config(nn_config)
-        nn_executor = nn_config.get("nn_executor")
+        nn_executor = nn_config.get(NN_EXECUTOR_KEY)
         if nn_executor is not None:
-            nn_executor = get_string_field(nn_config, "nn_executor", "NN executor")
-            executor_class = dynamic_import_class(nn_executor, "NN executor")
+            nn_executor = get_string_field(nn_config, NN_EXECUTOR_KEY, NN_EXECUTOR_TEXT)
+            executor_class = dynamic_import_class(nn_executor, NN_EXECUTOR_TEXT)
             if not issubclass(executor_class, NNExecutor):
-                message = "%r is not an NN executor class" % (nn_executor,)
+                message = "%r is not an %s class" % (nn_executor, NN_EXECUTOR_TEXT)
                 raise RuntimeError(message)
             executor = executor_class.from_config(nn_config)
             return executor
 
-        nn_name = nn_config.get("nn_name")
+        nn_name = nn_config.get(NN_NAME_KEY)
         if nn_name is not None:
-            nn_name = get_string_field(nn_config, "nn_name", "NN name")
-        nn_version = nn_config.get("nn_version")
+            nn_name = get_string_field(nn_config, NN_NAME_KEY, NN_NAME_TEXT)
+        nn_version = nn_config.get(NN_VERSION_KEY)
         if nn_version is not None:
-            nn_version = get_string_field(nn_config, "nn_version", "NN model version")
+            nn_version = get_string_field(nn_config, NN_VERSION_KEY, NN_VERSION_TEXT)
         if nn_name is not None:
             hub = NNHub.get_instance()
             executor = hub.get_model_executor(nn_name, nn_version)

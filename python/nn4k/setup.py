@@ -46,8 +46,7 @@ setup(
     name=package_name,
     version=version,
     description="nn4k",
-    author="xionghuaidong",
-    author_email="huaidong.xhd@antgroup.com",
+    url="https://github.com/OpenSPG/openspg",
     packages=find_packages(
         where=".",
         exclude=[

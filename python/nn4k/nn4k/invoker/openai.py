@@ -9,6 +9,8 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
+from typing import Optional
+
 from nn4k.invoker import NNInvoker
 
 
@@ -17,20 +19,24 @@ class OpenAIInvoker(NNInvoker):
         super().__init__(nn_config)
 
         import openai
+        from nn4k.consts import NN_OPENAI_MODEL_NAME_KEY, NN_OPENAI_MODEL_NAME_TEXT
+        from nn4k.consts import NN_OPENAI_API_KEY_KEY, NN_OPENAI_API_KEY_TEXT
+        from nn4k.consts import NN_OPENAI_API_BASE_KEY, NN_OPENAI_API_BASE_TEXT
+        from nn4k.consts import NN_OPENAI_MAX_TOKENS_KEY, NN_OPENAI_MAX_TOKENS_TEXT
         from nn4k.utils.config_parsing import get_string_field
         from nn4k.utils.config_parsing import get_positive_int_field
 
         self.openai_model_name = get_string_field(
-            self.init_args, "nn_name", "openai model name"
+            self.init_args, NN_OPENAI_MODEL_NAME_KEY, NN_OPENAI_MODEL_NAME_TEXT
         )
         self.openai_api_key = get_string_field(
-            self.init_args, "openai_api_key", "openai api key"
+            self.init_args, NN_OPENAI_API_KEY_KEY, NN_OPENAI_API_KEY_TEXT
         )
         self.openai_api_base = get_string_field(
-            self.init_args, "openai_api_base", "openai api base"
+            self.init_args, NN_OPENAI_API_BASE_KEY, NN_OPENAI_API_BASE_TEXT
         )
         self.openai_max_tokens = get_positive_int_field(
-            self.init_args, "openai_max_tokens", "openai max tokens"
+            self.init_args, NN_OPENAI_MAX_TOKENS_KEY, NN_OPENAI_MAX_TOKENS_TEXT
         )
 
         openai.api_key = self.openai_api_key
@@ -52,12 +58,12 @@ class OpenAIInvoker(NNInvoker):
         output = [choice.text for choice in completion.choices]
         return output
 
-    def remote_inference(self, input, **kwargs):
+    def remote_inference(
+        self, input, max_output_length: Optional[int] = None, **kwargs
+    ):
         import openai
 
-        if "max_output_length" in kwargs:
-            max_output_length = kwargs.pop("max_output_length")
-        else:
+        if max_output_length is None:
             max_output_length = self.openai_max_tokens
         prompt = self._create_prompt(input, **kwargs)
         completion = openai.Completion.create(
