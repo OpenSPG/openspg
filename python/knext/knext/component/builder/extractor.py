@@ -34,7 +34,7 @@ class LLMBasedExtractor(SPGExtractor):
                     ]
                 )
         extract = LLMBasedExtractor(
-                    llm=LLMInvoker.from_config("./config.json"),
+                    llm=NNInvoker.from_config("./config.json"),
                     prompt_ops=[prompt_op]
                 )
 

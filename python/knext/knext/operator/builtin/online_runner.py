@@ -14,7 +14,7 @@ from typing import Dict, List
 
 from knext.api.operator import ExtractOp
 from knext.operator.spg_record import SPGRecord
-from nn4k.invoker import LLMInvoker
+from nn4k.invoker import NNInvoker
 
 
 class _BuiltInOnlineExtractor(ExtractOp):
@@ -26,7 +26,7 @@ class _BuiltInOnlineExtractor(ExtractOp):
 
     def load_model(self):
         model_config = json.loads(self.params["model_config"])
-        return LLMInvoker.from_config(model_config)
+        return NNInvoker.from_config(model_config)
 
     def load_operator(self):
         import importlib.util

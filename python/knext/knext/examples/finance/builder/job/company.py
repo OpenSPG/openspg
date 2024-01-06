@@ -15,7 +15,7 @@ from schema.finance_schema_helper import Finance
 
 from knext.api.component import CSVReader, LLMBasedExtractor, KGWriter, SPGTypeMapping
 from knext.client.model.builder_job import BuilderJob
-from nn4k.invoker import LLMInvoker
+from nn4k.invoker import NNInvoker
 
 
 class Company(BuilderJob):
@@ -40,7 +40,7 @@ class Company(BuilderJob):
         )
 
         extract = LLMBasedExtractor(
-            llm=LLMInvoker.from_config("builder/model/openai_infer.json"),
+            llm=NNInvoker.from_config("builder/model/openai_infer.json"),
             prompt_ops=[prompt],
         )
 

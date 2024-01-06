@@ -10,7 +10,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from nn4k.invoker import LLMInvoker
+from nn4k.invoker import NNInvoker
 
 from knext.api.component import CSVReader, LLMBasedExtractor, SPGTypeMapping, KGWriter
 from knext.api.auto_prompt import REPrompt
@@ -30,7 +30,7 @@ class Disease(BuilderJob):
         )
 
         extract = LLMBasedExtractor(
-            llm=LLMInvoker.from_config("builder/model/openai_infer.json"),
+            llm=NNInvoker.from_config("builder/model/openai_infer.json"),
             prompt_ops=[
                 REPrompt(
                     spg_type_name=Medicine.Disease,
