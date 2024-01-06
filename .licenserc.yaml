@@ -15,6 +15,7 @@ header:
       or implied.
 
   paths-ignore:
+    - 'cfg'
     - 'dist'
     - 'licenses'
     - 'LICENSE'
