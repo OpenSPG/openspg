@@ -61,7 +61,7 @@ class _BuiltInOnlineExtractor(ExtractOp):
                         response = self.model.remote_inference(query)
                         collector.extend(op.parse_response(response))
                         next_params.extend(
-                            op.build_next_variables(input_param, response)
+                            op._build_next_variables(input_param, response)
                         )
                         break
                     except Exception as e:

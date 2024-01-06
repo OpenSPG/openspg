@@ -33,7 +33,7 @@ def _test_spg_record_properties(record: SPGRecord):
     assert record.get_property("phone") == properties["phone"]
     assert record.get_property("addr") == properties["addr"]
 
-    record.update_property("name", "taobao")
+    record.upsert_property("name", "taobao")
     assert record.get_property("name") == "taobao"
 
     record.update_properties(properties2)

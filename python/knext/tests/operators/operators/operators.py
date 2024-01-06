@@ -55,8 +55,8 @@ class TestLinkOp(LinkOp):
         output = []
         for i in range(self.num_outputs):
             record = copy.deepcopy(subject_record)
-            record.update_property("index", str(i + 1))
-            record.update_property("indexed_property", f"{property}_{i+1}")
+            record.upsert_property("index", str(i + 1))
+            record.upsert_property("indexed_property", f"{property}_{i+1}")
             output.append(record)
         return output
 
@@ -68,30 +68,24 @@ class TestFuseOp(FuseOp):
     def num_outputs(self):
         return 1
 
-    def link(self, subject_record: SPGRecord) -> List[SPGRecord]:
+    def link(self, subject_record: SPGRecord) -> SPGRecord:
         name = subject_record.get_property("name")
-        output = []
-        dummy_name = name
-        for i in range(3):
-            dummy_name = f"{dummy_name}{i+1}"
-            record = copy.deepcopy(subject_record)
-            record.update_property("name", dummy_name)
-            record.update_property("index", str(i + 1))
-            output.append(record)
-        np.random.shuffle(output)
-        print(f"link output = {output}")
-        return output
+        record = copy.deepcopy(subject_record)
+        record.upsert_property("name", name)
+        record.upsert_property("index", "1")
+        print(f"link output = {record}")
+        return record
 
     def merge(
-        self, subject_record: SPGRecord, linked_records: List[SPGRecord]
-    ) -> List[SPGRecord]:
+            self, subject_record: SPGRecord, linked_record: SPGRecord
+    ) -> SPGRecord:
         subject_name = subject_record.get_property("name")
-        object_names = [x.get_property("name") for x in linked_records]
-        scores = [jaccard_distance(subject_name, x) for x in object_names]
-        idx = np.argmax(scores)
-        output_record = linked_records[idx]
+        object_name = linked_record.get_property("name")
+        score = jaccard_distance(subject_name, object_name)
+        if score > 0:
+            output_record = linked_record
         print(f"merge output = {output_record}")
-        return [output_record]
+        return output_record
 
 
 class TestPredictOp(PredictOp):
@@ -107,7 +101,7 @@ class TestPredictOp(PredictOp):
         for i in range(self.num_outputs):
             record = copy.deepcopy(subject_record)
             new_name = f"{name}{i+1}"
-            record.update_property("name", new_name)
-            record.update_property("index", str(i + 1))
+            record.upsert_property("name", new_name)
+            record.upsert_property("index", str(i + 1))
             output.append(record)
         return output

@@ -18,7 +18,7 @@ from knext.operator.base import BaseOp
 from knext.operator.invoke_result import InvokeResult
 from knext.operator.spg_record import SPGRecord
 
-cache = knext.common.cache.LinkCache(500, 60)
+cache = knext.common.cache.LinkCache(5000, 60)
 
 
 class ExtractOp(BaseOp, ABC):
@@ -99,14 +99,14 @@ class FuseOp(BaseOp, ABC):
     def __init__(self):
         super().__init__()
 
-    def link(self, subject_record: SPGRecord) -> List[SPGRecord]:
+    def link(self, subject_record: SPGRecord) -> SPGRecord:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `link` method."
         )
 
     def merge(
-        self, subject_record: SPGRecord, linked_records: List[SPGRecord]
-    ) -> List[SPGRecord]:
+        self, subject_record: SPGRecord, linked_record: SPGRecord
+    ) -> SPGRecord:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `merge` method."
         )
@@ -115,12 +115,14 @@ class FuseOp(BaseOp, ABC):
         records = []
         for record in subject_records:
             cache_key = str(self.bind_to) + record.get_property("id", "")
-            linked_records = self.link(record)
-            merged_records = self.merge(record, linked_records)
-            merged_records = list(filter(None.__ne__, merged_records))
-            if merged_records:
-                cache.put(cache_key, ','.join([_r.get_property("id", "") for _r in merged_records]))
-            records.extend(merged_records)
+            linked_record = self.link(record)
+            if not linked_record:
+                records.append(record)
+                continue
+            merged_record = self.merge(record, linked_record)
+            if merged_record:
+                cache.put(cache_key, merged_record.get_property("id", ""))
+                records.append(merged_record)
         return records
 
     @staticmethod
@@ -153,16 +155,16 @@ class PromptOp(BaseOp, ABC):
     def parse_response(self, response: str) -> List[SPGRecord]:
         return []
 
-    def build_next_variables(
+    def invoke(self, *args):
+        pass
+
+    def _build_next_variables(
         self, variables: Dict[str, str], response: str
     ) -> List[Dict[str, str]]:
         if isinstance(response, list) and len(response) > 0:
             response = response[0]
-        variables.update({f"{self.__class__.__name__}": response})
+        variables.update({f"{self.name}": response})
         return [variables]
-
-    def invoke(self, *args):
-        pass
 
 
 class PredictOp(BaseOp, ABC):

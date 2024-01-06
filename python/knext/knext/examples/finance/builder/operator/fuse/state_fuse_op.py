@@ -25,16 +25,14 @@ class StateFuse(FuseOp):
         super().__init__()
         self.search_client = SearchClient(self.bind_to)
 
-    def link(self, subject_record: SPGRecord) -> List[SPGRecord]:
+    def link(self, subject_record: SPGRecord) -> SPGRecord:
         linked_record = self.search_client.exact_search(subject_record, "name")
 
-        if linked_record:
-            return [linked_record]
-        return []
+        return linked_record
 
     def merge(
-        self, subject_record: SPGRecord, linked_records: List[SPGRecord]
-    ) -> List[SPGRecord]:
-        if linked_records:
-            return linked_records
-        return [subject_record]
+            self, subject_record: SPGRecord, linked_record: SPGRecord
+    ) -> SPGRecord:
+        if linked_record:
+            return linked_record
+        return subject_record

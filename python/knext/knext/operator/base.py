@@ -59,7 +59,7 @@ class BaseOp(ABC):
         return inputs
 
     @staticmethod
-    def _post_process(output: InvokeResult) -> Dict[str, Any]:
+    def _post_process(output) -> Dict[str, Any]:
         """Convert result structures in operator into structures in building job after `eval` method."""
         return output.to_dict()
 

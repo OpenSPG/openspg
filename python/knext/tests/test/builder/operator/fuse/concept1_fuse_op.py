@@ -26,31 +26,30 @@ class Concept1FuseOp(FuseOp):
         super().__init__()
         self.search_client = SearchClient(self.bind_to)
 
-    def link(self, subject_record: SPGRecord) -> List[SPGRecord]:
+    def link(self, subject_record: SPGRecord) -> SPGRecord:
         print("####################Concept1FuseOp#####################")
         print("Concept1FuseOp.link(Input): ")
         print("--------------------------------------------")
         print(subject_record)
 
-        linked_records = self.search_client.fuzzy_search(subject_record, TEST.Concept1.name)
+        linked_record = self.search_client.exact_search(subject_record, TEST.Concept1.name)
 
         print("Concept1FuseOp.link(Output): ")
         print("--------------------------------------------")
-        print(linked_records)
-        return linked_records
+        print(linked_record)
+        return linked_record
 
     def merge(
-            self, subject_record: SPGRecord, linked_records: List[SPGRecord]
-    ) -> List[SPGRecord]:
+            self, subject_record: SPGRecord, linked_record: SPGRecord
+    ) -> SPGRecord:
         print("Concept1FuseOp.merge(Input): ")
         print("--------------------------------------------")
-        print(f"subject_record: {subject_record}, linked_records: {linked_records}")
+        print(f"subject_record: {subject_record}, linked_record: {linked_record}")
 
-        if linked_records:
-            new_id = subject_record.get_property("id") + "_" + linked_records[0].get_property("id")
-            subject_record.upsert_property(TEST.CenterEvent.id, new_id)
+        new_id = subject_record.get_property("id") + "_" + linked_record.get_property("id")
+        subject_record.upsert_property(TEST.CenterEvent.id, new_id)
 
         print("Concept1FuseOp.merge(Output): ")
         print("--------------------------------------------")
-        print([subject_record])
-        return [subject_record]
+        print(subject_record)
+        return subject_record
