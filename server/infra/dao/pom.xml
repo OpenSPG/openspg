@@ -34,19 +34,7 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>core-builder-service</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>common-service</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>core-reasoner-service</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>cloudext-impl-job-scheduler-local</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

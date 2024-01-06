@@ -14,10 +14,11 @@
 package com.antgroup.openspg.cloudext.interfaces.searchengine;
 
 import com.antgroup.openspg.common.util.DriverManagerUtils;
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
 import com.antgroup.openspg.server.common.model.exception.CloudExtException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 public class SearchEngineClientDriverManager {
@@ -41,12 +42,13 @@ public class SearchEngineClientDriverManager {
     log.info("registerDriver: {}", driver);
   }
 
-  public static SearchEngineClient getClient(SearchEngineConnectionInfo config) {
+  public static SearchEngineClient getClient(String connUrl) {
+    UriComponents uriComponents = UriComponentsBuilder.fromUriString(connUrl).build();
     for (SearchEngineClientDriver driver : registeredDrivers) {
-      if (driver.acceptsConfig(config)) {
-        return driver.connect(config);
+      if (driver.acceptsConfig(uriComponents.getScheme())) {
+        return driver.connect(connUrl);
       }
     }
-    throw CloudExtException.driverNotExist(config);
+    throw CloudExtException.driverNotExist(connUrl);
   }
 }

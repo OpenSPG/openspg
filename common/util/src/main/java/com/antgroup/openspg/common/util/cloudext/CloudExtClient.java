@@ -13,9 +13,7 @@
 
 package com.antgroup.openspg.common.util.cloudext;
 
-import com.antgroup.openspg.server.common.model.datasource.connection.BaseConnectionInfo;
-
 public interface CloudExtClient {
 
-  BaseConnectionInfo getConnInfo();
+  String getConnUrl();
 }

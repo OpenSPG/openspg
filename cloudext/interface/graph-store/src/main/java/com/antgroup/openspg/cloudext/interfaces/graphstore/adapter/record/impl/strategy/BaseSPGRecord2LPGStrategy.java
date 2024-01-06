@@ -15,11 +15,11 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.
 
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
-import com.antgroup.openspg.builder.model.record.SPGPropertyRecord;
 import com.antgroup.openspg.builder.model.record.SPGRecordAlterItem;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.BaseLPGGraphStoreClient;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.EdgeRecordConvertor;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.record.impl.convertor.VertexRecordConvertor;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.EdgeRecordConvertor;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.VertexRecordConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.OneHopLPGRecordQuery;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.Direction;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGRecordAlterItem;
@@ -99,7 +99,7 @@ public abstract class BaseSPGRecord2LPGStrategy implements SPGRecord2LPGStrategy
                                 new EdgeTypeName(
                                     advancedRecord.getName(),
                                     p.getName(),
-                                    p.getPropertyType().getObjectTypeRef().getName()))
+                                    p.getProperty().getObjectTypeRef().getName()))
                         .collect(Collectors.toSet()),
                     Direction.OUT));
     return recordStruct.getEdges().stream()

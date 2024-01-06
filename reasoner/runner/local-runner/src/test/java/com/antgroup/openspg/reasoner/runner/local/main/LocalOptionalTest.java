@@ -20,7 +20,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog;
 import com.antgroup.openspg.reasoner.recorder.DefaultRecorder;
-import com.antgroup.openspg.reasoner.runner.local.KGReasonerLocalRunner;
+import com.antgroup.openspg.reasoner.runner.local.LocalReasonerRunner;
 import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphLoader;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
@@ -669,7 +669,7 @@ public class LocalOptionalTest {
 
     task.setExecutionRecorder(new DefaultRecorder());
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     System.out.println(task.getExecutionRecorder().toReadableString());
@@ -749,7 +749,7 @@ public class LocalOptionalTest {
 
     task.setExecutionRecorder(new DefaultRecorder());
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     System.out.println(task.getExecutionRecorder().toReadableString());
@@ -870,7 +870,7 @@ public class LocalOptionalTest {
     task.setExecutorTimeoutMs(99999999999999999L);
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("u1", "ProfMedV1.Patient")));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     System.out.println(task.getExecutionRecorder().toReadableString());
@@ -940,7 +940,7 @@ public class LocalOptionalTest {
     task.setExecutorTimeoutMs(99999999999999999L);
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("u1", "ProfMedV1.Patient")));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     System.out.println(task.getExecutionRecorder().toReadableString());
@@ -1035,7 +1035,7 @@ public class LocalOptionalTest {
     task.setExecutorTimeoutMs(99999999999999999L);
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("u1", "ProfMedV1.Patient")));
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     System.out.println(task.getExecutionRecorder().toReadableString());
@@ -1244,7 +1244,7 @@ public class LocalOptionalTest {
     task.setExecutionRecorder(new DefaultRecorder());
     task.setExecutorTimeoutMs(99999999999999999L);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     System.out.println(task.getExecutionRecorder().toReadableString());
@@ -1341,7 +1341,7 @@ public class LocalOptionalTest {
     task.getParams().put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
     task.setExecutionRecorder(new DefaultRecorder());
     task.setExecutorTimeoutMs(99999999999999999L);
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     System.out.println(task.getExecutionRecorder().toReadableString());
@@ -1449,7 +1449,7 @@ public class LocalOptionalTest {
     task.getParams().put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true);
     task.getParams().put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     Assert.assertEquals(result.getRows().size(), 1);

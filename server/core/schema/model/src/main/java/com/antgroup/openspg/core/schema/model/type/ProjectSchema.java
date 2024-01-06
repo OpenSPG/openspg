@@ -13,11 +13,15 @@
 
 package com.antgroup.openspg.core.schema.model.type;
 
+import com.antgroup.openspg.core.schema.model.identifier.RelationIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTripleIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import com.antgroup.openspg.server.common.model.base.BaseToString;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.Getter;
 
 /** The schema details of the project, contains a list of SPG types. */
 public class ProjectSchema extends BaseToString {
@@ -25,7 +29,7 @@ public class ProjectSchema extends BaseToString {
   private static final long serialVersionUID = 6290975442808465802L;
 
   /** List of SPG types that defined in the project. */
-  private final List<BaseSPGType> spgTypes;
+  @Getter private final List<BaseSPGType> spgTypes;
 
   /**
    * A map contains all the SPG types that defined in the project. the key is the name of the type,
@@ -35,10 +39,6 @@ public class ProjectSchema extends BaseToString {
 
   public ProjectSchema(List<BaseSPGType> spgTypes) {
     this.spgTypes = spgTypes;
-  }
-
-  public List<BaseSPGType> getSpgTypes() {
-    return spgTypes;
   }
 
   /**
@@ -53,6 +53,13 @@ public class ProjectSchema extends BaseToString {
           spgTypes.stream().collect(Collectors.toMap(WithBasicInfo::getBaseSpgIdentifier, x -> x));
     }
     return spgTypeMap.get(name);
+  }
+
+  public Relation getByName(RelationIdentifier identifier) {
+    BaseSPGType spgType = getByName(identifier.getStart());
+    return spgType.getRelationByName(
+        new SPGTripleIdentifier(
+            identifier.getStart(), identifier.getPredicate(), identifier.getEnd()));
   }
 
   public boolean getSpreadable(SPGTypeIdentifier identifier) {

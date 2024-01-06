@@ -13,47 +13,13 @@
 
 package com.antgroup.openspg.builder.model.pipeline.config;
 
-import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
-import com.antgroup.openspg.server.common.model.datasource.connection.TableStoreConnectionInfo;
+import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
+import lombok.Getter;
 
+@Getter
 public class GraphStoreSinkNodeConfig extends BaseNodeConfig {
-
-  /** The configuration information for graph storage. */
-  private GraphStoreConnectionInfo graphStoreConnectionInfo;
-
-  /** The configuration information for the search engine. */
-  private SearchEngineConnectionInfo searchEngineConnectionInfo;
-
-  /** The configuration information for the table store. */
-  private TableStoreConnectionInfo tableStoreConnectionInfo;
 
   public GraphStoreSinkNodeConfig() {
     super(NodeTypeEnum.GRAPH_SINK);
-  }
-
-  public GraphStoreConnectionInfo getGraphStoreConnectionInfo() {
-    return graphStoreConnectionInfo;
-  }
-
-  public void setGraphStoreConnectionInfo(GraphStoreConnectionInfo graphStoreConnectionInfo) {
-    this.graphStoreConnectionInfo = graphStoreConnectionInfo;
-  }
-
-  public SearchEngineConnectionInfo getSearchEngineConnectionInfo() {
-    return searchEngineConnectionInfo;
-  }
-
-  public void setSearchEngineConnectionInfo(SearchEngineConnectionInfo searchEngineConnectionInfo) {
-    this.searchEngineConnectionInfo = searchEngineConnectionInfo;
-  }
-
-  public TableStoreConnectionInfo getTableStoreConnectionInfo() {
-    return tableStoreConnectionInfo;
-  }
-
-  public void setTableStoreConnectionInfo(TableStoreConnectionInfo tableStoreConnectionInfo) {
-    this.tableStoreConnectionInfo = tableStoreConnectionInfo;
   }
 }
