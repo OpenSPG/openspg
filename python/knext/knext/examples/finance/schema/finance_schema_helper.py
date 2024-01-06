@@ -19,33 +19,25 @@ from knext.common.schema_helper import SPGTypeHelper, PropertyHelper, RelationHe
 
 
 class Finance:
-    
     class AdministrativeArea(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         id = PropertyHelper("id")
         stdId = PropertyHelper("stdId")
         description = PropertyHelper("description")
         alias = PropertyHelper("alias")
-    
-    
-    
+
     class AreaRiskEvent(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         id = PropertyHelper("id")
         subject = PropertyHelper("subject")
         eventTime = PropertyHelper("eventTime")
         description = PropertyHelper("description")
         object = PropertyHelper("object")
-    
-    
-    
+
     class Company(SPGTypeHelper):
-        
-    
+
         regArea = PropertyHelper("regArea")
         name = PropertyHelper("name")
         businessScope = PropertyHelper("businessScope")
@@ -55,12 +47,9 @@ class Finance:
         legalPerson = PropertyHelper("legalPerson")
         orgCertNo = PropertyHelper("orgCertNo")
         establishDate = PropertyHelper("establishDate")
-    
-    
-    
+
     class CompanyEvent(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         location = PropertyHelper("location")
         id = PropertyHelper("id")
@@ -69,38 +58,31 @@ class Finance:
         eventTime = PropertyHelper("eventTime")
         description = PropertyHelper("description")
         object = PropertyHelper("object")
-    
-    
-    
+
     class Indicator(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         id = PropertyHelper("id")
         stdId = PropertyHelper("stdId")
         description = PropertyHelper("description")
         alias = PropertyHelper("alias")
-    
-    
-    
+
     class State(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         id = PropertyHelper("id")
         stdId = PropertyHelper("stdId")
         description = PropertyHelper("description")
         alias = PropertyHelper("alias")
-    
+
         derivedFrom = RelationHelper("derivedFrom")
         causes = RelationHelper("causes")
-    
-    
+
     AdministrativeArea = AdministrativeArea("Finance.AdministrativeArea")
     AreaRiskEvent = AreaRiskEvent("Finance.AreaRiskEvent")
     Company = Company("Finance.Company")
     CompanyEvent = CompanyEvent("Finance.CompanyEvent")
     Indicator = Indicator("Finance.Indicator")
     State = State("Finance.State")
-    
+
     pass

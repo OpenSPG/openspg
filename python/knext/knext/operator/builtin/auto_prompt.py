@@ -161,20 +161,38 @@ input:${input}
                 continue
             s, p_zh, o = spo_item["subject"], spo_item["predicate"], spo_item["object"]
             if s not in subject_records:
-                subject_records[s] = SPGRecord(spg_type_name=self.spg_type_name).upsert_property("id", s).upsert_property("name", s)
+                subject_records[s] = (
+                    SPGRecord(spg_type_name=self.spg_type_name)
+                    .upsert_property("id", s)
+                    .upsert_property("name", s)
+                )
             if p_zh in self.property_info_zh:
                 p, _, o_type = self.property_info_zh[p_zh]
                 o_list = re.split("[,，、;；]", o)
-                result.extend([SPGRecord(o_type).upsert_property("id", _o).upsert_property("name", _o) for _o in o_list])
+                result.extend(
+                    [
+                        SPGRecord(o_type)
+                        .upsert_property("id", _o)
+                        .upsert_property("name", _o)
+                        for _o in o_list
+                    ]
+                )
                 o = subject_records[s].get_property(p)
-                o = ','.join([o] + o_list) if o else ','.join(o_list)
+                o = ",".join([o] + o_list) if o else ",".join(o_list)
                 subject_records[s].upsert_property(p, o)
             elif p_zh in self.relation_info_zh:
                 p, _, o_type = self.relation_info_zh[p_zh]
                 o_list = re.split("[,，、;；]", o)
-                result.extend([SPGRecord(o_type).upsert_property("id", _o).upsert_property("name", _o) for _o in o_list])
+                result.extend(
+                    [
+                        SPGRecord(o_type)
+                        .upsert_property("id", _o)
+                        .upsert_property("name", _o)
+                        for _o in o_list
+                    ]
+                )
                 o = subject_records[s].get_relation(p, o_type, "")
-                o = ','.join([o] + o_list) if o else ','.join(o_list)
+                o = ",".join([o] + o_list) if o else ",".join(o_list)
                 subject_records[s].upsert_relation(p, o_type, o)
             else:
                 continue
@@ -190,35 +208,47 @@ input:${input}
         duplicate_predicates = set()
         for _prop in self.property_names:
             s_name_zh, s_desc = self.spg_type_schema_info_en.get(self.spg_type_name)
-            s_desc = (s_desc or s_name_zh) if self.spg_type_name not in duplicate_types else None
-            s_info = (s_name_zh or "") + (f'({s_desc})' if s_desc else "")
+            s_desc = (
+                (s_desc or s_name_zh)
+                if self.spg_type_name not in duplicate_types
+                else None
+            )
+            s_info = (s_name_zh or "") + (f"({s_desc})" if s_desc else "")
             p_name_zh, p_desc, o_type = self.property_info_en.get(_prop)
-            p_desc = (p_desc or p_name_zh) if _prop not in duplicate_predicates else None
-            p_info = (p_name_zh or "") + (f'({p_desc})' if p_desc else "")
+            p_desc = (
+                (p_desc or p_name_zh) if _prop not in duplicate_predicates else None
+            )
+            p_info = (p_name_zh or "") + (f"({p_desc})" if p_desc else "")
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
             o_desc = (o_desc or o_name_zh) if o_type not in duplicate_types else None
-            o_info = (o_name_zh or "") + (f'({o_desc})' if o_desc else "")
-            spo_infos.append(f'{s_info}-{p_info}-{o_info}')
+            o_info = (o_name_zh or "") + (f"({o_desc})" if o_desc else "")
+            spo_infos.append(f"{s_info}-{p_info}-{o_info}")
             duplicate_predicates.add(_prop)
             duplicate_types.update([self.spg_type_name, o_type])
             predicates.append(p_name_zh)
         for _rel, o_type in self.relation_names:
             s_name_zh, s_desc = self.spg_type_schema_info_en.get(self.spg_type_name)
-            s_desc = (s_desc or s_name_zh) if self.spg_type_name not in duplicate_types else None
-            s_info = (s_name_zh or "") + (f'({s_desc})' if s_desc else "")
+            s_desc = (
+                (s_desc or s_name_zh)
+                if self.spg_type_name not in duplicate_types
+                else None
+            )
+            s_info = (s_name_zh or "") + (f"({s_desc})" if s_desc else "")
             p_name_zh, p_desc, _ = self.relation_info_en.get(_rel)
             p_desc = (p_desc or p_name_zh) if _rel not in duplicate_predicates else None
-            p_info = (p_name_zh or "") + (f'({p_desc})' if p_desc else "")
+            p_info = (p_name_zh or "") + (f"({p_desc})" if p_desc else "")
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
             o_desc = (o_desc or o_name_zh) if o_type not in duplicate_types else None
-            o_info = (o_name_zh or "") + (f'({o_desc})' if o_desc else "")
-            spo_infos.append(f'{s_info}-{p_info}-{o_info}')
+            o_info = (o_name_zh or "") + (f"({o_desc})" if o_desc else "")
+            spo_infos.append(f"{s_info}-{p_info}-{o_info}")
             duplicate_predicates.add(_rel)
             duplicate_types.update([self.spg_type_name, o_type])
             predicates.append(p_name_zh)
         schema_text = "\n[" + ",\n".join(spo_infos) + "]"
-        predicate_text = ','.join(predicates)
-        self.template = self.template.replace("${schema}", schema_text).replace("${predicate}", predicate_text)
+        predicate_text = ",".join(predicates)
+        self.template = self.template.replace("${schema}", schema_text).replace(
+            "${predicate}", predicate_text
+        )
 
     def _init_render_variables(self):
         schema_session = SchemaClient().create_session()
@@ -227,16 +257,40 @@ input:${input}
         self.property_info_zh = {}
         self.relation_info_en = {}
         self.relation_info_zh = {}
-        self.spg_type_schema_info_en = {"Text": ("文本", None), "Integer": ("整型", None), "Float": ("浮点型", None)}
-        self.spg_type_schema_info_zh = {"文本": ("Text", None), "整型": ("Integer", None), "浮点型": ("Float", None)}
+        self.spg_type_schema_info_en = {
+            "Text": ("文本", None),
+            "Integer": ("整型", None),
+            "Float": ("浮点型", None),
+        }
+        self.spg_type_schema_info_zh = {
+            "文本": ("Text", None),
+            "整型": ("Integer", None),
+            "浮点型": ("Float", None),
+        }
         for _rel in spg_type.relations.values():
             if _rel.is_dynamic:
                 continue
-            self.relation_info_zh[_rel.name_zh] = (_rel.name, _rel.desc, _rel.object_type_name)
-            self.relation_info_en[_rel.name] = (_rel.name_zh, _rel.desc, _rel.object_type_name)
+            self.relation_info_zh[_rel.name_zh] = (
+                _rel.name,
+                _rel.desc,
+                _rel.object_type_name,
+            )
+            self.relation_info_en[_rel.name] = (
+                _rel.name_zh,
+                _rel.desc,
+                _rel.object_type_name,
+            )
         for _prop in spg_type.properties.values():
-            self.property_info_zh[_prop.name_zh] = (_prop.name, _prop.desc, _prop.object_type_name)
-            self.property_info_en[_prop.name] = (_prop.name_zh, _prop.desc, _prop.object_type_name)
+            self.property_info_zh[_prop.name_zh] = (
+                _prop.name,
+                _prop.desc,
+                _prop.object_type_name,
+            )
+            self.property_info_en[_prop.name] = (
+                _prop.name_zh,
+                _prop.desc,
+                _prop.object_type_name,
+            )
         for _type in schema_session.spg_types.values():
             if _type.name in ["Text", "Integer", "Float"]:
                 continue

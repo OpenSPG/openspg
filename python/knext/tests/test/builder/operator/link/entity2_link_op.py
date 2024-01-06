@@ -32,7 +32,9 @@ class Entity2LinkOp(LinkOp):
         print("--------------------------------------------")
         print(f"property: {property}, subject_record: {subject_record}")
 
-        linked_record = self.search_client.exact_search_by_property(property, TEST.Entity2.id)
+        linked_record = self.search_client.exact_search_by_property(
+            property, TEST.Entity2.id
+        )
 
         print("Entity2LinkOp(Output): ")
         print("--------------------------------------------")

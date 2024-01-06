@@ -30,9 +30,7 @@ class IndicatorFuse(FuseOp):
 
         return linked_record
 
-    def merge(
-            self, subject_record: SPGRecord, linked_record: SPGRecord
-    ) -> SPGRecord:
+    def merge(self, subject_record: SPGRecord, linked_record: SPGRecord) -> SPGRecord:
         if linked_record:
             return linked_record
         return subject_record

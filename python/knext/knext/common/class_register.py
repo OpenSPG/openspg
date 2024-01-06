@@ -25,6 +25,7 @@ def _register(root, path, files, class_type):
         if file_name.endswith(".py"):
             module_name = module_prefix + os.path.splitext(file_name)[0]
             import importlib
+
             module = importlib.import_module(module_name)
             classes = inspect.getmembers(module, inspect.isclass)
             for class_name, class_obj in classes:
@@ -34,7 +35,9 @@ def _register(root, path, files, class_type):
                 ):
 
                     class_type.register(
-                        name=class_name, local_path=os.path.join(path, file_name), module_path=module_name
+                        name=class_name,
+                        local_path=os.path.join(path, file_name),
+                        module_path=module_name,
                     )(class_obj)
 
 

@@ -41,9 +41,7 @@ class Disease(BuilderJob):
                         Medicine.Disease.department,
                         Medicine.Disease.diseaseSite,
                     ],
-                    relation_names=[
-                        (Medicine.Disease.abnormal, Medicine.Indicator)
-                    ]
+                    relation_names=[(Medicine.Disease.abnormal, Medicine.Indicator)],
                 )
             ],
         )
@@ -55,7 +53,7 @@ class Disease(BuilderJob):
             SPGTypeMapping(spg_type_name=Medicine.HospitalDepartment),
             SPGTypeMapping(spg_type_name=Medicine.Symptom),
             SPGTypeMapping(spg_type_name=Medicine.Indicator),
-            ]
+        ]
 
         sink = KGWriter()
 

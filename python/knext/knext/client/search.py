@@ -32,7 +32,12 @@ class IdxRecord:
     """
 
     def __init__(
-        self, spg_type_name: str, index_name: str, doc_id: str, score: float, properties: Dict[str, str]
+        self,
+        spg_type_name: str,
+        index_name: str,
+        doc_id: str,
+        score: float,
+        properties: Dict[str, str],
     ):
         self.spg_type_name = spg_type_name
         self.index_name = index_name
@@ -108,7 +113,9 @@ class SearchClient:
             return records
         return None
 
-    def fuzzy_search(self, record: SPGRecord, property_name: PropertyName, size: int = 10) -> List[SPGRecord]:
+    def fuzzy_search(
+        self, record: SPGRecord, property_name: PropertyName, size: int = 10
+    ) -> List[SPGRecord]:
         property_value = record.get_property(property_name)
         if not property_value:
             return []
@@ -117,12 +124,12 @@ class SearchClient:
         recall_results = self.search(query, size=size)
         if recall_results:
             for recall_result in recall_results:
-                records.append(
-                    recall_result.to_spg_record()
-                )
+                records.append(recall_result.to_spg_record())
         return records
 
-    def exact_search(self, record: SPGRecord, property_name: PropertyName) -> Optional[SPGRecord]:
+    def exact_search(
+        self, record: SPGRecord, property_name: PropertyName
+    ) -> Optional[SPGRecord]:
         property_value = record.get_property(property_name)
         if not property_value:
             return None
@@ -133,7 +140,9 @@ class SearchClient:
                 return recall_results[0].to_spg_record()
         return None
 
-    def exact_search_by_property(self, property_value: str, property_name: PropertyName) -> Optional[SPGRecord]:
+    def exact_search_by_property(
+        self, property_value: str, property_name: PropertyName
+    ) -> Optional[SPGRecord]:
         query = {"match": {property_name: property_value}}
         recall_results = self.search(query, size=1)
         if recall_results:
@@ -141,13 +150,13 @@ class SearchClient:
                 return recall_results[0].to_spg_record()
         return None
 
-    def fuzzy_search_by_property(self, property_value: str, property_name: PropertyName, size: int = 10) -> List[SPGRecord]:
+    def fuzzy_search_by_property(
+        self, property_value: str, property_name: PropertyName, size: int = 10
+    ) -> List[SPGRecord]:
         query = {"match": {property_name: property_value}}
         records = []
         recall_results = self.search(query, size=size)
         if recall_results:
             for recall_result in recall_results:
-                records.append(
-                    recall_result.to_spg_record()
-                )
+                records.append(recall_result.to_spg_record())
         return records

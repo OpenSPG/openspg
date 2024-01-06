@@ -51,6 +51,6 @@ ${rel}
                 if k == "subject":
                     result.upsert_property("id", v).upsert_property("name", v)
                 elif k == "object":
-                    result.upsert_relation("causes", Finance.State, ','.join(v))
+                    result.upsert_relation("causes", Finance.State, ",".join(v))
             logic_result.append(result)
         return logic_result

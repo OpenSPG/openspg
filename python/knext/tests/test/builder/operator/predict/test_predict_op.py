@@ -30,10 +30,12 @@ class TestPredictOp(PredictOp):
         predict_record = SPGRecord(
             spg_type_name=TEST.Entity3,
         )
-        predict_record.upsert_properties(properties={
+        predict_record.upsert_properties(
+            properties={
                 "id": "entity3_312",
                 "name": "entity3_312",
-            })
+            }
+        )
         print("TestPredictOp(Output): ")
         print("----------------------")
         print([predict_record])

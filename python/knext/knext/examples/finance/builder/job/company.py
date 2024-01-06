@@ -46,7 +46,7 @@ class Company(BuilderJob):
 
         mappings = [
             SPGTypeMapping(spg_type_name=Finance.Company),
-            SPGTypeMapping(spg_type_name=Finance.AdministrativeArea)
+            SPGTypeMapping(spg_type_name=Finance.AdministrativeArea),
         ]
 
         sink = KGWriter()

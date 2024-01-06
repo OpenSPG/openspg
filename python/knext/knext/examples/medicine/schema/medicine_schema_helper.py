@@ -19,25 +19,20 @@ from knext.common.schema_helper import SPGTypeHelper, PropertyHelper, RelationHe
 
 
 class Medicine:
-    
     class BodyPart(SPGTypeHelper):
-        
-    
+
         id = PropertyHelper("id")
         description = PropertyHelper("description")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
         name = PropertyHelper("name")
-    
-    
-    
+
     class Disease(SPGTypeHelper):
-        
         class abnormal(RelationHelper):
             range = PropertyHelper("range")
             shape = PropertyHelper("shape")
             color = PropertyHelper("color")
-    
+
         id = PropertyHelper("id")
         commonSymptom = PropertyHelper("commonSymptom")
         description = PropertyHelper("description")
@@ -46,53 +41,40 @@ class Medicine:
         applicableDrug = PropertyHelper("applicableDrug")
         department = PropertyHelper("department")
         name = PropertyHelper("name")
-    
-    
+
         abnormal = abnormal("abnormal")
-    
+
     class Drug(SPGTypeHelper):
-        
-    
+
         id = PropertyHelper("id")
         description = PropertyHelper("description")
         name = PropertyHelper("name")
-    
-    
-    
+
     class HospitalDepartment(SPGTypeHelper):
-        
-    
+
         id = PropertyHelper("id")
         description = PropertyHelper("description")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
         name = PropertyHelper("name")
-    
-    
-    
+
     class Indicator(SPGTypeHelper):
-        
-    
+
         id = PropertyHelper("id")
         description = PropertyHelper("description")
         name = PropertyHelper("name")
-    
-    
-    
+
     class Symptom(SPGTypeHelper):
-        
-    
+
         id = PropertyHelper("id")
         description = PropertyHelper("description")
         name = PropertyHelper("name")
-    
-    
-    
+
     BodyPart = BodyPart("Medicine.BodyPart")
     Disease = Disease("Medicine.Disease")
     Drug = Drug("Medicine.Drug")
     HospitalDepartment = HospitalDepartment("Medicine.HospitalDepartment")
     Indicator = Indicator("Medicine.Indicator")
     Symptom = Symptom("Medicine.Symptom")
-    
+
     pass

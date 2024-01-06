@@ -19,16 +19,16 @@ from knext.common.schema_helper import SPGTypeHelper, PropertyHelper, RelationHe
 
 
 class TEST:
-    
     class CenterEvent(SPGTypeHelper):
         class conceptProperty(PropertyHelper):
             source = PropertyHelper("source")
-        
+
         class eventRelation(RelationHelper):
             source = PropertyHelper("source")
             confidence = PropertyHelper("confidence")
+
         conceptProperty = conceptProperty("conceptProperty")
-    
+
         basicTextProperty = PropertyHelper("basicTextProperty")
         basicIntegerProperty = PropertyHelper("basicIntegerProperty")
         subject = PropertyHelper("subject")
@@ -38,73 +38,56 @@ class TEST:
         description = PropertyHelper("description")
         standardProperty = PropertyHelper("standardProperty")
         eventTime = PropertyHelper("eventTime")
-    
-    
+
         eventRelation = eventRelation("eventRelation")
-    
+
     class Concept1(SPGTypeHelper):
-        
-    
+
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
         description = PropertyHelper("description")
-    
+
         leadTo = RelationHelper("leadTo")
-    
-    
+
     class Concept2(SPGTypeHelper):
-        
-    
+
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
         description = PropertyHelper("description")
-    
-    
-    
+
     class Concept3(SPGTypeHelper):
-        
-    
+
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
         id = PropertyHelper("id")
         name = PropertyHelper("name")
         description = PropertyHelper("description")
-    
-    
-    
+
     class Entity1(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
-    
+
         predictRelation = RelationHelper("predictRelation")
         entityRelation = RelationHelper("entityRelation")
-    
-    
+
     class Entity2(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
-    
-    
-    
+
     class Entity3(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
-    
-    
-    
+
     CenterEvent = CenterEvent("TEST.CenterEvent")
     Concept1 = Concept1("TEST.Concept1")
     Concept2 = Concept2("TEST.Concept2")
@@ -112,5 +95,5 @@ class TEST:
     Entity1 = Entity1("TEST.Entity1")
     Entity2 = Entity2("TEST.Entity2")
     Entity3 = Entity3("TEST.Entity3")
-    
+
     pass

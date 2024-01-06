@@ -40,6 +40,8 @@ ${input}
             for category, indicator_list in output.items():
                 for indicator in indicator_list:
                     ner_result.append(
-                        SPGRecord(Finance.Indicator).upsert_property("id", indicator).upsert_property("name", indicator)
+                        SPGRecord(Finance.Indicator)
+                        .upsert_property("id", indicator)
+                        .upsert_property("name", indicator)
                     )
         return ner_result

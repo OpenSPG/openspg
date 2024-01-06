@@ -76,9 +76,7 @@ class TestFuseOp(FuseOp):
         print(f"link output = {record}")
         return record
 
-    def merge(
-            self, subject_record: SPGRecord, linked_record: SPGRecord
-    ) -> SPGRecord:
+    def merge(self, subject_record: SPGRecord, linked_record: SPGRecord) -> SPGRecord:
         subject_name = subject_record.get_property("name")
         object_name = linked_record.get_property("name")
         score = jaccard_distance(subject_name, object_name)

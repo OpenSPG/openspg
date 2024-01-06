@@ -858,7 +858,8 @@ class SPGSchemaMarkLang:
                 replace_list.append(
                     (
                         f"({group[0]}{group[1]}",
-                        f"({group[0]}{self.namespace}.{group[1].strip()}" if "`" not in group[1]
+                        f"({group[0]}{self.namespace}.{group[1].strip()}"
+                        if "`" not in group[1]
                         else f"({group[0]}`{self.namespace}.{group[1].replace('`', '').strip()}",
                     )
                 )

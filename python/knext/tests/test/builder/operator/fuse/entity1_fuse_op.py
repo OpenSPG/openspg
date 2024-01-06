@@ -32,21 +32,23 @@ class Entity1FuseOp(FuseOp):
         print("--------------------------------------------")
         print(subject_record)
 
-        linked_record = self.search_client.exact_search(subject_record, TEST.Entity1.name)
+        linked_record = self.search_client.exact_search(
+            subject_record, TEST.Entity1.name
+        )
 
         print("Entity1FuseOp.link(Output): ")
         print("--------------------------------------------")
         print(linked_record)
         return linked_record
 
-    def merge(
-            self, subject_record: SPGRecord, linked_record: SPGRecord
-    ) -> SPGRecord:
+    def merge(self, subject_record: SPGRecord, linked_record: SPGRecord) -> SPGRecord:
         print("Entity1FuseOp.merge(Input): ")
         print("--------------------------------------------")
         print(f"subject_record: {subject_record}, linked_record: {linked_record}")
 
-        new_id = subject_record.get_property("id") + "_" + linked_record.get_property("id")
+        new_id = (
+            subject_record.get_property("id") + "_" + linked_record.get_property("id")
+        )
         subject_record.upsert_property(TEST.CenterEvent.id, new_id)
 
         print("Entity1FuseOp.merge(Output): ")

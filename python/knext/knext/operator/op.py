@@ -66,7 +66,11 @@ class LinkOp(BaseOp, ABC):
         cache_key = str(self.bind_to) + _property
         cache_property = cache.get(cache_key)
         if cache_property:
-            output = [SPGRecord(spg_type_name=self.bind_to).upsert_property("id", cache_property)]
+            output = [
+                SPGRecord(spg_type_name=self.bind_to).upsert_property(
+                    "id", cache_property
+                )
+            ]
         else:
             output = self.invoke(_property, subject_record)
         post_output = self._post_process(output)
@@ -104,9 +108,7 @@ class FuseOp(BaseOp, ABC):
             f"{self.__class__.__name__} need to implement `link` method."
         )
 
-    def merge(
-        self, subject_record: SPGRecord, linked_record: SPGRecord
-    ) -> SPGRecord:
+    def merge(self, subject_record: SPGRecord, linked_record: SPGRecord) -> SPGRecord:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `merge` method."
         )

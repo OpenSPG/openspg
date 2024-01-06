@@ -32,7 +32,9 @@ class Concept2LinkOp(LinkOp):
         print("--------------------------------------------")
         print(f"property: {property}, subject_record: {subject_record}")
 
-        linked_record = self.search_client.exact_search_by_property(property, TEST.Concept2.id)
+        linked_record = self.search_client.exact_search_by_property(
+            property, TEST.Concept2.id
+        )
 
         print("Concept2LinkOp(Output): ")
         print("--------------------------------------------")

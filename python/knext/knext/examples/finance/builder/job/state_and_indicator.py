@@ -43,9 +43,7 @@ class StateAndIndicator(BuilderJob):
             .add_predicting_relation(Finance.State.derivedFrom, Finance.Indicator)
         )
 
-        indicator_mapping = (
-            SPGTypeMapping(spg_type_name=Finance.Indicator)
-        )
+        indicator_mapping = SPGTypeMapping(spg_type_name=Finance.Indicator)
 
         sink = KGWriter()
 

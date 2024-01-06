@@ -93,6 +93,7 @@ class Mapping(BuilderComponent, ABC):
                 return 0
 
         from knext import rest
+
         if len(mappings) == 1:
             return rest.SpgTypeMappingNodeConfigs(
                 mapping_node_configs=[m.to_rest().node_config for m in mappings]
