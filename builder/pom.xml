@@ -37,6 +37,8 @@
   <modules>
     <module>core</module>
     <module>model</module>
+    <module>runner/local</module>
+    <module>testdata</module>
   </modules>
 
   <properties/>

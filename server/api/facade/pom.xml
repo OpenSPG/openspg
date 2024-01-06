@@ -29,14 +29,6 @@
       <artifactId>core-schema-model</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>core-reasoner-model</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>core-builder-model</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
     </dependency>

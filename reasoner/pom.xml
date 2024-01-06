@@ -31,10 +31,11 @@
     <module>lube-logical</module>
     <module>lube-physical</module>
     <module>warehouse/warehouse-common</module>
+    <module>warehouse/cloudext-warehouse</module>
     <module>kgdsl-parser</module>
     <module>runner/runner-common</module>
-    <module>catalog/openspg-catalog</module>
     <module>runner/local-runner</module>
+    <module>catalog/openspg-catalog</module>
   </modules>
 
   <properties>
@@ -91,11 +92,6 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.reasoner</groupId>
-        <artifactId>reasoner-warehouse-common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.openspg.reasoner</groupId>
         <artifactId>reasoner-runner-common</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -107,6 +103,11 @@
       <dependency>
         <groupId>com.antgroup.openspg.reasoner</groupId>
         <artifactId>reasoner-warehouse-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-cloudext-warehouse</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -128,11 +129,6 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.25</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
         <version>1.7.25</version>
       </dependency>
       <dependency>
@@ -159,11 +155,6 @@
         <groupId>org.typelevel</groupId>
         <artifactId>cats-core_2.11</artifactId>
         <version>2.0.0</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.lukehutch</groupId>
-        <artifactId>fast-classpath-scanner</artifactId>
-        <version>2.21</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -245,6 +236,12 @@
         <artifactId>hadoop-common</artifactId>
         <version>${hadoop.version}</version>
         <scope>provided</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -326,6 +323,30 @@
           <exclusion>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-server</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.arrow</groupId>
+            <artifactId>arrow-vector</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.netty</groupId>
+            <artifactId>netty</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-mapreduce</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
           </exclusion>
         </exclusions>
       </dependency>

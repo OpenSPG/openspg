@@ -15,7 +15,7 @@
 #include <chrono>
 #include "lgraph/lgraph.h"
 #include "tools/json.hpp"
-#include "fma-common/logger.h"
+//#include "fma-common/logger.h"
 
 using json = nlohmann::json;
 
@@ -94,12 +94,12 @@ extern "C" LGAPI bool Process(GraphDB &db, const std::string &request, std::stri
 
             auto fromVertexId = findVertexId(txn, fromLabel, fromKey, fromId);
             if (fromVertexId < 0) {
-                FMA_LOG() << "Can not find vertex " << fromLabel << ":" << fromId.ToString();
+//                FMA_LOG() << "Can not find vertex " << fromLabel << ":" << fromId.ToString();
                 continue;
             }
             auto toVertexId = findVertexId(txn, toLabel, toKey, toId);
             if (toVertexId < 0) {
-                FMA_LOG() << "Can not find vertex " << toLabel << ":" << toId.ToString();
+//                FMA_LOG() << "Can not find vertex " << toLabel << ":" << toId.ToString();
                 continue;
             }
 

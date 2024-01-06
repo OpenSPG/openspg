@@ -20,7 +20,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
-import com.antgroup.openspg.reasoner.runner.local.KGReasonerLocalRunner;
+import com.antgroup.openspg.reasoner.runner.local.LocalReasonerRunner;
 import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphLoader;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
@@ -89,7 +89,7 @@ public class KgReasonerABMLocalTest {
     params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
     task.setParams(params);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
 
     // only u1
@@ -149,7 +149,7 @@ public class KgReasonerABMLocalTest {
     params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
     task.setParams(params);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
 
     // only u1
@@ -248,7 +248,7 @@ public class KgReasonerABMLocalTest {
     params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
     task.setParams(params);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
 
     // only u1
@@ -325,7 +325,7 @@ public class KgReasonerABMLocalTest {
     List<Tuple2<String, String>> startIdList = new ArrayList<>();
     startIdList.add(new Tuple2<>("2088xxx", "CustFundKG.Account"));
     task.setStartIdList(startIdList);
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
 
     // only u1
@@ -405,7 +405,7 @@ public class KgReasonerABMLocalTest {
     List<Tuple2<String, String>> startIdList = new ArrayList<>();
     startIdList.add(new Tuple2<>("2088xxx", "CustFundKG.Account"));
     task.setStartIdList(startIdList);
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
 
     // only u1
@@ -446,7 +446,7 @@ public class KgReasonerABMLocalTest {
     Map<String, Object> params = new HashMap<>();
     task.setParams(params);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
 
     // only u1
@@ -489,7 +489,7 @@ public class KgReasonerABMLocalTest {
     Map<String, Object> params = new HashMap<>();
     task.setParams(params);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
 
     // only u1
@@ -532,7 +532,7 @@ public class KgReasonerABMLocalTest {
     Map<String, Object> params = new HashMap<>();
     task.setParams(params);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
 
     // only u1
@@ -575,7 +575,7 @@ public class KgReasonerABMLocalTest {
     Map<String, Object> params = new HashMap<>();
     task.setParams(params);
 
-    KGReasonerLocalRunner runner = new KGReasonerLocalRunner();
+    LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
 
     // only u1

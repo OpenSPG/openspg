@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -32,6 +33,7 @@ import org.apache.commons.collections4.CollectionUtils;
  * </ul>
  */
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public abstract class BaseLPGRecord extends BaseValObj {
 
   private final LPGRecordTypeEnum recordType;

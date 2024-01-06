@@ -13,21 +13,21 @@
 
 package com.antgroup.openspg.builder.model.record;
 
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyValue;
 import com.antgroup.openspg.core.schema.model.type.WithSPGTypeEnum;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
 
+@Getter
 public abstract class BaseSPGRecord extends BaseRecord implements WithSPGTypeEnum {
 
   private final SPGRecordTypeEnum recordType;
 
   protected BaseSPGRecord(SPGRecordTypeEnum recordType) {
     this.recordType = recordType;
-  }
-
-  public SPGRecordTypeEnum getRecordType() {
-    return recordType;
   }
 
   public abstract List<BasePropertyRecord> getProperties();
@@ -40,11 +40,12 @@ public abstract class BaseSPGRecord extends BaseRecord implements WithSPGTypeEnu
     return rawPropertyValueMap;
   }
 
-  public Map<String, Object> getStdPropertyValueMap() {
-    Map<String, Object> stdPropertyValueMap = new HashMap<>(getProperties().size());
+  public Map<String, String> getStdStrPropertyValueMap() {
+    Map<String, String> stdStrPropertyValueMap = new HashMap<>(getProperties().size());
     for (BasePropertyRecord propertyRecord : getProperties()) {
-      stdPropertyValueMap.put(propertyRecord.getName(), propertyRecord.getValue().getStd());
+      SPGPropertyValue value = propertyRecord.getValue();
+      stdStrPropertyValueMap.put(propertyRecord.getName(), value.getStdValue());
     }
-    return stdPropertyValueMap;
+    return stdStrPropertyValueMap;
   }
 }

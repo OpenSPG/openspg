@@ -13,6 +13,9 @@
 
 package com.antgroup.openspg.builder.model.record;
 
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyValue;
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
@@ -20,14 +23,15 @@ import com.antgroup.openspg.core.schema.model.type.ConceptType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 
 public class ConceptRecord extends BaseAdvancedRecord {
 
   private static final String NAME = "name";
 
-  private final ConceptType conceptType;
+  @Getter private final ConceptType conceptType;
 
-  private final ConceptIdentifier conceptName;
+  @Getter private final ConceptIdentifier conceptName;
 
   private final List<SPGPropertyRecord> properties;
 
@@ -73,13 +77,5 @@ public class ConceptRecord extends BaseAdvancedRecord {
   @Override
   public void addSpgProperties(SPGPropertyRecord record) {
     properties.add(record);
-  }
-
-  public ConceptType getConceptType() {
-    return conceptType;
-  }
-
-  public ConceptIdentifier getConceptName() {
-    return conceptName;
   }
 }
