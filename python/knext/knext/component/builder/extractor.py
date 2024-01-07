@@ -66,7 +66,7 @@ class LLMBasedExtractor(SPGExtractor):
     def to_rest(self):
         """Transforms `LLMBasedExtractor` to REST model `ExtractNodeConfig`."""
         params = dict()
-        params["model_config"] = json.dumps(self.llm._nn_config)
+        params["model_config"] = json.dumps(self.llm.init_args)
         params["prompt_config"] = json.dumps(
             [OperatorClient().serialize(op.to_rest()) for op in self.prompt_ops]
         )
