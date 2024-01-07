@@ -15,11 +15,15 @@ package com.antgroup.openspg.builder.model.pipeline;
 
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * The knowledge processing pipeline constructed by knext sdk or the frontend based on business
  * needs.
  */
+@Getter
+@AllArgsConstructor
 public class Pipeline extends BaseValObj {
 
   /** The list of nodes in the pipeline. */
@@ -27,17 +31,4 @@ public class Pipeline extends BaseValObj {
 
   /** The list of edge in the pipeline. */
   private final List<Edge> edges;
-
-  public Pipeline(List<Node> nodes, List<Edge> edges) {
-    this.nodes = nodes;
-    this.edges = edges;
-  }
-
-  public List<Node> getNodes() {
-    return nodes;
-  }
-
-  public List<Edge> getEdges() {
-    return edges;
-  }
 }

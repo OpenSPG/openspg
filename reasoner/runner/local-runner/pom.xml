@@ -59,14 +59,6 @@
           <artifactId>hive-jdbc</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>com.alipay.cloudsdk</groupId>
-          <artifactId>object-storage-cloud-driver-minio</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.alipay.cloudsdk</groupId>
-          <artifactId>object-storage-cloud-driver-s3</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>org.apache.parquet</groupId>
           <artifactId>parquet-hadoop-bundle</artifactId>
         </exclusion>
@@ -76,7 +68,10 @@
       <groupId>com.antgroup.openspg.reasoner</groupId>
       <artifactId>reasoner-warehouse-common</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-cloudext-warehouse</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-compiler</artifactId>
@@ -120,4 +115,33 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.6.0</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+          <archive>
+            <manifest>
+              <mainClass>com.antgroup.openspg.reasoner.runner.local.LocalReasonerMain</mainClass>
+            </manifest>
+          </archive>
+          <outputDirectory>../../../python/knext/knext/lib</outputDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>assemble-all</id>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

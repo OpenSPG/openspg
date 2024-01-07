@@ -14,53 +14,15 @@
 package com.antgroup.openspg.server.common.service.config;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import org.apache.commons.lang3.BooleanUtils;
-import org.apache.commons.lang3.StringUtils;
+import lombok.Data;
 
 /** Application environment configuration */
+@Data
 public class AppEnvConfig implements Serializable {
 
   private String schemaUri;
 
-  private Boolean enableSearchEngine;
-  private String builderOperatorPythonExec;
-  private String builderOperatorPythonPaths;
+  private String graphStoreUrl;
 
-  public String getSchemaUri() {
-    return schemaUri;
-  }
-
-  public void setSchemaUri(String schemaUri) {
-    this.schemaUri = schemaUri;
-  }
-
-  public boolean getEnableSearchEngine() {
-    return BooleanUtils.isTrue(enableSearchEngine);
-  }
-
-  public void setEnableSearchEngine(Boolean enableSearchEngine) {
-    this.enableSearchEngine = enableSearchEngine;
-  }
-
-  public String getBuilderOperatorPythonExec() {
-    return builderOperatorPythonExec;
-  }
-
-  public void setBuilderOperatorPythonExec(String builderOperatorPythonExec) {
-    this.builderOperatorPythonExec = builderOperatorPythonExec;
-  }
-
-  public String[] getBuilderOperatorPythonPaths() {
-    if (StringUtils.isBlank(builderOperatorPythonPaths)) {
-      return null;
-    }
-    return Arrays.stream(builderOperatorPythonPaths.split(";"))
-        .filter(StringUtils::isNotBlank)
-        .toArray(String[]::new);
-  }
-
-  public void setBuilderOperatorPythonPaths(String builderOperatorPythonPaths) {
-    this.builderOperatorPythonPaths = builderOperatorPythonPaths;
-  }
+  private String searchEngineUrl;
 }

@@ -37,8 +37,8 @@ public abstract class BaseProcessor<C> extends BasePhysicalNode {
   /**
    * Process the input records and output the execution results to the downstream node.
    *
-   * @param records : The output results from the upstream node.
+   * @param inputs : The output results from the upstream node.
    * @return Collection of data that has been processed.
    */
-  public abstract List<BaseRecord> process(List<BaseRecord> records);
+  public abstract List<BaseRecord> process(List<BaseRecord> inputs);
 }

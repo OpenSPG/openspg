@@ -32,9 +32,10 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.QueryGroup;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.TermQuery;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.api.facade.SchemaJsonUtils;
 import com.dtflys.forest.http.ForestResponse;
 import com.google.gson.reflect.TypeToken;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -55,8 +56,8 @@ public class ElasticSearchRecordUtils {
         }
       }
       for (IdxRecord idxRecord : idxRecords) {
-        ForestResponse<String> upsert =
-            client.upsert(idxName, idxRecord.getDocId(), idxRecord.getFields());
+        String escapedDocId = escapeDocId(idxRecord.getDocId());
+        ForestResponse<String> upsert = client.upsert(idxName, escapedDocId, idxRecord.getFields());
         if (upsert.isTimeout()) {
           throw new RuntimeException("upsertIdxRecords timeout");
         }
@@ -78,12 +79,17 @@ public class ElasticSearchRecordUtils {
         }
       }
       for (IdxRecord idxRecord : idxRecords) {
-        ForestResponse<String> delete = client.delete(idxName, idxRecord.getDocId());
+        String escapedDocId = escapeDocId(idxRecord.getDocId());
+        ForestResponse<String> delete = client.delete(idxName, escapedDocId);
         if (!delete.isSuccess()) {
           throw new RuntimeException("deleteIdxRecords error, errorMsg=" + delete.getContent());
         }
       }
     }
+  }
+
+  private static String escapeDocId(String docId) {
+    return URLEncoder.encode(docId);
   }
 
   public static List<IdxRecord> mGetIdxRecords(
@@ -93,7 +99,8 @@ public class ElasticSearchRecordUtils {
       throw new RuntimeException("mGetIdxRecords error, errorMsg=" + response.getContent());
     }
 
-    EsDocs esDocs = JSON.deserialize(response.getContent(), new TypeToken<EsDocs>() {}.getType());
+    EsDocs esDocs =
+        SchemaJsonUtils.deserialize(response.getContent(), new TypeToken<EsDocs>() {}.getType());
     return esDocs.toIdxRecord();
   }
 
@@ -119,7 +126,7 @@ public class ElasticSearchRecordUtils {
     if (StringUtils.isBlank(hits)) {
       return Collections.emptyList();
     }
-    EsHits esHits = JSON.deserialize(hits, new TypeToken<EsHits>() {}.getType());
+    EsHits esHits = SchemaJsonUtils.deserialize(hits, new TypeToken<EsHits>() {}.getType());
     return esHits.toIdxRecord();
   }
 

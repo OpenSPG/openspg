@@ -32,5 +32,9 @@
       <groupId>com.antgroup.openspg.builder</groupId>
       <artifactId>builder-model</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.builder</groupId>
+      <artifactId>builder-testdata</artifactId>
+    </dependency>
   </dependencies>
 </project>
