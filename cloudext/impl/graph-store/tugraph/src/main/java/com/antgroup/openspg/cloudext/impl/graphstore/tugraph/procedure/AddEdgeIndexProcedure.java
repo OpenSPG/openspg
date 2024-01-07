@@ -19,7 +19,7 @@ public class AddEdgeIndexProcedure extends BaseTuGraphProcedure {
 
   /** The template of cypher */
   public static final String ADD_EDGE_INDEX_CYPHER_TEMPLATE =
-      "CALL db.addEdgeIndex('${labelName}', '${fieldName}', ${isUnique}, false)";
+      "CALL db.addEdgeIndex('${labelName}', '${fieldName}', ${isUnique}, ${isGlobal})";
 
   private final String labelName;
 
