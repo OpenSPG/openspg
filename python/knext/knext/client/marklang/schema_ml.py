@@ -349,8 +349,11 @@ class SPGSchemaMarkLang:
 
         elif type_meta == "properties":
             assert self.parsing_register[RegisterUnit.Type].spg_type_enum not in [
-                SpgTypeEnum.Standard
-            ], self.error_msg("Standard type does not allow defining properties.")
+                SpgTypeEnum.Standard,
+                SpgTypeEnum.Concept,
+            ], self.error_msg(
+                "Standard/concept type does not allow defining properties."
+            )
             self.save_register(
                 RegisterUnit.Property, Property(name="_", object_type_name="Thing")
             )
