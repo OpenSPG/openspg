@@ -165,7 +165,7 @@ class PromptOp(BaseOp, ABC):
     ) -> List[Dict[str, str]]:
         if isinstance(response, list) and len(response) > 0:
             response = response[0]
-        variables.update({f"{self.name}": response})
+        variables.update({f"{self.__class__.__name__}": response})
         return [variables]
 
 
