@@ -17,7 +17,7 @@ import scala.collection.mutable
 import scala.reflect.runtime.universe.TypeTag
 
 import com.antgroup.openspg.reasoner.lube.logical.Var
-import com.antgroup.openspg.reasoner.lube.physical.planning.JoinType
+import com.antgroup.openspg.reasoner.lube.logical.planning.JoinType
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 
 final case class Join[T <: RDG[T]: TypeTag](

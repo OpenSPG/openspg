@@ -18,7 +18,7 @@ import scala.collection.mutable
 import com.antgroup.openspg.reasoner.common.types.KTObject
 import com.antgroup.openspg.reasoner.lube.block.{AddPredicate, AddProperty, AddVertex, DDLOp}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
-import com.antgroup.openspg.reasoner.lube.common.expr.VConstant
+import com.antgroup.openspg.reasoner.lube.common.expr.{Expr, VConstant}
 import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode, IRVariable}
 import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, SolvedModel, Var}
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
@@ -28,6 +28,7 @@ final case class DDL(in: LogicalOperator, ddlOp: Set[DDLOp])
     with EmptyFields {
 
   override def refFields: List[Var] = {
+    val solvedModel = solved
     val fieldList = new mutable.ListBuffer[Var]()
     for (ddl <- ddlOp) {
       ddl match {
@@ -38,23 +39,17 @@ final case class DDL(in: LogicalOperator, ddlOp: Set[DDLOp])
               Set.apply(new Field(addPropOp.propertyName, addPropOp.propertyType, true))))
         case addPredicate: AddPredicate =>
           fieldList.append(NodeVar(addPredicate.predicate.source.alias, Set.empty))
+          addPredicate.predicate.fields.foreach(tuple => {
+            val field = getRefFields(tuple._2, solvedModel)
+            if (field != null) {
+              fieldList.append(field)
+            }
+          })
         case addVertex: AddVertex =>
           addVertex.props.foreach(tuple => {
-            tuple._2 match {
-              case expr: VConstant =>
-              case _ =>
-                val ref = ExprUtils
-                  .getAllInputFieldInRule(tuple._2, solved.getNodeAliasSet, solved.getEdgeAliasSet)
-                  .head
-                ref match {
-                  case IRNode(name, fields) =>
-                    val nodeV = NodeVar(name, fields.map(f => new Field(f, KTObject, true)).toSet)
-                    fieldList.append(nodeV)
-                  case IREdge(name, fields) =>
-                    val edgeV = EdgeVar(name, fields.map(f => new Field(f, KTObject, true)).toSet)
-                    fieldList.append(edgeV)
-                  case _ =>
-                }
+            val field = getRefFields(tuple._2, solvedModel)
+            if (field != null) {
+              fieldList.append(field)
             }
           })
         case _ =>
@@ -69,6 +64,23 @@ final case class DDL(in: LogicalOperator, ddlOp: Set[DDLOp])
       }
     }
     fieldsMap.values.toList
+  }
+
+  private def getRefFields(expr: Expr, solvedModel: SolvedModel): Var = {
+    expr match {
+      case expr: VConstant => null
+      case _ =>
+        val ref = ExprUtils
+          .getAllInputFieldInRule(expr, solvedModel.getNodeAliasSet, solvedModel.getEdgeAliasSet)
+          .head
+        ref match {
+          case IRNode(name, fields) =>
+            NodeVar(name, fields.map(f => new Field(f, KTObject, true)))
+          case IREdge(name, fields) =>
+             EdgeVar(name, fields.map(f => new Field(f, KTObject, true)))
+          case _ => null
+        }
+    }
   }
 
   override def solved: SolvedModel = in.solved.solve
