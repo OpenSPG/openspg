@@ -1,5 +1,6 @@
+
 ```bash
-knext project create --name 全风 --namespace Finance --desc 全风财政指标抽取
+knext project create --name Finance --namespace Finance --desc 这是一个示例项目
 ```
 
 ```bash
@@ -7,14 +8,9 @@ knext schema commit
 ```
 
 ```bash
-knext operator publish DemoExtractOp
-```
-
-```bash
-knext builder submit Demo
+knext builder execute Demo
 ```
 
 ```bash
 knext reasoner query --file ./reasoner/demo.dsl
 ```
-
