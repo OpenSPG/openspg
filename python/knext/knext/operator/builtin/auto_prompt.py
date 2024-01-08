@@ -262,7 +262,6 @@ class EEPrompt(AutoPrompt):
         }
 
     def build_prompt(self, variables: Dict[str, str]) -> str:
-        self.input = variables.get("input")
         return self.template.replace("${input}", variables.get("input"))
 
     def parse_response(self, response: str) -> List[SPGRecord]:
@@ -283,10 +282,10 @@ class EEPrompt(AutoPrompt):
             for p_zh, o in arguments.items():
                 if p_zh in self.property_info_zh:
                     p, _, o_type = self.property_info_zh[p_zh]
-                    if '.' not in o_type or 'STD.' in o_type:
+                    if not o:
                         continue
-                    if o:
-                        subject_record.upsert_property(p, o)
+                    subject_record.upsert_property(p, o)
+                    if '.' in o_type and 'STD.' not in o_type:
                         object_records.append(
                             SPGRecord(o_type)
                             .upsert_property("id", o)
@@ -294,10 +293,10 @@ class EEPrompt(AutoPrompt):
                         )
                 elif p_zh in self.relation_info_zh:
                     p, _, o_type = self.relation_info_zh[p_zh]
-                    if '.' not in o_type or 'STD.' in o_type:
+                    if not o:
                         continue
-                    if o:
-                        subject_record.upsert_relation(p, o_type, o)
+                    subject_record.upsert_relation(p, o_type, o)
+                    if '.' in o_type or 'STD.' not in o_type:
                         object_records.append(
                             SPGRecord(o_type)
                             .upsert_property("id", o)
