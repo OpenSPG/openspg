@@ -16,6 +16,7 @@ from knext.common.schema_helper import (
     SPGTypeName,
     PropertyName,
     RelationName,
+    SPGTypeHelper,
 )
 
 
@@ -170,6 +171,10 @@ class SPGRecord:
         :param value: The updated relation value.  # noqa: E501
         :type: str
         """
+        if isinstance(self._spg_type_name, SPGTypeHelper):
+            if not hasattr(self._spg_type_name, str(relation_name)):
+                raise KeyError(f"Relation {relation_name} not defined in Schema")
+
         self.relations[relation_name + "#" + object_type_name] = value
         return self
 
@@ -181,7 +186,7 @@ class SPGRecord:
         :type: dict
         """
         for (relation_name, object_type_name), value in relations.items():
-            self.relations[relation_name + "#" + object_type_name] = value
+            self.upsert_relation(relation_name, object_type_name, value)
         return self
 
     def remove_relation(
@@ -204,7 +209,7 @@ class SPGRecord:
         :param relation_names: A list of relation names.  # noqa: E501
         :type: list
         """
-        for (relation_name, object_type_name) in relation_names:
+        for relation_name, object_type_name in relation_names:
             self.relations.pop(relation_name + "#" + object_type_name)
         return self
 

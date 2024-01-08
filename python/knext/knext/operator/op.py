@@ -10,7 +10,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 from abc import ABC
-from typing import List, Dict, Any
+from typing import List, Dict, Tuple, Any
 
 import knext.common.cache
 from knext.common.schema_helper import SPGTypeName, TripletName
@@ -27,7 +27,9 @@ class ExtractOp(BaseOp, ABC):
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
 
-    def invoke(self, record: Dict[str, str]) -> List[Dict[str, str]]:
+    def invoke(
+        self, record: Dict[str, str]
+    ) -> Tuple[List[Dict[str, str]], List[SPGRecord]]:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `invoke` method."
         )
