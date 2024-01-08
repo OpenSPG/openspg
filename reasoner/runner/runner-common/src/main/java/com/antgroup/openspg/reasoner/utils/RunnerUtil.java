@@ -35,13 +35,17 @@ import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphSplitStaticParameters;
 import com.antgroup.openspg.reasoner.lube.block.AddPredicate;
 import com.antgroup.openspg.reasoner.lube.block.AddVertex;
-import com.antgroup.openspg.reasoner.lube.catalog.struct.Field;
 import com.antgroup.openspg.reasoner.lube.common.expr.AggOpExpr;
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
 import com.antgroup.openspg.reasoner.lube.common.expr.First$;
 import com.antgroup.openspg.reasoner.lube.common.graph.IRField;
-import com.antgroup.openspg.reasoner.lube.common.pattern.*;
+import com.antgroup.openspg.reasoner.lube.common.pattern.Connection;
+import com.antgroup.openspg.reasoner.lube.common.pattern.EdgePattern;
+import com.antgroup.openspg.reasoner.lube.common.pattern.LinkedPatternConnection;
+import com.antgroup.openspg.reasoner.lube.common.pattern.PartialGraphPattern;
+import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
+import com.antgroup.openspg.reasoner.lube.common.pattern.PatternElement;
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
 import com.antgroup.openspg.reasoner.lube.logical.EdgeVar;
 import com.antgroup.openspg.reasoner.lube.logical.NodeVar;
@@ -52,7 +56,6 @@ import com.antgroup.openspg.reasoner.lube.logical.Var;
 import com.antgroup.openspg.reasoner.lube.utils.RuleUtils;
 import com.antgroup.openspg.reasoner.rdg.common.FoldRepeatEdgeInfo;
 import com.antgroup.openspg.reasoner.rdg.common.UnfoldRepeatEdgeInfo;
-import com.antgroup.openspg.reasoner.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.session.KGReasonerSession;
 import com.antgroup.openspg.reasoner.udf.UdfMng;
@@ -60,6 +63,7 @@ import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
 import com.antgroup.openspg.reasoner.udf.model.BaseUdtf;
 import com.antgroup.openspg.reasoner.udf.model.LinkedUdtfResult;
 import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
 import com.antgroup.openspg.reasoner.util.KgGraphSchema;
 import com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig;
@@ -68,7 +72,9 @@ import com.antgroup.openspg.reasoner.warehouse.common.config.VertexLoaderConfig;
 import com.antgroup.openspg.reasoner.warehouse.common.partition.BasePartitioner;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
 import com.google.common.collect.Lists;
-import java.io.BufferedReader;
+import com.google.common.collect.Sets;
+import com.opencsv.CSVReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -88,13 +94,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 import scala.collection.JavaConversions;
 
 public class RunnerUtil {
-  private static final Logger log = LoggerFactory.getLogger(RunnerUtil.class);
 
   /** kg id is global id property */
   public static final String KG_REASONER_PROPERTY_GLOBAL_ID = "kgId";
@@ -327,7 +330,7 @@ public class RunnerUtil {
     if (edge instanceof PathEdge) {
       return pathEdgeContext((PathEdge<IVertexId, IProperty, IProperty>) edge, edgeType, kgGraph);
     } else if (edge instanceof OptionalEdge) {
-      return optionalEdgeContext((OptionalEdge<IVertexId, IProperty>) edge);
+      return optionalEdgeContext((OptionalEdge<IVertexId, IProperty>) edge, edgeType);
     }
     Map<String, Object> edgeProperty = new HashMap<>();
     if (StringUtils.isEmpty(edgeType)) {
@@ -342,7 +345,7 @@ public class RunnerUtil {
     }
     edgeProperty.put(Constants.CONTEXT_LABEL, edgeType);
     IVertexId fromId = edge.getSourceId();
-    IVertexId toId = edge.getSourceId();
+    IVertexId toId = edge.getTargetId();
     if (Direction.IN.equals(edge.getDirection())) {
       IVertexId tmp = fromId;
       fromId = toId;
@@ -359,12 +362,29 @@ public class RunnerUtil {
       PathEdge<IVertexId, IProperty, IProperty> edge, String edgeType, KgGraph<IVertexId> kgGraph) {
     Map<String, Object> edgeProperty = new HashMap<>();
     edgeProperty.put(Constants.CONTEXT_LABEL, edgeType);
+    IProperty property = edge.getValue();
+    if (null != property) {
+      for (String key : property.getKeySet()) {
+        edgeProperty.put(key, property.get(key));
+      }
+    }
+    edgeProperty.put("edges", edge.getEdgeList());
+    IVertex<IVertexId, IProperty> sourceVertex = kgGraph.findVertex(edge.getSourceId());
+    IVertex<IVertexId, IProperty> targetVertex = kgGraph.findVertex(edge.getTargetId());
+    List<IVertex<IVertexId, IProperty>> vertexList = new ArrayList<>();
+    vertexList.add(sourceVertex);
+    if (CollectionUtils.isNotEmpty(edge.getVertexList())) {
+      vertexList.addAll(edge.getVertexList());
+    }
+    vertexList.add(targetVertex);
+    edgeProperty.put("nodes", vertexList);
     return edgeProperty;
   }
 
   private static Map<String, Object> optionalEdgeContext(
-      OptionalEdge<IVertexId, IProperty> optionalEdge) {
+      OptionalEdge<IVertexId, IProperty> optionalEdge, String edgeType) {
     Map<String, Object> edgeProperty = new HashMap<>();
+    edgeProperty.put(Constants.CONTEXT_LABEL, edgeType);
     IProperty property = optionalEdge.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
@@ -372,6 +392,8 @@ public class RunnerUtil {
       }
     }
     edgeProperty.put(Constants.OPTIONAL_EDGE_FLAG, true);
+    edgeProperty.put("edges", new ArrayList<>());
+    edgeProperty.put("nodes", new ArrayList<>());
     return edgeProperty;
   }
 
@@ -418,20 +440,17 @@ public class RunnerUtil {
 
   /** load csv file to list */
   public static List<String[]> loadCsvFile(String file) {
-    List<String[]> result = new ArrayList<>();
-    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-      String line;
-      while ((line = br.readLine()) != null) {
-        String[] values = line.split(",");
-        for (int i = 0; i < values.length; ++i) {
-          values[i] = values[i].substring(1, values[i].length() - 1);
-        }
-        result.add(values);
-      }
-    } catch (IOException e) {
-      throw new RuntimeException("load csv file error", e);
+    CSVReader reader;
+    try {
+      reader = new CSVReader(new FileReader(file));
+    } catch (FileNotFoundException e) {
+      throw new RuntimeException(e);
     }
-    return result;
+    try {
+      return reader.readAll();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   /** get connection set from pattern */
@@ -790,37 +809,6 @@ public class RunnerUtil {
     JOIN_RIGHT_DATA_STATIC.remove(index);
   }
 
-  /** get join schema */
-  public static PartialGraphPattern getAfterJoinSchema(
-      PartialGraphPattern thisSchema,
-      PartialGraphPattern otherSchema,
-      scala.collection.immutable.List<Tuple2<String, String>> onAlias,
-      scala.collection.immutable.Map<Var, Var> rhsSchemaMapping) {
-
-    Map<Var, Var> aliasNameMapBack = new HashMap<>();
-    Map<Var, Var> javaRhsSchemaMapping =
-        new HashMap<>(JavaConversions.mapAsJavaMap(rhsSchemaMapping));
-    scala.collection.immutable.Set<Field> scalaEmptySet =
-        JavaConversions.asScalaSet(new HashSet<>()).toSet();
-    for (Tuple2<String, String> joinOnAlias : JavaConversions.seqAsJavaList(onAlias)) {
-      for (Map.Entry<Var, Var> entry : javaRhsSchemaMapping.entrySet()) {
-        if (entry.getKey().name().equals(joinOnAlias._2())) {
-          aliasNameMapBack.put(
-              new NodeVar(entry.getValue().name(), scalaEmptySet),
-              new NodeVar(joinOnAlias._1(), scalaEmptySet));
-        }
-      }
-    }
-    PartialGraphPattern otherRdgSchemaAfterRename =
-        KgGraphSchema.schemaAliasMapping(otherSchema, rhsSchemaMapping);
-    if (!aliasNameMapBack.isEmpty()) {
-      otherRdgSchemaAfterRename =
-          KgGraphSchema.schemaAliasMapping(
-              otherRdgSchemaAfterRename, Convert2ScalaUtil.toScalaImmutableMap(aliasNameMapBack));
-    }
-    return KgGraphSchema.expandSchema(thisSchema, otherRdgSchemaAfterRename);
-  }
-
   /** get fold repeat info */
   public static FoldRepeatEdgeInfo getFoldRepeatEdgeInfo(
       scala.collection.immutable.List<Tuple2<scala.collection.immutable.List<Var>, RichVar>>
@@ -934,13 +922,18 @@ public class RunnerUtil {
     Map<Var, Var> javaRhsSchemaMapping =
         new HashMap<>(JavaConversions.mapAsJavaMap(rhsSchemaMapping));
     sb.append(",right=");
+    boolean comma = false;
     for (Map.Entry<Var, Var> entry : javaRhsSchemaMapping.entrySet()) {
-      sb.append(",");
+      if (comma) {
+        sb.append(",");
+      } else {
+        comma = true;
+      }
       Var var = entry.getKey();
       if (var instanceof NodeVar) {
-        sb.append("v=").append(var.name());
+        sb.append("v:").append(var.name());
       } else if (var instanceof EdgeVar) {
-        sb.append("e=").append(var.name());
+        sb.append("e:").append(var.name());
       }
     }
     return sb.toString();
@@ -993,6 +986,37 @@ public class RunnerUtil {
     return propertyMap.get(propertyName);
   }
 
+  private static Double changeNumberObj(Comparable o) {
+    if (o instanceof Integer) {
+      return ((Integer) o).doubleValue();
+    }
+    if (o instanceof Long) {
+      return ((Long) o).doubleValue();
+    }
+    if (o instanceof Float) {
+      return ((Float) o).doubleValue();
+    }
+    if (o instanceof Double) {
+      return (Double) o;
+    }
+    return null;
+  }
+
+  private static int compareComparables(Comparable o1, Comparable o2) {
+    // Ensure we compare objects of the same type
+    if (o1.getClass().equals(o2.getClass())) {
+      return o1.compareTo(o2);
+    }
+    Double compare1 = changeNumberObj(o1);
+    Double compare2 = changeNumberObj(o2);
+
+    if (compare1 != null && compare2 != null) {
+      return compare1.compareTo(compare2);
+    }
+    // Different types, compare class names or any other logic
+    return o1.getClass().getName().compareTo(o2.getClass().getName());
+  }
+
   /** compare two object */
   public static int compareTwoObject(Object v1, Object v2) {
     if (null == v1) {
@@ -1008,16 +1032,32 @@ public class RunnerUtil {
       return 1;
     }
     Comparable c1 = (Comparable) v1;
-    return c1.compareTo(v2);
+    Comparable c2 = (Comparable) v2;
+    return compareComparables(c1, c2);
   }
 
   /** get edge string id */
-  public static String getEdgeIdentifier(IEdge<IVertexId, IProperty> edge) {
-    return edge.getSourceId().getInternalId()
-        + edge.getType()
-        + edge.getTargetId().getInternalId()
-        + edge.getVersion()
-        + edge.getDirection();
+  public static String getEdgeIdentifier(
+      IEdge<IVertexId, IProperty> edge, String edgeExtraIdentifier) {
+    StringBuilder edgeIdentifier =
+        new StringBuilder(
+            edge.getSourceId().getInternalId()
+                + edge.getType()
+                + edge.getTargetId().getInternalId()
+                + edge.getVersion()
+                + edge.getDirection());
+    if (StringUtils.isNotBlank(edgeExtraIdentifier)) {
+      Set<String> extraIdentifierSet =
+          Arrays.stream(edgeExtraIdentifier.split(","))
+              .map(String::trim)
+              .collect(Collectors.toSet());
+      for (String key : extraIdentifierSet) {
+        if (edge.getValue().isKeyExist(key)) {
+          edgeIdentifier.append(edge.getValue().get(key));
+        }
+      }
+    }
+    return edgeIdentifier.toString();
   }
 
   /** init type id mapping */
@@ -1047,21 +1087,159 @@ public class RunnerUtil {
         Object obj = RuleRunner.getInstance().executeExpression(new HashMap<>(), rule, "");
 
         if (idFilterMaps.containsValue(var)) {
-          List<Object> originIds = new ArrayList<>();
-          // convert 2 internal id
+          // convert 2 string id
           if (obj instanceof Object[]) {
+            List<Object> originIds = new ArrayList<>();
             Object[] ids = (Object[]) obj;
             for (Object id : ids) {
               originIds.add(id.toString());
             }
-          } else {
-            originIds.add(obj);
+            obj = originIds.toArray();
           }
-          obj = originIds.toArray();
         }
         taskRunningContext.put(var, obj);
       }
     }
     return taskRunningContext;
+  }
+
+  public static List<String> joinAliasAfterMapping(
+      scala.collection.immutable.List<Tuple2<String, String>> onAlias,
+      scala.collection.immutable.Map<Var, Var> lhsSchemaMapping) {
+    Map<String, String> lMap = getAlaisMapping(lhsSchemaMapping);
+    List<String> joinAlias = new ArrayList<>();
+    for (int i = 0; i < onAlias.size(); ++i) {
+      Tuple2<String, String> oldTuple2 = onAlias.apply(i);
+      joinAlias.add(lMap.getOrDefault(oldTuple2._1(), oldTuple2._1()));
+    }
+    return joinAlias;
+  }
+
+  public static scala.collection.immutable.Map<Var, Var> newRhsSchemaMapping(
+      scala.collection.immutable.Map<Var, Var> rhsSchemaMapping,
+      scala.collection.immutable.List<Tuple2<String, String>> onAlias) {
+    Map<String, String> rightMapLeft = new HashMap<>();
+    for (int i = 0; i < onAlias.size(); ++i) {
+      Tuple2<String, String> tuple2 = onAlias.apply(i);
+      rightMapLeft.put(tuple2._2(), tuple2._1());
+    }
+    Map<Var, Var> result = new HashMap<>();
+    for (Var key : JavaConversions.asJavaIterable(rhsSchemaMapping.keys())) {
+      Var value = rhsSchemaMapping.apply(key);
+      if (rightMapLeft.containsKey(key.name())) {
+        result.put(key, new NodeVar(rightMapLeft.get(key.name()), null));
+      } else {
+        result.put(key, value);
+      }
+    }
+    return Convert2ScalaUtil.toScalaImmutableMap(result);
+  }
+
+  public static Map<String, String> getAlaisMapping(
+      scala.collection.immutable.Map<Var, Var> schemaMapping) {
+    Map<String, String> result = new HashMap<>();
+    for (Map.Entry<Var, Var> entry : JavaConversions.mapAsJavaMap(schemaMapping).entrySet()) {
+      if (entry.getKey() instanceof NodeVar
+          && entry.getValue() instanceof NodeVar
+          && !entry.getKey().name().equals(entry.getValue().name())) {
+        result.put(entry.getKey().name(), entry.getValue().name());
+      } else if (entry.getKey() instanceof EdgeVar
+          && entry.getValue() instanceof EdgeVar
+          && !entry.getKey().name().equals(entry.getValue().name())) {
+        result.put(entry.getKey().name(), entry.getValue().name());
+      }
+    }
+    return result;
+  }
+
+  /** outer join none graph, edge oder */
+  public static List<Connection> getJoinNoneEdgeOrder(String startAlias, Pattern schema) {
+    List<Connection> result = new ArrayList<>();
+    Set<String> connectedVertexAlias = new HashSet<>();
+    connectedVertexAlias.add(startAlias);
+    Set<Connection> tmpConnectionSet = RunnerUtil.getConnectionSet(schema);
+    while (!tmpConnectionSet.isEmpty()) {
+      boolean find = false;
+      for (Connection connection : tmpConnectionSet) {
+        if (connectedVertexAlias.contains(connection.source())) {
+          tmpConnectionSet.remove(connection);
+          result.add(connection);
+          connectedVertexAlias.add(connection.target());
+          find = true;
+          break;
+        } else if (connectedVertexAlias.contains(connection.target())) {
+          tmpConnectionSet.remove(connection);
+          result.add(connection);
+          connectedVertexAlias.add(connection.source());
+          find = true;
+          break;
+        }
+      }
+      if (!find) {
+        throw new RuntimeException("can not find order");
+      }
+    }
+    return result;
+  }
+
+  /** outer join none */
+  public static void kgGraphJoinNone(KgGraphImpl kgGraph, List<Connection> noneEdgeOrder) {
+    for (Connection connection : noneEdgeOrder) {
+      IVertex<IVertexId, IProperty> sourceV = null;
+      IVertex<IVertexId, IProperty> targetV = null;
+      Set<IVertex<IVertexId, IProperty>> sourceSet =
+          kgGraph.getAlias2VertexMap().get(connection.source());
+      if (CollectionUtils.isNotEmpty(sourceSet)) {
+        sourceV = sourceSet.iterator().next();
+      }
+      Set<IVertex<IVertexId, IProperty>> targetSet =
+          kgGraph.getAlias2VertexMap().get(connection.target());
+      if (CollectionUtils.isNotEmpty(targetSet)) {
+        targetV = targetSet.iterator().next();
+      }
+      if (null == sourceV && null == targetV) {
+        throw new RuntimeException("noneEdgeOder error" + Arrays.toString(noneEdgeOrder.toArray()));
+      }
+
+      if (null == sourceV) {
+        sourceV = targetV;
+        kgGraph
+            .getAlias2VertexMap()
+            .put(connection.source(), Sets.newHashSet(new NoneVertex<>(sourceV)));
+      } else if (null == targetV) {
+        targetV = sourceV;
+        kgGraph
+            .getAlias2VertexMap()
+            .put(connection.target(), Sets.newHashSet(new NoneVertex<>(targetV)));
+      }
+      kgGraph
+          .getAlias2EdgeMap()
+          .put(
+              connection.alias(),
+              Sets.newHashSet(new OptionalEdge<>(sourceV.getId(), targetV.getId())));
+    }
+  }
+
+  public static Tuple2<List<String>, List<String>> getOverlapAlias(
+      PartialGraphPattern leftSchema, PartialGraphPattern rightSchema) {
+    Tuple2<
+            scala.collection.immutable.Set<PatternElement>,
+            scala.collection.immutable.Set<Connection>>
+        tuple2 = KgGraphSchema.getOverlapSchema(leftSchema, rightSchema);
+    List<String> overlapVertexAlias = new ArrayList<>();
+    List<String> overlapEdgeAlias = new ArrayList<>();
+    for (PatternElement patternElement : JavaConversions.setAsJavaSet(tuple2._1())) {
+      overlapVertexAlias.add(patternElement.alias());
+    }
+    for (Connection connection : JavaConversions.setAsJavaSet(tuple2._2())) {
+      overlapEdgeAlias.add(connection.alias());
+    }
+    return new Tuple2<>(overlapVertexAlias, overlapEdgeAlias);
+  }
+
+  public static Map<String, Tuple2<Direction, Direction>> getOverlapEdgeDirectionDiff(
+      PartialGraphPattern leftSchema, PartialGraphPattern rightSchema) {
+    return JavaConversions.mapAsJavaMap(
+        KgGraphSchema.getEdgeDirectionDiff(leftSchema, rightSchema));
   }
 }

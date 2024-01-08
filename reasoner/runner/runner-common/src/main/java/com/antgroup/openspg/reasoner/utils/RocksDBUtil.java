@@ -13,15 +13,16 @@
 
 package com.antgroup.openspg.reasoner.utils;
 
-import com.antgroup.openspg.reasoner.common.exception.IllegalArgumentException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.type.MapType2IdFactory;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import java.nio.ByteBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 public class RocksDBUtil {
-
+  private static final Logger log = LoggerFactory.getLogger(RocksDBUtil.class);
   private static final String PLACEHOLDER = "\01";
 
   public static final String VERTEX_FLAG = "V";

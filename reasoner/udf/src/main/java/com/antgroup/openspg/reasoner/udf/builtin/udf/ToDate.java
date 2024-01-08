@@ -17,7 +17,7 @@ import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
 import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 
 public class ToDate {
-  @UdfDefine(name = "to_date", compatibleName = "ToDate")
+  @UdfDefine(name = "to_date", compatibleName = "ToDate,getdate")
   public String toDate(String dateStr) {
     String df2 = "yyyy-MM-dd";
     return toDate(dateStr, df2);

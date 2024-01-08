@@ -10,6 +10,7 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
+
 package com.antgroup.openspg.reasoner.io.hive;
 
 import java.io.IOException;
@@ -74,7 +75,7 @@ public class KgReasonerBaseParquetWriter extends ParquetWriter<Group> {
         conf);
   }
 
-  /** Builder implement */
+  /** Builder实现 */
   public static class Builder extends ParquetWriter.Builder<Group, Builder> {
     private MessageType type = null;
     private Map<String, String> extraMetaData = new HashMap<String, String>();

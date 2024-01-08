@@ -24,6 +24,7 @@ import com.antgroup.openspg.reasoner.common.graph.property.IVersionProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.MirrorVertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
 import com.antgroup.openspg.reasoner.common.primitives.Bytes;
 import com.antgroup.openspg.reasoner.common.utils.PropertyUtil;
@@ -776,7 +777,7 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
 
     Set<IEdge<IVertexId, IProperty>> oldEdgeSet = this.alias2EdgeMap.get(edgeAlias);
 
-    // Prune the edge
+    // 裁掉边
     this.alias2EdgeMap.put(edgeAlias, edgeSet);
 
     if (edgeSet.size() == oldEdgeSet.size()) {
@@ -823,7 +824,7 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
 
     Set<IVertex<IVertexId, IProperty>> oldVertexSet = this.alias2VertexMap.get(vertexAlias);
 
-    // Prune the vertex
+    // 裁掉点
     this.alias2VertexMap.put(vertexAlias, vertexSet);
 
     if (vertexSet.size() == oldVertexSet.size()) {
@@ -967,16 +968,11 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
   @Override
   public boolean checkDuplicateVertex() {
     Set<IVertexId> idSet = new HashSet<>();
-    Set<IVertexId> mirrorIdSet = new HashSet<>();
     for (Set<IVertex<IVertexId, IProperty>> vertexSet : this.alias2VertexMap.values()) {
       if (1 == vertexSet.size()) {
         IVertex<IVertexId, IProperty> vertex = vertexSet.iterator().next();
         IVertexId id = vertex.getId();
-        if (vertex instanceof MirrorVertex) {
-          if (mirrorIdSet.contains(id)) {
-            return true;
-          }
-          mirrorIdSet.add(vertex.getId());
+        if (vertex instanceof NoneVertex) {
           continue;
         }
         if (idSet.contains(id)) {
@@ -987,6 +983,21 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
       }
     }
     return false;
+  }
+
+  @Override
+  public IVertex<IVertexId, IProperty> findVertex(IVertexId id) {
+    IVertex<IVertexId, IProperty> searchVertex = new Vertex<>(id);
+    for (Map.Entry<String, Set<IVertex<IVertexId, IProperty>>> entry : alias2VertexMap.entrySet()) {
+      if (entry.getValue().contains(searchVertex)) {
+        for (IVertex<IVertexId, IProperty> v : entry.getValue()) {
+          if (v.getId().equals(id)) {
+            return v;
+          }
+        }
+      }
+    }
+    return null;
   }
 
   @Override
