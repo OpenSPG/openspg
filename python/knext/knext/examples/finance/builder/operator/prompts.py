@@ -35,11 +35,13 @@ def get_mock_spg_records(size: int = 10):
     np.random.shuffle(mock_data)
     for data in mock_data[:size]:
         tmp = SPGRecord("Finance.Indicator")
-        tmp.upsert_properties(                {
-                    "id": data,
-                    "name": data,
-                })
-        output.append(tmp)    
+        tmp.upsert_properties(
+            {
+                "id": data,
+                "name": data,
+            }
+        )
+        output.append(tmp)
     return output
 
 

@@ -47,4 +47,3 @@ class IndicatorRel(BuilderJob):
         sink = KGWriter()
 
         return source >> extract >> [indicator_mapping] >> sink
-

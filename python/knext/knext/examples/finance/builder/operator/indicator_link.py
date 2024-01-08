@@ -18,12 +18,14 @@ from knext.api.client import SearchClient
 
 from schema.finance_schema_helper import Finance
 
+
 class IndicatorLinkOp(LinkOp):
     bind_to = Finance.Indicator
 
     def __init__(self):
         super().__init__()
         from builder.operator.prompts import IndicatorLinkPrompt
+
         self.prompt_op = IndicatorLinkPrompt()
         self.search_client = SearchClient(self.bind_to)
 

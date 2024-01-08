@@ -24,7 +24,8 @@ class IndicatorPredictOp(PredictOp):
 
     def __init__(self):
         super().__init__()
-        from builder.operator.prompts import IndicatorPredictPrompt 
+        from builder.operator.prompts import IndicatorPredictPrompt
+
         self.prompt_op = IndicatorPredictPrompt()
         self.search_client = SearchClient(Finance.Indicator)
 
@@ -51,10 +52,12 @@ class IndicatorPredictOp(PredictOp):
             record = SPGRecord(
                 Finance.Indicator,
             )
-            record.upsert_properties({
+            record.upsert_properties(
+                {
                     "id": recall_records[0].properties["name"],
                     "name": recall_records[0].properties["name"],
-                })
+                }
+            )
 
             return record
 
@@ -79,4 +82,3 @@ class IndicatorPredictOp(PredictOp):
                 )
                 output.append(recalled_record)
         return output
-

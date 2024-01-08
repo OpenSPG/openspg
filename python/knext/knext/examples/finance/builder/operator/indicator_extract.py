@@ -22,6 +22,7 @@ class IndicatorExtractOp(ExtractOp):
         # Address for LLM service
         self.url = self.params["url"]
         from builder.operator.prompts import IndicatorNERPrompt
+
         self.prompt_op = IndicatorNERPrompt()
 
     def generate(self, input_data, adapter_name):
