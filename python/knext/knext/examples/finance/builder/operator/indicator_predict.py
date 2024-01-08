@@ -35,7 +35,7 @@ class IndicatorPredictOp(PredictOp):
             "max_input_len": 1024,
             "max_output_len": 1024,
         }
-        url = "http://11.166.207.228:9999/generate"
+        url = "http://localhost:9999/generate"
         try:
             rsp = requests.post(url, req)
             rsp.raise_for_status()

@@ -33,7 +33,7 @@ class IndicatorFuseOp(FuseOp):
             "max_input_len": 1024,
             "max_output_len": 1024,
         }
-        url = "http://11.166.207.228:9999/generate"
+        url = "http://localhost:9999/generate"
         try:
             rsp = requests.post(url, req)
             rsp.raise_for_status()
@@ -62,6 +62,10 @@ class IndicatorFuseOp(FuseOp):
         # otherwise return `subject_record`
 
         if merge_result is not None:
-            return self.prompt_op.parse_response(merge_result)[0]
+            tmp = merge_result[0]
+            is_a_relation = subject_record.get_relation("isA", Finance.Indicator)
+            if is_a_relation is not None:
+                tmp.upsert_relation("isA", Finance.Indicator, is_a_relation)
+            return tmp
         else:
             return subject_record

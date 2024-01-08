@@ -33,7 +33,7 @@ class IndicatorRel(BuilderJob):
 
         extract = UserDefinedExtractor(
             extract_op=IndicatorExtractOp(
-                params={"url": "http://11.166.207.228:9999/generate"}
+                params={"url": "http://localhost:9999/generate"}
             ),
         )
 
