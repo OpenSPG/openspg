@@ -43,11 +43,9 @@ class IndicatorPredictOp(PredictOp):
         except Exception as e:
             return {"output": ""}
 
-    def _recall(self, indicator_name):
-        if len(indicator_name) == 0:
-            return None
-        recall_records = self.search_client.fuzzy_search(indicator_name, "name", size=1)
-        if recall_records is None:
+    def _recall(self, indicator):
+        recall_records = self.search_client.fuzzy_search(indicator, "name", size=1)
+        if len(recall_records) == 0:
             return None
         else:
             record = SPGRecord(
@@ -73,7 +71,7 @@ class IndicatorPredictOp(PredictOp):
         if len(predict_result) == 0:
             return output
         for item in predict_result:
-            recalled_record = self._recall(item.get_property("name"))
+            recalled_record = self._recall(item)
             print(item, recalled_record)
             if recalled_record is not None:
                 recalled_record.upsert_relation(
