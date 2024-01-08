@@ -315,13 +315,15 @@ class EEPrompt(AutoPrompt):
         arguments = ["名称"]
         for _prop in self.property_names:
             p_name_zh, p_desc, o_type = self.property_info_en.get(_prop)
+            o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
+            p_desc = f'类型是{o_name_zh}' + ("，" + o_desc if o_desc else "") + f'。{p_desc or p_name_zh}'
             arguments.append(p_name_zh)
             description[p_name_zh] = p_desc or p_name_zh
         for _rel, o_type in self.relation_names:
             p_name_zh, p_desc, _ = self.relation_info_en.get(_rel)
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
             name_zh = p_name_zh + '#' + o_name_zh
-            desc = f'类型是：{o_name_zh}, {o_desc or o_name_zh}。{p_desc or p_name_zh}'
+            desc = f'类型是{o_name_zh}' + ("，" + o_desc if o_desc else "") + f'。{p_desc or p_name_zh}'
             arguments.append(p_name_zh)
             description[name_zh] = desc
 
@@ -329,6 +331,6 @@ class EEPrompt(AutoPrompt):
         schema["arguments"] = arguments
         schema["event_type"] = s_name_zh
         description[s_name_zh] = s_desc or s_name_zh
-        self.template = self.template.replace("${schema}", json.dumps(schema)).replace(
-            "${description}", json.dumps(description)
+        self.template = self.template.replace("${schema}", json.dumps(schema, ensure_ascii=False)).replace(
+            "${description}", json.dumps(description, ensure_ascii=False)
         )
