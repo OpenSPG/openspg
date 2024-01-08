@@ -9,9 +9,9 @@ TaxOfProduct(产品分类): ConceptType
 Product(产品): EntityType
 	properties:
 		hasSupplyChain(供应链): Product
-		constraint: MultiValue
-	belongToIndustry(所属产业): Industry
-	IND#belongTo(所属产品分类): TaxOfProduct
+		    constraint: MultiValue
+		belongToIndustry(所属产业): Industry
+		IND#belongTo(所属产品分类): TaxOfProduct
 
 Company(企业): EntityType
 	properties:
