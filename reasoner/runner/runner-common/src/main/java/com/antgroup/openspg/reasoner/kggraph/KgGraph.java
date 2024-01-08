@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
+/** Data structure that transmits messages between workers */
 public interface KgGraph<K> {
 
   /**
@@ -207,4 +208,7 @@ public interface KgGraph<K> {
 
   /** check duplicate vertex */
   boolean checkDuplicateVertex();
+
+  /** find vertex from kggraph */
+  IVertex<IVertexId, IProperty> findVertex(IVertexId id);
 }

@@ -108,4 +108,21 @@ public class UdafTest {
 
     Assert.assertEquals(111L, aggregateFunctionOnWorker1.evaluate());
   }
+
+  @Test
+  public void testAggCountDistinct() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    UdafMeta udafMeta = mng.getUdafMeta("count_distinct", KTObject$.MODULE$);
+    BaseUdaf aggregateFunctionOnWorker1 = udafMeta.createAggregateFunction();
+    aggregateFunctionOnWorker1.initialize();
+    aggregateFunctionOnWorker1.update(1);
+    aggregateFunctionOnWorker1.update(2);
+    aggregateFunctionOnWorker1.update(2);
+    BaseUdaf aggregateFunctionOnWorker2 = udafMeta.createAggregateFunction();
+    aggregateFunctionOnWorker2.initialize();
+    aggregateFunctionOnWorker2.update(2);
+    aggregateFunctionOnWorker2.update(3);
+    aggregateFunctionOnWorker1.merge(aggregateFunctionOnWorker2);
+    Assert.assertEquals(3L, aggregateFunctionOnWorker1.evaluate());
+  }
 }

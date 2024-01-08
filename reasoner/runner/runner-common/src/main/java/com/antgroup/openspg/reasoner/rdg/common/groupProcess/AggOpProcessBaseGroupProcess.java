@@ -10,6 +10,7 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
+
 package com.antgroup.openspg.reasoner.rdg.common.groupProcess;
 
 import com.antgroup.openspg.reasoner.lube.common.expr.AggOpExpr;

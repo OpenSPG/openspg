@@ -58,4 +58,11 @@ public class Constants {
   public static final String OPTIONAL_EDGE_FLAG = "__optional_edge__";
   public static final String NONE_VERTEX_FLAG = "__none_vertex__";
   public static final String MIRROR_VERTEX_FLAG = "__mirror_vertex__";
+
+  /** property */
+  public static final String PROPERTY_JSON_KEY = "__property_json__";
+
+  public static final String GET_PATH_KEY = "__path__";
+  /** load all property */
+  public static final String CARRY_ALL_FLAG = "__carry_all__";
 }

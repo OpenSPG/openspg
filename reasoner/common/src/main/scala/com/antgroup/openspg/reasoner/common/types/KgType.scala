@@ -26,6 +26,7 @@ case object KTDouble extends KgType
 case object KTObject extends KgType
 case object KTDate extends KgType
 case object KTBoolean extends KgType
+case object KTParameter extends KgType
 
 /**
  * list type

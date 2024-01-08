@@ -11,44 +11,42 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.lube.physical.operators
+package com.antgroup.openspg.reasoner.lube.logical.operators
 
 import scala.collection.mutable
-import scala.reflect.runtime.universe.TypeTag
 
-import com.antgroup.openspg.reasoner.lube.logical.Var
-import com.antgroup.openspg.reasoner.lube.physical.planning.JoinType
-import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
+import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, Var}
 
-final case class Join[T <: RDG[T]: TypeTag](
-    lhs: PhysicalOperator[T],
-    rhs: PhysicalOperator[T],
-    onAlias: List[(String, String)],
-    joinType: JoinType,
-    lhsSchemaMapping: Map[Var, Var],
-    rhsSchemaMapping: Map[Var, Var])
-    extends PhysicalOperator[T] {
+case class PatternUnion(
+    lhs: LogicalOperator,
+    rhs: LogicalOperator)
+    extends BinaryLogicalOperator {
 
   /**
-   * The output of the current operator
+   * the nodes, edges, attributes has been solved in currently
    *
    * @return
    */
-  override def rdg: T = {
-    lhs.rdg.join(rhs.rdg, joinType, onAlias, lhsSchemaMapping, rhsSchemaMapping)
-  }
+  override def solved: SolvedModel = lhs.solved
 
   /**
-   * The meta of the output of the current output
+   * the reference fields in current operator
    *
    * @return
    */
-  override def meta: List[Var] = {
+  override def refFields: List[Var] = List.empty
+
+  /**
+   * the output fields of current operator
+   *
+   * @return
+   */
+  override def fields: List[Var] = {
     val varMap = new mutable.HashMap[String, Var]()
-    for (field <- lhs.meta) {
+    for (field <- lhs.fields) {
       varMap.put(field.name, field)
     }
-    for (field <- rhs.meta) {
+    for (field <- rhs.fields) {
       if (varMap.contains(field.name)) {
         varMap.put(field.name, varMap(field.name).merge(Option.apply(field)))
       } else {
@@ -57,4 +55,5 @@ final case class Join[T <: RDG[T]: TypeTag](
     }
     varMap.values.toList
   }
+
 }

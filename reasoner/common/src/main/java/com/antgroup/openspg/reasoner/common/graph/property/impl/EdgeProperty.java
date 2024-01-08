@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.common.graph.property.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,6 +41,10 @@ public class EdgeProperty implements IProperty {
 
   public EdgeProperty(Map<String, Object> props) {
     this.props = props;
+  }
+  /** constructor by kvs */
+  public EdgeProperty(Object... kvs) {
+    this.props = Utils.convert2Property(kvs);
   }
 
   @Override

@@ -119,8 +119,15 @@ public class RuntimeUdfMeta {
       String className = arg.getClass().getName();
       if ("java.util.ArrayList".equals(className)) {
         ArrayList list = (ArrayList) arg;
-        String memberType =
-            (list.isEmpty() || list.get(0) == null) ? "null" : list.get(0).getClass().getName();
+        String memberType;
+        if ((list.isEmpty() || list.get(0) == null)) {
+          memberType = null;
+        } else {
+          memberType = list.get(0).getClass().getName();
+          if (!memberType.startsWith("java.lang.")) {
+            memberType = "java.lang.Object";
+          }
+        }
         className = "java.util.List<" + memberType + ">";
       }
       kgTypeList.add(Utils.javaType2KgType(className));

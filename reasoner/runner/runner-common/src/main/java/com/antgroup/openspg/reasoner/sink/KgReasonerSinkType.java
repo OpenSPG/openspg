@@ -20,6 +20,8 @@ public enum KgReasonerSinkType implements Serializable {
   LOG,
   /** loca csv file */
   FILE,
+  /** odps table */
+  ODPS,
   /** hive table */
   HIVE
 }

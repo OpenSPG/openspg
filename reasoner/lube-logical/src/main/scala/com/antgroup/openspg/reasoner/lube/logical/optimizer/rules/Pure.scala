@@ -17,7 +17,7 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.InvalidRefVariable
 import com.antgroup.openspg.reasoner.lube.common.expr.Directly
-import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, Var}
+import com.antgroup.openspg.reasoner.lube.logical.{PathVar, RepeatPathVar, SolvedModel, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, Rule}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
@@ -70,11 +70,16 @@ object Pure extends Rule {
         }
       }
     }
+
     varMap.values.map(f => {
-      if (solved.fields.contains(f.name)) {
-        f.intersect(solved.fields(f.name))
+      if (f.isInstanceOf[PathVar]) {
+        f
+      } else if (!solved.fields.contains(f.name)) {
+        throw InvalidRefVariable(s"can not find $f")
+      } else if (solved.fields.get(f.name).get.isInstanceOf[RepeatPathVar]) {
+        f.intersect(solved.fields.get(f.name).get.asInstanceOf[RepeatPathVar].pathVar.elements(1))
       } else {
-        throw InvalidRefVariable(s"not found var: ${f.name}")
+        f.intersect(solved.fields.get(f.name).get)
       }
     }).toList
   }

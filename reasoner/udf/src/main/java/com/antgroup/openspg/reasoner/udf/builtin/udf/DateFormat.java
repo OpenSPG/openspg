@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class DateFormat {
-  @UdfDefine(name = "date_format", compatibleName = "DateFormat")
+  @UdfDefine(name = "date_format", compatibleName = "DateFormat,DATE_FORMAT")
   public String dateFormat(String dateStr, String toFormat) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTimeZone(DateUtils.timeZone);

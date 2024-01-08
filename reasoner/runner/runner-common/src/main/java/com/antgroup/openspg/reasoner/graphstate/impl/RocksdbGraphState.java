@@ -28,17 +28,22 @@ import com.antgroup.openspg.reasoner.common.utils.PropertyUtil;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.model.MergeTypeEnum;
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
+import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.utils.RocksDBUtil;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -57,13 +62,27 @@ import scala.Tuple2;
  */
 public class RocksdbGraphState implements GraphState<IVertexId> {
   private static final Logger log = LoggerFactory.getLogger(RocksdbGraphState.class);
-
   public final transient RocksDB rocksDB;
   private final transient IRocksDBGraphStateHelper helper;
+  private final transient boolean disableEdgeSpotDuplicateRemove;
+  private transient String edgeExtraIdentifier;
 
-  public RocksdbGraphState(RocksDB rocksDB, IRocksDBGraphStateHelper helper) {
+  public RocksdbGraphState(
+      RocksDB rocksDB, IRocksDBGraphStateHelper helper, Map<String, Object> params) {
     this.rocksDB = rocksDB;
     this.helper = helper;
+    Map<String, Object> parsedParamMap = RunnerUtil.getOfflineDslParams(params, false);
+    this.disableEdgeSpotDuplicateRemove =
+        ("true"
+            .equals(
+                String.valueOf(
+                        parsedParamMap.getOrDefault(
+                            ConfigKey.KG_REASONER_DISABLE_EDGE_SPOT_DUPLICATE_REMOVE, "false"))
+                    .toLowerCase(Locale.ROOT)));
+    if (parsedParamMap.containsKey(ConfigKey.EDGE_EXTRA_IDENTIFIER)) {
+      this.edgeExtraIdentifier =
+          String.valueOf(parsedParamMap.get(ConfigKey.EDGE_EXTRA_IDENTIFIER));
+    }
   }
 
   /**
@@ -306,26 +325,28 @@ public class RocksdbGraphState implements GraphState<IVertexId> {
   private List<Tuple2<byte[], IProperty>> wrapEdge(
       List<IEdge<IVertexId, IProperty>> edges, Direction direction, IVertexId vertexId) {
     List<Tuple2<byte[], IProperty>> wrapEdgeList = new ArrayList<>();
-    Map<String, Map<Long, List<IEdge<IVertexId, IProperty>>>> type2Version2EdgeMap =
-        new HashMap<>();
+    Map<String, Map<Long, Set<IEdge<IVertexId, IProperty>>>> type2Version2EdgeMap = new HashMap<>();
     for (IEdge<IVertexId, IProperty> edge : edges) {
       String p = edge.getType();
-      Map<Long, List<IEdge<IVertexId, IProperty>>> version2EdgeListMap =
+      Map<Long, Set<IEdge<IVertexId, IProperty>>> version2EdgeListMap =
           type2Version2EdgeMap.computeIfAbsent(p, k -> new HashMap<>());
-      List<IEdge<IVertexId, IProperty>> edgeList =
+      Set<IEdge<IVertexId, IProperty>> edgeSet =
           version2EdgeListMap.computeIfAbsent(
-              this.helper.getWriteWindow(edge.getVersion()), k -> new ArrayList<>());
-      edgeList.add(edge);
+              this.helper.getWriteWindow(edge.getVersion()), k -> new HashSet<>());
+      if (this.disableEdgeSpotDuplicateRemove && edgeSet.contains(edge)) {
+        edge.setVersion(UUID.randomUUID().getMostSignificantBits());
+      }
+      edgeSet.add(edge);
     }
     for (String type : type2Version2EdgeMap.keySet()) {
-      Map<Long, List<IEdge<IVertexId, IProperty>>> version2EdgeListMap =
+      Map<Long, Set<IEdge<IVertexId, IProperty>>> version2EdgeListMap =
           type2Version2EdgeMap.get(type);
       byte[] edgeKeyPrefix =
           RocksDBUtil.buildRocksDBEdgeKeyWithoutWindow(type, direction, vertexId);
       for (long window : version2EdgeListMap.keySet()) {
         byte[] edgeKey = RocksDBUtil.rocksdbKeyAppendWindow(edgeKeyPrefix, window);
         IProperty edgeProperty = new EdgeProperty();
-        edgeProperty.put("edges", version2EdgeListMap.get(window));
+        edgeProperty.put("edges", Lists.newArrayList(version2EdgeListMap.get(window)));
         wrapEdgeList.add(new Tuple2<>(edgeKey, edgeProperty));
       }
     }
@@ -536,7 +557,7 @@ public class RocksdbGraphState implements GraphState<IVertexId> {
                     Map<String, IEdge<IVertexId, IProperty>> edgeMap = new HashMap<>();
                     for (IEdge<IVertexId, IProperty> edge : edges) {
                       // spot identifies the unique edge
-                      String key = RunnerUtil.getEdgeIdentifier(edge);
+                      String key = RunnerUtil.getEdgeIdentifier(edge, this.edgeExtraIdentifier);
                       IEdge<IVertexId, IProperty> oldEdge = edgeMap.get(key);
                       if (null == oldEdge) {
                         edgeMap.put(key, edge);

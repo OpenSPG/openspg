@@ -53,11 +53,9 @@ final case class Project(in: LogicalOperator, expr: Map[Var, Expr], solved: Solv
     val fieldsMap = new mutable.HashMap[String, Var]
     for (pair <- expr) {
       pair._1 match {
-        case NodeVar(name, fields) =>
-          fieldsMap.put(pair._1.name, pair._1)
-        case EdgeVar(name, fields) =>
-          fieldsMap.put(pair._1.name, pair._1)
+        case propertyVar: PropertyVar =>
         case _ =>
+          fieldsMap.put(pair._1.name, pair._1)
       }
     }
     for (pair <- expr) {

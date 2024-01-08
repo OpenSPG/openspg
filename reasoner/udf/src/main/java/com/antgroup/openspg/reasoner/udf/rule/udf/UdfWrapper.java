@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.rule.udf;
+package com.antgroup.openspg.reasoner.udf.rule.udf;
 
 import com.antgroup.openspg.reasoner.udf.model.RuntimeUdfMeta;
 import com.ql.util.express.Operator;

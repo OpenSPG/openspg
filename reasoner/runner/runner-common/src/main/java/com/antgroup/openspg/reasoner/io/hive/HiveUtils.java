@@ -204,7 +204,7 @@ public class HiveUtils {
 
   private static final String HIVE_METASTORE_CONFIG_KEY = "hive.metastore.uris";
 
-  /** get hive metastore url */
+  /** 获取hive metastore url */
   public static String getHiveMetaStoreUrl(Statement stmt) {
     String getHiveMetaStoreUrisSql = "set " + HIVE_METASTORE_CONFIG_KEY;
 

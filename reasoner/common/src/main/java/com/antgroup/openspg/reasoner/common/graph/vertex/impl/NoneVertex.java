@@ -17,10 +17,16 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 
 public class NoneVertex<K, VV> extends Vertex<K, VV> {
 
-  /** mirror vertex for optional */
+  /** none vertex for optional */
   public NoneVertex(IVertex<K, VV> vertex) {
     this.id = vertex.getId();
     this.value = vertex.getValue();
+  }
+
+  /** create new None vertex */
+  public NoneVertex(K id) {
+    this.id = id;
+    this.value = null;
   }
 
   @Override

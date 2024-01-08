@@ -28,8 +28,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DiskStartIdRecorder extends MemStartIdRecoder {
+  private static final Logger log = LoggerFactory.getLogger(DiskStartIdRecorder.class);
 
   private final String id;
 

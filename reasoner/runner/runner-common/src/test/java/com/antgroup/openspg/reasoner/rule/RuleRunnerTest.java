@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer;
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 import com.google.common.collect.Lists;
 import java.util.Date;

@@ -20,6 +20,7 @@ import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -148,6 +149,22 @@ public class PathEdge<K, VV, EV> implements IEdge<K, EV> {
     if (null == this.vertexList) {
       return new PathEdge<>(Lists.newArrayList(this.edgeList), null, this.value);
     }
+    return new PathEdge<>(
+        Lists.newArrayList(this.edgeList), Lists.newArrayList(this.vertexList), this.value);
+  }
+
+  @Override
+  public PathEdge<K, VV, EV> reverse() {
+    List<Edge<K, EV>> newEdgeList = new ArrayList<>(this.edgeList.size());
+    List<Vertex<K, VV>> newVertexList = new ArrayList<>(this.vertexList.size());
+    for (Edge<K, EV> edge : this.edgeList) {
+      newEdgeList.add(edge.reverse());
+    }
+    for (Vertex<K, VV> vertex : this.vertexList) {
+      newVertexList.add(vertex);
+    }
+    Collections.reverse(newEdgeList);
+    Collections.reverse(newVertexList);
     return new PathEdge<>(
         Lists.newArrayList(this.edgeList), Lists.newArrayList(this.vertexList), this.value);
   }

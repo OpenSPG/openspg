@@ -45,8 +45,8 @@
       <artifactId>commons-lang3</artifactId>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>com.alibaba</groupId>
+      <artifactId>QLExpress</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.geometry</groupId>
@@ -59,6 +59,10 @@
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-epsg-hsql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
     </dependency>
   </dependencies>
 

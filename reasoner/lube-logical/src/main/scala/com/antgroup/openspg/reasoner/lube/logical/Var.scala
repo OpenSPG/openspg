@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.lube.logical
 
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 import scala.language.implicitConversions
 
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
@@ -125,9 +126,35 @@ object Var {
           props.++=(getFields(other.get))
           EdgeVar(name, props.toSet)
         case PathVar(name, elements) =>
-          PathVar(name, elements ++ (other.asInstanceOf[PathVar].elements))
-        case RepeatPathVar(_, _, _) =>
-          field
+          if (other.get.isInstanceOf[PathVar]) {
+            val list = new ListBuffer[Var]()
+            for (i <- 0 until elements.length) {
+              list.append(
+                elements(i).merge(Option.apply(other.get.asInstanceOf[PathVar].elements(i))))
+            }
+            PathVar(name, list.toList)
+          } else {
+            val list = new ListBuffer[Var]()
+            for (ele <- elements) {
+              if (ele.name.equals(other.get.name)) {
+                list.append(ele.merge(other))
+              } else {
+                list.append(ele)
+              }
+            }
+            PathVar(name, list.toList)
+          }
+        case RepeatPathVar(pathVar, lower, upper) =>
+          if (other.get.isInstanceOf[RepeatPathVar]) {
+            RepeatPathVar(
+              pathVar
+                .merge(Option.apply(other.get.asInstanceOf[RepeatPathVar].pathVar))
+                .asInstanceOf[PathVar],
+              lower,
+              upper)
+          } else {
+            RepeatPathVar(pathVar.merge(other).asInstanceOf[PathVar], lower, upper)
+          }
         case _ => throw UnsupportedOperationException(s"Unsupport $field")
       }
 
@@ -158,6 +185,14 @@ object Var {
         case RepeatPathVar(_, _, _) =>
           field
         case _ => throw UnsupportedOperationException(s"Unsupport $field")
+      }
+    }
+
+    implicit def flatten: List[Var] = {
+      field match {
+        case v: RepeatPathVar => v.pathVar.flatten
+        case v: PathVar => v.elements
+        case _ => List.apply(field)
       }
     }
 

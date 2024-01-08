@@ -16,10 +16,18 @@ package com.antgroup.openspg.reasoner.lube.logical.operators
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, Var}
+import com.antgroup.openspg.reasoner.lube.logical.planning.JoinType
 
+/**
+ * This operator express join between two patterns, though lhs.join(rhs, joinType)
+ * @param lhs
+ * @param rhs
+ * @param joinType
+ */
 case class PatternJoin(
     lhs: LogicalOperator,
-    rhs: LogicalOperator)
+    rhs: LogicalOperator,
+    joinType: JoinType)
     extends BinaryLogicalOperator {
 
   /**

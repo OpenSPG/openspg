@@ -10,19 +10,18 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-package com.antgroup.openspg.reasoner.rule.op;
 
-public class OperatorLike extends com.ql.util.express.instruction.op.OperatorLike {
-  public OperatorLike(String name) {
-    super(name);
-  }
+package com.antgroup.openspg.reasoner.rdg.common.model;
 
-  @Override
-  public Object executeInner(Object[] list) throws Exception {
-    if (list[0] == null || list[1] == null) {
-      return false;
-    } else {
-      return executeInner(list[0], list[1]);
-    }
-  }
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.kggraph.KgGraph;
+import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class JoinItem implements Serializable {
+  private boolean left;
+  private KgGraph<IVertexId> kgGraph;
 }

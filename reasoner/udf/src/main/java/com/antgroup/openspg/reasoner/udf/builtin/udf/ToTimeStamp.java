@@ -11,19 +11,18 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.rule.op;
+package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
-/** div op without exception return null when exception */
-public class OperatorMultiDiv extends com.ql.util.express.instruction.op.OperatorMultiplyDivide {
-  public OperatorMultiDiv(String name) {
-    super(name);
-  }
+import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-  public Object executeInner(Object[] list) throws Exception {
-    if (!(list[0] instanceof Number) || !(list[1] instanceof Number)) {
-      return null;
-    } else {
-      return executeInner(list[0], list[1]);
-    }
+public class ToTimeStamp {
+
+  @UdfDefine(name = "to_timestamp", compatibleName = "ToTimestamp")
+  public String toTimestamp(long curMillSecond) {
+    String format = "yyyy-MM-dd HH:mm:ss";
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+    return simpleDateFormat.format(new Date(curMillSecond));
   }
 }
