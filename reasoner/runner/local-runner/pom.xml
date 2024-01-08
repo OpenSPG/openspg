@@ -130,7 +130,7 @@
               <mainClass>com.antgroup.openspg.reasoner.runner.local.LocalReasonerMain</mainClass>
             </manifest>
           </archive>
-          <outputDirectory>../../../python/knext/knext/lib</outputDirectory>
+          <outputDirectory>../../../dev/release/python/lib</outputDirectory>
         </configuration>
         <executions>
           <execution>

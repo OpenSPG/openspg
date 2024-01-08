@@ -49,7 +49,7 @@
               <mainClass>com.antgroup.openspg.builder.runner.local.LocalBuilderMain</mainClass>
             </manifest>
           </archive>
-          <outputDirectory>../../../python/knext/knext/lib</outputDirectory>
+          <outputDirectory>../../../dev/release/python/lib</outputDirectory>
         </configuration>
         <executions>
           <execution>
