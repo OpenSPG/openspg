@@ -18,6 +18,8 @@ public enum SPGIdentifierTypeEnum {
   /** SPG type, such as EntityType, ConceptType, EventType etc. */
   SPG_TYPE,
 
+  RELATION,
+
   /** SPG triple, such as Property, Relation and SubProperty etc. */
   SPG_TRIPLE,
 

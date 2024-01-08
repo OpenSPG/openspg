@@ -934,6 +934,7 @@ public class LocalRDG extends RDG<LocalRDG> {
 
       // add to result list
       this.resultVertexSet.add(willAddedVertex);
+      this.graphState.addVertex(willAddedVertex);
       count++;
     }
 

@@ -13,18 +13,16 @@
 
 package com.antgroup.openspg.common.util.cloudext;
 
-import com.antgroup.openspg.server.common.model.datasource.connection.BaseConnectionInfo;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class CachedCloudExtClientDriver<
-        C extends CloudExtClient, I extends BaseConnectionInfo>
-    implements CloudExtClientDriver<C, I> {
+public abstract class CachedCloudExtClientDriver<C extends CloudExtClient>
+    implements CloudExtClientDriver<C> {
 
-  private final Map<I, C> CACHE = new ConcurrentHashMap<>();
+  private final Map<String, C> CACHE = new ConcurrentHashMap<>();
 
   @Override
-  public C connect(I connInfo) {
+  public C connect(String connInfo) {
     if (!CACHE.containsKey(connInfo)) {
       synchronized (this) {
         if (!CACHE.containsKey(connInfo)) {
@@ -36,5 +34,5 @@ public abstract class CachedCloudExtClientDriver<
     return CACHE.get(connInfo);
   }
 
-  protected abstract C innerConnect(I connInfo);
+  protected abstract C innerConnect(String connInfo);
 }

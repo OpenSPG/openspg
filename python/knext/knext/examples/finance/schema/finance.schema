@@ -1,0 +1,4 @@
+namespace Finance
+
+Indicator(指标概念): ConceptType
+    hypernymPredicate: isA

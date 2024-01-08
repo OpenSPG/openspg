@@ -14,6 +14,7 @@
 package com.antgroup.openspg.server.core.schema.service.alter.sync;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
+import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
 import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
 import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,8 @@ public class SearchEngineSyncer extends BaseSchemaSyncer {
 
   @Override
   public void syncSchema(Long projectId, SPGSchemaAlterCmd schemaEditCmd) {
-    SearchEngineClient searchEngineClient = dataSourceService.buildSharedSearchEngineClient();
-    if (appEnvConfig.getEnableSearchEngine() && null != searchEngineClient) {
-      searchEngineClient.alterSchema(schemaEditCmd);
-    }
+    SearchEngineClient searchEngineClient =
+        SearchEngineClientDriverManager.getClient(appEnvConfig.getSearchEngineUrl());
+    searchEngineClient.alterSchema(schemaEditCmd);
   }
 }

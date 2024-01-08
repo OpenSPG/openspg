@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.api.http.client.forest;
 
-import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.server.api.facade.SchemaJsonUtils;
 import com.dtflys.forest.converter.ConvertOptions;
 import com.dtflys.forest.converter.json.ForestJsonConverter;
 import com.dtflys.forest.http.ForestRequest;
@@ -40,7 +40,7 @@ public class GsonConvertor implements ForestJsonConverter {
 
   @Override
   public String encodeToString(Object obj) {
-    return JSON.serialize(obj);
+    return SchemaJsonUtils.serialize(obj);
   }
 
   @Override
@@ -76,7 +76,7 @@ public class GsonConvertor implements ForestJsonConverter {
     if (obj instanceof CharSequence) {
       return convertToJavaObject(obj.toString(), LinkedHashMap.class);
     }
-    final Gson gson = JSON.gson;
+    final Gson gson = SchemaJsonUtils.gson;
     final JsonElement jsonElement = gson.toJsonTree(obj);
     return toMap(jsonElement.getAsJsonObject(), true);
   }
@@ -88,7 +88,7 @@ public class GsonConvertor implements ForestJsonConverter {
 
   @Override
   public String getDateFormat() {
-    return JSON.DATA_FORMAT;
+    return SchemaJsonUtils.DATA_FORMAT;
   }
 
   @Override
@@ -96,7 +96,7 @@ public class GsonConvertor implements ForestJsonConverter {
     if (StringUtils.isBlank(source)) {
       return null;
     }
-    return JSON.deserialize(source, targetType);
+    return SchemaJsonUtils.deserialize(source, targetType);
   }
 
   @Override

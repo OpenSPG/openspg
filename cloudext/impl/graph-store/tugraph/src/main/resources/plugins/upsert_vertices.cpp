@@ -15,7 +15,7 @@
 #include <chrono>
 #include "lgraph/lgraph.h"
 #include "tools/json.hpp"
-#include "fma-common/logger.h"
+//#include "fma-common/logger.h"
 
 using json = nlohmann::json;
 

@@ -13,13 +13,6 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.check;
 
-import com.antgroup.kg.reasoner.catalog.impl.OpenKgCatalog;
-import com.antgroup.kg.reasoner.lube.block.Block;
-import com.antgroup.kg.reasoner.lube.catalog.Catalog;
-import com.antgroup.kg.reasoner.lube.logical.planning.LogicalPlannerContext;
-import com.antgroup.kg.reasoner.lube.logical.validate.Validator;
-import com.antgroup.kg.reasoner.lube.parser.ParserInterface;
-import com.antgroup.kg.reasoner.parser.KgDslParser;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.DslSyntaxError;
 import com.antgroup.openspg.core.schema.model.SchemaConstants;
@@ -28,6 +21,13 @@ import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.type.*;
 import com.antgroup.openspg.core.schema.model.type.BasicType.TextBasicType;
+import com.antgroup.openspg.reasoner.catalog.impl.OpenSPGCatalog;
+import com.antgroup.openspg.reasoner.lube.block.Block;
+import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
+import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext;
+import com.antgroup.openspg.reasoner.lube.logical.validate.Validator;
+import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
+import com.antgroup.openspg.reasoner.parser.KgDslParser;
 import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -165,7 +165,7 @@ public class PropertyChecker {
   protected Catalog buildCatalog(SchemaCheckContext context) {
     List<BaseSPGType> spgTypes = context.getMergedSchema();
     ProjectSchema projectSchema = new ProjectSchema(spgTypes);
-    Catalog catalog = new OpenKgCatalog(context.getProjectId(), null, projectSchema);
+    Catalog catalog = new OpenSPGCatalog(context.getProjectId(), null, projectSchema);
     catalog.init();
     return catalog;
   }

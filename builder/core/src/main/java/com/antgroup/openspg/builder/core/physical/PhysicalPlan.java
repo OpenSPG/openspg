@@ -13,35 +13,24 @@
 
 package com.antgroup.openspg.builder.core.physical;
 
-import com.antgroup.openspg.builder.core.logical.BaseNode;
+import com.antgroup.openspg.builder.core.logical.BaseLogicalNode;
 import com.antgroup.openspg.builder.core.logical.LogicalPlan;
-import com.antgroup.openspg.builder.core.physical.process.ExtractProcessor;
-import com.antgroup.openspg.builder.core.physical.process.MappingProcessor;
-import com.antgroup.openspg.builder.core.physical.sink.GraphStoreSinkWriter;
-import com.antgroup.openspg.builder.core.physical.source.BaseSourceReader;
-import com.antgroup.openspg.builder.core.physical.source.CsvFileSourceReader;
-import com.antgroup.openspg.builder.model.pipeline.config.CsvSourceNodeConfig;
-import com.antgroup.openspg.builder.model.pipeline.config.ExtractNodeConfig;
-import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
-import com.antgroup.openspg.builder.model.pipeline.config.MappingNodeConfig;
-import com.google.common.graph.Graph;
-import com.google.common.graph.GraphBuilder;
-import com.google.common.graph.ImmutableGraph;
+import com.antgroup.openspg.builder.core.physical.process.*;
+import com.antgroup.openspg.builder.model.pipeline.config.*;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.builder.GraphTypeBuilder;
 
 @AllArgsConstructor
-@SuppressWarnings({"UnstableApiUsage"})
 public class PhysicalPlan implements Serializable {
 
   /** DAG (Directed Acyclic Graph) of the physical execution plan. */
-  private final Graph<BasePhysicalNode> dag;
+  private final Graph<BaseProcessor<?>, DefaultEdge> dag;
 
   /**
    * Translating the logical execution plan into a physical execution plan.
@@ -50,35 +39,45 @@ public class PhysicalPlan implements Serializable {
    * @return Physical execution plan
    */
   public static PhysicalPlan plan(LogicalPlan logicalPlan) {
-    ImmutableGraph.Builder<BasePhysicalNode> immutable =
-        GraphBuilder.directed().allowsSelfLoops(false).immutable();
+    // first, remove the source and sink of the logical plan
+    logicalPlan = logicalPlan.removeSourceAndSinkNodes();
 
-    Queue<BaseNode<?>> queue = new LinkedList<>();
-    Map<String, BasePhysicalNode> id2Node = new HashMap<>(logicalPlan.size());
-    for (BaseNode<?> node : logicalPlan.startNodes()) {
+    Graph<BaseProcessor<?>, DefaultEdge> graph = newGraph();
+    Queue<BaseLogicalNode<?>> queue = new LinkedList<>();
+    Map<String, BaseProcessor<?>> id2Node = new HashMap<>(logicalPlan.size());
+    for (BaseLogicalNode<?> node : logicalPlan.sourceNodes()) {
       queue.add(node);
-      BasePhysicalNode physicalNode = parse(node);
-      immutable.addNode(physicalNode);
+      BaseProcessor<?> physicalNode = parse(node);
+      graph.addVertex(physicalNode);
       id2Node.put(physicalNode.getId(), physicalNode);
     }
 
     while (!queue.isEmpty()) {
-      BaseNode<?> cur = queue.poll();
+      BaseLogicalNode<?> cur = queue.poll();
 
-      for (BaseNode<?> successor : logicalPlan.successors(cur)) {
+      for (BaseLogicalNode<?> successor : logicalPlan.successors(cur)) {
         queue.add(successor);
-        BasePhysicalNode curPhysicalNode = id2Node.get(successor.getId());
+        BaseProcessor<?> curPhysicalNode = id2Node.get(successor.getId());
         if (curPhysicalNode == null) {
           curPhysicalNode = parse(successor);
-          immutable.addNode(curPhysicalNode);
+          graph.addVertex(curPhysicalNode);
           id2Node.put(curPhysicalNode.getId(), curPhysicalNode);
         }
 
-        BasePhysicalNode prePhysicalNode = id2Node.get(cur.getId());
-        immutable.putEdge(prePhysicalNode, curPhysicalNode);
+        BaseProcessor<?> prePhysicalNode = id2Node.get(cur.getId());
+        graph.addEdge(prePhysicalNode, curPhysicalNode);
       }
     }
-    return new PhysicalPlan(immutable.build());
+    return new PhysicalPlan(graph);
+  }
+
+  private static Graph<BaseProcessor<?>, DefaultEdge> newGraph() {
+    return GraphTypeBuilder.<BaseProcessor<?>, DefaultEdge>directed()
+        .allowingSelfLoops(false)
+        .allowingMultipleEdges(false)
+        .edgeClass(DefaultEdge.class)
+        .weighted(false)
+        .buildGraph();
   }
 
   /**
@@ -87,37 +86,36 @@ public class PhysicalPlan implements Serializable {
    * @param node: Logical execution node.
    * @return Physical execution node.
    */
-  private static BasePhysicalNode parse(BaseNode<?> node) {
+  private static BaseProcessor<?> parse(BaseLogicalNode<?> node) {
     switch (node.getType()) {
-      case CSV_SOURCE:
-        return new CsvFileSourceReader(
-            node.getId(), node.getName(), (CsvSourceNodeConfig) node.getNodeConfig());
-      case EXTRACT:
-        return new ExtractProcessor(
-            node.getId(), node.getName(), (ExtractNodeConfig) node.getNodeConfig());
-      case MAPPING:
-        return new MappingProcessor(
-            node.getId(), node.getName(), (MappingNodeConfig) node.getNodeConfig());
-      case GRAPH_SINK:
-        return new GraphStoreSinkWriter(
-            node.getId(), node.getName(), (GraphStoreSinkNodeConfig) node.getNodeConfig());
+      case USER_DEFINED_EXTRACT:
+        return new UserDefinedExtractProcessor(
+            node.getId(), node.getName(), (UserDefinedExtractNodeConfig) node.getNodeConfig());
+      case LLM_BASED_EXTRACT:
+        return new LLMBasedExtractProcessor(
+            node.getId(), node.getName(), (LLMBasedExtractNodeConfig) node.getNodeConfig());
+      case SPG_TYPE_MAPPINGS:
+        return new SPGTypeMappingProcessor(
+            node.getId(), node.getName(), (SPGTypeMappingNodeConfigs) node.getNodeConfig());
+      case RELATION_MAPPING:
+        return new RelationMappingProcessor(
+            node.getId(), node.getName(), (RelationMappingNodeConfig) node.getNodeConfig());
       default:
         throw new IllegalArgumentException("illegal type=" + node.getType());
     }
   }
 
-  public Set<BasePhysicalNode> nodes() {
-    return dag.nodes();
+  public Set<BaseProcessor<?>> nodes() {
+    return dag.vertexSet();
   }
 
-  public Set<BaseSourceReader<?>> sourceReaders() {
-    return dag.nodes().stream()
-        .filter(node -> node instanceof BaseSourceReader)
-        .map(node -> (BaseSourceReader<?>) node)
+  public Set<BaseProcessor<?>> sourceNodes() {
+    return dag.vertexSet().stream()
+        .filter(node -> dag.inDegreeOf(node) == 0)
         .collect(Collectors.toSet());
   }
 
-  public Set<BasePhysicalNode> successors(BasePhysicalNode physicalNode) {
-    return dag.successors(physicalNode);
+  public Set<BaseProcessor<?>> successors(BaseProcessor<?> cur) {
+    return new HashSet<>(Graphs.successorListOf(dag, cur));
   }
 }

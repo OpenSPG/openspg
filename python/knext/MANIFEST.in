@@ -1,0 +1,2 @@
+recursive-include knext *
+recursive-exclude knext/examples *
