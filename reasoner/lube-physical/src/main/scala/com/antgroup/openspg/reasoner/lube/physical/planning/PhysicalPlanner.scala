@@ -18,17 +18,13 @@ import scala.collection.mutable.ListBuffer
 import scala.reflect.runtime.universe.TypeTag
 
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException
+import com.antgroup.openspg.reasoner.common.graph.edge.Direction
 import com.antgroup.openspg.reasoner.lube.common.expr.Directly
-import com.antgroup.openspg.reasoner.lube.logical.{PathVar, RepeatPathVar, RichVar, Var}
+import com.antgroup.openspg.reasoner.lube.logical.{NodeVar, PathVar, RepeatPathVar, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
+import com.antgroup.openspg.reasoner.lube.logical.planning.{FullOuterJoin, InnerJoin, LeftOuterJoin}
 import com.antgroup.openspg.reasoner.lube.physical.operators
-import com.antgroup.openspg.reasoner.lube.physical.operators.{
-  AddInto,
-  Drop,
-  Fold,
-  PhysicalOperator,
-  Unfold
-}
+import com.antgroup.openspg.reasoner.lube.physical.operators.{AddInto, Drop, Fold, PhysicalOperator, Unfold}
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 
 /**
@@ -73,6 +69,8 @@ object PhysicalPlanner {
       case boundedVarLenExpand: BoundedVarLenExpand =>
         planBoundedVarLenExpand(boundedVarLenExpand, workingRdgName)
       case optional: Optional => planOptional(optional, workingRdgName)
+      case patternJoin: PatternJoin => planPatternJoin(patternJoin, workingRdgName)
+      case patternUnion: PatternUnion => planPatternUnion(patternUnion, workingRdgName)
       case other => throw NotImplementedException(s"physical planning of operator $other")
     }
   }
@@ -103,7 +101,8 @@ object PhysicalPlanner {
     }
 
     val inputFields = inputOp.meta
-    val outputFields = project.fields
+    val outputFields =
+      project.fields.filter(!_.isInstanceOf[PathVar]).map(f => f.flatten).flatten.distinct
     val fieldMap = new mutable.HashMap[String, Var]()
     for (v <- inputFields) {
       fieldMap.put(v.name, v)
@@ -152,10 +151,42 @@ object PhysicalPlanner {
     rst
   }
 
+  private def planPatternJoin[T <: RDG[T]: TypeTag](
+      patternJoin: PatternJoin,
+      workingRdgName: String)(implicit
+      context: PhysicalPlannerContext[T]): PhysicalOperator[T] = {
+    val left = plan[T](patternJoin.lhs, workingRdgName)
+    val cacheOp = operators.Cache(left)
+    val right = patternJoin.joinType match {
+      case LeftOuterJoin | InnerJoin => plan[T](patternJoin.rhs, cacheOp.cacheName)
+      case _ => plan[T](patternJoin.rhs, workingRdgName)
+    }
+
+    val rst = operators.Join(
+      cacheOp,
+      right,
+      intersect(left.meta, right.meta),
+      patternJoin.joinType,
+      left.meta.map(l => (l, l)).toMap,
+      right.meta.map(r => (r, r)).toMap)
+    rst
+  }
+
+  private def planPatternUnion[T <: RDG[T]: TypeTag](
+      patternJoin: PatternUnion,
+      workingRdgName: String)(implicit
+      context: PhysicalPlannerContext[T]): PhysicalOperator[T] = {
+    val left = plan[T](patternJoin.lhs, workingRdgName)
+    val cacheOp = operators.Cache(left)
+    val right = plan[T](patternJoin.rhs, cacheOp.cacheName)
+    val rst = operators.Union(cacheOp, right)
+    rst
+  }
+
   private def intersect(lhs: List[Var], rhs: List[Var]): List[(String, String)] = {
     val rst = new ListBuffer[(String, String)]()
-    val lhsSet = lhs.filter(!_.isInstanceOf[RichVar]).map(_.name).toSet
-    val rhsSet = rhs.filter(!_.isInstanceOf[RichVar]).map(_.name).toSet
+    val lhsSet = lhs.filter(_.isInstanceOf[NodeVar]).map(_.name).toSet
+    val rhsSet = rhs.filter(_.isInstanceOf[NodeVar]).map(_.name).toSet
     for (alias <- lhsSet.intersect(rhsSet)) {
       rst.prepend((alias, alias))
     }
@@ -174,9 +205,9 @@ object PhysicalPlanner {
     } else {
       (boundedVarLenExpand.edgePattern.dst.alias, boundedVarLenExpand.edgePattern.src.alias)
     }
-    val leftMapping = left.meta.map(flatten(_)).flatten.map(v => (v, v)).toMap
+    val leftMapping = left.meta.map(m => m.flatten).flatten.map(v => (v, v)).toMap
     val rightMapping = right.meta
-      .map(flatten((_)))
+      .map(m => m.flatten)
       .flatten
       .map(v => (v, v.rename(v.name + "_varlen_" + boundedVarLenExpand.index)))
       .toMap
@@ -204,18 +235,19 @@ object PhysicalPlanner {
 
   private def getRepeatPathVar(boundedVarLenExpand: BoundedVarLenExpand, inputMeta: List[Var]) = {
     val varMap = inputMeta.map(f => (f.name, f)).toMap
-    varMap(boundedVarLenExpand.edgePattern.edge.alias)
+    val repeatPathVar = varMap(boundedVarLenExpand.edgePattern.edge.alias)
       .asInstanceOf[RepeatPathVar]
-      .copy(
-        lower = boundedVarLenExpand.edgePattern.edge.lower,
-        upper = boundedVarLenExpand.edgePattern.edge.upper)
-  }
-
-  private def flatten(v: Var): List[Var] = {
-    v match {
-      case v: RepeatPathVar => flatten(v.pathVar)
-      case v: PathVar => v.elements
-      case _ => List.apply(v)
+    val lower = boundedVarLenExpand.edgePattern.edge.lower
+    val upper = boundedVarLenExpand.edgePattern.edge.upper
+    boundedVarLenExpand.edgePattern.edge.direction match {
+      case Direction.IN =>
+        val pathVar = repeatPathVar.pathVar
+        repeatPathVar.copy(
+          lower = lower,
+          upper = upper,
+          pathVar = pathVar.copy(elements = pathVar.elements.reverse))
+      case _ =>
+        repeatPathVar.copy(lower = lower, upper = upper)
     }
   }
 

@@ -23,7 +23,7 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.{
 }
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 import com.antgroup.openspg.reasoner.lube.logical.{RichVar, Var}
-import com.antgroup.openspg.reasoner.lube.physical.planning.JoinType
+import com.antgroup.openspg.reasoner.lube.logical.planning.JoinType
 
 /**
  * Resilient Distributed Graphs
@@ -164,5 +164,18 @@ abstract class RDG[T <: RDG[T]] extends Result {
    */
   def fold(foldMapping: List[(List[Var], RichVar)]): T
 
+  /**
+   * The "unfold" operation is the inverse operation of "fold",
+   * which expands a RichVar into a list of Vars.
+   * @param foldMapping
+   * @return
+   */
   def unfold(mapping: List[(RichVar, List[Var])]): T
+
+  /**
+   * Merge another RDG with current RDG.
+   * @param other
+   * @return
+   */
+  def union(other: T): T
 }

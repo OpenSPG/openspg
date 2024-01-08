@@ -26,7 +26,7 @@ import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog
 import com.antgroup.openspg.reasoner.lube.catalog.struct.{Field, NodeType}
 import com.antgroup.openspg.reasoner.lube.common.pattern._
-import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, _}
+import com.antgroup.openspg.reasoner.lube.logical._
 import com.antgroup.openspg.reasoner.lube.logical.operators.LogicalOperator
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.LogicalOptimizer
 import com.antgroup.openspg.reasoner.lube.logical.planning.{
