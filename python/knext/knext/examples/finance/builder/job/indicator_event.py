@@ -34,7 +34,7 @@ class IndicatorEvent(BuilderJob):
 
         extract = UserDefinedExtractor(
             extract_op=EventExtractOp(
-                params={"config": "builder/job/openai_config.json"}
+                params={"config": "builder/model/openai_infer.json"}
             ),
         )
 
@@ -42,7 +42,7 @@ class IndicatorEvent(BuilderJob):
             SPGTypeMapping(spg_type_name=Finance.IndicatorEvent)
             .add_property_mapping("id", Finance.IndicatorEvent.id)
             .add_property_mapping("id", Finance.IndicatorEvent.name)
-            .add_property_mapping("indicator", Finance.IndicatorEvent.indicator)
+            .add_property_mapping("subject", Finance.IndicatorEvent.subject)
             .add_property_mapping("value", Finance.IndicatorEvent.value)
             .add_property_mapping("trend", Finance.IndicatorEvent.trend)
             .add_property_mapping("date", Finance.IndicatorEvent.date)

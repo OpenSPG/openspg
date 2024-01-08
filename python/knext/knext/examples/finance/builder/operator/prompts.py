@@ -78,7 +78,12 @@ class IndicatorLinkPrompt(PromptOp):
         )
 
     def parse_response(self, response: str) -> List[SPGRecord]:
-        tmp = json.loads(response)
+        try:
+            tmp = json.loads(response)
+        except Exception as e:
+            print(f"failed to load {response}, info: {e}")
+            return []
+        print("IndicatorLink parse_response: ", tmp)
         linked_indicator = tmp.get("same_indicator", "")
         if len(linked_indicator) > 0:
             output = SPGRecord("Finance.Indicator")
@@ -133,15 +138,23 @@ class EventExtractPrompt(PromptOp):
         "input": "",
         "instruction": '你是专门进行事件提取的专家。请从input中抽取出符合schema定义的事件，不存在的事件返回空列表，不存在的论元返回空。请按照JSON字符串的格式回答。输出格式为:{"event":[{"event_type":,"arguments":{"":,},}]}',
         "schema": [
-            {"arguments": ["时间", "地域", "指标名", "指标值", "指标趋势"], "event_type": "区域指标事件"}
+            {
+                "arguments": [
+                    "date",
+                    "location",
+                    "indicator",
+                    "value",
+                    "trend",
+                ],
+                "event_type": "区域指标事件",
+            }
         ],
         "schema description": {
-            "区域经济指标事件": "指的是特定地区经济状况和发展水平的数据指标的相关事件。",
-            "时间": "类型为时间，年/月/日",
-            "地域": "类型为文本。指的是经济指标事件的范围，如全国、成都市、上海市等",
-            "指标名": "类型为文本，是用于衡量特定地区经济状况和发展水平的一系列数据和指标",
-            "指标值": "类型为数字, 代表指标名的数值",
-            "指标趋势": "类型为文本，代表指标名的变化趋势，如果不存在可以为空",
+            "date": "类型为时间，年/月/日",
+            "location": "类型为文本。指的是经济指标事件的范围，如全国、成都市、上海市等",
+            "indicator": "类型为文本，是用于衡量地区经济状况的数据指标，如土地出让收入，一般公共预算收入",
+            "value": "类型为数字, 代表指标名的数值，如200亿元",
+            "trend": "类型为文本，代表指标名的变化趋势，如果不存在可以为空",
         },
     }
 
@@ -151,13 +164,29 @@ class EventExtractPrompt(PromptOp):
         return json.dumps(tmp)
 
     def parse_response(self, response: str) -> List[SPGRecord]:
-        records = json.loads(response)
+        try:
+            records = json.loads(response)
+        except Exception as e:
+            print(f"failed to load {response}, info: {e}")
+            return []
+
         output = []
-        for record in records:
+        for record in records["event"]:
+            print(f"extracted events: {record}")
+            indicator = record["arguments"].get("indicator", "")
+            trend = record["arguments"].get("trend", "")
+            name = f"{indicator}{trend}"
+            if len(name) == 0:
+                continue
             tmp = SPGRecord("Finance.IndicatorEvent")
-            tmp.upsert_property("indicator", record["arguments"].get("指标名", ""))
-            tmp.upsert_property("value", record["arguments"].get("指标值", ""))
-            tmp.upsert_property("date", record["arguments"].get("时间", ""))
-            tmp.upsert_property("trend", record["arguments"].get("指标趋势", ""))
+            tmp.upsert_property("id", name)
+            tmp.upsert_property("name", name)
+            subject = record["arguments"].get("indicator", "")
+            if len(subject) == 0:
+                subject = name
+            tmp.upsert_property("subject", subject)
+            tmp.upsert_property("value", record["arguments"].get("value", ""))
+            tmp.upsert_property("date", record["arguments"].get("date", ""))
+            tmp.upsert_property("trend", record["arguments"].get("trend", ""))
             output.append(tmp)
         return output
