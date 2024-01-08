@@ -23,11 +23,11 @@ class Finance:
     class Indicator(SPGTypeHelper):
         
     
-        description = PropertyHelper("description")
-        alias = PropertyHelper("alias")
-        name = PropertyHelper("name")
-        id = PropertyHelper("id")
         stdId = PropertyHelper("stdId")
+        id = PropertyHelper("id")
+        alias = PropertyHelper("alias")
+        description = PropertyHelper("description")
+        name = PropertyHelper("name")
     
     
     
