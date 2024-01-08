@@ -310,7 +310,7 @@ class SPGSchemaMarkLang:
             spg_type = EntityType(
                 name=f"{self.namespace}.{type_name}", name_zh=type_name_zh
             )
-            if type_class == "EventType":
+            if parent_spg_type.spg_type_enum == SpgTypeEnum.Event:
                 spg_type = EventType(
                     name=f"{self.namespace}.{type_name}", name_zh=type_name_zh
                 )
