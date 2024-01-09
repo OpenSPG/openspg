@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.rdg.common;
 
+import com.antgroup.openspg.reasoner.common.exception.IllegalArgumentException;
 import java.io.Serializable;
 import org.apache.commons.lang3.StringUtils;
 

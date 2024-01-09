@@ -20,6 +20,7 @@ import com.antgroup.openspg.reasoner.lube.logical.EdgeVar;
 import com.antgroup.openspg.reasoner.lube.logical.NodeVar;
 import com.antgroup.openspg.reasoner.lube.logical.PathVar;
 import com.antgroup.openspg.reasoner.lube.logical.RepeatPathVar;
+import com.antgroup.openspg.reasoner.lube.logical.Var;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;

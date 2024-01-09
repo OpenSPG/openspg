@@ -29,10 +29,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
-/**
- * @author fuyu.bfy
- * @date 2023/03/12
- */
 public class GraphLoaderConfig implements Serializable {
   /** edge truncate threshold for each edge type */
   public static final int DEFAULT_EDGE_TRUNCATE_THRESHOLD = 8 * 10000;

@@ -26,10 +26,6 @@ import java.util.Set;
 import org.apache.commons.collections4.CollectionUtils;
 import scala.Tuple2;
 
-/**
- * @author fuyu.bfy
- * @date 2023/03/12
- */
 public class VertexLoaderConfig implements Serializable {
   /** vertex type */
   private String vertexType;

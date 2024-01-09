@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.utils;
 
+import com.antgroup.openspg.reasoner.common.exception.IllegalArgumentException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.type.MapType2IdFactory;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;

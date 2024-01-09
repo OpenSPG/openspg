@@ -37,16 +37,8 @@ public class ProgressStatus implements Serializable {
   private final Map<TimeConsumeType, Long> timeConsumeMap = new HashMap<>();
   private TimeConsumeType nowType;
   private long nowTypeStartMs;
-
-  public static ProgressStatus getProgressStatusFromOSS(String taskKey) {
-    try {
-      String taskStatusData = OSSClientHelper.getInstance().getFileContent(taskKey);
-      return new ProgressStatus(JSON.parseObject(taskStatusData));
-    } catch (Exception e) {
-      log.warn("ProgressStatus::updateProgressStatus failed! " + e.getMessage());
-    }
-    return null;
-  }
+  private ObjectStoreInterface objectStoreInterface;
+  public static final String LOCAL_FILE_PREFIX = "file://";
 
   public ProgressStatus(JSONObject context) {
     this.instanceId = context.getString("instanceId");
@@ -112,7 +104,7 @@ public class ProgressStatus implements Serializable {
     log.info("persistenceProgressStatus: storage is " + this.persistenceWay + " " + this.toJson());
     if ("oss".equals(this.persistenceWay)) {
       persistenceProgressToOSS();
-    } else if (this.persistenceWay.startsWith(FileUtil.LOCAL_FILE_PREFIX)) {
+    } else if (this.persistenceWay.startsWith(LOCAL_FILE_PREFIX)) {
       persistenceLocalFile();
     } else {
       log.error("persistenceProgressStatus not support");
@@ -121,7 +113,7 @@ public class ProgressStatus implements Serializable {
 
   private synchronized void persistenceProgressToOSS() {
     try {
-      OSSClientHelper.getInstance().putFileContent(taskKey, toJson());
+      objectStoreInterface.putFileContent(taskKey, toJson());
     } catch (Exception e) {
       log.warn("ProgressStatus::persistenceProgressStatus update failed! " + e.getMessage());
     }
@@ -129,7 +121,7 @@ public class ProgressStatus implements Serializable {
 
   private synchronized void persistenceLocalFile() {
     try {
-      String filePath = taskKey.substring(FileUtil.LOCAL_FILE_PREFIX.length());
+      String filePath = taskKey.substring(LOCAL_FILE_PREFIX.length());
       File file = new File(filePath);
       FileOutputStream outputStream = new FileOutputStream(file);
       outputStream.write(toJson().getBytes(StandardCharsets.UTF_8));
@@ -144,7 +136,7 @@ public class ProgressStatus implements Serializable {
     if ("oss".equals(this.persistenceWay)) {
       String content = null;
       try {
-        content = OSSClientHelper.getInstance().getFileContent(taskKey);
+        content = objectStoreInterface.getFileContent(taskKey);
         if (StringUtils.isBlank(content)) {
           return;
         }
@@ -161,7 +153,7 @@ public class ProgressStatus implements Serializable {
   public void reset() {
     if ("oss".equals(this.persistenceWay)) {
       try {
-        OSSClientHelper.getInstance().removeFile(taskKey);
+        objectStoreInterface.removeFile(taskKey);
       } catch (Exception ex) {
         log.error("reset error, ", ex);
       }
@@ -269,6 +261,10 @@ public class ProgressStatus implements Serializable {
 
   public Map<TimeConsumeType, Long> getTimeConsumeMap() {
     return timeConsumeMap;
+  }
+
+  public void setObjectStoreInterface(ObjectStoreInterface objectStoreInterface) {
+    this.objectStoreInterface = objectStoreInterface;
   }
 
   public enum JobStatus implements Serializable {

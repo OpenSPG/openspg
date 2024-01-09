@@ -13,7 +13,8 @@
 
 package com.antgroup.openspg.reasoner.parser.expr
 
-import com.antgroup.openspg.reasoner.common.types.KTString
+import com.antgroup.openspg.reasoner.common.exception.KGDSLGrammarException
+import com.antgroup.openspg.reasoner.common.types.{KTObject, KTString}
 import com.antgroup.openspg.reasoner.lube.common.expr.{BinaryOpExpr, _}
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
 import org.scalatest.funspec.AnyFunSpec

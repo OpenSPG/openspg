@@ -30,7 +30,7 @@ public class LocalRunnerThreadPool {
   private static final long KEEP_ALIVE_TIME_SECONDS = 5 * 60;
 
   private static final int DEFAULT_CORE_POOL_SIZE = 10;
-  private static final int DEFAULT_MAXIMUM_POOL_SIZE = 30;
+  private static final int DEFAULT_MAXIMUM_POOL_SIZE = 300;
 
   private static final int WORK_QUEUE_SIZE = 1000;
 

@@ -26,7 +26,7 @@ class EmptyCatalog extends Catalog {
 
   override def getConnections(): Map[AbstractConnection, Set[String]] = Map.empty
 
-  override def getConnection(typeName: String): AbstractConnection = null
+  override def getConnection(typeName: String): Set[AbstractConnection] = null
 
   /**
    * get default node properties

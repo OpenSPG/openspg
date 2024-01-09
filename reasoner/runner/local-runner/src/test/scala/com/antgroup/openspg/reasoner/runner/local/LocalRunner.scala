@@ -13,24 +13,49 @@
 
 package com.antgroup.openspg.reasoner.runner.local
 
-import com.antgroup.openspg.reasoner.runner.local.impl.LocalReasonerSession
-import com.antgroup.openspg.reasoner.runner.local.rdg.{LocalRow, TypeTags}
+import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState
 import com.antgroup.openspg.reasoner.lube.block.{Block, DDLBlock, MatchBlock, TableResultBlock}
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  GraphPattern,
-  LinkedPatternConnection,
-  PatternConnection
-}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{GraphPattern, LinkedPatternConnection, PatternConnection}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.logical.validate.{Dag, Validator}
 import com.antgroup.openspg.reasoner.parser.OpenspgDslParser
+import com.antgroup.openspg.reasoner.runner.local.impl.LocalReasonerSession
+import com.antgroup.openspg.reasoner.runner.local.rdg.{LocalRow, TypeTags}
 import com.google.common.collect.Lists
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
 class LocalRunner extends AnyFunSpec with BeforeAndAfter {
+
+  it("MockRunner2") {
+    val dsl =
+      """
+        |GraphStructure {
+        |	(Student:Student)-[STEdge:STEdge]->(Teacher:Teacher)
+        |}
+        |Rule {
+        |
+        |}
+        |Action {
+        |get(Student.name, Teacher.name, STEdge.name)
+        |}
+        |""".stripMargin
+    val schema: Map[String, Set[String]] = Map.apply(
+      "Student" -> Set.apply("name"),
+      "Teacher" -> Set.apply("name"),
+      "Student_STEdge_Teacher" -> Set.apply("name"))
+    val catalog = new PropertyGraphCatalog(schema)
+    catalog.init()
+    val session = new LocalReasonerSession(new OpenspgDslParser(),
+      catalog, TypeTags.rdgTypeTag, new MemGraphState)
+    val plan = session.plan(dsl, Map.empty)
+    val rst = session.getResult(plan.head)
+    if (rst.isInstanceOf[LocalRow]) {
+      rst.asInstanceOf[LocalRow].show(10)
+    }
+  }
 
   it("MockRunner") {
     val dsl =

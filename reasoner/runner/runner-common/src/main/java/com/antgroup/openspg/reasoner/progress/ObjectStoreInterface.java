@@ -11,11 +11,15 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.lube.physical.planning
+package com.antgroup.openspg.reasoner.progress;
 
-sealed trait JoinType
+public interface ObjectStoreInterface {
+  /** get file content */
+  String getFileContent(String fileName);
 
-case object InnerJoin extends JoinType
-case object LeftOuterJoin extends JoinType
-case object RightOuterJoin extends JoinType
-case object FullOuterJoin extends JoinType
+  /** put content to file */
+  void putFileContent(String fileName, String content);
+
+  /** remove file */
+  void removeFile(String fileName);
+}

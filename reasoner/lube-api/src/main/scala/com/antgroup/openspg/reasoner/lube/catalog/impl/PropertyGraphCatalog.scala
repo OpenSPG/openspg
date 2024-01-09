@@ -25,11 +25,6 @@ import com.antgroup.openspg.reasoner.common.types.{KTLong, KTString}
 import com.antgroup.openspg.reasoner.lube.catalog._
 import com.antgroup.openspg.reasoner.lube.catalog.struct.{Edge, Field, Node, NodeType}
 
-/**
- * Mock Catalog
- * @author chengqiang.cq
- * @version $Id: MockCatalog.java, v 0.1 2023-03-24 17:43 chengqiang.cq Exp $$
- */
 class PropertyGraphCatalog(val propertyGraphSchema: Map[String, Set[String]]) extends Catalog {
 
   /**

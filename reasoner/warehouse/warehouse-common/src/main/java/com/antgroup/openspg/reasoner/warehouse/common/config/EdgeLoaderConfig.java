@@ -30,10 +30,6 @@ import scala.Option;
 import scala.Tuple3;
 import scala.collection.JavaConversions;
 
-/**
- * @author fuyu.bfy
- * @date 2023/03/12
- */
 public class EdgeLoaderConfig implements Serializable {
   /** edge type */
   private String edgeType;

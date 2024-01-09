@@ -75,8 +75,42 @@ public class FinBenchTest {
     params.put("startTime", "1");
     params.put("endTime", "1");
 
+    params.put("trc1id", "'A1'");
     params.put("trc4id1", "'A1'");
     params.put("trc4id2", "'A2'");
+  }
+
+  @Test
+  public void trc1() {
+    LocalRunnerTestFactory.runTest(
+        "GraphStructure {\n"
+            + "    account[Account,__start__='true']\n"
+            + "    other [Account]\n"
+            + "    medium [Medium]\n"
+            + "    account -> other [transfer] repeat(1,3) as edge1\n"
+            + "    other -> medium [signIn] as edge2\n"
+            + "}\n"
+            + "Rule {\n"
+            + "    R1(\"参数\"): account.id == $trc1id\n"
+            + "    R2(\"transfer时间\"): edge1.edges().constraint((pre, cur) => pre.timestamp >= $startTime and pre\n"
+            + ".timestamp <= \n"
+            + "$endTime and cur.timestamp >= $startTime and cur.timestamp <= $endTime)\n"
+            + "    R3(\"signIn时间\"): edge2.timestamp >= $startTime and edge2.timestamp <= $endTime\n"
+            + "    R4(\"isBlocked\"): medium.isBlocked == true\n"
+            + "    repeat_len = repeat_edge_length(edge1)\n"
+            + "}\n"
+            + "Action {\n"
+            + "    get(other.id, repeat_len, medium.id)\n"
+            + "}",
+        this.graphLoader,
+        new AssertFunction() {
+          @Override
+          public void assertResult(LocalReasonerResult result) {
+            Assert.assertEquals(result.getRows().size(), 1);
+            Assert.assertEquals(result.getRows().get(0)[0], "A3");
+          }
+        },
+        this.params);
   }
 
   @Test

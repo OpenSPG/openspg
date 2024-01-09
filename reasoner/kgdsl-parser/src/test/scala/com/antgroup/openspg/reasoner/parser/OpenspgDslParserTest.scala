@@ -18,7 +18,7 @@ import com.antgroup.openspg.reasoner.common.exception.{KGDSLGrammarException, KG
 import com.antgroup.openspg.reasoner.common.types.{KTInteger, KTString}
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.common.expr._
-import com.antgroup.openspg.reasoner.lube.common.graph.{IRProperty, IRVariable}
+import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode, IRProperty, IRVariable, KG}
 import com.antgroup.openspg.reasoner.lube.common.pattern.{EntityElement, LinkedPatternConnection}
 import com.antgroup.openspg.reasoner.lube.common.rule.ProjectRule
 import org.scalatest.funspec.AnyFunSpec

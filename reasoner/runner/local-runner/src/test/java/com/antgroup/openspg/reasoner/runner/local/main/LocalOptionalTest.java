@@ -783,7 +783,8 @@ public class LocalOptionalTest {
               "MRI",
               "status",
               "完整"),
-          constructionVertex("前列腺癌", "ProfMedV1.Disease"));
+          constructionVertex("前列腺癌", "ProfMedV1.Disease"),
+          constructionVertex("前列腺肿瘤-突破前列腺包膜", "ProfMedV1.Index"));
     }
 
     @Override
@@ -903,7 +904,7 @@ public class LocalOptionalTest {
             + "\n"
             + "}\n"
             + "Action {\n"
-            + "    get(s.id, o1.id,p21.indexValue)\n"
+            + "    get(s.id, o1.id, p21.indexValue)\n"
             + "}\n";
 
     System.out.println(dsl);
@@ -944,7 +945,7 @@ public class LocalOptionalTest {
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
     System.out.println(task.getExecutionRecorder().toReadableString());
-    Assert.assertEquals(result.getRows().size(), 0);
+    Assert.assertEquals(result.getRows().size(), 5);
   }
 
   @Test
@@ -1099,7 +1100,8 @@ public class LocalOptionalTest {
               "index",
               "突破包膜"),
           constructionVertex("前列腺癌", "ProfMedV1.Disease"),
-          constructionVertex("前列腺肿瘤-侵犯精囊", "ProfMedV1.Index"));
+          constructionVertex("前列腺肿瘤-侵犯精囊", "ProfMedV1.Index"),
+          constructionVertex("确诊-前列腺癌", "ProfMedV1.Index"));
     }
 
     @Override
@@ -1119,6 +1121,8 @@ public class LocalOptionalTest {
       return Lists.newArrayList(
           constructionVertex("u1", "ProfMedV1.Patient"),
           constructionVertex("index1", "ProfMedV1.PatientIndex", "entity", "影像学检查"),
+          constructionVertex("前列腺肿瘤-突破前列腺包膜", "ProfMedV1.Index"),
+          constructionVertex("前列腺-影像学检查", "ProfMedV1.Index"),
           constructionVertex(
               "index2",
               "ProfMedV1.PatientIndex",
@@ -1195,7 +1199,10 @@ public class LocalOptionalTest {
             + "      N1(\"N1分期\"): R12\n"
             + "      N0(\"N0分期\"): R12 and R22\n"
             + "      Nx(\"Nx分期\"): R12 and (not R22)\n"
-            + "      p.nStage = rule_value(N1, \"N1\", rule_value(N0, \"N0\", rule_value(Nx, \"Nx\", \"无法判断\")))\n"
+            + "      n = rule_value(N1, \"N1\", rule_value(N0, \"N0\", rule_value(Nx, \"Nx\", \"无法判断\")))\n"
+            + "      p.nStage = group(s).concat_agg(n)\n"
+            //               + "      p.nStage = rule_value(N1, \"N1\", rule_value(N0, \"N0\",
+            // rule_value(Nx, \"Nx\", \"无法判断\")))\n"
             + "      //p.json_value = \"{'nStage': p.nStage}\"\n"
             + "      //UDF_JSONGet(p.json_value, '$.nStage')\n"
             + "    }\n"
@@ -1250,7 +1257,7 @@ public class LocalOptionalTest {
     System.out.println(task.getExecutionRecorder().toReadableString());
     Assert.assertEquals(result.getRows().size(), 1);
     Assert.assertEquals(result.getRows().get(0)[0], "u1");
-    Assert.assertEquals(result.getRows().get(0)[1], "N1");
+    Assert.assertTrue(String.valueOf(result.getRows().get(0)[1]).contains("N1"));
   }
 
   @Test
