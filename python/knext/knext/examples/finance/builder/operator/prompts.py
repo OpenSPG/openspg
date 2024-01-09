@@ -10,6 +10,7 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
+import json
 import numpy as np
 from typing import List, Dict
 from knext.api.operator import PromptOp
@@ -65,14 +66,8 @@ class IndicatorNERPrompt(PromptOp):
 
 class IndicatorLinkPrompt(PromptOp):
     template = """
-判断在指标列表{candidates}中，有无与指标{input}相同的指标名称，如果有，则返回相同指标名称，
-没有则返回空字符串。
-#####
-输出格式:
-{{"same_indicator": "XXX"}}
-#####
-文本: 
-{input}
+判断在指标列表{candidates}中，有无与指标{input}相同的指标名称，如果有，则依照如下json格式
+{{"same_indicator": "XXX"}}返回相同指标名称，没有则返回空字符串。注意返回结果一定要是可解析的json串。
 """
 
     def build_prompt(self, variables: Dict[str, str]):
@@ -82,7 +77,19 @@ class IndicatorLinkPrompt(PromptOp):
         )
 
     def parse_response(self, response: str) -> List[SPGRecord]:
-        return get_mock_spg_records(1)
+        try:
+            tmp = json.loads(response)
+        except Exception as e:
+            print(f"failed to load {response}, info: {e}")
+            return []
+        print("IndicatorLink parse_response: ", tmp)
+        linked_indicator = tmp.get("same_indicator", "")
+        if len(linked_indicator) > 0:
+            output = SPGRecord("Finance.Indicator")
+            output.upsert_property("id", linked_indicator)
+            output.upsert_property("name", linked_indicator)
+            return [output]
+        return []
 
 
 class IndicatorFusePrompt(PromptOp):
