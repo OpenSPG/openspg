@@ -24,7 +24,7 @@ import com.antgroup.openspg.reasoner.lube.physical.operators.PhysicalOperator;
 import com.antgroup.openspg.reasoner.lube.physical.operators.Select;
 import com.antgroup.openspg.reasoner.lube.physical.operators.Start;
 import com.antgroup.openspg.reasoner.lube.physical.util.PhysicalOperatorUtil;
-import com.antgroup.openspg.reasoner.parser.KgDslParser;
+import com.antgroup.openspg.reasoner.parser.OpenspgDslParser;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.impl.LocalPropertyGraph;
 import com.antgroup.openspg.reasoner.runner.local.impl.LocalReasonerSession;
@@ -86,7 +86,7 @@ public class LocalReasonerRunner {
           && task.getStartIdList().size() > 0) {
         task.getParams().put(Constants.START_LABEL, task.getStartIdList().get(0)._2);
       }
-      ParserInterface parser = new KgDslParser();
+      ParserInterface parser = new OpenspgDslParser();
       session = new LocalReasonerSession(parser, catalog, TypeTags.rdgTypeTag(), graphState);
       dslDagList =
           Lists.newArrayList(

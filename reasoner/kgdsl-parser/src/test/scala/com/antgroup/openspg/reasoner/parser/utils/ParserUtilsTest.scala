@@ -15,7 +15,7 @@ package com.antgroup.openspg.reasoner.parser.utils
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.table.FieldType
-import com.antgroup.openspg.reasoner.parser.KgDslParser
+import com.antgroup.openspg.reasoner.parser.OpenspgDslParser
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
@@ -31,7 +31,7 @@ class ParserUtilsTest extends AnyFunSpec {
         |        o = "abc"
         |    }
         |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val columnList = ParserUtils.getResultTableColumns(block, null)
     columnList should equal(null)
@@ -54,7 +54,7 @@ class ParserUtilsTest extends AnyFunSpec {
         |Action {
         |  get(A.name,B.name,F1.type,F4.source)
         |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val columnList = ParserUtils.getResultTableColumns(block, null)
     columnList.length should equal(4)
@@ -78,7 +78,7 @@ class ParserUtilsTest extends AnyFunSpec {
         |Action {
         |  get(A.name as an,B.name as bn,C.id as cid,D.id,E.name as en)
         |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val columnList = ParserUtils.getResultTableColumns(
       block,

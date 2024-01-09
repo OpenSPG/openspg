@@ -19,7 +19,7 @@ import com.antgroup.openspg.reasoner.lube.logical.operators.{Aggregate, BoundedV
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.LogicalOptimizer
 import com.antgroup.openspg.reasoner.lube.logical.planning.{LogicalPlanner, LogicalPlannerContext}
 import com.antgroup.openspg.reasoner.lube.logical.validate.Validator
-import com.antgroup.openspg.reasoner.parser.KgDslParser
+import com.antgroup.openspg.reasoner.parser.OpenspgDslParser
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
@@ -40,7 +40,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |    R5('智信确权'): s.zhixin == 'Y'
         |  }
         |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     println(block.pretty)
     val schema: Map[String, Set[String]] = Map.apply(
@@ -80,7 +80,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |  }
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     println(block.pretty)
     val schema: Map[String, Set[String]] = Map.apply(
@@ -119,7 +119,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |  get(s.id, o as b)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     println(block.pretty)
     val schema: Map[String, Set[String]] = Map.apply(
@@ -142,7 +142,7 @@ class LogicalPlannerTests extends AnyFunSpec {
       "}\n" + "Rule {\n" + "\tR1(\"80后导演\"): B.birthDate > '1980'\n" +
       "\tR2(\"导演编剧同性别\"): B.gender == C.gender\n" + "}\n" +
       "Action {\n" + "\tget(B.name, C.name)\n" + "}"
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     println(block.pretty)
     val schema: Map[String, Set[String]] = Map.apply(
@@ -206,7 +206,7 @@ class LogicalPlannerTests extends AnyFunSpec {
                 |o=get_first_notnull(rule_value(HighLost, "high_lost"), rule_value(HighReduce80, "high_reduce_80"),rule_value(HighReduce50, "high_reduce_50"), rule_value(HighReduce30, "high_reduce_30"), rule_value(HighReduce10, "high_reduce_10"), rule_value(High1, "high_1"), rule_value(High2, "high_2"), rule_value(Middle1, "middle_1"), rule_value(Middle2, "middle_2"), rule_value(Middle3, "middle_3"), rule_value(Low1, "low_1"), rule_value(Low2, "low_2"), rule_value(Sleep1, "sleep_1"), rule_value(Sleep2, "sleep_2"), rule_value(New, "new"), rule_value(Lost, "lost"))
                 |  }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     println(block.pretty)
     val schema: Map[String, Set[String]] = Map.apply(
@@ -236,7 +236,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |  get(A.id)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] =
       Map.apply("test" -> Set.apply("id"), "test_abc_test" -> Set.empty)
@@ -263,7 +263,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |}
         |
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "TuringCrowd" -> Set.empty,
@@ -298,7 +298,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         | get(s.id)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "User" -> Set.apply("zhixin", "id"),
@@ -330,7 +330,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |Action {
         |  get(B.id, t.payDate, hour)
         |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "Alipay" -> Set.apply("id"),
@@ -362,7 +362,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |Action {
         |  get(B.id, t.payDate, hour)
         |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "Alipay" -> Set.apply("id"),
@@ -398,7 +398,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |  get(s.id, p.avgProfit, c)
         |}
         |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "AttributePOC.User" -> Set.apply("id"),
@@ -438,7 +438,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |  get(s.id, totalAmt)
         |}
         |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "AttributePOC.User" -> Set.apply("id"),
@@ -477,7 +477,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |  get(A.name,C.name)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "FilmPerson" -> Set.apply("name"),
