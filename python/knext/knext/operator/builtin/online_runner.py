@@ -20,9 +20,10 @@ from nn4k.invoker import NNInvoker
 class _BuiltInOnlineExtractor(ExtractOp):
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
+        self.debug = bool(params.get("debug", ""))
+        self.max_retry_times = int(self.params.get("max_retry_times", "3"))
         self.model = self.load_model()
         self.prompt_ops = self.load_operator()
-        self.max_retry_times = int(self.params.get("max_retry_times", "3"))
 
     def load_model(self):
         model_config = json.loads(self.params["model_config"])
@@ -43,6 +44,8 @@ class _BuiltInOnlineExtractor(ExtractOp):
             op_clazz = getattr(module, op_config["className"])
             params = op_config.get("params", {})
             op_obj = op_clazz(**params)
+            if self.debug:
+                print(f'{op_config["className"]}.template: {op_obj.template}')
             prompt_ops.append(op_obj)
 
         return prompt_ops
@@ -68,4 +71,6 @@ class _BuiltInOnlineExtractor(ExtractOp):
                         retry_times += 1
                         print(e)
             input_params = next_params
+        if self.debug:
+            print(f'LLMBasedExtractor results: {collector}')
         return collector

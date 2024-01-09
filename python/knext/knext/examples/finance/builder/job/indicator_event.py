@@ -43,6 +43,7 @@ class IndicatorEvent(BuilderJob):
         extract = LLMBasedExtractor(
             llm=NNInvoker.from_config("builder/model/openai_infer.json"),
             prompt_ops=[prompt],
+            debug=True
         )
 
         mapping = SPGTypeMapping(spg_type_name=Finance.IndicatorEvent)

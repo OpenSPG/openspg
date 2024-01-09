@@ -45,6 +45,9 @@ class LLMBasedExtractor(SPGExtractor):
     """PromptOps."""
     prompt_ops: List[PromptOp]
 
+    max_retry_times: int = 3
+    debug: bool = False
+
     @property
     def input_types(self) -> Input:
         return Dict[str, str]
@@ -73,6 +76,8 @@ class LLMBasedExtractor(SPGExtractor):
         from knext.operator.builtin.online_runner import _BuiltInOnlineExtractor
 
         extract_op = _BuiltInOnlineExtractor(params)
+        extract_op.params["max_retry_times"] = str(self.max_retry_times)
+        extract_op.params["debug"] = "DEBUG" if self.debug else None
         config = rest.UserDefinedExtractNodeConfig(operator_config=extract_op.to_rest())
 
         return rest.Node(**super().to_dict(), node_config=config)
