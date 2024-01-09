@@ -29,9 +29,11 @@ import com.antgroup.openspg.reasoner.lube.logical.validate.Validator;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
 import com.antgroup.openspg.reasoner.parser.KgDslParser;
 import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
+import com.google.common.collect.Lists;
 import java.util.*;
 import java.util.regex.Pattern;
 import org.apache.commons.collections4.CollectionUtils;
+import scala.collection.JavaConversions;
 
 /**
  * Check the information of property type in spg type is legal, the list of property in spg type
@@ -173,10 +175,15 @@ public class PropertyChecker {
   protected void checkDSL(String dsl, Catalog catalog) {
     try {
       ParserInterface parser = new KgDslParser();
-      Block block = parser.parse(dsl);
+      List<Block> blocks =
+          Lists.newArrayList(
+              JavaConversions.asJavaCollection(
+                  parser.parseMultipleStatement(dsl, new scala.collection.immutable.HashMap<>())));
       LogicalPlannerContext context =
           new LogicalPlannerContext(catalog, parser, new scala.collection.immutable.HashMap<>());
-      Validator.validate(parser, block, context);
+      for (Block block : blocks) {
+        Validator.validate(parser, block, context);
+      }
     } catch (Exception e) {
       throw DslSyntaxError.dslSyntaxError(e);
     }
