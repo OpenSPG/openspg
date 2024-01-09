@@ -83,11 +83,11 @@ input:${input}
     """
 
     def __init__(
-            self,
-            spg_type_name: SPGTypeName,
-            property_names: List[PropertyName] = None,
-            relation_names: List[Tuple[RelationName, SPGTypeName]] = None,
-            custom_prompt: str = None,
+        self,
+        spg_type_name: SPGTypeName,
+        property_names: List[PropertyName] = None,
+        relation_names: List[Tuple[RelationName, SPGTypeName]] = None,
+        custom_prompt: str = None,
     ):
         super().__init__()
 
@@ -149,7 +149,7 @@ input:${input}
                 subject_records[s].upsert_property(p, o)
             elif p_zh in self.relation_info_zh:
                 p, _, o_type = self.relation_info_zh[p_zh]
-                if '.' not in o_type or 'STD.' in o_type:
+                if "." not in o_type or "STD." in o_type:
                     continue
                 o_list = re.split("[,，、;；]", o)
                 result.extend(
@@ -232,11 +232,11 @@ class EEPrompt(AutoPrompt):
     """
 
     def __init__(
-            self,
-            event_type_name: SPGTypeName,
-            property_names: List[PropertyName] = None,
-            relation_names: List[Tuple[RelationName, SPGTypeName]] = None,
-            custom_prompt: str = None,
+        self,
+        event_type_name: SPGTypeName,
+        property_names: List[PropertyName] = None,
+        relation_names: List[Tuple[RelationName, SPGTypeName]] = None,
+        custom_prompt: str = None,
     ):
         super().__init__()
 
@@ -278,14 +278,16 @@ class EEPrompt(AutoPrompt):
             event_type, arguments = event_item["event_type"], event_item["arguments"]
 
             uuid_4 = uuid.uuid4()
-            subject_record = SPGRecord(spg_type_name=self.spg_type_name).upsert_property("id", uuid_4.hex)
+            subject_record = SPGRecord(
+                spg_type_name=self.spg_type_name
+            ).upsert_property("id", uuid_4.hex)
             for p_zh, o in arguments.items():
                 if p_zh in self.property_info_zh:
                     p, _, o_type = self.property_info_zh[p_zh]
                     if not o:
                         continue
                     subject_record.upsert_property(p, o)
-                    if '.' in o_type and 'STD.' not in o_type:
+                    if "." in o_type and "STD." not in o_type:
                         object_records.append(
                             SPGRecord(o_type)
                             .upsert_property("id", o)
@@ -296,7 +298,7 @@ class EEPrompt(AutoPrompt):
                     if not o:
                         continue
                     subject_record.upsert_relation(p, o_type, o)
-                    if '.' in o_type or 'STD.' not in o_type:
+                    if "." in o_type or "STD." not in o_type:
                         object_records.append(
                             SPGRecord(o_type)
                             .upsert_property("id", o)
@@ -315,14 +317,22 @@ class EEPrompt(AutoPrompt):
         for _prop in self.property_names:
             p_name_zh, p_desc, o_type = self.property_info_en.get(_prop)
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
-            p_desc = f'类型是{o_name_zh}' + ("，" + o_desc if o_desc else "") + f'。{p_desc or p_name_zh}'
+            p_desc = (
+                f"类型是{o_name_zh}"
+                + ("，" + o_desc if o_desc else "")
+                + f"。{p_desc or p_name_zh}"
+            )
             arguments.append(p_name_zh)
             description[p_name_zh] = p_desc or p_name_zh
         for _rel, o_type in self.relation_names:
             p_name_zh, p_desc, _ = self.relation_info_en.get(_rel)
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
-            name_zh = p_name_zh + '#' + o_name_zh
-            desc = f'类型是{o_name_zh}' + ("，" + o_desc if o_desc else "") + f'。{p_desc or p_name_zh}'
+            name_zh = p_name_zh + "#" + o_name_zh
+            desc = (
+                f"类型是{o_name_zh}"
+                + ("，" + o_desc if o_desc else "")
+                + f"。{p_desc or p_name_zh}"
+            )
             arguments.append(p_name_zh)
             description[name_zh] = desc
 
@@ -330,6 +340,6 @@ class EEPrompt(AutoPrompt):
         schema["arguments"] = arguments
         schema["event_type"] = s_name_zh
         description[s_name_zh] = s_desc or s_name_zh
-        self.template = self.template.replace("${schema}", json.dumps(schema, ensure_ascii=False)).replace(
-            "${description}", json.dumps(description, ensure_ascii=False)
-        )
+        self.template = self.template.replace(
+            "${schema}", json.dumps(schema, ensure_ascii=False)
+        ).replace("${description}", json.dumps(description, ensure_ascii=False))
