@@ -41,13 +41,13 @@ class DemoGraphParser {
   val patternParser: PatternParser = new PatternParser()
 
   def parse(
-      demoGraphTxt: String): (List[Vertex[String, IProperty]], List[Edge[String, IProperty]]) = {
+             demoGraphTxt: String): (List[Vertex[String, IProperty]], List[Edge[String, IProperty]]) = {
     val parser = new LexerInit().initKGReasonerParser(demoGraphTxt)
     parseDemoGraph(parser.demo_graph())
   }
 
   def parseDemoGraph(ctx: Demo_graphContext)
-      : (List[Vertex[String, IProperty]], List[Edge[String, IProperty]]) = {
+  : (List[Vertex[String, IProperty]], List[Edge[String, IProperty]]) = {
     var edges: List[Edge[String, IProperty]] = List.empty
     var nodes: List[Vertex[String, IProperty]] = List.empty
     ctx
@@ -71,14 +71,17 @@ class DemoGraphParser {
     val s = patternParser.parseIdentifier(ctx.vertex_from().vertex_name().identifier())
     val o = patternParser.parseIdentifier(ctx.vertex_to().vertex_name().identifier())
 
-    val labelProperties = patternParser.parseLabelPropertyList(ctx.label_property_list())
+    val labelProperties = Map.apply(
+      Constants.EDGE_FROM_ID_KEY -> s,
+      Constants.EDGE_TO_ID_KEY -> o
+    ) ++ patternParser.parseLabelPropertyList(ctx.label_property_list())
     val labels = patternParser.parseLabelList(ctx.label_property_list())
     var direction = Direction.OUT
     ctx.getChild(1) match {
       case _: Right_arrowContext => direction = Direction.OUT
       case _: Both_arrowContext => direction = Direction.BOTH
     }
-    val edgeProperty = new EdgeProperty(labelProperties.asJava);
+    val edgeProperty = new EdgeProperty(labelProperties.asJava)
     val labelName = getLabel(labels)
     val version = getVersion(labelProperties)
     new Edge[String, IProperty](s, o, edgeProperty, version, direction, labelName)
@@ -100,7 +103,7 @@ class DemoGraphParser {
   }
 
   def parseDefineMultipleVertex(
-      ctx: Define_multiple_vertexContext): List[Vertex[String, IProperty]] = {
+                                 ctx: Define_multiple_vertexContext): List[Vertex[String, IProperty]] = {
     val labels = patternParser.parseLabelList(ctx.label_property_list())
     val labelProperties = patternParser.parseLabelPropertyList(ctx.label_property_list())
     val version = getVersion(labelProperties)
@@ -132,10 +135,10 @@ class DemoGraphParser {
   }
 
   protected def convert2VersionProperty(
-      bizId: String,
-      version: java.lang.Long,
-      rowPropertyMap: Map[String, Object])
-      : util.Map[String, util.TreeMap[java.lang.Long, AnyRef]] = {
+                                         bizId: String,
+                                         version: java.lang.Long,
+                                         rowPropertyMap: Map[String, Object])
+  : util.Map[String, util.TreeMap[java.lang.Long, AnyRef]] = {
     val propertyMap = rowPropertyMap ++ Map.apply(Constants.NODE_ID_KEY -> bizId)
     val result = new util.HashMap[String, util.TreeMap[java.lang.Long, AnyRef]]
 
@@ -155,10 +158,10 @@ class DemoGraphParser {
   }
 
   protected def generateVertex(
-      labels: Set[LabelType],
-      labelProperties: Map[String, Object],
-      version: java.lang.Long,
-      bizId: String): Vertex[String, IProperty] = {
+                                labels: Set[LabelType],
+                                labelProperties: Map[String, Object],
+                                version: java.lang.Long,
+                                bizId: String): Vertex[String, IProperty] = {
     val labelName = getLabel(labels)
     val properties = labelProperties ++ Map.apply(KG_REASONER_PROPERTY_TYPE -> labelName)
     val vertexId = IVertexId.from(bizId, labelName)

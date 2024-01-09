@@ -12,6 +12,13 @@
  */
 grammar KGDSL;
 
+// 定义根结构
+script: (
+		base_rule_define
+		| base_predicated_define
+		| kgdsl_old_define
+	)*;
+
 //#############################################################################
 // 词法分析
 //#############################################################################
@@ -28,7 +35,7 @@ grammar KGDSL;
 //    Action {
 //
 //    }
-base_rule_define : the_graph_structure the_rule create_action?;
+base_rule_define : the_graph_structure the_rule? create_action?;
 
 // define 模式
 //    Define (s:label1)-[p:label2]->[o:concept/ceontep1] {
@@ -42,7 +49,7 @@ base_rule_define : the_graph_structure the_rule create_action?;
 //
 //        }
 //    }
-base_perdicated_define : the_define_structure ;
+base_predicated_define : the_define_structure ;
 // kgdsl 1.0 兼容模式
 //    GraphStruture {
 //        path1: (s)-[p1:x]->(end:y)
@@ -56,7 +63,7 @@ base_perdicated_define : the_define_structure ;
 kgdsl_old_define : the_graph_structure the_rule the_action? ;
 // 多行模式，支持多个define，最后处理
 kg_dsl
-    : base_perdicated_define* base_job? EOF
+    : base_predicated_define* base_job? EOF
     ;
 base_job
     : kgdsl_old_define
@@ -66,10 +73,11 @@ base_job
 //#############################################################################
 // Define 定义部分
 //#############################################################################
+the_define_structure_symbol: DEFINE;
 the_define_structure
-    : DEFINE perdicated_define '{' base_rule_define '}'
+    : the_define_structure_symbol predicated_define '{' base_rule_define '}'
     ;
-perdicated_define
+predicated_define
     : node_pattern full_edge_pointing_right  node_pattern
     ;
 //#############################################################################
@@ -194,10 +202,12 @@ lower_bound : oC_IntegerLiteral ;
 upper_bound : oC_IntegerLiteral ;
 abbreviated_edge_pattern : right_arrow|left_arrow|minus_sign ;
 
-element_pattern_declaration_and_filler : ( element_variable_declaration )? ( colon (label_expression | linked_edge) )? ( element_pattern_where_clause )? ;
+element_lookup: colon ( label_expression | linked_edge )?;
+element_pattern_declaration_and_filler : ( element_variable_declaration )? element_lookup? ( element_pattern_where_clause )? ;
 element_variable_declaration : element_variable ;
 element_variable : identifier ;
-label_expression : label_name (vertical_bar label_name)* ;
+label_expression_lookup: vertical_bar label_name;
+label_expression : label_name label_expression_lookup* ;
 label_name : entity_type | concept_name;
 entity_type : identifier | prefix_name;
 prefix_name : identifier period identifier ;
@@ -224,6 +234,8 @@ rule_head
 rule_expression_body : rule_expression* ;
 // rule expression
 rule_expression : project_rule_expression | logic_rule_expression;
+// rule lookup
+rule_lookup : identifier (period property_name )? ;
 // project rule
 project_rule_expression : identifier (period property_name ) ? explain? assignment_operator expression_set;
 // logic rule
@@ -237,7 +249,7 @@ expression_set : value_expression|list_op_express|graph_group_op_express;
 value_expression : logic_value_expression|project_value_expression ;
 
 // list的聚合语法，支持链式表达风格 {variable}.op(k:do(k))?*
-list_op_express : value_expression (period list_op)* ;
+list_op_express : value_expression (period list_op?)* ;
 
 list_op :
     list_common_agg_express|
@@ -247,6 +259,12 @@ list_op :
     list_get_op|
     list_slice_op|
     list_str_join_op|
+    list_head_ele_op|
+    list_tail_ele_op|
+    list_nodes_op|
+    list_edges_op|
+    list_reduce_op|
+    list_constraint_op|
     list_accumulate_op
     ;
 
@@ -301,25 +319,44 @@ list_limit_op_all :
 list_order_and_limit:
     list_order_op period list_limit_op_all;
 
-list_get_op : GET left_paren  oC_IntegerLiteral right_paren;
+// 索引参数
+index_parameter: oC_IntegerLiteral;
 
-list_slice_op : SLICE left_paren  oC_IntegerLiteral comma oC_IntegerLiteral right_paren;
+list_get_op : GET left_paren index_parameter? right_paren;
+
+list_slice_op : SLICE left_paren? index_parameter? comma? index_parameter? right_paren?;
 
 list_str_join_op : 'str_join' left_paren character_string_literal right_paren;
 accumulate_support_op : plus_sign|asterisk;
-list_accumulate_op : 'accumulate' left_paren accumulate_support_op right_paren;
+list_accumulate_op : 'accumulate' left_paren accumulate_support_op? right_paren;
+
+list_head_ele_op : 'head' left_paren integerLiteral_full? right_paren;
+
+list_tail_ele_op : 'tail' left_paren integerLiteral_full? right_paren;
+
+integerLiteral_full : minus_sign? oC_IntegerLiteral;
+
+list_nodes_op : 'nodes' left_paren right_paren;
+list_edges_op : 'edges' left_paren right_paren;
+
+list_reduce_op : 'reduce' left_paren lambda_expr comma value_expression right_paren;
+list_constraint_op : 'constraint' left_paren lambda_expr right_paren;
 
 //group的聚合风格 group(a,c).op(expr)
-graph_group_op_express : 'group' left_paren graph_alias_element_list right_paren (period graph_op )*;
+group_op_fn: GROUP;
+graph_group_op_express : group_op_fn left_paren graph_alias_element_list right_paren (period graph_op )*;
 
 graph_op:
+    graph_common_agg_lookup|
     graph_common_agg_udf_express|
     graph_common_agg_express|
     graph_common_agg_if_express|
     graph_order_and_slice_op|
     graph_filter_op
     ;
-graph_common_agg_udf_express : function_name left_paren graph_alias (period property_name)? comma function_args? right_paren;
+// 占位符
+graph_common_agg_lookup: function_name left_paren? right_paren?;
+graph_common_agg_udf_express : function_name left_paren graph_alias (period property_name)? (comma function_args)? right_paren;
 graph_common_agg_express : graph_common_agg_name left_paren graph_alias (period property_name)? right_paren;
 graph_common_agg_name :
     SUM|
@@ -359,7 +396,7 @@ graph_alias_element_list : graph_alias ( comma graph_alias )* ;
 // graph structure 定义部分
 //#############################################################################
 // action 关键字
-ACTION_GET : 'get' | 'distinctGet' ;
+action_get : GET | 'distinctGet' ;
 ADD_EDGE : 'createEdgeInstance' ;
 ADD_NODE : 'createNodeInstance';
 SQL : 'sql';
@@ -368,8 +405,9 @@ EMBEDDED_SQL_ACTION
     : '>>>' .* '<<<'
     ;
 
+create_action_symbol: ACTION;
 create_action
-    : ACTION '{' create_action_body* '}'
+    : create_action_symbol '{' create_action_body* '}'
     ;
 create_action_body
     : add_node
@@ -436,10 +474,10 @@ get( A.id        as a_id              COMMENT '一个id'
 */
 get_action
     // 一般的get
-    : ACTION_GET '(' one_element_in_get (',' one_element_in_get)*')' ('.' sql_in_get)?
+    : action_get '(' one_element_in_get (',' one_element_in_get)*')' ('.' sql_in_get)?
     // TODO 以下两种语法后续将慢慢废弃掉
-    | ACTION_GET '(' one_element_in_get (',' one_element_in_get)* ')' ('.' as_view_in_get )?
-    | ACTION_GET '(' one_element_in_get (',' one_element_in_get)*  ')' '.' as_view_in_get '.' sql_in_get
+    | action_get '(' one_element_in_get (',' one_element_in_get)* ')' ('.' as_view_in_get )?
+    | action_get '(' one_element_in_get (',' one_element_in_get)*  ')' '.' as_view_in_get '.' sql_in_get
     ;
 
 //#############################################################################
@@ -484,7 +522,8 @@ AND : (('A' | 'a')('N' | 'n')('D' | 'd'))|('&&') ;
 OR_Latter : ('O' | 'o')('R' | 'r') ;
 OR_Symb : '||';
 
-NOT : ('N'|'n')('O'|'o')('T'|'t');
+NOT_Latter : ('N'|'n')('O'|'o')('T'|'t');
+NOT_Symb : '!';
 TRUE : ('T' | 't')('R' | 'r')('U' | 'u')('E' | 'e') ;
 FALSE : ('F' | 'f')('A' | 'a')('L' | 'l')('S' | 's')('E' | 'e') ;
 NULL : ('N'|'n')('U'|'u')('L'|'l')('L'|'l');
@@ -499,6 +538,7 @@ MATCH : ('M' | 'm')('A' | 'a')('T' | 't')('C' | 'c')('H' | 'h') ;
 RETURN : ('R' | 'r')('E' | 'e')('T' | 't')('U' | 'u')('R' | 'r')('N' | 'n') ;
 // rule 表达式
 or : OR_Latter|OR_Symb;
+not : NOT_Latter | NOT_Symb;
 value_expression_primary : parenthesized_value_expression|non_parenthesized_value_expression_primary_with_property ;
 parenthesized_value_expression : left_paren value_expression right_paren ;
 non_parenthesized_value_expression_primary_with_property: non_parenthesized_value_expression_primary (period property_name ) * ;
@@ -563,12 +603,13 @@ function_expr : function_name left_paren function_args? right_paren;
 function_name : identifier;
 function_args : list_element_list;
 
-
+lambda_expr : left_paren binary_lambda_args right_paren labmda_body_array value_expression;
+binary_lambda_args : identifier comma identifier ;
 // 逻辑 计算
 logic_value_expression : logic_term (or logic_term)* ;
 logic_term : logic_factor (AND logic_factor)* ;
-logic_factor : ( NOT )? logic_test ;
-logic_test : expr ( (IS ( NOT )?|equals_operator|not_equals_operator) truth_value )? ;
+logic_factor : (not)? logic_test ;
+logic_test : expr ( (IS ( NOT_Latter )?|equals_operator|not_equals_operator) truth_value )? ;
 truth_value : TRUE|FALSE|NULL ;
 
 
@@ -665,6 +706,7 @@ solidus : '/' ;
 double_solidus : '//' ;
 underscore : '_' ;
 vertical_bar : '|' ;
+labmda_body_array : '=>' ;
 
 separator : ( comment|whitespace )+ ;
 whitespace : WHITESPACE ;
