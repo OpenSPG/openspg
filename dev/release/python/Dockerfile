@@ -19,7 +19,7 @@ ENV LANG C.UTF-8
 ARG TARGETPLATFORM
 ARG APT_INSTALL="apt-get install --no-install-recommends -y"
 
-ARG PIP_PKGS="openspg-knext==0.0.2-beta1 openspg-nn4k==0.0.2-beta1"
+ARG PIP_PKGS="openspg-knext openspg-nn4k pemja==0.4.0"
 
 RUN apt-get clean && apt-get update && \
     # Install openjdk 8.

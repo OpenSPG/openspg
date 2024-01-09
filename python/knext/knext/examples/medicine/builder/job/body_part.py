@@ -19,7 +19,7 @@ class BodyPart(BuilderJob):
             local_path="./builder/job/data/BodyPart.csv", columns=["id"], start_row=1
         )
 
-        mapping = SPGTypeMapping(spg_type_name="Medicine.BodyPart").add_field(
+        mapping = SPGTypeMapping(spg_type_name="Medicine.BodyPart").add_property_mapping(
             "id", "id"
         )
 
