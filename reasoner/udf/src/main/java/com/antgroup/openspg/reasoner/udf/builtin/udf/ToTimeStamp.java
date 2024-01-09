@@ -14,15 +14,13 @@
 package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 
 public class ToTimeStamp {
 
   @UdfDefine(name = "to_timestamp", compatibleName = "ToTimestamp")
   public String toTimestamp(long curMillSecond) {
     String format = "yyyy-MM-dd HH:mm:ss";
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-    return simpleDateFormat.format(new Date(curMillSecond));
+    return DateUtils.second2Str(curMillSecond, format);
   }
 }
