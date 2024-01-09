@@ -4,3 +4,4 @@ mybatis-generator-config.xml
 application-default.properties
 reasoner.sh
 dev/release/python/Dockerfile
+dev/release/docker-compose.yml

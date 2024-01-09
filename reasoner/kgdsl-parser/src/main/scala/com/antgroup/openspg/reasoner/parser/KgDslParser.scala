@@ -25,17 +25,11 @@ import com.antgroup.openspg.reasoner.common.types._
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.graph._
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  Element,
-  EntityElement,
-  GraphPath,
-  PatternElement,
-  PredicateElement
-}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{Element, EntityElement, GraphPath, PatternElement, PredicateElement}
 import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, ProjectRule, Rule}
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface
 import com.antgroup.openspg.reasoner.lube.utils.{ExprUtils, RuleUtils}
-import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Rule2ExprTransformer
+import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.{Expr2QlexpressTransformer, Rule2ExprTransformer}
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
 import com.antgroup.openspg.reasoner.parser.pattern.{ConceptLabelType, EntityLabelType, PatternParser}
 
@@ -45,8 +39,9 @@ import com.antgroup.openspg.reasoner.parser.pattern.{ConceptLabelType, EntityLab
 class KgDslParser extends ParserInterface {
   val patternParser: PatternParser = new PatternParser()
   val exprParser: RuleExprParser = new RuleExprParser()
-  var addPropertiesMap: Set[IRProperty] = Set.empty
+  val expr2StringTransformer = new Expr2QlexpressTransformer()
   val ruleTransformer = new Rule2ExprTransformer()
+  var addPropertiesMap: Set[IRProperty] = Set.empty
 
   /**
    * Get All parameters from dsl, parameter like '${var_name}'
@@ -88,8 +83,8 @@ class KgDslParser extends ParserInterface {
    * @return
    */
   override def parseMultipleStatement(
-      text: String,
-      param: Map[String, Object] = Map.empty): List[Block] = {
+                                       text: String,
+                                       param: Map[String, Object] = Map.empty): List[Block] = {
     val parser = new LexerInit().initKGReasonerParser(text)
     exprParser.parameters = Set.empty
     exprParser.idFilterParameters = Map.empty
@@ -103,8 +98,8 @@ class KgDslParser extends ParserInterface {
    */
   def parseKgDsl(ctx: Kg_dslContext, param: Map[String, Object]): List[Block] = {
     var blocks = List[Block]()
-    if (ctx.base_perdicated_define() != null && ctx.base_perdicated_define().size() != 0) {
-      for (x <- ctx.base_perdicated_define().asScala) {
+    if (ctx.base_predicated_define() != null && ctx.base_predicated_define().size() != 0) {
+      for (x <- ctx.base_predicated_define().asScala) {
         addPropertiesMap = Set.empty
         blocks = blocks :+ parseBasePerdicatedDefine(x)
       }
@@ -116,52 +111,12 @@ class KgDslParser extends ParserInterface {
     }
   }
 
-  /**
-   * Convert a string representation of a type to a type.
-   * @param typeName
-   * @return
-   */
-  def parseBasicTypeFromStr(typeName: String): KgType = {
-    typeName match {
-      case "Int" => KTInteger
-      case "String" => KTString
-      case "Boolean" => KTBoolean
-      case "Long" => KTLong
-      case "Float" => KTDouble
-      case "Integer" => KTInteger
-      case "Text" => KTString
-      case _ => KTObject
-    }
+  def parseBasePerdicatedDefine(ctx: Base_predicated_defineContext): Block = {
+    parseDefine(ctx.the_define_structure())
   }
-
-  /**
-   * Convert a expr to output element name
-   * @param expr
-   * @return
-   */
-  def parseExpr2ElementStr(expr: Expr): String = {
-    expr match {
-      case UnaryOpExpr(name, arg) =>
-        val express = arg match {
-          case Ref(refName) => refName
-          case _ =>
-            throw new KGDSLGrammarException("Action get must be a variable, not a express")
-        }
-        val attrName = name match {
-          case GetField(fieldName) => fieldName
-          case _ => throw new KGDSLGrammarException("Action get must contains attribuate")
-        }
-        express + "." + attrName
-      case Ref(refName) => refName
-      case VString(value) => "output_const_" + value
-      case _ => throw new KGDSLGrammarException("Action get must be a variable, not a express")
-    }
-  }
-
-  // All functions below are parsing and processing functions for ANTLR
 
   def parseDefine(ctx: The_define_structureContext): Block = {
-    val ddlBlockWithNodes = parsePerdicatedDefine(ctx.perdicated_define())
+    val ddlBlockWithNodes = parsePerdicatedDefine(ctx.predicated_define())
 
     val ddlInfo =
       parseBaseRuleDefine(ctx.base_rule_define(), ddlBlockWithNodes._2, ddlBlockWithNodes._3)
@@ -229,8 +184,28 @@ class KgDslParser extends ParserInterface {
     }
   }
 
+  /**
+   * Convert a string representation of a type to a type.
+   *
+   * @param typeName
+   * @return
+   */
+  def parseBasicTypeFromStr(typeName: String): KgType = {
+    typeName match {
+      case "Int" => KTInteger
+      case "String" => KTString
+      case "Boolean" => KTBoolean
+      case "Long" => KTLong
+      case "Float" => KTDouble
+      case "Integer" => KTInteger
+      case "Text" => KTString
+      case _ => KTObject
+    }
+  }
+
+  // All functions below are parsing and processing functions for ANTLR
   def parsePerdicatedDefine(
-      ctx: Perdicated_defineContext): Tuple3[DDLBlock, Element, PredicateElement] = {
+                             ctx: Predicated_defineContext): Tuple3[DDLBlock, Element, PredicateElement] = {
     val s = patternParser.parseNodePattern(ctx.node_pattern(0))
     val o = patternParser.parseNodePattern(ctx.node_pattern(1))
     val p = patternParser.parseEdgeInfo(
@@ -254,16 +229,6 @@ class KgDslParser extends ParserInterface {
         PredicateElement(p.relTypes.head, p.alias, s, o, Map.empty, Direction.OUT)
       Tuple3(DDLBlock(Set.apply(AddPredicate(predicateElement)), List.empty), s, predicateElement)
     }
-  }
-
-  def parseBaseRuleDefine(
-      ctx: Base_rule_defineContext,
-      head: Element,
-      predicate: PredicateElement): (Block, Set[DDLOp]) = {
-    val matchBlock = parseGraphStructure(ctx.the_graph_structure(), head, predicate)
-    val ruleBlock = parseRule(ctx.the_rule(), matchBlock)
-    val ddlOp = parseCreateAction(ctx.create_action())
-    (ruleBlock, ddlOp)
   }
 
   def getAllRefVariables(expr: Expr): List[String] = {
@@ -303,19 +268,55 @@ class KgDslParser extends ParserInterface {
     }
   }
 
+  def parseBaseRuleDefine(
+                           ctx: Base_rule_defineContext,
+                           head: Element,
+                           predicate: PredicateElement): (Block, Set[DDLOp]) = {
+    val matchBlock = parseGraphStructure(ctx.the_graph_structure(), head, predicate)
+    val ruleBlock = parseRule(ctx.the_rule(), matchBlock)
+    val ddlOp = parseCreateAction(ctx.create_action())
+    (ruleBlock, ddlOp)
+  }
+
   def parseOpChain2Block(
-      opChain: OpChainExpr,
-      lValueName: IRField,
-      graphAggExpr: GraphAggregatorExpr,
-      preBlock: Block): Block = {
+                          opChain: OpChainExpr,
+                          lValueName: IRField,
+                          graphAggExpr: GraphAggregatorExpr,
+                          preBlock: Block,
+                          kg: IRGraph): Block = {
     if (opChain == null) {
       preBlock
     } else {
-      val opBlock = parseOpChain2Block(opChain.preChainExpr, lValueName, graphAggExpr, preBlock)
-      if (opChain.curExpr == graphAggExpr) {
+      var opBlock = parseOpChain2Block(opChain.preChainExpr, lValueName, graphAggExpr, preBlock, kg)
+      if (graphAggExpr != null && opChain.curExpr == graphAggExpr) {
         return opBlock
       }
+      if (opBlock == null) {
+        opBlock = preBlock
+      }
       if (graphAggExpr != null) {
+        val realLValue = lValueName match {
+          case null =>
+            val aggEleExpr = opChain.curExpr match {
+              case AggIfOpExpr(aggOpExpr, _) =>
+                aggOpExpr.aggEleExpr
+              case AggOpExpr(_, aggEleExpr) =>
+                aggEleExpr
+              case _ => null
+            }
+            val refName = aggEleExpr match {
+              case Ref(refName) => refName
+              case _ => null
+            }
+            if (kg.edges.contains(refName)) {
+              kg.edges(refName)
+            } else if (kg.nodes.contains(refName)) {
+              kg.nodes(refName)
+            } else {
+              null
+            }
+          case x => x
+        }
         opChain.curExpr match {
           case Filter(condition) =>
             FilterBlock(
@@ -334,9 +335,12 @@ class KgDslParser extends ParserInterface {
               Option(limit.num),
               graphAggExpr.by.map(x => x.refName))
           case AggIfOpExpr(_, _) | AggOpExpr(_, _) =>
+            if (realLValue == null) {
+              throw new KGDSLGrammarException("AggregationBlock generated left variable is null")
+            }
             AggregationBlock(
               List.apply(opBlock),
-              Aggregations(Map.apply(lValueName -> opChain.curExpr.asInstanceOf[Aggregator])),
+              Aggregations(Map.apply(realLValue -> opChain.curExpr.asInstanceOf[Aggregator])),
               graphAggExpr.by.map(x => x.refName))
           case _ => throw new
               KGDSLGrammarException("not support " + opChain.curExpr)
@@ -350,16 +354,27 @@ class KgDslParser extends ParserInterface {
                 "anonymous_rule_" + patternParser.getDefaultAliasNum,
                 "anonymous_rule_" + patternParser.getDefaultAliasNum,
                 condition))
-          case ListOpExpr(_, opInput) =>
-            ProjectBlock(
-              List.apply(opBlock),
-              ProjectFields(
-                Map.apply(
-                  IRVariable(opInput.refName) ->
-                    ProjectRule(
-                      IRVariable(opInput.refName),
-                      exprParser.parseRetType(opInput),
-                      opChain.curExpr))))
+          case ListOpExpr(name, _) =>
+            name match {
+              case Constraint(_, _, _) =>
+                FilterBlock(
+                  List.apply(opBlock),
+                  LogicRule(
+                    "anonymous_rule_" + patternParser.getDefaultAliasNum,
+                    "list filter",
+                    opChain
+                  ))
+              case _ =>
+                ProjectBlock(
+                  List.apply(opBlock),
+                  ProjectFields(
+                    Map.apply(
+                      lValueName ->
+                        ProjectRule(
+                          lValueName,
+                          exprParser.parseRetType(opChain.curExpr),
+                          opChain))))
+            }
           case AggIfOpExpr(_, _) | AggOpExpr(_, _) =>
             ProjectBlock(
               List.apply(opBlock),
@@ -370,7 +385,7 @@ class KgDslParser extends ParserInterface {
                       lValueName,
                       exprParser.parseRetType(opChain.curExpr),
                       opChain.curExpr))))
-          case _ => throw new UnsupportedOperationException(opChain.curExpr.toString + " not impl")
+          case _ => null
         }
       }
 
@@ -381,12 +396,23 @@ class KgDslParser extends ParserInterface {
     IRVariable("tmp_property2variable_prefix_" + p.name + "_" + p.field)
   }
 
-  def generateProjectBlock(rule: Rule, preBlock: Block): Block = {
-    val lvalueFiled = rule.getOutput match {
+  def parseLValueFiled(irFiled: IRField): IRField = {
+    irFiled match {
       case p: IRProperty =>
         addPropertiesMap = addPropertiesMap + p
         generateIRPropertyTmpVariable(p)
       case x => x
+    }
+  }
+
+  def generateProjectBlock(rule: Rule, preBlock: Block, kg: IRGraph): Block = {
+    val lvalueFiled: IRField = rule match {
+      case LogicRule(_, _, _) => rule.getExpr match {
+        case a: OpChainExpr => null
+        case _ => parseLValueFiled(rule.getOutput)
+      }
+      case _ =>
+        parseLValueFiled(rule.getOutput)
     }
 
     val expr = ruleTransformer.transform(rule)
@@ -396,7 +422,7 @@ class KgDslParser extends ParserInterface {
           case c: GraphAggregatorExpr => c
           case _ => null
         }
-        parseOpChain2Block(a, lvalueFiled, aggExpr, preBlock)
+        parseOpChain2Block(a, lvalueFiled, aggExpr, preBlock, kg)
       case a: OrderAndLimit =>
         OrderAndSliceBlock(
           List.apply(preBlock),
@@ -420,18 +446,19 @@ class KgDslParser extends ParserInterface {
     }
   }
 
-  def genBlockOp(rule: Rule, preBlock: Block, filterToProjectBlock: Boolean): Block = {
+  def genBlockOp(rule: Rule, preBlock: Block, filterToProjectBlock: Boolean, kg: IRGraph): Block = {
     if (rule.isInstanceOf[LogicRule] && !filterToProjectBlock) {
       FilterBlock(List.apply(preBlock), rule)
     } else {
-      generateProjectBlock(rule, preBlock)
+      generateProjectBlock(rule, preBlock, kg)
     }
   }
 
   def genBlockOpWithDependency(
-      ruleRefRelate: Map[Rule, Set[Rule]],
-      rule: Rule,
-      preBlock: Block): Block = {
+                                ruleRefRelate: Map[Rule, Set[Rule]],
+                                rule: Rule,
+                                preBlock: Block,
+                                kg: IRGraph): Block = {
     val isGenerateStep = isGenerateOneStepBlockExpr(rule)
     if (isNeedDependenceExpr(rule, ruleRefRelate) && !isGenerateStep) {
       // if ref equal 1, and without graph group we add to dependencies
@@ -441,18 +468,24 @@ class KgDslParser extends ParserInterface {
       genBlockOp(
         rule,
         preBlock,
-        (ruleRefRelate.contains(rule) && ruleRefRelate(rule).size > 1) || isGenerateStep)
+        (ruleRefRelate.contains(rule) && ruleRefRelate(rule).size > 1) || isGenerateStep,
+        kg
+      )
     }
   }
 
   def parseRule(ctx: The_ruleContext, matchBlock: MatchBlock): Block = {
+    val nodesProp = new mutable.HashMap[String, IRNode]()
+    val edgesProp = new mutable.HashMap[String, IREdge]()
+    var refFieldsMap: Map[String, Set[String]] = Map.empty
     var rules: List[Rule] = List.empty
     if (ctx.rule_expression_body().rule_expression().size() != 0) {
       rules = ctx
         .rule_expression_body()
         .rule_expression()
         .asScala
-        .map(x => exprParser.parseRuleExpression(x)).toList
+        .map(x => exprParser.parseRuleExpression(x))
+        .toList
     }
     parseRuleBlock(rules, matchBlock.patterns)
   }
@@ -489,11 +522,11 @@ class KgDslParser extends ParserInterface {
       }
     })
 
-
+    val graph = updatedMatch.dependencies.head.asInstanceOf[SourceBlock].graph
     // reformat
     var curBlock: Block = updatedMatch
     for (rule <- rules) {
-      val genBlock = genBlockOpWithDependency(ruleInstructs, rule, curBlock)
+      val genBlock = genBlockOpWithDependency(ruleInstructs, rule, curBlock, graph)
       if (genBlock != null) {
         curBlock match {
           case curAggBlock: AggregationBlock if genBlock.isInstanceOf[AggregationBlock] =>
@@ -515,13 +548,6 @@ class KgDslParser extends ParserInterface {
       }
     }
     curBlock
-  }
-
-  def parseGraphStructure(
-      ctx: The_graph_structureContext,
-      head: Element,
-      predicate: PredicateElement): MatchBlock = {
-    patternParser.parseGraphStructureDefine(ctx.graph_structure_define(), head, predicate)
   }
 
   def parseCreateAction(ctx: Create_actionContext): Set[DDLOp] = {
@@ -611,14 +637,18 @@ class KgDslParser extends ParserInterface {
     }
   }
 
-  def parseGetAction(ctx: Get_actionContext, preBlock: Block): Block = {
+  def parseGetAndAs(ctx: Get_actionContext, preBlock: Block)
+  : (List[String], List[String], List[Expr], Block, String) = {
+    var newPreBlock: Block = preBlock
     var columnNames = List[String]()
+    var columnExpr = List[Expr]()
     var outputColumnNames = List[String]()
     val columnProjectRule = ctx
       .one_element_in_get()
       .asScala
       .map(x => {
         val action = parseOneElementInGet(x)
+        columnExpr = columnExpr :+ action._1.getExpr
         columnNames = columnNames :+ action._1.getName
         outputColumnNames = outputColumnNames :+ action._2
         if (action._3) {
@@ -629,7 +659,11 @@ class KgDslParser extends ParserInterface {
       })
       .filter(x => x != null)
 
+    var viewName: String = "view"
     if (ctx.as_view_in_get() != null) {
+      if (ctx.as_view_in_get().identifier() != null) {
+        viewName = ctx.as_view_in_get().identifier().getText
+      }
       outputColumnNames = List[String]()
       ctx
         .as_view_in_get()
@@ -640,8 +674,13 @@ class KgDslParser extends ParserInterface {
             outputColumnNames :+ parseAsAliasWithComment(x, patternParser.getDefaultName)
         })
     }
+    newPreBlock = addRuleToBlock(columnProjectRule.toSet, newPreBlock)
+    (columnNames, outputColumnNames, columnExpr, newPreBlock, viewName)
+  }
 
-    parseTableResultBlock(columnNames, outputColumnNames, columnProjectRule.toSet, preBlock)
+  def parseGetAction(ctx: Get_actionContext, preBlock: Block): Block = {
+    val (columnNames, outputColumnNames, _, newPreBlock, _) = parseGetAndAs(ctx, preBlock)
+    parseTableResultBlock(columnNames, outputColumnNames, Set.empty, List.empty, newPreBlock)
   }
 
   def parseOneElementInGet(ctx: One_element_in_getContext): (Rule, String, Boolean) = {
@@ -653,16 +692,22 @@ class KgDslParser extends ParserInterface {
   }
 
   def parseOneElementWithConst(ctx: One_element_with_constContext): (Rule, String, Boolean) = {
-    val expr = VString(exprParser.parseUnbrokenCharacterStringLiteral(
-      ctx.unbroken_character_string_literal()
-    ))
+    val expr = VString(
+      exprParser.parseUnbrokenCharacterStringLiteral(ctx.unbroken_character_string_literal()))
     val defaultName = "const_output_" + patternParser.getDefaultAliasNum
     val columnName = parseAsAliasWithComment(ctx.as_alias_with_comment(), defaultName)
     (ProjectRule(IRVariable(defaultName), KTString, expr), columnName, true)
   }
 
+  def parseGraphStructure(
+                           ctx: The_graph_structureContext,
+                           head: Element,
+                           predicate: PredicateElement): MatchBlock = {
+    patternParser.parseGraphStructureDefine(ctx.graph_structure_define(), head, predicate)
+  }
+
   def parseOneElementWithVariable(
-      ctx: One_element_with_variableContext): (Rule, String, Boolean) = {
+                                   ctx: One_element_with_variableContext): (Rule, String, Boolean) = {
     val expr = exprParser.parseNonParentValueExpressionPrimaryWithProperty(
       ctx.non_parenthesized_value_expression_primary_with_property())
     val defaultColumnName = parseExpr2ElementStr(expr)
@@ -679,6 +724,40 @@ class KgDslParser extends ParserInterface {
     } else {
       ctx.identifier().getText
     }
+  }
+
+  /**
+   * Convert a expr to output element name
+   *
+   * @param expr
+   * @return
+   */
+  def parseExpr2ElementStr(expr: Expr): String = {
+    expr match {
+      case UnaryOpExpr(name, arg) =>
+        val express = arg match {
+          case Ref(refName) => refName
+          case _ =>
+            throw new KGDSLGrammarException("Action get must be a variable, not a express")
+        }
+        val attrName = name match {
+          case GetField(fieldName) => fieldName
+          case _ => throw new KGDSLGrammarException("Action get must contains attribuate")
+        }
+        express + "." + attrName
+      case Ref(refName) => refName
+      case VString(value) => "output_const_" + value
+      case _ => throw new KGDSLGrammarException("Action get must be a variable, not a express")
+    }
+  }
+
+  def addRuleToBlock(rules: Set[Rule], preBlock: Block): Block = {
+    var newPreBlock = preBlock
+    if (rules.nonEmpty) {
+      newPreBlock =
+        ProjectBlock(List.apply(preBlock), ProjectFields(rules.map(x => (x.getOutput, x)).toMap))
+    }
+    newPreBlock
   }
 
   def parseBaseJob(ctx: Base_jobContext, param: Map[String, Object]): Block = {
@@ -757,23 +836,49 @@ class KgDslParser extends ParserInterface {
   }
 
   def parseTableResultBlock(
-      columnNames: List[String],
-      outputColumnNames: List[String],
-      rules: Set[Rule],
-      preBlock: Block): Block = {
+                             columnNames: List[String],
+                             outputColumnNames: List[String],
+                             rules: Set[Rule],
+                             graphAttributeInGet: List[String],
+                             preBlock: Block): Block = {
     if (outputColumnNames.size != columnNames.size) {
       throw new KGDSLGrammarException("as output column not equal get element")
     }
     var dependency = preBlock
-    val fieldMap = new mutable.HashMap[String, mutable.Set[String]]()
+    var graph = dependency.transform[IRGraph] {
+      case (SourceBlock(graph), _) => graph
+      case (_, g) => if (g.isEmpty) {
+        null
+      } else {
+        g.head
+      }
+    }
+    if (graph == null) {
+      graph = KG(Map.empty, Map.empty)
+    }
+    val fieldMap: mutable.HashMap[String, mutable.Set[String]] = getFiledUsedInGraph(columnNames)
+    if (null != graphAttributeInGet && graphAttributeInGet.nonEmpty) {
+      val extraFieldMap = getFiledUsedInGraph(graphAttributeInGet)
+      extraFieldMap.foreach { case (key, newValues) =>
+        val combinedValues = fieldMap.getOrElseUpdate(key, new mutable.HashSet[String]())
+        combinedValues ++= newValues
+      }
+    }
     val resultFields = columnNames.map(x =>
       if (x.contains(".")) {
         val part = x.split('.')
-        val props = fieldMap.getOrElseUpdate(part(0), new mutable.HashSet[String]())
-        props.add(part(1))
         IRProperty(part(0), part(1))
       } else {
-        IRVariable(x)
+        if (graph.nodes.contains(x) || graph.edges.contains(x)) {
+          val props = fieldMap.getOrElseUpdate(x, new mutable.HashSet[String]())
+          props.add(Constants.PROPERTY_JSON_KEY)
+          IRProperty(x, Constants.PROPERTY_JSON_KEY)
+        } else if (Constants.GET_PATH_KEY.equals(x)) {
+          IRPath(x, (graph.nodes.values ++ graph.edges.values).toList)
+        }
+        else {
+          IRVariable(x)
+        }
       })
     dependency = preBlock.rewriteTopDown {
       case matchBlock: MatchBlock =>
@@ -839,17 +944,18 @@ class KgDslParser extends ParserInterface {
       })
       .filter(x => x != null)
 
-    parseTableResultBlock(columnNames, outputColumnNames, columnProjectRule.toSet, preBlock)
+    parseTableResultBlock(
+      columnNames,
+      outputColumnNames,
+      columnProjectRule.toSet,
+      List.empty,
+      preBlock)
   }
 
   def parseKgdslOldDefine(ctx: Kgdsl_old_defineContext, head: PatternElement): Block = {
     val matchBlock = parseGraphStructure(ctx.the_graph_structure(), head, null)
     val ruleBlock = parseRule(ctx.the_rule(), matchBlock)
     parseAction(ctx.the_action(), ruleBlock)
-  }
-
-  def parseBasePerdicatedDefine(ctx: Base_perdicated_defineContext): Block = {
-    parseDefine(ctx.the_define_structure())
   }
 
   /**
@@ -860,4 +966,15 @@ class KgDslParser extends ParserInterface {
    */
   override def parseExpr(rule: String): Expr = exprParser.parse(rule)
 
+  private def getFiledUsedInGraph(
+                                   graphAttributeInGet: List[String]): mutable.HashMap[String, mutable.Set[String]] = {
+    val fieldMap = new mutable.HashMap[String, mutable.Set[String]]()
+    graphAttributeInGet.map(x =>
+      if (x.contains(".")) {
+        val part = x.split('.')
+        val props = fieldMap.getOrElseUpdate(part(0), new mutable.HashSet[String]())
+        props.add(part(1))
+      })
+    fieldMap
+  }
 }

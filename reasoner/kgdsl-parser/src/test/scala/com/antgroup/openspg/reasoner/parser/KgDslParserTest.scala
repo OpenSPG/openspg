@@ -25,9 +25,28 @@ import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
 class KgDslParserTest extends AnyFunSpec {
+  val parser = new KgDslParser()
+  it ("test return edge or node") {
+    val dsl = """GraphStructure {
+                |  A [Film]}
+                |Rule {
+                |  R1('下沉到数据加载'): 'c54e6f7dd4dacc1ac5b0fa66565a4a60' == A.id
+                |}
+                |Action {
+                |  get(A.id, A.__property_json__, A, __path__)
+                |}""".stripMargin
+    val blocks = parser.parseMultipleStatement(dsl, Map.apply(Constants.START_ALIAS -> "o"))
+    val block = blocks.head
+    print(block.pretty)
+    block.isInstanceOf[TableResultBlock] should equal(true)
+    block.asInstanceOf[TableResultBlock].asList.size should equal(4)
+    block.asInstanceOf[TableResultBlock]
+      .selectList.fields(2).isInstanceOf[IRProperty] should equal(true)
+    block.asInstanceOf[TableResultBlock]
+      .selectList.fields(2).asInstanceOf[IRProperty].field should equal(Constants.PROPERTY_JSON_KEY)
+  }
   it ("test gql 0") {
     val dsl = """MATCH (s)-[]->(o) RETURN s.id, o.id"""
-    val parser = new KgDslParser()
     val blocks = parser.parseMultipleStatement(dsl, Map.apply(Constants.START_ALIAS -> "o"))
     val block = blocks.head
     print(block.pretty)
@@ -41,7 +60,6 @@ class KgDslParserTest extends AnyFunSpec {
 
   it ("test gql 1") {
     val dsl = """MATCH (s)-[]->(o) RETURN s.id, o.id"""
-    val parser = new KgDslParser()
     val block = parser.parse(dsl)
     print(block.pretty)
     block.isInstanceOf[TableResultBlock] should equal(true)
@@ -50,7 +68,6 @@ class KgDslParserTest extends AnyFunSpec {
 
   it ("test gql 2") {
     val dsl = """MATCH (s)-[]->(o) WHERE s.id = 1 RETURN s.id, o.id"""
-    val parser = new KgDslParser()
     val block = parser.parse(dsl)
     print(block.pretty)
     block.isInstanceOf[TableResultBlock] should equal(true)
@@ -68,7 +85,7 @@ class KgDslParserTest extends AnyFunSpec {
       """MATCH (s)-[]->(o),(o)-[]->(p1)
         |WHERE s.id > o.id
         |RETURN s.id As s_id, o.id, p1.id""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     block.isInstanceOf[TableResultBlock] should equal(true)
@@ -78,7 +95,7 @@ class KgDslParserTest extends AnyFunSpec {
 
   it ("test gql 4") {
     val dsl = """MATCH (s:`OpenSource.TaxonomyOfApp`/`赌博APP`) RETURN s.id"""
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     block.isInstanceOf[TableResultBlock] should equal(true)
@@ -100,7 +117,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |Action {
                 |	get(o1.id)
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
   }
@@ -114,7 +131,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |Action {
                 |	get(o1.id)
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
   }
@@ -143,7 +160,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |Action {
                 |    get(s.id, o.id)
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     try {
       parser.parseMultipleStatement(dsl)
     } catch {
@@ -154,30 +171,74 @@ class KgDslParserTest extends AnyFunSpec {
 
   it("opChainTest") {
     val chain = OpChainExpr(Filter(BinaryOpExpr(BNotEqual, Ref("a"), Ref("b"))), null)
-    val parser = new KgDslParser()
-    val case1 = parser.parseOpChain2Block(chain, IRVariable("abc"), null, null)
+
+    val case1 = parser.parseOpChain2Block(chain, IRVariable("abc"), null,
+      null, KG(Map.empty, Map.empty))
     case1.isInstanceOf[FilterBlock] should equal(true)
 
     val case2Chain = OpChainExpr(ListOpExpr(Get(1), Ref("a")), null)
-    val case2 = parser.parseOpChain2Block(case2Chain, IRVariable("abc"), null, null)
+    val case2 = parser.parseOpChain2Block(case2Chain, IRVariable("abc"), null,
+      null, KG(Map.empty, Map.empty))
     case2.isInstanceOf[ProjectBlock] should equal(true)
 
     val case3Chain = OpChainExpr(
       AggIfOpExpr(AggOpExpr(Count, Ref("a")), BinaryOpExpr(BGreaterThan, Ref("a"), VLong("1"))),
       null)
-    val case3 = parser.parseOpChain2Block(case3Chain, IRVariable("abc"), null, null)
+    val case3 = parser.parseOpChain2Block(case3Chain, IRVariable("abc"), null,
+      null, KG(Map.empty, Map.empty))
     case3.isInstanceOf[ProjectBlock] should equal(true)
 
     val case4Chain = OpChainExpr(AggOpExpr(Count, Ref("a")), null)
-    val case4 = parser.parseOpChain2Block(case4Chain, IRVariable("abc"), null, null)
+    val case4 = parser.parseOpChain2Block(case4Chain, IRVariable("abc"), null,
+      null, KG(Map.empty, Map.empty))
     case4.isInstanceOf[ProjectBlock] should equal(true)
 
     val case5Chain = OpChainExpr(Filter(BinaryOpExpr(BNotEqual, Ref("a"), Ref("b"))), null)
     val groupAgg =
       GraphAggregatorExpr("unresolved_default_path", List.apply(Ref("A"), Ref("B")), null)
-    val case5 = parser.parseOpChain2Block(case5Chain, IRVariable("abc"), groupAgg, null)
+    val case5 = parser.parseOpChain2Block(case5Chain, IRVariable("abc"), groupAgg,
+      null, KG(Map.empty, Map.empty))
     case5.isInstanceOf[FilterBlock] should equal(true)
+
   }
+
+  it("opChain test6") {
+    val case6Chain = OpChainExpr(AggOpExpr(Count, Ref("a")), null)
+    val groupAgg2 =
+      GraphAggregatorExpr("unresolved_default_path", List.apply(Ref("A"), Ref("B")), null)
+    try {
+      val case6 = parser.parseOpChain2Block(case6Chain, null, groupAgg2,
+        null, KG(Map.empty, Map.empty))
+      true should equal(false)
+    } catch {
+      case ex: KGDSLGrammarException =>
+        ex.getMessage
+          .contains("AggregationBlock generated left variable is null") should equal(true)
+    }
+  }
+
+  it("opChain test7") {
+    val caseChain = OpChainExpr(AggOpExpr(Count, Ref("a")), null)
+    val groupAgg =
+      GraphAggregatorExpr("unresolved_default_path", List.apply(Ref("A"), Ref("B")), null)
+    val case1 = parser.parseOpChain2Block(caseChain, null, groupAgg,
+      null, KG(Map.apply("a"-> IRNode("a", Set.empty)), Map.empty))
+    case1.isInstanceOf[AggregationBlock] should equal(true)
+    case1.asInstanceOf[AggregationBlock].
+      aggregations.pairs.contains(IRNode("a", Set.empty)) should equal(true)
+  }
+
+  it("opChain test8") {
+    val caseChain = OpChainExpr(AggOpExpr(Count, Ref("a")), null)
+    val groupAgg =
+      GraphAggregatorExpr("unresolved_default_path", List.apply(Ref("A"), Ref("B")), null)
+    val case1 = parser.parseOpChain2Block(caseChain, null, groupAgg,
+      null, KG(Map.empty, Map.apply("a"-> IREdge("a", Set.empty))))
+    case1.isInstanceOf[AggregationBlock] should equal(true)
+    case1.asInstanceOf[AggregationBlock].
+      aggregations.pairs.contains(IREdge("a", Set.empty)) should equal(true)
+  }
+
   it("addproperies1") {
     val dsl = """Define (s:DomainFamily)-[p:totalText]->(o:Text) {
                 |    GraphStructure {
@@ -187,7 +248,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |        o = "abc"
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
@@ -205,7 +266,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |        o = "abc"
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
@@ -224,7 +285,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |        o = num
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
@@ -242,7 +303,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |        o = num
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
@@ -278,7 +339,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |    )
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
@@ -305,12 +366,12 @@ class KgDslParserTest extends AnyFunSpec {
                 |    )
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     try {
       parser.parse(dsl)
     } catch {
-    case ex: KGDSLGrammarException =>
-      ex.getMessage.contains("must has type param") should equal(true)
+      case ex: KGDSLGrammarException =>
+        ex.getMessage.contains("must has type param") should equal(true)
     }
   }
 
@@ -334,7 +395,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |        )
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
 
     try {
       parser.parse(dsl)
@@ -364,7 +425,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |        )
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
 
     try {
       parser.parse(dsl)
@@ -395,7 +456,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |        )
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[MatchBlock] should equal(true)
@@ -423,7 +484,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |    )
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     try {
       parser.parse(dsl)
     } catch {
@@ -451,7 +512,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |    )
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     try {
       parser.parse(dsl)
     } catch {
@@ -479,7 +540,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |    )
                 |    }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     try {
       parser.parse(dsl)
     } catch {
@@ -533,7 +594,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |    get(s.id,o.id)
                 |}""".stripMargin
 
-    val parser = new KgDslParser()
+
     val blocks = parser.parseMultipleStatement(dsl)
 
     blocks.size should equal(4)
@@ -625,7 +686,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |    get(s.id,o.id)
                 |}""".stripMargin
 
-    val parser = new KgDslParser()
+
     try {
       parser.parse(dsl)
       true should equal(false)
@@ -645,10 +706,11 @@ class KgDslParserTest extends AnyFunSpec {
         |        p.same_domain_num = domain_num + 1
         |    }
         |}""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
   }
+
 
   it("case1_get_exception") {
     val dsl =
@@ -662,7 +724,7 @@ class KgDslParserTest extends AnyFunSpec {
         |  get(a().name, o as b)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+
     try {
       parser.parse(dsl)
       true should equal(false)
@@ -671,13 +733,30 @@ class KgDslParserTest extends AnyFunSpec {
     }
   }
 
+  it("test repeat function") {
+    val dsl = "GraphStructure {\n" +
+      "  A [RelatedParty, __start__='true']\n" +
+      "  B [RelatedParty]\n" +
+      "  A->B [holdShare] repeat(1,10) as e\n" +
+      "}\n" +
+      "Rule {\n" +
+      "  R: group(A,B).keep_shortest_path(e)\n" +
+      "}\n" +
+      "Action {\n" +
+      "  get(A.id,B.id)  \n" +
+      "}"
+
+    val blocks = parser.parse(dsl)
+    print(blocks.pretty)
+  }
+
   it("case1_start") {
     val dsl =
       """
         |GraphStructure {
         |  A [test]
         |  D [test, __start__='true']
-        |  D->C [abc]
+        |  D->C [abc] as D_C_2
         |}
         |Rule {
         |}
@@ -685,7 +764,7 @@ class KgDslParserTest extends AnyFunSpec {
         |  get(A.id)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+
     val blocks = parser.parse(dsl)
     print(blocks.pretty)
     val blockRst = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(A,id))), asList=List(A.id))
@@ -709,7 +788,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |Action {
                 |  get(s.id, o)
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     val blocks = parser.parseMultipleStatement(dsl, null)
     print(blocks.head.pretty)
     val block = blocks.head
@@ -722,7 +801,7 @@ class KgDslParserTest extends AnyFunSpec {
         |GraphStructure {
         |  A [test]
         |  D [test]
-        |  D->C [abc]
+        |  D->C [abc] as D_C_2
         |}
         |Rule {
         |}
@@ -730,7 +809,7 @@ class KgDslParserTest extends AnyFunSpec {
         |  get(A.id)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+
     val blocks = parser.parseMultipleStatement(dsl, null)
     print(blocks.head.pretty)
     val blockRst = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(A,id))), asList=List(A.id))
@@ -745,7 +824,7 @@ class KgDslParserTest extends AnyFunSpec {
         |GraphStructure {
         |  A [test]
         |  D [test]
-        |  D->C [abc]
+        |  D->C [abc] as D_C_2
         |}
         |Rule {
         |}
@@ -753,7 +832,7 @@ class KgDslParserTest extends AnyFunSpec {
         |  get(A.id)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+
     val blocks = parser.parseMultipleStatement(dsl, Map.apply(Constants.START_ALIAS -> "D"))
     print(blocks.head.pretty)
     val blockRst = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(A,id))), asList=List(A.id))
@@ -774,7 +853,7 @@ class KgDslParserTest extends AnyFunSpec {
         |  get(a(), o as b)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+
     try {
       parser.parse(dsl)
       true should equal(false)
@@ -797,7 +876,7 @@ class KgDslParserTest extends AnyFunSpec {
         |  get(s.name.tmp, o as b)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+
     try {
       parser.parse(dsl)
       true should equal(false)
@@ -820,7 +899,7 @@ class KgDslParserTest extends AnyFunSpec {
         |  get(s.name,"label" as b)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
@@ -840,7 +919,7 @@ class KgDslParserTest extends AnyFunSpec {
         |  get(s.name,"label" as b).as(table0(s,v1))
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
@@ -860,7 +939,7 @@ class KgDslParserTest extends AnyFunSpec {
         |  get(s.name, o as b).as(a,b,c)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+
     try {
       parser.parse(dsl)
       true should equal(false)
@@ -884,7 +963,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |    R5('智信确权'): s.zhixin == 'Y'
                 |  }
                 |}""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     block.isInstanceOf[DDLBlock] should equal(true)
@@ -925,7 +1004,7 @@ class KgDslParserTest extends AnyFunSpec {
                 |}
                 |
               """.stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     val text = """└─DDLBlock(ddlOp=Set(AddProperty((s:CustFundKG.Account),aggTransAmountNumByDay,KTBoolean)))
@@ -959,7 +1038,7 @@ class KgDslParserTest extends AnyFunSpec {
         |  get(s.id, o as b)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     val text = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(s,id), IRVariable(o))), asList=List(s.id, b))
@@ -984,7 +1063,7 @@ class KgDslParserTest extends AnyFunSpec {
       "}\n" + "Rule {\n" + "\tR1(\"80后导演\"): B.birthDate > '1980'\n" +
       "\tR2(\"导演编剧同性别\"): B.gender == C.gender\n" + "}\n" +
       "Action {\n" + "\tget(B.name, C.name)\n" + "}"
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     val text = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(B,name), IRProperty(C,name))), asList=List(B.name, C.name))
@@ -1004,7 +1083,7 @@ class KgDslParserTest extends AnyFunSpec {
         |   Rule{}
         |   Action {get(s)}
         |""".stripMargin
-    val parser = new KgDslParser()
+
     val block = parser.parse(dsl)
     print(block.pretty)
     val edges =
