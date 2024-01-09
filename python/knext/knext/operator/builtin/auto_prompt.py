@@ -255,7 +255,7 @@ class EEPrompt(AutoPrompt):
         self._render()
 
         self.params = {
-            "spg_type_name": event_type_name,
+            "event_type_name": event_type_name,
             "property_names": property_names,
             "relation_names": relation_names,
             "custom_prompt": custom_prompt,
