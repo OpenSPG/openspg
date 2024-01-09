@@ -21,6 +21,6 @@ public class ToTimeStamp {
   @UdfDefine(name = "to_timestamp", compatibleName = "ToTimestamp")
   public String toTimestamp(long curMillSecond) {
     String format = "yyyy-MM-dd HH:mm:ss";
-    return DateUtils.second2Str(curMillSecond, format);
+    return DateUtils.millSecond2Str(curMillSecond, format);
   }
 }
