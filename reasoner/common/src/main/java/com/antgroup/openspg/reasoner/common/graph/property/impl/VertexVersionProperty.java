@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.common.graph.property.impl;
 
+import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.property.IVersionProperty;
 import com.antgroup.openspg.reasoner.common.utils.PropertyUtil;
@@ -36,6 +37,17 @@ public class VertexVersionProperty implements IVersionProperty {
   /** constructor */
   public VertexVersionProperty(Map<String, TreeMap<Long, Object>> props) {
     this.props = props;
+  }
+
+  /** constructor by kvs */
+  public VertexVersionProperty(Object... kvs) {
+    this.props = new HashMap<>();
+    Map<String, Object> propertyMap = Utils.convert2Property(kvs);
+    for (Map.Entry<String, Object> entry : propertyMap.entrySet()) {
+      TreeMap<Long, Object> valueMap = new TreeMap<>();
+      valueMap.put(0L, entry.getValue());
+      this.props.put(entry.getKey(), valueMap);
+    }
   }
 
   @Override

@@ -25,7 +25,7 @@ import com.antgroup.openspg.reasoner.lube.logical.planning.{LogicalPlanner, Logi
 import com.antgroup.openspg.reasoner.lube.physical.operators._
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 import com.antgroup.openspg.reasoner.parser.OpenspgDslParser
-import com.antgroup.openspg.reasoner.rule.RuleRunner
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner
 import com.antgroup.openspg.reasoner.util.LoaderUtil
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{contain, convertToAnyShouldWrapper, equal}

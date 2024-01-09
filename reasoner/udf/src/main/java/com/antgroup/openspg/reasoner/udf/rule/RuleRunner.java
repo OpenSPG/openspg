@@ -11,25 +11,26 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.rule;
+package com.antgroup.openspg.reasoner.udf.rule;
 
 import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.reasoner.common.Utils;
-import com.antgroup.openspg.reasoner.rule.op.OperatorEqualsLessMore;
-import com.antgroup.openspg.reasoner.rule.op.OperatorIn;
-import com.antgroup.openspg.reasoner.rule.op.OperatorLike;
-import com.antgroup.openspg.reasoner.rule.op.OperatorMultiDiv;
-import com.antgroup.openspg.reasoner.rule.udf.UdfWrapper;
 import com.antgroup.openspg.reasoner.udf.UdfMng;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
 import com.antgroup.openspg.reasoner.udf.model.RuntimeUdfMeta;
 import com.antgroup.openspg.reasoner.udf.model.UdfOperatorTypeEnum;
+import com.antgroup.openspg.reasoner.udf.rule.op.OperatorEqualsLessMore;
+import com.antgroup.openspg.reasoner.udf.rule.op.OperatorIn;
+import com.antgroup.openspg.reasoner.udf.rule.op.OperatorLike;
+import com.antgroup.openspg.reasoner.udf.rule.op.OperatorMultiDiv;
+import com.antgroup.openspg.reasoner.udf.rule.udf.UdfWrapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.Operator;
+import com.ql.util.express.exception.QLCompileException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +89,9 @@ public class RuleRunner {
         if ((1 + i) == ruleList.size()) {
           return (Boolean) tmpRet;
         }
+
+      } catch (QLCompileException e) {
+        log.warn("RuleRunner error, rule=" + rule + ",ctx=" + JSON.toJSONString(context), e);
       } catch (Exception e) {
         if (Utils.randomLog()) {
           log.warn("RuleRunner error, rule=" + rule + ",ctx=" + JSON.toJSONString(context), e);

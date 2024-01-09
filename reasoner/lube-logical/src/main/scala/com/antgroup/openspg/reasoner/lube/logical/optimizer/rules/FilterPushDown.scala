@@ -39,12 +39,15 @@ object FilterPushDown extends Rule {
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
     case filter: Filter =>
-      val fields = RuleUtils.getAllInputFieldInRule(filter.rule, null, null)
+      val fields = RuleUtils.getAllInputFieldInRule(
+        filter.rule,
+        filter.solved.getNodeAliasSet,
+        filter.solved.getEdgeAliasSet)
       val propertyMap = new mutable.HashMap[String, Set[String]]
       for (field <- fields) {
         field match {
-          case IREdge(name, fields) => propertyMap.put(name, fields.toSet)
-          case IRNode(name, fields) => propertyMap.put(name, fields.toSet)
+          case IREdge(name, fields) => propertyMap.put(name, fields)
+          case IRNode(name, fields) => propertyMap.put(name, fields)
           case _ =>
         }
       }
@@ -84,20 +87,28 @@ object FilterPushDown extends Rule {
 
     def rewriter: PartialFunction[LogicalOperator, LogicalOperator] = {
       case expandInto: ExpandInto =>
-        val res = fillInRule(filter.rule, aliasMap, expandInto.pattern, expandInto.refFields)
-        if (res._1) {
-          hasPushDown = true
-          expandInto.copy(pattern = res._2)
-        } else {
+        if (hasPushDown) {
           expandInto
+        } else {
+          val res = fillInRule(filter.rule, aliasMap, expandInto.pattern, expandInto.refFields)
+          if (res._1) {
+            hasPushDown = true
+            expandInto.copy(pattern = res._2)
+          } else {
+            expandInto
+          }
         }
       case patternScan: PatternScan =>
-        val res = fillInRule(filter.rule, aliasMap, patternScan.pattern, patternScan.refFields)
-        if (res._1) {
-          hasPushDown = true
-          patternScan.copy(pattern = res._2)
-        } else {
+        if (hasPushDown) {
           patternScan
+        } else {
+          val res = fillInRule(filter.rule, aliasMap, patternScan.pattern, patternScan.refFields)
+          if (res._1) {
+            hasPushDown = true
+            patternScan.copy(pattern = res._2)
+          } else {
+            patternScan
+          }
         }
     }
 

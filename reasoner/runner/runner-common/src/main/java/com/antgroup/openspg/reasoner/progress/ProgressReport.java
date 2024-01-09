@@ -41,9 +41,7 @@ public class ProgressReport {
       progressStatus = null;
       return;
     }
-    if (null == progressStatus) {
-      throw new RuntimeException();
-    }
+    progressStatus = new ProgressStatus("", String.valueOf(path), "oss");
     progressStatus.init(totalSteps);
   }
 
@@ -100,9 +98,5 @@ public class ProgressReport {
         new String(Base64.getDecoder().decode(paramStringEncoded), StandardCharsets.UTF_8);
     Map<String, Object> params = new HashMap<>(JSON.parseObject(paramsJsonString));
     return (String) params.get(ConfigKey.KG_REASONER_PROGRESS_PATH);
-  }
-
-  public static void setProgressStatus(ProgressStatus progressStatus) {
-    ProgressReport.progressStatus = progressStatus;
   }
 }

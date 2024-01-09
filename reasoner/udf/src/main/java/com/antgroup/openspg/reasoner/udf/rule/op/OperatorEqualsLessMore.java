@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.rule.op;
+package com.antgroup.openspg.reasoner.udf.rule.op;
 
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.ql.util.express.Operator;

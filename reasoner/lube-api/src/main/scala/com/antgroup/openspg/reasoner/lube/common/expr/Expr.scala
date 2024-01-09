@@ -91,15 +91,30 @@ final case class Limit(column: Expr, num: Integer) extends TypeValidatedExpr {}
 /**
  * list object operator set
  */
-sealed trait OrderOpSet
-case object DescExpr extends OrderOpSet {}
-case object AscExpr extends OrderOpSet {}
-
-final case class OrderAndLimit(order: OrderOpSet, limit: Limit) extends TypeValidatedExpr {}
 
 final case class Slice(start: Integer, end: Integer) extends ListOpSet {}
 
-final case class Filter(condition: Expr) extends TypeValidatedExpr {}
+/**
+ * list reduce operator
+ * @param ele
+ * @param res
+ * @param reduceFunc
+ * @param initValue
+ */
+final case class Reduce(ele: String,
+                        res: String,
+                        reduceFunc: Expr,
+                        initValue: Expr) extends ListOpSet {}
+
+/**
+ * list rule constraint operator
+ * @param pre
+ * @param cur
+ * @param reduceFunc
+ */
+final case class Constraint(pre: String,
+                            cur: String,
+                            reduceFunc: Expr) extends ListOpSet {}
 /**
  * list operator expr paradigm
  * @param name
@@ -107,7 +122,35 @@ final case class Filter(condition: Expr) extends TypeValidatedExpr {}
  */
 final case class ListOpExpr(name: ListOpSet, opInput: Ref) extends TypeValidatedExpr {}
 
+/**
+ * order operator set
+ */
+sealed trait OrderOpSet
+case object DescExpr extends OrderOpSet {}
+case object AscExpr extends OrderOpSet {}
 
+/**
+ * order operator expr paradigm
+ * @param order
+ * @param limit
+ */
+final case class OrderAndLimit(order: OrderOpSet, limit: Limit) extends TypeValidatedExpr {}
+
+/**
+ * filter operator
+ * @param condition
+ */
+final case class Filter(condition: Expr) extends TypeValidatedExpr {}
+/**
+ * path operator set
+ */
+sealed trait PathOpSet
+case object GetNodesExpr extends PathOpSet {}
+case object GetEdgesExpr extends PathOpSet {}
+/**
+ * path operator expr paradigm
+ */
+final case class PathOpExpr(name: PathOpSet, pathName: Ref) extends TypeValidatedExpr {}
 
 /**
  * aggregator operator expr paradigm

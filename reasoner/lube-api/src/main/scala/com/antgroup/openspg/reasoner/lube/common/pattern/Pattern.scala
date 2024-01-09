@@ -83,7 +83,8 @@ case class EdgePattern[E <: Connection](src: PatternElement, dst: PatternElement
    * @param alias
    * @return
    */
-  override def getNode(alias: String): PatternElement = if (src.alias.equals(alias)) src else dst
+  override def getNode(alias: String): PatternElement =
+    if (src.alias.equals(alias)) src else if (dst.alias.equals(alias)) dst else null
 
   /**
    * The patterns graph, describing connections between node elements via relationships.

@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.reasoner.rdg.common;
 
-import com.antgroup.openspg.reasoner.common.exception.IllegalArgumentException;
 import com.antgroup.openspg.reasoner.common.graph.type.GraphItemType;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
@@ -23,7 +22,7 @@ import com.antgroup.openspg.reasoner.lube.logical.EdgeVar;
 import com.antgroup.openspg.reasoner.lube.logical.NodeVar;
 import com.antgroup.openspg.reasoner.lube.logical.PropertyVar;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
-import com.antgroup.openspg.reasoner.rule.RuleRunner;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.util.KgGraphSchema;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import java.io.Serializable;

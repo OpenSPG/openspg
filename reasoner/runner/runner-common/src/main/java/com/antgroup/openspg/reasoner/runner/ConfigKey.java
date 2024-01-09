@@ -88,6 +88,14 @@ public class ConfigKey {
   /** set graph load config */
   public static final String KG_REASONER_GRAPH_LOAD_CONFIG = "kg.reasoner.graph.load.config";
 
+  /** set graph load kgstate connection */
+  public static final String KG_REASONER_GRAPH_KGSTATE_CONNECTION =
+      "kg.reasoner.graph.load.kgstate.connection";
+
+  /** set kgstate schema url */
+  public static final String KG_REASONER_GRAPH_KGSTATE_SCHEMA_URL =
+      "kg.reasoner.graph.load.kgstate.schema.url";
+
   /** enable cache project */
   public static final String KG_REASONER_PLAN_CACHE_PROJECT_ENABLE =
       "kg.reasoner.plan_cache_project_enable";
@@ -136,4 +144,14 @@ public class ConfigKey {
 
   /** split KgGraph to worker */
   public static final String KG_REASONER_SPLIT_TO_WORKER = "kg.reasoner.enable.split.to.worker";
+
+  /** kgstate version condition */
+  public static final String KG_STATE_VERSION = "kg.state.version";
+
+  /** disable edge spot duplicate remove */
+  public static final String KG_REASONER_DISABLE_EDGE_SPOT_DUPLICATE_REMOVE =
+      "kg.reasoner.disable.edge.spot.duplicate.remove";
+
+  /** edge extra identifier, separated by commas */
+  public static final String EDGE_EXTRA_IDENTIFIER = "kg.reasoner.edge.extra.identifier";
 }
