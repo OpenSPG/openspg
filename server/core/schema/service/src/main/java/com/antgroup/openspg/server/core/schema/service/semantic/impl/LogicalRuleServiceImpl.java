@@ -18,7 +18,7 @@ import com.antgroup.openspg.core.schema.model.DslSyntaxError;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
-import com.antgroup.openspg.reasoner.parser.KgDslParser;
+import com.antgroup.openspg.reasoner.parser.OpenspgDslParser;
 import com.antgroup.openspg.server.core.schema.service.semantic.LogicalRuleService;
 import com.antgroup.openspg.server.core.schema.service.semantic.model.DslCheckResult;
 import com.antgroup.openspg.server.core.schema.service.semantic.repository.LogicalRuleRepository;
@@ -83,7 +83,7 @@ public class LogicalRuleServiceImpl implements LogicalRuleService {
   public DslCheckResult checkDslSyntax(String dsl) {
     DslCheckResult result = new DslCheckResult();
     try {
-      ParserInterface parser = new KgDslParser();
+      ParserInterface parser = new OpenspgDslParser();
       if (StringUtils.isEmpty(dsl)) {
         result.setPass(false);
         result.setErrorPart("empty dsl");

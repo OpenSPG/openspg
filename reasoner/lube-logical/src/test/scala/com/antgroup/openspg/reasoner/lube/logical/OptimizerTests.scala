@@ -31,7 +31,7 @@ import com.antgroup.openspg.reasoner.lube.logical.optimizer.rules._
 import com.antgroup.openspg.reasoner.lube.logical.planning.{LogicalPlanner, LogicalPlannerContext}
 import com.antgroup.openspg.reasoner.lube.logical.validate.Validator
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
-import com.antgroup.openspg.reasoner.parser.KgDslParser
+import com.antgroup.openspg.reasoner.parser.OpenspgDslParser
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
@@ -86,7 +86,7 @@ class OptimizerTests extends AnyFunSpec {
         |}
         |""".stripMargin
     catalog.init()
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     implicit val context: LogicalPlannerContext =
       LogicalPlannerContext(catalog, parser, Map.empty)
@@ -187,7 +187,7 @@ class OptimizerTests extends AnyFunSpec {
         "sumAmt"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     implicit val context: LogicalPlannerContext =
       LogicalPlannerContext(catalog, parser, Map.empty)
@@ -222,7 +222,7 @@ class OptimizerTests extends AnyFunSpec {
         |  get(u.id as uid, u.name as uname, o.id as oid)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] =
       Map.apply(
@@ -263,7 +263,7 @@ class OptimizerTests extends AnyFunSpec {
         |  get(A.id, countB, countC)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] =
       Map.apply(

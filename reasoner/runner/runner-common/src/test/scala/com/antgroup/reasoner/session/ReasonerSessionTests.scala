@@ -24,7 +24,7 @@ import com.antgroup.openspg.reasoner.lube.logical.optimizer.LogicalOptimizer
 import com.antgroup.openspg.reasoner.lube.logical.planning.{LogicalPlanner, LogicalPlannerContext}
 import com.antgroup.openspg.reasoner.lube.physical.operators._
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
-import com.antgroup.openspg.reasoner.parser.KgDslParser
+import com.antgroup.openspg.reasoner.parser.OpenspgDslParser
 import com.antgroup.openspg.reasoner.rule.RuleRunner
 import com.antgroup.openspg.reasoner.util.LoaderUtil
 import org.scalatest.funspec.AnyFunSpec
@@ -75,7 +75,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "TuringCore.TravelEvent_travelEndpoint_CKG.AdministrativeArea" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val rst = session.plan(dsl, Map.empty)
     rst.foreach(session.getResult(_))
     val node = catalog.getGraph(IRGraph.defaultGraphName).getNode("TuringCore.AlipayUser")
@@ -98,7 +98,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "Subway_centerS2CellId_STD.S2CellId" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val physicalOperatorList = session.plan(dsl, Map.empty)
     val definePhysicalOp = physicalOperatorList.head
     val expandIntoCount = definePhysicalOp.transform[Int] {
@@ -134,7 +134,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "Park_boundaryS2CellId_STD.S2CellId" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val physicalOperatorList = session.plan(
       dsl,
       Map
@@ -185,7 +185,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "PE.AntPOI_locationS2CellId_STD.S2CellId" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val physicalOperatorList = session.plan(
       dsl,
       Map
@@ -257,7 +257,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "Park_SameCity_BusinessArea" -> Set.apply("city"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val physicalOperatorList = session.plan(dsl, Map.empty)
     physicalOperatorList.size should equal(2)
     val definePhysicalPlan = physicalOperatorList.head
@@ -318,7 +318,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "User_trade_User" -> Set.apply("trade_num", "trade_time"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val rst = session.plan(dsl, Map.empty)
     rst.foreach(session.getResult(_))
     val edge = catalog.getGraph(IRGraph.defaultGraphName).getEdge("User_tradeInfo_User")
@@ -345,7 +345,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "User_trade_User" -> Set.apply("trade_num", "trade_time"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val parser = new KgDslParser()
+    val parser = new OpenspgDslParser()
     val block = parser.parse(dsl)
     implicit val context: LogicalPlannerContext =
       LogicalPlannerContext(catalog, parser, Map.empty)
@@ -388,7 +388,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "AttributePOC.BrinsonAttribute_factorValue_AttributePOC.BrinsonAttribute" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -444,7 +444,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "AttributePOC.BrinsonAttribute_factorValue_AttributePOC.BrinsonAttribute" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     try {
       val rst = session.plan(
         dsl,
@@ -480,7 +480,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "FilmDirector_t1_FilmDirector" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -512,7 +512,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "SupplyChain.Product_belongTo_SupplyChain.Industry" -> Set.apply("payDate", "bizComment"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -555,7 +555,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "RiskMining.App_belongTo_RiskMining.TaxOfRiskApp" -> Set.apply("payDate", "bizComment"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -601,7 +601,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "CustFundKG.Yeb_transfer_CustFundKG.Yeb" -> Set.apply("payDate", "bizComment"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -657,7 +657,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -703,7 +703,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -749,7 +749,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     try {
       session.plan(
         dsl,
@@ -788,7 +788,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenspgDslParser(), catalog)
     try {
       session.plan(
         dsl,

@@ -27,7 +27,7 @@ import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext;
 import com.antgroup.openspg.reasoner.lube.logical.validate.Validator;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
-import com.antgroup.openspg.reasoner.parser.KgDslParser;
+import com.antgroup.openspg.reasoner.parser.OpenspgDslParser;
 import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -172,7 +172,7 @@ public class PropertyChecker {
 
   protected void checkDSL(String dsl, Catalog catalog) {
     try {
-      ParserInterface parser = new KgDslParser();
+      ParserInterface parser = new OpenspgDslParser();
       Block block = parser.parse(dsl);
       LogicalPlannerContext context =
           new LogicalPlannerContext(catalog, parser, new scala.collection.immutable.HashMap<>());

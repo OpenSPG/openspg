@@ -36,7 +36,7 @@ import com.antgroup.openspg.reasoner.parser.pattern.{ConceptLabelType, EntityLab
 /**
  * parse dsl to Block
  */
-class KgDslParser extends ParserInterface {
+class OpenspgDslParser extends ParserInterface {
   val patternParser: PatternParser = new PatternParser()
   val exprParser: RuleExprParser = new RuleExprParser()
   val expr2StringTransformer = new Expr2QlexpressTransformer()
