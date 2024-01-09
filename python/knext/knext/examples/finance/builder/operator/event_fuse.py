@@ -34,8 +34,10 @@ class EventFuseOp(FuseOp):
 
     def merge(self, subject_record: SPGRecord, linked_record: SPGRecord) -> SPGRecord:
         # Merge relations from event to subject.
-        subjects = subject_record.get_property("subject", "").split(',') + linked_record.get_property("subject", "").split(',')
-        subjects = ','.join(list(set(subjects)))
+        subjects = subject_record.get_property("subject", "").split(
+            ","
+        ) + linked_record.get_property("subject", "").split(",")
+        subjects = ",".join(list(set(subjects)))
         linked_record.upsert_property("subject", subjects)
 
         return linked_record
