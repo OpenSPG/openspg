@@ -209,7 +209,7 @@ class SPGSchemaMarkLang:
             self.current_parsing_level += 1
 
     def error_msg(self, msg):
-        return f"Line# {self.current_line_num}: {msg} (Please refer https://spg.openkg.cn/tutorial/spgschema for details)"
+        return f"Line# {self.current_line_num}: {msg} (Please refer https://spg.openkg.cn/tutorial/schema/dsl for details)"
 
     def get_type_name_with_ns(self, type_name: str):
         if "." in type_name:
