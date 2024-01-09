@@ -27,7 +27,7 @@ class ExtractOp(BaseOp, ABC):
     def __init__(self, params: Dict[str, str] = None):
         super().__init__(params)
 
-    def invoke(self, record: Dict[str, str]) -> List[Dict[str, str]]:
+    def invoke(self, record: Dict[str, str]) -> List[SPGRecord]:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `invoke` method."
         )
