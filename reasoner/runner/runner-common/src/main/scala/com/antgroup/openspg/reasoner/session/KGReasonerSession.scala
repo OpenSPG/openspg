@@ -43,8 +43,8 @@ import com.antgroup.openspg.reasoner.lube.physical.planning.{
   PhysicalPlannerContext
 }
 import com.antgroup.openspg.reasoner.lube.physical.rdg.{RDG, Result}
-import com.antgroup.openspg.reasoner.warehouse.common.config.GraphLoaderConfig
 import com.antgroup.openspg.reasoner.util.LoaderUtil
+import com.antgroup.openspg.reasoner.warehouse.common.config.GraphLoaderConfig
 
 /**
  * Base class for KGReasoner pipeline.
