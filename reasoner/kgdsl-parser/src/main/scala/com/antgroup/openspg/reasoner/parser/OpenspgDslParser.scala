@@ -36,11 +36,11 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.{
 }
 import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, ProjectRule, Rule}
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface
+import com.antgroup.openspg.reasoner.lube.utils.{ExprUtils, RuleUtils}
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.{
   Expr2QlexpressTransformer,
   Rule2ExprTransformer
 }
-import com.antgroup.openspg.reasoner.lube.utils.{ExprUtils, RuleUtils}
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
 import com.antgroup.openspg.reasoner.parser.pattern.{
   ConceptLabelType,

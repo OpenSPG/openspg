@@ -20,8 +20,8 @@ import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge
-import com.antgroup.openspg.reasoner.common.graph.property.impl.EdgeProperty
 import com.antgroup.openspg.reasoner.common.graph.property.{IProperty, IVersionProperty}
+import com.antgroup.openspg.reasoner.common.graph.property.impl.EdgeProperty
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex
 import com.antgroup.openspg.reasoner.common.utils.PropertyUtil

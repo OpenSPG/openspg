@@ -181,7 +181,9 @@ class RuleExprParser extends Serializable {
         }
         value
       case VList(list, listType) =>
+        // scalastyle:off throwerror
         throw new NotImplementedError("not impl list")
+      // scalastyle:off throwerror
       case _ => throw new NotImplementedError("not impl other types")
     }
     VList(strList, listType)
