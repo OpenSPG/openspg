@@ -72,5 +72,5 @@ class _BuiltInOnlineExtractor(ExtractOp):
                         print(e)
             input_params = next_params
         if self.debug:
-            print(f'LLMBasedExtractor results: {collector}')
+            print(f"LLMBasedExtractor results: {collector}")
         return collector
