@@ -27,10 +27,10 @@ TEMPLATES_TO_RENDER = (
     (".knext.cfg.tmpl",),
     ("README.md.tmpl",),
     ("schema", "${project}.schema.tmpl"),
-    ("reasoner", "demo.dsl.tmpl"),
-    ("builder", "operator", "demo_extract_op.py"),
-    ("builder", "job", "data", "Demo.csv"),
-    ("builder", "job", "demo.py.tmpl"),
+    ("reasoner", "company.dsl.tmpl"),
+    ("builder", "operator", "address_extract_op.py.tmpl"),
+    ("builder", "job", "data", "company.csv"),
+    ("builder", "job", "company.py.tmpl"),
 )
 
 

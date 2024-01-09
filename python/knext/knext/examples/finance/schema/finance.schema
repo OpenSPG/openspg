@@ -2,3 +2,15 @@ namespace Finance
 
 Indicator(指标概念): ConceptType
     hypernymPredicate: isA
+
+IndicatorEvent(经济指标事件): EventType
+    desc: 指的是特定地区经济状况和发展水平的数据指标的相关事件
+    properties:
+        subject(指标名): Indicator
+            desc: 是用于衡量特定地区经济状况和发展水平的一系列数据和指标，比如GDP、
+            constraint: MultiValue
+        value(指标值): Text
+            desc: 代表指标名的数值
+        trend(指标趋势): Text
+            desc: 代表指标名的变化趋势，比如上涨、下跌之类
+        date(指标日期): STD.Date

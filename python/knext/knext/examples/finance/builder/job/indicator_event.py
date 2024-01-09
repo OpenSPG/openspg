@@ -9,34 +9,35 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
+import os
 
-
+from nn4k.invoker import NNInvoker
 from schema.finance_schema_helper import Finance
 
-from knext.api.component import CSVReader, LLMBasedExtractor, KGWriter, SPGTypeMapping
+from knext.api.component import (
+    CSVReader,
+    LLMBasedExtractor,
+    KGWriter,
+    SPGTypeMapping,
+)
+from knext.api.auto_prompt import EEPrompt
 from knext.client.model.builder_job import BuilderJob
-from nn4k.invoker import NNInvoker
 
 
-class Company(BuilderJob):
+class IndicatorEvent(BuilderJob):
     def build(self):
         source = CSVReader(
-            local_path="builder/job/data/company.csv", columns=["input"], start_row=2
+            local_path="builder/job/data/document.csv", columns=["input"], start_row=2
         )
 
-        from knext.api.auto_prompt import REPrompt
-
-        prompt = REPrompt(
-            spg_type_name=Finance.Company,
+        prompt = EEPrompt(
+            event_type_name=Finance.IndicatorEvent,
             property_names=[
-                Finance.Company.orgCertNo,
-                Finance.Company.regArea,
-                Finance.Company.businessScope,
-                Finance.Company.establishDate,
-                Finance.Company.legalPerson,
-                Finance.Company.regCapital,
+                Finance.IndicatorEvent.subject,
+                Finance.IndicatorEvent.value,
+                Finance.IndicatorEvent.trend,
+                Finance.IndicatorEvent.date,
             ],
-            relation_names=[],
         )
 
         extract = LLMBasedExtractor(
@@ -44,11 +45,8 @@ class Company(BuilderJob):
             prompt_ops=[prompt],
         )
 
-        mappings = [
-            SPGTypeMapping(spg_type_name=Finance.Company),
-            SPGTypeMapping(spg_type_name=Finance.AdministrativeArea),
-        ]
+        mapping = SPGTypeMapping(spg_type_name=Finance.IndicatorEvent)
 
         sink = KGWriter()
 
-        return source >> extract >> mappings >> sink
+        return source >> extract >> mapping >> sink

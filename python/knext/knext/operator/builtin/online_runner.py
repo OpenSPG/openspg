@@ -66,6 +66,6 @@ class _BuiltInOnlineExtractor(ExtractOp):
                         break
                     except Exception as e:
                         retry_times += 1
-                        raise e
+                        print(e)
             input_params = next_params
         return collector
