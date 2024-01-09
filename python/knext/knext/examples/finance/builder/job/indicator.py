@@ -17,7 +17,7 @@ from schema.finance_schema_helper import Finance
 class Indicator(BuilderJob):
     def build(self):
         source = CSVReader(
-            local_path="./builder/job/data/Indicator.csv",
+            local_path="./builder/job/data/indicators.csv",
             columns=["id"],
             start_row=2,
         )

@@ -17,6 +17,7 @@ from knext.api.record import SPGRecord
 from knext.api.client import SearchClient
 
 from schema.finance_schema_helper import Finance
+from nn4k.invoker import NNInvoker
 
 
 class IndicatorLinkOp(LinkOp):
@@ -29,29 +30,17 @@ class IndicatorLinkOp(LinkOp):
         self.prompt_op = IndicatorLinkPrompt()
         self.search_client = SearchClient(self.bind_to)
 
-    def generate(self, input_data):
-        req = {
-            "input": input_data,
-            "max_input_len": 1024,
-            "max_output_len": 1024,
-        }
-        url = "http://localhost:9999/generate"
-        try:
-            rsp = requests.post(url, req)
-            rsp.raise_for_status()
-            return rsp.json()
-        except Exception as e:
-            return {"output": ""}
-
     def invoke(self, property: str, subject_record: SPGRecord) -> List[SPGRecord]:
         # Retrieve relevant indicators from KG based on indicator name
         name = property
-        recall_records = self.search_client.fuzzy_search_by_property(property, name)
-        # Reranking the realled records with LLM to get final linking result
-        data = {
-            "input": name,
-            "candidates": [x.properties["name"] for x in recall_records],
-        }
-        link_input = self.prompt_op.build_prompt(data)
-        link_result = self.generate(link_input)
-        return self.prompt_op.parse_response(link_result)
+        recall_records = self.search_client.fuzzy_search_by_property(
+            property, "name", size=3
+        )
+        if len(recall_records) == 0:
+            print("no indicators recalled")
+            tmp = SPGRecord("Finance.Indicator")
+            tmp.upsert_property("id", property)
+            tmp.upsert_property("name", name)
+            return [tmp]
+        print(f"recalled indicators: {recall_records}")
+        return recall_records
