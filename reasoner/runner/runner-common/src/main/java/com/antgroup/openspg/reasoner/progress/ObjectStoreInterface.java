@@ -18,7 +18,7 @@ public interface ObjectStoreInterface {
   String getFileContent(String fileName);
 
   /** put content to file */
-  void putFileContent(String fileName, String content);
+  boolean putFileContent(String fileName, String content);
 
   /** remove file */
   void removeFile(String fileName);
