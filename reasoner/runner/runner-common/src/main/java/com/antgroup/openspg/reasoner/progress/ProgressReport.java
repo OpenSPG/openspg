@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class ProgressReport {
   private static ProgressStatus progressStatus = null;
-
+  public static ObjectStoreGenerator generator = null;
   /** report error */
   public static void reportError(Map config, Throwable e) {
     if (!config.containsKey(ConfigKey.KG_REASONER_PARAMS)) {
@@ -42,6 +42,7 @@ public class ProgressReport {
       return;
     }
     progressStatus = new ProgressStatus("", String.valueOf(path), "oss");
+    progressStatus.setObjectStoreInterface(generator.gen());
     progressStatus.init(totalSteps);
   }
 
