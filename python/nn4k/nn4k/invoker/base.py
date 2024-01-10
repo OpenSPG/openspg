@@ -138,14 +138,6 @@ class LLMInvoker(NNInvoker):
         """
         raise NotImplementedError(f"{self.__class__.__name__} does not support SFT.")
 
-    def submit_rl_tuning(self, submit_mode: SubmitMode = SubmitMode.K8s):
-        """
-        Submit remote RL-Tuning execution.
-        """
-        raise NotImplementedError(
-            f"{self.__class__.__name__} does not support RL-Tuning."
-        )
-
     def local_inference(self, data, **kwargs):
         """
         Implement local inference for local invoker.
@@ -184,3 +176,38 @@ class LLMInvoker(NNInvoker):
         """
         invoker = cls(nn_config)
         return invoker
+
+
+class AlignInvoker(NNInvoker):
+    """A invoker for X-Alignment tuning"""
+    @classmethod
+    def from_config(cls, nn_config: Union[str, dict]) -> "NNInvoker":
+        """
+        Create an instance from `nn_config`.
+        """
+        invoker = cls(nn_config)
+        return invoker
+
+    def submit_rm(self, submit_mode: SubmitMode = SubmitMode.K8s):
+        """
+        Submit remote tuning execution for reward model(rm).
+        """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support submit_rm yet."
+        )
+
+    def submit_dpo(self, submit_mode: SubmitMode = SubmitMode.K8s):
+        """
+        Submit remote execution for DPO.
+        """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support submit_dpo yet."
+        )
+
+    def submit_ppo(self, submit_mode: SubmitMode = SubmitMode.K8s):
+        """
+        Submit remote execution for PPO.
+        """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support submit_ppo yet."
+        )
