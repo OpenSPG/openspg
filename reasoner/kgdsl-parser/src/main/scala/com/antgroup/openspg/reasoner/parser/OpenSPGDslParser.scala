@@ -51,7 +51,7 @@ import com.antgroup.openspg.reasoner.parser.pattern.{
 /**
  * parse dsl to Block
  */
-class OpenspgDslParser extends ParserInterface {
+class OpenSPGDslParser extends ParserInterface {
   val patternParser: PatternParser = new PatternParser()
   val exprParser: RuleExprParser = new RuleExprParser()
   val expr2StringTransformer = new Expr2QlexpressTransformer()

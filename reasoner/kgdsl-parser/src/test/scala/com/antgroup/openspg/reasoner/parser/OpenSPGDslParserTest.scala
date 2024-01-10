@@ -24,8 +24,8 @@ import com.antgroup.openspg.reasoner.lube.common.rule.ProjectRule
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
-class OpenspgDslParserTest extends AnyFunSpec {
-  val parser = new OpenspgDslParser()
+class OpenSPGDslParserTest extends AnyFunSpec {
+  val parser = new OpenSPGDslParser()
   it ("test return edge or node") {
     val dsl = """GraphStructure {
                 |  A [Film]}

@@ -15,7 +15,7 @@ package com.antgroup.reasoner.session
 
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog
 import com.antgroup.openspg.reasoner.lube.physical.util.PhysicalOperatorUtil
-import com.antgroup.openspg.reasoner.parser.OpenspgDslParser
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
@@ -49,7 +49,7 @@ class PhysicalOpUtilTests extends AnyFunSpec {
       "User_trade_User" -> Set.apply("trade_num", "trade_time"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new OpenspgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val rst = session.plan(dsl, Map.empty)
     PhysicalOperatorUtil.getStartTypes(rst.head) should equal (Set.apply("User"))
   }

@@ -24,7 +24,7 @@ import com.antgroup.openspg.reasoner.lube.physical.operators.PhysicalOperator;
 import com.antgroup.openspg.reasoner.lube.physical.operators.Select;
 import com.antgroup.openspg.reasoner.lube.physical.operators.Start;
 import com.antgroup.openspg.reasoner.lube.physical.util.PhysicalOperatorUtil;
-import com.antgroup.openspg.reasoner.parser.OpenspgDslParser;
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.impl.LocalPropertyGraph;
 import com.antgroup.openspg.reasoner.runner.local.impl.LocalReasonerSession;
@@ -53,7 +53,7 @@ public class LocalReasonerRunner {
   private final ParserInterface parser;
 
   public LocalReasonerRunner() {
-    this.parser = new OpenspgDslParser();
+    this.parser = new OpenSPGDslParser();
   }
 
   public LocalReasonerRunner(ParserInterface parser) {
