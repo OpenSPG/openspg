@@ -25,19 +25,19 @@ public class FromUnixTime {
     return fromUnixTime(tsStr, format);
   }
 
-  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime")
+  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime,from_unixtime")
   public String fromUnixTime(String tsStr, String format) {
     long ts = Long.parseLong(tsStr);
     return fromUnixTime(ts, format);
   }
 
-  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime")
+  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime,from_unixtime")
   public String fromUnixTime(long ts) {
     String format = "yyyy-MM-dd HH:mm:ss";
     return fromUnixTime(ts, format);
   }
 
-  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime")
+  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime,from_unixtime")
   public String fromUnixTime(long ts, String format) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
     simpleDateFormat.setTimeZone(DateUtils.timeZone);

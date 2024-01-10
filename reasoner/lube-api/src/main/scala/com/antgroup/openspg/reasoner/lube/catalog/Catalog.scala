@@ -13,16 +13,10 @@
 
 package com.antgroup.openspg.reasoner.lube.catalog
 
-import scala.collection.mutable
-
-import com.antgroup.openspg.reasoner.common.exception.
-{
-  ConnectionNotFoundException,
-  GraphAlreadyExistsException,
-  GraphNotFoundException
-}
+import com.antgroup.openspg.reasoner.common.exception.{ConnectionNotFoundException, GraphAlreadyExistsException, GraphNotFoundException}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
+import scala.collection.mutable
 
 
 /**
@@ -33,7 +27,7 @@ import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
  */
 abstract class Catalog() extends Serializable {
   protected val graphRepository = new mutable.HashMap[String, SemanticPropertyGraph]()
-  private val connections = new mutable.HashMap[String, AbstractConnection]()
+  private val connections = new mutable.HashMap[String, mutable.HashSet[AbstractConnection]]()
 
   /**
    * Init Catalog from Knowledge Graph
@@ -69,7 +63,9 @@ abstract class Catalog() extends Serializable {
    */
   def registerConnection(types: Set[String], connection: AbstractConnection): Unit = {
     for (t <- types) {
-      connections.put(t, connection)
+      val innerConnSet: mutable.HashSet[AbstractConnection] =
+        connections.getOrElseUpdate(t, new mutable.HashSet[AbstractConnection]())
+      innerConnSet.add(connection)
     }
   }
 
@@ -78,12 +74,12 @@ abstract class Catalog() extends Serializable {
    * @param typeName
    * @return
    */
-  def getConnection(typeName: String): AbstractConnection = {
+  def getConnection(typeName: String): Set[AbstractConnection] = {
     val finalType = typeName.split("/")(0)
     if (!connections.contains(finalType)) {
       throw ConnectionNotFoundException(s"$finalType not found.", null)
     }
-    connections.get(finalType).orNull
+    connections.getOrElse(finalType, mutable.Set.empty).toSet
   }
 
   /**

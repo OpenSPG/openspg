@@ -21,6 +21,7 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
 import com.antgroup.openspg.reasoner.lube.logical.NodeVar;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
+import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,16 +36,23 @@ import java.util.TreeSet;
 public class KgGraphSortImpl implements KgGraphListProcess {
   private final scala.collection.immutable.List<Var> groupKey;
   private final scala.collection.immutable.List<SortItem> sortItems;
+  private final List<List<String>> ruleList = new ArrayList<>();
   private final int limit;
+  private final String taskId;
   private final KgGraphSplitStaticParameters staticParameters;
 
   public KgGraphSortImpl(
       scala.collection.immutable.List<Var> groupKey,
       scala.collection.immutable.List<SortItem> sortItems,
       Pattern schema,
-      int limit) {
+      int limit,
+      String taskId) {
     this.groupKey = groupKey;
     this.sortItems = sortItems;
+    for (int i = 0; i < sortItems.size(); ++i) {
+      SortItem sortItem = sortItems.apply(i);
+      this.ruleList.add(WareHouseUtils.getRuleList(sortItem.expr()));
+    }
     this.limit = limit;
     Set<String> splitVertexAliases = new HashSet<>();
     for (int i = 0; i < groupKey.size(); ++i) {
@@ -53,6 +61,7 @@ public class KgGraphSortImpl implements KgGraphListProcess {
         splitVertexAliases.add(var.name());
       }
     }
+    this.taskId = taskId;
     this.staticParameters = new KgGraphSplitStaticParameters(splitVertexAliases, schema);
   }
 
@@ -73,7 +82,8 @@ public class KgGraphSortImpl implements KgGraphListProcess {
         Object[] keys = RunnerUtil.getVarFromKgGraph(kgGraph, groupKey);
         TreeMap<KgGraphSortItem, List<KgGraph<IVertexId>>> sortedTreeMap =
             groupByMap.computeIfAbsent(new GroupByKeyItem(keys), k -> new TreeMap<>());
-        KgGraphSortItem newItem = new KgGraphSortItem(this.sortItems, kgGraph);
+        KgGraphSortItem newItem =
+            new KgGraphSortItem(this.sortItems, ruleList, kgGraph, this.taskId);
         int allSize = 0;
         for (List<KgGraph<IVertexId>> kgGraphList : sortedTreeMap.values()) {
           allSize += kgGraphList.size();
@@ -110,7 +120,8 @@ public class KgGraphSortImpl implements KgGraphListProcess {
         } else if (kgGraphList.size() + count > limit) {
           TreeSet<KgGraphSortItem> sortItemTreeSet = new TreeSet<>();
           for (KgGraph<IVertexId> kgGraph : kgGraphList) {
-            sortItemTreeSet.add(new KgGraphSortItem(this.sortItems, kgGraph));
+            sortItemTreeSet.add(
+                new KgGraphSortItem(this.sortItems, this.ruleList, kgGraph, this.taskId));
           }
           for (int i = sortItemTreeSet.size(); i > (limit - count); --i) {
             sortItemTreeSet.remove(sortItemTreeSet.last());

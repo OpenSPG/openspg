@@ -10,6 +10,7 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
+
 package com.antgroup.openspg.reasoner.batching;
 
 import com.alibaba.fastjson.JSONObject;
@@ -20,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 public class DynamicBatchSize {
   private static final Logger log = LoggerFactory.getLogger(DynamicBatchSize.class);
-
   private final List<Integer> costs = new ArrayList<>();
   private final List<Long> batchSizes = new ArrayList<>();
   private long preBatchTime = 0;
@@ -77,8 +77,7 @@ public class DynamicBatchSize {
   }
 
   /**
-   * Retrieve the next batch size. The dynamic batch size calculation formula is N^i = N^(i-1) - p *
-   * s, where p is the step size, and s is the gradient.
+   * 获取下一个batch大小 动态batchSize计算公式为 N^i = N^(i-1) - p*s 其中p为步长, s为梯度
    *
    * @return
    */
@@ -91,7 +90,7 @@ public class DynamicBatchSize {
         processSize = allSize;
         return allSize;
       }
-      // Set the first round to the 500th percentile.
+      // 第一轮设置为500分位
       preBatchTime = System.currentTimeMillis();
       long curSize = (long) (allSize / (expectRounds * 2.5));
       curSize = uniformBatchSize(curSize);
@@ -101,7 +100,7 @@ public class DynamicBatchSize {
       nowRound++;
       return curSize;
     } else if (nowRound == 1) {
-      // Set the second round to the 200th percentile.
+      // 第二轮设置为200分位
       long curSize = allSize / expectRounds;
       curSize = uniformBatchSize(curSize);
       costs.add(computeProcessTime());
@@ -116,8 +115,7 @@ public class DynamicBatchSize {
       int size = costs.size();
       long curSize = 0;
       if (batchSizes.get(size - 1) - batchSizes.get(size - 2) == 0) {
-        // To avoid being restricted to a certain value when the denominator is zero, introduce a
-        // perturbation to the batchSize.
+        // 分母为0，batchSize做一个扰动，避免被限制在某一个数值
         curSize = batchSizes.get(size - 1) + disturb;
       } else {
         double tN1 = costs.get(size - 1) * allSize * 1.0 / batchSizes.get(size - 1);
@@ -125,15 +123,14 @@ public class DynamicBatchSize {
         double gradient = (tN1 - tN2) / (batchSizes.get(size - 1) - batchSizes.get(size - 2));
         curSize = Double.valueOf(batchSizes.get(size - 1) - step * gradient).intValue();
         if (curSize <= 0) {
-          // As a fallback, if the calculated value is abnormal, take the size of the previous
-          // batch.
+          // 兜底，如果计算值异常则取上一个batch大小
           curSize = batchSizes.get(size - 1);
         }
       }
       curSize = (int) Math.min(allSize - processSize, curSize);
       curSize = uniformBatchSize(curSize);
 
-      // Gradient control: an increase of no more than 30% is allowed at a time.
+      // 梯度控制，一次不允许增加超过30%
       final double gradient = 1.3;
       if (batchSizes.size() > 0) {
         long lastBatchSize = batchSizes.get(batchSizes.size() - 1);
@@ -143,9 +140,7 @@ public class DynamicBatchSize {
       }
 
       if (nowCost < 30 * 1000) {
-        // If each round of calculation is less than 30 seconds, do not allow the batch size to be
-        // reduced,
-        // as the gradient is not significant when the load is very low.
+        // 每轮计算小于30秒，不允许降低batch大小，因为负载非常低时，梯度不明显
         long lastSize = batchSizes.get(batchSizes.size() - 1);
         if (curSize < lastSize) {
           curSize = lastSize + disturb;

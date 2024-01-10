@@ -17,11 +17,15 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
+import com.antgroup.openspg.reasoner.lube.logical.operators.LogicalOperator;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
 import com.antgroup.openspg.reasoner.lube.physical.PropertyGraph;
 import com.antgroup.openspg.reasoner.runner.local.rdg.LocalRDG;
 import com.antgroup.openspg.reasoner.session.KGReasonerSession;
 import com.antgroup.openspg.reasoner.warehouse.common.config.GraphLoaderConfig;
+import scala.collection.immutable.List;
+import scala.collection.immutable.Map;
+import scala.collection.immutable.Set;
 import scala.reflect.api.TypeTags.TypeTag;
 
 public class LocalReasonerSession extends KGReasonerSession<LocalRDG> {
@@ -41,6 +45,19 @@ public class LocalReasonerSession extends KGReasonerSession<LocalRDG> {
       TypeTag<LocalRDG> typeTag,
       GraphState<IVertexId> graphState) {
     super(parser, catalog, typeTag);
+    this.graphState = graphState;
+  }
+
+  /** new session with cached data */
+  public LocalReasonerSession(
+      ParserInterface parser,
+      Catalog catalog,
+      TypeTag<LocalRDG> typeTag,
+      GraphState<IVertexId> graphState,
+      List<LogicalOperator> optimizedLogicalPlan,
+      Set<String> variableParameters,
+      Map<String, String> idFilterParameters) {
+    super(parser, catalog, optimizedLogicalPlan, variableParameters, idFilterParameters, typeTag);
     this.graphState = graphState;
   }
 

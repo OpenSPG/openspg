@@ -10,6 +10,7 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
+
 package com.antgroup.openspg.reasoner.warehouse.common.config;
 
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
@@ -23,36 +24,38 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import scala.Tuple2;
+import scala.Option;
+import scala.Tuple3;
+import scala.collection.JavaConversions;
 
 public class EdgeLoaderConfig implements Serializable {
   /** edge type */
-  @Setter @Getter private String edgeType;
+  private String edgeType;
 
   /** maximum edge threshold for this edge type */
-  @Setter @Getter
   private int edgeTruncateThreshold = GraphLoaderConfig.DEFAULT_EDGE_TRUNCATE_THRESHOLD;
 
   /**
    * connection info for this edge type considering that each edge may be stored in different
    * storage or different table
    */
-  @Setter @Getter private AbstractConnection connection;
+  private Set<AbstractConnection> connection;
 
   /** cut out the unnecessary attribute fields, and only keep the necessary attributes here */
-  @Setter private Set<String> needProperties;
+  private Set<String> needProperties;
 
   /** pushdown edge attribute filtering rules */
   private List<Rule> propertiesFilterRules;
 
-  private List<Tuple2<String, List<String>>> propertiesFilterRuleString;
+  private List<Tuple3<String, String, List<String>>> propertiesFilterRuleString;
+
+  /** The alias for the source and target vertex of this edge */
+  private final Set<String> endVertexAliasSet = new HashSet<>();
 
   /** edge load direction */
-  @Setter @Getter private Direction loadDirection = Direction.BOTH;
+  private Direction loadDirection = Direction.BOTH;
 
   /**
    * get start type from spo format
@@ -81,12 +84,57 @@ public class EdgeLoaderConfig implements Serializable {
   }
 
   /**
+   * get edge type
+   *
+   * @return
+   */
+  public String getEdgeType() {
+    return edgeType;
+  }
+
+  /**
+   * setter
+   *
+   * @param edgeType
+   */
+  public void setEdgeType(String edgeType) {
+    this.edgeType = edgeType;
+  }
+
+  /**
+   * getter
+   *
+   * @return
+   */
+  public int getEdgeTruncateThreshold() {
+    return edgeTruncateThreshold;
+  }
+
+  /**
+   * setter
+   *
+   * @param edgeTruncateThreshold
+   */
+  public void setEdgeTruncateThreshold(int edgeTruncateThreshold) {
+    this.edgeTruncateThreshold = edgeTruncateThreshold;
+  }
+
+  /**
    * getter
    *
    * @return
    */
   public Set<String> getNeedProperties() {
     return needProperties == null ? Collections.emptySet() : needProperties;
+  }
+
+  /**
+   * setter
+   *
+   * @param needProperties
+   */
+  public void setNeedProperties(Set<String> needProperties) {
+    this.needProperties = needProperties;
   }
 
   /**
@@ -103,13 +151,14 @@ public class EdgeLoaderConfig implements Serializable {
    *
    * @return
    */
-  public List<Tuple2<String, List<String>>> getPropertiesFilterRuleString() {
+  public List<Tuple3<String, String, List<String>>> getPropertiesFilterRuleString() {
     if (null != propertiesFilterRuleString) {
       return propertiesFilterRuleString;
     }
     propertiesFilterRuleString = new ArrayList<>();
     for (Rule rule : getPropertiesFilterRules()) {
-      propertiesFilterRuleString.add(WareHouseUtils.getRuleListWithAlias(rule));
+      propertiesFilterRuleString.add(
+          WareHouseUtils.getRuleListWithAlias(rule, this.endVertexAliasSet));
     }
     return propertiesFilterRuleString;
   }
@@ -171,6 +220,42 @@ public class EdgeLoaderConfig implements Serializable {
     return Objects.hash(edgeType);
   }
 
+  /**
+   * Getter method for property connection.
+   *
+   * @return property value of connection
+   */
+  public Set<AbstractConnection> getConnection() {
+    return connection;
+  }
+
+  /**
+   * Setter method for property connection.
+   *
+   * @param connection value to be assigned to property connection
+   */
+  public void setConnection(Set<AbstractConnection> connection) {
+    this.connection = connection;
+  }
+
+  /**
+   * Getter method for property <tt>loadDirection</tt>.
+   *
+   * @return property value of loadDirection
+   */
+  public Direction getLoadDirection() {
+    return loadDirection;
+  }
+
+  /**
+   * Setter method for property <tt>loadDirection</tt>.
+   *
+   * @param loadDirection value to be assigned to property loadDirection
+   */
+  public void setLoadDirection(Direction loadDirection) {
+    this.loadDirection = loadDirection;
+  }
+
   @Override
   public String toString() {
     return "EdgeLoaderConfig,edgeType="
@@ -185,5 +270,12 @@ public class EdgeLoaderConfig implements Serializable {
         + this.getPropertiesFilterRuleString()
         + ",loadDirection="
         + this.getLoadDirection();
+  }
+
+  public void addEndVertexAliasSet(Option<scala.collection.immutable.Set<String>> aliasSet) {
+    if (aliasSet.isEmpty()) {
+      return;
+    }
+    this.endVertexAliasSet.addAll(JavaConversions.setAsJavaSet(aliasSet.get()));
   }
 }

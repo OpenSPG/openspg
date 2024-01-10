@@ -51,25 +51,24 @@ class JSONGraphCatalog(val propertyGraph: String) extends Catalog {
 
   override def getConnections(): Map[AbstractConnection, Set[String]] = Map.empty
 
-  override def getConnection(typeName: String): AbstractConnection = null
+  override def getConnection(typeName: String): Set[AbstractConnection] = Set.empty
 
   /**
    * get default node properties
    * @return
    */
-  override def getDefaultNodeProperties()
-      : Set[Field] = {
+  override def getDefaultNodeProperties(): Set[Field] = {
     Set.apply(
       new Field(Constants.NODE_ID_KEY, KTString, true),
       new Field(Constants.VERTEX_INTERNAL_ID_KEY, KTString, true),
-      new Field(Constants.CONTEXT_LABEL, KTString, true))
+      new Field(Constants.CONTEXT_LABEL, KTString, true),
+      new Field(Constants.PROPERTY_JSON_KEY, KTString, true))
   }
 
   /**
    * get default edge properties
    */
-  override def getDefaultEdgeProperties()
-      : Set[Field] = {
+  override def getDefaultEdgeProperties(): Set[Field] = {
     Set.apply(
       new Field(Constants.CONTEXT_LABEL, KTString, true),
       new Field(Constants.EDGE_FROM_ID_KEY, KTString, true),
@@ -77,8 +76,8 @@ class JSONGraphCatalog(val propertyGraph: String) extends Catalog {
       new Field(Constants.EDGE_FROM_INTERNAL_ID_KEY, KTString, true),
       new Field(Constants.EDGE_TO_INTERNAL_ID_KEY, KTString, true),
       new Field(Constants.EDGE_FROM_ID_TYPE_KEY, KTString, true),
-      new Field(Constants.EDGE_TO_ID_TYPE_KEY, KTString, true)
-    )
+      new Field(Constants.EDGE_TO_ID_TYPE_KEY, KTString, true),
+      new Field(Constants.PROPERTY_JSON_KEY, KTString, true))
   }
 
 }

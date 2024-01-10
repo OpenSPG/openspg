@@ -27,7 +27,7 @@ import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext;
 import com.antgroup.openspg.reasoner.lube.logical.validate.Validator;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
-import com.antgroup.openspg.reasoner.parser.KgDslParser;
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser;
 import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
 import com.google.common.collect.Lists;
 import java.util.*;
@@ -174,7 +174,7 @@ public class PropertyChecker {
 
   protected void checkDSL(String dsl, Catalog catalog) {
     try {
-      ParserInterface parser = new KgDslParser();
+      ParserInterface parser = new OpenSPGDslParser();
       List<Block> blocks =
           Lists.newArrayList(
               JavaConversions.asJavaCollection(

@@ -26,7 +26,7 @@ import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog
 import com.antgroup.openspg.reasoner.lube.catalog.struct.{Field, NodeType}
 import com.antgroup.openspg.reasoner.lube.common.pattern._
-import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, _}
+import com.antgroup.openspg.reasoner.lube.logical._
 import com.antgroup.openspg.reasoner.lube.logical.operators.LogicalOperator
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.LogicalOptimizer
 import com.antgroup.openspg.reasoner.lube.logical.planning.{
@@ -65,6 +65,19 @@ abstract class KGReasonerSession[T <: RDG[T]: TypeTag](
   private var loaderConfig: GraphLoaderConfig = new GraphLoaderConfig()
   private var variableParameters: Set[String] = Set.empty
   private var idFilterParameters: Map[String, String] = Map.empty
+  private var optimizedLogicalPlan: List[LogicalOperator] = List.empty
+
+  def this(
+      parser: ParserInterface,
+      catalog: Catalog,
+      optimizedLogicalPlan: List[LogicalOperator],
+      variableParameters: Set[String],
+      idFilterParameters: Map[String, String]) {
+    this(parser, catalog)
+    this.optimizedLogicalPlan = optimizedLogicalPlan
+    this.variableParameters = variableParameters
+    this.idFilterParameters = idFilterParameters
+  }
 
   /**
    * Init KGReasonerSession.
@@ -116,6 +129,12 @@ abstract class KGReasonerSession[T <: RDG[T]: TypeTag](
   def getIdFilterParameters(): Map[String, String] = idFilterParameters
 
   /**
+   * get optimized logical plan tree
+   * @return
+   */
+  def getOptimizedLogicalPlan(): List[LogicalOperator] = optimizedLogicalPlan
+
+  /**
    * get load config from parse plan
    */
   def getLoaderConfig(): GraphLoaderConfig = loaderConfig
@@ -133,6 +152,22 @@ abstract class KGReasonerSession[T <: RDG[T]: TypeTag](
    * @return
    */
   def plan(query: String, params: Map[String, Object]): List[PhysicalOperator[T]] = {
+    optimizedLogicalPlan = plan2OptimizedLogicalPlan(query, params)
+    planLogicalPlan2PhysicalPlan(optimizedLogicalPlan, params)
+  }
+
+  /**
+   * Generate the optimization logical plan of giving KGDSL/GQL query.
+   * step1: Parse query to unresolved logical plan, which is represented by [[Block]].
+   * step2: Use [[LogicalPlanner]] to plan unresolved logical plan to logical plan,
+   * which is represented by [[LogicalOperator]]
+   * @param query
+   * @param params
+   * @return
+   */
+  def plan2OptimizedLogicalPlan(
+      query: String,
+      params: Map[String, Object]): List[LogicalOperator] = {
     var start = System.currentTimeMillis()
     val blocks = plan2UnresolvedLogicalPlan(query, params)
     if (ParameterUtils.isEnableSPGPlanPrettyPrint(params)) {
@@ -149,7 +184,13 @@ abstract class KGReasonerSession[T <: RDG[T]: TypeTag](
     logger.info(
       "benchmark main plan plan2LogicalPlan cost = "
         + (System.currentTimeMillis() - start))
-    start = System.currentTimeMillis()
+    optimizedLogicalPlan
+  }
+
+  def planLogicalPlan2PhysicalPlan(
+      optimizedLogicalPlan: List[LogicalOperator],
+      params: Map[String, Object]): List[PhysicalOperator[T]] = {
+    val start = System.currentTimeMillis()
     val physicalPlan = plan2PhysicalPlan(optimizedLogicalPlan, params)
     logger.info(
       "benchmark main plan plan2PhysicalPlan cost = "

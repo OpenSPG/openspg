@@ -14,8 +14,7 @@
 package com.antgroup.openspg.reasoner.lube.logical.optimizer.rules
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.trees.BottomUp
-import com.antgroup.openspg.reasoner.common.types.{KTBoolean, KTDouble, KTLong, KTString}
+import com.antgroup.openspg.reasoner.common.trees.TopDown
 import com.antgroup.openspg.reasoner.lube.common.expr.{Filter => _, _}
 import com.antgroup.openspg.reasoner.lube.common.pattern._
 import com.antgroup.openspg.reasoner.lube.common.rule.LogicRule
@@ -42,22 +41,17 @@ object IdFilterPushDown extends Rule {
     val updatedRule = filter.rule match {
       case rule: LogicRule =>
         rule.getExpr match {
-          case BinaryOpExpr(
-                BIn | BEqual,
+          case BinaryOpExpr(opName,
                 UnaryOpExpr(GetField(Constants.NODE_ID_KEY), Ref(refName)),
                 r) =>
-            val rightExpr = r match {
-              case VString(value) => VList(List.apply(value), KTString)
-              case VLong(value) => VList(List.apply(value), KTLong)
-              case VDouble(value) => VList(List.apply(value), KTDouble)
-              case VBoolean(value) => VList(List.apply(value), KTBoolean)
-              case Parameter(_) | VList(_, _) => r
+            opName match {
+              case BIn => r match {
+                case _ => (refName, r, BIn)
+              }
+              case BEqual => r match {
+                case _ => (refName, r, BEqual)
+              }
               case _ => null
-            }
-            if (rightExpr != null) {
-              (refName, rightExpr)
-            } else {
-              null
             }
           case _ => null
         }
@@ -66,9 +60,17 @@ object IdFilterPushDown extends Rule {
     if (updatedRule == null) {
       return filter
     }
+
+    var boundedVarLenExpandEdgeNameSet: Set[String] = Set.empty
     def rewriter: PartialFunction[LogicalOperator, LogicalOperator] = {
+      case boundedVarLenExpand: BoundedVarLenExpand =>
+        boundedVarLenExpandEdgeNameSet += boundedVarLenExpand.edgePattern.edge.alias
+        boundedVarLenExpandEdgeNameSet += boundedVarLenExpand.edgePattern.dst.alias
+        boundedVarLenExpandEdgeNameSet += boundedVarLenExpand.edgePattern.src.alias
+        boundedVarLenExpand
       case expandInto: ExpandInto =>
-        val res = updatePatternFilterRule(expandInto.pattern, updatedRule, null)
+        val res = updatePatternFilterRule(expandInto.pattern, updatedRule,
+          null, boundedVarLenExpandEdgeNameSet)
         if (res._1) {
           hasPushDown = true
           expandInto.copy(pattern = res._2)
@@ -77,7 +79,7 @@ object IdFilterPushDown extends Rule {
         }
       case patternScan: PatternScan =>
         val res = updatePatternFilterRule(patternScan.pattern, updatedRule,
-          patternScan.pattern.root.alias)
+          patternScan.pattern.root.alias, boundedVarLenExpandEdgeNameSet)
         if (res._1) {
           hasPushDown = true
           patternScan.copy(pattern = res._2)
@@ -85,36 +87,44 @@ object IdFilterPushDown extends Rule {
           patternScan
         }
     }
-    val newFilter = BottomUp[LogicalOperator](rewriter).transform(filter).asInstanceOf[Filter]
-    newFilter.in
+    val newFilter = TopDown[LogicalOperator](rewriter).transform(filter).asInstanceOf[Filter]
+    if (hasPushDown) {
+      newFilter.in
+    } else {
+      filter
+    }
   }
 
   private def fillInRule(
       filterRule: com.antgroup.openspg.reasoner.lube.common.rule.Rule,
       alias: String,
-      pattern: Pattern): (Boolean, Pattern) = {
+      pattern: Pattern, boundedVarLenExpandEdgeNameSet: Set[String]): (Boolean, Pattern) = {
     var pushToAlias = ""
-    pattern match {
-      case NodePattern(node) =>
-        if (node.alias.equals(alias)) {
-          pushToAlias = node.alias
-        }
-      case EdgePattern(_, _, edge) =>
-        if (edge.alias.equals(alias)) {
-          pushToAlias = edge.alias
-        }
-      case PartialGraphPattern(_, nodes, edges) =>
-        if (nodes.contains(alias)) {
-          pushToAlias = alias;
-        }
-        val edgeSet = edges.values.flatten
-        for (e <- edgeSet) {
-          if (StringUtils.isBlank(pushToAlias) && e.alias.equals(alias)) {
-            pushToAlias = e.alias
+    if (!boundedVarLenExpandEdgeNameSet.contains(alias)) {
+      pattern match {
+        case NodePattern(node) =>
+          if (node.alias.equals(alias)) {
+            pushToAlias = node.alias
           }
-        }
-      case _ =>
+        case EdgePattern(_, _, edge) =>
+          if (edge.alias.equals(alias)) {
+            pushToAlias = edge.alias
+          }
+        case PartialGraphPattern(_, nodes, edges) =>
+          if (nodes.contains(alias)) {
+            pushToAlias = alias;
+          }
+          val edgeSet = edges.values.flatten
+          for (e <- edgeSet) {
+            if (StringUtils.isBlank(pushToAlias) &&
+              e.alias.equals(alias)) {
+              pushToAlias = e.alias
+            }
+          }
+        case _ =>
+      }
     }
+
     if (StringUtils.isNotBlank(pushToAlias)) {
       (true, pattern.fillInRule(filterRule, pushToAlias))
     } else {
@@ -124,20 +134,22 @@ object IdFilterPushDown extends Rule {
 
   private def updatePatternFilterRule(
       pattern: Pattern,
-      updateExpr: (String, Expr),
-      startAlias: String): (Boolean, Pattern) = {
+      updateExpr: (String, Expr, BinaryOpSet),
+      startAlias: String,
+      boundedVarLenExpandEdgeNameSet: Set[String]): (Boolean, Pattern) = {
     var updatedPattern = pattern
 
     val alias = updateExpr._1
     val expr = updateExpr._2
+    val opName = updateExpr._3
     var isChange = false
     // node rule
     if (alias.equals(startAlias)) {
       val filterRule = LogicRule(
         "generate_id_filter_" + alias,
         "",
-        BinaryOpExpr(BIn, UnaryOpExpr(GetField(Constants.NODE_ID_KEY), Ref(alias)), expr))
-      val res = fillInRule(filterRule, alias, updatedPattern)
+        BinaryOpExpr(opName, UnaryOpExpr(GetField(Constants.NODE_ID_KEY), Ref(alias)), expr))
+      val res = fillInRule(filterRule, alias, updatedPattern, boundedVarLenExpandEdgeNameSet)
       isChange = res._1 || isChange
       updatedPattern = res._2
     }
@@ -148,8 +160,10 @@ object IdFilterPushDown extends Rule {
       val filterInEdgeRule = LogicRule(
         "generate_in_edge_id_filter_" + x.alias,
         "",
-        BinaryOpExpr(BIn, UnaryOpExpr(GetField(Constants.EDGE_TO_ID_KEY), Ref(x.alias)), expr))
-      val res = fillInRule(filterInEdgeRule, x.alias, updatedPattern)
+        BinaryOpExpr(opName, UnaryOpExpr(GetField(Constants.EDGE_TO_ID_KEY), Ref(x.alias)), expr))
+      val res = fillInRule(filterInEdgeRule, x.alias, updatedPattern,
+        boundedVarLenExpandEdgeNameSet)
+
       isChange = res._1 || isChange
       updatedPattern = res._2
     })
@@ -159,8 +173,9 @@ object IdFilterPushDown extends Rule {
       val filterOutEdgeRule = LogicRule(
         "generate_out_edge_id_filter_" + x.alias,
         "",
-        BinaryOpExpr(BIn, UnaryOpExpr(GetField(Constants.EDGE_FROM_ID_KEY), Ref(x.alias)), expr))
-      val res = fillInRule(filterOutEdgeRule, x.alias, updatedPattern)
+        BinaryOpExpr(opName, UnaryOpExpr(GetField(Constants.EDGE_FROM_ID_KEY), Ref(x.alias)), expr))
+      val res = fillInRule(filterOutEdgeRule, x.alias,
+        updatedPattern, boundedVarLenExpandEdgeNameSet)
       isChange = res._1 || isChange
       updatedPattern = res._2
     })

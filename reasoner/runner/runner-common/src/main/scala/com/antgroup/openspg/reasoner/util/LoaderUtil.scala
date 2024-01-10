@@ -21,14 +21,7 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.{
   PatternConnection
 }
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
-import com.antgroup.openspg.reasoner.lube.logical.{
-  EdgeVar,
-  NodeVar,
-  PathVar,
-  RepeatPathVar,
-  SolvedModel,
-  Var
-}
+import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, SolvedModel, Var}
 import com.antgroup.openspg.reasoner.lube.logical.PatternOps.PatternOps
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.warehouse.common.config.{
@@ -36,6 +29,7 @@ import com.antgroup.openspg.reasoner.warehouse.common.config.{
   GraphLoaderConfig,
   VertexLoaderConfig
 }
+import java.util
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
@@ -230,6 +224,41 @@ object LoaderUtil {
     }
   }
 
+  private def getEdgeEndVertexAliasSet(logicalPlan: LogicalOperator): Map[String, Set[String]] = {
+    logicalPlan.transform[Map[String, Set[String]]] {
+      case (PatternScan(_, pattern), maps) =>
+        mergeEdgeEndVertexAliasMap(maps :+ getPatternEdgeEndVertexAliasMap(pattern))
+      case (ExpandInto(_, _, pattern), maps) =>
+        mergeEdgeEndVertexAliasMap(maps :+ getPatternEdgeEndVertexAliasMap(pattern))
+      case (_, maps) => mergeEdgeEndVertexAliasMap(maps)
+    }
+  }
+
+  private def mergeEdgeEndVertexAliasMap(
+      list: List[Map[String, Set[String]]]): Map[String, Set[String]] = {
+    list.foldLeft(Map[String, Set[String]]()) { (acc, m) =>
+      m.foldLeft(acc) { (accInner, kv) =>
+        val (key, valueSet) = kv
+        accInner + (key -> (accInner.getOrElse(key, Set.empty[String]) ++ valueSet))
+      }
+    }
+  }
+
+  private def getPatternEdgeEndVertexAliasMap(pattern: Pattern): Map[String, Set[String]] = {
+    pattern.topology.values
+      .flatMap(pcs => pcs.map(pc => pc))
+      .map(pc => (pc.relTypes, pc.source, pc.target))
+      .flatMap { case (set, str1, str2) =>
+        for {
+          s <- set
+        } yield (s, str1, str2)
+      }
+      .groupBy(_._1)
+      .map { case (key, tuples) =>
+        key -> tuples.flatMap(t => Set(t._2, t._3)).toSet
+      }
+  }
+
   private def getAllowIsolateVertexFromEdgeLoadDirectionMap(
       edgeLoadDirectionMap: Map[String, Direction]): Set[String] = {
     val isolateVertexMap = new mutable.HashMap[String, mutable.HashMap[SPO, Direction]]()
@@ -297,7 +326,8 @@ object LoaderUtil {
     val loaderConf = new GraphLoaderConfig()
     val vertexLoaderConfigMap = new mutable.HashMap[String, VertexLoaderConfig]()
     val edgeLoaderConfigMap = new mutable.HashMap[String, EdgeLoaderConfig]()
-    for (field <- solvedModel.fields.values.map(flatten(_)).flatten) {
+    val edgeEndVertexAliasSet = getEdgeEndVertexAliasSet(logicalPlan)
+    for (field <- solvedModel.fields.values.map(f => f.flatten).flatten) {
       field match {
         case nodeVar: NodeVar =>
           for (typeName <- solvedModel.getTypes(field.name)) {
@@ -310,7 +340,8 @@ object LoaderUtil {
               vertexLoaderConfig.setVertexType(node.typeName)
               vertexLoaderConfig.setNeedProperties(
                 nodeVar.fields.filter(_.resolved).map(_.name).asJava)
-              vertexLoaderConfig.setConnection(catalog.getConnection(node.typeName))
+              vertexLoaderConfig.setConnection(
+                new util.HashSet(catalog.getConnection(node.typeName).asJava))
               if (vertexLoaderConfigMap.contains(node.typeName)) {
                 val oldVertexLoaderConfig = vertexLoaderConfigMap(node.typeName)
                 vertexLoaderConfig.merge(oldVertexLoaderConfig)
@@ -327,13 +358,15 @@ object LoaderUtil {
               edgeLoaderConfig.setEdgeType(edgeTypeName)
               edgeLoaderConfig.setNeedProperties(
                 edgeVar.fields.filter(_.resolved).map(_.name).asJava)
-              edgeLoaderConfig.setConnection(catalog.getConnection(edgeTypeName))
+              edgeLoaderConfig.setConnection(
+                new util.HashSet(catalog.getConnection(edgeTypeName).asJava))
               if (edgeLoaderConfigMap.contains(edgeTypeName)) {
                 val oldEdgeLoaderConfig = edgeLoaderConfigMap(edgeTypeName)
                 edgeLoaderConfig.merge(oldEdgeLoaderConfig)
               }
               edgeLoaderConfig.setLoadDirection(
                 edgeLoadDirectionMap.getOrElse(edgeTypeName, Direction.BOTH))
+              edgeLoaderConfig.addEndVertexAliasSet(edgeEndVertexAliasSet.get(edge.typeName))
               edgeLoaderConfigMap.put(edgeTypeName, edgeLoaderConfig)
             }
           }
@@ -390,14 +423,6 @@ object LoaderUtil {
       })
     }
     ruleMap.toMap
-  }
-
-  private def flatten(v: Var): List[Var] = {
-    v match {
-      case v: RepeatPathVar => flatten(v.pathVar)
-      case v: PathVar => v.elements
-      case _ => List.apply(v)
-    }
   }
 
 }

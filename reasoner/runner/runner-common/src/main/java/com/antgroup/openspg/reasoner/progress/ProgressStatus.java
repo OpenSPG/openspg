@@ -16,30 +16,34 @@ package com.antgroup.openspg.reasoner.progress;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.Getter;
-import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class ProgressStatus implements Serializable {
+public class ProgressStatus implements Serializable {
   private static final Logger log = LoggerFactory.getLogger(ProgressStatus.class);
-
-  @Getter @Setter private JobStatus status;
-  @Getter @Setter private ProgressInfo progressInfo;
-  @Getter private String errMsg;
+  private JobStatus status;
+  private ProgressInfo progressInfo;
+  private String errMsg;
   private final String instanceId;
   private final String taskKey;
   private final String persistenceWay;
-  @Getter private final Map<TimeConsumeType, Long> timeConsumeMap = new HashMap<>();
+  private final Map<TimeConsumeType, Long> timeConsumeMap = new HashMap<>();
   private TimeConsumeType nowType;
   private long nowTypeStartMs;
+  private ObjectStoreInterface objectStoreInterface;
+  public static final String LOCAL_FILE_PREFIX = "file://";
 
   public ProgressStatus(JSONObject context) {
     this.instanceId = context.getString("instanceId");
     this.taskKey = context.getString("taskKey");
+    // 内容清零0
     this.progressInfo = new ProgressInfo();
     this.errMsg = context.getString("errMsg");
     this.status = str2Status(context.getString("status"));
@@ -58,15 +62,6 @@ public abstract class ProgressStatus implements Serializable {
     this.status = JobStatus.pending;
     this.progressInfo.setTotalSteps(totalSteps);
   }
-
-  /** Persistent progress status files */
-  public abstract void persistenceProgressStatus();
-
-  /** Retrieve task status information from storage. */
-  public abstract void refresh();
-
-  /** Reset the exists progress status file */
-  public abstract void reset();
 
   private JobStatus str2Status(String s) {
     if ("ERROR".equals(s)) {
@@ -105,10 +100,74 @@ public abstract class ProgressStatus implements Serializable {
     return JSON.toJSONString(context, true);
   }
 
+  public void persistenceProgressStatus() {
+    log.info("persistenceProgressStatus: storage is " + this.persistenceWay + " " + this.toJson());
+    if ("oss".equals(this.persistenceWay)) {
+      persistenceProgressToOSS();
+    } else if (this.persistenceWay.startsWith(LOCAL_FILE_PREFIX)) {
+      persistenceLocalFile();
+    } else {
+      log.error("persistenceProgressStatus not support");
+    }
+  }
+
+  private synchronized void persistenceProgressToOSS() {
+    try {
+      objectStoreInterface.putFileContent(taskKey, toJson());
+    } catch (Exception e) {
+      log.warn("ProgressStatus::persistenceProgressStatus update failed! " + e.getMessage());
+    }
+  }
+
+  private synchronized void persistenceLocalFile() {
+    try {
+      String filePath = taskKey.substring(LOCAL_FILE_PREFIX.length());
+      File file = new File(filePath);
+      FileOutputStream outputStream = new FileOutputStream(file);
+      outputStream.write(toJson().getBytes(StandardCharsets.UTF_8));
+      outputStream.close();
+    } catch (Exception e) {
+      log.warn("ProgressStatus::persistenceProgressStatus update failed! " + e.getMessage());
+    }
+  }
+
+  /** 从存储中获取任务状态信息 */
+  public void refresh() {
+    if ("oss".equals(this.persistenceWay)) {
+      String content = null;
+      try {
+        content = objectStoreInterface.getFileContent(taskKey);
+        if (StringUtils.isBlank(content)) {
+          return;
+        }
+        JSONObject contentObj = JSONObject.parseObject(content);
+        this.errMsg = contentObj.getString("errMsg");
+        this.progressInfo = contentObj.getObject("progressInfo", ProgressInfo.class);
+        this.status = contentObj.getObject("status", JobStatus.class);
+      } catch (Exception ex) {
+        log.error("content={} refresh error, ", content, ex);
+      }
+    }
+  }
+
+  public void reset() {
+    if ("oss".equals(this.persistenceWay)) {
+      try {
+        objectStoreInterface.removeFile(taskKey);
+      } catch (Exception ex) {
+        log.error("reset error, ", ex);
+      }
+    }
+  }
+
   public void updateStatus(JobStatus jobStatus, String errMsg) {
     this.status = jobStatus;
     this.errMsg = errMsg;
     persistenceProgressStatus();
+  }
+
+  public String getErrMsg() {
+    return this.errMsg;
   }
 
   public void finishedProgress() {
@@ -132,7 +191,7 @@ public abstract class ProgressStatus implements Serializable {
           "task is finished, can not change status, now status=" + this.status);
     }
     if (step == this.progressInfo.getCurStep() && total == this.progressInfo.getTotal()) {
-      // The same steps do not need to be reset.
+      // 相同的步骤不需要重置
       return;
     }
     this.status = JobStatus.running;
@@ -169,6 +228,22 @@ public abstract class ProgressStatus implements Serializable {
     persistenceProgressStatus();
   }
 
+  public ProgressInfo getProgressInfo() {
+    return progressInfo;
+  }
+
+  public void setProgressInfo(ProgressInfo progressInfo) {
+    this.progressInfo = progressInfo;
+  }
+
+  public String getStatus() {
+    return status.name();
+  }
+
+  public void setStatus(JobStatus status) {
+    this.status = status;
+  }
+
   public void setTimeConsumeType(TimeConsumeType type) {
     long nowMs = System.currentTimeMillis();
 
@@ -184,6 +259,14 @@ public abstract class ProgressStatus implements Serializable {
     }
   }
 
+  public Map<TimeConsumeType, Long> getTimeConsumeMap() {
+    return timeConsumeMap;
+  }
+
+  public void setObjectStoreInterface(ObjectStoreInterface objectStoreInterface) {
+    this.objectStoreInterface = objectStoreInterface;
+  }
+
   public enum JobStatus implements Serializable {
     running,
     pending,
@@ -191,8 +274,6 @@ public abstract class ProgressStatus implements Serializable {
     finished
   }
 
-  @Getter
-  @Setter
   public static class ProgressInfo implements Serializable {
     private long batchId;
     private long totalSteps;
@@ -202,6 +283,30 @@ public abstract class ProgressStatus implements Serializable {
     private long processOffset;
 
     private long shrinkFactor = 1;
+
+    public long getBatchId() {
+      return batchId;
+    }
+
+    public void setBatchId(long batchId) {
+      this.batchId = batchId;
+    }
+
+    public long getTotalSteps() {
+      return totalSteps;
+    }
+
+    public void setTotalSteps(long totalSteps) {
+      this.totalSteps = totalSteps;
+    }
+
+    public long getCurStep() {
+      return curStep;
+    }
+
+    public void setCurStep(long curStep) {
+      this.curStep = curStep;
+    }
 
     public long getTotal() {
       return total / this.shrinkFactor;
@@ -234,6 +339,10 @@ public abstract class ProgressStatus implements Serializable {
       return readOffset / this.shrinkFactor;
     }
 
+    public void setReadOffset(long readOffset) {
+      this.readOffset = readOffset;
+    }
+
     public long getProcessOffset() {
       return processOffset / this.shrinkFactor;
     }
@@ -241,6 +350,14 @@ public abstract class ProgressStatus implements Serializable {
     @JSONField(serialize = false)
     public long getRealProcessOffset() {
       return processOffset;
+    }
+
+    public void setProcessOffset(long processOffset) {
+      this.processOffset = processOffset;
+    }
+
+    public long getShrinkFactor() {
+      return shrinkFactor;
     }
   }
 }

@@ -71,14 +71,16 @@ class DemoGraphParser {
     val s = patternParser.parseIdentifier(ctx.vertex_from().vertex_name().identifier())
     val o = patternParser.parseIdentifier(ctx.vertex_to().vertex_name().identifier())
 
-    val labelProperties = patternParser.parseLabelPropertyList(ctx.label_property_list())
+    val labelProperties =
+      Map.apply(Constants.EDGE_FROM_ID_KEY -> s, Constants.EDGE_TO_ID_KEY -> o) ++ patternParser
+        .parseLabelPropertyList(ctx.label_property_list())
     val labels = patternParser.parseLabelList(ctx.label_property_list())
     var direction = Direction.OUT
     ctx.getChild(1) match {
       case _: Right_arrowContext => direction = Direction.OUT
       case _: Both_arrowContext => direction = Direction.BOTH
     }
-    val edgeProperty = new EdgeProperty(labelProperties.asJava);
+    val edgeProperty = new EdgeProperty(labelProperties.asJava)
     val labelName = getLabel(labels)
     val version = getVersion(labelProperties)
     new Edge[String, IProperty](s, o, edgeProperty, version, direction, labelName)

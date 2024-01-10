@@ -17,7 +17,7 @@ import com.antgroup.openspg.reasoner.catalog.impl.KgSchemaConnectionInfo;
 import com.antgroup.openspg.reasoner.catalog.impl.OpenSPGCatalog;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
-import com.antgroup.openspg.reasoner.parser.KgDslParser;
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.utils.SimpleObjSerde;
 import java.util.Map;
@@ -29,7 +29,7 @@ public class CatalogFactory {
   private static final Logger log = LoggerFactory.getLogger(CatalogFactory.class);
 
   public static Catalog createCatalog(Map<String, Object> params, KgSchemaConnectionInfo connInfo) {
-    return createCatalog(new KgDslParser(), params, connInfo);
+    return createCatalog(new OpenSPGDslParser(), params, connInfo);
   }
 
   public static Catalog createCatalog(

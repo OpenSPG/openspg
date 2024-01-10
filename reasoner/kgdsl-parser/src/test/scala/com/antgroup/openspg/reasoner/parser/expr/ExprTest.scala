@@ -13,13 +13,87 @@
 
 package com.antgroup.openspg.reasoner.parser.expr
 
-import com.antgroup.openspg.reasoner.common.types.KTString
+import com.antgroup.openspg.reasoner.common.exception.KGDSLGrammarException
+import com.antgroup.openspg.reasoner.common.types.{KTObject, KTString}
 import com.antgroup.openspg.reasoner.lube.common.expr.{BinaryOpExpr, _}
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
 class ExprTest extends AnyFunSpec {
+  it("test remove front and tailQuote") {
+    val exprParser = new RuleExprParser()
+    try {
+      exprParser.removeFrontAndTailQuote("abc")
+      true should equal(false)
+    } catch {
+      case ex: KGDSLGrammarException =>
+        ex.getMessage.contains("need quote") should equal(true)
+    }
+  }
+
+  it("test expressionTreeBuilder") {
+    val exprParser = new RuleExprParser()
+    try {
+      exprParser.expressionTreeBuilder(List.apply(Ref("a"), Ref("b")), List.empty)
+      true should equal(false)
+    } catch {
+      case ex: KGDSLGrammarException =>
+        ex.getMessage.contains("expr list length not equal op list + 1") should equal(true)
+    }
+  }
+
+  it("test parseListConstValue") {
+    val exprParser = new RuleExprParser()
+    try {
+      exprParser.parseListConstValue(List.apply(VLong("1"), VDouble("1.2")))
+    } catch {
+      case ex: KGDSLGrammarException =>
+        println(ex.getMessage)
+        ex.getMessage should equal("KTLong is not in [KTDouble]")
+    }
+
+    try {
+      exprParser.parseListConstValue(List.apply(VString("1.2"), VLong("1")))
+    } catch {
+      case ex: KGDSLGrammarException =>
+        println(ex.getMessage)
+        ex.getMessage should equal("KTString is not in [KTLong, KTDouble]")
+    }
+
+    try {
+      exprParser.parseListConstValue(List.apply(VLong("1"), VString("1.2")))
+    } catch {
+      case ex: KGDSLGrammarException =>
+        println(ex.getMessage)
+        ex.getMessage should equal("KTLong is not in [KTString]")
+    }
+
+    try {
+      exprParser.parseListConstValue(List.apply(VList(List.empty, KTObject)))
+    } catch {
+      case ex: NotImplementedError =>
+        println(ex.getMessage)
+        ex.getMessage should equal("not impl list")
+    }
+
+    try {
+      exprParser.parseListConstValue(List.apply(VLong("1"), VBoolean("true")))
+    } catch {
+      case ex: KGDSLGrammarException =>
+        println(ex.getMessage)
+        ex.getMessage should equal("KTLong is not in [KTBoolean]")
+    }
+
+    try {
+      exprParser.parseListConstValue(List.apply(Ref("abc")))
+    } catch {
+      case ex: NotImplementedError =>
+        println(ex.getMessage)
+        ex.getMessage should equal("not impl other types")
+    }
+  }
+
   it("a+b") {
     val exprParser = new RuleExprParser()
     val expr = exprParser.parse("a+b")
@@ -150,6 +224,36 @@ class ExprTest extends AnyFunSpec {
         null
       )
 
+    )
+  }
+
+  it("a.get(1)") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("a.get(1)")
+    print(expr.pretty)
+    expr should equal(
+      OpChainExpr(
+        ListOpExpr(
+          Get(1),
+          Ref("a")
+        ),
+        null
+      )
+    )
+  }
+
+  it("a.slice(1,4)") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("a.slice(1,4)")
+    print(expr.pretty)
+    expr should equal(
+      OpChainExpr(
+        ListOpExpr(
+          Slice(1, 4),
+          Ref("a")
+        ),
+        null
+      )
     )
   }
 
@@ -421,6 +525,132 @@ class ExprTest extends AnyFunSpec {
         ),
         null
       )
+    ).pretty
+    expr.pretty should equal(expectResult)
+  }
+
+  it ("e.nodes()") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("e.nodes()")
+    print(expr.pretty)
+    val expectResult = OpChainExpr(
+      PathOpExpr(
+        GetNodesExpr,
+        Ref("e")
+      ),
+      null
+    ).pretty
+    expr.pretty should equal(expectResult)
+  }
+
+  it ("e.edges()") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("e.edges()")
+    print(expr.pretty)
+    val expectResult = OpChainExpr(
+      PathOpExpr(
+        GetEdgesExpr,
+        Ref("e")
+      ), null).pretty
+    expr.pretty should equal(expectResult)
+  }
+
+  it ("e.nodes().reduce((x, y) => x + y.times, 0)") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("e.nodes().reduce((x, y) => x + y.times, 0)")
+    print(expr.pretty)
+    val expectResult = OpChainExpr(
+      ListOpExpr(
+        Reduce(
+          "y",
+          "x",
+          BinaryOpExpr(BAdd, Ref("x"), UnaryOpExpr(GetField("times"), Ref("y"))),
+          VLong("0")
+        ),
+        Ref("e")
+      ),
+      OpChainExpr(
+        PathOpExpr(
+          GetNodesExpr,
+          Ref("e")
+        ),
+        null
+      )
+    ).pretty
+    expr.pretty should equal(expectResult)
+  }
+
+  it ("e.nodes().constraint((cur, pre) => cur.logId == pre.logId)") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("e.nodes().constraint((cur, pre) => cur.logId == pre.logId)")
+    print(expr.pretty)
+    val expectResult = OpChainExpr(
+      ListOpExpr(
+        Constraint(
+          "cur",
+          "pre",
+          BinaryOpExpr(BEqual,
+            UnaryOpExpr(GetField("logId"), Ref("cur")), UnaryOpExpr(GetField("logId"), Ref("pre")))
+        ),
+        Ref("e")
+      ),
+      OpChainExpr(
+        PathOpExpr(
+          GetNodesExpr,
+          Ref("e")
+        ), null)
+    ).pretty
+    expr.pretty should equal(expectResult)
+  }
+
+
+  it ("e.nodes().head()") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("e.nodes().head()")
+    print(expr.pretty)
+    val expectResult = OpChainExpr(
+      ListOpExpr(
+        Get(0),
+        Ref("e")),
+      OpChainExpr(
+        PathOpExpr(
+          GetNodesExpr,
+          Ref("e")
+        ), null)
+    ).pretty
+    expr.pretty should equal(expectResult)
+  }
+
+  it ("e.nodes().tail()") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("e.nodes().tail()")
+    print(expr.pretty)
+    val expectResult = OpChainExpr(
+      ListOpExpr(
+        Get(-1),
+        Ref("e")),
+      OpChainExpr(
+        PathOpExpr(
+          GetNodesExpr,
+          Ref("e")
+        ), null)
+    ).pretty
+    expr.pretty should equal(expectResult)
+  }
+
+  it ("e.nodes().tail(-1)") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("e.nodes().tail(-1)")
+    print(expr.pretty)
+    val expectResult = OpChainExpr(
+      ListOpExpr(
+        Get(-2),
+        Ref("e")),
+      OpChainExpr(
+        PathOpExpr(
+          GetNodesExpr,
+          Ref("e")
+        ), null)
     ).pretty
     expr.pretty should equal(expectResult)
   }

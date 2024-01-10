@@ -34,12 +34,13 @@ class RuleExprParser extends Serializable {
   var parameters = Set[String]()
   var idFilterParameters: Map[String, String] = Map.empty
   var udfMetas = UdfMngFactory.getUdfMng.getAllUdfMeta.asScala
+
   /**
    * parse one line rule to Expr
    * @param s
    * @return
    */
-   def parse(s: String): Expr = {
+  def parse(s: String): Expr = {
     val parser = new LexerInit().initKGReasonerParser(s)
     val ctx = parser.expression_set()
     parseExpressionSet(ctx)
@@ -85,8 +86,7 @@ class RuleExprParser extends Serializable {
     if (isQuote(s(0)) && isQuote(s(s.length - 1))) {
       s.substring(1, s.length - 1)
     } else {
-      throw new
-          KGDSLGrammarException(s + " need quote, like `" + s + "`")
+      throw new KGDSLGrammarException(s + " need quote, like `" + s + "`")
     }
   }
 
@@ -94,8 +94,7 @@ class RuleExprParser extends Serializable {
 
   def expressionTreeBuilder(exprList: List[Expr], operList: List[String]): Expr = {
     if (exprList.length != operList.length + 1) {
-      throw new
-          KGDSLGrammarException("expr list length not equal op list + 1")
+      throw new KGDSLGrammarException("expr list length not equal op list + 1")
     }
     val expr1 = exprList.head
     val tupleList = (exprList.slice(1, exprList.length), operList: List[String]).zipped.toList
@@ -123,7 +122,8 @@ class RuleExprParser extends Serializable {
     }
   }
 
-  def parseUnbrokenCharacterStringLiteral(ctx: Unbroken_character_string_literalContext): String = {
+  def parseUnbrokenCharacterStringLiteral(
+      ctx: Unbroken_character_string_literalContext): String = {
     removeFrontAndTailQuote(ctx.StringLiteral().getText)
   }
 
@@ -145,6 +145,50 @@ class RuleExprParser extends Serializable {
     }
   }
 
+  def parseListConstValue(exprList: List[Expr]): VList = {
+    var listType: KgType = null
+    val strList = exprList.map {
+      case VLong(value) =>
+        if (listType == null) {
+          listType = KTLong
+        }
+        if (listType != KTLong && listType != KTDouble) {
+          throw new KGDSLGrammarException(listType + " is not in [KTLong, KTDouble]")
+        }
+        value
+      case VString(value) =>
+        if (listType == null) {
+          listType = KTString
+        }
+        if (listType != KTString) {
+          throw new KGDSLGrammarException(listType + " is not in [KTString]")
+        }
+        value
+      case VDouble(value) =>
+        if (listType == null || listType == KTDouble) {
+          listType = KTDouble
+        }
+        if (listType != KTDouble) {
+          throw new KGDSLGrammarException(listType + " is not in [KTDouble]")
+        }
+        value
+      case VBoolean(value) =>
+        if (listType == null) {
+          listType = KTBoolean
+        }
+        if (listType != KTBoolean) {
+          throw new KGDSLGrammarException(listType + " is not in [KTBoolean]")
+        }
+        value
+      case VList(list, listType) =>
+        // scalastyle:off throwerror
+        throw new NotImplementedError("not impl list")
+      // scalastyle:off throwerror
+      case _ => throw new NotImplementedError("not impl other types")
+    }
+    VList(strList, listType)
+  }
+
   def parseListLiteral(context: List_literalContext): Expr = {
     val exprList: List[Expr] =
       context
@@ -153,52 +197,7 @@ class RuleExprParser extends Serializable {
         .asScala
         .toList
         .map(x => parseValueExpression(x.value_expression()))
-    var listType: KgType = null
-    val strList = exprList.map(x =>
-      x match {
-        case VLong(value) =>
-          if (listType == null) {
-            listType = KTLong
-          }
-          if (listType != KTLong && listType != KTDouble) {
-            throw new
-                KGDSLGrammarException(listType + " is not in [KTLong, KTDouble]")
-          }
-          value
-        case VString(value) =>
-          if (listType == null) {
-            listType = KTString
-          }
-          if (listType != KTString) {
-            throw new
-                KGDSLGrammarException(listType + " is not in [KTString]")
-          }
-          value
-        case VDouble(value) =>
-          if (listType == null || listType == KTDouble) {
-            listType = KTDouble
-          }
-          if (listType != KTDouble) {
-            throw new
-                KGDSLGrammarException(listType + " is not in [KTDouble]")
-          }
-          value
-        case VBoolean(value) =>
-          if (listType == null) {
-            listType = KTBoolean
-          }
-          if (listType != KTBoolean) {
-            throw new
-                KGDSLGrammarException(listType + " is not in [KTBoolean]")
-          }
-          value
-        case VList(list, listType) =>
-          throw new
-              NotImplementedError("not impl list")
-        case _ => throw new
-            NotImplementedError("not impl other types")
-      })
-    VList(strList, listType)
+    parseListConstValue(exprList)
   }
 
   def parseUValueSpecification(ctx: Unsigned_value_specificationContext): Expr = {
@@ -276,6 +275,7 @@ class RuleExprParser extends Serializable {
     val ref = parseProjectValueExpression(ctx.project_value_expression())
     UnaryOpExpr(Ceil, ref)
   }
+
   def parseAbsoluteValueExpression(ctx: Absolute_value_expressionContext): Expr = {
     val ref = parseProjectValueExpression(ctx.project_value_expression())
     UnaryOpExpr(Abs, ref)
@@ -348,10 +348,9 @@ class RuleExprParser extends Serializable {
     val refName = unaryExpr.arg.asInstanceOf[Ref].refName
     if (idFilterParameters.contains(refName) &&
       !idFilterParameters(refName).equals(variableParam)) {
-      throw new
-          KGDSLGrammarException(refName + " has more than one id filter condition")
+      throw new KGDSLGrammarException(refName + " has more than one id filter condition")
     }
-    idFilterParameters = idFilterParameters + (refName-> variableParam)
+    idFilterParameters = idFilterParameters + (refName -> variableParam)
     idFilterParameters
   }
 
@@ -407,11 +406,11 @@ class RuleExprParser extends Serializable {
   def parseFunctionArgs(args: Function_argsContext): List[Expr] = {
     if (args != null) {
       args
-          .list_element_list()
-          .list_element()
-          .asScala
-          .toList
-          .map(x => parseValueExpression(x.value_expression()))
+        .list_element_list()
+        .list_element()
+        .asScala
+        .toList
+        .map(x => parseValueExpression(x.value_expression()))
     } else {
       List.empty
     }
@@ -420,7 +419,7 @@ class RuleExprParser extends Serializable {
   def parseFunctionExprDetail(funcNameTxt: String, function_args: List[Expr]): Expr = {
     val funcName = getFunctionNames(funcNameTxt)
     funcName match {
-      case "top"|"bottom" =>
+      case "top" | "bottom" =>
         val op = funcName match {
           case "top" => DescExpr
           case "bottom" => AscExpr
@@ -433,8 +432,13 @@ class RuleExprParser extends Serializable {
               throw new KGDSLGrammarException(funcName + " limit argas is not integer")
           }
         }
-        OrderAndLimit(op,
-          Limit(function_args.head, limit))
+        OrderAndLimit(op, Limit(function_args.head, limit))
+      case "keep_shortest_path" | "keep_longest_path" =>
+        val op = funcName match {
+          case "keep_shortest_path" => AscExpr
+          case "keep_longest_path" => DescExpr
+        }
+        OrderAndLimit(op, Limit(FunctionExpr("repeat_edge_length", function_args), 1))
       case _ => FunctionExpr(funcName, function_args)
     }
   }
@@ -451,10 +455,12 @@ class RuleExprParser extends Serializable {
     if (ctx == null) {
       Map.empty
     } else {
-      ctx.assignment_expression()
+      ctx
+        .assignment_expression()
         .asScala
         .toList
-        .map(x => parseAssignmentExpression(x)).toMap
+        .map(x => parseAssignmentExpression(x))
+        .toMap
     }
   }
 
@@ -519,8 +525,71 @@ class RuleExprParser extends Serializable {
       case c: List_slice_opContext => parseListSliceOp(c, opEle)
       case c: List_accumulate_opContext => parseListAccumulateOp(c, opEle)
       case c: List_str_join_opContext => parseListStrJoinOp(c, opEle)
+      case c: List_head_ele_opContext => parseListHeadEleOp(c, opEle)
+      case c: List_tail_ele_opContext => parseListTailEleOp(c, opEle)
+      case c: List_nodes_opContext => parseListNodesOp(c, opEle)
+      case c: List_edges_opContext => parseListEdgesOp(c, opEle)
+      case c: List_reduce_opContext => parseListReduceOp(c, opEle)
+      case c: List_constraint_opContext => parseListConstraintOp(c, opEle)
       case _ => throw new UnsupportedOperationException(ctx.getChild(0).toString + " not impl")
     }
+  }
+
+  def parseIntegerFull(ctx: IntegerLiteral_fullContext): Integer = {
+    if (ctx == null) {
+      return 0
+    }
+    val value = ctx.oC_IntegerLiteral().getText.toInt
+    if (ctx.minus_sign() != null) {
+      -1 * value
+    } else {
+      value
+    }
+  }
+
+  def parseListHeadEleOp(ctx: List_head_ele_opContext, opEle: Ref): Expr = {
+    ListOpExpr(Get(parseIntegerFull(ctx.integerLiteral_full())), opEle)
+  }
+
+  def parseListTailEleOp(ctx: List_tail_ele_opContext, opEle: Ref): Expr = {
+    ListOpExpr(Get(parseIntegerFull(ctx.integerLiteral_full()) - 1), opEle)
+  }
+
+  def parseListNodesOp(ctx: List_nodes_opContext, opEle: Ref): Expr = {
+    PathOpExpr(GetNodesExpr, opEle)
+  }
+
+  def parseListEdgesOp(ctx: List_edges_opContext, opEle: Ref): Expr = {
+    PathOpExpr(GetEdgesExpr, opEle)
+  }
+
+  def parseLambdaExprOp(ctx: Lambda_exprContext): (List[String], Expr) = {
+    val args = ctx
+      .binary_lambda_args()
+      .identifier()
+      .asScala
+      .map(arg => {
+        arg.getText
+      })
+      .toList
+    val expr = parseValueExpression(ctx.value_expression())
+    (args, expr)
+  }
+
+  def parseListReduceOp(ctx: List_reduce_opContext, opEle: Ref): Expr = {
+    val lambdaArgs = parseLambdaExprOp(ctx.lambda_expr())
+    ListOpExpr(
+      Reduce(
+        lambdaArgs._1.last,
+        lambdaArgs._1.head,
+        lambdaArgs._2,
+        parseValueExpression(ctx.value_expression())),
+      opEle)
+  }
+
+  def parseListConstraintOp(ctx: List_constraint_opContext, opEle: Ref): Expr = {
+    val lambdaArgs = parseLambdaExprOp(ctx.lambda_expr())
+    ListOpExpr(Constraint(lambdaArgs._1.head, lambdaArgs._1.last, lambdaArgs._2), opEle)
   }
 
   def parseListLimitOp(ctx: List_limit_opContext, opEle: Ref): Expr = {
@@ -546,20 +615,24 @@ class RuleExprParser extends Serializable {
     OrderAndLimit(opName, parseListLimitAllOp(ctx.list_limit_op_all(), lambdaExpr))
   }
 
+  def parseIndexParameter(ctx: Index_parameterContext): Int = {
+    ctx.oC_IntegerLiteral().getText.toInt
+  }
+
   def parseListGetOp(ctx: List_get_opContext, opEle: Ref): ListOpExpr = {
-    ListOpExpr(Get(ctx.oC_IntegerLiteral().getText.toInt), opEle)
+    ListOpExpr(Get(parseIndexParameter(ctx.index_parameter())), opEle)
   }
 
   def parseListSliceOp(ctx: List_slice_opContext, opEle: Ref): ListOpExpr = {
     ListOpExpr(
-      Slice(ctx.oC_IntegerLiteral(0).getText.toInt, ctx.oC_IntegerLiteral(1).getText.toInt),
-      opEle
-    )
+      Slice(
+        parseIndexParameter(ctx.index_parameter().get(0)),
+        parseIndexParameter(ctx.index_parameter().get(1))),
+      opEle)
   }
 
   def parseListAccumulateOp(ctx: List_accumulate_opContext, opEle: Ref): Expr = {
-    AggOpExpr(Accumulate(ctx.accumulate_support_op().getText),
-      opEle)
+    AggOpExpr(Accumulate(ctx.accumulate_support_op().getText), opEle)
   }
 
   def parseListFilterOp(ctx: List_filter_op_nameContext): Filter = {
@@ -576,8 +649,8 @@ class RuleExprParser extends Serializable {
     var opExpr: Expr = null
     val listOp: Ref = originListId match {
       case c: Ref => c
-      case _ => opExpr = BinaryOpExpr(
-        BAssign, VString("list_tmp" + ctx.getRuleIndex), originListId)
+      case _ =>
+        opExpr = BinaryOpExpr(BAssign, VString("list_tmp" + ctx.getRuleIndex), originListId)
         Ref("list_tmp" + ctx.getRuleIndex)
     }
     val reverse_op = ctx.list_op().asScala
@@ -609,28 +682,21 @@ class RuleExprParser extends Serializable {
   def parseGraphCommonAggUdfExpress(ctx: Graph_common_agg_udf_expressContext): Expr = {
     var function_args: List[Expr] = List.empty
     if (ctx.function_args() != null) {
-      function_args =
-        ctx.function_args()
-          .list_element_list()
-          .list_element()
-          .asScala
-          .toList
-          .map(x => parseValueExpression(x.value_expression()))
+      function_args = ctx
+        .function_args()
+        .list_element_list()
+        .list_element()
+        .asScala
+        .toList
+        .map(x => parseValueExpression(x.value_expression()))
     }
     val funcArgs = parseFunctionArgs(ctx.function_args())
-    val refExpr: Expr = parseRefExpr(
-      ctx.graph_alias(), ctx.property_name())
+    val refExpr: Expr = parseRefExpr(ctx.graph_alias(), ctx.property_name())
 
     val passArgs: List[Expr] = refExpr +: funcArgs
-    val functionExpr = parseFunctionExprDetail(ctx.function_name().getText,
-      passArgs)
+    val functionExpr = parseFunctionExprDetail(ctx.function_name().getText, passArgs)
     functionExpr match {
-      case c: FunctionExpr => AggOpExpr(
-        AggUdf(
-          c.name,
-          funcArgs
-        ),
-        refExpr)
+      case c: FunctionExpr => AggOpExpr(AggUdf(c.name, funcArgs), refExpr)
       case c => c
     }
   }
@@ -648,7 +714,8 @@ class RuleExprParser extends Serializable {
       if (ctx.graph_order_op().property_name() == null) {
         Ref(ctx.graph_order_op().graph_alias().getText)
       } else {
-        UnaryOpExpr(GetField(ctx.graph_order_op().property_name.getText),
+        UnaryOpExpr(
+          GetField(ctx.graph_order_op().property_name.getText),
           Ref(ctx.graph_order_op().graph_alias().getText))
       }
     }
@@ -669,16 +736,19 @@ class RuleExprParser extends Serializable {
     AggOpExpr(opExpr, ele)
   }
 
-  def parseListCommonAggIfOpExpress(ctx: List_common_agg_if_expressContext,
-                                    opEle: Ref): AggIfOpExpr = {
+  def parseListCommonAggIfOpExpress(
+      ctx: List_common_agg_if_expressContext,
+      opEle: Ref): AggIfOpExpr = {
     ctx.getChild(0) match {
-      case c: List_common_agg_if_chain_expressContext => parseListCommonAggIfChainExpress(c, opEle)
+      case c: List_common_agg_if_chain_expressContext =>
+        parseListCommonAggIfChainExpress(c, opEle)
       case c: List_common_agg_if_one_expressContext => parseListCommonAggIfOneExpress(c, opEle)
     }
   }
 
-  def parseListCommonAggIfOneExpress(ctx: List_common_agg_if_one_expressContext,
-                                     opEle: Ref): AggIfOpExpr = {
+  def parseListCommonAggIfOneExpress(
+      ctx: List_common_agg_if_one_expressContext,
+      opEle: Ref): AggIfOpExpr = {
     var opEleExpr: Expr = opEle
     val filterExpr = parseValueExpression(ctx.list_op_args().get(0).value_expression())
     if (ctx.list_op_args().size() > 1 && ctx.list_op_args().get(1).value_expression() != null) {
@@ -693,28 +763,18 @@ class RuleExprParser extends Serializable {
       case "MINIF" => Min
       case "MAXIF" => Max
     }
-    AggIfOpExpr(
-      AggOpExpr(
-        opAggNameExpr,
-        opEleExpr
-      ),
-      filterExpr
-    )
+    AggIfOpExpr(AggOpExpr(opAggNameExpr, opEleExpr), filterExpr)
   }
 
-  def parseListCommonAggIfChainExpress(ctx: List_common_agg_if_chain_expressContext,
-                                       opEle: Ref): AggIfOpExpr = {
+  def parseListCommonAggIfChainExpress(
+      ctx: List_common_agg_if_chain_expressContext,
+      opEle: Ref): AggIfOpExpr = {
     val filterExpr = parseListFilterOp(ctx.list_filter_op_name())
     val aggExpr = parseListCommonAggOpExpress(ctx.list_common_agg_express(), opEle)
-    AggIfOpExpr(
-      aggExpr.asInstanceOf[AggOpExpr],
-      filterExpr.condition
-    )
+    AggIfOpExpr(aggExpr.asInstanceOf[AggOpExpr], filterExpr.condition)
   }
 
-  def parseListCommonAggOpExpress(
-                                ctx: List_common_agg_expressContext,
-                                opEle: Ref): AggOpExpr = {
+  def parseListCommonAggOpExpress(ctx: List_common_agg_expressContext, opEle: Ref): AggOpExpr = {
     var lambdaExpr: Expr = opEle
     if (null != ctx.list_op_args().value_expression()) {
       lambdaExpr = parseValueExpression(ctx.list_op_args().value_expression())
@@ -749,22 +809,14 @@ class RuleExprParser extends Serializable {
       case "MINIF" => Min
       case "MAXIF" => Max
     }
-    AggIfOpExpr(
-      AggOpExpr(
-        opExpr,
-        expr
-      ),
-      filterExpr
-    )
+    AggIfOpExpr(AggOpExpr(opExpr, expr), filterExpr)
   }
-  def parseGraphCommonAggIfChainExpress(ctx: Graph_common_agg_if_chain_expressContext)
-  : Aggregator = {
+
+  def parseGraphCommonAggIfChainExpress(
+      ctx: Graph_common_agg_if_chain_expressContext): Aggregator = {
     val filter = parseGraphFilterOp(ctx.graph_filter_op())
     val aggFunc = parseGraphCommonAggExpress(ctx.graph_common_agg_express())
-    AggIfOpExpr(
-      aggFunc,
-      filter.condition
-    )
+    AggIfOpExpr(aggFunc, filter.condition)
   }
 
   def parseGraphCommonAggExpress(ctx: Graph_common_agg_expressContext): AggOpExpr = {
@@ -781,7 +833,7 @@ class RuleExprParser extends Serializable {
       last_op = OpChainExpr(parseGraphOp(op), last_op)
     }
     if (!last_op.curExpr.isInstanceOf[Aggregator] &&
-        !last_op.curExpr.isInstanceOf[OrderAndLimit]) {
+      !last_op.curExpr.isInstanceOf[OrderAndLimit]) {
       throw new KGDSLGrammarException("graph group last op must be aggregator or topK operator")
     }
     OpChainExpr(GraphAggregatorExpr("unresolved_default_path", group_alias, null), last_op)
@@ -811,17 +863,12 @@ class RuleExprParser extends Serializable {
     val expr = parseExpressionSet(ctx.expression_set())
     val symbol = ctx.identifier().getText
     if (ctx.explain() == null) {
-      LogicRule(
-        symbol,
-        "",
-        expr
-      )
+      LogicRule(symbol, "", expr)
     } else {
       LogicRule(
         symbol,
         parseUnbrokenCharacterStringLiteral(ctx.explain().unbroken_character_string_literal()),
-        expr
-      )
+        expr)
     }
   }
 
@@ -831,15 +878,11 @@ class RuleExprParser extends Serializable {
       ProjectRule(
         IRProperty(ctx.identifier().getText, ctx.property_name().getText),
         parseRetType(expr),
-        expr
-      )
+        expr)
     } else {
-      ProjectRule(
-        IRVariable(ctx.identifier().getText),
-        parseRetType(expr),
-        expr
-      )
+      ProjectRule(IRVariable(ctx.identifier().getText), parseRetType(expr), expr)
     }
 
   }
+
 }

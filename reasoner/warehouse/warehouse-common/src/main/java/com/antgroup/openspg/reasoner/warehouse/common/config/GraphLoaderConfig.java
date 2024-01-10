@@ -10,8 +10,10 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
+
 package com.antgroup.openspg.reasoner.warehouse.common.config;
 
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.utils.SetsUtils;
 import com.antgroup.openspg.reasoner.lube.catalog.AbstractConnection;
 import com.google.common.collect.Lists;
@@ -25,12 +27,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 
-@Getter
-@Setter
 public class GraphLoaderConfig implements Serializable {
   /** edge truncate threshold for each edge type */
   public static final int DEFAULT_EDGE_TRUNCATE_THRESHOLD = 8 * 10000;
@@ -51,7 +49,8 @@ public class GraphLoaderConfig implements Serializable {
   protected Set<VertexLoaderConfig> vertexLoaderConfigs;
 
   /** edge loader config */
-  protected Set<EdgeLoaderConfig> edgeLoaderConfigs;
+  protected Set<com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig>
+      edgeLoaderConfigs;
 
   private StartVertexConfig startVertexConfig;
 
@@ -77,10 +76,62 @@ public class GraphLoaderConfig implements Serializable {
   /** kg reasoner task id */
   private String taskId = "";
 
+  public int getTotalWorkerCount() {
+    return totalWorkerCount;
+  }
+
+  public void setTotalWorkerCount(int totalWorkerCount) {
+    this.totalWorkerCount = totalWorkerCount;
+  }
+
+  public int getCurWorkerIndex() {
+    return curWorkerIndex;
+  }
+
+  public void setCurWorkerIndex(int curWorkerIndex) {
+    this.curWorkerIndex = curWorkerIndex;
+  }
+
+  public int getEdgeTruncateThreshold() {
+    return edgeTruncateThreshold;
+  }
+
+  public void setEdgeTruncateThreshold(int edgeTruncateThreshold) {
+    this.edgeTruncateThreshold = edgeTruncateThreshold;
+  }
+
   public void setEdgeTruncateEachTypeThreshold(int edgeTruncateThreshold) {
-    for (EdgeLoaderConfig edgeLoaderConfig : this.edgeLoaderConfigs) {
+    for (com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig edgeLoaderConfig :
+        this.edgeLoaderConfigs) {
       edgeLoaderConfig.setEdgeTruncateThreshold(edgeTruncateThreshold);
     }
+  }
+
+  public Set<VertexLoaderConfig> getVertexLoaderConfigs() {
+    return vertexLoaderConfigs;
+  }
+
+  public void setVertexLoaderConfigs(Set<VertexLoaderConfig> vertexLoaderConfigs) {
+    this.vertexLoaderConfigs = vertexLoaderConfigs;
+  }
+
+  public Set<com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig>
+      getEdgeLoaderConfigs() {
+    return edgeLoaderConfigs;
+  }
+
+  public void setEdgeLoaderConfigs(
+      Set<com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig>
+          edgeLoaderConfigs) {
+    this.edgeLoaderConfigs = edgeLoaderConfigs;
+  }
+
+  public String getNamespaceUrl() {
+    return namespaceUrl;
+  }
+
+  public void setNamespaceUrl(String namespaceUrl) {
+    this.namespaceUrl = namespaceUrl;
   }
 
   public Set<String> allVertexTypes() {
@@ -88,7 +139,9 @@ public class GraphLoaderConfig implements Serializable {
   }
 
   public Set<String> allEdgeTypes() {
-    return SetsUtils.map(edgeLoaderConfigs, EdgeLoaderConfig::getEdgeType);
+    return SetsUtils.map(
+        edgeLoaderConfigs,
+        com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig::getEdgeType);
   }
 
   public VertexLoaderConfig getVertexLoadConfig(String vertexType) {
@@ -101,7 +154,8 @@ public class GraphLoaderConfig implements Serializable {
         .orElse(null);
   }
 
-  public EdgeLoaderConfig getEdgeLoadConfig(String edgeType) {
+  public com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig getEdgeLoadConfig(
+      String edgeType) {
     if (CollectionUtils.isEmpty(edgeLoaderConfigs)) {
       return null;
     }
@@ -133,11 +187,14 @@ public class GraphLoaderConfig implements Serializable {
     if (edgeLoaderConfigs == null) {
       this.edgeLoaderConfigs = other.edgeLoaderConfigs;
     } else {
-      Map<String, EdgeLoaderConfig> edgeLoaderConfigMap = new HashMap<>();
-      for (EdgeLoaderConfig edgeLoaderConfig : edgeLoaderConfigs) {
+      Map<String, com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig>
+          edgeLoaderConfigMap = new HashMap<>();
+      for (com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig edgeLoaderConfig :
+          edgeLoaderConfigs) {
         edgeLoaderConfigMap.put(edgeLoaderConfig.getEdgeType(), edgeLoaderConfig);
       }
-      for (EdgeLoaderConfig edgeLoaderConfig : other.edgeLoaderConfigs) {
+      for (com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig edgeLoaderConfig :
+          other.edgeLoaderConfigs) {
         String eType = edgeLoaderConfig.getEdgeType();
         if (edgeLoaderConfigMap.containsKey(eType)) {
           edgeLoaderConfigMap.put(eType, edgeLoaderConfigMap.get(eType).merge(edgeLoaderConfig));
@@ -159,7 +216,8 @@ public class GraphLoaderConfig implements Serializable {
             .collect(Collectors.toList());
     List<String> edgeTypeList =
         edgeLoaderConfigs.stream()
-            .map(EdgeLoaderConfig::getEdgeType)
+            .map(
+                com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig::getEdgeType)
             .sorted()
             .collect(Collectors.toList());
     return Objects.hash(vertexTypeList, edgeTypeList);
@@ -171,8 +229,11 @@ public class GraphLoaderConfig implements Serializable {
         new Consumer<VertexLoaderConfig>() {
           @Override
           public void accept(VertexLoaderConfig vertexLoaderConfig) {
-            vertexLoaderConfig.setNeedProperties(
-                Sets.newHashSet(vertexLoaderConfig.getNeedProperties()));
+            Set<String> propertySet = Sets.newHashSet(vertexLoaderConfig.getNeedProperties());
+            if (propertySet.remove(Constants.PROPERTY_JSON_KEY)) {
+              propertySet.add(Constants.CARRY_ALL_FLAG);
+            }
+            vertexLoaderConfig.setNeedProperties(propertySet);
             vertexLoaderConfig.setPropertiesFilterRules(
                 Lists.newArrayList(vertexLoaderConfig.getPropertiesFilterRules()));
           }
@@ -180,11 +241,16 @@ public class GraphLoaderConfig implements Serializable {
     this.vertexLoaderConfigs = Sets.newHashSet(this.vertexLoaderConfigs);
 
     this.edgeLoaderConfigs.forEach(
-        new Consumer<EdgeLoaderConfig>() {
+        new Consumer<com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig>() {
           @Override
-          public void accept(EdgeLoaderConfig edgeLoaderConfig) {
-            edgeLoaderConfig.setNeedProperties(
-                Sets.newHashSet(edgeLoaderConfig.getNeedProperties()));
+          public void accept(
+              com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig
+                  edgeLoaderConfig) {
+            Set<String> propertySet = Sets.newHashSet(edgeLoaderConfig.getNeedProperties());
+            if (propertySet.remove(Constants.PROPERTY_JSON_KEY)) {
+              propertySet.add(Constants.CARRY_ALL_FLAG);
+            }
+            edgeLoaderConfig.setNeedProperties(propertySet);
             edgeLoaderConfig.setPropertiesFilterRules(
                 Lists.newArrayList(edgeLoaderConfig.getPropertiesFilterRules()));
           }
@@ -199,19 +265,57 @@ public class GraphLoaderConfig implements Serializable {
           new Consumer<VertexLoaderConfig>() {
             @Override
             public void accept(VertexLoaderConfig vertexLoaderConfig) {
-              vertexLoaderConfig.setConnection(connection);
+              vertexLoaderConfig.setConnection(Sets.newHashSet(connection));
             }
           });
     }
     if (CollectionUtils.isNotEmpty(this.edgeLoaderConfigs)) {
       this.edgeLoaderConfigs.forEach(
-          new Consumer<EdgeLoaderConfig>() {
+          new Consumer<com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig>() {
             @Override
-            public void accept(EdgeLoaderConfig edgeLoaderConfig) {
-              edgeLoaderConfig.setConnection(connection);
+            public void accept(
+                com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig
+                    edgeLoaderConfig) {
+              edgeLoaderConfig.setConnection(Sets.newHashSet(connection));
             }
           });
     }
+  }
+
+  /**
+   * Getter method for property <tt>schemaUrl</tt>.
+   *
+   * @return property value of schemaUrl
+   */
+  public String getSchemaUrl() {
+    return schemaUrl;
+  }
+
+  /**
+   * Setter method for property <tt>schemaUrl</tt>.
+   *
+   * @param schemaUrl value to be assigned to property schemaUrl
+   */
+  public void setSchemaUrl(String schemaUrl) {
+    this.schemaUrl = schemaUrl;
+  }
+
+  /**
+   * Getter method for property <tt>binary</tt>.
+   *
+   * @return property value of binary
+   */
+  public Boolean getBinary() {
+    return binary;
+  }
+
+  /**
+   * Setter method for property <tt>binary</tt>.
+   *
+   * @param binary value to be assigned to property binary
+   */
+  public void setBinary(Boolean binary) {
+    this.binary = binary;
   }
 
   /** verify config */
@@ -221,13 +325,32 @@ public class GraphLoaderConfig implements Serializable {
     }
 
     if (null != this.edgeLoaderConfigs) {
-      for (EdgeLoaderConfig edgeLoaderConfig : this.edgeLoaderConfigs) {
+      for (com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig edgeLoaderConfig :
+          this.edgeLoaderConfigs) {
         if (edgeLoaderConfig.getEdgeTruncateThreshold() > this.edgeTruncateThreshold) {
           edgeLoaderConfig.setEdgeTruncateThreshold(edgeTruncateThreshold);
         }
       }
     }
     return this;
+  }
+
+  /**
+   * Getter method for property <tt>taskId</tt>.
+   *
+   * @return property value of taskId
+   */
+  public String getTaskId() {
+    return taskId;
+  }
+
+  /**
+   * Setter method for property <tt>taskId</tt>.
+   *
+   * @param taskId value to be assigned to property schemaUrl
+   */
+  public void setTaskId(String taskId) {
+    this.taskId = taskId;
   }
 
   @Override
@@ -243,9 +366,28 @@ public class GraphLoaderConfig implements Serializable {
     for (VertexLoaderConfig vertexLoaderConfig : this.vertexLoaderConfigs) {
       str.append(",[").append(vertexLoaderConfig).append("]");
     }
-    for (EdgeLoaderConfig edgeLoaderConfig : this.edgeLoaderConfigs) {
+    for (com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig edgeLoaderConfig :
+        this.edgeLoaderConfigs) {
       str.append(",[").append(edgeLoaderConfig).append("]");
     }
     return str.toString();
+  }
+
+  /**
+   * Getter method for property <tt>graphVersionConfig</tt>.
+   *
+   * @return property value of graphVersionConfig
+   */
+  public GraphVersionConfig getGraphVersionConfig() {
+    return graphVersionConfig;
+  }
+
+  /**
+   * Setter method for property <tt>graphVersionConfig</tt>.
+   *
+   * @param graphVersionConfig value to be assigned to property graphVersionConfig
+   */
+  public void setGraphVersionConfig(GraphVersionConfig graphVersionConfig) {
+    this.graphVersionConfig = graphVersionConfig;
   }
 }

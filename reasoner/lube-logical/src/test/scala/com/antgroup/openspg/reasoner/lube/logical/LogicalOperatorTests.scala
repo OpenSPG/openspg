@@ -19,7 +19,7 @@ import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.logical.LogicalOperatorOps.RichLogicalOperator
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.planning.{LogicalPlanner, LogicalPlannerContext}
-import com.antgroup.openspg.reasoner.parser.KgDslParser
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
@@ -41,7 +41,7 @@ class LogicalOperatorTests extends AnyFunSpec {
         |	get(B.name, C.name)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "Film" -> Set.empty,

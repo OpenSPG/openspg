@@ -27,6 +27,7 @@ public class KgReasonerCsvWriter {
   private static final Map<String, CSVWriter> CSV_WRITER_MAP = new ConcurrentHashMap<>();
 
   public static void write(String file, Object[] data) {
+    // log.info("KgReasonerCsvWriter,file=" + file + ",data=" + Arrays.toString(data));
     CSVWriter writer =
         CSV_WRITER_MAP.computeIfAbsent(
             file,

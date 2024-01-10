@@ -16,6 +16,8 @@ package com.antgroup.openspg.reasoner.runner.local.impl;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.MirrorVertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.lube.logical.RepeatPathVar;
@@ -82,6 +84,12 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
     for (KgGraph<IVertexId> kgGraph : rdg.getKgGraphList()) {
       List<IVertex<IVertexId, IProperty>> vertexList = kgGraph.getVertex(alias);
       for (IVertex<IVertexId, IProperty> vertex : vertexList) {
+        if (vertex instanceof NoneVertex) {
+          if (vertex instanceof MirrorVertex) {
+            startIdSet.add(vertex.getId());
+          }
+          continue;
+        }
         startIdSet.add(vertex.getId());
       }
     }
@@ -102,6 +110,10 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
   @Override
   public LocalRDG createRDGFromPath(RepeatPathVar repeatVar, String alias, LocalRDG rdg) {
     return null;
+  }
+
+  public GraphState<IVertexId> getGraphState() {
+    return graphState;
   }
 
   private String getTaskId() {

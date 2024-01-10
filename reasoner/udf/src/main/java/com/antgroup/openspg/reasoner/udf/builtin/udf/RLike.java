@@ -28,10 +28,11 @@ public class RLike {
    * @return
    */
   @UdfDefine(name = "rlike", udfType = UdfOperatorTypeEnum.OPERATOR)
-  public Boolean inStr(String inputStr, String regex) {
-    // 创建正则表达式模式
+  public Boolean rlike(String inputStr, String regex) {
+    if (inputStr == null) {
+      return false;
+    }
     Pattern pattern = Pattern.compile(regex);
-    // 创建Matcher对象
     Matcher matcher = pattern.matcher(inputStr);
     return matcher.find();
   }
