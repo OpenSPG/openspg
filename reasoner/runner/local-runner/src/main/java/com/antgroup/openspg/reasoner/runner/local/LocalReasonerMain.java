@@ -72,7 +72,7 @@ public class LocalReasonerMain {
     }
   }
 
-  private static void writeOutputFile(LocalReasonerResult result, String file) {
+  protected static void writeOutputFile(LocalReasonerResult result, String file) {
     Path path = Paths.get(file);
     try {
       if (Files.notExists(path.getParent())) {
@@ -97,7 +97,7 @@ public class LocalReasonerMain {
     }
   }
 
-  private static void writeCsv(Path path, List<String> columns, List<Object[]> rows) {
+  protected static void writeCsv(Path path, List<String> columns, List<Object[]> rows) {
     List<String[]> allLines = new ArrayList<>(rows.size() + 1);
     allLines.add(columns.toArray(new String[] {}));
     for (Object[] rowObj : rows) {
@@ -122,7 +122,7 @@ public class LocalReasonerMain {
     }
   }
 
-  private static void writeFile(Path path, String content) {
+  protected static void writeFile(Path path, String content) {
     try {
       Files.write(path, content.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
     } catch (IOException e) {
@@ -130,7 +130,7 @@ public class LocalReasonerMain {
     }
   }
 
-  private static LocalReasonerTask parseArgs(String[] args) {
+  protected static LocalReasonerTask parseArgs(String[] args) {
     Options options = getOptions();
 
     CommandLineParser parser = new DefaultParser();
@@ -203,18 +203,18 @@ public class LocalReasonerMain {
     return task;
   }
 
-  private static final String PROJECT_ID_OPTION = "projectId";
-  private static final String QUERY_OPTION = "query";
-  private static final String OUTPUT_OPTION = "output";
-  private static final String SCHEMA_URL_OPTION = "schemaUrl";
-  private static final String GRAPH_STATE_CLASS_OPTION = "graphStateClass";
-  private static final String GRAPH_LOADER_CLASS_OPTION = "graphLoaderClass";
-  private static final String GRAPH_STORE_URL_OPTION = "graphStoreUrl";
-  private static final String START_ID_OPTION = "startIdList";
-  private static final String PARAMs_OPTION = "params";
-  private static final String LOG_FILE_OPTION = "logFile";
+  protected static final String PROJECT_ID_OPTION = "projectId";
+  protected static final String QUERY_OPTION = "query";
+  protected static final String OUTPUT_OPTION = "output";
+  protected static final String SCHEMA_URL_OPTION = "schemaUrl";
+  protected static final String GRAPH_STATE_CLASS_OPTION = "graphStateClass";
+  protected static final String GRAPH_LOADER_CLASS_OPTION = "graphLoaderClass";
+  protected static final String GRAPH_STORE_URL_OPTION = "graphStoreUrl";
+  protected static final String START_ID_OPTION = "startIdList";
+  protected static final String PARAMs_OPTION = "params";
+  protected static final String LOG_FILE_OPTION = "logFile";
 
-  private static Options getOptions() {
+  protected static Options getOptions() {
     Options options = new Options();
 
     options.addRequiredOption(PROJECT_ID_OPTION, PROJECT_ID_OPTION, true, "project id");
@@ -233,7 +233,7 @@ public class LocalReasonerMain {
     return options;
   }
 
-  private static void setUpLogFile(String logFileName) {
+  protected static void setUpLogFile(String logFileName) {
     LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
     loggerContext.reset();
 

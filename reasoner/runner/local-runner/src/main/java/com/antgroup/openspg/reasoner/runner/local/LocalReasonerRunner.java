@@ -50,6 +50,15 @@ import scala.collection.JavaConversions;
 
 @Slf4j
 public class LocalReasonerRunner {
+  private final ParserInterface parser;
+
+  public LocalReasonerRunner() {
+    this.parser = new OpenspgDslParser();
+  }
+
+  public LocalReasonerRunner(ParserInterface parser) {
+    this.parser = parser;
+  }
 
   /** run dsl task on local runner */
   public LocalReasonerResult run(LocalReasonerTask task) {
@@ -86,7 +95,6 @@ public class LocalReasonerRunner {
           && task.getStartIdList().size() > 0) {
         task.getParams().put(Constants.START_LABEL, task.getStartIdList().get(0)._2);
       }
-      ParserInterface parser = new OpenspgDslParser();
       session = new LocalReasonerSession(parser, catalog, TypeTags.rdgTypeTag(), graphState);
       dslDagList =
           Lists.newArrayList(
