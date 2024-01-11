@@ -13,6 +13,9 @@
 
 package com.antgroup.openspg.reasoner.common.constants;
 
+import com.google.common.collect.Sets;
+import java.util.Set;
+
 public class Constants {
   public static final String CONTEXT_LABEL = "__label__";
   /** edge from id key */
@@ -65,4 +68,13 @@ public class Constants {
   public static final String GET_PATH_KEY = "__path__";
   /** load all property */
   public static final String CARRY_ALL_FLAG = "__carry_all__";
+
+  /** ddl edge version property key */
+  public static final String DDL_EDGE_VERSION_KEY = "version";
+
+  /** hypernym edge type */
+  public static final Set<String> CONCEPT_HYPERNYM_EDGE_TYPE_SET =
+      Sets.newHashSet("isA", "locateAt");
+
+  public static final String CONCEPT_EDGE_EXPAND_FUNC_NAME = "concept_edge_expand";
 }

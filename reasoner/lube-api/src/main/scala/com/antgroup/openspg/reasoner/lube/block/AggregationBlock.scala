@@ -21,7 +21,7 @@ import com.antgroup.openspg.reasoner.lube.common.graph.IRField
 final case class AggregationBlock(
     dependencies: List[Block],
     aggregations: Aggregations,
-    group: List[String])
+    group: List[IRField])
     extends BasicBlock[Fields](BlockType("aggregation")) {
 
   override def binds: Fields = {

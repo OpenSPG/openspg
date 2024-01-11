@@ -16,7 +16,7 @@ package com.antgroup.openspg.reasoner.lube.utils
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.trees.{BottomUp, Transform}
-import com.antgroup.openspg.reasoner.lube.common.expr.{Expr, GetField, Ref, UnaryOpExpr}
+import com.antgroup.openspg.reasoner.lube.common.expr.{Constraint, Expr, GetField, ListOpExpr, Ref, UnaryOpExpr}
 import com.antgroup.openspg.reasoner.lube.common.graph._
 
 /**
@@ -26,6 +26,7 @@ object ExprUtils {
 
   /**
    * get all ref name from Expr
+   *
    * @param expr
    * @return
    */
@@ -43,9 +44,9 @@ object ExprUtils {
   }
 
   def getAllInputFieldInRule(
-      expr: Expr,
-      nodesAlias: Set[String],
-      edgeAlias: Set[String]): List[IRField] = {
+                              expr: Expr,
+                              nodesAlias: Set[String],
+                              edgeAlias: Set[String]): List[IRField] = {
     Transform((e: Expr, c: List[List[IRField]]) => {
       if (c.nonEmpty) {
         e match {
@@ -60,6 +61,16 @@ object ExprUtils {
                   List.apply(IRNode(refName, Set.apply(fieldName)))
                 }
               case _ => c.filter(Option(_).isDefined).flatten
+            }
+          case ListOpExpr(name, _) =>
+            name match {
+              case constraint: Constraint =>
+                val irList =
+                  getAllInputFieldInRule(constraint.reduceFunc, nodesAlias, edgeAlias).filter(
+                    ir => !ir.name.equals(constraint.cur) && !ir.name.equals(constraint.pre))
+                mergeListIRField(c.flatten ++ irList)
+              case _ =>
+                mergeListIRField(c.flatten)
             }
           case _ =>
             // merge list ir
@@ -84,6 +95,7 @@ object ExprUtils {
 
   /**
    * rename rule contains variable name by renameFunc
+   *
    * @param expr
    * @param renameFunc
    * @return
@@ -106,14 +118,14 @@ object ExprUtils {
    */
   def renameVariableInExpr(expr: Expr, replaceVar: Map[IRField, IRProperty]): Expr = {
     val trans: PartialFunction[Expr, Expr] = {
-      case expr @ UnaryOpExpr(GetField(name), Ref(alis)) =>
+      case expr@UnaryOpExpr(GetField(name), Ref(alis)) =>
         if (replaceVar.contains(IRProperty(alis, name))) {
           val newProp = replaceVar.get(IRProperty(alis, name)).get
           UnaryOpExpr(GetField(newProp.field), Ref(newProp.name))
         } else {
           expr
         }
-      case expr @ Ref(name) =>
+      case expr@Ref(name) =>
         if (replaceVar.contains(IRVariable(name))) {
           val newProp = replaceVar.get(IRVariable(name)).get
           UnaryOpExpr(GetField(newProp.field), Ref(newProp.name))
@@ -127,7 +139,7 @@ object ExprUtils {
 
   def renameAliasInExpr(expr: Expr, replaceVar: Map[String, String]): Expr = {
     val trans: PartialFunction[Expr, Expr] = {
-      case x @ Ref(name) =>
+      case x@Ref(name) =>
         if (replaceVar.contains(name)) {
           val newAlias = replaceVar.get(name).get
           Ref(newAlias)

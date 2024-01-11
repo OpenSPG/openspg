@@ -16,24 +16,20 @@ package com.antgroup.openspg.reasoner.lube.logical.planning
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
-import com.antgroup.openspg.reasoner.common.types.KTString
+import com.antgroup.openspg.reasoner.common.types.{KTObject, KTString}
 import com.antgroup.openspg.reasoner.lube.block.Aggregations
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator
 import com.antgroup.openspg.reasoner.lube.common.graph._
 import com.antgroup.openspg.reasoner.lube.logical._
-import com.antgroup.openspg.reasoner.lube.logical.operators.{
-  Aggregate,
-  LogicalOperator,
-  StackingLogicalOperator
-}
+import com.antgroup.openspg.reasoner.lube.logical.operators.{Aggregate, LogicalOperator, StackingLogicalOperator}
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 import org.apache.commons.lang3.StringUtils
 
-class AggregationPlanner(group: List[String], aggregations: Aggregations) {
+class AggregationPlanner(group: List[IRField], aggregations: Aggregations) {
 
   def plan(dependency: LogicalOperator): LogicalOperator = {
-    val groupVar: List[Var] = group.map(NodeVar(_, null))
+    val groupVar: List[Var] = group.map(toVar(_, dependency.solved))
     val aggMap = new mutable.HashMap[Var, Aggregator]()
     var resolved = dependency.solved
     for (p <- aggregations.pairs) {
@@ -84,10 +80,19 @@ class AggregationPlanner(group: List[String], aggregations: Aggregations) {
     Aggregate(dependency, groupVar, aggMap.toMap, resolved.solve)
   }
 
+  private def toVar(field: IRField, solvedModel: SolvedModel): Var = {
+    field match {
+      case IRNode(name, fields) => NodeVar(name, Set.empty)
+      case IRProperty(name, field) => PropertyVar(name, new Field(field, KTObject, true))
+      case field: IRVariable => solvedModel.getField(field)
+      case _ => throw UnsupportedOperationException(s"cannot group by $field")
+    }
+  }
+
   private def getAggregateTarget(
-      referFields: List[IRField],
-      resolved: SolvedModel,
-      dependency: LogicalOperator): IRField = {
+                                  referFields: List[IRField],
+                                  resolved: SolvedModel,
+                                  dependency: LogicalOperator): IRField = {
     val fieldGroups = referFields.groupBy(_.name)
     if (fieldGroups.size == 1) {
       fieldGroups.values.head.head

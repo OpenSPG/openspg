@@ -349,15 +349,27 @@ class OpenSPGDslParser extends ParserInterface {
                 case DescExpr => Desc(limit.column)
               }),
               Option(limit.num),
-              graphAggExpr.by.map(x => x.refName))
+              graphAggExpr.by.map {
+                case Ref(refName) => refName
+                case UnaryOpExpr(GetField(fieldName), Ref(refName)) => refName + "." + fieldName
+                case x => throw
+                  new KGDSLGrammarException("OrderAndSliceBlock can not group " + x.pretty)
+              })
           case AggIfOpExpr(_, _) | AggOpExpr(_, _) =>
             if (realLValue == null) {
               throw new KGDSLGrammarException("AggregationBlock generated left variable is null")
             }
+            val fieldMap = opBlock.binds.fields.map(f => (f.name, f)).toMap
             AggregationBlock(
               List.apply(opBlock),
               Aggregations(Map.apply(realLValue -> opChain.curExpr.asInstanceOf[Aggregator])),
-              graphAggExpr.by.map(x => x.refName))
+              graphAggExpr.by.map {
+                case Ref(refName) => fieldMap(refName)
+                case UnaryOpExpr(GetField(fieldName), Ref(refName)) =>
+                  IRProperty(refName, fieldName)
+                case x => throw
+                  new KGDSLGrammarException("OrderAndSliceBlock can not group " + x.pretty)
+              })
           case _ => throw new KGDSLGrammarException("not support " + opChain.curExpr)
         }
       } else {

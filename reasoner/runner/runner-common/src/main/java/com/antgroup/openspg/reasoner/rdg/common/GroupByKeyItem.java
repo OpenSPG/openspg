@@ -13,9 +13,10 @@
 
 package com.antgroup.openspg.reasoner.rdg.common;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class GroupByKeyItem {
+public class GroupByKeyItem implements Serializable {
   private final Object[] keys;
 
   public GroupByKeyItem(Object[] keys) {

@@ -113,8 +113,19 @@ public class ExtractRelationImpl implements Serializable {
     IVertexId s = kgGraph.getVertex(sourceElement.alias()).get(0).getId();
     IVertexId o = getTargetVertexId(targetEntityElement, targetPatternElement, kgGraph);
 
+    long useVersion = version;
+    IProperty property = getEdgeProperty(kgGraph);
+    Object versionObj = property.get(Constants.DDL_EDGE_VERSION_KEY);
+    if (null != versionObj) {
+      try {
+        useVersion = Long.parseLong(String.valueOf(versionObj));
+      } catch (Throwable e) {
+        // pass
+      }
+    }
+
     IEdge<IVertexId, IProperty> willAddedEdge =
-        new Edge<>(s, o, getEdgeProperty(kgGraph), version, direction, getEdgeType(s, o));
+        new Edge<>(s, o, getEdgeProperty(kgGraph), useVersion, direction, getEdgeType(s, o));
 
     Map<String, Set<IEdge<IVertexId, IProperty>>> alias2EdgeMap = new HashMap<>();
     alias2EdgeMap.put(this.addPredicate.predicate().alias(), Sets.newHashSet(willAddedEdge));

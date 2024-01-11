@@ -33,4 +33,9 @@ public class NoneVertex<K, VV> extends Vertex<K, VV> {
   public NoneVertex<K, VV> clone() {
     return new NoneVertex<>(this);
   }
+
+  @Override
+  public String toString() {
+    return "NoneVertex(s=" + getId() + ",property=" + getValue() + ")";
+  }
 }
