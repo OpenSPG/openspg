@@ -18,6 +18,9 @@ import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.common.types.KTInteger$;
+import com.antgroup.openspg.reasoner.common.types.KTObject$;
+import com.antgroup.openspg.reasoner.common.types.KTString$;
 import com.antgroup.openspg.reasoner.common.types.KgType;
 import com.antgroup.openspg.reasoner.udf.model.BaseUdtf;
 import com.antgroup.openspg.reasoner.udf.model.LinkedUdtfResult;
@@ -42,12 +45,17 @@ public class ConceptEdgeExpand extends BaseUdtf {
 
   @Override
   public List<KgType> getInputRowTypes() {
-    return null;
+    return Lists.newArrayList(
+        KTObject$.MODULE$,
+        KTString$.MODULE$,
+        KTString$.MODULE$,
+        KTString$.MODULE$,
+        KTInteger$.MODULE$);
   }
 
   @Override
   public List<KgType> getResultTypes() {
-    return null;
+    return Lists.newArrayList(KTObject$.MODULE$);
   }
 
   @Override
