@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 
 public class RepeatConstraint {
 
@@ -28,8 +29,12 @@ public class RepeatConstraint {
   public boolean constraint(
       List<Object> itemList, String preName, String curName, String express, Object context) {
     Map<String, Object> contextMap = getParentContext(context);
-    for (int i = 1; i < itemList.size(); ++i) {
-      Object pre = itemList.get(i - 1);
+    int processIndex = 1;
+    if (StringUtils.isEmpty(preName) || !express.contains(preName)) {
+      processIndex = 0;
+    }
+    for (int i = processIndex; i < itemList.size(); ++i) {
+      Object pre = 0 == i ? null : itemList.get(i - 1);
       Object cur = itemList.get(i);
       Map<String, Object> subContext = new HashMap<>(contextMap);
       subContext.put(preName, CommonUtils.getRepeatItemContext(pre));

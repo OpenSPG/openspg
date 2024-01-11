@@ -66,7 +66,7 @@ public class FoldEdgeImpl implements Serializable {
     Set<IVertex<IVertexId, IProperty>> newVertexSet = new HashSet<>();
     Set<IEdge<IVertexId, IProperty>> newEdgeSet = new HashSet<>();
     for (IVertex<IVertexId, IProperty> vertex : vertexSet) {
-      IVertex<IVertexId, IProperty> newVertex = new MirrorVertex<>(vertex);
+      IVertex<IVertexId, IProperty> newVertex = new MirrorVertex<>(vertex.getId());
       newVertexSet.add(newVertex);
 
       IEdge<IVertexId, IProperty> newEdge = new OptionalEdge<>(vertex.getId(), vertex.getId());
@@ -105,7 +105,7 @@ public class FoldEdgeImpl implements Serializable {
 
         Set<IVertex<IVertexId, IProperty>> newVertexSet = new HashSet<>();
         for (IVertex<IVertexId, IProperty> vertex : fromVertexSet) {
-          newVertexSet.add(new MirrorVertex<>(vertex));
+          newVertexSet.add(new MirrorVertex<>(vertex.getId()));
         }
         kgGraph.getAlias2VertexMap().put(this.foldRepeatEdgeInfo.getToVertexAlias(), newVertexSet);
         kgGraph.getAlias2EdgeMap().put(this.foldRepeatEdgeInfo.getToEdgeAlias(), fromEdgeSet);

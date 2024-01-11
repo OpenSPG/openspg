@@ -326,7 +326,7 @@ object LogicalPlanner {
    */
   private def planAggregate(
       aggregations: Aggregations,
-      group: List[String],
+      group: List[IRField],
       dependency: LogicalOperator)(implicit context: LogicalPlannerContext): LogicalOperator = {
     val aggregationPlanner = new AggregationPlanner(group, aggregations)
     aggregationPlanner.plan(dependency)
@@ -374,7 +374,7 @@ object LogicalPlanner {
   private def getStarts(block: Block): Set[String] = {
     block.transform[Set[String]] {
       case (AggregationBlock(_, _, group), groupList) =>
-        val groupAlias = group.map(_.split("\\.")(0)).toSet
+        val groupAlias = group.map(_.name).toSet
         if (groupList.head.isEmpty) {
           groupAlias
         } else {

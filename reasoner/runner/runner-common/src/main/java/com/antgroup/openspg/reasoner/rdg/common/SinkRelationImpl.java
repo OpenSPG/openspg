@@ -65,7 +65,7 @@ public class SinkRelationImpl {
       Set<IEdge<IVertexId, IProperty>> outEdgeList = entry.getValue()._2();
       this.graphState.addEdges(
           vertexId, Lists.newArrayList(inEdgeList), Lists.newArrayList(outEdgeList));
-      sinkCount++;
+      sinkCount = sinkCount + inEdgeList.size() + outEdgeList.size();
       if (Utils.randomLog()) {
         log.info(
             "SinkRelation,v="
