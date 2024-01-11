@@ -22,11 +22,7 @@ import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator
 import com.antgroup.openspg.reasoner.lube.common.graph._
 import com.antgroup.openspg.reasoner.lube.logical._
-import com.antgroup.openspg.reasoner.lube.logical.operators.{
-  Aggregate,
-  LogicalOperator,
-  StackingLogicalOperator
-}
+import com.antgroup.openspg.reasoner.lube.logical.operators.{Aggregate, LogicalLeafOperator, LogicalOperator}
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 import org.apache.commons.lang3.StringUtils
 
@@ -108,7 +104,8 @@ class AggregationPlanner(group: List[String], aggregations: Aggregations) {
 
   private def getTargetAlias(aliasSet: Set[String], dependency: LogicalOperator): String = {
     val aliasOrder = dependency.transform[String] {
-      case (stackOp: StackingLogicalOperator, list) =>
+      case (leafOp: LogicalLeafOperator, _) => ""
+      case (stackOp: LogicalOperator, list) =>
         if (StringUtils.isEmpty(list.head)) {
           val curAliasSet = stackOp.fields.map(_.name).toSet
           if (aliasSet.diff(curAliasSet).isEmpty) {
