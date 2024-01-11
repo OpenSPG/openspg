@@ -16,7 +16,7 @@ package com.antgroup.openspg.reasoner.lube.logical.planning
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
-import com.antgroup.openspg.reasoner.common.types.{KTObject, KTString}
+import com.antgroup.openspg.reasoner.common.types.KTObject
 import com.antgroup.openspg.reasoner.lube.block.Aggregations
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator
@@ -56,21 +56,21 @@ class AggregationPlanner(group: List[IRField], aggregations: Aggregations) {
       val field = getAggregateTarget(referFields, resolved, dependency)
       field match {
         case IRNode(alias, _) =>
-          val propertyVar = PropertyVar(alias, new Field(p._1.name, KTString, true))
+          val propertyVar = PropertyVar(alias, new Field(p._1.name, KTObject, true))
           aggMap.put(propertyVar, newAggExpr)
           resolved = resolved.addField((p._1.asInstanceOf[IRVariable], propertyVar))
         case IREdge(alias, _) =>
           if (resolved.getVar(alias).isInstanceOf[RepeatPathVar]) {
             aggMap.put(resolved.getVar(alias).asInstanceOf[RepeatPathVar].pathVar, newAggExpr)
           } else {
-            val propertyVar = PropertyVar(alias, new Field(p._1.name, KTString, true))
+            val propertyVar = PropertyVar(alias, new Field(p._1.name, KTObject, true))
             resolved = resolved.addField((p._1.asInstanceOf[IRVariable], propertyVar))
             aggMap.put(propertyVar, newAggExpr)
           }
         case IRVariable(alias) =>
           val tmpPropertyVar = resolved.tmpFields(IRVariable(alias))
           val propertyVar =
-            PropertyVar(tmpPropertyVar.name, new Field(p._1.name, KTString, true))
+            PropertyVar(tmpPropertyVar.name, new Field(p._1.name, KTObject, true))
           aggMap.put(propertyVar, newAggExpr)
           resolved = resolved.addField((p._1.asInstanceOf[IRVariable], propertyVar))
         case _ =>
