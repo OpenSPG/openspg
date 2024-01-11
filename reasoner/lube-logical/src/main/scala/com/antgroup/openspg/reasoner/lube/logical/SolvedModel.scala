@@ -16,7 +16,7 @@ package com.antgroup.openspg.reasoner.lube.logical
 import scala.collection.mutable
 import scala.language.implicitConversions
 
-import com.antgroup.openspg.reasoner.common.exception.InvalidRefVariable
+import com.antgroup.openspg.reasoner.common.exception.{InvalidRefVariable, UnsupportedOperationException}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.graph.IRVariable
 
@@ -58,7 +58,9 @@ case class SolvedModel(
     fields(alias) match {
       case NodeVar(_, fields) => fields.filter(_.name.equals(fieldName)).head
       case EdgeVar(_, fields) => fields.filter(_.name.equals(fieldName)).head
-      case _ => null
+      case RepeatPathVar(pathVar, _, _) =>
+        pathVar.elements(1).asInstanceOf[EdgeVar].fields.filter(_.name.equals(fieldName)).head
+      case _ => throw UnsupportedOperationException(s"connot support ${fields(alias)}")
     }
   }
 

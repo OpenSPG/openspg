@@ -664,8 +664,9 @@ class RuleExprParser extends Serializable {
     last_op
   }
 
-  def parseGraphAliasElementList(ctx: Graph_alias_element_listContext): List[Ref] = {
-    val aliasSet = ctx.graph_alias().asScala.map(k => Ref(k.identifier().getText))
+  def parseGraphAliasElementList(ctx: Graph_alias_element_listContext): List[Expr] = {
+    val aliasSet = ctx.graph_alias_with_property()
+      .asScala.map(k => parseRefExpr(k.graph_alias(), k.property_name()))
     aliasSet.toList
   }
 

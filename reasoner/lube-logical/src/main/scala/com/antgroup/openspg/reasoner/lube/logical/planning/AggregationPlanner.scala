@@ -16,7 +16,7 @@ package com.antgroup.openspg.reasoner.lube.logical.planning
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
-import com.antgroup.openspg.reasoner.common.types.KTString
+import com.antgroup.openspg.reasoner.common.types.KTObject
 import com.antgroup.openspg.reasoner.lube.block.Aggregations
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator
@@ -26,10 +26,10 @@ import com.antgroup.openspg.reasoner.lube.logical.operators.{Aggregate, LogicalL
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 import org.apache.commons.lang3.StringUtils
 
-class AggregationPlanner(group: List[String], aggregations: Aggregations) {
+class AggregationPlanner(group: List[IRField], aggregations: Aggregations) {
 
   def plan(dependency: LogicalOperator): LogicalOperator = {
-    val groupVar: List[Var] = group.map(NodeVar(_, null))
+    val groupVar: List[Var] = group.map(toVar(_, dependency.solved))
     val aggMap = new mutable.HashMap[Var, Aggregator]()
     var resolved = dependency.solved
     for (p <- aggregations.pairs) {
@@ -56,21 +56,21 @@ class AggregationPlanner(group: List[String], aggregations: Aggregations) {
       val field = getAggregateTarget(referFields, resolved, dependency)
       field match {
         case IRNode(alias, _) =>
-          val propertyVar = PropertyVar(alias, new Field(p._1.name, KTString, true))
+          val propertyVar = PropertyVar(alias, new Field(p._1.name, KTObject, true))
           aggMap.put(propertyVar, newAggExpr)
           resolved = resolved.addField((p._1.asInstanceOf[IRVariable], propertyVar))
         case IREdge(alias, _) =>
           if (resolved.getVar(alias).isInstanceOf[RepeatPathVar]) {
             aggMap.put(resolved.getVar(alias).asInstanceOf[RepeatPathVar].pathVar, newAggExpr)
           } else {
-            val propertyVar = PropertyVar(alias, new Field(p._1.name, KTString, true))
+            val propertyVar = PropertyVar(alias, new Field(p._1.name, KTObject, true))
             resolved = resolved.addField((p._1.asInstanceOf[IRVariable], propertyVar))
             aggMap.put(propertyVar, newAggExpr)
           }
         case IRVariable(alias) =>
           val tmpPropertyVar = resolved.tmpFields(IRVariable(alias))
           val propertyVar =
-            PropertyVar(tmpPropertyVar.name, new Field(p._1.name, KTString, true))
+            PropertyVar(tmpPropertyVar.name, new Field(p._1.name, KTObject, true))
           aggMap.put(propertyVar, newAggExpr)
           resolved = resolved.addField((p._1.asInstanceOf[IRVariable], propertyVar))
         case _ =>
@@ -78,6 +78,15 @@ class AggregationPlanner(group: List[String], aggregations: Aggregations) {
       }
     }
     Aggregate(dependency, groupVar, aggMap.toMap, resolved.solve)
+  }
+
+  private def toVar(field: IRField, solvedModel: SolvedModel): Var = {
+    field match {
+      case IRNode(name, fields) => NodeVar(name, Set.empty)
+      case IRProperty(name, field) => PropertyVar(name, new Field(field, KTObject, true))
+      case field: IRVariable => solvedModel.getField(field)
+      case _ => throw UnsupportedOperationException(s"cannot group by $field")
+    }
   }
 
   private def getAggregateTarget(

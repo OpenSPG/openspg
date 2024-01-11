@@ -184,7 +184,7 @@ final case class Window(start: Expr, end: Expr) extends TypeValidatedExpr {}
  * @param by
  * @param expr
  */
-final case class GraphAggregatorExpr(pathName: String, by: List[Ref], expr: Aggregator)
+final case class GraphAggregatorExpr(pathName: String, by: List[Expr], expr: Aggregator)
     extends Aggregator {}
 
 /**
