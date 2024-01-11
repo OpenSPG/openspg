@@ -389,7 +389,8 @@ graph_order_and_slice_op: graph_order_op period graph_limit_op;
 graph_limit_op : LIMIT left_paren oC_IntegerLiteral right_paren;
 graph_filter_op : IF left_paren value_expression right_paren;
 graph_alias : identifier ;
-graph_alias_element_list : graph_alias ( comma graph_alias )* ;
+graph_alias_with_property : graph_alias (period property_name)? ;
+graph_alias_element_list : graph_alias_with_property ( comma graph_alias_with_property )* ;
 
 
 //#############################################################################
