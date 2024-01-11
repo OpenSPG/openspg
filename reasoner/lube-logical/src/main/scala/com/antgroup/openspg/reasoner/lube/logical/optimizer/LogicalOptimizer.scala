@@ -24,6 +24,7 @@ object LogicalOptimizer {
 
   var LOGICAL_OPT_RULES: Seq[Rule] =
     Seq(
+      GroupNode,
       IdFilterPushDown,
       FilterPushDown,
       ExpandIntoPure,
