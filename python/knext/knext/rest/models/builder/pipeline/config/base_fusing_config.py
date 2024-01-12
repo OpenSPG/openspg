@@ -46,12 +46,6 @@ class BaseFusingConfig(object):
 
     attribute_map = {"strategy_type": "strategyType", "fusing_type": "fusingType"}
 
-    discriminator_value_class_map = {
-        "OPERATOR": "OperatorFusingConfig",
-        "NEW_INSTANCE": "NewInstanceFusingConfig",
-        "NOT_IMPORT": "NotImportFusingConfig",
-    }
-
     def __init__(
         self, strategy_type="FUSING", fusing_type=None, local_vars_configuration=None
     ):  # noqa: E501
@@ -129,7 +123,7 @@ class BaseFusingConfig(object):
             raise ValueError(
                 "Invalid value for `fusing_type`, must not be `None`"
             )  # noqa: E501
-        allowed_values = ["OPERATOR", "NEW_INSTANCE", "NOT_IMPORT"]  # noqa: E501
+        allowed_values = ["OPERATOR", "OVERWRITE"]  # noqa: E501
         if (
             self.local_vars_configuration.client_side_validation
             and fusing_type not in allowed_values

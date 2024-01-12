@@ -154,7 +154,6 @@ class ApiClient(object):
         _request_timeout=None,
         _host=None,
     ):
-
         config = self.configuration
 
         # header parameters
@@ -765,7 +764,6 @@ class ApiClient(object):
 
 
 class BaseApi(object):
-
     api_client: ApiClient
 
     def __init__(self, api_client=None):
