@@ -18,35 +18,20 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.exception.{
-  KGDSLGrammarException,
-  KGDSLOneTaskException
-}
+import com.antgroup.openspg.reasoner.common.exception.{KGDSLGrammarException, KGDSLOneTaskException}
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction
 import com.antgroup.openspg.reasoner.common.trees.BottomUp
 import com.antgroup.openspg.reasoner.common.types._
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.graph._
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  Element,
-  GraphPath,
-  PatternElement,
-  PredicateElement
-}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{Element, GraphPath, PatternElement, PredicateElement}
 import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, ProjectRule, Rule}
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface
 import com.antgroup.openspg.reasoner.lube.utils.{ExprUtils, RuleUtils}
-import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.{
-  Expr2QlexpressTransformer,
-  Rule2ExprTransformer
-}
+import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.{Expr2QlexpressTransformer, Rule2ExprTransformer}
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
-import com.antgroup.openspg.reasoner.parser.pattern.{
-  ConceptLabelType,
-  EntityLabelType,
-  PatternParser
-}
+import com.antgroup.openspg.reasoner.parser.pattern.{ConceptLabelType, EntityLabelType, PatternParser}
 
 /**
  * parse dsl to Block
@@ -367,8 +352,8 @@ class OpenSPGDslParser extends ParserInterface {
                 case Ref(refName) => fieldMap(refName)
                 case UnaryOpExpr(GetField(fieldName), Ref(refName)) =>
                   IRProperty(refName, fieldName)
-                case x => throw
-                  new KGDSLGrammarException("OrderAndSliceBlock can not group " + x.pretty)
+                case x =>
+                  throw new KGDSLGrammarException("OrderAndSliceBlock can not group " + x.pretty)
               })
           case _ => throw new KGDSLGrammarException("not support " + opChain.curExpr)
         }
