@@ -20,12 +20,12 @@ class TestBaseInvoker(unittest.TestCase):
     """
 
     def setUp(self):
-        # for importing test_stub.py
+        # for importing invoker_test_stub.py
         dir_path = os.path.dirname(os.path.abspath(__file__))
         sys.path.insert(0, dir_path)
 
         from nn4k.nnhub import NNHub
-        from test_stub import StubHub
+        from invoker_test_stub import StubHub
 
         NNHub._hub_instance = StubHub()
 
@@ -37,22 +37,24 @@ class TestBaseInvoker(unittest.TestCase):
 
     def testCustomNNInvoker(self):
         from nn4k.invoker import NNInvoker
-        from test_stub import StubInvoker
+        from invoker_test_stub import StubInvoker
 
-        nn_config = {"nn_invoker": "test_stub.StubInvoker"}
+        nn_config = {"nn_invoker": "invoker_test_stub.StubInvoker"}
         invoker = NNInvoker.from_config(nn_config)
         self.assertTrue(isinstance(invoker, StubInvoker))
         self.assertEqual(invoker.init_args, nn_config)
         self.assertEqual(invoker.kwargs, {})
 
         with self.assertRaises(RuntimeError):
-            invoker = NNInvoker.from_config({"nn_invoker": "test_stub.NotInvoker"})
+            invoker = NNInvoker.from_config(
+                {"nn_invoker": "invoker_test_stub.NotInvoker"}
+            )
 
     def testHubInvoker(self):
         from nn4k.invoker import NNInvoker
-        from test_stub import StubInvoker
+        from invoker_test_stub import StubInvoker
 
-        nn_config = {"nn_name": "test_stub"}
+        nn_config = {"nn_name": "invoker_test_stub"}
         invoker = NNInvoker.from_config(nn_config)
         self.assertTrue(isinstance(invoker, StubInvoker))
         self.assertEqual(invoker.init_args, nn_config)
@@ -66,9 +68,9 @@ class TestBaseInvoker(unittest.TestCase):
 
     def testLocalInvoker(self):
         from nn4k.invoker import NNInvoker
-        from test_stub import StubInvoker
+        from invoker_test_stub import StubInvoker
 
-        nn_config = {"nn_name": "test_stub"}
+        nn_config = {"nn_name": "invoker_test_stub"}
         invoker = NNInvoker.from_config(nn_config)
         self.assertTrue(isinstance(invoker, StubInvoker))
         self.assertEqual(invoker.init_args, nn_config)

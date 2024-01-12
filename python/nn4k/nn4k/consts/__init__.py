@@ -37,6 +37,9 @@ NN_OPENAI_API_BASE_TEXT = "openai api base"
 NN_OPENAI_MAX_TOKENS_KEY = "openai_max_tokens"
 NN_OPENAI_MAX_TOKENS_TEXT = "openai max tokens"
 
+NN_OPENAI_ORGANIZATION_KEY = "openai_organization"
+NN_OPENAI_ORGANIZATION_TEXT = "openai organization"
+
 NN_OPENAI_GPT4_PREFIX = "gpt-4"
 NN_OPENAI_GPT35_PREFIX = "gpt-3.5"
 

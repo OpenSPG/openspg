@@ -1,4 +1,4 @@
-# Copyright 2023 OpenSPG Authors
+# Copyright 2023 Ant Group CO., Ltd.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -32,9 +32,9 @@ class MockChoice:
     message: MockMessage
 
 
-class TestOpenAIInvoker(unittest.TestCase):
+class TestOpenAIInvokerLegacyAPI(unittest.TestCase):
     """
-    OpenAIInvoker unittest
+    OpenAIInvoker unittest for legacy OpenAI api
     """
 
     def setUp(self):
@@ -48,8 +48,7 @@ class TestOpenAIInvoker(unittest.TestCase):
             sys.modules["openai"] = self._saved_openai
 
     def testOpenAICompletion(self):
-        self._mocked_openai.__version__ = "1.7.0"
-        self._mocked_openai.OpenAI = unittest.mock.MagicMock
+        self._mocked_openai.__version__ = "0.28.1"
 
         nn_config = {
             "nn_name": "gpt-3.5-turbo",
@@ -59,16 +58,16 @@ class TestOpenAIInvoker(unittest.TestCase):
         }
         invoker = NNInvoker.from_config(nn_config)
         self.assertEqual(invoker.init_args, nn_config)
-        self.assertEqual(invoker.client.api_key, nn_config["openai_api_key"])
-        self.assertEqual(invoker.client.base_url, nn_config["openai_api_base"])
+        self.assertEqual(self._mocked_openai.api_key, nn_config["openai_api_key"])
+        self.assertEqual(self._mocked_openai.api_base, nn_config["openai_api_base"])
 
         mock_completion = MockCompletion(
             choices=[MockChoice(message=MockMessage(content="a dog named Bolt ..."))]
         )
-        invoker.client.chat.completions.create.return_value = mock_completion
+        self._mocked_openai.ChatCompletion.create.return_value = mock_completion
 
         result = invoker.remote_inference("Long long ago, ")
-        invoker.client.chat.completions.create.assert_called_with(
+        self._mocked_openai.ChatCompletion.create.assert_called_with(
             model=nn_config["nn_name"],
             messages=[{"role": "user", "content": "Long long ago, "}],
             max_tokens=nn_config["openai_max_tokens"],

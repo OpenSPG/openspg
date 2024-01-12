@@ -29,6 +29,7 @@ class TestInvokerChecking(unittest.TestCase):
             is_openai_invoker({"openai_api_base": "http://localhost:38000/v1"})
         )
         self.assertTrue(is_openai_invoker({"openai_max_tokens": 1000}))
+        self.assertTrue(is_openai_invoker({"openai_organization": "test_org"}))
         self.assertFalse(is_openai_invoker({"foo": "bar"}))
 
     def testIsLocalInvoker(self):
