@@ -43,10 +43,9 @@ object ExprUtils {
     }).transform(expr)
   }
 
-  def getAllInputFieldInRule(
-                              expr: Expr,
-                              nodesAlias: Set[String],
-                              edgeAlias: Set[String]): List[IRField] = {
+  def getAllInputFieldInRule(expr: Expr,
+                             nodesAlias: Set[String],
+                             edgeAlias: Set[String]): List[IRField] = {
     Transform((e: Expr, c: List[List[IRField]]) => {
       if (c.nonEmpty) {
         e match {
