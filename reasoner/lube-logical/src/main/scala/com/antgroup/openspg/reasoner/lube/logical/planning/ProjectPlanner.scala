@@ -14,22 +14,15 @@
 package com.antgroup.openspg.reasoner.lube.logical.planning
 
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
 
-import com.antgroup.openspg.reasoner.common.exception.{SystemError, UnsupportedOperationException}
-import com.antgroup.openspg.reasoner.common.types.KTString
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
+import com.antgroup.openspg.reasoner.common.types.KTObject
 import com.antgroup.openspg.reasoner.lube.block.ProjectFields
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.{Directly, Expr}
 import com.antgroup.openspg.reasoner.lube.common.graph._
 import com.antgroup.openspg.reasoner.lube.logical.{ExprUtil, PropertyVar, SolvedModel, Var}
-import com.antgroup.openspg.reasoner.lube.logical.operators.{
-  ExpandInto,
-  LogicalOperator,
-  PatternScan,
-  Project,
-  StackingLogicalOperator
-}
+import com.antgroup.openspg.reasoner.lube.logical.operators.{LogicalOperator, Project, StackingLogicalOperator}
 import com.antgroup.openspg.reasoner.lube.utils.RuleUtils
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Rule2ExprTransformer
 import org.apache.commons.lang3.StringUtils
@@ -80,7 +73,7 @@ class ProjectPlanner(projects: ProjectFields) {
     left match {
       case IRVariable(name) =>
         if (referVars.size == 1) {
-          PropertyVar(referVars.head.name, new Field(name, KTString, true))
+          PropertyVar(referVars.head.name, new Field(name, KTObject, true))
         } else {
           val aliasSet = new mutable.HashSet[String]()
           for (rVar <- referVars) {
@@ -91,11 +84,11 @@ class ProjectPlanner(projects: ProjectFields) {
             }
           }
           val targetAlias = getTargetAlias(aliasSet.toSet, dependency)
-          PropertyVar(targetAlias, new Field(left.name, KTString, true))
+          PropertyVar(targetAlias, new Field(left.name, KTObject, true))
         }
-      case IRProperty(name, field) => PropertyVar(name, new Field(field, KTString, true))
-      case IRNode(name, fields) => PropertyVar(name, new Field(fields.head, KTString, true))
-      case IREdge(name, fields) => PropertyVar(name, new Field(fields.head, KTString, true))
+      case IRProperty(name, field) => PropertyVar(name, new Field(field, KTObject, true))
+      case IRNode(name, fields) => PropertyVar(name, new Field(fields.head, KTObject, true))
+      case IREdge(name, fields) => PropertyVar(name, new Field(fields.head, KTObject, true))
       case _ => throw UnsupportedOperationException(s"cannot support $left")
     }
 
