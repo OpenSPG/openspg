@@ -305,4 +305,43 @@ class OptimizerTests extends AnyFunSpec {
     cnt should equal(2)
   }
 
+  it("test groups to node") {
+    val dsl =
+      """
+        |GraphStructure {
+        |  (A:User)-[e1:lk]->(B:User)-[e2:lk]->(C:User)
+        |}
+        |Rule {
+        |  R1(""): e1.weight < e2.weight
+        |  R2(""): C.height > 170
+        |  countB = group(A.id, A.name).count(B)
+        |  countC = group(A.id, A.name).count(C)
+        |}
+        |Action {
+        |  get(A.id, countB, countC)
+        |}
+        |""".stripMargin
+    val parser = new OpenSPGDslParser()
+    val block = parser.parse(dsl)
+    val schema: Map[String, Set[String]] =
+      Map.apply(
+        "User" -> Set.apply("id", "name", "age", "height", "weight"),
+        "User_lk_User" -> Set.apply("weight"))
+    val catalog = new PropertyGraphCatalog(schema)
+    catalog.init()
+    implicit val context: LogicalPlannerContext =
+      LogicalPlannerContext(
+        catalog,
+        parser,
+        Map
+          .apply((Constants.SPG_REASONER_MULTI_VERSION_ENABLE, true))
+          .asInstanceOf[Map[String, Object]])
+    val dag = Validator.validate(List.apply(block))
+    val logicalPlan = LogicalPlanner.plan(dag).popRoot()
+    val rule = Seq(GroupNode, FilterPushDown, ExpandIntoPure, FilterMerge, SolvedModelPure)
+    val optimizedLogicalPlan = LogicalOptimizer.optimize(logicalPlan, rule)
+    optimizedLogicalPlan.findExactlyOne { case Aggregate(_, group, _, _) =>
+      group should equal(List.apply(NodeVar("A", Set.empty)))
+    }
+  }
 }
