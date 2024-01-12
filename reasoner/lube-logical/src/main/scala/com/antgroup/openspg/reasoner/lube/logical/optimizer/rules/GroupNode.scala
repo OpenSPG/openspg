@@ -56,6 +56,8 @@ object GroupNode extends Rule {
               groups.++=(kv._2)
             }
           }
+        } else {
+          groups.++=(kv._2)
         }
       }
       aggregate.copy(group = groups.toList)
