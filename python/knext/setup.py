@@ -41,6 +41,7 @@ __package_name__ = "{package_name}"
 __version__ = "{version}"
 
 from knext.common.env import init_env
+
 init_env()
 """
     wf.write(content)
