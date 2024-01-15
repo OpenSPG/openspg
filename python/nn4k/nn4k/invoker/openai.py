@@ -36,9 +36,11 @@ class OpenAIInvoker(NNInvoker):
         self.openai_api_base = get_string_field(
             self.init_args, NN_OPENAI_API_BASE_KEY, NN_OPENAI_API_BASE_TEXT
         )
-        self.openai_max_tokens = get_positive_int_field(
-            self.init_args, NN_OPENAI_MAX_TOKENS_KEY, NN_OPENAI_MAX_TOKENS_TEXT
-        )
+        self.openai_max_tokens = self.init_args.get(NN_OPENAI_MAX_TOKENS_KEY)
+        if self.openai_max_tokens is not None:
+            self.openai_max_tokens = get_positive_int_field(
+                self.init_args, NN_OPENAI_MAX_TOKENS_KEY, NN_OPENAI_MAX_TOKENS_TEXT
+            )
         self.openai_organization = self.init_args.get(NN_OPENAI_ORGANIZATION_KEY)
         if self.openai_organization is not None:
             self.openai_organization = get_string_field(
@@ -96,12 +98,43 @@ class OpenAIInvoker(NNInvoker):
         output = [choice.message.content for choice in completion.choices]
         return output
 
-    def remote_inference(
-        self, input, max_output_length: Optional[int] = None, **kwargs
-    ):
-        if max_output_length is None:
-            max_output_length = self.openai_max_tokens
+    def _get_completion(self, input, max_output_length, **kwargs):
         prompt = self._create_prompt(input, **kwargs)
         completion = self._create_completion(input, prompt, max_output_length, **kwargs)
         output = self._create_output(input, prompt, completion, **kwargs)
+        return output
+
+    def _get_embeddings(self, input, **kwargs):
+        import openai
+
+        if isinstance(input, list):
+            inputs = input
+        else:
+            inputs = [input]
+
+        if self._is_legacy_openai_api:
+            response = openai.Embedding.create(
+                model=self.openai_model_name,
+                input=inputs,
+            )
+        else:
+            response = self.client.embeddings.create(
+                model=self.openai_model_name,
+                input=inputs,
+            )
+
+        embeddings = [emb.embedding for emb in response.data]
+        return embeddings
+
+    def remote_inference(
+        self, input, max_output_length: Optional[int] = None, **kwargs
+    ):
+        from nn4k.consts import NN_OPENAI_EMBEDDING_PREFIX
+
+        if self.openai_model_name.startswith(NN_OPENAI_EMBEDDING_PREFIX):
+            output = self._get_embeddings(input, **kwargs)
+        else:
+            if max_output_length is None:
+                max_output_length = self.openai_max_tokens
+            output = self._get_completion(input, max_output_length, **kwargs)
         return output

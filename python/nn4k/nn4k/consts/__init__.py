@@ -42,5 +42,6 @@ NN_OPENAI_ORGANIZATION_TEXT = "openai organization"
 
 NN_OPENAI_GPT4_PREFIX = "gpt-4"
 NN_OPENAI_GPT35_PREFIX = "gpt-3.5"
+NN_OPENAI_EMBEDDING_PREFIX = "text-embedding"
 
 NN_LOCAL_HF_MODEL_CONFIG_FILE = "config.json"

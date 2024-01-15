@@ -22,6 +22,7 @@ class TestInvokerChecking(unittest.TestCase):
 
         self.assertTrue(is_openai_invoker({"nn_name": "gpt-3.5-turbo"}))
         self.assertTrue(is_openai_invoker({"nn_name": "gpt-4"}))
+        self.assertTrue(is_openai_invoker({"nn_name": "text-embedding-ada-002"}))
         self.assertFalse(is_openai_invoker({"nn_name": "dummy"}))
 
         self.assertTrue(is_openai_invoker({"openai_api_key": "EMPTY"}))
