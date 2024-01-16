@@ -468,7 +468,9 @@ class BaseProperty(ABC):
         for name, member in members:
             if isinstance(member, property):
                 if name == "sub_properties":
-                    setattr(self, name, [prop for _, prop in getattr(other, name).items()])
+                    setattr(
+                        self, name, [prop for _, prop in getattr(other, name).items()]
+                    )
                 else:
                     setattr(self, name, getattr(other, name))
 
