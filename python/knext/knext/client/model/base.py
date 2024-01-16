@@ -467,7 +467,12 @@ class BaseProperty(ABC):
         members = inspect.getmembers(self.__class__)
         for name, member in members:
             if isinstance(member, property):
-                setattr(self, name, getattr(other, name))
+                if name == "sub_properties":
+                    setattr(
+                        self, name, [prop for _, prop in getattr(other, name).items()]
+                    )
+                else:
+                    setattr(self, name, getattr(other, name))
 
     def to_dict(self):
         """Returns the model properties as a dict"""

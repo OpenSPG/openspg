@@ -96,6 +96,15 @@ class BuilderClient(Client):
         if kwargs.get("lead_to"):
             java_cmd.append("--leadTo")
 
+        if os.getenv("KNEXT_DEBUG_MODE", "False") == "True":
+            print_java_cmd = [
+                cmd if not cmd.startswith("{") else f"'{cmd}'" for cmd in java_cmd
+            ]
+            print_java_cmd = [
+                cmd if not cmd.count(";") > 0 else f"'{cmd}'" for cmd in print_java_cmd
+            ]
+            print(json.dumps(" ".join(print_java_cmd))[1:-1].replace("'", '"'))
+
         subprocess.call(java_cmd)
 
     def query(self, job_inst_id: int):

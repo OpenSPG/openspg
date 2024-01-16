@@ -9,8 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
-
+import os
 from json import JSONDecodeError
 from typing import Any
 
@@ -26,15 +25,15 @@ class _ApiExceptionHandler(Group):
     """Echo exceptions."""
 
     def invoke(self, ctx: Context) -> Any:
-        return super().invoke(ctx)
-        # # TODO
-        # try:
-        #     return super().invoke(ctx)
-        # except ApiException as api:
-        #     try:
-        #         body = json.loads(api.body)
-        #     except JSONDecodeError:
-        #         raise api
-        #     click.secho("ERROR: " + body, fg="bright_red")
-        # except Exception as e:
-        #     click.secho("ERROR: " + e.__str__(), fg="bright_red")
+        if os.getenv("KNEXT_DEBUG_MODE", "False") == "True":
+            return super().invoke(ctx)
+        try:
+            return super().invoke(ctx)
+        except ApiException as api:
+            try:
+                body = json.loads(api.body)
+            except JSONDecodeError:
+                raise api
+            click.secho("ERROR: " + body, fg="bright_red")
+        except Exception as e:
+            click.secho("ERROR: " + e.__str__(), fg="bright_red")
