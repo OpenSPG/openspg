@@ -23,5 +23,6 @@ jobs:
           remote-organization-name: OpenSPG
           remote-repository-name: cla-assistant
           lock-pullrequest-aftermerge: True
+          branch: 'main'
 
 
