@@ -81,6 +81,19 @@ class TestBaseInvoker(unittest.TestCase):
         result = invoker.local_inference("input")
         self.assertEqual(result, invoker._nn_executor.inference_result)
 
+    def testLocalLLMInvokerWithCustomExecutor(self):
+        from nn4k.invoker import LLMInvoker
+
+        nn_config = {"nn_executor": "invoker_test_stub.StubExecutor"}
+        invoker = LLMInvoker.from_config(nn_config)
+        self.assertTrue(isinstance(invoker, LLMInvoker))
+        self.assertEqual(invoker.init_args, nn_config)
+
+        invoker.warmup_local_model()
+        invoker._nn_executor.inference_result = "inference result"
+        result = invoker.local_inference("input")
+        self.assertEqual(result, invoker._nn_executor.inference_result)
+
 
 if __name__ == "__main__":
     unittest.main()
