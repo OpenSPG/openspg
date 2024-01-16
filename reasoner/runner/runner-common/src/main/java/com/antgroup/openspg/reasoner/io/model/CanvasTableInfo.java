@@ -11,19 +11,12 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.sink;
+package com.antgroup.openspg.reasoner.io.model;
 
-import java.io.Serializable;
+import lombok.Data;
 
-public enum KgReasonerSinkType implements Serializable {
-  /** log */
-  LOG,
-  /** loca csv file */
-  FILE,
-  /** odps table */
-  ODPS,
-  /** hive table */
-  HIVE,
-  /** openspg canvas */
-  CANVAS
+@Data
+public class CanvasTableInfo extends AbstractTableInfo {
+  private String queryId;
+  private String apiPath;
 }

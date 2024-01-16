@@ -18,7 +18,6 @@ import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
-import com.antgroup.openspg.reasoner.common.types.KTInteger$;
 import com.antgroup.openspg.reasoner.common.types.KTObject$;
 import com.antgroup.openspg.reasoner.common.types.KTString$;
 import com.antgroup.openspg.reasoner.common.types.KgType;
@@ -27,13 +26,13 @@ import com.antgroup.openspg.reasoner.udf.model.LinkedUdtfResult;
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import scala.Tuple2;
@@ -46,11 +45,7 @@ public class ConceptEdgeExpand extends BaseUdtf {
   @Override
   public List<KgType> getInputRowTypes() {
     return Lists.newArrayList(
-        KTObject$.MODULE$,
-        KTString$.MODULE$,
-        KTString$.MODULE$,
-        KTString$.MODULE$,
-        KTInteger$.MODULE$);
+        KTObject$.MODULE$, KTString$.MODULE$, KTObject$.MODULE$, KTString$.MODULE$);
   }
 
   @Override
@@ -69,13 +64,8 @@ public class ConceptEdgeExpand extends BaseUdtf {
   public void process(List<Object> args) {
     Map<String, Object> source = (Map<String, Object>) args.get(0);
     String edgeType = (String) args.get(1);
-    String conceptId = (String) args.get(2);
+    String[] conceptIds = (String[]) args.get(2);
     String conceptType = (String) args.get(3);
-
-    Integer[] subLevels = new Integer[] {0};
-    if (args.size() >= 5) {
-      subLevels = (Integer[]) args.get(4);
-    }
 
     Long internalId = (Long) source.get(Constants.VERTEX_INTERNAL_ID_KEY);
     String sourceVertexType = (String) source.get(Constants.CONTEXT_LABEL);
@@ -87,18 +77,22 @@ public class ConceptEdgeExpand extends BaseUdtf {
       return;
     }
 
-    boolean find = false;
+    Set<String> checkingConceptIdSet = new HashSet<>(Lists.newArrayList(conceptIds));
+
+    Set<String> validConceptIdSet = new HashSet<>();
+
     Map<Integer, List<String>> upperConceptMap = new HashMap<>();
-    if (belongToConceptList.contains(conceptId)) {
-      find = true;
-      upperConceptMap.put(0, Lists.newArrayList(conceptId));
-    } else {
-      Queue<Tuple2<Integer, String>> checkConceptQueue = new LinkedList<>();
-      for (String concept : belongToConceptList) {
-        checkConceptQueue.add(new Tuple2<>(0, concept));
-        List<String> conceptList = upperConceptMap.computeIfAbsent(0, k -> new ArrayList<>());
-        conceptList.add(concept);
+    Queue<Tuple2<Integer, String>> checkConceptQueue = new LinkedList<>();
+    for (String concept : belongToConceptList) {
+      if (checkingConceptIdSet.contains(concept)) {
+        checkingConceptIdSet.remove(concept);
+        validConceptIdSet.add(concept);
       }
+      checkConceptQueue.add(new Tuple2<>(0, concept));
+      List<String> conceptList = upperConceptMap.computeIfAbsent(0, k -> new ArrayList<>());
+      conceptList.add(concept);
+    }
+    if (!checkingConceptIdSet.isEmpty()) {
       Tuple2<Integer, String> checkingConcept;
       while (null != (checkingConcept = checkConceptQueue.poll())) {
         String upper = this.conceptTree.getUpper(conceptType, checkingConcept._2());
@@ -108,35 +102,20 @@ public class ConceptEdgeExpand extends BaseUdtf {
         if (StringUtils.isEmpty(upper)) {
           break;
         }
-        if (upper.equals(conceptId)) {
-          find = true;
-          break;
+        if (checkingConceptIdSet.contains(upper)) {
+          checkingConceptIdSet.remove(upper);
+          validConceptIdSet.add(upper);
+          if (checkingConceptIdSet.isEmpty()) {
+            break;
+          }
         }
         checkConceptQueue.add(new Tuple2<>(checkingConcept._1() + 1, upper));
-      }
-    }
-    if (!find) {
-      return;
-    }
-
-    int maxLevel = Collections.max(upperConceptMap.keySet());
-    Map<Integer, List<String>> revertLevelUpperConceptMap = new HashMap<>();
-    for (Map.Entry<Integer, List<String>> entry : upperConceptMap.entrySet()) {
-      revertLevelUpperConceptMap.put(Math.abs(maxLevel - entry.getKey()), entry.getValue());
-    }
-
-    List<Integer> subLevelList = Arrays.asList(subLevels);
-    List<String> result = new ArrayList<>();
-    for (int i = 0; i <= maxLevel; ++i) {
-      boolean add = subLevelList.contains(i);
-      if (add && revertLevelUpperConceptMap.containsKey(i)) {
-        result.addAll(revertLevelUpperConceptMap.get(i));
       }
     }
 
     LinkedUdtfResult udtfResult = new LinkedUdtfResult();
     udtfResult.setEdgeType(edgeType);
-    udtfResult.getTargetVertexIdList().addAll(result);
+    udtfResult.getTargetVertexIdList().addAll(validConceptIdSet);
     forward(Lists.newArrayList(udtfResult));
   }
 }
