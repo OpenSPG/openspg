@@ -81,6 +81,7 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
         if (!chosenEdges.contains(connection)) {
           val (src, dst) = getSrcAndDst(connection, chosenNodes)
           chosenEdges.add(connection)
+          chosenNodes.add(dst)
           val rhsPlanner = new PatternMatchPlanner(parts._2.copy(rootAlias = dst))
           val rhsOperator =
             rhsPlanner.plan(

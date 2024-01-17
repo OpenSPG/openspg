@@ -15,15 +15,12 @@ package com.antgroup.openspg.reasoner.lube.logical.validate.semantic
 
 import com.antgroup.openspg.reasoner.lube.block.Block
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
-import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.rules.{
-  ConceptExplain,
-  SpatioTemporalExplain
-}
+import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.rules.{ConceptExplain, NodeIdTransform, SpatioTemporalExplain}
 
 object SemanticExplainer {
 
   var SEMANTIC_EXPLAINS: Seq[Explain] =
-    Seq(ConceptExplain, SpatioTemporalExplain)
+    Seq(ConceptExplain, SpatioTemporalExplain, NodeIdTransform)
 
   def explain(input: Block, optRuleList: Seq[Explain])(implicit
       context: LogicalPlannerContext): Block = {
