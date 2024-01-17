@@ -1,5 +1,5 @@
 # coding: utf-8
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -45,12 +45,6 @@ class BaseFusingConfig(object):
     openapi_types = {"strategy_type": "str", "fusing_type": "str"}
 
     attribute_map = {"strategy_type": "strategyType", "fusing_type": "fusingType"}
-
-    discriminator_value_class_map = {
-        "OPERATOR": "OperatorFusingConfig",
-        "NEW_INSTANCE": "NewInstanceFusingConfig",
-        "NOT_IMPORT": "NotImportFusingConfig",
-    }
 
     def __init__(
         self, strategy_type="FUSING", fusing_type=None, local_vars_configuration=None
@@ -129,7 +123,7 @@ class BaseFusingConfig(object):
             raise ValueError(
                 "Invalid value for `fusing_type`, must not be `None`"
             )  # noqa: E501
-        allowed_values = ["OPERATOR", "NEW_INSTANCE", "NOT_IMPORT"]  # noqa: E501
+        allowed_values = ["OPERATOR", "OVERWRITE"]  # noqa: E501
         if (
             self.local_vars_configuration.client_side_validation
             and fusing_type not in allowed_values

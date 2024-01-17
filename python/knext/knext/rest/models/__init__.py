@@ -1,5 +1,5 @@
 # coding: utf-8
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -204,12 +204,9 @@ from knext.rest.models.builder.pipeline.config.operator_predicting_config import
     OperatorPredictingConfig,
 )
 from knext.rest.models.builder.pipeline.config.predicting_config import PredictingConfig
-from knext.rest.models.builder.pipeline.config.new_instance_fusing_config import (
-    NewInstanceFusingConfig,
+from knext.rest.models.builder.pipeline.config.overwrite_fusing_config import (
+    OverwriteFusingConfig,
 )
 from knext.rest.models.builder.pipeline.config.spg_type_mapping_node_configs import (
     SpgTypeMappingNodeConfigs,
-)
-from knext.rest.models.builder.pipeline.config.not_import_fusing_config import (
-    NotImportFusingConfig,
 )

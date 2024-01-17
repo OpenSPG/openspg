@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -95,6 +95,15 @@ class BuilderClient(Client):
 
         if kwargs.get("lead_to"):
             java_cmd.append("--leadTo")
+
+        if os.getenv("KNEXT_DEBUG_MODE", "False") == "True":
+            print_java_cmd = [
+                cmd if not cmd.startswith("{") else f"'{cmd}'" for cmd in java_cmd
+            ]
+            print_java_cmd = [
+                cmd if not cmd.count(";") > 0 else f"'{cmd}'" for cmd in print_java_cmd
+            ]
+            print(json.dumps(" ".join(print_java_cmd))[1:-1].replace("'", '"'))
 
         subprocess.call(java_cmd)
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -467,7 +467,12 @@ class BaseProperty(ABC):
         members = inspect.getmembers(self.__class__)
         for name, member in members:
             if isinstance(member, property):
-                setattr(self, name, getattr(other, name))
+                if name == "sub_properties":
+                    setattr(
+                        self, name, [prop for _, prop in getattr(other, name).items()]
+                    )
+                else:
+                    setattr(self, name, getattr(other, name))
 
     def to_dict(self):
         """Returns the model properties as a dict"""

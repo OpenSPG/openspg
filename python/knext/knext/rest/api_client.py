@@ -1,5 +1,5 @@
 # coding: utf-8
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -154,7 +154,6 @@ class ApiClient(object):
         _request_timeout=None,
         _host=None,
     ):
-
         config = self.configuration
 
         # header parameters
@@ -765,7 +764,6 @@ class ApiClient(object):
 
 
 class BaseApi(object):
-
     api_client: ApiClient
 
     def __init__(self, api_client=None):
