@@ -46,7 +46,7 @@ class TwoDegreeSubGraph(BuilderJob):
         event_mapping = (
             SPGTypeMapping(
                 spg_type_name=TEST.CenterEvent,
-                fusing_strategy=FusingStrategyEnum.NewInstance,
+                fusing_strategy=FusingStrategyEnum.Overwrite,
             )
             .add_property_mapping("id", TEST.CenterEvent.id)
             .add_property_mapping("id", TEST.CenterEvent.name)
@@ -77,7 +77,7 @@ class TwoDegreeSubGraph(BuilderJob):
         entity1_mapping = (
             SPGTypeMapping(
                 spg_type_name=TEST.Entity1,
-                fusing_strategy=FusingStrategyEnum.NewInstance,
+                fusing_strategy=FusingStrategyEnum.Overwrite,
             )
             .add_property_mapping("entity", TEST.Entity1.id)
             .add_property_mapping("entity", TEST.Entity1.name)
@@ -93,7 +93,7 @@ class TwoDegreeSubGraph(BuilderJob):
         concept1_mapping = (
             SPGTypeMapping(
                 spg_type_name=TEST.Concept1,
-                fusing_strategy=FusingStrategyEnum.NewInstance,
+                fusing_strategy=FusingStrategyEnum.Overwrite,
             )
             .add_property_mapping("concept", TEST.Concept1.id)
             .add_property_mapping("concept", TEST.Concept1.name)
@@ -114,7 +114,7 @@ class TwoDegreeSubGraph(BuilderJob):
         entity2_mapping = (
             SPGTypeMapping(
                 spg_type_name=TEST.Entity2,
-                fusing_strategy=FusingStrategyEnum.NewInstance,
+                fusing_strategy=FusingStrategyEnum.Overwrite,
             )
             .add_property_mapping("entity_relation", TEST.Entity2.id)
             .add_property_mapping("entity_relation", TEST.Entity2.name)
@@ -123,7 +123,7 @@ class TwoDegreeSubGraph(BuilderJob):
         entity3_mapping = (
             SPGTypeMapping(
                 spg_type_name=TEST.Entity3,
-                fusing_strategy=FusingStrategyEnum.NewInstance,
+                fusing_strategy=FusingStrategyEnum.Overwrite,
             )
             .add_property_mapping("predict_relation", TEST.Entity3.id)
             .add_property_mapping("predict_relation", TEST.Entity3.name)
@@ -132,7 +132,7 @@ class TwoDegreeSubGraph(BuilderJob):
         concept2_mapping = (
             SPGTypeMapping(
                 spg_type_name=TEST.Concept2,
-                fusing_strategy=FusingStrategyEnum.NewInstance,
+                fusing_strategy=FusingStrategyEnum.Overwrite,
             )
             .add_property_mapping("lead_to_concept2", TEST.Concept3.id)
             .add_property_mapping("lead_to_concept2", TEST.Concept3.name)
@@ -141,7 +141,7 @@ class TwoDegreeSubGraph(BuilderJob):
         concept3_mapping = (
             SPGTypeMapping(
                 spg_type_name=TEST.Concept3,
-                fusing_strategy=FusingStrategyEnum.NewInstance,
+                fusing_strategy=FusingStrategyEnum.Overwrite,
             )
             .add_property_mapping("lead_to_concept3", TEST.Concept3.id)
             .add_property_mapping("lead_to_concept3", TEST.Concept3.name)

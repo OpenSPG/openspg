@@ -34,7 +34,7 @@ class LinkingStrategyEnum(str, Enum):
 
 
 class FusingStrategyEnum(str, Enum):
-    NewInstance = "NEW_INSTANCE"
+    Overwrite = "OVERWRITE"
 
 
 class PredictingStrategyEnum(str, Enum):
@@ -375,8 +375,8 @@ class SPGTypeMapping(Mapping):
             fusing_config = rest.OperatorFusingConfig(
                 operator_config=self.fusing_strategy.to_rest()
             )
-        elif self.fusing_strategy == FusingStrategyEnum.NewInstance:
-            fusing_config = rest.NewInstanceFusingConfig()
+        elif self.fusing_strategy == FusingStrategyEnum.Overwrite:
+            fusing_config = rest.OverwriteFusingConfig()
         elif not self.fusing_strategy:
             if self.spg_type_name in FuseOp.bind_schemas:
                 op_name = FuseOp.bind_schemas[self.spg_type_name]

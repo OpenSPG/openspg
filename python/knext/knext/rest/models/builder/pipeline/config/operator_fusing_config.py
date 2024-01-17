@@ -138,7 +138,7 @@ class OperatorFusingConfig(object):
             raise ValueError(
                 "Invalid value for `fusing_type`, must not be `None`"
             )  # noqa: E501
-        allowed_values = ["OPERATOR", "NEW_INSTANCE"]  # noqa: E501
+        allowed_values = ["OPERATOR", "OVERWRITE"]  # noqa: E501
         if (
             self.local_vars_configuration.client_side_validation
             and fusing_type not in allowed_values
