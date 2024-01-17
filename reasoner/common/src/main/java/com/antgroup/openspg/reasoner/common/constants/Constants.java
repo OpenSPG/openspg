@@ -59,6 +59,7 @@ public class Constants {
       "kg.reasoner.output.column.force.string";
 
   public static final String OPTIONAL_EDGE_FLAG = "__optional_edge__";
+  public static final String REPEAT_EDGE_FLAG = "__repeat_edge__";
   public static final String NONE_VERTEX_FLAG = "__none_vertex__";
   public static final String MIRROR_VERTEX_FLAG = "__mirror_vertex__";
 

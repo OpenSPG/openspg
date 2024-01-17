@@ -419,6 +419,7 @@ public class RunnerUtil {
         edgeProperty.put(key, property.get(key));
       }
     }
+    edgeProperty.put(Constants.REPEAT_EDGE_FLAG, true);
     edgeProperty.put("edges", edge.getEdgeList());
     IVertex<IVertexId, IProperty> sourceVertex = kgGraph.findVertex(edge.getSourceId());
     IVertex<IVertexId, IProperty> targetVertex = kgGraph.findVertex(edge.getTargetId());
