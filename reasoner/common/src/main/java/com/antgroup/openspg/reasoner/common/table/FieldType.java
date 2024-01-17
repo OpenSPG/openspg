@@ -29,8 +29,7 @@ public enum FieldType implements Serializable {
   DOUBLE(KTDouble$.MODULE$),
   BOOLEAN(KTBoolean$.MODULE$),
   UNKNOWN(KTString$.MODULE$),
-  OBJECT(KTObject$.MODULE$)
-  ;
+  OBJECT(KTObject$.MODULE$);
 
   private final KgType kgType;
 
