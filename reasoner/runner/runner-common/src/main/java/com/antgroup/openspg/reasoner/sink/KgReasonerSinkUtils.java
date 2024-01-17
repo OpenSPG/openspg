@@ -70,7 +70,7 @@ public class KgReasonerSinkUtils {
           outputTableConfig.getJSONArray(KgReasonerSinkType.CANVAS.name()).getJSONObject(0);
       CanvasTableInfo canvasTableInfo = new CanvasTableInfo();
       canvasTableInfo.setQueryId(canvasConfig.getString("queryId"));
-      canvasTableInfo.setApiPath(canvasConfig.getString("apiPath"));
+      canvasTableInfo.setApiPath(canvasConfig.getString("canvasUrl"));
       return canvasTableInfo;
     }
     return null;
