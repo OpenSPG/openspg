@@ -13,9 +13,11 @@
 
 package com.antgroup.openspg.reasoner.lube.logical.optimizer.rules
 
+import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.lube.common.pattern.NodePattern
-import com.antgroup.openspg.reasoner.lube.logical.operators.{ExpandInto, LogicalOperator}
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
+import com.antgroup.openspg.reasoner.lube.logical.NodeVar
+import com.antgroup.openspg.reasoner.lube.logical.operators.{BoundedVarLenExpand, ExpandInto, LogicalOperator}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, Rule}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 
 /**
@@ -32,6 +34,30 @@ object ExpandIntoPure extends Rule {
       } else {
         expandInto
       }
+    case boundedVarLenExpand @ BoundedVarLenExpand(
+          lhs,
+          expandInto: ExpandInto,
+          edgePattern,
+          index) =>
+      if (expandInto.pattern.isInstanceOf[NodePattern] && edgePattern.edge.upper == index) {
+        val refFields = expandInto.refFields
+        if (refFields.head.isEmpty || (refFields.head
+            .asInstanceOf[NodeVar]
+            .fields
+            .size == 1 && refFields.head
+            .asInstanceOf[NodeVar]
+            .fields
+            .head
+            .name
+            .equals(Constants.NODE_ID_KEY))) {
+          BoundedVarLenExpand(lhs, expandInto.in, edgePattern, index)
+        } else {
+          boundedVarLenExpand
+        }
+      } else {
+        boundedVarLenExpand
+      }
+
   }
 
   private def canPure(expandInto: ExpandInto): Boolean = {
@@ -47,7 +73,7 @@ object ExpandIntoPure extends Rule {
     }
   }
 
-  override def direction: Direction = Up
+  override def direction: Direction = Down
 
   override def maxIterations: Int = 1
 }

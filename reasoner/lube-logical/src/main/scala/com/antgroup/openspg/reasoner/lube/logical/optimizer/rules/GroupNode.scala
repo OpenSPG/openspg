@@ -15,7 +15,6 @@ package com.antgroup.openspg.reasoner.lube.logical.optimizer.rules
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
-import scala.util.control.Breaks.break
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.lube.logical.{NodeVar, PropertyVar, Var}
