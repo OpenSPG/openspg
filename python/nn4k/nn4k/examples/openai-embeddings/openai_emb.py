@@ -9,6 +9,9 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
+from nn4k.invoker import NNInvoker
 
-__package_name__ = "openspg-nn4k"
-__version__ = "0.0.2-beta3"
+invoker = NNInvoker.from_config("openai_emb.json")
+vecs = invoker.remote_inference(["How old are you?", "What is your age?"])
+similarity = sum(x * y for x, y in zip(*vecs))
+print("similarity: %g" % similarity)

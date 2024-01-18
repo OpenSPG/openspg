@@ -9,6 +9,8 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
+from nn4k.invoker import NNInvoker
 
-__package_name__ = "openspg-nn4k"
-__version__ = "0.0.2-beta3"
+invoker = NNInvoker.from_config("openai_infer.json")
+output = invoker.remote_inference("Say this is a test.")
+print(output)
