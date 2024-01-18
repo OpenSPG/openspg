@@ -34,6 +34,10 @@ import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.utils.RocksDBUtil;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.util.ArrayList;
@@ -47,6 +51,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -782,8 +788,39 @@ public class RocksdbGraphState implements GraphState<IVertexId>, IConceptTree {
     return edgeTypeSet;
   }
 
+  private final LoadingCache<String, List<String>> conceptCache =
+      CacheBuilder.newBuilder()
+          .maximumSize(2000)
+          .expireAfterAccess(30, TimeUnit.MINUTES)
+          .build(
+              new CacheLoader<String, List<String>>() {
+                @Override
+                public List<String> load(String key) throws Exception {
+                  List<String> kl = Lists.newArrayList(Splitter.on("|").split(key));
+                  String concept = kl.get(0);
+                  String conceptType = kl.get(1);
+                  String upper = kl.get(2);
+                  if ("u".equals(upper)) {
+                    return Lists.newArrayList(doGetUpper(conceptType, concept));
+                  }
+                  return doGetLower(conceptType, concept);
+                }
+              });
+
   @Override
   public String getUpper(String conceptType, String concept) {
+    try {
+      List<String> upper = conceptCache.get(concept + "|" + conceptType + "|u");
+      if (CollectionUtils.isEmpty(upper)) {
+        return null;
+      }
+      return upper.get(0);
+    } catch (ExecutionException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private String doGetUpper(String conceptType, String concept) {
     IVertexId id = IVertexId.from(concept, conceptType);
     List<IEdge<IVertexId, IProperty>> edgeList =
         this.getEdges(id, null, null, getEdgeTypeSet(conceptType), Direction.OUT);
@@ -795,6 +832,14 @@ public class RocksdbGraphState implements GraphState<IVertexId>, IConceptTree {
 
   @Override
   public List<String> getLower(String conceptType, String concept) {
+    try {
+      return conceptCache.get(concept + "|" + conceptType + "|l");
+    } catch (ExecutionException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private List<String> doGetLower(String conceptType, String concept) {
     List<String> result = new ArrayList<>();
     IVertexId id = IVertexId.from(concept, conceptType);
     List<IEdge<IVertexId, IProperty>> edgeList =
