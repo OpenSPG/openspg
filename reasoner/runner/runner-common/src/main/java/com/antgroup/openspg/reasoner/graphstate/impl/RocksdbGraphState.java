@@ -47,6 +47,7 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.rocksdb.ReadOptions;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
@@ -327,6 +328,22 @@ public class RocksdbGraphState implements GraphState<IVertexId> {
     List<Tuple2<byte[], IProperty>> wrapEdgeList = new ArrayList<>();
     Map<String, Map<Long, Set<IEdge<IVertexId, IProperty>>>> type2Version2EdgeMap = new HashMap<>();
     for (IEdge<IVertexId, IProperty> edge : edges) {
+      // if set edgeExtraIdentifier, then append it to version
+      StringBuffer newVersion = new StringBuffer(String.valueOf(edge.getVersion()));
+      if (StringUtils.isNotBlank(edgeExtraIdentifier)) {
+        Set<String> extraIdentifierSet =
+            Arrays.stream(edgeExtraIdentifier.split(","))
+                .map(String::trim)
+                .collect(Collectors.toSet());
+        for (String key : extraIdentifierSet) {
+          if (edge.getValue().isKeyExist(key)) {
+            newVersion.append(edge.getValue().get(key));
+          }
+        }
+        edge.setVersion(
+            UUID.nameUUIDFromBytes(newVersion.toString().getBytes()).getMostSignificantBits());
+      }
+
       String p = edge.getType();
       Map<Long, Set<IEdge<IVertexId, IProperty>>> version2EdgeListMap =
           type2Version2EdgeMap.computeIfAbsent(p, k -> new HashMap<>());
@@ -557,7 +574,7 @@ public class RocksdbGraphState implements GraphState<IVertexId> {
                     Map<String, IEdge<IVertexId, IProperty>> edgeMap = new HashMap<>();
                     for (IEdge<IVertexId, IProperty> edge : edges) {
                       // spot identifies the unique edge
-                      String key = RunnerUtil.getEdgeIdentifier(edge, this.edgeExtraIdentifier);
+                      String key = RunnerUtil.getEdgeIdentifier(edge);
                       IEdge<IVertexId, IProperty> oldEdge = edgeMap.get(key);
                       if (null == oldEdge) {
                         edgeMap.put(key, edge);

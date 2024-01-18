@@ -191,7 +191,7 @@ public class KgGraphLeftJoinImpl implements Serializable {
         if (edge instanceof OptionalEdge) {
           continue;
         }
-        String edgeKey = RunnerUtil.getEdgeIdentifier(edge, null);
+        String edgeKey = RunnerUtil.getEdgeIdentifier(edge);
         IEdge<IVertexId, IProperty> existEdge = selectMap.getOrDefault(edgeKey, null);
         if (null == existEdge || null == existEdge.getValue()) {
           selectMap.put(edgeKey, edge);
@@ -201,7 +201,7 @@ public class KgGraphLeftJoinImpl implements Serializable {
         if (edge instanceof OptionalEdge) {
           continue;
         }
-        String edgeKey = RunnerUtil.getEdgeIdentifier(edge, null);
+        String edgeKey = RunnerUtil.getEdgeIdentifier(edge);
         IEdge<IVertexId, IProperty> existEdge = selectMap.getOrDefault(edgeKey, null);
         if (null == existEdge || null == existEdge.getValue()) {
           selectMap.put(edgeKey, edge);
