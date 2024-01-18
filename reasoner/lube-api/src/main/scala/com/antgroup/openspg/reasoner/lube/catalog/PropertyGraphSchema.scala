@@ -13,16 +13,16 @@
 
 package com.antgroup.openspg.reasoner.lube.catalog
 
-import scala.collection.mutable
-
+import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.exception.SchemaException
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
-import com.antgroup.openspg.reasoner.common.types.KgType
+import com.antgroup.openspg.reasoner.common.types.{KgType, KTString}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.{Edge, Field, Node, NodeType}
 import org.json4s._
 import org.json4s.ext.EnumNameSerializer
 import org.json4s.jackson.Serialization
 import org.json4s.jackson.Serialization.write
+import scala.collection.mutable
 
 class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutable.Map[SPO, Edge])
     extends Serializable {
@@ -70,6 +70,9 @@ class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutab
   }
 
   def getEdgeField(spoStr: Set[String], fieldName: String): Field = {
+    if (Constants.EDGE_TO_ID_KEY.equals(fieldName)) {
+      return new Field(Constants.EDGE_TO_ID_KEY, KTString, true)
+    }
     for (spo <- spoStr) {
       val field = getEdgeField(spo, fieldName)
       if (field != null) {

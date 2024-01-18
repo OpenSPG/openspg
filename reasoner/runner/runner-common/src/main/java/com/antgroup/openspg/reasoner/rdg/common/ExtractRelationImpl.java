@@ -26,6 +26,7 @@ import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
 import com.antgroup.openspg.reasoner.lube.block.AddPredicate;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
+import com.antgroup.openspg.reasoner.lube.common.pattern.Connection;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Element;
 import com.antgroup.openspg.reasoner.lube.common.pattern.EntityElement;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
@@ -93,9 +94,23 @@ public class ExtractRelationImpl implements Serializable {
           Constants.EDGE_TO_ID_KEY, Lists.newArrayList("'" + targetEntityElement.id() + "'"));
     } else {
       targetPatternElement = (PatternElement) te;
+      String edgeAlias = null;
+      for (Connection connection : RunnerUtil.getConnectionSet(this.kgGraphSchema)) {
+        if (connection.target().equals(targetPatternElement.alias())) {
+          edgeAlias = connection.alias();
+          break;
+        }
+      }
       if (!this.propertyRuleMap.containsKey(Constants.EDGE_TO_ID_KEY)) {
         this.propertyRuleMap.put(
-            Constants.EDGE_TO_ID_KEY, Lists.newArrayList(targetPatternElement.alias() + ".id"));
+            Constants.EDGE_TO_ID_KEY,
+            Lists.newArrayList(
+                targetPatternElement.alias()
+                    + ".id==null ? "
+                    + edgeAlias
+                    + ".__to_id__ : "
+                    + targetPatternElement.alias()
+                    + ".id"));
       }
     }
     if (!this.propertyRuleMap.containsKey(Constants.EDGE_FROM_ID_KEY)) {
