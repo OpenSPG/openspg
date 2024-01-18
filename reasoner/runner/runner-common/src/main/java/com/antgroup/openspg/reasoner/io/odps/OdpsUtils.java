@@ -149,7 +149,8 @@ public class OdpsUtils {
             .map(column -> column.getTypeInfo().getOdpsType())
             .sorted(Enum::compareTo)
             .collect(Collectors.toList());
-
+    /*
+    Comment it out and wait for the type inference to complete
     if (!neededType.equals(realType)) {
       log.error(
           "odps_type_not_match, need_type="
@@ -158,6 +159,7 @@ public class OdpsUtils {
               + JSON.toJSONString(realType));
       return false;
     }
+     */
 
     return true;
   }

@@ -17,6 +17,7 @@ import com.antgroup.openspg.reasoner.common.types.KTBoolean$;
 import com.antgroup.openspg.reasoner.common.types.KTDouble$;
 import com.antgroup.openspg.reasoner.common.types.KTInteger$;
 import com.antgroup.openspg.reasoner.common.types.KTLong$;
+import com.antgroup.openspg.reasoner.common.types.KTObject$;
 import com.antgroup.openspg.reasoner.common.types.KTString$;
 import com.antgroup.openspg.reasoner.common.types.KgType;
 import java.io.Serializable;
@@ -28,7 +29,7 @@ public enum FieldType implements Serializable {
   DOUBLE(KTDouble$.MODULE$),
   BOOLEAN(KTBoolean$.MODULE$),
   UNKNOWN(KTString$.MODULE$),
-  ;
+  OBJECT(KTObject$.MODULE$);
 
   private final KgType kgType;
 
