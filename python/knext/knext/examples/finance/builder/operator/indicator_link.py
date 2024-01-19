@@ -12,9 +12,9 @@
 # or implied.
 import requests
 from typing import List
-from knext.api.operator import LinkOp
-from knext.api.record import SPGRecord
-from knext.api.client import SearchClient
+from knext.builder.operator import LinkOp
+from knext.builder.operator.spg_record import SPGRecord
+from knext.common.search import SearchClient
 
 from schema.finance_schema_helper import Finance
 from nn4k.invoker import NNInvoker

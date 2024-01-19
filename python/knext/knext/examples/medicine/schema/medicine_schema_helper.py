@@ -15,60 +15,64 @@
 # PLEASE DO NOT MODIFY THIS FILE!!!
 #
 
-from knext.common.schema_helper import SPGTypeHelper, PropertyHelper, RelationHelper
+from knext.schema.model.schema_helper import (
+    SPGTypeHelper,
+    PropertyHelper,
+    RelationHelper,
+)
 
 
 class Medicine:
     class BodyPart(SPGTypeHelper):
 
-        id = PropertyHelper("id")
-        description = PropertyHelper("description")
-        stdId = PropertyHelper("stdId")
-        alias = PropertyHelper("alias")
         name = PropertyHelper("name")
+        stdId = PropertyHelper("stdId")
+        description = PropertyHelper("description")
+        alias = PropertyHelper("alias")
+        id = PropertyHelper("id")
 
     class Disease(SPGTypeHelper):
         class abnormal(RelationHelper):
-            range = PropertyHelper("range")
             shape = PropertyHelper("shape")
             color = PropertyHelper("color")
+            range = PropertyHelper("range")
 
-        id = PropertyHelper("id")
-        commonSymptom = PropertyHelper("commonSymptom")
-        description = PropertyHelper("description")
-        diseaseSite = PropertyHelper("diseaseSite")
-        complication = PropertyHelper("complication")
-        applicableDrug = PropertyHelper("applicableDrug")
-        department = PropertyHelper("department")
         name = PropertyHelper("name")
+        diseaseSite = PropertyHelper("diseaseSite")
+        department = PropertyHelper("department")
+        description = PropertyHelper("description")
+        applicableDrug = PropertyHelper("applicableDrug")
+        complication = PropertyHelper("complication")
+        commonSymptom = PropertyHelper("commonSymptom")
+        id = PropertyHelper("id")
 
         abnormal = abnormal("abnormal")
 
     class Drug(SPGTypeHelper):
 
-        id = PropertyHelper("id")
-        description = PropertyHelper("description")
         name = PropertyHelper("name")
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
 
     class HospitalDepartment(SPGTypeHelper):
 
-        id = PropertyHelper("id")
-        description = PropertyHelper("description")
-        stdId = PropertyHelper("stdId")
-        alias = PropertyHelper("alias")
         name = PropertyHelper("name")
+        stdId = PropertyHelper("stdId")
+        description = PropertyHelper("description")
+        alias = PropertyHelper("alias")
+        id = PropertyHelper("id")
 
     class Indicator(SPGTypeHelper):
 
-        id = PropertyHelper("id")
-        description = PropertyHelper("description")
         name = PropertyHelper("name")
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
 
     class Symptom(SPGTypeHelper):
 
-        id = PropertyHelper("id")
-        description = PropertyHelper("description")
         name = PropertyHelper("name")
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
 
     BodyPart = BodyPart("Medicine.BodyPart")
     Disease = Disease("Medicine.Disease")

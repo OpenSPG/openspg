@@ -11,12 +11,12 @@
 # or implied.
 
 
-from knext.client.model.builder_job import BuilderJob
-from knext.api.component import CSVReader, SPGTypeMapping, KGWriter
+from knext.builder.model.builder_job import BuilderJob
+from knext.builder.component import CSVReader, SPGTypeMapping, KGWriter
 
 from schema.test_schema_helper import TEST
 
-from knext.component.builder.mapping import LinkingStrategyEnum, FusingStrategyEnum
+from knext.builder.component.mapping import LinkingStrategyEnum, FusingStrategyEnum
 
 
 class TwoDegreeSubGraph(BuilderJob):

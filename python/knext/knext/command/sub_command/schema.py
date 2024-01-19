@@ -16,8 +16,8 @@ from pathlib import Path
 
 import click
 
-from knext.client.marklang.concept_rule_ml import SPGConceptRuleMarkLang
-from knext.client.marklang.schema_ml import SPGSchemaMarkLang
+from knext.schema.marklang.concept_rule_ml import SPGConceptRuleMarkLang
+from knext.schema.marklang.schema_ml import SPGSchemaMarkLang
 from knext.common.template import copytree
 
 TEMPLATE_TO_RENDER = "${project}_schema_helper.py.tmpl"
