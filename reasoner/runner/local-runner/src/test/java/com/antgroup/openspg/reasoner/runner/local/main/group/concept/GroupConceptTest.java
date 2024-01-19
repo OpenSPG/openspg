@@ -102,16 +102,6 @@ public class GroupConceptTest {
         };
 
     params = new HashMap<>();
-
-    /*
-    // start id
-    List<List<String>> startIdList = new ArrayList<>();
-    startIdList.add(Lists.newArrayList("A1", "Account"));
-    params.put(ConfigKey.KG_REASONER_START_ID_LIST, JSON.toJSONString(startIdList));
-
-    // other params
-    params.put("startTime", "1");
-     */
   }
 
   @Test
@@ -124,7 +114,7 @@ public class GroupConceptTest {
             + "  }\n"
             + "Rule {\n"
             + "    eventDay = from_unix_time(e.eventTime, 'yyyyMMdd')\n"
-            + "    R1(\"timeInDay\"): eventDay in ['20220101', '20231119']\n"
+            + "    R1(\"timeInDay\"): from_unix_time(e.eventTime, 'yyyyMMdd') in ['20220101', '20231119']\n"
             + "    p.version = cast_type(eventDay, 'long')\n"
             // + "    p.__to_id__ = eee.__to_id__\n"
             + "  }\n"
@@ -138,7 +128,7 @@ public class GroupConceptTest {
             + "  }\n"
             + "Rule {\n"
             + "    eventDay = from_unix_time(e.eventTime, 'yyyyMMdd')\n"
-            + "    R1(\"timeInDay\"): eventDay in ['20220101', '20231119']\n"
+            + "    R1(\"timeInDay\"): from_unix_time(e.eventTime, 'yyyyMMdd') in ['20220101', '20231119']\n"
             + "    p.version = cast_type(eventDay, 'long')\n"
             // + "    p.__to_id__ = o.id\n"
             + "  }\n"

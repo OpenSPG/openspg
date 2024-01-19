@@ -65,7 +65,7 @@ public class LocalRunnerTestFactory {
     assertFunc.assertResult(result);
   }
 
-  private static Catalog getCatalogFromGraphData(AbstractGraphGenerator graph) {
+  public static Catalog getCatalogFromGraphData(AbstractGraphGenerator graph) {
     Tuple2<List<IVertex<IVertexId, IProperty>>, List<IEdge<IVertexId, IProperty>>> graphData =
         graph.getGraphData();
     Map<String, java.util.Set<String>> schemaMap = new HashMap<>();

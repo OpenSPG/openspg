@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import scala.Tuple2;
@@ -77,7 +78,16 @@ public class ConceptEdgeExpand extends BaseUdtf {
       return;
     }
 
-    Set<String> checkingConceptIdSet = new HashSet<>(Lists.newArrayList(conceptIds));
+    List<String> conceptIdList =
+        Lists.newArrayList(conceptIds).stream()
+            .filter(StringUtils::isNotEmpty)
+            .collect(Collectors.toList());
+    if (conceptIdList.isEmpty()) {
+      getAllConcept(belongToConceptList, conceptType, edgeType);
+      return;
+    }
+
+    Set<String> checkingConceptIdSet = new HashSet<>(conceptIdList);
 
     Set<String> validConceptIdSet = new HashSet<>();
 
@@ -96,12 +106,12 @@ public class ConceptEdgeExpand extends BaseUdtf {
       Tuple2<Integer, String> checkingConcept;
       while (null != (checkingConcept = checkConceptQueue.poll())) {
         String upper = this.conceptTree.getUpper(conceptType, checkingConcept._2());
-        List<String> conceptList =
-            upperConceptMap.computeIfAbsent(checkingConcept._1() + 1, k -> new ArrayList<>());
-        conceptList.add(upper);
         if (StringUtils.isEmpty(upper)) {
           break;
         }
+        List<String> conceptList =
+            upperConceptMap.computeIfAbsent(checkingConcept._1() + 1, k -> new ArrayList<>());
+        conceptList.add(upper);
         if (checkingConceptIdSet.contains(upper)) {
           checkingConceptIdSet.remove(upper);
           validConceptIdSet.add(upper);
@@ -113,6 +123,31 @@ public class ConceptEdgeExpand extends BaseUdtf {
       }
     }
 
+    LinkedUdtfResult udtfResult = new LinkedUdtfResult();
+    udtfResult.setEdgeType(edgeType);
+    udtfResult.getTargetVertexIdList().addAll(validConceptIdSet);
+    forward(Lists.newArrayList(udtfResult));
+  }
+
+  private void getAllConcept(
+      List<String> belongToConceptList, String conceptType, String edgeType) {
+    Set<String> validConceptIdSet = new HashSet<>();
+
+    Queue<Tuple2<Integer, String>> checkConceptQueue = new LinkedList<>();
+    for (String concept : belongToConceptList) {
+      validConceptIdSet.add(concept);
+      checkConceptQueue.add(new Tuple2<>(0, concept));
+    }
+
+    Tuple2<Integer, String> checkingConcept;
+    while (null != (checkingConcept = checkConceptQueue.poll())) {
+      String upper = this.conceptTree.getUpper(conceptType, checkingConcept._2());
+      if (StringUtils.isEmpty(upper)) {
+        break;
+      }
+      validConceptIdSet.add(upper);
+      checkConceptQueue.add(new Tuple2<>(checkingConcept._1() + 1, upper));
+    }
     LinkedUdtfResult udtfResult = new LinkedUdtfResult();
     udtfResult.setEdgeType(edgeType);
     udtfResult.getTargetVertexIdList().addAll(validConceptIdSet);
