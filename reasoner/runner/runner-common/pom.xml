@@ -126,6 +126,10 @@
       <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.aliyun.odps</groupId>
+      <artifactId>odps-sdk-core</artifactId>
+    </dependency>
 
     <!-- parquet start -->
     <dependency>
