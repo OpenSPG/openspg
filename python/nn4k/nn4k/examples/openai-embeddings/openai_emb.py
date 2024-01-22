@@ -12,6 +12,8 @@
 from nn4k.invoker import NNInvoker
 
 invoker = NNInvoker.from_config("openai_emb.json")
-vecs = invoker.remote_inference(["How old are you?", "What is your age?"])
+vecs = invoker.remote_inference(
+    ["How old are you?", "What is your age?"], type="Embedding"
+)
 similarity = sum(x * y for x, y in zip(*vecs))
 print("similarity: %g" % similarity)

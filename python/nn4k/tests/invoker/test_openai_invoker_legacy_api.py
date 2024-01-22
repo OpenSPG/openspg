@@ -32,6 +32,16 @@ class MockChoice:
     message: MockMessage
 
 
+@dataclass
+class MockEmbeddings:
+    data: list
+
+
+@dataclass
+class MockEmbedding:
+    embedding: list
+
+
 class TestOpenAIInvokerLegacyAPI(unittest.TestCase):
     """
     OpenAIInvoker unittest for legacy OpenAI api
@@ -73,6 +83,30 @@ class TestOpenAIInvokerLegacyAPI(unittest.TestCase):
             max_tokens=nn_config["openai_max_tokens"],
         )
         self.assertEqual(result, [mock_completion.choices[0].message.content])
+
+    def testOpenAIEmbedding(self):
+        self._mocked_openai.__version__ = "0.28.1"
+        self._mocked_openai.OpenAI = unittest.mock.MagicMock
+
+        nn_config = {
+            "nn_name": "text-embedding-ada-002",
+            "openai_api_key": "EMPTY",
+            "openai_api_base": "http://localhost:38080/v1",
+        }
+        invoker = NNInvoker.from_config(nn_config)
+        self.assertEqual(invoker.init_args, nn_config)
+        self.assertEqual(self._mocked_openai.api_key, nn_config["openai_api_key"])
+        self.assertEqual(self._mocked_openai.api_base, nn_config["openai_api_base"])
+
+        mock_embeddings = MockEmbeddings(data=[MockEmbedding(embedding=[0.1, 0.2])])
+        self._mocked_openai.Embedding.create.return_value = mock_embeddings
+
+        result = invoker.remote_inference("How old are you?", type="Embedding")
+        self._mocked_openai.Embedding.create.assert_called_with(
+            model=nn_config["nn_name"],
+            input=["How old are you?"],
+        )
+        self.assertEqual(result, [mock_embeddings.data[0].embedding])
 
 
 if __name__ == "__main__":

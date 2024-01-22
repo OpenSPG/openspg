@@ -127,11 +127,13 @@ class OpenAIInvoker(NNInvoker):
         return embeddings
 
     def remote_inference(
-        self, input, max_output_length: Optional[int] = None, **kwargs
+        self,
+        input,
+        type: Optional[str] = None,
+        max_output_length: Optional[int] = None,
+        **kwargs
     ):
-        from nn4k.consts import NN_OPENAI_EMBEDDING_PREFIX
-
-        if self.openai_model_name.startswith(NN_OPENAI_EMBEDDING_PREFIX):
+        if type == "Embedding":
             output = self._get_embeddings(input, **kwargs)
         else:
             if max_output_length is None:
