@@ -84,8 +84,7 @@ public class UdtfTest {
     Set<String> udfKeySet = new HashSet<>();
     udtfMetaList.forEach(udfMeta -> udfKeySet.add(udfMeta.toString()));
     Assert.assertTrue(
-        udfKeySet.contains(
-            "concept_edge_expand(KTObject,KTString,KTString,KTString,KTInteger)->KTObject"));
+        udfKeySet.contains("concept_edge_expand(KTObject,KTString,KTObject,KTString)->KTObject"));
   }
 
   @Test
