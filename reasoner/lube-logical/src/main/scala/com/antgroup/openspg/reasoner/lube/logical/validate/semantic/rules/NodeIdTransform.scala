@@ -50,12 +50,14 @@ object NodeIdTransform extends Explain {
     val props = tableResultBlock.selectList.orderedFields.groupBy(_.name)
     val selects = new ListBuffer[IRField]
     var needModResolve = false
+    val removed = new mutable.HashSet[String]()
     for (select <- tableResultBlock.selectList.orderedFields) {
       if (select.isInstanceOf[IRProperty] && props(select.name).size == 1 && select
           .asInstanceOf[IRProperty]
           .field
           .equals(Constants.NODE_ID_KEY)) {
         selects.append(transform(select.name, pattern))
+        removed.add(select.name)
         needModResolve = true
       } else {
         selects.append(select)
@@ -65,7 +67,14 @@ object NodeIdTransform extends Explain {
     val newBlock = tableResultBlock.copy(selectList = OrderedFields(selects.toList))
     if (needModResolve) {
       newBlock.rewrite { case matchBlock @ MatchBlock(dependencies, patterns) =>
-        val props = new mutable.HashMap[String, Set[String]]() ++= pattern.properties
+        val props = new mutable.HashMap[String, Set[String]]()
+        for (prop <- pattern.properties) {
+          if (removed.contains(prop._1)) {
+            props.put(prop._1, Set.empty)
+          } else {
+            props.put(prop._1, prop._2)
+          }
+        }
         val selectMap = selects.filter(_.isInstanceOf[IRProperty]).groupBy(_.name)
         for (select <- selectMap) {
           val propNames =
