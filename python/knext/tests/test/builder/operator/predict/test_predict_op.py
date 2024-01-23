@@ -12,8 +12,8 @@
 
 from typing import List
 
-from knext.api.record import SPGRecord
-from knext.api.operator import PredictOp
+from knext.builder.operator.spg_record import SPGRecord
+from knext.builder.operator import PredictOp
 
 from schema.test_schema_helper import TEST
 

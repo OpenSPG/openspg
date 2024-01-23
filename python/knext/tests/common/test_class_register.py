@@ -12,8 +12,8 @@
 
 import os
 from knext.common.class_register import register_from_package
-from knext.operator.base import BaseOp
-from knext.operator.op import ExtractOp, LinkOp, FuseOp, PredictOp
+from knext.builder.operator.base import BaseOp
+from knext.builder.operator.op import ExtractOp, LinkOp, FuseOp, PredictOp
 
 PWD = os.path.dirname(__file__)
 

@@ -14,9 +14,9 @@ from typing import List
 
 import requests
 
-from knext.api.operator import LinkOp
-from knext.api.record import SPGRecord
-from knext.client.search import SearchClient
+from knext.builder.operator import LinkOp
+from knext.builder.operator.spg_record import SPGRecord
+from knext.common.search import SearchClient
 
 
 def llm_infer(word, recall):
