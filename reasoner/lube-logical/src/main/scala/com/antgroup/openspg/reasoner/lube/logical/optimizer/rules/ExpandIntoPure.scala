@@ -17,7 +17,7 @@ import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.lube.common.pattern.NodePattern
 import com.antgroup.openspg.reasoner.lube.logical.NodeVar
 import com.antgroup.openspg.reasoner.lube.logical.operators.{BoundedVarLenExpand, ExpandInto, LogicalOperator}
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, Rule}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, Rule, Up}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 
 /**
@@ -73,7 +73,7 @@ object ExpandIntoPure extends Rule {
     }
   }
 
-  override def direction: Direction = Down
+  override def direction: Direction = Up
 
   override def maxIterations: Int = 1
 }
