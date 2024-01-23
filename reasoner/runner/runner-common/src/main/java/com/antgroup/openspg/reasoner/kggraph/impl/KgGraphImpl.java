@@ -599,6 +599,9 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
     KgGraphImpl tmpMatchedKgGraph = new KgGraphImpl((KgGraphImpl) matchedKgGraph);
     int minMatchCount = Integer.MAX_VALUE;
     for (String vertexAlias : intersectionVertexAliasSet) {
+      if (vertexAlias.equals(matchedSchema.root().alias())) {
+        continue;
+      }
       Set<IVertex<IVertexId, IProperty>> matchedVertexSet =
           tmpMatchedKgGraph.alias2VertexMap.remove(vertexAlias);
       Set<IVertex<IVertexId, IProperty>> thisVertexSet = this.alias2VertexMap.get(vertexAlias);
