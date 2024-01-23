@@ -11,7 +11,7 @@
 
 import unittest
 
-from knext.api.chain import BuilderChain
+from knext.builder.chain import BuilderChain
 
 
 class TestBuilderClient(unittest.TestCase):

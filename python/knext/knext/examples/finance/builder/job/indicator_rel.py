@@ -13,13 +13,13 @@
 
 from schema.finance_schema_helper import Finance
 
-from knext.api.component import (
+from knext.builder.component import (
     CSVReader,
     UserDefinedExtractor,
     KGWriter,
     SPGTypeMapping,
 )
-from knext.client.model.builder_job import BuilderJob
+from knext.builder.model.builder_job import BuilderJob
 from nn4k.invoker import NNInvoker
 
 from builder.operator.indicator_extract import IndicatorExtractOp

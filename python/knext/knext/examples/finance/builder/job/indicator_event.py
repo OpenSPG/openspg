@@ -14,14 +14,14 @@ import os
 from nn4k.invoker import NNInvoker
 from schema.finance_schema_helper import Finance
 
-from knext.api.component import (
+from knext.builder.component import (
     CSVReader,
     LLMBasedExtractor,
     KGWriter,
     SPGTypeMapping,
 )
-from knext.api.auto_prompt import EEPrompt
-from knext.client.model.builder_job import BuilderJob
+from knext.builder.operator import EEPrompt
+from knext.builder.model.builder_job import BuilderJob
 
 
 class IndicatorEvent(BuilderJob):

@@ -12,9 +12,9 @@
 
 from typing import List
 
-from knext.operator.op import LinkOp
-from knext.client.search import SearchClient
-from knext.operator.spg_record import SPGRecord
+from knext.builder.operator.op import LinkOp
+from knext.common.search import SearchClient
+from knext.builder.operator.spg_record import SPGRecord
 
 
 class CertLinkerOperator(LinkOp):

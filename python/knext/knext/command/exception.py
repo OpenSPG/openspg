@@ -18,7 +18,7 @@ import json
 import click
 from click import Context, Group
 
-from knext.rest import ApiException
+from knext.common.rest import ApiException
 
 
 class _ApiExceptionHandler(Group):

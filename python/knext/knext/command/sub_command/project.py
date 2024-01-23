@@ -20,7 +20,7 @@ from typing import Optional
 import click
 from tabulate import tabulate
 
-from knext import rest
+from knext.common import project as rest
 from knext.common.template import copytree, render_template
 
 TEMPLATES_TO_RENDER = (
