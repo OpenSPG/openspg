@@ -29,8 +29,8 @@ object ProjectMerge extends Rule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
-    case project @ Project(in, _, _) =>
-      if (!in.isInstanceOf[Project] || !canMerge(project)) {
+    case project @ Project(in: Project, _, _) =>
+      if (!canMerge(project, in)) {
         project
       } else {
         val parentProjects = in.asInstanceOf[Project].expr
@@ -88,19 +88,17 @@ object ProjectMerge extends Rule {
     }
   }
 
-  private def canMerge(project: Project): Boolean = {
-    val parentOutput =
-      project.in.asInstanceOf[Project].expr.filter(!_._2.isInstanceOf[Directly.type]).keySet
+  private def canMerge(project: Project, in: Project): Boolean = {
+    val parentOutput = in.expr.filter(!_._2.isInstanceOf[Directly.type]).keySet
     val computeExprs = project.expr.filter(!_._2.isInstanceOf[Directly.type])
     for (expr <- computeExprs) {
       val fields = ExprUtil.getReferProperties(expr._2)
       for (pair <- fields) {
-        val outputVar = parentOutput.filter(_.name.equals(pair._1))
-        if (!outputVar.isEmpty && outputVar.head
-            .asInstanceOf[PropertyVar]
-            .field
-            .name
-            .equals(pair._2)) {
+        val outputVar = parentOutput
+          .filter(_.name.equals(pair._1))
+          .map(_.asInstanceOf[PropertyVar])
+          .map(_.field.name)
+        if (outputVar.contains(pair._2)) {
           return false
         }
       }
