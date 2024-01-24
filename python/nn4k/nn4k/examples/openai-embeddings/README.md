@@ -26,3 +26,4 @@ Edit configurations in [openai_emb.json](./openai_emb.json).
 ```bash
 python openai_emb.py
 ```
+
