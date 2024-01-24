@@ -15,9 +15,10 @@ package com.antgroup.openspg.reasoner.lube.catalog
 
 import scala.collection.mutable
 
+import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.exception.SchemaException
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
-import com.antgroup.openspg.reasoner.common.types.KgType
+import com.antgroup.openspg.reasoner.common.types.{KgType, KTString}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.{Edge, Field, Node, NodeType}
 import org.json4s._
 import org.json4s.ext.EnumNameSerializer
@@ -105,6 +106,10 @@ class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutab
       typeName: String,
       endNode: String,
       fieldName: String): Field = {
+    if (fieldName.equals(Constants.EDGE_FROM_ID_KEY) || fieldName.equals(
+        Constants.EDGE_TO_ID_KEY)) {
+      return new Field(fieldName, KTString, true)
+    }
     val spo = new SPO(startNode, typeName, endNode)
     val edge = edges.get(spo)
     if (edge.isEmpty) {

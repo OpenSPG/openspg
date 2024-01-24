@@ -73,7 +73,7 @@ object ExpandIntoPure extends Rule {
     }
   }
 
-  override def direction: Direction = Up
+  override def direction: Direction = Down
 
   override def maxIterations: Int = 1
 }

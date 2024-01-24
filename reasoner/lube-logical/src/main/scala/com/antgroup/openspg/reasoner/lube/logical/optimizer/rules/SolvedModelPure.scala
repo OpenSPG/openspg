@@ -39,11 +39,16 @@ object SolvedModelPure extends Rule {
 
   private def resolvedModel(input: LogicalOperator): SolvedModel = {
     val fields = input.transform[List[Var]] {
-      case (scan @ PatternScan(_, _), _) => scan.refFields
-      case (expandInto @ ExpandInto(_, _, _), tupleList) =>
+      case (scan: PatternScan, _) => scan.refFields
+      case (expandInto: ExpandInto, tupleList) =>
         val list = new mutable.ListBuffer[Var]()
         list.++=(tupleList.flatten)
         list.++=(expandInto.refFields)
+        list.toList
+      case (linkedExpand: LinkedExpand, tupleList) =>
+        val list = new mutable.ListBuffer[Var]()
+        list.++=(tupleList.flatten)
+        list.++=(linkedExpand.refFields)
         list.toList
       case (_, tupleList) => tupleList.flatten
     }

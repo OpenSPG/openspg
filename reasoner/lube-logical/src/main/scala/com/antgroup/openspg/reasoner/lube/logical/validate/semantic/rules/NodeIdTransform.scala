@@ -18,6 +18,7 @@ import scala.collection.mutable.ListBuffer
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.lube.block.{Block, MatchBlock, OrderedFields, TableResultBlock}
+import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
 import com.antgroup.openspg.reasoner.lube.common.graph.{IRField, IRProperty}
 import com.antgroup.openspg.reasoner.lube.common.pattern.{GraphPattern, VariablePatternConnection}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
@@ -32,10 +33,13 @@ object NodeIdTransform extends Explain {
    * @return
    */
   override def explain(implicit context: LogicalPlannerContext): PartialFunction[Block, Block] = {
-    case tableResult: TableResultBlock => tableResultTransform(tableResult)
+    case tableResult: TableResultBlock =>
+      tableResultTransform(tableResult, context.catalog.getGraph(Catalog.defaultGraphName))
   }
 
-  private def tableResultTransform(tableResultBlock: TableResultBlock): Block = {
+  private def tableResultTransform(
+      tableResultBlock: TableResultBlock,
+      graph: SemanticPropertyGraph): Block = {
     val matchBlock = tableResultBlock.transform[MatchBlock] {
       case (matchBlock: MatchBlock, _) => matchBlock
       case (_, list) =>
@@ -56,7 +60,7 @@ object NodeIdTransform extends Explain {
           .asInstanceOf[IRProperty]
           .field
           .equals(Constants.NODE_ID_KEY)) {
-        selects.append(transform(select.name, pattern))
+        selects.append(transform(select.name, pattern, graph))
         removed.add(select.name)
         needModResolve = true
       } else {
@@ -91,7 +95,10 @@ object NodeIdTransform extends Explain {
 
   }
 
-  private def transform(alias: String, pattern: GraphPattern): IRProperty = {
+  private def transform(
+      alias: String,
+      pattern: GraphPattern,
+      graph: SemanticPropertyGraph): IRProperty = {
     var ir: IRProperty = null
     if (pattern.edges.contains(alias)) {
       val fixedEdges = pattern.edges(alias).filter(!_.isInstanceOf[VariablePatternConnection])

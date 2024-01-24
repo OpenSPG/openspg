@@ -172,13 +172,13 @@ object LogicalPlanner {
     field match {
       case node: IRNode =>
         if (types(node.name).isEmpty && node.fields.nonEmpty) {
-          throw SchemaException(s"Cannot find $node.name in $types")
+          throw SchemaException(s"Cannot find ${node.name} in $types")
         }
         val fields = node.fields.map(graph.graphSchema.getNodeField(types(node.name), _))
         NodeVar(node.name, fields)
       case edge: IREdge =>
         if (types(edge.name).isEmpty && edge.fields.nonEmpty) {
-          throw SchemaException(s"Cannot find $edge.name in $types")
+          throw SchemaException(s"Cannot find ${edge.name} in $types")
         }
         val fields = edge.fields.map(graph.graphSchema.getEdgeField(types(edge.name), _))
         EdgeVar(edge.name, fields)

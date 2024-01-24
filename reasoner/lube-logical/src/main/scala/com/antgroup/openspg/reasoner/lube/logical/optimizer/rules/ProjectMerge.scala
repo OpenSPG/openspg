@@ -33,7 +33,7 @@ object ProjectMerge extends Rule {
       if (!canMerge(project, in)) {
         project
       } else {
-        val parentProjects = in.asInstanceOf[Project].expr
+        val parentProjects = in.expr
         val newProjects = new mutable.HashMap[Var, Expr]()
         for (pair <- parentProjects) {
           if (!pair._2.isInstanceOf[Directly.type]) {
@@ -68,7 +68,7 @@ object ProjectMerge extends Rule {
             newProjects.put(pair._1, pair._2)
           }
         }
-        Project(in.asInstanceOf[Project].in, newProjects.toMap, in.solved)
+        Project(in.in, newProjects.toMap, in.solved)
       }
   }
 

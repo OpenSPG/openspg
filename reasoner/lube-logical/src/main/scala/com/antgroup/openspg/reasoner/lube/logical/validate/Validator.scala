@@ -127,7 +127,7 @@ object Validator extends Logging {
       field match {
         case node: IRNode =>
           if (!types.contains(node.name) || (types(node.name).isEmpty && node.fields.nonEmpty)) {
-            throw SchemaException(s"Cannot find $node.name in $types")
+            throw SchemaException(s"Cannot find ${node.name} in $types")
           }
           varMap.put(
             node.name,
@@ -136,7 +136,7 @@ object Validator extends Logging {
               node.fields.map(graph.graphSchema.getNodeField(types(node.name), _)).toSet))
         case edge: IREdge =>
           if (types(edge.name).isEmpty && edge.fields.nonEmpty) {
-            throw SchemaException(s"Cannot find $edge.name in $types")
+            throw SchemaException(s"Cannot find ${edge.name} in $types")
           }
           varMap.put(
             edge.name,
