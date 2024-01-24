@@ -12,8 +12,8 @@
 # or implied.
 import requests
 from typing import List, Dict
-from knext.api.operator import ExtractOp
-from knext.api.record import SPGRecord
+from knext.builder.operator import ExtractOp
+from knext.builder.operator.spg_record import SPGRecord
 
 
 class IndicatorExtractOp(ExtractOp):

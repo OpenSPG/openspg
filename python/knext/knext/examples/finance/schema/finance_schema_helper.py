@@ -15,7 +15,11 @@
 # PLEASE DO NOT MODIFY THIS FILE!!!
 #
 
-from knext.common.schema_helper import SPGTypeHelper, PropertyHelper, RelationHelper
+from knext.schema.model.schema_helper import (
+    SPGTypeHelper,
+    PropertyHelper,
+    RelationHelper,
+)
 
 
 class Finance:
@@ -23,20 +27,20 @@ class Finance:
 
         name = PropertyHelper("name")
         id = PropertyHelper("id")
-        stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
         description = PropertyHelper("description")
+        stdId = PropertyHelper("stdId")
 
     class IndicatorEvent(SPGTypeHelper):
 
         name = PropertyHelper("name")
-        id = PropertyHelper("id")
         eventTime = PropertyHelper("eventTime")
+        id = PropertyHelper("id")
+        description = PropertyHelper("description")
+        trend = PropertyHelper("trend")
         value = PropertyHelper("value")
         date = PropertyHelper("date")
         subject = PropertyHelper("subject")
-        trend = PropertyHelper("trend")
-        description = PropertyHelper("description")
 
     Indicator = Indicator("Finance.Indicator")
     IndicatorEvent = IndicatorEvent("Finance.IndicatorEvent")

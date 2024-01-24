@@ -12,9 +12,14 @@
 
 from nn4k.invoker import NNInvoker
 
-from knext.api.component import CSVReader, LLMBasedExtractor, SPGTypeMapping, KGWriter
-from knext.api.auto_prompt import REPrompt
-from knext.client.model.builder_job import BuilderJob
+from knext.builder.component import (
+    CSVReader,
+    LLMBasedExtractor,
+    SPGTypeMapping,
+    KGWriter,
+)
+from knext.builder.operator import REPrompt
+from knext.builder.model.builder_job import BuilderJob
 
 
 from schema.medicine_schema_helper import Medicine

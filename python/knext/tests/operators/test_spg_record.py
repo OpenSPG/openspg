@@ -10,7 +10,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from knext.operator.spg_record import SPGRecord
+from knext.builder.operator.spg_record import SPGRecord
 
 
 def get_test_data():
@@ -50,7 +50,7 @@ def _test_spg_record_properties(record: SPGRecord):
 
 def test_spg_record_properties():
     name, properties, properties2 = get_test_data()
-    record = SPGRecord(name, properties)
+    record = SPGRecord(name).upsert_properties()
     _test_spg_record_properties(record)
 
 

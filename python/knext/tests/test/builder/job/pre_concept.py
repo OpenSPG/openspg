@@ -9,17 +9,16 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
-
-from knext.client.model.builder_job import BuilderJob
-from knext.api.component import CSVReader, SPGTypeMapping, KGWriter
+from knext.builder.component.mapping import FusingStrategyEnum
+from knext.builder.model.builder_job import BuilderJob
+from knext.builder.component import CSVReader, SPGTypeMapping, KGWriter
 from schema.test_schema_helper import TEST
 
 
 class PreConcept(BuilderJob):
     def build(self):
         source = CSVReader(
-            local_path="./builder/job/data/data_constructor.csv",
+            local_path="./builder/job/data/two_degree_sub_graph.csv",
             columns=[
                 "id",
                 "text",
@@ -27,24 +26,35 @@ class PreConcept(BuilderJob):
                 "float",
                 "standard",
                 "concept",
-                "lead_to_concept",
-                "relevant_event_id",
-                "subject_entity_id",
-                "subject_relation_id",
+                "confidence_concept",
+                "lead_to_concept2",
+                "lead_to_concept3",
+                "event",
+                "confidence_event",
+                "source_event",
+                "entity",
+                "entity_relation",
+                "predict_relation",
             ],
             start_row=1,
         )
 
         concept_mapping_1 = (
-            SPGTypeMapping(spg_type_name=TEST.Concept1)
-            .add_mapping_field("concept", TEST.Entity2.id)
-            .add_mapping_field("concept", TEST.Entity2.name)
+            SPGTypeMapping(
+                spg_type_name=TEST.Concept1,
+                fusing_strategy=FusingStrategyEnum.Overwrite,
+            )
+            .add_property_mapping("concept", TEST.Entity2.id)
+            .add_property_mapping("concept", TEST.Entity2.name)
         )
 
         concept_mapping_2 = (
-            SPGTypeMapping(spg_type_name=TEST.Concept2)
-            .add_mapping_field("lead_to_concept", TEST.Entity3.id)
-            .add_mapping_field("lead_to_concept", TEST.Entity3.name)
+            SPGTypeMapping(
+                spg_type_name=TEST.Concept2,
+                fusing_strategy=FusingStrategyEnum.Overwrite,
+            )
+            .add_property_mapping("lead_to_concept2", TEST.Entity3.id)
+            .add_property_mapping("lead_to_concept2", TEST.Entity3.name)
         )
 
         sink = KGWriter()

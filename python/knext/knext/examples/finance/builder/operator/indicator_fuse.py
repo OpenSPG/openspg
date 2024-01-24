@@ -11,9 +11,9 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 import requests
-from knext.api.operator import FuseOp
-from knext.api.record import SPGRecord
-from knext.api.client import SearchClient
+from knext.builder.operator import FuseOp
+from knext.builder.operator.spg_record import SPGRecord
+from knext.common.search import SearchClient
 
 from schema.finance_schema_helper import Finance
 
