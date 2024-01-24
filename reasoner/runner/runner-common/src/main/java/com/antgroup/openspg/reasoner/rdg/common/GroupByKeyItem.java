@@ -23,6 +23,10 @@ public class GroupByKeyItem implements Serializable {
     this.keys = keys;
   }
 
+  public Object[] getKeys() {
+    return keys;
+  }
+
   @Override
   public int hashCode() {
     return Arrays.hashCode(keys);
