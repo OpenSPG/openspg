@@ -13,12 +13,12 @@ import sys
 import unittest
 import unittest.mock
 
-from nn4k.executor.hugging_face import HfEmbeddingExecutor
+from nn4k.executor.hugging_face import HFEmbeddingExecutor
 
 
-class TestHfEmbeddingExecutor(unittest.TestCase):
+class TestHFEmbeddingExecutor(unittest.TestCase):
     """
-    HfEmbeddingExecutor unittest
+    HFEmbeddingExecutor unittest
     """
 
     def setUp(self):
@@ -39,13 +39,13 @@ class TestHfEmbeddingExecutor(unittest.TestCase):
         if self._saved_sentence_transformers is not None:
             sys.modules["sentence_transformers"] = self._saved_sentence_transformers
 
-    def testHfEmbeddingExecutor(self):
+    def testHFEmbeddingExecutor(self):
         nn_config = {
             "nn_name": "/opt/test_model_dir",
             "nn_version": "default",
         }
 
-        executor = HfEmbeddingExecutor.from_config(nn_config)
+        executor = HFEmbeddingExecutor.from_config(nn_config)
         executor.load_model()
         executor.inference("input")
 

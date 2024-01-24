@@ -146,8 +146,8 @@ class SimpleNNHub(NNHub):
         from nn4k.consts import NN_VERSION_KEY, NN_VERSION_TEXT
         from nn4k.consts import NN_LOCAL_HF_MODEL_CONFIG_FILE
         from nn4k.consts import NN_LOCAL_SENTENCE_TRANSFORMERS_CONFIG_FILE
-        from nn4k.executor.hugging_face import HfLLMExecutor
-        from nn4k.executor.hugging_face import HfEmbeddingExecutor
+        from nn4k.executor.hugging_face import HFLLMExecutor
+        from nn4k.executor.hugging_face import HFEmbeddingExecutor
         from nn4k.utils.config_parsing import get_string_field
 
         nn_executor = nn_config.get(NN_EXECUTOR_KEY)
@@ -171,9 +171,9 @@ class SimpleNNHub(NNHub):
                         nn_name, NN_LOCAL_SENTENCE_TRANSFORMERS_CONFIG_FILE
                     )
                     if os.path.isfile(file_path):
-                        executor_class = HfEmbeddingExecutor
+                        executor_class = HFEmbeddingExecutor
                     else:
-                        executor_class = HfLLMExecutor
+                        executor_class = HFLLMExecutor
                 return executor_class
 
         nn_version = nn_config.get(NN_VERSION_KEY)

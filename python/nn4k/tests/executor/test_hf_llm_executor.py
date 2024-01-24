@@ -13,12 +13,12 @@ import sys
 import unittest
 import unittest.mock
 
-from nn4k.executor.hugging_face import HfLLMExecutor
+from nn4k.executor.hugging_face import HFLLMExecutor
 
 
-class TestHfLLMExecutor(unittest.TestCase):
+class TestHFLLMExecutor(unittest.TestCase):
     """
-    HfLLMExecutor unittest
+    HFLLMExecutor unittest
     """
 
     def setUp(self):
@@ -39,13 +39,13 @@ class TestHfLLMExecutor(unittest.TestCase):
         if self._saved_transformers is not None:
             sys.modules["transformers"] = self._saved_transformers
 
-    def testHfLLMExecutor(self):
+    def testHFLLMExecutor(self):
         nn_config = {
             "nn_name": "/opt/test_model_dir",
             "nn_version": "default",
         }
 
-        executor = HfLLMExecutor.from_config(nn_config)
+        executor = HFLLMExecutor.from_config(nn_config)
         executor.load_model()
         executor.inference("input")
 

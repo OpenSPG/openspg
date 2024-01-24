@@ -13,11 +13,11 @@ from typing import Union
 from nn4k.executor import LLMExecutor
 
 
-class HfLLMExecutor(LLMExecutor):
+class HFLLMExecutor(LLMExecutor):
     @classmethod
-    def from_config(cls, nn_config: dict) -> "HfLLMExecutor":
+    def from_config(cls, nn_config: dict) -> "HFLLMExecutor":
         """
-        Create an HfLLMExecutor instance from `nn_config`.
+        Create an HFLLMExecutor instance from `nn_config`.
         """
         executor = cls(nn_config)
         return executor
@@ -104,11 +104,11 @@ class HfLLMExecutor(LLMExecutor):
         return outputs
 
 
-class HfEmbeddingExecutor(LLMExecutor):
+class HFEmbeddingExecutor(LLMExecutor):
     @classmethod
-    def from_config(cls, nn_config: dict) -> "HfEmbeddingExecutor":
+    def from_config(cls, nn_config: dict) -> "HFEmbeddingExecutor":
         """
-        Create an HfEmbeddingExecutor instance from `nn_config`.
+        Create an HFEmbeddingExecutor instance from `nn_config`.
         """
         executor = cls(nn_config)
         return executor
