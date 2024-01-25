@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.lube.logical.optimizer
 
+import com.antgroup.openspg.reasoner.common.trees.{BottomUpWithContext, TopDownWithContext}
 import com.antgroup.openspg.reasoner.lube.logical.operators.LogicalOperator
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.rules._
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
@@ -25,7 +26,7 @@ object LogicalOptimizer {
   var LOGICAL_OPT_RULES: Seq[Rule] =
     Seq(
       GroupNode,
-      IdFilterPushDown,
+      NodeIdToEdgeProperty,
       FilterPushDown,
       ExpandIntoPure,
       FilterMerge,
@@ -41,9 +42,9 @@ object LogicalOptimizer {
     for (rule <- optRuleList) {
       for (i <- 0 until (rule.maxIterations)) {
         if (rule.direction.equals(Up)) {
-          root = root.rewrite(rule.rule)
+          root = BottomUpWithContext(rule.ruleWithContext).transform(root, Map.empty)._1
         } else {
-          root = root.rewriteTopDown(rule.rule)
+          root = TopDownWithContext(rule.ruleWithContext).transform(root, Map.empty)._1
         }
       }
     }

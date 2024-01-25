@@ -20,7 +20,7 @@ import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.rules.{Conce
 object SemanticExplainer {
 
   var SEMANTIC_EXPLAINS: Seq[Explain] =
-    Seq(ConceptExplain, SpatioTemporalExplain, NodeIdTransform)
+    Seq(ConceptExplain, SpatioTemporalExplain)
 
   def explain(input: Block, optRuleList: Seq[Explain])(implicit
       context: LogicalPlannerContext): Block = {

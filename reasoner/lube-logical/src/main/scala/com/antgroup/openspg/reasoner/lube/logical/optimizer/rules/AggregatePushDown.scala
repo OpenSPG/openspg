@@ -21,14 +21,14 @@ import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern
 import com.antgroup.openspg.reasoner.lube.logical._
 import com.antgroup.openspg.reasoner.lube.logical.operators.{Filter, _}
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, SimpleRule, Up}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.utils.{ExprUtils, RuleUtils}
 
 /**
  * Aggregation push down
  */
-object AggregatePushDown extends Rule {
+object AggregatePushDown extends SimpleRule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {

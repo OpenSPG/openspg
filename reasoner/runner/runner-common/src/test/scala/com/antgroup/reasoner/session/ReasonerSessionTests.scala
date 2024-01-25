@@ -532,7 +532,7 @@ class ReasonerSessionTests extends AnyFunSpec {
           cnt.sum
         }
     }
-    cnt should equal(2)
+    cnt should equal(1)
   }
 
 
@@ -575,7 +575,7 @@ class ReasonerSessionTests extends AnyFunSpec {
           cnt.sum
         }
     }
-    cnt should equal(6)
+    cnt should equal(3)
   }
 
 

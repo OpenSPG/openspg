@@ -19,13 +19,13 @@ import com.antgroup.openspg.reasoner.common.exception.SystemError
 import com.antgroup.openspg.reasoner.lube.common.expr.{Directly, Expr}
 import com.antgroup.openspg.reasoner.lube.logical._
 import com.antgroup.openspg.reasoner.lube.logical.operators.{LogicalOperator, Project}
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, SimpleRule, Up}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 
 /**
  * Merge adjacent Project operators
  */
-object ProjectMerge extends Rule {
+object ProjectMerge extends SimpleRule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {

@@ -148,7 +148,7 @@ case class TopDownWithContext[T <: AbstractTreeNode[T]: ClassTag, C](
         updatedContext = pair._2
         i += 1
       }
-      tree.withNewChildren(updatedChildren)
+      afterSelf.withNewChildren(updatedChildren)
     }
     afterChildren -> updatedContext
   }

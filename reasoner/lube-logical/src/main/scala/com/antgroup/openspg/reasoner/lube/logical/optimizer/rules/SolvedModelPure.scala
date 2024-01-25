@@ -18,13 +18,13 @@ import scala.collection.mutable
 import com.antgroup.openspg.reasoner.common.trees.BottomUp
 import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, SimpleRule, Up}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 
 /**
  * Pure solvedModel after EdgeToProperty
  */
-object SolvedModelPure extends Rule {
+object SolvedModelPure extends SimpleRule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
