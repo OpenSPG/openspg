@@ -1,13 +1,16 @@
-namespace TestV2
-
-
+namespace Openkg
 
 TypeOfBuilding(建筑类型): ConceptType
     hypernymPredicate: isA
+
 Person(人物): EntityType
+
 Service(服务): EntityType
+
 Organization(机构): EntityType
+
 Place(地点): EntityType
+
 MunicipalBuilding(市政建筑): EntityType
 	desc: 指由政府或公共部门拥有并管理的，用于城市公共服务和行政管理目的的建筑物和设施。
 	properties:

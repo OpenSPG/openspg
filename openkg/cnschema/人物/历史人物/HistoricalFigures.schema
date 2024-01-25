@@ -1,7 +1,8 @@
-namespace TestV2
+namespace Openkg
 
 HistoricalFiguresField(历史人物领域): ConceptType
 	hypernymPredicate: isA
+
 HistoricalFigures(历史人物): EntityType
   desc: 包括已故的名人，他们在各个领域都有贡献
   properties:

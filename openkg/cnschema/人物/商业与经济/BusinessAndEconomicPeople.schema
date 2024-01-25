@@ -1,9 +1,12 @@
-namespace TestV2
+namespace Openkg
 
 BusinessAndEconomicField(商业与经济领域): ConceptType
 	hypernymPredicate: isA
+
 Organization(机构): EntityType
+
 Product(物品): EntityType
+
 BusinessAndEconomicPeople(商经界人士): EntityType
   desc: 包括企业家、投资人、经济学家、金融专家、管理顾问等
   properties:

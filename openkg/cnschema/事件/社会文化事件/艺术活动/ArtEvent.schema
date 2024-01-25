@@ -1,13 +1,18 @@
-namespace TestV2
-
+namespace Openkg
 
 Category(活动类型): ConceptType
     hypernymPredicate: isA
+
 Organization(机构): EntityType
+
 URL(链接): EntityType
+
 Status(状态): EntityType
+
 Place(地点): EntityType
+
 Person(人物): EntityType
+
 ArtEvent(艺术活动): EventType
     properties:
         subject(主办方): Organization

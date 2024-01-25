@@ -1,7 +1,8 @@
-namespace TestV2
+namespace Openkg
 
 PoliticalAndLegalField(政治与法律领域): ConceptType
 	hypernymPredicate: isA
+
 PoliticalAndLegalPeople(政法人士): EntityType
 	desc: 包括政治家、政府官员、法官、律师、外交官、活动家等
 	properties:

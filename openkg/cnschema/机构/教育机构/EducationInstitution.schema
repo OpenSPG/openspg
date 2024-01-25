@@ -1,14 +1,20 @@
 namespace TestV2
 
-
 EducationInstitutionType(医疗机构类型): ConceptType
     hypernymPredicate: isA
+
 Person(人): EntityType
+
 Product(物品): EntityType
+
 AcademicProgram(课程或专业): EntityType
+
 Organization(机构): EntityType
+
 Place(地点): EntityType
+
 Department(部门): EntityType
+
 EducationInstitution(教育机构): EntityType
     desc: 提供教学、学术研究和人才培养服务的实体，如学校、大学、学院、培训机构等
     properties:

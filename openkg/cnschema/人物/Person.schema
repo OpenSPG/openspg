@@ -1,10 +1,15 @@
-namespace TestV2
+namespace Openkg
 
 Country(国家): EntityType
+
 School(学校): EntityType
+
 CreativeWork(创作): EntityType
+
 Place(地点): EntityType
+
 Organization(机构): EntityType
+
 Person(人物): EntityType
      properties:
             additionalName(别名):Text

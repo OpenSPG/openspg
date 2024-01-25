@@ -1,15 +1,21 @@
-namespace TestV2
-
+namespace Openkg
 
 FuelCategory(燃料类型): ConceptType
     hypernymPredicate: isA
+
 Category(类型): ConceptType
     hypernymPredicate: isA
+
 Brand(品牌): EntityType
+
 OperatingSystem(操作系统): EntityType
+
 Color(颜色): EntityType
+
 Url(链接): EntityType
+
 Product(物品): EntityType
+
 TransportationVehicle(出行工具): EntityType
     properties:
         vehicleType(车辆类型): Category

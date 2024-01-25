@@ -1,9 +1,11 @@
-namespace TestV2
+namespace Openkg
 
 Entertainment(娱乐领域): ConceptType
 	desc: 指明个体主要在哪个娱乐领域活动，如电影、电视、音乐、戏剧等
 	hypernymPredicate: isA
+
 Product(物品): EntityType
+
 EntertainmentOfPeople(娱乐圈的人): EntityType
   desc: 包括演员、歌手、导演、编剧、模特、主播等
   properties:

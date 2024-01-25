@@ -1,12 +1,13 @@
-namespace TestV2
-
-
+namespace Openkg
 
 AdministrativeAreaType(行政区划类型): ConceptType
     hypernymPredicate: isA
+
 Language(语言): EntityType
 Place(地点): EntityType
+
 Organization(机构): EntityType
+
 AdministrativeArea(行政区划): EntityType
 	desc: 表示国家或地区为便于行政管理而划分的区域，包括省、自治区、直辖市、自治州、县、市等不同层级。
 	properties:

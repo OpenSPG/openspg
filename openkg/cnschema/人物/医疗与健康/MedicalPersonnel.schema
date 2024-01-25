@@ -1,10 +1,12 @@
-namespace TestV2
-
+namespace Openkg
 
 MedicalField(医疗领域): ConceptType
 	hypernymPredicate: isA
+
 Organization(机构): EntityType
+
 Person(人物): EntityType
+
 MedicalPersonnel(医疗人员): EntityType
   desc: 包括医生、护士、药剂师、医技人员等
   properties:

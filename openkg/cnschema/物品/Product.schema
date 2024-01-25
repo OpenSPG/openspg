@@ -1,11 +1,15 @@
-namespace TestV2
+namespace Openkg
 
 
 ProductType(类别): ConceptType
     hypernymPredicate: isA
+
 Brand(品牌): EntityType
+
 Organization(机构): EntityType
+
 Place(地点): EntityType
+
 Product(物品): EntityType
     desc: 用于描述任何类型的物品，包括但不限于日用消费品、电子产品、出行工具、工业制品与原材料、文化与娱乐产品等
     properties:

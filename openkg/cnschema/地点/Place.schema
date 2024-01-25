@@ -1,10 +1,12 @@
-namespace TestV2
-
+namespace Openkg
 
 PlaceType(地点类型): ConceptType
     hypernymPredicate: isA
+
 Organization(机构): EntityType
+
 URL(链接): EntityType
+
 Place(地点): EntityType
 	desc: 用于描述具有地理位置特征和功能属性的实体，包括但不限于自然地理实体、历史文化遗产、行政区划、住宅区与社区、旅游景点、市政建筑及本地商铺等。
 	properties:

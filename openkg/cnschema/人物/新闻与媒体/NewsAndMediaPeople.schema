@@ -1,8 +1,10 @@
-namespace TestV2
+namespace Openkg
 
 NewsAndMediaField(新闻与媒体领域): ConceptType
 	hypernymPredicate: isA
+
 Organization(机构): EntityType
+
 NewsAndMediaPeople(新闻媒体人士): EntityType
   desc: 包括记者、编辑、主持人、评论员、博主等
   properties:

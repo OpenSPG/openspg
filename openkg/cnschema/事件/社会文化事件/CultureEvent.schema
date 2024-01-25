@@ -1,8 +1,7 @@
-namespace TestV2
-
-
+namespace Openkg
 
 Organization(机构): EntityType
+
 CultureEvent(社会文化事件): EventType
     properties:
         subject(主办方): Organization

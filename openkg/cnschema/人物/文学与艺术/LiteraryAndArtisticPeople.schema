@@ -1,11 +1,14 @@
-namespace TestV2
-
+namespace Openkg
 
 LiteraryAndArtisticField(文学与艺术领域): ConceptType
 	hypernymPredicate: isA
+
 Organization(机构): EntityType
+
 Product(物品): EntityType
+
 Person(人物): EntityType
+
 LiteraryAndArtisticPeople(文学与艺术界的人): EntityType
   desc: 包括作家、诗人、画家、雕塑家、摄影师、设计师、建筑师、音乐家、舞蹈家等
   properties:

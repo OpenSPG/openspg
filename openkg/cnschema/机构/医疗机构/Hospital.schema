@@ -1,14 +1,20 @@
-namespace TestV2
-
+namespace Openkg
 
 HospitalType(医疗机构类型): ConceptType
     hypernymPredicate: isA
+
 Person(人): EntityType
+
 Product(物品): EntityType
+
 MedicalService(医疗服务): EntityType
+
 Organization(机构): EntityType
+
 Place(地点): EntityType
+
 Department(部门): EntityType
+
 Hospital(医疗机构): EntityType
     desc: 提供医疗服务的实体，如综合医院、专科医院、诊所等
     properties:

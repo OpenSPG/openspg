@@ -1,8 +1,10 @@
-namespace TestV2
+namespace Openkg
 
 SocialWelfareAndCharityField(社会公益与慈善领域): ConceptType
 	hypernymPredicate: isA
+
 Organization(机构): EntityType
+
 SocialWelfareAndCharityPeople(公益慈善人士): EntityType
   desc: 包括慈善家、非政府组织工作者、志愿者、人权活动家等
   properties:

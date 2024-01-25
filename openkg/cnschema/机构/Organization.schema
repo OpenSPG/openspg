@@ -1,12 +1,12 @@
-namespace TestV2
-
+namespace Openkg
 
 Person(人): EntityType
+
 Place(地点): EntityType
+
 Organization(机构): EntityType
     desc: 描述各类组织、公司、团体或企事业单位等实体
     properties:
-
         address(地址信息): Place
             desc: 包含详细地理位置信息的地址
             properties:

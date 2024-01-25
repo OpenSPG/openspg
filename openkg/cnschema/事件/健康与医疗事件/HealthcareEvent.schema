@@ -1,11 +1,12 @@
-namespace TestV2
-
-
+namespace Openkg
 
 DiseaseType(疾病类型): ConceptType
     hypernymPredicate: isA
+
 Organization(机构): EntityType
+
 Place(地点): EventType
+
 HealthcareEvent(事件): EventType
     properties:
         subject(主体): Organization

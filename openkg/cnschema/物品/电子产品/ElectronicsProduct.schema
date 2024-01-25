@@ -1,13 +1,18 @@
-namespace TestV2
-
+namespace Openkg
 
 Category(类别): ConceptType
     hypernymPredicate: isA
+
 Brand(品牌): EntityType
+
 OperatingSystem(操作系统): EntityType
+
 Color(颜色): EntityType
+
 Url(链接): EntityType
+
 Product(物品): EntityType
+
 ElectronicsProduct(电子产品): EntityType
     properties:
         productType(产品类型): Category

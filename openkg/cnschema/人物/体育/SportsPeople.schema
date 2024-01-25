@@ -1,10 +1,13 @@
-namespace TestV2
+namespace Openkg
 
 SportsField(体育领域): ConceptType
 	hypernymPredicate: isA
+
 SportsCategory(运动项目): ConceptType
 	hypernymPredicate: isA
+
 Organization(机构): EntityType
+
 SportsPeople(体育界人士): EntityType
   desc: 包括运动员、教练、裁判、体育管理人员等
   properties:

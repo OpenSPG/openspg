@@ -1,6 +1,4 @@
-namespace TestV2
-
-
+namespace Openkg
 
 Event(事件): EventType
     properties:

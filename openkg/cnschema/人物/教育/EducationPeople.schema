@@ -1,6 +1,7 @@
-namespace TestV2
+namespace Openkg
 
 Organization(机构): EntityType
+
 Product(物品): EntityType
 
 EducationField(教育领域): ConceptType
