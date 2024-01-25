@@ -40,6 +40,7 @@ import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.antgroup.openspg.reasoner.warehouse.common.partition.BasePartitioner;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
 import com.google.common.collect.Lists;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -53,15 +54,14 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import scala.collection.JavaConversions;
 
-public class LinkEdgeImpl {
+public class LinkEdgeImpl implements Serializable {
   private final String taskId;
-  private final PartialGraphPattern kgGraphSchema;
   private final KgGraphSplitStaticParameters staticParameters;
 
   private final EdgePattern<LinkedPatternConnection> linkedEdgePattern;
   private final UdtfMeta udtfMeta;
   private final BasePartitioner partitioner;
-  private final GraphState<IVertexId> graphState;
+  private final transient GraphState<IVertexId> graphState;
 
   private final List<List<String>> allExprList;
   private final Map<String, Object> initContext;
@@ -75,7 +75,6 @@ public class LinkEdgeImpl {
       BasePartitioner partitioner,
       GraphState<IVertexId> graphState) {
     this.taskId = taskId;
-    this.kgGraphSchema = kgGraphSchema;
     this.staticParameters = staticParameters;
     this.linkedEdgePattern = linkedEdgePattern;
     this.udtfMeta = udtfMeta;
@@ -89,7 +88,7 @@ public class LinkEdgeImpl {
       allExprList.add(exprStr);
     }
 
-    this.initContext = RunnerUtil.getKgGraphInitContext(this.kgGraphSchema);
+    this.initContext = RunnerUtil.getKgGraphInitContext(kgGraphSchema);
   }
 
   public List<KgGraph<IVertexId>> link(KgGraph<IVertexId> kgGraph) {
