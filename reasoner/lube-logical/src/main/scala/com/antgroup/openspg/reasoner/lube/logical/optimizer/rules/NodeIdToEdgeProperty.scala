@@ -34,34 +34,15 @@ object NodeIdToEdgeProperty extends Rule {
   def ruleWithContext(implicit context: LogicalPlannerContext): PartialFunction[
     (LogicalOperator, Map[String, Object]),
     (LogicalOperator, Map[String, Object])] = {
-    case (stackingOp: StackingLogicalOperator, map) if stackingOp.in.isInstanceOf[ExpandInto] =>
-      val expandInto = stackingOp.in.asInstanceOf[ExpandInto]
+    case (expandInto: ExpandInto, map) =>
       if (!canPushDown(expandInto)) {
-        stackingOp -> map
+        expandInto -> map
       } else {
         val toEdgeAlias = toPropertyName(expandInto)
-        val newOp = stackingOpUpdate(stackingOp, expandInto)
-        newOp -> (map + (expandInto.pattern.root.alias -> toEdgeAlias))
+        expandInto -> (map + (expandInto.pattern.root.alias -> toEdgeAlias))
       }
-
     case (filter: Filter, map) => filterUpdate(filter, map) -> map
     case (select: Select, map) => selectUpdate(select, map) -> map
-
-  }
-
-  private def stackingOpUpdate(
-      stackingOp: StackingLogicalOperator,
-      in: ExpandInto): StackingLogicalOperator = {
-    stackingOp match {
-      case aggregate: Aggregate => aggregate.copy(in = in.in)
-      case ddl: DDL => ddl.copy(in = in.in)
-      case expandInto: ExpandInto => expandInto.copy(in = in.in)
-      case filter: Filter => filter.copy(in = in.in)
-      case linked: LinkedExpand => linked.copy(in = in.in)
-      case order: OrderAndLimit => order.copy(in = in.in)
-      case project: Project => project.copy(in = in.in)
-      case select: Select => select.copy(in = in.in)
-    }
   }
 
   private def filterUpdate(filter: Filter, map: Map[String, Object]): Filter = {

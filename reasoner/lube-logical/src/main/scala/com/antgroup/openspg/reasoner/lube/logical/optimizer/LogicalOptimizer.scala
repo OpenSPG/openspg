@@ -26,12 +26,12 @@ object LogicalOptimizer {
   var LOGICAL_OPT_RULES: Seq[Rule] =
     Seq(
       GroupNode,
+      DistinctGet,
       NodeIdToEdgeProperty,
       FilterPushDown,
       ExpandIntoPure,
       FilterMerge,
       SolvedModelPure,
-      DistinctGet,
       AggregatePushDown,
       Pure,
       ProjectMerge)
