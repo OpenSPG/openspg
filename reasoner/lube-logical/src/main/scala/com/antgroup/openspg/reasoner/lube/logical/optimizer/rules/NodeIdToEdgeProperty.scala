@@ -17,11 +17,12 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.exception.SystemError
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
+import com.antgroup.openspg.reasoner.common.graph.edge
 import com.antgroup.openspg.reasoner.common.types.KTString
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.graph.{IRField, IRNode, IRProperty}
-import com.antgroup.openspg.reasoner.lube.common.pattern.{NodePattern, Pattern, VariablePatternConnection}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{Connection, NodePattern, Pattern, VariablePatternConnection}
 import com.antgroup.openspg.reasoner.lube.logical.{NodeVar, PropertyVar, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
@@ -38,11 +39,22 @@ object NodeIdToEdgeProperty extends Rule {
       if (!canPushDown(expandInto)) {
         expandInto -> map
       } else {
-        val toEdgeAlias = toPropertyName(expandInto)
-        expandInto -> (map + (expandInto.pattern.root.alias -> toEdgeAlias))
+        val toEdge = targetConnection(expandInto)
+        expandInto -> (map + (expandInto.pattern.root.alias -> (toEdge.alias -> toEdge.direction)))
       }
     case (filter: Filter, map) => filterUpdate(filter, map) -> map
     case (select: Select, map) => selectUpdate(select, map) -> map
+  }
+
+  private def genField(pair: (String, edge.Direction), fieldName: String): String = {
+    (pair._2, fieldName) match {
+      case (edge.Direction.OUT, Constants.NODE_ID_KEY) => Constants.EDGE_TO_ID_KEY
+      case (edge.Direction.OUT, Constants.CONTEXT_LABEL) => Constants.EDGE_TO_ID_TYPE_KEY
+      case (edge.Direction.IN, Constants.NODE_ID_KEY) => Constants.EDGE_FROM_ID_KEY
+      case (edge.Direction.IN, Constants.CONTEXT_LABEL) => Constants.EDGE_FROM_ID_TYPE_KEY
+      case (_, _) =>
+        throw UnsupportedOperationException(s"""unsupport (${pair._2}, ${fieldName})""")
+    }
   }
 
   private def filterUpdate(filter: Filter, map: Map[String, Object]): Filter = {
@@ -51,17 +63,10 @@ object NodeIdToEdgeProperty extends Rule {
     for (irField <- input) {
       if (irField.isInstanceOf[IRNode] && map.contains(irField.name)) {
         for (propName <- irField.asInstanceOf[IRNode].fields) {
-          propName match {
-            case Constants.NODE_ID_KEY =>
-              replaceVar.put(
-                IRProperty(irField.name, Constants.NODE_ID_KEY),
-                IRProperty(map(irField.name).toString, Constants.EDGE_TO_ID_KEY))
-            case Constants.CONTEXT_LABEL =>
-              replaceVar.put(
-                IRProperty(irField.name, Constants.CONTEXT_LABEL),
-                IRProperty(map(irField.name).toString, Constants.EDGE_TO_ID_TYPE_KEY))
-            case _ => throw SystemError("something wrong.")
-          }
+          val edgeInfo = map(irField.name).asInstanceOf[(String, edge.Direction)]
+          replaceVar.put(
+            IRProperty(irField.name, propName),
+            IRProperty(edgeInfo._1, genField(edgeInfo, propName)))
         }
       }
     }
@@ -77,20 +82,10 @@ object NodeIdToEdgeProperty extends Rule {
     val newFields = new ListBuffer[Var]()
     for (field <- select.fields) {
       if (field.isInstanceOf[PropertyVar] && map.contains(field.name)) {
+        val edgeInfo = map(field.name).asInstanceOf[(String, edge.Direction)]
         val propName = field.asInstanceOf[PropertyVar].field.name
-        propName match {
-          case Constants.NODE_ID_KEY =>
-            newFields.append(
-              PropertyVar(
-                map(field.name).toString,
-                new Field(Constants.EDGE_TO_ID_KEY, KTString, true)))
-          case Constants.CONTEXT_LABEL =>
-            newFields.append(
-              PropertyVar(
-                map(field.name).toString,
-                new Field(Constants.EDGE_TO_ID_TYPE_KEY, KTString, true)))
-          case _ => throw SystemError("something wrong.")
-        }
+        newFields.append(
+          PropertyVar(edgeInfo._1, new Field(genField(edgeInfo, propName), KTString, true)))
       } else {
         newFields.append(field)
       }
@@ -98,20 +93,20 @@ object NodeIdToEdgeProperty extends Rule {
     select.copy(fields = newFields.toList)
   }
 
-  private def toPropertyName(expandInto: ExpandInto): String = {
+  private def targetConnection(expandInto: ExpandInto): Connection = {
     val alias = expandInto.pattern.root.alias
-    val edgeAlias = expandInto.transform[String] {
+    val edgeAlias = expandInto.transform[Connection] {
       case (patternScan: PatternScan, _) =>
-        getEdgePropertyName(alias, patternScan.pattern)
+        targetConnection(alias, patternScan.pattern)
       case (expandInto: ExpandInto, list) =>
-        if (!list.isEmpty && !list.head.isEmpty) {
+        if (!list.isEmpty && list.head != null) {
           list.head
         } else {
-          getEdgePropertyName(alias, expandInto.pattern)
+          targetConnection(alias, expandInto.pattern)
         }
       case (_, list) =>
         if (list.isEmpty) {
-          ""
+          null
         } else {
           list.head
         }
@@ -119,7 +114,7 @@ object NodeIdToEdgeProperty extends Rule {
     edgeAlias
   }
 
-  private def getEdgePropertyName(alias: String, pattern: Pattern): String = {
+  private def targetConnection(alias: String, pattern: Pattern): Connection = {
     val connections = pattern.topology.values.flatten.filter(_.target.equals(alias))
     val fixedEdges = connections.filter(!_.isInstanceOf[VariablePatternConnection])
     val varEdges = connections
@@ -127,11 +122,11 @@ object NodeIdToEdgeProperty extends Rule {
       .map(_.asInstanceOf[VariablePatternConnection])
       .filter(_.upper == 1)
     if (fixedEdges.isEmpty && varEdges.isEmpty) {
-      ""
+      null
     } else if (fixedEdges.isEmpty) {
-      varEdges.head.alias
+      varEdges.head
     } else {
-      fixedEdges.head.alias
+      fixedEdges.head
     }
   }
 
