@@ -70,6 +70,7 @@ import com.antgroup.openspg.reasoner.rdg.common.KgGraphFirstEdgeAggImpl;
 import com.antgroup.openspg.reasoner.rdg.common.KgGraphListProcess;
 import com.antgroup.openspg.reasoner.rdg.common.KgGraphRenameImpl;
 import com.antgroup.openspg.reasoner.rdg.common.KgGraphSortImpl;
+import com.antgroup.openspg.reasoner.rdg.common.LinkEdgeImpl;
 import com.antgroup.openspg.reasoner.rdg.common.ReasonerJoinImpl;
 import com.antgroup.openspg.reasoner.rdg.common.SelectRowImpl;
 import com.antgroup.openspg.reasoner.rdg.common.SinkRelationImpl;
@@ -274,17 +275,11 @@ public class LocalRDG extends RDG<LocalRDG> {
 
     long count = 0;
     long targetVertexSize = 0;
+    LinkEdgeImpl linkEdge =
+        new LinkEdgeImpl(
+            this.taskId, this.kgGraphSchema, staticParameters, pattern, udtfMeta, null, graphState);
     for (KgGraph<IVertexId> kgGraph : this.kgGraphList) {
-      java.util.List<KgGraph<IVertexId>> splitedKgGraphList =
-          RunnerUtil.linkEdge(
-              this.taskId,
-              kgGraph,
-              this.kgGraphSchema,
-              staticParameters,
-              pattern,
-              udtfMeta,
-              null,
-              graphState);
+      java.util.List<KgGraph<IVertexId>> splitedKgGraphList = linkEdge.link(kgGraph);
       if (CollectionUtils.isNotEmpty(splitedKgGraphList)) {
         KgGraph<IVertexId> result = new KgGraphImpl();
         result.merge(splitedKgGraphList, null);

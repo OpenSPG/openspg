@@ -20,19 +20,15 @@ import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
-import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.OptionalEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.PathEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
-import com.antgroup.openspg.reasoner.common.graph.property.impl.EdgeProperty;
 import com.antgroup.openspg.reasoner.common.graph.type.MapType2IdFactory;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.MirrorVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
-import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
 import com.antgroup.openspg.reasoner.common.utils.CombinationIterator;
-import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphSplitStaticParameters;
@@ -63,8 +59,6 @@ import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.session.KGReasonerSession;
 import com.antgroup.openspg.reasoner.udf.UdfMng;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
-import com.antgroup.openspg.reasoner.udf.model.BaseUdtf;
-import com.antgroup.openspg.reasoner.udf.model.LinkedUdtfResult;
 import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
@@ -72,7 +66,6 @@ import com.antgroup.openspg.reasoner.util.KgGraphSchema;
 import com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig;
 import com.antgroup.openspg.reasoner.warehouse.common.config.GraphLoaderConfig;
 import com.antgroup.openspg.reasoner.warehouse.common.config.VertexLoaderConfig;
-import com.antgroup.openspg.reasoner.warehouse.common.partition.BasePartitioner;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -90,7 +83,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
@@ -589,119 +581,6 @@ public class RunnerUtil {
     } else {
       return defaultValue;
     }
-  }
-
-  /**
-   * compute the linked edge
-   *
-   * @return
-   */
-  public static List<KgGraph<IVertexId>> linkEdge(
-      String taskId,
-      KgGraph<IVertexId> kgGraph,
-      PartialGraphPattern kgGraphSchema,
-      KgGraphSplitStaticParameters staticParameters,
-      EdgePattern<LinkedPatternConnection> linkedEdgePattern,
-      UdtfMeta udtfMeta,
-      BasePartitioner partitioner,
-      GraphState<IVertexId> graphState) {
-    Iterator<KgGraph<IVertexId>> it = kgGraph.getPath(staticParameters, null);
-    List<KgGraph<IVertexId>> mergeList = new ArrayList<>();
-
-    while (it.hasNext()) {
-      KgGraph<IVertexId> path = it.next();
-
-      Map<String, Object> context =
-          RunnerUtil.kgGraph2Context(RunnerUtil.getKgGraphInitContext(kgGraphSchema), path);
-      List<Expr> exprList = JavaConversions.seqAsJavaList(linkedEdgePattern.edge().params());
-      List<Object> paramList = new ArrayList<>();
-      for (Expr expr : exprList) {
-        List<String> exprStr = WareHouseUtils.getRuleList(expr);
-        Object parameter = RuleRunner.getInstance().executeExpression(context, exprStr, taskId);
-        paramList.add(parameter);
-      }
-
-      BaseUdtf tableFunction = udtfMeta.createTableFunction();
-      tableFunction.initialize(graphState);
-      tableFunction.process(paramList);
-      List<List<Object>> udtfResult = tableFunction.getCollector();
-      List<LinkedUdtfResult> linkedUdtfResultList =
-          udtfResult.stream()
-              .flatMap(List::stream)
-              .filter(Objects::nonNull)
-              .map(
-                  obj -> {
-                    if (!(obj instanceof LinkedUdtfResult)) {
-                      throw new RuntimeException("linked udtf must return LinkedUdtfResult");
-                    }
-                    return ((LinkedUdtfResult) obj);
-                  })
-              .collect(Collectors.toList());
-      if (CollectionUtils.isEmpty(linkedUdtfResultList)) {
-        continue;
-      }
-      String sourceAlias = linkedEdgePattern.src().alias();
-      List<IVertex<IVertexId, IProperty>> sourceList = path.getVertex(sourceAlias);
-      if (null == sourceList || sourceList.size() != 1) {
-        throw new RuntimeException("There is more than one start vertex in kgGraph path");
-      }
-      IVertex<IVertexId, IProperty> sourceVertex = sourceList.get(0);
-      IVertexId sourceId = sourceVertex.getId();
-      Connection pc = linkedEdgePattern.edge();
-
-      Map<String, Set<IVertex<IVertexId, IProperty>>> newAliasVertexMap = new HashMap<>();
-      Map<String, Set<IEdge<IVertexId, IProperty>>> newAliasEdgeMap = new HashMap<>();
-      for (LinkedUdtfResult linkedUdtfResult : linkedUdtfResultList) {
-        for (String targetIdStr : linkedUdtfResult.getTargetVertexIdList()) {
-          // add target vertex
-          String targetAlias = pc.target();
-          PatternElement targetVertexMeta = linkedEdgePattern.dst();
-          List<String> targetVertexTypes =
-              new ArrayList<>(JavaConversions.setAsJavaSet(targetVertexMeta.typeNames()));
-          if (targetVertexTypes.size() == 0) {
-            throw new RuntimeException(
-                "Linked edge target vertex type must contains at least one type");
-          }
-          for (String targetVertexType : targetVertexTypes) {
-            IVertexId targetId = IVertexId.from(targetIdStr, targetVertexType);
-            if (partitioner != null && !partitioner.canPartition(targetId)) {
-              continue;
-            }
-            // need add property with id
-            Set<IVertex<IVertexId, IProperty>> newVertexSet =
-                newAliasVertexMap.computeIfAbsent(targetAlias, k -> new HashSet<>());
-            newVertexSet.add(new Vertex<>(targetId));
-
-            Map<String, Object> props = new HashMap<>(linkedUdtfResult.getEdgePropertyMap());
-            props.put(Constants.EDGE_TO_ID_KEY, targetIdStr);
-            if (sourceVertex.getValue().isKeyExist(Constants.NODE_ID_KEY)) {
-              props.put(
-                  Constants.EDGE_FROM_ID_KEY, sourceVertex.getValue().get(Constants.NODE_ID_KEY));
-            }
-            IProperty property = new EdgeProperty(props);
-
-            // construct new edge
-            IEdge<IVertexId, IProperty> linkedEdge = new Edge<>(sourceId, targetId, property);
-            String edgeType =
-                StringUtils.isNotEmpty(linkedUdtfResult.getEdgeType())
-                    ? linkedUdtfResult.getEdgeType()
-                    : linkedEdgePattern.edge().funcName();
-            linkedEdge.setType(sourceId.getType() + "_" + edgeType + "_" + targetVertexType);
-            String edgeAlias = pc.alias();
-
-            Set<IEdge<IVertexId, IProperty>> newEdgeSet =
-                newAliasEdgeMap.computeIfAbsent(edgeAlias, k -> new HashSet<>());
-            newEdgeSet.add(linkedEdge);
-          }
-        }
-      }
-      if (!(newAliasVertexMap.isEmpty() && newAliasEdgeMap.isEmpty())) {
-        KgGraph<IVertexId> newKgGraph = new KgGraphImpl(newAliasVertexMap, newAliasEdgeMap);
-        path.merge(Lists.newArrayList(newKgGraph), null);
-        mergeList.add(path);
-      }
-    }
-    return mergeList;
   }
 
   /**
