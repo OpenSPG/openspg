@@ -1,0 +1,53 @@
+namespace TestV2
+
+
+EducationInstitutionType(医疗机构类型): ConceptType
+    hypernymPredicate: isA
+Person(人): EntityType
+Product(物品): EntityType
+AcademicProgram(课程或专业): EntityType
+Organization(机构): EntityType
+Place(地点): EntityType
+Department(部门): EntityType
+EducationInstitution(教育机构): EntityType
+    desc: 提供教学、学术研究和人才培养服务的实体，如学校、大学、学院、培训机构等
+    properties:
+        IND#belongTo(属于):EducationInstitutionType
+            desc: 如小学、中学、高中、大学、职业学院、培训机构等
+        address(地址): Place
+            desc: 包含详细地理位置信息的地址实体
+            properties:
+              postalCode(邮政编码): Text
+              locality(城市名): Text
+              region(省名): Text
+              country(国家名): Text
+        establishmentDate(成立日期): STD.Date
+            desc: 教育机构正式创建的时间
+        affiliation(所属组织): Text
+            desc: 教育机构上级的教育集团或关联组织
+        numberOfStudents(学生人数): Text
+            desc: 在校学生总数
+        numberOfFaculty(教职工人数): Text
+            desc: 全职与兼职教师及其他教职员工总数
+        academicPrograms(开设课程或专业): AcademicProgram
+            desc: 教育机构提供的各类学历教育项目和非学历培训课程
+            constraint: MultiValue
+        campuses(校区列表): Place
+            desc: 若有多个校区，则列举各校区信息
+            constraint: MultiValue
+        ranking(排名情况): Text
+            desc: 教育机构在国内外各类排名中的位置
+        accreditation(认证资质): Text
+            desc: 教育机构所获得的相关教育质量认证
+            constraint: MultiValue
+        administeredBy(校长或负责人): Person
+            desc: 教育机构的现任校长或主要负责人
+        departments(院系列表): Department
+            desc: 教育机构内部下设的不同院系或学部
+            constraint: MultiValue
+        faculties(师资力量): Person
+            desc: 教育机构内的教师团队成员及其角色（如教授、讲师等）
+            constraint: MultiValue
+        partnerships(合作单位): Organization
+            desc: 与其他教育机构、企业或政府部门的合作关系
+            constraint: MultiValue

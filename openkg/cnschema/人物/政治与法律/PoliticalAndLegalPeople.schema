@@ -1,0 +1,18 @@
+namespace TestV2
+
+PoliticalAndLegalField(政治与法律领域): ConceptType
+	hypernymPredicate: isA
+PoliticalAndLegalPeople(政法人士): EntityType
+	desc: 包括政治家、政府官员、法官、律师、外交官、活动家等
+	properties:
+		politicalAffiliation(政治隶属关系): Text
+		officeHeld(曾任职务): Text
+			constraint: MultiValue
+		legalPracticeArea(法律执业领域): Text
+		notableCases(知名案件): Text
+			constraint: MultiValue
+		diplomaticPosts(外交职位): Text
+			constraint: MultiValue
+		educationalBackground(教育背景): Text
+		publicServiceYears(公职年数): Text
+		IND#belongTo(所属领域): PoliticalAndLegalField

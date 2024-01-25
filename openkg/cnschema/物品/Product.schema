@@ -1,0 +1,35 @@
+namespace TestV2
+
+
+ProductType(类别): ConceptType
+    hypernymPredicate: isA
+Brand(品牌): EntityType
+Organization(机构): EntityType
+Place(地点): EntityType
+Product(物品): EntityType
+    desc: 用于描述任何类型的物品，包括但不限于日用消费品、电子产品、出行工具、工业制品与原材料、文化与娱乐产品等
+    properties:
+    	weight(重量): Text
+    	color(颜色): Text
+    	prices(价格): Text
+    	modelNumber(型号): Text
+        desc: 物品的产品型号
+    	brand(品牌): Brand
+    	  desc: 生产该物品的品牌
+    	category(类别): ProductType
+    	  desc: 物品所属的一级或多级分类
+    	placeOfOrigin(产地): Place
+    	  desc: 物品生产或制造的地点
+    	manufacturer(制造商): Organization
+    	  desc: 制造或生产的组织或企业
+    	productionDate(生产日期): STD.Date
+    	  desc: 物品被制造完成的时间
+    	expirationDate(有效期): STD.Date
+          desc: 物品的有效期限（对于有保质期的物品）(可选)
+    	dimensions(尺寸规格): Text
+    	  desc: 物品的长、宽、高等物理尺寸信息
+
+    	relatedProducts(相关产品): Product
+    	  desc: 相关联的其他产品，如配件、套装等
+    	material(主要材料): Product
+          desc: 制造物品的主要材料

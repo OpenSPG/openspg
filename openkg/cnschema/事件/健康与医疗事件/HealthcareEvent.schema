@@ -1,0 +1,29 @@
+namespace TestV2
+
+
+
+DiseaseType(疾病类型): ConceptType
+    hypernymPredicate: isA
+Organization(机构): EntityType
+Place(地点): EventType
+HealthcareEvent(事件): EventType
+    properties:
+        subject(主体): Organization
+            desc: 可能是疾病、医疗技术、药品、政策等
+        startTime(发生时间): STD.Date
+        endTime(结束时间): STD.Date
+        location(地点): Place
+        disease(疾病类型): DiseaseType
+            desc: 如果事件与疾病相关，可以描述疾病的名称
+        severity(严重程度): Text
+            desc: 疾病的严重程度或者公共卫生事件的影响程度
+        stage(发展阶段): Text
+            desc: 疾病的阶段或者医疗技术、新药的研发阶段
+        treatment(治疗方式或技术创新): Text
+            desc: 描述用于治疗疾病的方式或者医疗技术创新的具体内容
+        policyChange(健康政策变化): Text
+            desc: 描述政策的具体变化和影响
+        impact(产生影响): Text
+            desc: 包括对公众健康的影响、对医疗系统的影响、对经济的影响等
+        scientificExplanation(科学解释和原因分析): Text
+            desc: 对事件发生的科学解释和原因分析

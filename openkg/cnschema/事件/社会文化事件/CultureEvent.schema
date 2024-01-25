@@ -1,0 +1,18 @@
+namespace TestV2
+
+
+
+Organization(机构): EntityType
+CultureEvent(社会文化事件): EventType
+    properties:
+        subject(主办方): Organization
+        startTime(举办时间): Date
+        druingTime(持续时间): Date
+        location(地点): Text
+				activitycontent(活动内容): Text
+        theme(主题): Text
+        audiencegroup(受众群体): Text
+          desc: 事件的目标受众群体，如年龄、性别、职业、兴趣爱好等。
+        participationmethods(参与方式): Text
+          desc: 参与者如何参与事件，如线上、线下、购票入场、在线直播等
+        effect(社会影响与意义): Text

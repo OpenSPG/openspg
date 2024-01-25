@@ -1,0 +1,18 @@
+namespace TestV2
+
+NewsAndMediaField(新闻与媒体领域): ConceptType
+	hypernymPredicate: isA
+Organization(机构): EntityType
+NewsAndMediaPeople(新闻媒体人士): EntityType
+  desc: 包括记者、编辑、主持人、评论员、博主等
+  properties:
+    mediaOutlets(供职媒体): Organization
+    	constraint: MultiValue
+    areasOfCoverage(报道领域): Text
+    notableStories(知名报道): Text
+    	constraint: MultiValue
+    publishedWorks(出版作品): Text
+    	constraint: MultiValue
+    journalismAwards(新闻奖项): Text
+    	constraint: MultiValue
+    IND#belongTo(所属领域): NewsAndMediaField

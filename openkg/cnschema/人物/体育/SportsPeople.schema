@@ -1,0 +1,20 @@
+namespace TestV2
+
+SportsField(体育领域): ConceptType
+	hypernymPredicate: isA
+SportsCategory(运动项目): ConceptType
+	hypernymPredicate: isA
+Organization(机构): EntityType
+SportsPeople(体育界人士): EntityType
+  desc: 包括运动员、教练、裁判、体育管理人员等
+  properties:
+    debutDate(出道日期): STD.Date
+    sportsCategory(运动项目): SportsCategory
+    achievements(成就): Text
+    	constraint: MultiValue
+    teamsRepresented(代表队伍): Organization
+    	constraint: MultiValue
+    coachingExperience(执教经历): Text
+    officiatingExperience(裁判经历): Text
+    administrativeRoles(管理职务): Text
+    IND#belongTo(所属领域): SportsField

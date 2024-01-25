@@ -1,0 +1,50 @@
+namespace TestV2
+
+
+HospitalType(医疗机构类型): ConceptType
+    hypernymPredicate: isA
+Person(人): EntityType
+Product(物品): EntityType
+MedicalService(医疗服务): EntityType
+Organization(机构): EntityType
+Place(地点): EntityType
+Department(部门): EntityType
+Hospital(医疗机构): EntityType
+    desc: 提供医疗服务的实体，如综合医院、专科医院、诊所等
+    properties:
+        type(类型): Text
+            desc: 如综合医院、专科医院、社区卫生服务中心等
+        address(地址): Place
+            desc: 包含详细地理位置信息的地址实体
+            properties:
+                streetAddress(街道地址): Text
+                postalCode(邮政编码): Text
+                locality(城市名): Text
+                region(省名): Text
+                country(国家名): Text
+        establishmentDate(成立日期): STD.Date
+            desc: 医疗机构正式创建的时间
+        bedCapacity(床位数): Text
+            desc: 医院可提供的住院床位总数
+        IND#belongTo(属于):HospitalType
+        licenseNumber(执业许可证号): Text
+            desc: 医疗机构合法运营的许可证编号
+        departments(科室): Department
+            desc: 医疗机构下设的不同医疗科室
+            constraint: MultiValue
+        servicesProvided(提供服务): MedicalService
+            desc: 医疗机构提供的医疗服务项目
+            constraint: MultiValue
+        affiliatedOrganizations(上级机构或关联机构): Organization
+            desc: 医疗机构所属的上级集团或关联机构
+        managedBy(院长或负责人): Person
+            desc: 医疗机构的现任院长或主要负责人
+        medicalEquipment(医疗设备): Product
+            desc: 医疗机构拥有的各类医疗设备资源
+            constraint: MultiValue
+        partnerships(合作单位): Organization
+            desc: 与本医疗机构存在合作关系的其他医疗机构、研究机构或企业等
+            constraint: MultiValue
+        accreditations(认证资质): Text
+            desc: 医疗机构获得的各种医疗质量和安全相关的认证和评价结果
+            constraint: MultiValue

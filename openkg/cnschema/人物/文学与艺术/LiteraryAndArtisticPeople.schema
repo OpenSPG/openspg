@@ -1,0 +1,24 @@
+namespace TestV2
+
+
+LiteraryAndArtisticField(文学与艺术领域): ConceptType
+	hypernymPredicate: isA
+Organization(机构): EntityType
+Product(物品): EntityType
+Person(人物): EntityType
+LiteraryAndArtisticPeople(文学与艺术界的人): EntityType
+  desc: 包括作家、诗人、画家、雕塑家、摄影师、设计师、建筑师、音乐家、舞蹈家等
+  properties:
+    debutDate(出道日期): STD.Date
+    notableWorks(代表作品): Product
+      constraint: MultiValue
+    artisticStyle(艺术风格): Text
+    exhibitions(参展经历): Text
+      constraint: MultiValue
+    influences(影响因素或人物): Person
+      constraint: MultiValue
+    affiliation(所属团队): Organization
+    socialMediaProfiles(社交媒体账号): Text
+    popularity(知名度): Text
+      desc: 衡量个体在公众或专业领域的认知度。
+    IND#belongTo(所属领域): LiteraryAndArtisticField

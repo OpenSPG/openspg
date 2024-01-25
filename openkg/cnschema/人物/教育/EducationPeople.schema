@@ -1,0 +1,20 @@
+namespace TestV2
+
+Organization(机构): EntityType
+Product(物品): EntityType
+
+EducationField(教育领域): ConceptType
+	hypernymPredicate: isA
+
+EducationPeople(教育界人士): EntityType
+	desc: 包括教育家、学者、教师、研究员等
+	properties:
+  	teachingSubjects(教授科目): Text
+    researchInterests(研究兴趣): Text
+    institutionsAffiliated(所属院校): Organization
+    	constraint: MultiValue
+    publications(出版物): Product
+    	constraint: MultiValue
+    educationalPhilosophy(教育理念): Text
+    teachingExperience(教学经验): Text
+    IND#belongTo(所属领域): EducationField

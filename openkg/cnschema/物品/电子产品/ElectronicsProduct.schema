@@ -1,0 +1,45 @@
+namespace TestV2
+
+
+Category(类别): ConceptType
+    hypernymPredicate: isA
+Brand(品牌): EntityType
+OperatingSystem(操作系统): EntityType
+Color(颜色): EntityType
+Url(链接): EntityType
+Product(物品): EntityType
+ElectronicsProduct(电子产品): EntityType
+    properties:
+        productType(产品类型): Category
+          desc: 描述电子产品的类别，如智能手机、笔记本电脑、平板电视、家用电器等。
+        brand(品牌): Brand
+          desc: 制造商或品牌的名称及其相关信息。
+        modelNumber(型号): Text
+          desc: 电子产品具体的型号标识。
+        releaseDate(上市日期): STD.Date
+          desc: 该电子产品首次投放市场或发布的日期。
+        specifications(规格参数): Text
+          desc: 如屏幕尺寸、分辨率、处理器类型、内存大小、存储容量等。
+          properties:
+                memorySize(内存大小): Text
+                screenSize(屏幕尺寸): Text
+                processorType(处理器类型): Text
+                storageCapacity(存储容量): Text
+        operatingSystem(操作系统): OperatingSystem
+          desc: 预装在设备上的操作系统名称及版本信息。
+        batteryLife(电池续航时间): Text
+          desc: 官方标称的电池使用时长。
+        weight(重量): Text
+          desc: 电子产品的净重，通常以克或磅为单位。
+        colorVariants(颜色选项): Color
+          desc: 提供的可选颜色列表。
+        price(价格): Text
+          desc: 电子产品当前的售价，可能包括不同销售阶段的价格区间。
+        availability(库存状态): Text
+          desc: 标识产品的库存情况，如在售、预售、已下架、缺货等。
+        warrantyPeriod(保修期): Text
+          desc: 产品的标准保修期限。
+        accessoriesIncluded(附带配件): Product
+          desc: 购买电子产品时随箱附带的配件清单。
+        productImage(产品图片): Url
+          desc: 展示电子产品的官方宣传图片链接。

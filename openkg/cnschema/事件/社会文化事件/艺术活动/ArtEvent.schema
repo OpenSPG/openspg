@@ -1,0 +1,38 @@
+namespace TestV2
+
+
+Category(活动类型): ConceptType
+    hypernymPredicate: isA
+Organization(机构): EntityType
+URL(链接): EntityType
+Status(状态): EntityType
+Place(地点): EntityType
+Person(人物): EntityType
+ArtEvent(艺术活动): EventType
+    properties:
+        subject(主办方): Organization
+        eventType(活动类型): Category
+            desc: 描述活动所属类别，例如音乐会、戏剧表演、艺术展览、舞蹈演出、文学讲座等。
+        eventDescription(活动描述): Text
+            desc: 提供活动内容、特色及意义的详细说明。
+        startDateAndTime(开始日期与时间): STD.Date
+            desc: 标注活动开始的具体日期和时刻。
+        endDateAndTime(结束日期与时间): STD.Date
+            desc: 标注活动结束的具体日期和时刻。
+        duringTime(持续时间): Text
+            desc: 表示活动总时长或单场次时长，可以是时间段或具体小时数。
+        locationInfo(地点信息): Place
+            desc: 包括举办场所名称、地址以及经纬度坐标等地理位置数据。
+        mainArtists(主创人员): Person
+            desc: 列出参与创作或表演的主要艺术家名单。
+            constraint: MultiValue
+        ticketPrice(门票价格): Text
+            desc: 单价、套票价格信息，也可以标注是否免费入场。
+        ticketStatus(售票状态): Status
+            desc: 指示当前门票销售状况，如已售罄、在售、预售中等。
+        eventLink(活动链接): URL
+            desc: 官方网站、购票网址或其他关联网页链接。
+        promotionalImage(宣传图片): URL
+            desc: 展示活动形象的官方宣传图片或海报的网络链接地址。
+        targetAudience(目标受众群体): Person
+            desc: 描述活动主要面向的观众群体特征，包括但不限于年龄层、性别、职业、兴趣爱好等。
