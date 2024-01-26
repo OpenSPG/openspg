@@ -10,6 +10,6 @@
 # or implied.
 
 docker buildx build -f Dockerfile --platform linux/amd64 --push \
-  -t openspg/openspg-python:0.0.2-beta2 \
+  -t openspg/openspg-python:0.0.2-beta5 \
   -t openspg/openspg-python:latest \
   .
