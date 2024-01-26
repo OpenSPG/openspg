@@ -71,6 +71,11 @@ class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutab
   }
 
   def getEdgeField(spoStr: Set[String], fieldName: String): Field = {
+    if (fieldName.equals(Constants.EDGE_FROM_ID_KEY) || fieldName.equals(
+      Constants.EDGE_TO_ID_KEY) || fieldName.equals(
+      Constants.EDGE_FROM_ID_TYPE_KEY) || fieldName.equals(Constants.EDGE_TO_ID_TYPE_KEY)) {
+      return new Field(fieldName, KTString, true)
+    }
     for (spo <- spoStr) {
       val field = getEdgeField(spo, fieldName)
       if (field != null) {

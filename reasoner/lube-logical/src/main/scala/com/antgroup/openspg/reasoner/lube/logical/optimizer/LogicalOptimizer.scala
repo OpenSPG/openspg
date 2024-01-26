@@ -31,10 +31,10 @@ object LogicalOptimizer {
       FilterPushDown,
       ExpandIntoPure,
       FilterMerge,
-      SolvedModelPure,
       AggregatePushDown,
       Pure,
-      ProjectMerge)
+      ProjectMerge,
+      SolvedModelPure)
 
   def optimize(input: LogicalOperator, optRuleList: Seq[Rule])(implicit
       context: LogicalPlannerContext): LogicalOperator = {

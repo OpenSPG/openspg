@@ -965,7 +965,7 @@ public class TransitiveOptionalTest {
             + "  A [TestFinParty.RelatedParty, __start__='true']\n"
             + "  B, C [TestFinParty.RelatedParty]\n"
             + "// 1.17的B 必须存在\n"
-            + "  C->B [votingRatio] repeat(0,20) as F1\n"
+            + "  C->B [votingRatio] repeat(0,2) as F1\n"
             + "// 1.19的C D 可以不存在\n"
             + "  B->A [votingRatio, __optional__='true'] as F2\n"
             + "}\n"

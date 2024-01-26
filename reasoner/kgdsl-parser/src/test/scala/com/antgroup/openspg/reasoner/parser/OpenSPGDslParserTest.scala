@@ -22,6 +22,7 @@ import com.antgroup.openspg.reasoner.lube.common.graph._
 import com.antgroup.openspg.reasoner.lube.common.pattern.{EntityElement, LinkedPatternConnection}
 import com.antgroup.openspg.reasoner.lube.common.rule.ProjectRule
 import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.must.Matchers.contain
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
 class OpenSPGDslParserTest extends AnyFunSpec {
@@ -660,8 +661,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
       .asInstanceOf[AddPredicate]
       .predicate
       .fields
-      .head
-      ._1 should equal("same_domain_num")
+      .keySet should contain ("same_domain_num")
 
     blocks(1).asInstanceOf[DDLBlock].ddlOp.head.isInstanceOf[AddProperty] should equal(true)
     blocks(1)
@@ -1015,7 +1015,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
       .predicate
       .label equals ("belongTo")
     val text =
-      """└─DDLBlock(ddlOp=Set(AddPredicate(PredicateElement(belongTo,p,(s:User,BinaryOpExpr(name=BEqual)),EntityElement(cardUser,accountQueryCrowd,o),Map(),OUT))))
+      """└─DDLBlock(ddlOp=Set(AddPredicate(PredicateElement(belongTo,p,(s:User,BinaryOpExpr(name=BEqual)),EntityElement(cardUser,accountQueryCrowd,o),Map(__to_id_type__->VString(value=accountQueryCrowd/cardUser),__to_id__->VString(value=cardUser),__from_id__->UnaryOpExpr(name=GetField(id)),__from_id_type__->VString(value=User)),OUT))))
         *    └─FilterBlock(rules=LogicRule(R5,智信确权,BinaryOpExpr(name=BEqual)))
         *        └─FilterBlock(rules=LogicRule(R4,绑定数目,BinaryOpExpr(name=BGreaterThan)))
         *            └─AggregationBlock(aggregations=Aggregations(Map(IRVariable(BindNum) -> AggOpExpr(name=Sum))), group=List(IRNode(s,Set(zhixin))))

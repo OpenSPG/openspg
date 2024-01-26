@@ -17,13 +17,12 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
+import com.antgroup.openspg.reasoner.common.exception.{SystemError, UnsupportedOperationException}
 import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph
 import com.antgroup.openspg.reasoner.lube.common.pattern._
 import com.antgroup.openspg.reasoner.lube.common.pattern.ElementOps.toPattenElement
 import com.antgroup.openspg.reasoner.lube.logical.SolvedModel
 import com.antgroup.openspg.reasoner.lube.logical.operators._
-
 /**
  * QueryPath splitting
  * @param pattern GraphPath, some times are called QueryGraph
@@ -60,7 +59,7 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
             val dst = getSrcAndDst(connection, chosenNodes)._2
             chosenEdges.add(connection)
             val driving = Driving(dependency.graph, src, dependency.solved)
-            val scan = PatternScan(driving, buildEdgePattern(connection))
+            val scan = PatternScan(driving, buildEdgePattern(src, connection))
             val rhsPlanner = new PatternMatchPlanner(parts._2.copy(rootAlias = dst))
             val oneRhsOperator = rhsPlanner.plan(scan, chosenNodes.clone(), chosenEdges.clone())
             if (oneRhsOperator != null && rhsOperator != null) {
@@ -81,7 +80,6 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
         if (!chosenEdges.contains(connection)) {
           val (src, dst) = getSrcAndDst(connection, chosenNodes)
           chosenEdges.add(connection)
-          chosenNodes.add(dst)
           val rhsPlanner = new PatternMatchPlanner(parts._2.copy(rootAlias = dst))
           val rhsOperator =
             rhsPlanner.plan(
@@ -91,7 +89,7 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
           lhsOperator = connection match {
             case conn: VariablePatternConnection =>
               val edgePattern =
-                buildEdgePattern(conn).asInstanceOf[EdgePattern[VariablePatternConnection]]
+                buildEdgePattern(src, conn).asInstanceOf[EdgePattern[VariablePatternConnection]]
               val repeatOperator = buildBoundVarLenExpand(src, edgePattern, lhsOperator)
               if (rhsOperator == null) {
                 repeatOperator
@@ -110,8 +108,14 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
     }
   }
 
-  private def buildEdgePattern(conn: Connection) = {
-    EdgePattern(pattern.getNode(conn.source), pattern.getNode(conn.target), conn)
+  private def buildEdgePattern(root: String, conn: Connection) = {
+    if (root.equals(conn.source)) {
+      EdgePattern(pattern.getNode(conn.source), pattern.getNode(conn.target), conn)
+    } else if (root.equals(conn.target)) {
+      EdgePattern(pattern.getNode(conn.target), pattern.getNode(conn.source), conn.reverse)
+    } else {
+      throw SystemError(s"PatternMatchPlanner error, root=${root}, conn=${conn}")
+    }
   }
 
   private def getSrcAndDst(
