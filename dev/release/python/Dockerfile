@@ -35,6 +35,7 @@ RUN python3 -m venv /openspg_venv && \
     pip3 install $PIP_PKGS && \
     echo "if (tty -s); then \n   . /openspg_venv/bin/activate \nfi" >> ~/.bashrc
 
-ADD lib/*.jar /openspg_venv/lib/python3.8/site-packages/knext/lib
+ADD lib/builder*.jar /openspg_venv/lib/python3.8/site-packages/knext/builder/lib
+ADD lib/reasoner*.jar /openspg_venv/lib/python3.8/site-packages/knext/reasoner/lib
 
 RUN git clone --depth=1 https://github.com/OpenSPG/openspg.git
