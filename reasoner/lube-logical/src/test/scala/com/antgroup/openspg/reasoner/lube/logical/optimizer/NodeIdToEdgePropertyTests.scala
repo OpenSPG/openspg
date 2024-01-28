@@ -164,7 +164,7 @@ class NodeIdToEdgePropertyTests extends AnyFunSpec {
     val optimizedLogicalPlan = LogicalOptimizer.optimize(logicalPlan, rule)
     optimizedLogicalPlan.findExactlyOne { case select: Select =>
       select.fields.map(f => s"${f.name}.${f.asInstanceOf[PropertyVar].field.name}") should equal(
-        List.apply(s"e1.${Constants.EDGE_TO_ID_KEY}", "B.id", s"e2.${Constants.EDGE_TO_ID_KEY}"))
+        List.apply(s"e1.${Constants.EDGE_FROM_ID_KEY}", "B.id", s"e2.${Constants.EDGE_TO_ID_KEY}"))
     }
     val cnt = optimizedLogicalPlan.transform[Int] {
       case (scan: PatternScan, cnt) =>

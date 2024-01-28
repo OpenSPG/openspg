@@ -497,7 +497,7 @@ class ReasonerSessionTests extends AnyFunSpec {
           cnt.sum
         }
     }
-    cnt should equal(5)
+    cnt should equal(6)
   }
 
   it("test concept check") {

@@ -23,7 +23,7 @@ import com.antgroup.openspg.reasoner.common.types.KTString
 import com.antgroup.openspg.reasoner.lube.block.{AddPredicate, DDLOp}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
-import com.antgroup.openspg.reasoner.lube.common.graph.{IRField, IRNode, IRProperty}
+import com.antgroup.openspg.reasoner.lube.common.graph.{IRField, IRNode, IRProperty, IRVariable}
 import com.antgroup.openspg.reasoner.lube.common.pattern.{Connection, NodePattern, Pattern, VariablePatternConnection}
 import com.antgroup.openspg.reasoner.lube.logical.{NodeVar, PropertyVar, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
@@ -68,7 +68,7 @@ object NodeIdToEdgeProperty extends Rule {
         varLenExpand ->
           (map + (expandInto.pattern.root.alias -> (toEdge.alias -> toEdge.direction)))
       } else if (canPushDown(expandInto)) {
-        varLenExpand ->  (map - expandInto.pattern.root.alias)
+        varLenExpand -> (map - expandInto.pattern.root.alias)
       } else {
         varLenExpand -> map
       }
@@ -86,8 +86,11 @@ object NodeIdToEdgeProperty extends Rule {
   }
 
   private def filterUpdate(filter: Filter, map: Map[String, Object]): Filter = {
-    val input = RuleUtils.getAllInputFieldInRule(filter.rule, null, null)
-    val replaceVar = new mutable.HashMap[IRField, IRProperty]
+    val input = RuleUtils.getAllInputFieldInRule(
+      filter.rule,
+      filter.solved.getNodeAliasSet,
+      filter.solved.getEdgeAliasSet)
+    val replaceVar = new mutable.HashMap[IRField, IRField]
     for (irField <- input) {
       if (irField.isInstanceOf[IRNode] && map.contains(irField.name)) {
         for (propName <- irField.asInstanceOf[IRNode].fields) {
@@ -96,6 +99,7 @@ object NodeIdToEdgeProperty extends Rule {
             replaceVar.put(
               IRProperty(irField.name, propName),
               IRProperty(edgeInfo._1, genField(edgeInfo, propName)))
+            replaceVar.put(IRVariable(irField.name), IRVariable(edgeInfo._1))
           }
         }
       }
@@ -114,7 +118,7 @@ object NodeIdToEdgeProperty extends Rule {
       if (field.isInstanceOf[PropertyVar] && map.contains(field.name)) {
         val edgeInfo = map(field.name).asInstanceOf[(String, edge.Direction)]
         val propName = field.asInstanceOf[PropertyVar].field.name
-        if (NODE_DEFAULT_PROPS.contains(propName))  {
+        if (NODE_DEFAULT_PROPS.contains(propName)) {
           newFields.append(
             PropertyVar(edgeInfo._1, new Field(genField(edgeInfo, propName), KTString, true)))
         } else {
@@ -139,7 +143,7 @@ object NodeIdToEdgeProperty extends Rule {
             for (irField <- input) {
               if (irField.isInstanceOf[IRNode] && map.contains(irField.name)) {
                 for (propName <- irField.asInstanceOf[IRNode].fields) {
-                  if (NODE_DEFAULT_PROPS.contains(propName))  {
+                  if (NODE_DEFAULT_PROPS.contains(propName)) {
                     val edgeInfo = map(irField.name).asInstanceOf[(String, edge.Direction)]
                     replaceVar.put(
                       IRProperty(irField.name, propName),

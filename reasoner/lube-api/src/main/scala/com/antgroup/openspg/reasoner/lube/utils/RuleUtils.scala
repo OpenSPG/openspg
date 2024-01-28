@@ -49,7 +49,7 @@ object RuleUtils {
    * @param renameFunc
    * @return
    */
-  def renameVariableInRule(rule: Rule, replaceVar: Map[IRField, IRProperty]): Rule = {
+  def renameVariableInRule(rule: Rule, replaceVar: Map[IRField, IRField]): Rule = {
     if (null == rule) {
       return null
     }
