@@ -378,6 +378,20 @@ public class RunnerUtil {
     }
     vertexList.add(targetVertex);
     edgeProperty.put("nodes", vertexList);
+    if (CollectionUtils.isNotEmpty(edge.getEdgeList())) {
+      Object fromIdObj = edge.getEdgeList().get(0).getValue().get(Constants.EDGE_FROM_ID_KEY);
+      if (null != fromIdObj) {
+        edgeProperty.put(Constants.EDGE_FROM_ID_KEY, fromIdObj);
+      }
+      Object toIdObj =
+          edge.getEdgeList()
+              .get(edge.getEdgeList().size() - 1)
+              .getValue()
+              .get(Constants.EDGE_TO_ID_KEY);
+      if (null != toIdObj) {
+        edgeProperty.put(Constants.EDGE_TO_ID_KEY, toIdObj);
+      }
+    }
     return edgeProperty;
   }
 
