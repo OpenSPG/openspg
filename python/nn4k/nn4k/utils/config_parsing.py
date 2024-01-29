@@ -9,10 +9,8 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-import json
-
-from typing import Any
-from typing import Union
+from pathlib import Path
+from typing import Any, Union
 
 
 def preprocess_config(nn_config: Union[str, dict]) -> dict:
@@ -21,22 +19,45 @@ def preprocess_config(nn_config: Union[str, dict]) -> dict:
 
     * If `nn_config` is already a dictionary, return it as is.
 
-    * If `nn_config` is a string, decode it as a JSON file.
+    * If `nn_config` is a string, decode it as a JSON or JSON5 file.
 
     :param nn_config: config to be preprocessed
     :type nn_config: str or dict
-    :return: `nn_config` or `nn_config` decoded as JSON
+    :return: `nn_config` or `nn_config` decoded as JSON or JSON5
     :rtype: dict
     :raises ValueError: if cannot decode config file specified by
-                        `nn_config` as JSON
+                        `nn_config` as JSON or JSON5
     """
     try:
-        if isinstance(nn_config, str):
-            with open(nn_config, "r") as f:
-                nn_config = json.load(f)
+        if isinstance(nn_config, dict):
+            return nn_config
+        elif isinstance(nn_config, str):
+            if nn_config.endswith(".json"):
+                import json
+
+                with open(Path(nn_config), "r", encoding="utf-8") as open_json_file:
+                    data = json.load(open_json_file)
+                    nn_config = data
+                    return nn_config
+            if nn_config.endswith(".json5"):
+                import json5
+
+                with open(Path(nn_config), "r", encoding="utf-8") as open_json5_file:
+                    data = json5.load(open_json5_file)
+                    nn_config = data
+                    return nn_config
+            from nn4k.utils.io.file_utils import FileUtils
+
+            raise ValueError(
+                f"Config file with extension type {FileUtils.get_extension(nn_config)} is not supported."
+                f"use json or json5 instead."
+            )
+        else:
+            raise ValueError(
+                f"nn_config could be dict or str, {type(nn_config)} is not yet supported."
+            )
     except:
         raise ValueError("cannot decode config file")
-    return nn_config
 
 
 def get_field(nn_config: dict, name: str, text: str) -> Any:

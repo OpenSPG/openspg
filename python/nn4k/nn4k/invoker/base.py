@@ -9,6 +9,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
+import copy
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Union
@@ -19,6 +20,7 @@ from nn4k.executor import NNExecutor
 class SubmitMode(Enum):
     K8s = "k8s"
     Docker = "docker"
+    Local = "local"
 
 
 class NNInvoker(ABC):
@@ -137,6 +139,15 @@ class LLMInvoker(NNInvoker):
         Submit remote SFT execution.
         """
         raise NotImplementedError(f"{self.__class__.__name__} does not support SFT.")
+
+    def local_sft(self, args: dict = None):
+        sft_args = copy.deepcopy(self.init_args)
+        args = args or {}
+        sft_args.update(args)
+
+        from nn4k.executor import LLMExecutor
+
+        LLMExecutor.from_config(sft_args).execute_sft()
 
     def submit_rl_tuning(self, submit_mode: SubmitMode = SubmitMode.K8s):
         """
