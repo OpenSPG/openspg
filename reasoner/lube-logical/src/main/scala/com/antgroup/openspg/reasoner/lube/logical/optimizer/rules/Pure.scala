@@ -19,7 +19,7 @@ import com.antgroup.openspg.reasoner.common.exception.InvalidRefVariable
 import com.antgroup.openspg.reasoner.lube.common.expr.Directly
 import com.antgroup.openspg.reasoner.lube.logical.{PathVar, RepeatPathVar, SolvedModel, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, Rule}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, SimpleRule}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 
 /**
@@ -27,7 +27,7 @@ import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
  * if and only if the output of the current Op is not dependent on the downstream node,
  * add a ProjectOp for attribute clipping
  */
-object Pure extends Rule {
+object Pure extends SimpleRule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {

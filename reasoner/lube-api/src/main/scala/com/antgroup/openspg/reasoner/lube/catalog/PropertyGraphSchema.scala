@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.reasoner.lube.catalog
 
+import scala.collection.mutable
+
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.exception.SchemaException
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
@@ -22,7 +24,6 @@ import org.json4s._
 import org.json4s.ext.EnumNameSerializer
 import org.json4s.jackson.Serialization
 import org.json4s.jackson.Serialization.write
-import scala.collection.mutable
 
 class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutable.Map[SPO, Edge])
     extends Serializable {
@@ -70,8 +71,10 @@ class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutab
   }
 
   def getEdgeField(spoStr: Set[String], fieldName: String): Field = {
-    if (Constants.EDGE_TO_ID_KEY.equals(fieldName)) {
-      return new Field(Constants.EDGE_TO_ID_KEY, KTString, true)
+    if (fieldName.equals(Constants.EDGE_FROM_ID_KEY) || fieldName.equals(
+      Constants.EDGE_TO_ID_KEY) || fieldName.equals(
+      Constants.EDGE_FROM_ID_TYPE_KEY) || fieldName.equals(Constants.EDGE_TO_ID_TYPE_KEY)) {
+      return new Field(fieldName, KTString, true)
     }
     for (spo <- spoStr) {
       val field = getEdgeField(spo, fieldName)
@@ -108,6 +111,11 @@ class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutab
       typeName: String,
       endNode: String,
       fieldName: String): Field = {
+    if (fieldName.equals(Constants.EDGE_FROM_ID_KEY) || fieldName.equals(
+        Constants.EDGE_TO_ID_KEY) || fieldName.equals(
+        Constants.EDGE_FROM_ID_TYPE_KEY) || fieldName.equals(Constants.EDGE_TO_ID_TYPE_KEY)) {
+      return new Field(fieldName, KTString, true)
+    }
     val spo = new SPO(startNode, typeName, endNode)
     val edge = edges.get(spo)
     if (edge.isEmpty) {

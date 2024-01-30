@@ -23,10 +23,26 @@ case object Down extends Direction
 
 trait Rule {
 
-  def rule(implicit
-      context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator]
+  def ruleWithContext(implicit context: LogicalPlannerContext): PartialFunction[
+    (LogicalOperator, Map[String, Object]),
+    (LogicalOperator, Map[String, Object])]
 
   def direction: Direction
 
   def maxIterations: Int
+}
+
+abstract class SimpleRule extends Rule {
+
+  override def ruleWithContext(implicit context: LogicalPlannerContext): PartialFunction[
+    (LogicalOperator, Map[String, Object]),
+    (LogicalOperator, Map[String, Object])] = {
+    case (operator, c) if rule.isDefinedAt(operator) =>
+      val transformedOperator = rule(context)(operator)
+      (transformedOperator, c)
+  }
+
+  def rule(implicit
+      context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator]
+
 }

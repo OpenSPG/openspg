@@ -13,9 +13,10 @@
 
 package com.antgroup.openspg.reasoner.lube.logical
 
+import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog
 import com.antgroup.openspg.reasoner.lube.logical.LogicalOperatorOps.RichLogicalOperator
-import com.antgroup.openspg.reasoner.lube.logical.operators.{Aggregate, BoundedVarLenExpand, PatternScan, Project, Start}
+import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.LogicalOptimizer
 import com.antgroup.openspg.reasoner.lube.logical.planning.{LogicalPlanner, LogicalPlannerContext}
 import com.antgroup.openspg.reasoner.lube.logical.validate.Validator
@@ -268,7 +269,9 @@ class LogicalPlannerTests extends AnyFunSpec {
     val schema: Map[String, Set[String]] = Map.apply(
       "TuringCrowd" -> Set.empty,
       "User" -> Set.apply("id"),
-      "User_belongTo_TuringCrowd" -> Set.empty)
+      "User_belongTo_TuringCrowd" -> Set.apply(
+        Constants.EDGE_FROM_ID_KEY,
+        Constants.EDGE_TO_ID_KEY))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
     implicit val context: LogicalPlannerContext =

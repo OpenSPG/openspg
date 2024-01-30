@@ -26,7 +26,6 @@ object ExprUtils {
 
   /**
    * get all ref name from Expr
-   *
    * @param expr
    * @return
    */
@@ -43,9 +42,10 @@ object ExprUtils {
     }).transform(expr)
   }
 
-  def getAllInputFieldInRule(expr: Expr,
-                             nodesAlias: Set[String],
-                             edgeAlias: Set[String]): List[IRField] = {
+  def getAllInputFieldInRule(
+      expr: Expr,
+      nodesAlias: Set[String],
+      edgeAlias: Set[String]): List[IRField] = {
     Transform((e: Expr, c: List[List[IRField]]) => {
       if (c.nonEmpty) {
         e match {
@@ -94,7 +94,6 @@ object ExprUtils {
 
   /**
    * rename rule contains variable name by renameFunc
-   *
    * @param expr
    * @param renameFunc
    * @return
@@ -115,30 +114,37 @@ object ExprUtils {
    * @param renameFunc
    * @return
    */
-  def renameVariableInExpr(expr: Expr, replaceVar: Map[IRField, IRProperty]): Expr = {
+  def renameVariableInExpr(expr: Expr, replaceVar: Map[IRField, IRField]): Expr = {
     val trans: PartialFunction[Expr, Expr] = {
-      case expr@UnaryOpExpr(GetField(name), Ref(alis)) =>
+      case expr @ UnaryOpExpr(GetField(name), Ref(alis)) =>
         if (replaceVar.contains(IRProperty(alis, name))) {
-          val newProp = replaceVar.get(IRProperty(alis, name)).get
+          val newProp = replaceVar.get(IRProperty(alis, name)).get.asInstanceOf[IRProperty]
           UnaryOpExpr(GetField(newProp.field), Ref(newProp.name))
         } else {
           expr
         }
-      case expr@Ref(name) =>
+      case expr @ Ref(name) =>
         if (replaceVar.contains(IRVariable(name))) {
           val newProp = replaceVar.get(IRVariable(name)).get
-          UnaryOpExpr(GetField(newProp.field), Ref(newProp.name))
+          newProp match {
+            case IRVariable(name) => Ref(name)
+            case IRProperty(name, field) => UnaryOpExpr(GetField(field), Ref(name))
+            case _ =>
+              throw UnsupportedOperationException(
+                s"rename unsupported expr=${expr}, replaceVar=${replaceVar}")
+          }
+
         } else {
           expr
         }
       case x => x
     }
-    BottomUp(trans).transform(expr)
+    TopDown(trans).transform(expr)
   }
 
   def renameAliasInExpr(expr: Expr, replaceVar: Map[String, String]): Expr = {
     val trans: PartialFunction[Expr, Expr] = {
-      case x@Ref(name) =>
+      case x @ Ref(name) =>
         if (replaceVar.contains(name)) {
           val newAlias = replaceVar.get(name).get
           Ref(newAlias)
@@ -194,4 +200,5 @@ object ExprUtils {
     }
     variable
   }
+
 }
