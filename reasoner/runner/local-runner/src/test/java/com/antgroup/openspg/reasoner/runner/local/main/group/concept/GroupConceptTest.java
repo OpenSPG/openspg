@@ -11,10 +11,6 @@
  * or implied.
  */
 
-/*
- * Ant Group
- * Copyright (c) 2004-2024 All Rights Reserved.
- */
 package com.antgroup.openspg.reasoner.runner.local.main.group.concept;
 
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
@@ -33,10 +29,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @author donghai.ydh
- * @version GroupConceptTest.java, v 0.1 2024-01-02 16:07 donghai.ydh
- */
 public class GroupConceptTest {
   private AbstractLocalGraphLoader graphLoader;
   private Map<String, Object> params;

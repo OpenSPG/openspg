@@ -16,8 +16,6 @@ package com.antgroup.openspg.reasoner.rdg.common;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
-import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
-import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.table.FieldType;
 import com.antgroup.openspg.reasoner.common.types.KTString$;
@@ -109,17 +107,6 @@ public class SelectRowImpl implements Serializable {
           SerializerFeature.SortField);
     }
     Map<String, Object> propertyMap = (Map<String, Object>) context.get(alias);
-    if (Constants.EDGE_FROM_ID_KEY.equals(propertyName)
-        && propertyMap.containsKey(Constants.REPEAT_EDGE_FLAG)) {
-      List<Edge<IVertexId, IProperty>> edgeList =
-          (List<Edge<IVertexId, IProperty>>) propertyMap.get("edges");
-      return edgeList.get(0).getValue().get(propertyName);
-    } else if (Constants.EDGE_TO_ID_KEY.equals(propertyName)
-        && propertyMap.containsKey(Constants.REPEAT_EDGE_FLAG)) {
-      List<Edge<IVertexId, IProperty>> edgeList =
-          (List<Edge<IVertexId, IProperty>>) propertyMap.get("edges");
-      return edgeList.get(edgeList.size() - 1).getValue().get(propertyName);
-    }
     return propertyMap.get(propertyName);
   }
 }

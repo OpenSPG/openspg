@@ -291,8 +291,7 @@ public class KgReasonerTransitiveTest {
     for (Object[] strings : result.getRows()) {
       dSet.add(String.valueOf(strings[2]));
     }
-    Assert.assertTrue(dSet.contains("C1"));
-    Assert.assertTrue(dSet.contains("C2"));
+    Assert.assertTrue(dSet.contains("null"));
     Assert.assertTrue(dSet.contains("D21"));
     Assert.assertTrue(dSet.contains("D22"));
   }
