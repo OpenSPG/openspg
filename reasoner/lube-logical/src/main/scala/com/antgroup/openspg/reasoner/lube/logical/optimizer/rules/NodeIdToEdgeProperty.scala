@@ -42,7 +42,7 @@ object NodeIdToEdgeProperty extends Rule {
         expandInto -> map
       } else {
         val toEdge = targetConnection(expandInto)
-        expandInto -> (map + (expandInto.pattern.root.alias -> (toEdge.alias -> toEdge.direction)))
+        expandInto -> (map + (expandInto.pattern.root.alias -> toEdge))
       }
     case (filter: Filter, map) =>
       if (map.isEmpty) {
@@ -65,8 +65,7 @@ object NodeIdToEdgeProperty extends Rule {
     case (varLenExpand @ BoundedVarLenExpand(_, expandInto: ExpandInto, edgePattern, _), map) =>
       if (edgePattern.edge.upper == 1 && canPushDown(expandInto)) {
         val toEdge = targetConnection(expandInto)
-        varLenExpand ->
-          (map + (expandInto.pattern.root.alias -> (toEdge.alias -> toEdge.direction)))
+        varLenExpand -> (map + (expandInto.pattern.root.alias -> toEdge))
       } else if (canPushDown(expandInto)) {
         varLenExpand -> (map - expandInto.pattern.root.alias)
       } else {
@@ -74,14 +73,14 @@ object NodeIdToEdgeProperty extends Rule {
       }
   }
 
-  private def genField(pair: (String, edge.Direction), fieldName: String): String = {
-    (pair._2, fieldName) match {
+  private def genField(direction: edge.Direction, fieldName: String): String = {
+    (direction, fieldName) match {
       case (edge.Direction.OUT, Constants.NODE_ID_KEY) => Constants.EDGE_TO_ID_KEY
       case (edge.Direction.OUT, Constants.CONTEXT_LABEL) => Constants.EDGE_TO_ID_TYPE_KEY
       case (edge.Direction.IN, Constants.NODE_ID_KEY) => Constants.EDGE_FROM_ID_KEY
       case (edge.Direction.IN, Constants.CONTEXT_LABEL) => Constants.EDGE_FROM_ID_TYPE_KEY
       case (_, _) =>
-        throw UnsupportedOperationException(s"""unsupport (${pair._2}, ${fieldName})""")
+        throw UnsupportedOperationException(s"""unsupport (${direction}, ${fieldName})""")
     }
   }
 
@@ -95,11 +94,11 @@ object NodeIdToEdgeProperty extends Rule {
       if (irField.isInstanceOf[IRNode] && map.contains(irField.name)) {
         for (propName <- irField.asInstanceOf[IRNode].fields) {
           if (NODE_DEFAULT_PROPS.contains(propName)) {
-            val edgeInfo = map(irField.name).asInstanceOf[(String, edge.Direction)]
+            val edgeInfo = map(irField.name).asInstanceOf[Connection]
             replaceVar.put(
               IRProperty(irField.name, propName),
-              IRProperty(edgeInfo._1, genField(edgeInfo, propName)))
-            replaceVar.put(IRVariable(irField.name), IRVariable(edgeInfo._1))
+              IRProperty(edgeInfo.alias, genField(edgeInfo.direction, propName)))
+            replaceVar.put(IRVariable(irField.name), IRVariable(edgeInfo.alias))
           }
         }
       }
@@ -116,11 +115,13 @@ object NodeIdToEdgeProperty extends Rule {
     val newFields = new ListBuffer[Var]()
     for (field <- select.fields) {
       if (field.isInstanceOf[PropertyVar] && map.contains(field.name)) {
-        val edgeInfo = map(field.name).asInstanceOf[(String, edge.Direction)]
+        val edgeInfo = map(field.name).asInstanceOf[Connection]
         val propName = field.asInstanceOf[PropertyVar].field.name
         if (NODE_DEFAULT_PROPS.contains(propName)) {
           newFields.append(
-            PropertyVar(edgeInfo._1, new Field(genField(edgeInfo, propName), KTString, true)))
+            PropertyVar(
+              edgeInfo.alias,
+              new Field(genField(edgeInfo.direction, propName), KTString, true)))
         } else {
           newFields.append(field)
         }
@@ -144,10 +145,10 @@ object NodeIdToEdgeProperty extends Rule {
               if (irField.isInstanceOf[IRNode] && map.contains(irField.name)) {
                 for (propName <- irField.asInstanceOf[IRNode].fields) {
                   if (NODE_DEFAULT_PROPS.contains(propName)) {
-                    val edgeInfo = map(irField.name).asInstanceOf[(String, edge.Direction)]
+                    val edgeInfo = map(irField.name).asInstanceOf[Connection]
                     replaceVar.put(
                       IRProperty(irField.name, propName),
-                      IRProperty(edgeInfo._1, genField(edgeInfo, propName)))
+                      IRProperty(edgeInfo.alias, genField(edgeInfo.direction, propName)))
                   }
                 }
               }
