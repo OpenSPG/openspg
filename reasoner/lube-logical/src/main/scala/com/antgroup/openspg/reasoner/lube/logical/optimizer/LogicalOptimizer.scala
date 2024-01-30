@@ -25,6 +25,7 @@ object LogicalOptimizer {
 
   var LOGICAL_OPT_RULES: Seq[Rule] =
     Seq(
+      PatternJoinPure,
       GroupNode,
       DistinctGet,
       NodeIdToEdgeProperty,
