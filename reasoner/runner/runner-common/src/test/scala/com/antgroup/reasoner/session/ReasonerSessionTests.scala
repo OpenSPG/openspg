@@ -200,7 +200,7 @@ class ReasonerSessionTests extends AnyFunSpec {
     val physicalOpOrder = getPhysicalPlanOrder(subqueryPhysicalOp)
     println(physicalOpOrder)
     physicalOpOrder should equal(
-      "Start,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,PatternScan,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,ExpandInto,ExpandInto,Drop,Filter,Drop,Select")
+      "Start,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,PatternScan,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,ExpandInto,Drop,Filter,Drop,Select")
   }
 
   private def getPhysicalPlanOrder[T <: RDG[T]](physicalOperator: PhysicalOperator[T]) = {
@@ -497,7 +497,7 @@ class ReasonerSessionTests extends AnyFunSpec {
           cnt.sum
         }
     }
-    cnt should equal(6)
+    cnt should equal(5)
   }
 
   it("test concept check") {
@@ -532,7 +532,7 @@ class ReasonerSessionTests extends AnyFunSpec {
           cnt.sum
         }
     }
-    cnt should equal(2)
+    cnt should equal(1)
   }
 
 
@@ -575,7 +575,7 @@ class ReasonerSessionTests extends AnyFunSpec {
           cnt.sum
         }
     }
-    cnt should equal(6)
+    cnt should equal(3)
   }
 
 
@@ -678,7 +678,7 @@ class ReasonerSessionTests extends AnyFunSpec {
           cnt.sum
         }
     }
-    cnt should equal(2)
+    cnt should equal(1)
   }
 
   it("test id push down 4") {
@@ -760,8 +760,8 @@ class ReasonerSessionTests extends AnyFunSpec {
           .asInstanceOf[Map[String, Object]])
     } catch {
       case ex: SchemaException =>
-        println(ex.getMessage)
-        ex.getMessage.contains("Cannot find p3 types in") should equal(true)
+        ex.printStackTrace()
+        ex.getMessage.contains("Cannot find p3") should equal(true)
     }
   }
 
@@ -799,8 +799,8 @@ class ReasonerSessionTests extends AnyFunSpec {
           .asInstanceOf[Map[String, Object]])
     } catch {
       case ex: SchemaException =>
-        println(ex.getMessage)
-        ex.getMessage.contains("Cannot find IRNode(D,Set()).name") should equal(true)
+        ex.printStackTrace()
+        ex.getMessage.contains("Cannot find D") should equal(true)
     }
   }
 }

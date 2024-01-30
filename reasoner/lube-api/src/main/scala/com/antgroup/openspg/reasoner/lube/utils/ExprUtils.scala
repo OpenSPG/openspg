@@ -15,7 +15,8 @@ package com.antgroup.openspg.reasoner.lube.utils
 
 import scala.collection.mutable
 
-import com.antgroup.openspg.reasoner.common.trees.{BottomUp, Transform}
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
+import com.antgroup.openspg.reasoner.common.trees.{BottomUp, TopDown, Transform}
 import com.antgroup.openspg.reasoner.lube.common.expr.{Expr, GetField, Ref, UnaryOpExpr}
 import com.antgroup.openspg.reasoner.lube.common.graph._
 
@@ -104,11 +105,11 @@ object ExprUtils {
    * @param renameFunc
    * @return
    */
-  def renameVariableInExpr(expr: Expr, replaceVar: Map[IRField, IRProperty]): Expr = {
+  def renameVariableInExpr(expr: Expr, replaceVar: Map[IRField, IRField]): Expr = {
     val trans: PartialFunction[Expr, Expr] = {
       case expr @ UnaryOpExpr(GetField(name), Ref(alis)) =>
         if (replaceVar.contains(IRProperty(alis, name))) {
-          val newProp = replaceVar.get(IRProperty(alis, name)).get
+          val newProp = replaceVar.get(IRProperty(alis, name)).get.asInstanceOf[IRProperty]
           UnaryOpExpr(GetField(newProp.field), Ref(newProp.name))
         } else {
           expr
@@ -116,13 +117,20 @@ object ExprUtils {
       case expr @ Ref(name) =>
         if (replaceVar.contains(IRVariable(name))) {
           val newProp = replaceVar.get(IRVariable(name)).get
-          UnaryOpExpr(GetField(newProp.field), Ref(newProp.name))
+          newProp match {
+            case IRVariable(name) => Ref(name)
+            case IRProperty(name, field) => UnaryOpExpr(GetField(field), Ref(name))
+            case _ =>
+              throw UnsupportedOperationException(
+                s"rename unsupported expr=${expr}, replaceVar=${replaceVar}")
+          }
+
         } else {
           expr
         }
       case x => x
     }
-    BottomUp(trans).transform(expr)
+    TopDown(trans).transform(expr)
   }
 
   def renameAliasInExpr(expr: Expr, replaceVar: Map[String, String]): Expr = {
@@ -183,4 +191,5 @@ object ExprUtils {
     }
     variable
   }
+
 }

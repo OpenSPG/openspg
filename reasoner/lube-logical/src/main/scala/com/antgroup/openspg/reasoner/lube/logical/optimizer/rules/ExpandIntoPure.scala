@@ -13,9 +13,12 @@
 
 package com.antgroup.openspg.reasoner.lube.logical.optimizer.rules
 
+import scala.collection.mutable
+
 import com.antgroup.openspg.reasoner.lube.common.pattern.NodePattern
-import com.antgroup.openspg.reasoner.lube.logical.operators.{ExpandInto, LogicalOperator}
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
+import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, PropertyVar, Var}
+import com.antgroup.openspg.reasoner.lube.logical.operators._
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, Rule}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 
 /**
@@ -23,23 +26,62 @@ import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
  */
 object ExpandIntoPure extends Rule {
 
-  override def rule(implicit
-      context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
-    case expandInto @ ExpandInto(in, target, _) =>
-      val needPure = canPure(expandInto)
+  def ruleWithContext(implicit context: LogicalPlannerContext): PartialFunction[
+    (LogicalOperator, Map[String, Object]),
+    (LogicalOperator, Map[String, Object])] = {
+    case (select: Select, map) =>
+      select -> merge(map, select.refFields, select.solved.getNodeAliasSet)
+    case (ddl: DDL, map) => ddl -> merge(map, ddl.refFields, ddl.solved.getNodeAliasSet)
+    case (filter: Filter, map) =>
+      filter -> merge(map, filter.refFields, filter.solved.getNodeAliasSet)
+    case (project: Project, map) =>
+      project -> merge(map, project.refFields, project.solved.getNodeAliasSet)
+    case (aggregate: Aggregate, map) =>
+      aggregate -> merge(map, aggregate.refFields, aggregate.solved.getNodeAliasSet)
+    case (order: OrderAndLimit, map) =>
+      order -> merge(map, order.refFields, order.solved.getNodeAliasSet)
+    case (expandInto @ ExpandInto(in, _, _), map) =>
+      val needPure = canPure(expandInto, map.asInstanceOf[Map[String, Var]])
       if (needPure) {
-        in
+        in -> map
       } else {
-        expandInto
+        expandInto -> map
       }
+
   }
 
-  private def canPure(expandInto: ExpandInto): Boolean = {
+  private def merge(
+      map: Map[String, Object],
+      fields: List[Var],
+      nodes: Set[String]): Map[String, Object] = {
+    val varMap = new mutable.HashMap[String, Var]()
+    varMap.++=(map.asInstanceOf[Map[String, Var]])
+    for (field <- fields) {
+      if (varMap.contains(field.name)) {
+        varMap.put(field.name, varMap(field.name).merge(Option.apply(field)))
+      } else if (field.isInstanceOf[PropertyVar]) {
+        if (nodes.contains(field.name)) {
+          varMap.put(
+            field.name,
+            NodeVar(field.name, Set.apply(field.asInstanceOf[PropertyVar].field)))
+        } else {
+          varMap.put(
+            field.name,
+            EdgeVar(field.name, Set.apply(field.asInstanceOf[PropertyVar].field)))
+        }
+      } else {
+        varMap.put(field.name, field)
+      }
+    }
+    varMap.toMap
+  }
+
+  private def canPure(expandInto: ExpandInto, map: Map[String, Var]): Boolean = {
     if (!expandInto.pattern.isInstanceOf[NodePattern]) {
       false
     } else {
-      val refFields = expandInto.refFields
-      if (refFields.head.isEmpty) {
+      val alias = expandInto.pattern.root.alias
+      if (!map.contains(alias) || map(alias).isEmpty) {
         true
       } else {
         false
@@ -47,7 +89,7 @@ object ExpandIntoPure extends Rule {
     }
   }
 
-  override def direction: Direction = Up
+  override def direction: Direction = Down
 
-  override def maxIterations: Int = 1
+  override def maxIterations: Int = 10
 }

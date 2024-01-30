@@ -15,12 +15,13 @@ package com.antgroup.openspg.reasoner.lube.logical.operators
 
 import scala.collection.mutable
 
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.types.KTObject
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
-import com.antgroup.openspg.reasoner.lube.common._
 import com.antgroup.openspg.reasoner.lube.common.expr.{Directly, Expr}
-import com.antgroup.openspg.reasoner.lube.common.graph.IRVariable
-import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, ExprUtil, NodeVar, PropertyVar, SolvedModel, Var}
+import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode}
+import com.antgroup.openspg.reasoner.lube.logical._
+import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 
 final case class Project(in: LogicalOperator, expr: Map[Var, Expr], solved: SolvedModel)
     extends StackingLogicalOperator {
@@ -31,17 +32,17 @@ final case class Project(in: LogicalOperator, expr: Map[Var, Expr], solved: Solv
       pair._2 match {
         case Directly => fieldsMap.put(pair._1.name, pair._1)
         case e: Expr =>
-          val refPair = ExprUtil.getReferProperties(e)
-          for (ref <- refPair) {
-            val alias = if (ref._1 != null) ref._1 else solved.getField(IRVariable(ref._2)).name
-            solved.fields.get(alias).get match {
-              case NodeVar(name, _) =>
-                val node = NodeVar(name, Set.apply(new Field(ref._2, KTObject, true)))
+          val fields =
+            ExprUtils.getAllInputFieldInRule(e, solved.getNodeAliasSet, solved.getEdgeAliasSet)
+          for (ref <- fields) {
+            ref match {
+              case IRNode(name, fields) =>
+                val node = NodeVar(name, fields.map(new Field(_, KTObject, true)))
                 fieldsMap.put(name, node.merge(fieldsMap.get(name)))
-              case EdgeVar(name, _) =>
-                val edge = EdgeVar(name, Set.apply(new Field(ref._2, KTObject, true)))
+              case IREdge(name, fields) =>
+                val edge = EdgeVar(name, fields.map(new Field(_, KTObject, true)))
                 fieldsMap.put(name, edge.merge(fieldsMap.get(name)))
-              case _ =>
+              case _ => throw UnsupportedOperationException(s"unsupported $expr")
             }
           }
       }

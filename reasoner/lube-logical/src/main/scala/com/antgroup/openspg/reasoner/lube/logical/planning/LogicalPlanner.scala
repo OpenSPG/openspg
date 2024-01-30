@@ -16,11 +16,7 @@ package com.antgroup.openspg.reasoner.lube.logical.planning
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.exception.{
-  NotImplementedException,
-  SchemaException,
-  UnsupportedOperationException
-}
+import com.antgroup.openspg.reasoner.common.exception.{NotImplementedException, SchemaException, UnsupportedOperationException}
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
@@ -172,15 +168,20 @@ object LogicalPlanner {
     field match {
       case node: IRNode =>
         if (types(node.name).isEmpty && node.fields.nonEmpty) {
-          throw SchemaException(s"Cannot find $node.name in $types")
+          throw SchemaException(s"Cannot find ${node.name} in $types")
         }
         val fields = node.fields.map(graph.graphSchema.getNodeField(types(node.name), _))
         NodeVar(node.name, fields)
       case edge: IREdge =>
         if (types(edge.name).isEmpty && edge.fields.nonEmpty) {
-          throw SchemaException(s"Cannot find $edge.name in $types")
+          throw SchemaException(s"Cannot find ${edge.name} in $types")
         }
-        val fields = edge.fields.map(graph.graphSchema.getEdgeField(types(edge.name), _))
+        val fullFields = edge.fields ++ Set.apply(
+          Constants.EDGE_FROM_ID_KEY,
+          Constants.EDGE_FROM_ID_TYPE_KEY,
+          Constants.EDGE_TO_ID_KEY,
+          Constants.EDGE_TO_ID_TYPE_KEY)
+        val fields = fullFields.map(graph.graphSchema.getEdgeField(types(edge.name), _))
         EdgeVar(edge.name, fields)
       case array: IRRepeatPath =>
         RepeatPathVar(

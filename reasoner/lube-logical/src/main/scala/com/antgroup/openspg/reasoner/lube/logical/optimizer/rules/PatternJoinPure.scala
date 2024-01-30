@@ -13,24 +13,26 @@
 
 package com.antgroup.openspg.reasoner.lube.logical.optimizer.rules
 
-import com.antgroup.openspg.reasoner.lube.logical.operators.{Filter, LogicalOperator}
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, Rule, SimpleRule}
+import com.antgroup.openspg.reasoner.lube.common.pattern.NodePattern
+import com.antgroup.openspg.reasoner.lube.logical.operators.{BoundedVarLenExpand, LogicalOperator, PatternJoin, PatternScan}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, SimpleRule, Up}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 
-object FilterMerge extends SimpleRule {
-
+object PatternJoinPure extends SimpleRule {
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
-    case filter @ Filter(_: Filter, _) => mergeTwoFilter(filter)
+    case patternJoin @ PatternJoin(
+          boundedVarLenExpand: BoundedVarLenExpand,
+          scan: PatternScan,
+          _) =>
+      if (scan.pattern.isInstanceOf[NodePattern]) {
+        boundedVarLenExpand
+      } else {
+        patternJoin
+      }
   }
 
-  private def mergeTwoFilter(filer: Filter): LogicalOperator = {
-    val inFilter = filer.in.asInstanceOf[Filter]
-    val newFilter = Filter(inFilter.in, filer.rule.andRule(inFilter.rule))
-    newFilter
-  }
+  override def direction: Direction = Up
 
-  override def direction: Direction = Down
-
-  override def maxIterations: Int = 10
+  override def maxIterations: Int = 1
 }

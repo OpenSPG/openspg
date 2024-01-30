@@ -351,23 +351,26 @@ object LoaderUtil {
           }
         case edgeVar: EdgeVar =>
           for (typeName <- solvedModel.getTypes(field.name)) {
-            val edge = logicalPlan.graph.getEdge(typeName)
-            if (edge.resolved) {
-              val edgeTypeName = edge.startNode + "_" + edge.typeName + "_" + edge.endNode
-              val edgeLoaderConfig = new EdgeLoaderConfig()
-              edgeLoaderConfig.setEdgeType(edgeTypeName)
-              edgeLoaderConfig.setNeedProperties(
-                edgeVar.fields.filter(_.resolved).map(_.name).asJava)
-              edgeLoaderConfig.setConnection(
-                new util.HashSet(catalog.getConnection(edgeTypeName).asJava))
-              if (edgeLoaderConfigMap.contains(edgeTypeName)) {
-                val oldEdgeLoaderConfig = edgeLoaderConfigMap(edgeTypeName)
-                edgeLoaderConfig.merge(oldEdgeLoaderConfig)
+            val graph = logicalPlan.graph
+            if (graph.containsEdge(typeName)) {
+              val edge = graph.getEdge(typeName)
+              if (edge.resolved) {
+                val edgeTypeName = edge.startNode + "_" + edge.typeName + "_" + edge.endNode
+                val edgeLoaderConfig = new EdgeLoaderConfig()
+                edgeLoaderConfig.setEdgeType(edgeTypeName)
+                edgeLoaderConfig.setNeedProperties(
+                  edgeVar.fields.filter(_.resolved).map(_.name).asJava)
+                edgeLoaderConfig.setConnection(
+                  new util.HashSet(catalog.getConnection(edgeTypeName).asJava))
+                if (edgeLoaderConfigMap.contains(edgeTypeName)) {
+                  val oldEdgeLoaderConfig = edgeLoaderConfigMap(edgeTypeName)
+                  edgeLoaderConfig.merge(oldEdgeLoaderConfig)
+                }
+                edgeLoaderConfig.setLoadDirection(
+                  edgeLoadDirectionMap.getOrElse(edgeTypeName, Direction.BOTH))
+                edgeLoaderConfig.addEndVertexAliasSet(edgeEndVertexAliasSet.get(edge.typeName))
+                edgeLoaderConfigMap.put(edgeTypeName, edgeLoaderConfig)
               }
-              edgeLoaderConfig.setLoadDirection(
-                edgeLoadDirectionMap.getOrElse(edgeTypeName, Direction.BOTH))
-              edgeLoaderConfig.addEndVertexAliasSet(edgeEndVertexAliasSet.get(edge.typeName))
-              edgeLoaderConfigMap.put(edgeTypeName, edgeLoaderConfig)
             }
           }
         case _ =>
