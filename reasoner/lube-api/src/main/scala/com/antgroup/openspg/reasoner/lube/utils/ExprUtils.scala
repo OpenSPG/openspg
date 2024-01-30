@@ -15,7 +15,8 @@ package com.antgroup.openspg.reasoner.lube.utils
 
 import scala.collection.mutable
 
-import com.antgroup.openspg.reasoner.common.trees.{BottomUp, Transform}
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
+import com.antgroup.openspg.reasoner.common.trees.{BottomUp, TopDown, Transform}
 import com.antgroup.openspg.reasoner.lube.common.expr.{Constraint, Expr, GetField, ListOpExpr, Ref, UnaryOpExpr}
 import com.antgroup.openspg.reasoner.lube.common.graph._
 
