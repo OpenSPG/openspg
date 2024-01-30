@@ -68,6 +68,7 @@ class TestBaseInvoker(unittest.TestCase):
 
         invoker = NNInvoker.from_config({"nn_name": "not_exists"})
         from nn4k.invoker.base import LLMInvoker
+
         assert type(invoker) == LLMInvoker
 
     def testLocalInvoker(self):
