@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -137,7 +136,7 @@ class VectorStore(ABC):
         embedding_extractor: Optional[EmbeddingExtractor] = None,
     ) -> "VectorStore":
         """
-        Create vector store from `config`.
+        Create vector store from `config` and optional `embedding_extractor`.
 
         :param config: vector store config
         :type config: Dict[str, Any]
@@ -268,8 +267,8 @@ class VectorStore(ABC):
         Perform vector-based similarity search on the vector store,
         return top-k similar documents and scores.
 
-        :param query: vector to search
-        :type query: EmbeddingVector
+        :param vector: vector to search
+        :type vector: EmbeddingVector
         :param k: maximum number of similar documents to return
         :type k: int
         :param kwargs: vector store specific keyword arguments
