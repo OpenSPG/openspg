@@ -314,7 +314,7 @@ public class TransitiveOptionalTest {
 
     schema.put("a_ab_b", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
     schema.put("b_bb_b1", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
-    schema.put("b_cc_b1", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put("b1_cc_b1", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
 
     LocalReasonerResult rst = runTest(schema, dsl, dataGraphStr);
     Assert.assertEquals(1, rst.getRows().size());
