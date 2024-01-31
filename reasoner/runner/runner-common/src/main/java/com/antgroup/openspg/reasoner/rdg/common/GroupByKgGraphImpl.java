@@ -119,7 +119,7 @@ public class GroupByKgGraphImpl implements Serializable {
       Map.Entry<ByKey, List<KgGraph<IVertexId>>> entry = mapIt.next();
       mapIt.remove();
       List<KgGraph<IVertexId>> kgGraphList = entry.getValue();
-      if (CollectionUtils.isNotEmpty(this.byPropertyList)) {
+      if (CollectionUtils.isNotEmpty(this.byPropertyList) && kgGraphList.size() > 1) {
         // group by property
         Map<ByKey, List<KgGraph<IVertexId>>> kgGraphPropertyMap = new HashMap<>();
         for (KgGraph<IVertexId> kgGraph : kgGraphList) {

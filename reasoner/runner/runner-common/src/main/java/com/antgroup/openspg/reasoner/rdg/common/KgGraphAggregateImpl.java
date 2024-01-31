@@ -18,7 +18,6 @@ import static com.antgroup.openspg.reasoner.warehouse.utils.DebugVertexIdSet.DEB
 
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
-import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
@@ -284,27 +283,15 @@ public class KgGraphAggregateImpl implements Serializable {
         if (checkSource) {
           if (edge.getSourceId().equals(vertex.getId())) {
             edgeIt.remove();
-            IEdge<IVertexId, IProperty> newEdge =
-                new Edge<>(
-                    newId,
-                    edge.getTargetId(),
-                    edge.getValue(),
-                    edge.getVersion(),
-                    edge.getDirection(),
-                    edge.getType());
+            IEdge<IVertexId, IProperty> newEdge = edge.clone();
+            newEdge.setSourceId(newId);
             newEdgeList.add(newEdge);
           }
         } else {
           if (edge.getTargetId().equals(vertex.getId())) {
             edgeIt.remove();
-            IEdge<IVertexId, IProperty> newEdge =
-                new Edge<>(
-                    edge.getSourceId(),
-                    newId,
-                    edge.getValue(),
-                    edge.getVersion(),
-                    edge.getDirection(),
-                    edge.getType());
+            IEdge<IVertexId, IProperty> newEdge = edge.clone();
+            newEdge.setTargetId(newId);
             newEdgeList.add(newEdge);
           }
         }

@@ -164,12 +164,12 @@ public class GroupConceptTest {
             Assert.assertEquals(46, result.getRows().size());
             Map<String, String> rstMap = new HashMap<>();
             for (Object[] strings : result.getRows()) {
-              Object[] keys = Arrays.copyOfRange(strings, 0, 4);
+              Object[] keys = Arrays.copyOfRange(strings, 0, 5);
               StringBuilder key = new StringBuilder();
               for (Object o : keys) {
                 key.append(",").append(o);
               }
-              rstMap.put(key.toString(), String.valueOf(strings[4]));
+              rstMap.put(key.toString(), String.valueOf(strings[5]));
             }
             Assert.assertEquals("2", rstMap.get(",参加活动/五福,null,null,null,20220101"));
           }

@@ -1162,11 +1162,13 @@ public class LocalRDG extends RDG<LocalRDG> {
     this.kgGraphSchema = KgGraphSchema.schemaChangeRoot(this.kgGraphSchema, null);
 
     // duplicates need to be removed after unfold
+    java.util.List<String> byAliasList =
+        Lists.newArrayList(RunnerUtil.getAllVertexAlias(this.kgGraphSchema));
     this.groupByVariableThenAggregate(
-        Lists.newArrayList(
-            unfoldRepeatEdgeInfo.getAnchorVertexAlias(), unfoldRepeatEdgeInfo.getFoldVertexAlias()),
+        byAliasList,
         new ArrayList<>(),
         new UnfoldReduceDuplicateImpl(this.kgGraphSchema, unfoldRepeatEdgeInfo.getEdgeAlias()));
+    this.executionRecorder.stageResult("unfold", this.kgGraphList.size());
     return this;
   }
 
@@ -1188,6 +1190,7 @@ public class LocalRDG extends RDG<LocalRDG> {
       newKgGraphList.addAll(rst);
     }
     this.kgGraphList = newKgGraphList;
+    this.executionRecorder.stageResult("fold", this.kgGraphList.size());
     return this;
   }
 
