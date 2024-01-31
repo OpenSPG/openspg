@@ -22,6 +22,11 @@ public class MirrorVertex<K, VV> extends NoneVertex<K, VV> {
     super(vertex);
   }
 
+  /** create new None vertex */
+  public MirrorVertex(K id) {
+    super(id);
+  }
+
   @Override
   public MirrorVertex<K, VV> clone() {
     return new MirrorVertex<>(this);

@@ -11,23 +11,18 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.udf.model;
+package com.antgroup.openspg.reasoner.common;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import java.util.List;
-import java.util.Map;
-import lombok.Data;
 
-@Data
-public class LinkedUdtfResult {
+public interface IConceptTree {
 
-  /** The property of linked edge */
-  private Map<String, Object> edgePropertyMap = new HashMap();
+  List<String> getBelongToConcept(IVertexId id, String edgeType, Direction direction);
+  /** get upper concept */
+  String getUpper(String conceptType, String concept);
 
-  /** The target vertex id of linked edge */
-  private List<String> targetVertexIdList = new ArrayList<>();
-
-  /** edge type */
-  private String edgeType = null;
+  /** get lower concept */
+  List<String> getLower(String conceptType, String concept);
 }

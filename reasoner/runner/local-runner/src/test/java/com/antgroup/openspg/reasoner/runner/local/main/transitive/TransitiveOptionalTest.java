@@ -27,6 +27,7 @@ import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
 import com.google.common.collect.Sets;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
@@ -313,7 +314,7 @@ public class TransitiveOptionalTest {
 
     schema.put("a_ab_b", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
     schema.put("b_bb_b1", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
-    schema.put("b_cc_b1", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put("b1_cc_b1", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
 
     LocalReasonerResult rst = runTest(schema, dsl, dataGraphStr);
     Assert.assertEquals(1, rst.getRows().size());
@@ -459,6 +460,12 @@ public class TransitiveOptionalTest {
 
     LocalReasonerResult rst = runTest(schema, dsl, dataGraphStr);
     Assert.assertEquals(2, rst.getRows().size());
+    java.util.Set<Object> dSet = new HashSet<>();
+    for (Object[] row : rst.getRows()) {
+      dSet.add(row[3]);
+    }
+    Assert.assertTrue(dSet.contains("D_333"));
+    Assert.assertTrue(dSet.contains(null));
 
     dataGraphStr =
         "Graph {\n"

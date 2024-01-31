@@ -13,23 +13,18 @@
 
 package com.antgroup.openspg.reasoner.util
 
+import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
+import com.antgroup.openspg.reasoner.common.types.KTString
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  PartialGraphPattern,
-  Pattern,
-  PatternConnection
-}
+import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
+import com.antgroup.openspg.reasoner.lube.common.expr.VString
+import com.antgroup.openspg.reasoner.lube.common.pattern.{EdgePattern, LinkedPatternConnection, PartialGraphPattern, Pattern, PatternConnection}
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, SolvedModel, Var}
 import com.antgroup.openspg.reasoner.lube.logical.PatternOps.PatternOps
 import com.antgroup.openspg.reasoner.lube.logical.operators._
-import com.antgroup.openspg.reasoner.warehouse.common.config.{
-  EdgeLoaderConfig,
-  GraphLoaderConfig,
-  VertexLoaderConfig
-}
-import java.util
+import com.antgroup.openspg.reasoner.warehouse.common.config.{EdgeLoaderConfig, GraphLoaderConfig, VertexLoaderConfig}
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
@@ -299,6 +294,107 @@ object LoaderUtil {
       .toSet
   }
 
+
+  def getConceptEdgeExpandSolvedModel(graph: SemanticPropertyGraph,
+      edgePattern: EdgePattern[LinkedPatternConnection]): SolvedModel = {
+    val conceptMap = getConceptHypernym(graph, edgePattern.dst.typeNames)
+    val hypernymEdgeAlias = getHypernymEdgeAlias()
+    val alias2Types: Map[String, Set[String]] =
+      Map
+        .apply(
+          edgePattern.src.alias -> edgePattern.src.typeNames,
+          edgePattern.dst.alias -> edgePattern.dst.typeNames,
+          edgePattern.edge.alias ->
+            generateEdgeTypeSet(
+              edgePattern.src.typeNames,
+              edgePattern.dst.typeNames,
+              Set(edgePattern.edge.params.apply(1).asInstanceOf[VString].value),
+              edgePattern.edge.direction),
+          { hypernymEdgeAlias -> conceptMap.values.toSet })
+    val fields: Map[String, Var] = Map.apply(
+      edgePattern.edge.alias ->
+        EdgeVar(
+          edgePattern.edge.alias,
+          Set(
+            new Field(Constants.EDGE_FROM_ID_KEY, KTString, true),
+            new Field(Constants.EDGE_TO_ID_KEY, KTString, true))),
+      hypernymEdgeAlias -> EdgeVar(
+        hypernymEdgeAlias,
+        Set(
+          new Field(Constants.EDGE_FROM_ID_KEY, KTString, true),
+          new Field(Constants.EDGE_TO_ID_KEY, KTString, true))),
+      edgePattern.src.alias -> NodeVar(
+        edgePattern.src.alias,
+        Set(new Field(Constants.NODE_ID_KEY, KTString, true))),
+      edgePattern.dst.alias -> NodeVar(
+        edgePattern.dst.alias,
+        Set(new Field(Constants.NODE_ID_KEY, KTString, true))))
+    SolvedModel(alias2Types, fields, Map.empty)
+  }
+  private def generateEdgeTypeSet(
+                                   srcTypeSet: Set[String],
+                                   dstTypeSet: Set[String],
+                                   edgeSet: Set[String],
+                                   direction: Direction): Set[String] = {
+    var set1 = srcTypeSet;
+    var set3 = dstTypeSet
+    if (Direction.IN.equals(direction)) {
+      set1 = dstTypeSet
+      set3 = srcTypeSet
+    }
+    val separator = "_"
+    for {
+      s1 <- set1
+      s2 <- edgeSet
+      s3 <- set3
+    } yield s"$s1$separator$s2$separator$s3"
+  }
+  var index = 0;
+  private def getHypernymEdgeAlias(): String = {
+    index = index + 1
+    "hypernym_" + index
+  }
+  private def getConceptHypernym(
+                                  graph: SemanticPropertyGraph,
+                                  conceptTypeSet: Set[String]): Map[String, String] = {
+    val r = generateEdgeTypeSet(
+      conceptTypeSet,
+      conceptTypeSet,
+      Convert2ScalaUtil.toScalaImmutableSet(Constants.CONCEPT_HYPERNYM_EDGE_TYPE_SET),
+      Direction.OUT)
+      .filter(e => {
+        try {
+          graph.getEdge(e)
+          true
+        } catch {
+          case _: NoSuchElementException => false
+        }
+      })
+      .map(t => {
+        val spo = new SPO(t)
+        (spo.getS, spo.toString)
+      })
+      .toMap
+    r
+  }
+  def getConceptEdgeExpandMap(logicalPlan: LogicalOperator): Map[String, String] = {
+    logicalPlan.transform[Map[String, String]] {
+      case (LinkedExpand(_, edgePattern), list) =>
+        if (edgePattern.edge.funcName.equals(Constants.CONCEPT_EDGE_EXPAND_FUNC_NAME)) {
+          getConceptHypernym(logicalPlan.graph, edgePattern.dst.typeNames)
+        } else {
+          list.flatten.toMap
+        }
+      case (_, list) =>
+        if (list.isEmpty) {
+          Map.empty
+        } else {
+          list.flatten.toMap
+        }
+    }
+  }
+
+
   private def getLoaderConfig(logicalPlan: LogicalOperator, catalog: Catalog) = {
     val solvedModel = logicalPlan.transform[SolvedModel] {
       case (Start(_, _, _, solvedModel), list) =>
@@ -306,6 +402,12 @@ object LoaderUtil {
           solvedModel
         } else {
           merge(solvedModel, list.head)
+        }
+      case (LinkedExpand(_, edgePattern), list) =>
+        if (edgePattern.edge.funcName.equals(Constants.CONCEPT_EDGE_EXPAND_FUNC_NAME)) {
+          merge(getConceptEdgeExpandSolvedModel(logicalPlan.graph, edgePattern), list.head)
+        } else {
+          list.foldLeft(list.head)((l, r) => merge(l, r))
         }
       case (Driving(_, _, solvedModel), list) =>
         if (list == null || list.isEmpty) {
@@ -320,6 +422,7 @@ object LoaderUtil {
           list.foldLeft(list.head)((l, r) => merge(l, r))
         }
     }
+    val broadcastConceptMap = getConceptEdgeExpandMap(logicalPlan)
     val edgeLoadDirectionMap = getEdgeLoadDirectionMap(logicalPlan)
     val typesAllowIsolateVertex = findAllTypesAllowIsolateVertex(
       logicalPlan) ++ getAllowIsolateVertexFromEdgeLoadDirectionMap(edgeLoadDirectionMap)
@@ -341,10 +444,13 @@ object LoaderUtil {
               vertexLoaderConfig.setNeedProperties(
                 nodeVar.fields.filter(_.resolved).map(_.name).asJava)
               vertexLoaderConfig.setConnection(
-                new util.HashSet(catalog.getConnection(node.typeName).asJava))
+                new java.util.HashSet(catalog.getConnection(node.typeName).asJava))
               if (vertexLoaderConfigMap.contains(node.typeName)) {
                 val oldVertexLoaderConfig = vertexLoaderConfigMap(node.typeName)
                 vertexLoaderConfig.merge(oldVertexLoaderConfig)
+              }
+              if (broadcastConceptMap.contains(node.typeName)) {
+                vertexLoaderConfig.setConceptHypernym(broadcastConceptMap(node.typeName))
               }
               vertexLoaderConfigMap.put(node.typeName, vertexLoaderConfig)
             }
@@ -353,7 +459,7 @@ object LoaderUtil {
           for (typeName <- solvedModel.getTypes(field.name)) {
             val graph = logicalPlan.graph
             if (graph.containsEdge(typeName)) {
-              val edge = graph.getEdge(typeName)
+              val edge = logicalPlan.graph.getEdge(typeName)
               if (edge.resolved) {
                 val edgeTypeName = edge.startNode + "_" + edge.typeName + "_" + edge.endNode
                 val edgeLoaderConfig = new EdgeLoaderConfig()
@@ -361,7 +467,7 @@ object LoaderUtil {
                 edgeLoaderConfig.setNeedProperties(
                   edgeVar.fields.filter(_.resolved).map(_.name).asJava)
                 edgeLoaderConfig.setConnection(
-                  new util.HashSet(catalog.getConnection(edgeTypeName).asJava))
+                  new java.util.HashSet(catalog.getConnection(edgeTypeName).asJava))
                 if (edgeLoaderConfigMap.contains(edgeTypeName)) {
                   val oldEdgeLoaderConfig = edgeLoaderConfigMap(edgeTypeName)
                   edgeLoaderConfig.merge(oldEdgeLoaderConfig)

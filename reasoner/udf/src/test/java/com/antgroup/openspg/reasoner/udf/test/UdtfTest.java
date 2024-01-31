@@ -18,6 +18,7 @@ import com.antgroup.openspg.reasoner.common.types.KTString$;
 import com.antgroup.openspg.reasoner.udf.UdfMng;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
 import com.antgroup.openspg.reasoner.udf.model.BaseUdtf;
+import com.antgroup.openspg.reasoner.udf.model.LinkedUdtfResult;
 import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
 import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 import com.google.common.collect.Lists;
@@ -55,20 +56,23 @@ public class UdtfTest {
   }
 
   @Test
-  public void testSplit1() {
+  public void testGeoUdtf() {
     UdfMng udfMng = UdfMngFactory.getUdfMng();
-    UdtfMeta udtfMeta = udfMng.getUdtfMeta("split", Lists.newArrayList(KTString$.MODULE$));
+    UdtfMeta udtfMeta =
+        udfMng.getUdtfMeta(
+            "geo_buffer_and_convert_2_s2CellId",
+            Lists.newArrayList(KTString$.MODULE$, KTDouble$.MODULE$));
     Assert.assertTrue(udtfMeta.getCompatibleNames().isEmpty());
 
     BaseUdtf tableFunction = udtfMeta.createTableFunction();
-    tableFunction.initialize("|");
-    tableFunction.process(Lists.newArrayList("abc|bcd|efg"));
-    List<List<Object>> tableResult = tableFunction.getCollector();
-    Assert.assertEquals(tableResult.size(), 3);
-    Assert.assertEquals(tableResult.get(0).size(), 1);
-    Assert.assertEquals(tableResult.get(0).get(0), "abc");
-    Assert.assertEquals(tableResult.get(1).get(0), "bcd");
-    Assert.assertEquals(tableResult.get(2).get(0), "efg");
+    tableFunction.initialize();
+    tableFunction.process(
+        Lists.newArrayList(
+            "MULTIPOINT(116.506619 39.945368,116.509562 39.945402,116.509474 39.943348,116.506648 39.943247)",
+            100.0));
+    List<List<Object>> rst = tableFunction.getCollector();
+    Assert.assertNotNull(rst);
+    Assert.assertEquals(4, ((LinkedUdtfResult) rst.get(0).get(0)).getTargetVertexIdList().size());
   }
 
   @Test
@@ -79,7 +83,8 @@ public class UdtfTest {
 
     Set<String> udfKeySet = new HashSet<>();
     udtfMetaList.forEach(udfMeta -> udfKeySet.add(udfMeta.toString()));
-    Assert.assertTrue(udfKeySet.contains("split(KTString)->KTString"));
+    Assert.assertTrue(
+        udfKeySet.contains("concept_edge_expand(KTObject,KTString,KTObject,KTString)->KTObject"));
   }
 
   @Test

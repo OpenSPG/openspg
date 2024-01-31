@@ -20,7 +20,6 @@ import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
-import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.OptionalEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.PathEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
@@ -29,7 +28,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.MirrorVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
-import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
+import com.antgroup.openspg.reasoner.common.utils.CombinationIterator;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphSplitStaticParameters;
@@ -60,8 +59,6 @@ import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.session.KGReasonerSession;
 import com.antgroup.openspg.reasoner.udf.UdfMng;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
-import com.antgroup.openspg.reasoner.udf.model.BaseUdtf;
-import com.antgroup.openspg.reasoner.udf.model.LinkedUdtfResult;
 import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
@@ -69,7 +66,6 @@ import com.antgroup.openspg.reasoner.util.KgGraphSchema;
 import com.antgroup.openspg.reasoner.warehouse.common.config.EdgeLoaderConfig;
 import com.antgroup.openspg.reasoner.warehouse.common.config.GraphLoaderConfig;
 import com.antgroup.openspg.reasoner.warehouse.common.config.VertexLoaderConfig;
-import com.antgroup.openspg.reasoner.warehouse.common.partition.BasePartitioner;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -87,7 +83,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
@@ -184,12 +179,60 @@ public class RunnerUtil {
   public static List<KgGraph<IVertexId>> filterKgGraph(
       KgGraph<IVertexId> value,
       Set<String> splitAliasSet,
+      Set<String> edgeAliasSet,
       Pattern kgGraphSchema,
       KgGraphSplitStaticParameters staticParameters,
       List<String> ruleList,
       Long maxPathLimit) {
+    List<String> sortedEdgeAliasList = Lists.newArrayList(edgeAliasSet);
+    ArrayList<KgGraph<IVertexId>> result = new ArrayList<>();
     Predicate<KgGraph<IVertexId>> predicate = new PredicateKgGraph(kgGraphSchema, ruleList);
-    return value.split(splitAliasSet, kgGraphSchema, staticParameters, predicate, maxPathLimit);
+    List<KgGraph<IVertexId>> splitList =
+        value.split(splitAliasSet, kgGraphSchema, staticParameters, null, maxPathLimit);
+    for (KgGraph<IVertexId> kgGraph : splitList) {
+      if (CollectionUtils.isEmpty(sortedEdgeAliasList)) {
+        if (!predicate.test(kgGraph)) {
+          continue;
+        }
+        result.add(kgGraph);
+      } else {
+        List<String> useEdgeAliasList = Lists.newArrayList(sortedEdgeAliasList);
+        List<List<IEdge<IVertexId, IProperty>>> combinEdgeList = new ArrayList<>();
+        Iterator<String> it = useEdgeAliasList.iterator();
+        while (it.hasNext()) {
+          String edgeAlias = it.next();
+          List<IEdge<IVertexId, IProperty>> edgeList = kgGraph.getEdge(edgeAlias);
+          if (edgeList.size() <= 1) {
+            it.remove();
+            continue;
+          }
+          combinEdgeList.add(edgeList);
+        }
+        if (useEdgeAliasList.isEmpty()) {
+          if (!predicate.test(kgGraph)) {
+            continue;
+          }
+          result.add(kgGraph);
+          continue;
+        }
+        CombinationIterator<IEdge<IVertexId, IProperty>> cIt =
+            new CombinationIterator<>(combinEdgeList);
+        while (cIt.hasNext()) {
+          List<IEdge<IVertexId, IProperty>> edgeList = cIt.next();
+          KgGraphImpl tmpKgGraph = new KgGraphImpl((KgGraphImpl) kgGraph);
+          for (int i = 0; i < useEdgeAliasList.size(); ++i) {
+            String edgeAlias = useEdgeAliasList.get(i);
+            tmpKgGraph.getAlias2EdgeMap().put(edgeAlias, Sets.newHashSet(edgeList.get(i)));
+          }
+          if (!predicate.test(tmpKgGraph)) {
+            continue;
+          }
+          result.add(tmpKgGraph);
+        }
+      }
+    }
+    result.trimToSize();
+    return result;
   }
 
   public static void doStarPathLimit(
@@ -368,6 +411,7 @@ public class RunnerUtil {
         edgeProperty.put(key, property.get(key));
       }
     }
+    edgeProperty.put(Constants.REPEAT_EDGE_FLAG, true);
     edgeProperty.put("edges", edge.getEdgeList());
     IVertex<IVertexId, IProperty> sourceVertex = kgGraph.findVertex(edge.getSourceId());
     IVertex<IVertexId, IProperty> targetVertex = kgGraph.findVertex(edge.getTargetId());
@@ -478,6 +522,18 @@ public class RunnerUtil {
     return connectionSet;
   }
 
+  /** get edge endpoint alias */
+  public static List<String> getEdgeEndPointAlias(String edgeAlias, Pattern schema) {
+    List<String> rst = new ArrayList<>();
+    for (Connection connection : RunnerUtil.getConnectionSet(schema)) {
+      if (connection.alias().equals(edgeAlias)) {
+        rst.add(connection.source());
+        rst.add(connection.target());
+      }
+    }
+    return rst;
+  }
+
   /** get neighbor alias */
   public static String getNeighborAlias(String alias, Connection pc) {
     if (alias.equals(pc.source())) {
@@ -542,109 +598,6 @@ public class RunnerUtil {
   }
 
   /**
-   * compute the linked edge
-   *
-   * @return
-   */
-  public static List<KgGraph<IVertexId>> linkEdge(
-      String taskId,
-      KgGraph<IVertexId> kgGraph,
-      PartialGraphPattern kgGraphSchema,
-      KgGraphSplitStaticParameters staticParameters,
-      EdgePattern<LinkedPatternConnection> linkedEdgePattern,
-      UdtfMeta udtfMeta,
-      BasePartitioner partitioner) {
-    Iterator<KgGraph<IVertexId>> it = kgGraph.getPath(staticParameters, null);
-    List<KgGraph<IVertexId>> mergeList = new ArrayList<>();
-
-    while (it.hasNext()) {
-      KgGraph<IVertexId> path = it.next();
-
-      Map<String, Object> context =
-          RunnerUtil.kgGraph2Context(RunnerUtil.getKgGraphInitContext(kgGraphSchema), path);
-      List<Expr> exprList = JavaConversions.seqAsJavaList(linkedEdgePattern.edge().params());
-      List<Object> paramList = new ArrayList<>();
-      for (Expr expr : exprList) {
-        List<String> exprStr = WareHouseUtils.getRuleList(expr);
-        Object parameter = RuleRunner.getInstance().executeExpression(context, exprStr, taskId);
-        paramList.add(parameter);
-      }
-
-      BaseUdtf tableFunction = udtfMeta.createTableFunction();
-      tableFunction.process(paramList);
-      List<List<Object>> udtfResult = tableFunction.getCollector();
-      List<LinkedUdtfResult> linkedUdtfResultList =
-          udtfResult.stream()
-              .flatMap(List::stream)
-              .filter(Objects::nonNull)
-              .map(
-                  obj -> {
-                    if (!(obj instanceof LinkedUdtfResult)) {
-                      throw new RuntimeException("linked udtf must return LinkedUdtfResult");
-                    }
-                    return ((LinkedUdtfResult) obj);
-                  })
-              .collect(Collectors.toList());
-      if (CollectionUtils.isEmpty(linkedUdtfResultList)) {
-        continue;
-      }
-      String sourceAlias = linkedEdgePattern.src().alias();
-      List<IVertex<IVertexId, IProperty>> sourceList = path.getVertex(sourceAlias);
-      if (null == sourceList || sourceList.size() != 1) {
-        throw new RuntimeException("There is more than one start vertex in kgGraph path");
-      }
-      IVertexId sourceId = sourceList.get(0).getId();
-      Connection pc = linkedEdgePattern.edge();
-
-      Map<String, Set<IVertex<IVertexId, IProperty>>> newAliasVertexMap = new HashMap<>();
-      Map<String, Set<IEdge<IVertexId, IProperty>>> newAliasEdgeMap = new HashMap<>();
-      for (LinkedUdtfResult linkedUdtfResult : linkedUdtfResultList) {
-        for (String targetIdStr : linkedUdtfResult.getTargetVertexIdList()) {
-          // add target vertex
-          String targetAlias = pc.target();
-          PatternElement targetVertexMeta = linkedEdgePattern.dst();
-          List<String> targetVertexTypes =
-              new ArrayList<>(JavaConversions.setAsJavaSet(targetVertexMeta.typeNames()));
-          if (targetVertexTypes.size() == 0) {
-            throw new RuntimeException(
-                "Linked edge target vertex type must contains at least one type");
-          }
-          for (String targetVertexType : targetVertexTypes) {
-            IVertexId targetId = IVertexId.from(targetIdStr, targetVertexType);
-            if (partitioner != null && !partitioner.canPartition(targetId)) {
-              continue;
-            }
-            // need add property with id
-            Set<IVertex<IVertexId, IProperty>> newVertexSet =
-                newAliasVertexMap.computeIfAbsent(targetAlias, k -> new HashSet<>());
-            newVertexSet.add(new Vertex(targetId));
-
-            // construct new edge
-            IEdge<IVertexId, IProperty> linkedEdge = new Edge<>(sourceId, targetId, null);
-            linkedEdge.setType(
-                sourceId.getType()
-                    + "_"
-                    + linkedEdgePattern.edge().funcName()
-                    + "_"
-                    + targetVertexType);
-            String edgeAlias = pc.alias();
-
-            Set<IEdge<IVertexId, IProperty>> newEdgeSet =
-                newAliasEdgeMap.computeIfAbsent(edgeAlias, k -> new HashSet<>());
-            newEdgeSet.add(linkedEdge);
-          }
-        }
-      }
-      if (!(newAliasVertexMap.isEmpty() && newAliasEdgeMap.isEmpty())) {
-        KgGraph<IVertexId> newKgGraph = new KgGraphImpl(newAliasVertexMap, newAliasEdgeMap);
-        path.merge(Lists.newArrayList(newKgGraph), null);
-        mergeList.add(path);
-      }
-    }
-    return mergeList;
-  }
-
-  /**
    * choose the udtfMeta corresponding to linkedEdgePattern
    *
    * @param pattern
@@ -693,6 +646,15 @@ public class RunnerUtil {
     return new Tuple2<>(vertexAliasSet, edgePatternSet);
   }
 
+  /** get vertex alias set */
+  public static Set<String> getVertexAliasSet(PartialGraphPattern schema) {
+    Set<String> result = new HashSet<>();
+    for (Connection connection : getConnectionSet(schema)) {
+      result.add(connection.source());
+      result.add(connection.target());
+    }
+    return result;
+  }
   /** if match pattern contains edges in kgGraphSchema, there has intersection alias */
   public static Set<String> getIntersectionAliasSet(Pattern kgGraphSchema, Pattern matchPattern) {
     Set<String> matchRootNeighborSet = new HashSet<>();
@@ -1126,6 +1088,15 @@ public class RunnerUtil {
     return taskRunningContext;
   }
 
+  public static Set<String> getAllVertexAlias(Pattern schema) {
+    Set<String> result = new HashSet<>();
+    for (Connection connection : getConnectionSet(schema)) {
+      result.add(connection.source());
+      result.add(connection.target());
+    }
+    return result;
+  }
+
   public static List<String> joinAliasAfterMapping(
       scala.collection.immutable.List<Tuple2<String, String>> onAlias,
       scala.collection.immutable.Map<Var, Var> lhsSchemaMapping) {
@@ -1205,6 +1176,25 @@ public class RunnerUtil {
     return result;
   }
 
+  public static List<String> sortGroupByAlias(
+      List<String> byAliasList, Set<String> validRootAlias) {
+    List<String> rstList = new ArrayList<>();
+    for (String alias : byAliasList) {
+      if (rstList.contains(alias)) {
+        continue;
+      }
+      if (validRootAlias.contains(alias)) {
+        rstList.add(alias);
+      }
+    }
+    for (String alias : byAliasList) {
+      if (rstList.contains(alias)) {
+        continue;
+      }
+      rstList.add(alias);
+    }
+    return rstList;
+  }
   /** outer join none */
   public static void kgGraphJoinNone(KgGraphImpl kgGraph, List<Connection> noneEdgeOrder) {
     for (Connection connection : noneEdgeOrder) {
@@ -1228,12 +1218,12 @@ public class RunnerUtil {
         sourceV = targetV;
         kgGraph
             .getAlias2VertexMap()
-            .put(connection.source(), Sets.newHashSet(new NoneVertex<>(sourceV)));
+            .put(connection.source(), Sets.newHashSet(new NoneVertex<>(sourceV.getId())));
       } else if (null == targetV) {
         targetV = sourceV;
         kgGraph
             .getAlias2VertexMap()
-            .put(connection.target(), Sets.newHashSet(new NoneVertex<>(targetV)));
+            .put(connection.target(), Sets.newHashSet(new NoneVertex<>(targetV.getId())));
       }
       kgGraph
           .getAlias2EdgeMap()

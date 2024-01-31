@@ -23,5 +23,7 @@ public enum KgReasonerSinkType implements Serializable {
   /** odps table */
   ODPS,
   /** hive table */
-  HIVE
+  HIVE,
+  /** openspg canvas */
+  CANVAS
 }

@@ -11,23 +11,12 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.udf.model;
+package com.antgroup.openspg.reasoner.io.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import lombok.Data;
 
 @Data
-public class LinkedUdtfResult {
-
-  /** The property of linked edge */
-  private Map<String, Object> edgePropertyMap = new HashMap();
-
-  /** The target vertex id of linked edge */
-  private List<String> targetVertexIdList = new ArrayList<>();
-
-  /** edge type */
-  private String edgeType = null;
+public class CanvasTableInfo extends AbstractTableInfo {
+  private String queryId;
+  private String apiPath;
 }

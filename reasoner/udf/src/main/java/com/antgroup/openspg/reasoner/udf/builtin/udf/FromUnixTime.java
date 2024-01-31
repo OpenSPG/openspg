@@ -43,4 +43,17 @@ public class FromUnixTime {
     simpleDateFormat.setTimeZone(DateUtils.timeZone);
     return simpleDateFormat.format(new Date(ts * 1000));
   }
+
+  @UdfDefine(name = "from_unix_time_ms")
+  public String fromUnixTimeMs(long ms, String format) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+    simpleDateFormat.setTimeZone(DateUtils.timeZone);
+    return simpleDateFormat.format(new Date(ms));
+  }
+
+  @UdfDefine(name = "from_unix_time_ms")
+  public String fromUnixTimeMs(String ms, String format) {
+    long msLong = Long.parseLong(ms);
+    return fromUnixTimeMs(msLong, format);
+  }
 }

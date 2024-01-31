@@ -42,7 +42,11 @@ object NodeIdToEdgeProperty extends Rule {
         expandInto -> map
       } else {
         val toEdge = targetConnection(expandInto)
-        expandInto -> (map + (expandInto.pattern.root.alias -> toEdge))
+        if (toEdge != null) {
+          expandInto -> (map + (expandInto.pattern.root.alias -> toEdge))
+        } else {
+          expandInto -> map
+        }
       }
     case (filter: Filter, map) =>
       if (map.isEmpty) {

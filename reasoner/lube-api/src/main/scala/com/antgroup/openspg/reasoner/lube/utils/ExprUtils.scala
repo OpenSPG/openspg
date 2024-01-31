@@ -17,7 +17,7 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.trees.{BottomUp, TopDown, Transform}
-import com.antgroup.openspg.reasoner.lube.common.expr.{Expr, GetField, Ref, UnaryOpExpr}
+import com.antgroup.openspg.reasoner.lube.common.expr.{Constraint, Expr, GetField, ListOpExpr, Ref, UnaryOpExpr}
 import com.antgroup.openspg.reasoner.lube.common.graph._
 
 /**
@@ -61,6 +61,16 @@ object ExprUtils {
                   List.apply(IRNode(refName, Set.apply(fieldName)))
                 }
               case _ => c.filter(Option(_).isDefined).flatten
+            }
+          case ListOpExpr(name, _) =>
+            name match {
+              case constraint: Constraint =>
+                val irList =
+                  getAllInputFieldInRule(constraint.reduceFunc, nodesAlias, edgeAlias).filter(
+                    ir => !ir.name.equals(constraint.cur) && !ir.name.equals(constraint.pre))
+                mergeListIRField(c.flatten ++ irList)
+              case _ =>
+                mergeListIRField(c.flatten)
             }
           case _ =>
             // merge list ir

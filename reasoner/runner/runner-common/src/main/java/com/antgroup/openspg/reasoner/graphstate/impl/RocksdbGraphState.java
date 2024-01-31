@@ -13,7 +13,9 @@
 
 package com.antgroup.openspg.reasoner.graphstate.impl;
 
+import com.antgroup.openspg.reasoner.common.IConceptTree;
 import com.antgroup.openspg.reasoner.common.Utils;
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
@@ -32,7 +34,12 @@ import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.utils.RocksDBUtil;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,6 +51,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -60,7 +69,7 @@ import scala.Tuple2;
  * GraphState based on Rocksdb vertex key is V_TYPEID_ID_PLACEHOLDER_WINDOWS, value is vertex
  * property edge key is E_EDGETYPE_DIRECTION_VERTEXID_WINDOW, value is edges
  */
-public class RocksdbGraphState implements GraphState<IVertexId> {
+public class RocksdbGraphState implements GraphState<IVertexId>, IConceptTree {
   private static final Logger log = LoggerFactory.getLogger(RocksdbGraphState.class);
   public final transient RocksDB rocksDB;
   private final transient IRocksDBGraphStateHelper helper;
@@ -758,5 +767,89 @@ public class RocksdbGraphState implements GraphState<IVertexId> {
   @Override
   public void close() {
     this.rocksDB.close();
+  }
+
+  @Override
+  public List<String> getBelongToConcept(IVertexId id, String edgeType, Direction direction) {
+    List<String> result = new ArrayList<>();
+    List<IEdge<IVertexId, IProperty>> edgeList =
+        this.getEdges(id, null, null, Sets.newHashSet(edgeType), direction);
+    for (IEdge<IVertexId, IProperty> edge : edgeList) {
+      result.add((String) edge.getValue().get(Constants.EDGE_TO_ID_KEY));
+    }
+    return result;
+  }
+
+  private Set<String> getEdgeTypeSet(String conceptType) {
+    Set<String> edgeTypeSet = new HashSet<>();
+    for (String hypernym : Constants.CONCEPT_HYPERNYM_EDGE_TYPE_SET) {
+      edgeTypeSet.add(conceptType + "_" + hypernym + "_" + conceptType);
+    }
+    return edgeTypeSet;
+  }
+
+  private final LoadingCache<String, List<String>> conceptCache =
+      CacheBuilder.newBuilder()
+          .maximumSize(2000)
+          .expireAfterAccess(30, TimeUnit.MINUTES)
+          .build(
+              new CacheLoader<String, List<String>>() {
+                @Override
+                public List<String> load(String key) throws Exception {
+                  List<String> kl = Lists.newArrayList(Splitter.on("|").split(key));
+                  String concept = kl.get(0);
+                  String conceptType = kl.get(1);
+                  String upper = kl.get(2);
+                  if ("u".equals(upper)) {
+                    return Lists.newArrayList(doGetUpper(conceptType, concept));
+                  }
+                  return doGetLower(conceptType, concept);
+                }
+              });
+
+  @Override
+  public String getUpper(String conceptType, String concept) {
+    try {
+      List<String> upper = conceptCache.get(concept + "|" + conceptType + "|u");
+      if (CollectionUtils.isEmpty(upper)) {
+        return null;
+      }
+      return upper.get(0);
+    } catch (ExecutionException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private String doGetUpper(String conceptType, String concept) {
+    IVertexId id = IVertexId.from(concept, conceptType);
+    List<IEdge<IVertexId, IProperty>> edgeList =
+        this.getEdges(id, null, null, getEdgeTypeSet(conceptType), Direction.OUT);
+    if (CollectionUtils.isEmpty(edgeList)) {
+      return null;
+    }
+    return (String) edgeList.get(0).getValue().get(Constants.EDGE_TO_ID_KEY);
+  }
+
+  @Override
+  public List<String> getLower(String conceptType, String concept) {
+    try {
+      return conceptCache.get(concept + "|" + conceptType + "|l");
+    } catch (ExecutionException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private List<String> doGetLower(String conceptType, String concept) {
+    List<String> result = new ArrayList<>();
+    IVertexId id = IVertexId.from(concept, conceptType);
+    List<IEdge<IVertexId, IProperty>> edgeList =
+        this.getEdges(id, null, null, getEdgeTypeSet(conceptType), Direction.IN);
+    if (CollectionUtils.isEmpty(edgeList)) {
+      return result;
+    }
+    for (IEdge<IVertexId, IProperty> edge : edgeList) {
+      result.add((String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY));
+    }
+    return result;
   }
 }

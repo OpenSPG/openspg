@@ -239,4 +239,23 @@ public class PathEdge<K, VV, EV> implements IEdge<K, EV> {
   public EV getValue() {
     return value;
   }
+
+  @Override
+  public String toString() {
+    String rst =
+        "PathEdge(s="
+            + getSourceId()
+            + ",p="
+            + getType()
+            + ",o="
+            + getTargetId()
+            + ",vertexSize="
+            + (null == vertexList ? 0 : vertexList.size())
+            + ",edgeSize="
+            + (null == edgeList ? 0 : edgeList.size());
+    if (null != edgeList && edgeList.size() > 0) {
+      rst += ",firstEdge=" + edgeList.get(0);
+    }
+    return rst;
+  }
 }
