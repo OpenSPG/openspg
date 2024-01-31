@@ -20,11 +20,13 @@ import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphL
 import com.antgroup.openspg.reasoner.runner.local.main.LocalRunnerTestFactory;
 import com.antgroup.openspg.reasoner.runner.local.main.LocalRunnerTestFactory.AssertFunction;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
+import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +37,7 @@ public class GroupConceptTest {
 
   @Before
   public void init() {
+    DateUtils.timeZone = TimeZone.getTimeZone("Asia/Shanghai");
     graphLoader =
         new AbstractLocalGraphLoader() {
           @Override
