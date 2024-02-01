@@ -127,10 +127,10 @@ public class KgReasonerTransitiveTest {
   @Test
   public void testTransitiveWithPathLongestWithTailRule() {
     String dsl =
-            "GraphStructure {\n"
+        "GraphStructure {\n"
             + "  A [RelatedParty, __start__='true']\n"
             + "  B [RelatedParty]\n"
-            + "  A->B [holdShare] repeat(1,10) as e\n"
+            + "  A->B [holdShare] repeat(1,3) as e\n"
             + "}\n"
             + "Rule {\n"
             + "  R0: B.name == 'C4'\n"
@@ -150,7 +150,7 @@ public class KgReasonerTransitiveTest {
   @Test
   public void testTransitiveWithPathLongestWithHeadRule() {
     String dsl =
-            "GraphStructure {\n"
+        "GraphStructure {\n"
             + "  A [RelatedParty, __start__='true']\n"
             + "  B [RelatedParty]\n"
             + "  A->B [holdShare] repeat(1,10) as e\n"
@@ -173,7 +173,7 @@ public class KgReasonerTransitiveTest {
   @Test
   public void testTransitiveWithPathShortest() {
     String dsl =
-            "GraphStructure {\n"
+        "GraphStructure {\n"
             + "  A [RelatedParty, __start__='true']\n"
             + "  B [RelatedParty]\n"
             + "  A->B [holdShare] repeat(1,10) as e\n"

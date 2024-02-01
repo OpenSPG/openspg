@@ -55,6 +55,7 @@ object FilterPushDown extends SimpleRule {
   }
 
   private def pushDown(filter: Filter, aliasMap: Map[String, Set[String]]): LogicalOperator = {
+    var keepOriginal = false
     var hasPushDown = false
     def rewriter: PartialFunction[LogicalOperator, LogicalOperator] = {
       case logicalOp: StackingLogicalOperator =>
@@ -65,19 +66,28 @@ object FilterPushDown extends SimpleRule {
         } else {
           logicalOp
         }
+      case boundedVarLenExpand @ BoundedVarLenExpand(_, expandInto: ExpandInto, edgePattern, _) =>
+        if (hasPushDown) {
+          val alias = Set.apply(edgePattern.edge.alias, edgePattern.dst.alias)
+          if (!aliasMap.keySet.intersect(alias).isEmpty) {
+            keepOriginal = true
+          }
+        }
+        boundedVarLenExpand
     }
 
     val newRoot = BottomUp[LogicalOperator](rewriter).transform(filter).asInstanceOf[Filter]
-    if (hasPushDown) {
-      newRoot.in
+    if (keepOriginal || !hasPushDown) {
+      filter
     } else {
-      newRoot
+      newRoot.in
     }
   }
 
   private def pushDown2Pattern(
       filter: Filter,
       aliasMap: Map[String, Set[String]]): (Boolean, LogicalOperator) = {
+    var keepOriginal = false
     var hasPushDown: Boolean = false
 
     def rewriter: PartialFunction[LogicalOperator, LogicalOperator] = {
@@ -105,13 +115,21 @@ object FilterPushDown extends SimpleRule {
             patternScan
           }
         }
+      case boundedVarLenExpand @ BoundedVarLenExpand(_, expandInto: ExpandInto, edgePattern, _) =>
+        if (hasPushDown) {
+          val alias = Set.apply(edgePattern.edge.alias, edgePattern.dst.alias)
+          if (!aliasMap.keySet.intersect(alias).isEmpty) {
+            keepOriginal = true
+          }
+        }
+        boundedVarLenExpand
     }
 
     val newRoot = BottomUp[LogicalOperator](rewriter).transform(filter).asInstanceOf[Filter]
-    if (hasPushDown) {
-      (hasPushDown, newRoot.in)
+    if (keepOriginal || !hasPushDown) {
+      (hasPushDown, filter)
     } else {
-      (hasPushDown, newRoot)
+      (hasPushDown, newRoot.in)
     }
   }
 
