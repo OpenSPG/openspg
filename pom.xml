@@ -135,6 +135,12 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>30.1-jre</version>
+        <exclusions>
+          <exclusion>
+            <artifactId>lombok</artifactId>
+            <groupId>org.projectlombok</groupId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -317,7 +323,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.12</version>
+      <version>1.18.22</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
