@@ -13,12 +13,12 @@ import sys
 import unittest
 import unittest.mock
 
-from nn4k.executor.hugging_face import HFLLMExecutor
+from nn4k.executor.hugging_face import HFEmbeddingExecutor
 
 
-class TestHFLLMExecutor(unittest.TestCase):
+class TestHFEmbeddingExecutor(unittest.TestCase):
     """
-    HFLLMExecutor unittest
+    HFEmbeddingExecutor unittest
     """
 
     def setUp(self):
@@ -26,33 +26,31 @@ class TestHFLLMExecutor(unittest.TestCase):
         self._mocked_torch = unittest.mock.MagicMock()
         sys.modules["torch"] = self._mocked_torch
 
-        self._saved_transformers = sys.modules.get("transformers")
-        self._mocked_transformers = unittest.mock.MagicMock()
-        sys.modules["transformers"] = self._mocked_transformers
+        self._saved_sentence_transformers = sys.modules.get("sentence_transformers")
+        self._mocked_sentence_transformers = unittest.mock.MagicMock()
+        sys.modules["sentence_transformers"] = self._mocked_sentence_transformers
 
     def tearDown(self):
         del sys.modules["torch"]
         if self._saved_torch is not None:
             sys.modules["torch"] = self._saved_torch
 
-        del sys.modules["transformers"]
-        if self._saved_transformers is not None:
-            sys.modules["transformers"] = self._saved_transformers
+        del sys.modules["sentence_transformers"]
+        if self._saved_sentence_transformers is not None:
+            sys.modules["sentence_transformers"] = self._saved_sentence_transformers
 
-    def testHFLLMExecutor(self):
+    def testHFEmbeddingExecutor(self):
         nn_config = {
             "nn_name": "/opt/test_model_dir",
             "nn_version": "default",
         }
 
-        executor = HFLLMExecutor.from_config(nn_config)
+        executor = HFEmbeddingExecutor.from_config(nn_config)
         executor.load_model()
         executor.inference("input")
 
-        self._mocked_transformers.AutoTokenizer.from_pretrained.assert_called()
-        self._mocked_transformers.AutoModelForCausalLM.from_pretrained.assert_called()
-        executor.tokenizer.assert_called()
-        executor.model.generate.assert_called()
+        self._mocked_sentence_transformers.SentenceTransformer.assert_called()
+        executor.model.encode.assert_called()
 
 
 if __name__ == "__main__":

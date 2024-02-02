@@ -42,9 +42,9 @@ class MockEmbedding:
     embedding: list
 
 
-class TestOpenAIInvoker(unittest.TestCase):
+class TestOpenAIInvokerLegacyAPI(unittest.TestCase):
     """
-    OpenAIInvoker unittest
+    OpenAIInvoker unittest for legacy OpenAI api
     """
 
     def setUp(self):
@@ -58,8 +58,7 @@ class TestOpenAIInvoker(unittest.TestCase):
             sys.modules["openai"] = self._saved_openai
 
     def testOpenAICompletion(self):
-        self._mocked_openai.__version__ = "1.7.0"
-        self._mocked_openai.OpenAI = unittest.mock.MagicMock
+        self._mocked_openai.__version__ = "0.28.1"
 
         nn_config = {
             "nn_name": "gpt-3.5-turbo",
@@ -69,16 +68,16 @@ class TestOpenAIInvoker(unittest.TestCase):
         }
         invoker = NNInvoker.from_config(nn_config)
         self.assertEqual(invoker.init_args, nn_config)
-        self.assertEqual(invoker.client.api_key, nn_config["openai_api_key"])
-        self.assertEqual(invoker.client.base_url, nn_config["openai_api_base"])
+        self.assertEqual(self._mocked_openai.api_key, nn_config["openai_api_key"])
+        self.assertEqual(self._mocked_openai.api_base, nn_config["openai_api_base"])
 
         mock_completion = MockCompletion(
             choices=[MockChoice(message=MockMessage(content="a dog named Bolt ..."))]
         )
-        invoker.client.chat.completions.create.return_value = mock_completion
+        self._mocked_openai.ChatCompletion.create.return_value = mock_completion
 
         result = invoker.remote_inference("Long long ago, ")
-        invoker.client.chat.completions.create.assert_called_with(
+        self._mocked_openai.ChatCompletion.create.assert_called_with(
             model=nn_config["nn_name"],
             messages=[{"role": "user", "content": "Long long ago, "}],
             max_tokens=nn_config["openai_max_tokens"],
@@ -86,7 +85,7 @@ class TestOpenAIInvoker(unittest.TestCase):
         self.assertEqual(result, [mock_completion.choices[0].message.content])
 
     def testOpenAIEmbedding(self):
-        self._mocked_openai.__version__ = "1.7.0"
+        self._mocked_openai.__version__ = "0.28.1"
         self._mocked_openai.OpenAI = unittest.mock.MagicMock
 
         nn_config = {
@@ -96,14 +95,14 @@ class TestOpenAIInvoker(unittest.TestCase):
         }
         invoker = NNInvoker.from_config(nn_config)
         self.assertEqual(invoker.init_args, nn_config)
-        self.assertEqual(invoker.client.api_key, nn_config["openai_api_key"])
-        self.assertEqual(invoker.client.base_url, nn_config["openai_api_base"])
+        self.assertEqual(self._mocked_openai.api_key, nn_config["openai_api_key"])
+        self.assertEqual(self._mocked_openai.api_base, nn_config["openai_api_base"])
 
         mock_embeddings = MockEmbeddings(data=[MockEmbedding(embedding=[0.1, 0.2])])
-        invoker.client.embeddings.create.return_value = mock_embeddings
+        self._mocked_openai.Embedding.create.return_value = mock_embeddings
 
         result = invoker.remote_inference("How old are you?", type="Embedding")
-        invoker.client.embeddings.create.assert_called_with(
+        self._mocked_openai.Embedding.create.assert_called_with(
             model=nn_config["nn_name"],
             input=["How old are you?"],
         )

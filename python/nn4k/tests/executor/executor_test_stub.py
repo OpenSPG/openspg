@@ -11,34 +11,19 @@
 
 from typing import Optional
 
-from nn4k.invoker import NNInvoker, LLMInvoker
-from nn4k.executor import NNExecutor
+from nn4k.executor import NNExecutor, LLMExecutor
 from nn4k.nnhub import SimpleNNHub
 
 
-class StubInvoker(LLMInvoker):
-    @classmethod
-    def from_config(cls, nn_config: dict) -> "StubInvoker":
-        """
-        Create a StubInvoker instance from `nn_config`.
-        """
-        invoker = cls(nn_config)
-        return invoker
-
-
-class NotInvoker:
-    pass
-
-
-class StubExecutor(NNExecutor):
+class StubExecutor(LLMExecutor):
     def load_model(self, args=None, mode=None, **kwargs):
-        self.load_model_called = True
+        pass
 
     def warmup_inference(self, args=None, **kwargs):
-        self.warmup_inference_called = True
+        pass
 
     def inference(self, data, args=None, **kwargs):
-        return self.inference_result
+        pass
 
     @classmethod
     def from_config(cls, nn_config: dict) -> "StubExecutor":
@@ -49,18 +34,15 @@ class StubExecutor(NNExecutor):
         return executor
 
 
-class StubHub(SimpleNNHub):
-    def get_invoker(self, nn_config: dict) -> Optional[NNInvoker]:
-        nn_name = nn_config.get("nn_name")
-        if nn_name is not None and nn_name == "test_stub":
-            invoker = StubInvoker(nn_config, test_stub_invoker=True)
-            return invoker
-        return super().get_invoker(nn_config)
+class NotExecutor:
+    pass
 
+
+class StubHub(SimpleNNHub):
     def get_model_executor(
         self, name: str, version: str = None
     ) -> Optional[NNExecutor]:
-        if name == "test_stub":
+        if name == "executor_test_stub":
             if version is None:
                 version = "default"
             executor = StubExecutor(
