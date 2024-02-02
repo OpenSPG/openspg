@@ -138,6 +138,8 @@ public class OdpsUtils {
       return false;
     }
 
+    /*
+    Comment it out and wait for the type inference to complete
     List<OdpsType> neededType =
         schemaNeeded.getColumns().stream()
             .map(column -> column.getTypeInfo().getOdpsType())
@@ -149,8 +151,6 @@ public class OdpsUtils {
             .map(column -> column.getTypeInfo().getOdpsType())
             .sorted(Enum::compareTo)
             .collect(Collectors.toList());
-    /*
-    Comment it out and wait for the type inference to complete
     if (!neededType.equals(realType)) {
       log.error(
           "odps_type_not_match, need_type="
