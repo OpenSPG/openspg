@@ -13,8 +13,8 @@ import torch
 import transformers
 from transformers import AutoModelForCausalLM
 
-from nn4k.executor.huggingface.base.hf_args import HFModelArgs
-from nn4k.executor.huggingface.base.hf_llm_executor import HFLLMExecutor
+from nn4k.executor.huggingface import HFModelArgs
+from nn4k.executor.huggingface import HFLLMExecutor
 
 
 class HFDecodeOnlyExecutor(HFLLMExecutor):

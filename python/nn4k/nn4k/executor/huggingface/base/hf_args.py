@@ -14,7 +14,7 @@ from typing import Optional
 
 from transformers import TrainingArguments
 
-from nn4k.executor.base import NNAdapterModelArgs
+from nn4k.executor import NNAdapterModelArgs
 
 
 @dataclass

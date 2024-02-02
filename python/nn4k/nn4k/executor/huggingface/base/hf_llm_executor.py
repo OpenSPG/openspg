@@ -18,7 +18,7 @@ from torch.utils.data import Dataset
 from transformers import AutoConfig, AutoTokenizer, Trainer
 
 from nn4k.executor import LLMExecutor
-from nn4k.executor.huggingface.base.hf_args import HFModelArgs, HFSftArgs
+from .hf_args import HFSftArgs, HFModelArgs
 from nn4k.executor.huggingface.nn_hf_trainer import NNHFTrainer
 
 
@@ -189,7 +189,7 @@ class HFLLMExecutor(LLMExecutor):
             return
 
         from transformers import HfArgumentParser
-        from nn4k.executor.huggingface.base.hf_args import HFModelArgs
+        from nn4k.executor.huggingface import HFModelArgs
 
         parser = HfArgumentParser(HFModelArgs)
         hf_model_args, *_ = parser.parse_dict(args, allow_extra_keys=True)
