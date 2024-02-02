@@ -137,8 +137,8 @@
         <version>30.1-jre</version>
         <exclusions>
           <exclusion>
-            <artifactId>lombok</artifactId>
             <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
