@@ -35,6 +35,7 @@ LOCAL_CONFIG = [
     "reasoner_result_dir",
 ]
 CFG_PREFIX = "KNEXT_"
+LOCAL_SCHEMA_URL = "http://localhost:8887"
 
 
 def init_env():
@@ -118,8 +119,8 @@ def load_operator():
     """
     Load all operators in [builder_operator_dir].
     """
-    from knext.operator.base import BaseOp
-    from knext.operator import builtin
+    from knext.builder.operator.base import BaseOp
+    from knext.builder.operator import builtin
 
     if not BaseOp._has_registered and (
         "KNEXT_ROOT_PATH" in os.environ and "KNEXT_BUILDER_OPERATOR_DIR" in os.environ
@@ -139,7 +140,7 @@ def load_builder_job():
     """
     Load all builder jobs in [builder_job_dir].
     """
-    from knext.client.model.builder_job import BuilderJob
+    from knext.builder.model.builder_job import BuilderJob
 
     if not BuilderJob._has_registered and (
         "KNEXT_ROOT_PATH" in os.environ and "KNEXT_BUILDER_JOB_DIR" in os.environ

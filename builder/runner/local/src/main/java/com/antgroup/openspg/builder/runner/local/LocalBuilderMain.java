@@ -98,7 +98,6 @@ public class LocalBuilderMain {
     try {
       commandLine = parser.parse(options, args);
     } catch (ParseException e) {
-      System.out.println(e.getMessage());
       helper.printHelp("Usage: ", options);
       System.exit(0);
     }

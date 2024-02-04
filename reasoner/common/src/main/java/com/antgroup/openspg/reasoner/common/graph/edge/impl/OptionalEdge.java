@@ -27,4 +27,21 @@ public class OptionalEdge<K, EV> extends Edge<K, EV> {
   public OptionalEdge<K, EV> clone() {
     return new OptionalEdge<>(this.sourceId, this.targetId);
   }
+
+  @Override
+  public String toString() {
+    return "OptionalEdge(s="
+        + getSourceId()
+        + ",p="
+        + getType()
+        + ",o="
+        + getTargetId()
+        + ",direction="
+        + direction
+        + ",version="
+        + version
+        + ",property="
+        + getValue()
+        + ")";
+  }
 }

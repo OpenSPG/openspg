@@ -27,6 +27,7 @@ import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
 import com.google.common.collect.Sets;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
@@ -313,7 +314,7 @@ public class TransitiveOptionalTest {
 
     schema.put("a_ab_b", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
     schema.put("b_bb_b1", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
-    schema.put("b_cc_b1", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put("b1_cc_b1", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
 
     LocalReasonerResult rst = runTest(schema, dsl, dataGraphStr);
     Assert.assertEquals(1, rst.getRows().size());
@@ -459,6 +460,12 @@ public class TransitiveOptionalTest {
 
     LocalReasonerResult rst = runTest(schema, dsl, dataGraphStr);
     Assert.assertEquals(2, rst.getRows().size());
+    java.util.Set<Object> dSet = new HashSet<>();
+    for (Object[] row : rst.getRows()) {
+      dSet.add(row[3]);
+    }
+    Assert.assertTrue(dSet.contains("D_333"));
+    Assert.assertTrue(dSet.contains(null));
 
     dataGraphStr =
         "Graph {\n"
@@ -708,9 +715,9 @@ public class TransitiveOptionalTest {
             + "  R4: e2.relatedReason == 'CONTROL'\n"
             + "  R5: e3.edges().constraint((pre,cur) => cur.relatedReason == 'CONTROL')\n"
             + "  R6: C.entityType == 'CORPORATION'\n"
-            + "  R7: D.entityType == 'CORPORATION'\n"
+            + "  R7: (not exists(D)) or (exists(D) and D.entityType == 'CORPORATION')\n"
             + "  R8: C.belongCategory != 'MY_GROUP' && C.belongCategory != 'MY_BB'\n"
-            + "  R9: D.belongCategory != 'MY_GROUP' && D.belongCategory != 'MY_BB'\n"
+            + "  R9: (not exists(D)) or (exists(D) && D.belongCategory != 'MY_GROUP' && D.belongCategory != 'MY_BB')\n"
             + "  R10: A.id == 'A_89'\n"
             + "}\n"
             + "Action {\n"
@@ -937,10 +944,10 @@ public class TransitiveOptionalTest {
             + "  R41: X6.entityType == 'CORPORATION'\n"
             + "  R42: X7.entityType == 'CORPORATION'\n"
             + "  R43: X8.entityType == 'CORPORATION'\n"
-            + "  R48: Y5.entityType == 'CORPORATION'\n"
-            + "  R49: Y6.entityType == 'CORPORATION'\n"
-            + "  R50: Y7.entityType == 'CORPORATION'\n"
-            + "  R51: Y8.entityType == 'CORPORATION'\n"
+            + "  R48: (exists(Y5) and Y5.entityType == 'CORPORATION') or (not exists(Y5))\n"
+            + "  R49: (exists(Y6) and Y6.entityType == 'CORPORATION') or (not exists(Y6))\n"
+            + "  R50: (exists(Y7) and Y7.entityType == 'CORPORATION') or (not exists(Y7))\n"
+            + "  R51: (exists(Y8) and Y8.entityType == 'CORPORATION') or (not exists(Y8))\n"
             + "}\n"
             + "Action {\n"
             + "  get(A.id, D.id, B3.id, C3.id, B4.id, C4.id, X5.id, X6.id, X7.id, X8.id, Y5.id, Y6.id, Y7.id, Y8.id)\n"
@@ -965,7 +972,7 @@ public class TransitiveOptionalTest {
             + "  A [TestFinParty.RelatedParty, __start__='true']\n"
             + "  B, C [TestFinParty.RelatedParty]\n"
             + "// 1.17的B 必须存在\n"
-            + "  C->B [votingRatio] repeat(0,20) as F1\n"
+            + "  C->B [votingRatio] repeat(0,2) as F1\n"
             + "// 1.19的C D 可以不存在\n"
             + "  B->A [votingRatio, __optional__='true'] as F2\n"
             + "}\n"
@@ -1146,7 +1153,7 @@ public class TransitiveOptionalTest {
             + "  totalRate = e1.edges().reduce((x,y) => y.shareholdingRatio/100.0 * x, 1)\n"
             + " R1: totalRate > 0.05\n"
             + "  R0(\"只保留最长的路径\"): group(A).keep_longest_path(e1)\n"
-            + "R2: B.entityType == 'CORPORATION'\n"
+            + "R2: (exists(B) and B.entityType == 'CORPORATION') or (not exist(B))\n"
             + "}\n"
             + "Action {\n"
             + "  get(A.id, B.id)\n"
@@ -1253,7 +1260,7 @@ public class TransitiveOptionalTest {
             + "  R6: F4.votingRatio >= 30 && F6.votingRatio >= 10\n"
             + "  R17: F8.edges().constraint((pre,cur) => cur.relatedReason == 'CONTROL')\n"
             + "  R8: X.entityType == 'CORPORATION'\n"
-            + "  R9: Y.entityType == 'CORPORATION'\n"
+            + "  R9: (exists(Y) and Y.entityType == 'CORPORATION') or (not exists(Y))\n"
             + "  R10: X.belongCategory != 'MY_GROUP' && X.belongCategory != 'MY_BB'\n"
             + "  R11: A.id == 'A_810'\n"
             + "}\n"

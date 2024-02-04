@@ -13,7 +13,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Union
 
-from nn4k.executor import LLMExecutor
+from nn4k.executor import NNExecutor
 
 
 class SubmitMode(Enum):
@@ -157,23 +157,36 @@ class LLMInvoker(NNInvoker):
         Implement local model warming up logic for local invoker.
         """
         from nn4k.nnhub import NNHub
+        from nn4k.consts import NN_EXECUTOR_KEY, NN_EXECUTOR_TEXT
         from nn4k.consts import NN_NAME_KEY, NN_NAME_TEXT
         from nn4k.consts import NN_VERSION_KEY, NN_VERSION_TEXT
         from nn4k.utils.config_parsing import get_string_field
+        from nn4k.utils.class_importing import dynamic_import_class
 
-        nn_name = get_string_field(self.init_args, NN_NAME_KEY, NN_NAME_TEXT)
-        nn_version = self.init_args.get(NN_VERSION_KEY)
-        if nn_version is not None:
-            nn_version = get_string_field(
-                self.init_args, NN_VERSION_KEY, NN_VERSION_TEXT
+        nn_executor = self.init_args.get(NN_EXECUTOR_KEY)
+        if nn_executor is not None:
+            nn_executor = get_string_field(
+                self.init_args, NN_EXECUTOR_KEY, NN_EXECUTOR_TEXT
             )
-        hub = NNHub.get_instance()
-        executor = hub.get_model_executor(nn_name, nn_version)
-        if executor is None:
-            message = "model %r version %r " % (nn_name, nn_version)
-            message += "is not found in the model hub"
-            raise RuntimeError(message)
-        self._nn_executor: LLMExecutor = executor
+            executor_class = dynamic_import_class(nn_executor, NN_EXECUTOR_TEXT)
+            if not issubclass(executor_class, NNExecutor):
+                message = "%r is not an %s class" % (nn_executor, NN_EXECUTOR_TEXT)
+                raise RuntimeError(message)
+            executor = executor_class.from_config(self.init_args)
+        else:
+            nn_name = get_string_field(self.init_args, NN_NAME_KEY, NN_NAME_TEXT)
+            nn_version = self.init_args.get(NN_VERSION_KEY)
+            if nn_version is not None:
+                nn_version = get_string_field(
+                    self.init_args, NN_VERSION_KEY, NN_VERSION_TEXT
+                )
+            hub = NNHub.get_instance()
+            executor = hub.get_model_executor(nn_name, nn_version)
+            if executor is None:
+                message = "model %r version %r " % (nn_name, nn_version)
+                message += "is not found in the model hub"
+                raise RuntimeError(message)
+        self._nn_executor: NNExecutor = executor
         self._nn_executor.load_model()
         self._nn_executor.warmup_inference()
 

@@ -12,10 +12,9 @@
 
 import copy
 import json
-import numpy as np
 from typing import Dict, List
-from knext.operator.base import BaseOp
-from knext.operator.op import ExtractOp, LinkOp, FuseOp, PredictOp, SPGRecord
+from knext.builder.operator.base import BaseOp
+from knext.builder.operator.op import ExtractOp, LinkOp, FuseOp, PredictOp, SPGRecord
 
 
 def jaccard_distance(a: str, b: str):
@@ -41,7 +40,7 @@ class TestExtractOp(ExtractOp):
     def invoke(self, record: Dict[str, str]) -> List[SPGRecord]:
         spg_type = record["type"]
         properties = json.loads(record["properties"])
-        return [SPGRecord(spg_type, properties)]
+        return [SPGRecord(spg_type).upsert_properties(properties)]
 
 
 class TestLinkOp(LinkOp):

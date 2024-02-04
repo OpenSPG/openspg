@@ -10,13 +10,13 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from knext.api.component import (
+from knext.builder.component import (
     CSVReader,
     KGWriter,
 )
-from knext.api.component import SPGTypeMapping
-from knext.client.model.builder_job import BuilderJob
-from knext.component.builder.mapping import RelationMapping
+from knext.builder.component import SPGTypeMapping
+from knext.builder.model.builder_job import BuilderJob
+from knext.builder.component.mapping import RelationMapping
 
 from schema.riskmining_schema_helper import RiskMining
 

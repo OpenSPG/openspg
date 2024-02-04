@@ -11,4 +11,4 @@
 
 docker pull openspg/openspg-python:latest
 
-docker run -it openspg/openspg-python:latest "/bin/bash"
+docker run --rm --net=host -it openspg/openspg-python:latest "/bin/bash"

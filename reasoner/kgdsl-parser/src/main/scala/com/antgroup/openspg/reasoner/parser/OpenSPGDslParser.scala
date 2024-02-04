@@ -25,7 +25,7 @@ import com.antgroup.openspg.reasoner.common.types._
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.graph._
-import com.antgroup.openspg.reasoner.lube.common.pattern.{Element, GraphPath, PatternElement, PredicateElement}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{Element, EntityElement, GraphPath, PatternElement, PredicateElement}
 import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, ProjectRule, Rule}
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface
 import com.antgroup.openspg.reasoner.lube.utils.{ExprUtils, RuleUtils}
@@ -162,11 +162,31 @@ class OpenSPGDslParser extends ParserInterface {
                   Ref(ddlBlockWithNodes._3.target.alias)))))
         DDLBlock(Set.apply(ddlBlockOp), List.apply(prjBlk))
       case AddPredicate(predicate) =>
-        var attrFields: Map[String, Ref] = Map.empty
+        val attrFields = new mutable.HashMap[String, Expr]()
         addPropertiesMap.foreach(x =>
           if (x.name == predicate.alias) {
             attrFields += (x.field -> Ref(generateIRPropertyTmpVariable(x).name))
           })
+        attrFields.put(
+          Constants.EDGE_FROM_ID_KEY,
+          UnaryOpExpr(GetField(Constants.NODE_ID_KEY), Ref(predicate.source.alias)))
+        attrFields.put(
+          Constants.EDGE_FROM_ID_TYPE_KEY,
+          VString(predicate.source.typeNames.head))
+        if (predicate.target.isInstanceOf[EntityElement]) {
+          attrFields.put(
+            Constants.EDGE_TO_ID_KEY,
+            VString(predicate.target.asInstanceOf[EntityElement].id))
+        } else {
+          attrFields.put(
+            Constants.EDGE_TO_ID_KEY,
+            UnaryOpExpr(GetField(Constants.NODE_ID_KEY), Ref(predicate.target.alias)))
+        }
+        attrFields.put(
+          Constants.EDGE_TO_ID_TYPE_KEY,
+          VString(predicate.target.typeNames.head))
+
+
         val depBlk = ruleBlock
 
         DDLBlock(
@@ -177,7 +197,7 @@ class OpenSPGDslParser extends ParserInterface {
                 predicate.alias,
                 predicate.source,
                 predicate.target,
-                attrFields,
+                attrFields.toMap,
                 predicate.direction))),
           List.apply(depBlk))
       case _ => DDLBlock(Set.apply(ddlBlockOp), List.apply(ruleBlock))
@@ -337,8 +357,8 @@ class OpenSPGDslParser extends ParserInterface {
               graphAggExpr.by.map {
                 case Ref(refName) => refName
                 case UnaryOpExpr(GetField(fieldName), Ref(refName)) => refName + "." + fieldName
-                case x => throw
-                  new KGDSLGrammarException("OrderAndSliceBlock can not group " + x.pretty)
+                case x =>
+                  throw new KGDSLGrammarException("OrderAndSliceBlock can not group " + x.pretty)
               })
           case AggIfOpExpr(_, _) | AggOpExpr(_, _) =>
             if (realLValue == null) {

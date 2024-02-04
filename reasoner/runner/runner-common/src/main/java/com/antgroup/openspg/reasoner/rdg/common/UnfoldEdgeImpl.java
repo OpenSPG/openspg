@@ -60,7 +60,7 @@ public class UnfoldEdgeImpl implements Serializable {
           for (IVertex<IVertexId, IProperty> v :
               kgGraph.getAlias2VertexMap().get(this.unfoldRepeatEdgeInfo.getAnchorVertexAlias())) {
             if (v.getId().equals(anchorVertexId)) {
-              newAnchorVertex = new MirrorVertex<>(v);
+              newAnchorVertex = new MirrorVertex<>(v.getId());
               break;
             }
           }

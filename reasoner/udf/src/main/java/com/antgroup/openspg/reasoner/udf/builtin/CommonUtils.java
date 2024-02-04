@@ -25,6 +25,9 @@ public class CommonUtils {
   /** get repeat item context */
   public static Map<String, Object> getRepeatItemContext(Object item) {
     Map<String, Object> result = new HashMap<>();
+    if (null == item) {
+      return result;
+    }
     IProperty property = null;
     if (item instanceof Edge) {
       Edge<IVertexId, IProperty> edge = (Edge<IVertexId, IProperty>) item;

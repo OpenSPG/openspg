@@ -17,16 +17,11 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.trees.BottomUp
 import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode}
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  EdgePattern,
-  NodePattern,
-  PartialGraphPattern,
-  Pattern
-}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{EdgePattern, NodePattern, PartialGraphPattern, Pattern}
 import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, Var}
 import com.antgroup.openspg.reasoner.lube.logical.PatternOps.PatternOps
 import com.antgroup.openspg.reasoner.lube.logical.operators._
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, SimpleRule, Up}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.utils.RuleUtils
 import org.apache.commons.lang3.StringUtils
@@ -34,7 +29,7 @@ import org.apache.commons.lang3.StringUtils
 /**
  * Predicate push down
  */
-object FilterPushDown extends Rule {
+object FilterPushDown extends SimpleRule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
@@ -60,6 +55,7 @@ object FilterPushDown extends Rule {
   }
 
   private def pushDown(filter: Filter, aliasMap: Map[String, Set[String]]): LogicalOperator = {
+    var keepOriginal = false
     var hasPushDown = false
     def rewriter: PartialFunction[LogicalOperator, LogicalOperator] = {
       case logicalOp: StackingLogicalOperator =>
@@ -70,19 +66,28 @@ object FilterPushDown extends Rule {
         } else {
           logicalOp
         }
+      case boundedVarLenExpand @ BoundedVarLenExpand(_, expandInto: ExpandInto, edgePattern, _) =>
+        if (hasPushDown) {
+          val alias = Set.apply(edgePattern.edge.alias, edgePattern.dst.alias)
+          if (!aliasMap.keySet.intersect(alias).isEmpty) {
+            keepOriginal = true
+          }
+        }
+        boundedVarLenExpand
     }
 
     val newRoot = BottomUp[LogicalOperator](rewriter).transform(filter).asInstanceOf[Filter]
-    if (hasPushDown) {
-      newRoot.in
+    if (keepOriginal || !hasPushDown) {
+      filter
     } else {
-      newRoot
+      newRoot.in
     }
   }
 
   private def pushDown2Pattern(
       filter: Filter,
       aliasMap: Map[String, Set[String]]): (Boolean, LogicalOperator) = {
+    var keepOriginal = false
     var hasPushDown: Boolean = false
 
     def rewriter: PartialFunction[LogicalOperator, LogicalOperator] = {
@@ -110,13 +115,21 @@ object FilterPushDown extends Rule {
             patternScan
           }
         }
+      case boundedVarLenExpand @ BoundedVarLenExpand(_, expandInto: ExpandInto, edgePattern, _) =>
+        if (hasPushDown) {
+          val alias = Set.apply(edgePattern.edge.alias, edgePattern.dst.alias)
+          if (!aliasMap.keySet.intersect(alias).isEmpty) {
+            keepOriginal = true
+          }
+        }
+        boundedVarLenExpand
     }
 
     val newRoot = BottomUp[LogicalOperator](rewriter).transform(filter).asInstanceOf[Filter]
-    if (hasPushDown) {
-      (hasPushDown, newRoot.in)
+    if (keepOriginal || !hasPushDown) {
+      (hasPushDown, filter)
     } else {
-      (hasPushDown, newRoot)
+      (hasPushDown, newRoot.in)
     }
   }
 

@@ -27,4 +27,7 @@ public class LinkedUdtfResult {
 
   /** The target vertex id of linked edge */
   private List<String> targetVertexIdList = new ArrayList<>();
+
+  /** edge type */
+  private String edgeType = null;
 }

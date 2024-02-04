@@ -22,7 +22,7 @@ import com.antgroup.openspg.reasoner.lube.Logging
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticRule, TemplateSemanticRule}
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern
-import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, SolvedModel, Var}
+import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, RepeatPathVar, SolvedModel, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.planning.SubQueryPlanner.nodeName
 import com.antgroup.openspg.reasoner.lube.logical.validate.Dag
@@ -144,6 +144,34 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
                 pattern
                   .topology(pattern.root.alias)
                   .filter(_.alias.equals(name))
+                  .filter(conn => {
+                    if (conn.direction == Direction.OUT) {
+                      conn.relTypes.contains(spo.getP) && pattern
+                        .getNode(conn.target)
+                        .typeNames
+                        .contains(getMetaType(spo.getO))
+                    } else {
+                      conn.relTypes.contains(spo.getP) && pattern
+                        .getNode(conn.source)
+                        .typeNames
+                        .contains(getMetaType(spo.getO))
+                    }
+                  })
+                  .head
+                  .direction
+              defined.add((t, direction))
+            }
+          }
+        case RepeatPathVar(pathVar, _, _) =>
+          val types = solved.getTypes(pathVar.name)
+          for (t <- types) {
+            val spo = new SPO(t)
+            val edge = graph.getEdge(t)
+            if (!edge.resolved) {
+              val direction =
+                pattern
+                  .topology(pattern.root.alias)
+                  .filter(_.alias.equals(pathVar.name))
                   .filter(conn => {
                     if (conn.direction == Direction.OUT) {
                       conn.relTypes.contains(spo.getP) && pattern

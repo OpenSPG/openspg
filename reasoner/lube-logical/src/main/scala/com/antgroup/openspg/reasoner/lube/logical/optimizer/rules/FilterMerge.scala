@@ -14,10 +14,10 @@
 package com.antgroup.openspg.reasoner.lube.logical.optimizer.rules
 
 import com.antgroup.openspg.reasoner.lube.logical.operators.{Filter, LogicalOperator}
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, Rule}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, Rule, SimpleRule}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 
-object FilterMerge extends Rule {
+object FilterMerge extends SimpleRule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {

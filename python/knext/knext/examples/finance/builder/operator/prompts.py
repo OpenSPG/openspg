@@ -13,8 +13,8 @@
 import json
 import numpy as np
 from typing import List, Dict
-from knext.api.operator import PromptOp
-from knext.api.record import SPGRecord
+from knext.builder.operator import PromptOp
+from knext.builder.operator.spg_record import SPGRecord
 
 
 def get_mock_spg_records(size: int = 10):

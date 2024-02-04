@@ -26,6 +26,7 @@ import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
 import com.antgroup.openspg.reasoner.lube.block.AddPredicate;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
+import com.antgroup.openspg.reasoner.lube.common.pattern.Connection;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Element;
 import com.antgroup.openspg.reasoner.lube.common.pattern.EntityElement;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
@@ -93,9 +94,23 @@ public class ExtractRelationImpl implements Serializable {
           Constants.EDGE_TO_ID_KEY, Lists.newArrayList("'" + targetEntityElement.id() + "'"));
     } else {
       targetPatternElement = (PatternElement) te;
+      String edgeAlias = null;
+      for (Connection connection : RunnerUtil.getConnectionSet(this.kgGraphSchema)) {
+        if (connection.target().equals(targetPatternElement.alias())) {
+          edgeAlias = connection.alias();
+          break;
+        }
+      }
       if (!this.propertyRuleMap.containsKey(Constants.EDGE_TO_ID_KEY)) {
         this.propertyRuleMap.put(
-            Constants.EDGE_TO_ID_KEY, Lists.newArrayList(targetPatternElement.alias() + ".id"));
+            Constants.EDGE_TO_ID_KEY,
+            Lists.newArrayList(
+                targetPatternElement.alias()
+                    + ".id==null ? "
+                    + edgeAlias
+                    + ".__to_id__ : "
+                    + targetPatternElement.alias()
+                    + ".id"));
       }
     }
     if (!this.propertyRuleMap.containsKey(Constants.EDGE_FROM_ID_KEY)) {
@@ -113,8 +128,19 @@ public class ExtractRelationImpl implements Serializable {
     IVertexId s = kgGraph.getVertex(sourceElement.alias()).get(0).getId();
     IVertexId o = getTargetVertexId(targetEntityElement, targetPatternElement, kgGraph);
 
+    long useVersion = version;
+    IProperty property = getEdgeProperty(kgGraph);
+    Object versionObj = property.get(Constants.DDL_EDGE_VERSION_KEY);
+    if (null != versionObj) {
+      try {
+        useVersion = Long.parseLong(String.valueOf(versionObj));
+      } catch (Throwable e) {
+        // pass
+      }
+    }
+
     IEdge<IVertexId, IProperty> willAddedEdge =
-        new Edge<>(s, o, getEdgeProperty(kgGraph), version, direction, getEdgeType(s, o));
+        new Edge<>(s, o, getEdgeProperty(kgGraph), useVersion, direction, getEdgeType(s, o));
 
     Map<String, Set<IEdge<IVertexId, IProperty>>> alias2EdgeMap = new HashMap<>();
     alias2EdgeMap.put(this.addPredicate.predicate().alias(), Sets.newHashSet(willAddedEdge));

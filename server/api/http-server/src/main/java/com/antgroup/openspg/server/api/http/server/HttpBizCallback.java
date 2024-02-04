@@ -13,15 +13,11 @@
 
 package com.antgroup.openspg.server.api.http.server;
 
-import com.antgroup.openspg.server.common.model.exception.IllegalParamsException;
 import org.springframework.http.ResponseEntity;
 
 public interface HttpBizCallback<T> {
 
-  /**
-   * Perform some pre-validation, and if the validation fails, throw an {@link
-   * IllegalParamsException} exception directly.
-   */
+  /** Perform some pre-validation */
   void check();
 
   /**

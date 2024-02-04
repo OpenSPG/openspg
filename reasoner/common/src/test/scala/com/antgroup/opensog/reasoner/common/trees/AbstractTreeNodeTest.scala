@@ -13,7 +13,7 @@
 
 package com.antgroup.opensog.reasoner.common.trees
 
-import com.antgroup.openspg.reasoner.common.trees.AbstractTreeNode
+import com.antgroup.openspg.reasoner.common.trees.{AbstractTreeNode, BottomUpWithContext, TopDownWithContext}
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
@@ -28,6 +28,22 @@ class AbstractTreeNodeTest extends AnyFunSpec {
          |        ├─Number(v=4)
          |        └─Number(v=3)""".stripMargin)
   }
+
+  it("rewrites with context up") {
+    val calculation = Add(Number(5), Add(Number(4), Number(3)))
+    val sumOnce: PartialFunction[(CalcExpr, Boolean), (CalcExpr, Boolean)] = {
+      case (Add(n1: Number, n2: Number), false) => Number(n1.v + n2.v) -> true
+    }
+
+    val expected = Add(Number(5), Number(7)) -> true
+
+    val up = BottomUpWithContext(sumOnce).transform(calculation, false)
+    up should equal(expected)
+
+    val down = TopDownWithContext(sumOnce).transform(calculation, false)
+    down should equal(expected)
+  }
+
 }
 
 case class Number(v: Int) extends CalcExpr {
@@ -41,3 +57,4 @@ abstract class CalcExpr extends AbstractTreeNode[CalcExpr] {
 case class Add(left: CalcExpr, right: CalcExpr) extends CalcExpr {
   def eval: Int = left.eval + right.eval
 }
+

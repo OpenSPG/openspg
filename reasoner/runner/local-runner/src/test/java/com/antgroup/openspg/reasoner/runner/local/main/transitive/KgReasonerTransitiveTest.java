@@ -125,6 +125,52 @@ public class KgReasonerTransitiveTest {
   }
 
   @Test
+  public void testTransitiveWithPathLongestWithTailRule() {
+    String dsl =
+        "GraphStructure {\n"
+            + "  A [RelatedParty, __start__='true']\n"
+            + "  B [RelatedParty]\n"
+            + "  A->B [holdShare] repeat(1,3) as e\n"
+            + "}\n"
+            + "Rule {\n"
+            + "  R0: B.name == 'C4'\n"
+            + "  R1(\"只保留最长的路径\"): group(A).keep_longest_path(e)\n"
+            + "}\n"
+            + "Action {\n"
+            + "  get(A.id,B.id)  \n"
+            + "}";
+    LocalReasonerResult result = doProcess(dsl);
+    // check result
+    Assert.assertEquals(1, result.getRows().size());
+    Assert.assertEquals(2, result.getRows().get(0).length);
+    Assert.assertEquals(result.getRows().get(0)[0], "P1");
+    Assert.assertEquals(result.getRows().get(0)[1], "C4");
+  }
+
+  @Test
+  public void testTransitiveWithPathLongestWithHeadRule() {
+    String dsl =
+        "GraphStructure {\n"
+            + "  A [RelatedParty, __start__='true']\n"
+            + "  B [RelatedParty]\n"
+            + "  A->B [holdShare] repeat(1,10) as e\n"
+            + "}\n"
+            + "Rule {\n"
+            + "  R0: A.name == 'P1'\n"
+            + "  R1(\"只保留最长的路径\"): group(A).keep_longest_path(e)\n"
+            + "}\n"
+            + "Action {\n"
+            + "  get(A.id,B.id)  \n"
+            + "}";
+    LocalReasonerResult result = doProcess(dsl);
+    // check result
+    Assert.assertEquals(1, result.getRows().size());
+    Assert.assertEquals(2, result.getRows().get(0).length);
+    Assert.assertEquals(result.getRows().get(0)[0], "P1");
+    Assert.assertEquals(result.getRows().get(0)[1], "C5");
+  }
+
+  @Test
   public void testTransitiveWithPathShortest() {
     String dsl =
         "GraphStructure {\n"
@@ -142,6 +188,28 @@ public class KgReasonerTransitiveTest {
     // check result
     Assert.assertEquals(1, result.getRows().size());
     Assert.assertEquals(2, result.getRows().get(0).length);
+    Assert.assertEquals(result.getRows().get(0)[0], "P1");
+    Assert.assertTrue("C2,C1".contains(result.getRows().get(0)[1].toString()));
+  }
+
+  @Test
+  public void testTransitiveWithPathShortestWithPath() {
+    String dsl =
+        "GraphStructure {\n"
+            + "  A [RelatedParty, __start__='true']\n"
+            + "  B [RelatedParty]\n"
+            + "  A->B [holdShare] repeat(1,10) as e\n"
+            + "}\n"
+            + "Rule {\n"
+            + "  R1: group(A).keep_shortest_path(e)\n"
+            + "}\n"
+            + "Action {\n"
+            + "  get(A.id,B.id, __path__)  \n"
+            + "}";
+    LocalReasonerResult result = doProcess(dsl);
+    // check result
+    Assert.assertEquals(1, result.getRows().size());
+    Assert.assertEquals(3, result.getRows().get(0).length);
     Assert.assertEquals(result.getRows().get(0)[0], "P1");
     Assert.assertTrue("C2,C1".contains(result.getRows().get(0)[1].toString()));
   }
@@ -291,8 +359,7 @@ public class KgReasonerTransitiveTest {
     for (Object[] strings : result.getRows()) {
       dSet.add(String.valueOf(strings[2]));
     }
-    Assert.assertTrue(dSet.contains("C1"));
-    Assert.assertTrue(dSet.contains("C2"));
+    Assert.assertTrue(dSet.contains("null"));
     Assert.assertTrue(dSet.contains("D21"));
     Assert.assertTrue(dSet.contains("D22"));
   }

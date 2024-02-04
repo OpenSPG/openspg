@@ -46,6 +46,8 @@ public class VertexLoaderConfig implements Serializable {
 
   /** allow loading of isolate vertex */
   private boolean allowIsolateVertex = false;
+  /** if this vertex is a concept, give the hypernym for loader all data */
+  private String conceptHypernym = null;
 
   public String getVertexType() {
     return vertexType;
@@ -157,6 +159,23 @@ public class VertexLoaderConfig implements Serializable {
    */
   public void setAllowIsolateVertex(boolean allowIsolateVertex) {
     this.allowIsolateVertex = allowIsolateVertex;
+  }
+
+  /**
+   * Getter method for property <tt>conceptHypernym</tt>.
+   *
+   * @return property value of conceptHypernym
+   */
+  public String getConceptHypernym() {
+    return conceptHypernym;
+  }
+  /**
+   * Setter method for property <tt>conceptHypernym</tt>.
+   *
+   * @param conceptHypernym value to be assigned to property conceptHypernym
+   */
+  public void setConceptHypernym(String conceptHypernym) {
+    this.conceptHypernym = conceptHypernym;
   }
 
   @Override
