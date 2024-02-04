@@ -6,7 +6,7 @@
 
 [OpenSPG](https://spg.openkg.cn/en-US) is a knowledge graph engine developed by Ant Group in collaboration with OpenKG, based on the SPG (Semantic-enhanced Programmable Graph) framework, which is a summary of Ant Group's years of experience in constructing and applying diverse domain knowledge graphs in the financial scenarios.
 
-![OpenSPG Architecture](https://mdn.alipayobjects.com/huamei_xgb3qj/afts/img/A*DmdvRKo5pyYAAAAAAAAAAAAADtmcAQ/original)
+![OpenSPG Architecture](https://mdn.alipayobjects.com/huamei_xgb3qj/afts/img/A*DsIHS7Fe78AAAAAAAAAAAAAADtmcAQ/original)
 
 # SPG Background
 
@@ -31,7 +31,12 @@ OpenSPG Core Capabilities:
   * Abstracts KGDSL (Knowledge Graph Domain Specific Language) to provide programmable symbolic representation of logic rules.
   * Supports downstream tasks, such as rule inference, neural/symbolic fusion learning, KG2Prompt linked LLM knowledge extraction/knowledge reasoning, represented in machine-understandable symbolic form.
   * Define dependency and transfer between knowledge through predicate semantics and logic rules, and support modeling and analysis of complex business scenarios.
-* Extensible SDK framework
+* Programmable Framework -- KNext 
+  * As a programmable framework of knownledge graph, KNext offers a set of extensible, procedural, and user-friendly components;
+  * It abstracts the core capabilities of knowledge graphs, congealing them into componentized, framework-oriented, and engine-built-in capabilities;
+  * Achieves isolation between the engine and business logic, domain models, facilitating rapid definition of knowledge graph solutions for businesses;
+  * Constructs a controllable AI technology stack driven by knowledge, based on the OpenSPG engine, connecting deep learning capabilities such as LLM and GraphLearning.
+* Cloud Adaptation Layer -- Cloudext 
   * Business systems build their own characteristic business front-end by interfacing with open SDKs
   * Extensible/adaptable customized graph storage/graph calculation engine
   * Extensible/adaptable machine learning framework suitable for their own business characteristics
@@ -40,18 +45,15 @@ OpenSPG Core Capabilities:
 
 ## Get Started
 
-* [Install OpenSPG](https://spg.openkg.cn/en-US/quick-start/install)
+* [Install OpenSPG](https://openspg.yuque.com/ndx6g9/ns5nw2/yl9p847hcfpluv46)
 * Quick start with examples:
-  * [Enterprise Supply Chain Knowledge Graph](https://spg.openkg.cn/en-US/example/enterprise-supply-chain)
-  * [Risk Mining Knowledge Graph](https://spg.openkg.cn/en-US/example/risk-mining)
-  * [Medical Knowledge Graph](https://spg.openkg.cn/en-US/example/medical)
+  * [Enterprise Supply Chain Knowledge Graph](https://openspg.yuque.com/ndx6g9/ns5nw2/gyd703vk4l5qqb9y)
+  * [Risk Mining Knowledge Graph](https://openspg.yuque.com/ndx6g9/ns5nw2/yoleogat9akvyqnz)
+  * [Medical Knowledge Graph](https://openspg.yuque.com/ndx6g9/ns5nw2/kadwgc3iarqqemo1)
 
 ## Advanced tutorials
 
-* [KNext command tool and SDK Tutorial](https://spg.openkg.cn/en-US/tutorial/knext)
-* [SPG-Schema tutorial](https://spg.openkg.cn/en-US/tutorial/spgschema)
-* [SPG-Reasoner Tutorial](https://spg.openkg.cn/en-US/tutorial/spgreasoner)
-* [Adapting a new graph database tutorial](https://spg.openkg.cn/en-US/tutorial/spg2lpg)
+* [OpenSPG User Guide](https://openspg.yuque.com/ndx6g9/ns5nw2)
 
 # How to contribute
 
