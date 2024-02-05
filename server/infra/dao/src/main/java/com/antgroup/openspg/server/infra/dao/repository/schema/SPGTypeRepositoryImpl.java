@@ -81,7 +81,7 @@ public class SPGTypeRepositoryImpl implements SPGTypeRepository {
   @Override
   public int delete(SimpleSPGType advancedType) {
     ontologyParentRelRepository.delete(advancedType.getUniqueId());
-    projectOntologyRelRepository.delete(advancedType.getUniqueId());
+    projectOntologyRelRepository.delete(advancedType.getUniqueId(), advancedType.getProjectId());
 
     OntologyDOExample example = new OntologyDOExample();
     example.createCriteria().andOriginalIdEqualTo(advancedType.getUniqueId());

@@ -61,4 +61,10 @@ public class SchemaException extends OpenSPGException {
   public static SchemaException relationNotExist(String relationName) {
     return new SchemaException("there is no relation with name={}", relationName);
   }
+
+  public static SchemaException existReference(String spgTypeName) {
+    return new SchemaException(
+        "{} is referenced by another project, so that it cannot be deleted until the reference is released",
+        spgTypeName);
+  }
 }
