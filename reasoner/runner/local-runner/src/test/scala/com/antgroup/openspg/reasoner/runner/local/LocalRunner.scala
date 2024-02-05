@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,24 +13,49 @@
 
 package com.antgroup.openspg.reasoner.runner.local
 
-import com.antgroup.openspg.reasoner.runner.local.impl.LocalReasonerSession
-import com.antgroup.openspg.reasoner.runner.local.rdg.{LocalRow, TypeTags}
+import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState
 import com.antgroup.openspg.reasoner.lube.block.{Block, DDLBlock, MatchBlock, TableResultBlock}
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  GraphPattern,
-  LinkedPatternConnection,
-  PatternConnection
-}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{GraphPattern, LinkedPatternConnection, PatternConnection}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.logical.validate.{Dag, Validator}
-import com.antgroup.openspg.reasoner.parser.KgDslParser
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser
+import com.antgroup.openspg.reasoner.runner.local.impl.LocalReasonerSession
+import com.antgroup.openspg.reasoner.runner.local.rdg.{LocalRow, TypeTags}
 import com.google.common.collect.Lists
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
 class LocalRunner extends AnyFunSpec with BeforeAndAfter {
+
+  it("MockRunner2") {
+    val dsl =
+      """
+        |GraphStructure {
+        |	(Student:Student)-[STEdge:STEdge]->(Teacher:Teacher)
+        |}
+        |Rule {
+        |
+        |}
+        |Action {
+        |get(Student.name, Teacher.name, STEdge.name)
+        |}
+        |""".stripMargin
+    val schema: Map[String, Set[String]] = Map.apply(
+      "Student" -> Set.apply("name"),
+      "Teacher" -> Set.apply("name"),
+      "Student_STEdge_Teacher" -> Set.apply("name"))
+    val catalog = new PropertyGraphCatalog(schema)
+    catalog.init()
+    val session = new LocalReasonerSession(new OpenSPGDslParser(),
+      catalog, TypeTags.rdgTypeTag, new MemGraphState)
+    val plan = session.plan(dsl, Map.empty)
+    val rst = session.getResult(plan.head)
+    if (rst.isInstanceOf[LocalRow]) {
+      rst.asInstanceOf[LocalRow].show(10)
+    }
+  }
 
   it("MockRunner") {
     val dsl =
@@ -51,7 +76,7 @@ class LocalRunner extends AnyFunSpec with BeforeAndAfter {
       "Student_STEdge_Teacher" -> Set.apply("name"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new LocalReasonerSession(new KgDslParser(), catalog, TypeTags.rdgTypeTag)
+    val session = new LocalReasonerSession(new OpenSPGDslParser(), catalog, TypeTags.rdgTypeTag)
     val plan = session.plan(dsl, Map.empty)
     val rst = session.getResult(plan.head)
     if (rst.isInstanceOf[LocalRow]) {
@@ -69,7 +94,7 @@ class LocalRunner extends AnyFunSpec with BeforeAndAfter {
         |   Rule{}
         |   Action {get(s)}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "Park" -> Set.apply("boundary"),
@@ -78,7 +103,7 @@ class LocalRunner extends AnyFunSpec with BeforeAndAfter {
       "Subway_centerS2CellId_STD.S2CellId" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new LocalReasonerSession(new KgDslParser(), catalog, TypeTags.rdgTypeTag)
+    val session = new LocalReasonerSession(new OpenSPGDslParser(), catalog, TypeTags.rdgTypeTag)
     implicit val context: LogicalPlannerContext =
       LogicalPlannerContext(catalog, parser, Map.empty)
     session.plan2UnresolvedLogicalPlan(dsl, Map.empty)
@@ -122,7 +147,7 @@ class LocalRunner extends AnyFunSpec with BeforeAndAfter {
         |   Rule{}
         |   Action {get(s)}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "Park" -> Set.apply("boundary"),
@@ -134,7 +159,7 @@ class LocalRunner extends AnyFunSpec with BeforeAndAfter {
       "Shop_centerS2CellId_STD.S2CellId" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new LocalReasonerSession(new KgDslParser(), catalog, TypeTags.rdgTypeTag)
+    val session = new LocalReasonerSession(new OpenSPGDslParser(), catalog, TypeTags.rdgTypeTag)
     implicit val context: LogicalPlannerContext =
       LogicalPlannerContext(catalog, parser, Map.empty)
     session.plan2UnresolvedLogicalPlan(dsl, Map.empty)
@@ -169,7 +194,7 @@ class LocalRunner extends AnyFunSpec with BeforeAndAfter {
         |   Rule{}
         |   Action {get(s)}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "Park" -> Set.apply("boundary"),
@@ -178,7 +203,7 @@ class LocalRunner extends AnyFunSpec with BeforeAndAfter {
       "Subway_centerS2CellId_STD.S2CellId" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new LocalReasonerSession(new KgDslParser(), catalog, TypeTags.rdgTypeTag)
+    val session = new LocalReasonerSession(new OpenSPGDslParser(), catalog, TypeTags.rdgTypeTag)
     try {
       implicit val context: LogicalPlannerContext =
         LogicalPlannerContext(catalog, parser, Map.empty)
@@ -201,7 +226,7 @@ class LocalRunner extends AnyFunSpec with BeforeAndAfter {
         |   Rule{}
         |   Action {get(s)}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] = Map.apply(
       "Park" -> Set.apply("boundary"),
@@ -210,7 +235,7 @@ class LocalRunner extends AnyFunSpec with BeforeAndAfter {
       "Subway_centerS2CellId_STD.S2CellId" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new LocalReasonerSession(new KgDslParser(), catalog, TypeTags.rdgTypeTag)
+    val session = new LocalReasonerSession(new OpenSPGDslParser(), catalog, TypeTags.rdgTypeTag)
     try {
       implicit val context: LogicalPlannerContext =
         LogicalPlannerContext(catalog, parser, Map.empty)
@@ -250,7 +275,7 @@ class LocalRunner extends AnyFunSpec with BeforeAndAfter {
       "Film_starOfFilm_FilmStar" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new LocalReasonerSession(new KgDslParser(), catalog, TypeTags.rdgTypeTag)
+    val session = new LocalReasonerSession(new OpenSPGDslParser(), catalog, TypeTags.rdgTypeTag)
     val graphLoaderConfig = session.getGraphLoaderConfig(dsl, Map.empty)
     val vertexTypeSet = graphLoaderConfig.allVertexTypes()
     val edgeTypeSet = graphLoaderConfig.allEdgeTypes()

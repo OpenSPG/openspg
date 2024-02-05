@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -19,6 +19,7 @@ import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.property.IVersionProperty;
+import com.antgroup.openspg.reasoner.common.graph.property.impl.EdgeProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
@@ -131,6 +132,31 @@ public abstract class AbstractGraphGenerator implements Serializable {
     return edgeAggregatedMap;
   }
 
+  protected String getVertexTypeInEdge(
+      Map<String, IVertex<String, IProperty>> vertexMap, IEdge<String, IProperty> edge, String id) {
+    IVertex<String, IProperty> vertex = vertexMap.get(id);
+    if (vertex != null) {
+      return RunnerUtil.getVertexTypeFromProperty(vertex.getValue());
+    }
+    String typePropName = Constants.EDGE_FROM_ID_TYPE_KEY;
+    if (edge.getSourceId().equals(id) && edge.getDirection().equals(Direction.IN)) {
+      typePropName = Constants.EDGE_TO_ID_TYPE_KEY;
+    } else if (edge.getSourceId().equals(id) && edge.getDirection().equals(Direction.OUT)) {
+      typePropName = Constants.EDGE_FROM_ID_TYPE_KEY;
+    } else if (edge.getTargetId().equals(id) && edge.getDirection().equals(Direction.IN)) {
+      typePropName = Constants.EDGE_FROM_ID_TYPE_KEY;
+    } else if (edge.getTargetId().equals(id) && edge.getDirection().equals(Direction.OUT)) {
+      typePropName = Constants.EDGE_TO_ID_TYPE_KEY;
+    }
+
+    if (!edge.getValue().isKeyExist(typePropName)) {
+      throw new RuntimeException(
+          edge.toString() + " does not exist " + typePropName + ", pls set this value");
+    }
+
+    return edge.getValue().get(typePropName).toString();
+  }
+
   protected Tuple2<List<IVertex<IVertexId, IProperty>>, List<IEdge<IVertexId, IProperty>>>
       generateGraphData(
           List<IVertex<String, IProperty>> vertexList, List<IEdge<String, IProperty>> edgeList) {
@@ -147,23 +173,29 @@ public abstract class AbstractGraphGenerator implements Serializable {
             .map(
                 (Function<IEdge<String, IProperty>, IEdge<IVertexId, IProperty>>)
                     edge -> {
+                      String sourceType = getVertexTypeInEdge(vertexMap, edge, edge.getSourceId());
+                      String targetType = getVertexTypeInEdge(vertexMap, edge, edge.getTargetId());
+
                       IVertex<String, IProperty> source = vertexMap.get(edge.getSourceId());
-                      if (null == source) {
-                        throw new RuntimeException(
-                            "source vertex " + edge.getSourceId() + " does not exists");
+                      IVertexId sourceId = IVertexId.from(edge.getSourceId(), sourceType);
+                      if (null != source) {
+                        sourceId = IVertexId.from(source.getId(), sourceType);
                       }
 
                       IVertex<String, IProperty> target = vertexMap.get(edge.getTargetId());
-                      if (null == target) {
-                        throw new RuntimeException(
-                            "target vertex " + edge.getTargetId() + " does not exists");
+                      IVertexId targetId = IVertexId.from(edge.getTargetId(), targetType);
+                      if (null != target) {
+                        targetId = IVertexId.from(target.getId(), targetType);
                       }
-                      String sourceType = RunnerUtil.getVertexTypeFromProperty(source.getValue());
-                      String targetType = RunnerUtil.getVertexTypeFromProperty(target.getValue());
+
+                      EdgeProperty edgeProperty = new EdgeProperty();
+                      for (String key : edge.getValue().getKeySet()) {
+                        edgeProperty.put(key, edge.getValue().get(key));
+                      }
                       return new Edge<>(
-                          IVertexId.from(source.getId(), sourceType),
-                          IVertexId.from(target.getId(), targetType),
-                          edge.getValue(),
+                          sourceId,
+                          targetId,
+                          edgeProperty,
                           edge.getVersion(),
                           edge.getDirection(),
                           sourceType + "_" + edge.getType() + "_" + targetType);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -18,7 +18,7 @@ import com.antgroup.openspg.core.schema.model.DslSyntaxError;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
-import com.antgroup.openspg.reasoner.parser.KgDslParser;
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser;
 import com.antgroup.openspg.server.core.schema.service.semantic.LogicalRuleService;
 import com.antgroup.openspg.server.core.schema.service.semantic.model.DslCheckResult;
 import com.antgroup.openspg.server.core.schema.service.semantic.repository.LogicalRuleRepository;
@@ -83,7 +83,7 @@ public class LogicalRuleServiceImpl implements LogicalRuleService {
   public DslCheckResult checkDslSyntax(String dsl) {
     DslCheckResult result = new DslCheckResult();
     try {
-      ParserInterface parser = new KgDslParser();
+      ParserInterface parser = new OpenSPGDslParser();
       if (StringUtils.isEmpty(dsl)) {
         result.setPass(false);
         result.setErrorPart("empty dsl");

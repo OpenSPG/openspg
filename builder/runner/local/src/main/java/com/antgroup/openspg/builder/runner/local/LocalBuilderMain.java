@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -98,7 +98,6 @@ public class LocalBuilderMain {
     try {
       commandLine = parser.parse(options, args);
     } catch (ParseException e) {
-      System.out.println(e.getMessage());
       helper.printHelp("Usage: ", options);
       System.exit(0);
     }

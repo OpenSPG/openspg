@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,15 +13,35 @@
 
 package com.antgroup.openspg.reasoner.common.graph.edge.impl;
 
+import com.antgroup.openspg.reasoner.common.constants.Constants;
+import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
+
 public class OptionalEdge<K, EV> extends Edge<K, EV> {
 
   /** optional edge */
   public OptionalEdge(K srcId, K targetId) {
-    super(srcId, targetId);
+    super(srcId, targetId, null, 0L, Direction.OUT, Constants.OPTIONAL_EDGE_FLAG);
   }
 
   @Override
   public OptionalEdge<K, EV> clone() {
     return new OptionalEdge<>(this.sourceId, this.targetId);
+  }
+
+  @Override
+  public String toString() {
+    return "OptionalEdge(s="
+        + getSourceId()
+        + ",p="
+        + getType()
+        + ",o="
+        + getTargetId()
+        + ",direction="
+        + direction
+        + ",version="
+        + version
+        + ",property="
+        + getValue()
+        + ")";
   }
 }

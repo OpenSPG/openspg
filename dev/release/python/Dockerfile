@@ -1,4 +1,4 @@
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ ENV LANG C.UTF-8
 ARG TARGETPLATFORM
 ARG APT_INSTALL="apt-get install --no-install-recommends -y"
 
-ARG PIP_PKGS="openspg-knext==0.0.2-beta1 openspg-nn4k==0.0.2-beta1"
+ARG PIP_PKGS="openspg-knext openspg-nn4k pemja==0.4.0"
 
 RUN apt-get clean && apt-get update && \
     # Install openjdk 8.
@@ -34,5 +34,8 @@ RUN python3 -m venv /openspg_venv && \
     . /openspg_venv/bin/activate && \
     pip3 install $PIP_PKGS && \
     echo "if (tty -s); then \n   . /openspg_venv/bin/activate \nfi" >> ~/.bashrc
+
+ADD lib/builder*.jar /openspg_venv/lib/python3.8/site-packages/knext/builder/lib
+ADD lib/reasoner*.jar /openspg_venv/lib/python3.8/site-packages/knext/reasoner/lib
 
 RUN git clone --depth=1 https://github.com/OpenSPG/openspg.git

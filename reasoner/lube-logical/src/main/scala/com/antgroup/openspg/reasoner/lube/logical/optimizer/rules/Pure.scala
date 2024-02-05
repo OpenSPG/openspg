@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,9 +17,9 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.InvalidRefVariable
 import com.antgroup.openspg.reasoner.lube.common.expr.Directly
-import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, Var}
+import com.antgroup.openspg.reasoner.lube.logical.{PathVar, RepeatPathVar, SolvedModel, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, Rule}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, SimpleRule}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 
 /**
@@ -27,7 +27,7 @@ import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
  * if and only if the output of the current Op is not dependent on the downstream node,
  * add a ProjectOp for attribute clipping
  */
-object Pure extends Rule {
+object Pure extends SimpleRule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
@@ -70,11 +70,16 @@ object Pure extends Rule {
         }
       }
     }
+
     varMap.values.map(f => {
-      if (solved.fields.contains(f.name)) {
-        f.intersect(solved.fields(f.name))
+      if (f.isInstanceOf[PathVar]) {
+        f
+      } else if (!solved.fields.contains(f.name)) {
+        throw InvalidRefVariable(s"can not find $f")
+      } else if (solved.fields.get(f.name).get.isInstanceOf[RepeatPathVar]) {
+        f.intersect(solved.fields.get(f.name).get.asInstanceOf[RepeatPathVar].pathVar.elements(1))
       } else {
-        throw InvalidRefVariable(s"not found var: ${f.name}")
+        f.intersect(solved.fields.get(f.name).get)
       }
     }).toList
   }

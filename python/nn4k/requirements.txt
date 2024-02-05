@@ -1,1 +1,1 @@
-openai<1
+openai

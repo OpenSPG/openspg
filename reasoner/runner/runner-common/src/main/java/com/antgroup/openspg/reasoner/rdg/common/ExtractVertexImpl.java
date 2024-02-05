@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
 import com.antgroup.openspg.reasoner.lube.block.AddVertex;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
-import com.antgroup.openspg.reasoner.rule.RuleRunner;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
 import com.google.common.collect.Lists;

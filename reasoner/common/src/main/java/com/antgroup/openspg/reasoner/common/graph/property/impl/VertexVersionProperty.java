@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.common.graph.property.impl;
 
+import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.property.IVersionProperty;
 import com.antgroup.openspg.reasoner.common.utils.PropertyUtil;
@@ -36,6 +37,17 @@ public class VertexVersionProperty implements IVersionProperty {
   /** constructor */
   public VertexVersionProperty(Map<String, TreeMap<Long, Object>> props) {
     this.props = props;
+  }
+
+  /** constructor by kvs */
+  public VertexVersionProperty(Object... kvs) {
+    this.props = new HashMap<>();
+    Map<String, Object> propertyMap = Utils.convert2Property(kvs);
+    for (Map.Entry<String, Object> entry : propertyMap.entrySet()) {
+      TreeMap<Long, Object> valueMap = new TreeMap<>();
+      valueMap.put(0L, entry.getValue());
+      this.props.put(entry.getKey(), valueMap);
+    }
   }
 
   @Override

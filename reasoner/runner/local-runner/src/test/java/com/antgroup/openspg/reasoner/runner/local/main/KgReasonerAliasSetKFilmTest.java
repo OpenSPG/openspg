@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -110,6 +110,44 @@ public class KgReasonerAliasSetKFilmTest {
     Assert.assertEquals("500", result.get(0)[3]);
     Assert.assertEquals("500", result.get(1)[3]);
     Assert.assertEquals("500", result.get(2)[3]);
+  }
+
+  @Test
+  public void test3() {
+    FileMutex.runTestWithMutex(this::doTest3);
+  }
+
+  private void doTest3() {
+    String dsl =
+        "\n"
+            + "GraphStructure {\n"
+            + "    (A:User)-[p1:trans]->(B:User)-[p2:trans]->(C:User)-[p3:trans]->(A)\n"
+            + "}\n"
+            + "Rule {\n"
+            + "R1: A.id == $idSet1\n"
+            + "R2: B.id == $idSet2\n"
+            + "R3: C.id == $idSet3\n"
+            + "totalTrans = p1.amount + p2.amount + p3.amount\n"
+            + "R2('取top2'): top(totalTrans, 3)"
+            + "}\n"
+            + "Action {\n"
+            + "    get(A.id, B.id, C.id, totalTrans)\n"
+            + "}";
+    List<String[]> result =
+        TransBaseTestData.runTestResult(
+            dsl,
+            new HashMap<String, Object>() {
+              {
+                put("idSet1", "'1'");
+                put("idSet2", "'2'");
+                put("idSet3", "'3'");
+              }
+            });
+    Assert.assertEquals(3, result.size());
+    Assert.assertEquals(4, result.get(0).length);
+    Assert.assertEquals("350", result.get(0)[3]);
+    Assert.assertEquals("350", result.get(1)[3]);
+    Assert.assertEquals("350", result.get(2)[3]);
   }
 
   @Test

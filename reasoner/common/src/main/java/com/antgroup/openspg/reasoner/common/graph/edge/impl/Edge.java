@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -122,6 +122,17 @@ public class Edge<K, EV> implements IEdge<K, EV> {
   public Edge<K, EV> clone() {
     return new Edge<>(
         this.sourceId, this.targetId, this.value, this.version, this.direction, this.type);
+  }
+
+  @Override
+  public Edge<K, EV> reverse() {
+    return new Edge<>(
+        this.targetId,
+        this.sourceId,
+        this.value,
+        this.version,
+        Direction.OUT.equals(this.direction) ? Direction.IN : Direction.OUT,
+        this.type);
   }
 
   @Override

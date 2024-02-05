@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,7 +17,7 @@ import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
 import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
 
 public class ToDate {
-  @UdfDefine(name = "to_date", compatibleName = "ToDate")
+  @UdfDefine(name = "to_date", compatibleName = "ToDate,getdate")
   public String toDate(String dateStr) {
     String df2 = "yyyy-MM-dd";
     return toDate(dateStr, df2);

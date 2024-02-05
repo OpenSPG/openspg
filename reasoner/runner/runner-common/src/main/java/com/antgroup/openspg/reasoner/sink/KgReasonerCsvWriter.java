@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -27,6 +27,7 @@ public class KgReasonerCsvWriter {
   private static final Map<String, CSVWriter> CSV_WRITER_MAP = new ConcurrentHashMap<>();
 
   public static void write(String file, Object[] data) {
+    // log.info("KgReasonerCsvWriter,file=" + file + ",data=" + Arrays.toString(data));
     CSVWriter writer =
         CSV_WRITER_MAP.computeIfAbsent(
             file,

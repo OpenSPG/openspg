@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,15 +13,11 @@
 
 package com.antgroup.openspg.server.api.http.server;
 
-import com.antgroup.openspg.server.common.model.exception.IllegalParamsException;
 import org.springframework.http.ResponseEntity;
 
 public interface HttpBizCallback<T> {
 
-  /**
-   * Perform some pre-validation, and if the validation fails, throw an {@link
-   * IllegalParamsException} exception directly.
-   */
+  /** Perform some pre-validation */
   void check();
 
   /**

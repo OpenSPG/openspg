@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -14,9 +14,9 @@ from typing import List
 
 import requests
 
-from knext.api.operator import LinkOp
-from knext.api.record import SPGRecord
-from knext.client.search import SearchClient
+from knext.builder.operator import LinkOp
+from knext.builder.operator.spg_record import SPGRecord
+from knext.common.search import SearchClient
 
 
 def llm_infer(word, recall):

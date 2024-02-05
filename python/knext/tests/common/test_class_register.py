@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -12,8 +12,8 @@
 
 import os
 from knext.common.class_register import register_from_package
-from knext.operator.base import BaseOp
-from knext.operator.op import ExtractOp, LinkOp, FuseOp, PredictOp
+from knext.builder.operator.base import BaseOp
+from knext.builder.operator.op import ExtractOp, LinkOp, FuseOp, PredictOp
 
 PWD = os.path.dirname(__file__)
 

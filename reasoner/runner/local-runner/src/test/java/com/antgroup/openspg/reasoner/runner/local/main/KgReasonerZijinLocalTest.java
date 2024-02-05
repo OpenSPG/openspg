@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -19,6 +19,8 @@ import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog;
+import com.antgroup.openspg.reasoner.recorder.DefaultRecorder;
+import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.LocalReasonerRunner;
 import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphLoader;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
@@ -34,6 +36,68 @@ import org.junit.Test;
 import scala.Tuple2;
 
 public class KgReasonerZijinLocalTest {
+
+  @Test
+  public void test41() {
+    String dsl =
+        "//异常借贷行为\n"
+            + "GraphStructure {\n"
+            + "A[AMLz50.BlackCompanyRelated]\n"
+            + "}\n"
+            + "Rule\n"
+            + "{\t\n"
+            + "R1(\"频繁花呗借款\")     = rule_value(A.explainStrategyList rlike 'HuaBeiMultiLending', true, false)\n"
+            + "R2(\"花呗提前还款\")  = rule_value(A.explainStrategyList rlike 'HuaBeiMultiPrepay', true, false)\n"
+            + "R3(\"花呗逾期未还\")  = rule_value(A.explainStrategyList rlike 'HuaBeiCreditOverdue', true, false)\n"
+            + "\n"
+            + "result = R1 or R2 or R3\n"
+            + "\t\tr5 = rule_value(R3, \"花呗逾期未还\", \"\")\n"
+            + "\t\tr4 = rule_value(R1, \"频繁借款\", r5)\n"
+            + "\t\tr3 = rule_value(R1 && R3, \"频繁借款，花呗逾期未还\", r4)\n"
+            + "    r2 = rule_value(R1 && R2, \"频繁借款后提前还款\", r3)\n"
+            + "    r1 = rule_value(R1 && R2 && R3, \"频繁借款后提前还款，花呗逾期未还\", r2)\n"
+            + "}\n"
+            + "Action {\n"
+            + "\tget(A.id,result,r1)\n"
+            + "}";
+    System.out.println(dsl);
+    LocalReasonerTask task = new LocalReasonerTask();
+    task.setDsl(dsl);
+    // add mock catalog
+    Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
+    schema.put(
+        "AMLz50.BlackCompanyRelated",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("explainStrategyList")));
+    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
+    catalog.init();
+    task.setCatalog(catalog);
+    task.setGraphLoadClass(
+        "com.antgroup.openspg.reasoner.runner.local.main.KgReasonerZijinLocalTest$GraphLoader41");
+    // enable subquery
+    Map<String, Object> params = new HashMap<>();
+    params.put(ConfigKey.KG_REASONER_BINARY_PROPERTY, "false");
+    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
+    task.setParams(params);
+    task.setExecutorTimeoutMs(99999999999999999L);
+    task.setExecutionRecorder(new DefaultRecorder());
+    LocalReasonerRunner runner = new LocalReasonerRunner();
+    LocalReasonerResult result = runner.run(task);
+    System.out.println(task.getExecutionRecorder().toReadableString());
+    // only u1
+    Assert.assertEquals(1, result.getRows().size());
+  }
+
+  public static class GraphLoader41 extends AbstractLocalGraphLoader {
+    @Override
+    public List<IVertex<String, IProperty>> genVertexList() {
+      return Lists.newArrayList(constructionVertex("SA", "AMLz50.BlackCompanyRelated"));
+    }
+
+    @Override
+    public List<IEdge<String, IProperty>> genEdgeList() {
+      return Lists.newArrayList();
+    }
+  }
 
   @Test
   public void test3() {

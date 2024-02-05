@@ -1,4 +1,4 @@
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -10,6 +10,6 @@
 # or implied.
 
 docker buildx build -f Dockerfile --platform linux/arm64/v8,linux/amd64 --push \
-  -t openspg/openspg-server:0.0.2-beta1 \
+  -t openspg/openspg-server:0.0.2-beta2 \
   -t openspg/openspg-server:latest \
   .

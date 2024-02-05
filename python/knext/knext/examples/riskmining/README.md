@@ -15,23 +15,13 @@ knext project create --prj_path .
 knext schema commit
 ```
 
-- Then, we will build the knowledge graph based on the schema.
-  The data source of the knowledge graph is a local CSV file located in the ./builder/job/data directory.
-  During the process of the knowledge graph construction, it may be necessary to preprocess the raw data.
-  In such cases, we need to invoke construction operators.
-  Therefore, before constructing the knowledge graph, we need to publish the construction operators.
-
-```bash
-knext operator publish CertLinkerOperator
-```
-
 - Next, we can start building the knowledge graph based on the created schema and published operators.
   We can import entities such as App, Cert, Person, Company, along with their attributes and relations.
   After completing these operations, we will obtain a RiskMining knowledge graph.
 
 ```bash
-knext builder submit TaxOfRiskUser,TaxOfRiskApp,Cert,Company,CompanyHasCert
-knext builder submit App,Device,Person,PersonFundTrans,PersonHasDevice,PersonHoldShare
+knext builder execute TaxOfRiskUser,TaxOfRiskApp,Cert,Company,CompanyHasCert
+knext builder execute App,Device,Person,PersonFundTrans,PersonHasDevice,PersonHoldShare
 ```
 
 - Next, we can also explore some more exciting possibilities. We define some logical rules,
@@ -51,9 +41,9 @@ knext schema reg_concept_rule --file ./schema/concept.rule
   Now, Let's run it!
 
 ```bash
-knext reasoner query --file ./reasoner/gambling_app.dsl
-knext reasoner query --dsl "MATCH (phone:STD.ChinaMobile)<-[:hasPhone]-(u:RiskMining.Person) RETURN u.name,phone.id"
-knext reasoner query --dsl "MATCH (s:\`RiskMining.TaxOfRiskApp\`/\`赌博应用\`) RETURN s.id"
-knext reasoner query --dsl "MATCH (s:\`RiskMining.TaxOfRiskUser\`/\`赌博App开发者\`) RETURN s.id,s.name"
+knext reasoner execute --file ./reasoner/gambling_app.dsl
+knext reasoner execute --dsl "MATCH (phone:STD.ChinaMobile)<-[:hasPhone]-(u:RiskMining.Person) RETURN u.name,phone.id"
+knext reasoner execute --dsl "MATCH (s:\`RiskMining.TaxOfRiskApp\`/\`赌博应用\`) RETURN s.id"
+knext reasoner execute --dsl "MATCH (s:\`RiskMining.TaxOfRiskUser\`/\`赌博App开发者\`) RETURN s.id,s.name"
 ```
 

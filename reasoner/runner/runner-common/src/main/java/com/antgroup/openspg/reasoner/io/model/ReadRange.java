@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,11 +13,6 @@
 
 package com.antgroup.openspg.reasoner.io.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class ReadRange implements Comparable<ReadRange> {
   private long start;
   private long end;
@@ -25,6 +20,42 @@ public class ReadRange implements Comparable<ReadRange> {
   /** create read range */
   public ReadRange(long start, long end) {
     this.start = start;
+    this.end = end;
+  }
+
+  /**
+   * Getter method for property <tt>start</tt>.
+   *
+   * @return property value of start
+   */
+  public long getStart() {
+    return start;
+  }
+
+  /**
+   * Setter method for property <tt>start</tt>.
+   *
+   * @param start value to be assigned to property start
+   */
+  public void setStart(long start) {
+    this.start = start;
+  }
+
+  /**
+   * Getter method for property <tt>end</tt>.
+   *
+   * @return property value of end
+   */
+  public long getEnd() {
+    return end;
+  }
+
+  /**
+   * Setter method for property <tt>end</tt>.
+   *
+   * @param end value to be assigned to property end
+   */
+  public void setEnd(long end) {
     this.end = end;
   }
 

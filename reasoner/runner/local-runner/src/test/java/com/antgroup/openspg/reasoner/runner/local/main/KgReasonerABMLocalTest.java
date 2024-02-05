@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -19,6 +19,7 @@ import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog;
+import com.antgroup.openspg.reasoner.recorder.DefaultRecorder;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.LocalReasonerRunner;
 import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphLoader;
@@ -37,6 +38,96 @@ import org.junit.Test;
 import scala.Tuple2;
 
 public class KgReasonerABMLocalTest {
+  @Test
+  public void test12() {
+    String dsl =
+        "Define (s:ABM.User)-[p:zeroInstallNum]->(o:Int) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[e1:acc2apdid]->(B:ABM.Apdid)-[e2:zeroInstall]->(A:ABM.Pkg)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        num = group(s).count(A)\n"
+            + "        o = num\n"
+            + "    }\n"
+            + "}\n"
+            + "\n"
+            + "// com.hvtgurarchp.yoedshtnmt.idbgvsrubx\n"
+            + "GraphStructure {\n"
+            + "  A [ABM.Pkg, __start__='true']\n"
+            + "  B [ABM.Apdid]\n"
+            + "  C [ABM.User]\n"
+            + "  B->A [zeroInstall]\n"
+            + "  C->B [acc2apdid]\n"
+            + "\n"
+            + "}\n"
+            + "Rule {\n"
+            + "    R1(\"User必须安装超过2次\"): C.zeroInstallNum > 1\n"
+            + "}\n"
+            + "Action {\n"
+            + "  get(A.id,B.id, C.id)   // 获取A和B两个导演的名字，调试和在线执行时直接看渲染出来的子图\n"
+            + "}";
+    System.out.println(dsl);
+    LocalReasonerTask task = new LocalReasonerTask();
+    task.setDsl(dsl);
+    // add mock catalog
+    Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
+    schema.put("ABM.User", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+    schema.put(
+        "ABM.Apdid",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "stock", "total")));
+    schema.put("ABM.Pkg", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+    schema.put(
+        "ABM.User_acc2apdid_ABM.Apdid",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+    schema.put(
+        "ABM.Apdid_zeroInstall_ABM.Pkg",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
+    catalog.init();
+    task.setCatalog(catalog);
+    task.setGraphLoadClass(
+        "com.antgroup.openspg.reasoner.runner.local.main.KgReasonerABMLocalTest$GraphLoader12");
+    // enable subquery
+    Map<String, Object> params = new HashMap<>();
+    // 开启子查询
+    params.put(ConfigKey.KG_REASONER_BINARY_PROPERTY, "false");
+    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
+    task.setParams(params);
+    task.setExecutorTimeoutMs(99999999999999999L);
+    task.setExecutionRecorder(new DefaultRecorder());
+    LocalReasonerRunner runner = new LocalReasonerRunner();
+    LocalReasonerResult result = runner.run(task);
+    System.out.println(task.getExecutionRecorder().toReadableString());
+    // only u1
+    Assert.assertEquals(2, result.getRows().size());
+  }
+
+  public static class GraphLoader12 extends AbstractLocalGraphLoader {
+    @Override
+    public List<IVertex<String, IProperty>> genVertexList() {
+      return Lists.newArrayList(
+          constructionVertex("Pkg", "ABM.Pkg", "resultFrom", "RAC"),
+          constructionVertex("Pkg2", "ABM.Pkg", "resultFrom", "RAC"),
+          constructionVertex("D1", "ABM.Apdid", "resultFrom", "RAC"),
+          constructionVertex("D2", "ABM.Apdid", "resultFrom", "RAC"),
+          constructionVertex("U1", "ABM.User", "resultFrom", "RAC"),
+          constructionVertex("U2", "ABM.User", "resultFrom", "RAC"),
+          constructionVertex("U3", "ABM.User", "resultFrom", "RAC"),
+          constructionVertex("U4", "ABM.User", "resultFrom", "RAC"));
+    }
+
+    @Override
+    public List<IEdge<String, IProperty>> genEdgeList() {
+      return Lists.newArrayList(
+          constructionEdge("U1", "acc2apdid", "D1"),
+          constructionEdge("U1", "acc2apdid", "D2"),
+          constructionEdge("U2", "acc2apdid", "D1"),
+          constructionEdge("U4", "acc2apdid", "D2"),
+          constructionEdge("U3", "acc2apdid", "D2"),
+          constructionEdge("D1", "zeroInstall", "Pkg"),
+          constructionEdge("D2", "zeroInstall", "Pkg2"));
+    }
+  }
 
   @Test
   public void test11() {

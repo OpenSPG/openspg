@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,16 +17,11 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.trees.BottomUp
 import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode}
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  EdgePattern,
-  NodePattern,
-  PartialGraphPattern,
-  Pattern
-}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{EdgePattern, NodePattern, PartialGraphPattern, Pattern}
 import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, Var}
 import com.antgroup.openspg.reasoner.lube.logical.PatternOps.PatternOps
 import com.antgroup.openspg.reasoner.lube.logical.operators._
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, SimpleRule, Up}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.utils.RuleUtils
 import org.apache.commons.lang3.StringUtils
@@ -34,17 +29,20 @@ import org.apache.commons.lang3.StringUtils
 /**
  * Predicate push down
  */
-object FilterPushDown extends Rule {
+object FilterPushDown extends SimpleRule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
     case filter: Filter =>
-      val fields = RuleUtils.getAllInputFieldInRule(filter.rule, null, null)
+      val fields = RuleUtils.getAllInputFieldInRule(
+        filter.rule,
+        filter.solved.getNodeAliasSet,
+        filter.solved.getEdgeAliasSet)
       val propertyMap = new mutable.HashMap[String, Set[String]]
       for (field <- fields) {
         field match {
-          case IREdge(name, fields) => propertyMap.put(name, fields.toSet)
-          case IRNode(name, fields) => propertyMap.put(name, fields.toSet)
+          case IREdge(name, fields) => propertyMap.put(name, fields)
+          case IRNode(name, fields) => propertyMap.put(name, fields)
           case _ =>
         }
       }
@@ -57,6 +55,7 @@ object FilterPushDown extends Rule {
   }
 
   private def pushDown(filter: Filter, aliasMap: Map[String, Set[String]]): LogicalOperator = {
+    var keepOriginal = false
     var hasPushDown = false
     def rewriter: PartialFunction[LogicalOperator, LogicalOperator] = {
       case logicalOp: StackingLogicalOperator =>
@@ -67,45 +66,70 @@ object FilterPushDown extends Rule {
         } else {
           logicalOp
         }
+      case boundedVarLenExpand @ BoundedVarLenExpand(_, expandInto: ExpandInto, edgePattern, _) =>
+        if (hasPushDown) {
+          val alias = Set.apply(edgePattern.edge.alias, edgePattern.dst.alias)
+          if (!aliasMap.keySet.intersect(alias).isEmpty) {
+            keepOriginal = true
+          }
+        }
+        boundedVarLenExpand
     }
 
     val newRoot = BottomUp[LogicalOperator](rewriter).transform(filter).asInstanceOf[Filter]
-    if (hasPushDown) {
-      newRoot.in
+    if (keepOriginal || !hasPushDown) {
+      filter
     } else {
-      newRoot
+      newRoot.in
     }
   }
 
   private def pushDown2Pattern(
       filter: Filter,
       aliasMap: Map[String, Set[String]]): (Boolean, LogicalOperator) = {
+    var keepOriginal = false
     var hasPushDown: Boolean = false
 
     def rewriter: PartialFunction[LogicalOperator, LogicalOperator] = {
       case expandInto: ExpandInto =>
-        val res = fillInRule(filter.rule, aliasMap, expandInto.pattern, expandInto.refFields)
-        if (res._1) {
-          hasPushDown = true
-          expandInto.copy(pattern = res._2)
-        } else {
+        if (hasPushDown) {
           expandInto
+        } else {
+          val res = fillInRule(filter.rule, aliasMap, expandInto.pattern, expandInto.refFields)
+          if (res._1) {
+            hasPushDown = true
+            expandInto.copy(pattern = res._2)
+          } else {
+            expandInto
+          }
         }
       case patternScan: PatternScan =>
-        val res = fillInRule(filter.rule, aliasMap, patternScan.pattern, patternScan.refFields)
-        if (res._1) {
-          hasPushDown = true
-          patternScan.copy(pattern = res._2)
-        } else {
+        if (hasPushDown) {
           patternScan
+        } else {
+          val res = fillInRule(filter.rule, aliasMap, patternScan.pattern, patternScan.refFields)
+          if (res._1) {
+            hasPushDown = true
+            patternScan.copy(pattern = res._2)
+          } else {
+            patternScan
+          }
         }
+      case boundedVarLenExpand @ BoundedVarLenExpand(_, expandInto: ExpandInto, edgePattern, _) =>
+        if (hasPushDown) {
+          val alias = Set.apply(edgePattern.edge.alias, edgePattern.dst.alias)
+          if (!aliasMap.keySet.intersect(alias).isEmpty) {
+            keepOriginal = true
+          }
+        }
+        boundedVarLenExpand
     }
 
     val newRoot = BottomUp[LogicalOperator](rewriter).transform(filter).asInstanceOf[Filter]
-    if (hasPushDown) {
-      (hasPushDown, newRoot.in)
+    if (keepOriginal || !hasPushDown) {
+      (hasPushDown, filter)
     } else {
-      (hasPushDown, newRoot)
+      (hasPushDown, newRoot.in)
     }
   }
 

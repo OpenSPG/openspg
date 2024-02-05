@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -25,22 +25,35 @@ public class FromUnixTime {
     return fromUnixTime(tsStr, format);
   }
 
-  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime")
+  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime,from_unixtime")
   public String fromUnixTime(String tsStr, String format) {
     long ts = Long.parseLong(tsStr);
     return fromUnixTime(ts, format);
   }
 
-  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime")
+  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime,from_unixtime")
   public String fromUnixTime(long ts) {
     String format = "yyyy-MM-dd HH:mm:ss";
     return fromUnixTime(ts, format);
   }
 
-  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime")
+  @UdfDefine(name = "from_unix_time", compatibleName = "FromUnixtime,from_unixtime")
   public String fromUnixTime(long ts, String format) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
     simpleDateFormat.setTimeZone(DateUtils.timeZone);
     return simpleDateFormat.format(new Date(ts * 1000));
+  }
+
+  @UdfDefine(name = "from_unix_time_ms")
+  public String fromUnixTimeMs(long ms, String format) {
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
+    simpleDateFormat.setTimeZone(DateUtils.timeZone);
+    return simpleDateFormat.format(new Date(ms));
+  }
+
+  @UdfDefine(name = "from_unix_time_ms")
+  public String fromUnixTimeMs(String ms, String format) {
+    long msLong = Long.parseLong(ms);
+    return fromUnixTimeMs(msLong, format);
   }
 }

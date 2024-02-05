@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -65,7 +65,7 @@ public class SinkRelationImpl {
       Set<IEdge<IVertexId, IProperty>> outEdgeList = entry.getValue()._2();
       this.graphState.addEdges(
           vertexId, Lists.newArrayList(inEdgeList), Lists.newArrayList(outEdgeList));
-      sinkCount++;
+      sinkCount = sinkCount + inEdgeList.size() + outEdgeList.size();
       if (Utils.randomLog()) {
         log.info(
             "SinkRelation,v="

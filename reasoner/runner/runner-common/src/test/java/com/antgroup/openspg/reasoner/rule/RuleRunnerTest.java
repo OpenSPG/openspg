@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,26 +14,48 @@
 package com.antgroup.openspg.reasoner.rule;
 
 import com.alibaba.fastjson.JSON;
+import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
+import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
+import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
+import com.antgroup.openspg.reasoner.common.graph.edge.impl.PathEdge;
+import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
+import com.antgroup.openspg.reasoner.common.graph.property.impl.EdgeProperty;
+import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexVersionProperty;
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
+import com.antgroup.openspg.reasoner.kggraph.KgGraph;
+import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
+import com.antgroup.openspg.reasoner.lube.common.graph.IRField;
+import com.antgroup.openspg.reasoner.lube.utils.ExprUtils;
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer;
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.udf.utils.DateUtils;
+import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
+import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import scala.collection.JavaConversions;
 
 public class RuleRunnerTest {
+  private RuleExprParser ruleExprParser;
 
   @Before
   public void init() {
     DateUtils.timeZone = TimeZone.getTimeZone("Asia/Shanghai");
+    ruleExprParser = new RuleExprParser();
   }
 
   /** test overloading */
@@ -423,5 +445,118 @@ public class RuleRunnerTest {
 
     boolean rst = RuleRunner.getInstance().check(context, rules, "");
     Assert.assertFalse(rst);
+  }
+
+  private Map<String, Object> getRepeatTestContext() {
+    Map<String, Set<IVertex<IVertexId, IProperty>>> alias2VertexMap = new HashMap<>();
+    alias2VertexMap.put(
+        "A",
+        Sets.newHashSet(
+            new Vertex<>(
+                IVertexId.from(0L, "v"),
+                new VertexVersionProperty("age", 18, "gender", "男", "logId", "xx1"))));
+    alias2VertexMap.put(
+        "B",
+        Sets.newHashSet(
+            new Vertex<>(
+                IVertexId.from(2L, "v"),
+                new VertexVersionProperty("age", 20, "gender", "男", "logId", "xx1"))));
+    Map<String, Object> edge1Property = new HashMap<>();
+    edge1Property.put("rate", 0.5);
+    Map<String, Object> edge2Property = new HashMap<>();
+    edge2Property.put("rate", 0.3);
+    PathEdge<IVertexId, IProperty, IProperty> pathEdge1 =
+        new PathEdge<>(
+            new Edge<>(
+                IVertexId.from(0L, "v"),
+                IVertexId.from(1L, "v"),
+                new EdgeProperty(edge1Property),
+                0L,
+                Direction.OUT,
+                "e"));
+    PathEdge<IVertexId, IProperty, IProperty> pathEdge2 =
+        new PathEdge<>(
+            pathEdge1,
+            new Vertex<>(
+                IVertexId.from(1L, "v"),
+                new VertexVersionProperty("age", 19, "gender", "男", "logId", "xx1")),
+            new Edge<>(
+                IVertexId.from(1L, "v"),
+                IVertexId.from(2L, "v"),
+                new EdgeProperty(edge2Property),
+                0L,
+                Direction.OUT,
+                "e"));
+    Map<String, Set<IEdge<IVertexId, IProperty>>> alias2EdgeMap = new HashMap<>();
+    alias2EdgeMap.put("e", Sets.newHashSet(pathEdge2));
+    KgGraph<IVertexId> kgGraph = new KgGraphImpl(alias2VertexMap, alias2EdgeMap);
+    return RunnerUtil.kgGraph2Context(new HashMap<>(), kgGraph);
+  }
+
+  @Test
+  public void testRepeatReduce() {
+    Map<String, Object> context = getRepeatTestContext();
+    Object rst =
+        RuleRunner.getInstance()
+            .executeExpression(
+                context,
+                Lists.newArrayList("repeat_reduce(e.edges, 1, 'pre', 'cur', 'cur.rate * pre')"),
+                "");
+    Assert.assertEquals(rst, 0.15);
+  }
+
+  @Test
+  public void testRepeatConstraint() {
+    Map<String, Object> context = getRepeatTestContext();
+    boolean rst =
+        RuleRunner.getInstance()
+            .check(
+                context,
+                Lists.newArrayList(
+                    "repeat_constraint(e.nodes, 'pre', 'cur', 'cur.logId == pre.logId && cur.age >= A.age && cur.gender == B.gender', "
+                        + "context_capturer(['A.age', 'B.gender'], [A.age, B.gender]))"),
+                "");
+    Assert.assertTrue(rst);
+  }
+
+  @Test
+  public void testRepeatConstraint2() {
+    Expr e =
+        ruleExprParser.parse(
+            "e.nodes().constraint((pre,cur) => cur.logId == pre.logId && cur.age >= A.age && cur.gender == B.gender)");
+    List<IRField> l =
+        JavaConversions.seqAsJavaList(
+            ExprUtils.getAllInputFieldInRule(
+                e,
+                Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("B", "A")),
+                Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("e"))));
+    Set<String> aliasSet = l.stream().map(IRField::name).collect(Collectors.toSet());
+    Assert.assertEquals(3, l.size());
+    Assert.assertTrue(aliasSet.contains("A"));
+    Assert.assertTrue(aliasSet.contains("B"));
+    Assert.assertTrue(aliasSet.contains("e"));
+    Expr2QlexpressTransformer transformer = new Expr2QlexpressTransformer();
+    List<String> rules =
+        Lists.newArrayList(JavaConversions.asJavaCollection(transformer.transform(e)));
+    Assert.assertEquals(
+        rules.get(0),
+        "repeat_constraint(e.nodes, \"pre\", \"cur\", '((cur.logId == pre.logId) && (cur.age >= A.age)) && (cur.gender == B.gender)', "
+            + "context_capturer([\"A.age\",\"B.gender\"],[A.age,B.gender]))");
+    Map<String, Object> context = getRepeatTestContext();
+    boolean rst = RuleRunner.getInstance().check(context, rules, "");
+    Assert.assertTrue(rst);
+  }
+
+  @Test
+  public void testRepeatReduce2() {
+    Expr e = ruleExprParser.parse("e.edges().reduce((pre, cur) => cur.rate * pre, 1)");
+    Expr2QlexpressTransformer transformer = new Expr2QlexpressTransformer();
+    List<String> rules =
+        Lists.newArrayList(JavaConversions.asJavaCollection(transformer.transform(e)));
+    Assert.assertEquals(
+        rules.get(0), "repeat_reduce(e.edges, 1, \"pre\", \"cur\", \"cur.rate * pre\")");
+    Map<String, Object> context = getRepeatTestContext();
+    Object rst = RuleRunner.getInstance().executeExpression(context, rules, "");
+    Assert.assertEquals(rst, 0.15);
   }
 }

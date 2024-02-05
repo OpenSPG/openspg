@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class ProgressReport {
   private static ProgressStatus progressStatus = null;
-
+  public static ObjectStoreGenerator generator = null;
   /** report error */
   public static void reportError(Map config, Throwable e) {
     if (!config.containsKey(ConfigKey.KG_REASONER_PARAMS)) {
@@ -41,9 +41,8 @@ public class ProgressReport {
       progressStatus = null;
       return;
     }
-    if (null == progressStatus) {
-      throw new RuntimeException();
-    }
+    progressStatus = new ProgressStatus("", String.valueOf(path), "oss");
+    progressStatus.setObjectStoreInterface(generator.gen());
     progressStatus.init(totalSteps);
   }
 
@@ -100,9 +99,5 @@ public class ProgressReport {
         new String(Base64.getDecoder().decode(paramStringEncoded), StandardCharsets.UTF_8);
     Map<String, Object> params = new HashMap<>(JSON.parseObject(paramsJsonString));
     return (String) params.get(ConfigKey.KG_REASONER_PROGRESS_PATH);
-  }
-
-  public static void setProgressStatus(ProgressStatus progressStatus) {
-    ProgressReport.progressStatus = progressStatus;
   }
 }

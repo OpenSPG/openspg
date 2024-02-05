@@ -1,4 +1,4 @@
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -23,18 +23,27 @@ def is_openai_invoker(nn_config: dict) -> bool:
     from nn4k.consts import NN_OPENAI_API_KEY_KEY
     from nn4k.consts import NN_OPENAI_API_BASE_KEY
     from nn4k.consts import NN_OPENAI_MAX_TOKENS_KEY
+    from nn4k.consts import NN_OPENAI_ORGANIZATION_KEY
     from nn4k.consts import NN_OPENAI_GPT4_PREFIX
     from nn4k.consts import NN_OPENAI_GPT35_PREFIX
+    from nn4k.consts import NN_OPENAI_EMBEDDING_PREFIX
     from nn4k.utils.config_parsing import get_string_field
 
     nn_name = nn_config.get(NN_NAME_KEY)
     if nn_name is not None:
         nn_name = get_string_field(nn_config, NN_NAME_KEY, NN_NAME_TEXT)
-        if nn_name.startswith(NN_OPENAI_GPT4_PREFIX) or nn_name.startswith(
-            NN_OPENAI_GPT35_PREFIX
+        if (
+            nn_name.startswith(NN_OPENAI_GPT4_PREFIX)
+            or nn_name.startswith(NN_OPENAI_GPT35_PREFIX)
+            or nn_name.startswith(NN_OPENAI_EMBEDDING_PREFIX)
         ):
             return True
-    keys = (NN_OPENAI_API_KEY_KEY, NN_OPENAI_API_BASE_KEY, NN_OPENAI_MAX_TOKENS_KEY)
+    keys = (
+        NN_OPENAI_API_KEY_KEY,
+        NN_OPENAI_API_BASE_KEY,
+        NN_OPENAI_MAX_TOKENS_KEY,
+        NN_OPENAI_ORGANIZATION_KEY,
+    )
     for key in keys:
         if key in nn_config:
             return True

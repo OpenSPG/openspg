@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,11 +15,11 @@ package com.antgroup.openspg.reasoner.lube.logical.validate
 
 import scala.collection.mutable
 
-import com.antgroup.openspg.reasoner.common.exception.SchemaException
+import com.antgroup.openspg.reasoner.common.exception.{SchemaException, UnsupportedOperationException}
 import com.antgroup.openspg.reasoner.lube.Logging
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog._
-import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRField, IRNode}
+import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRField, IRNode, IRRepeatPath}
 import com.antgroup.openspg.reasoner.lube.logical._
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.SemanticExplainer
@@ -127,7 +127,7 @@ object Validator extends Logging {
       field match {
         case node: IRNode =>
           if (!types.contains(node.name) || (types(node.name).isEmpty && node.fields.nonEmpty)) {
-            throw SchemaException(s"Cannot find $node.name in $types")
+            throw SchemaException(s"Cannot find ${node.name} in $types")
           }
           varMap.put(
             node.name,
@@ -136,14 +136,24 @@ object Validator extends Logging {
               node.fields.map(graph.graphSchema.getNodeField(types(node.name), _)).toSet))
         case edge: IREdge =>
           if (types(edge.name).isEmpty && edge.fields.nonEmpty) {
-            throw SchemaException(s"Cannot find $edge.name in $types")
+            throw SchemaException(s"Cannot find ${edge.name} in $types")
           }
           varMap.put(
             edge.name,
             EdgeVar(
               edge.name,
               edge.fields.map(graph.graphSchema.getEdgeField(types(edge.name), _)).toSet))
-        case _ =>
+        case path: IRRepeatPath =>
+          val edge = path.element.elements(1).asInstanceOf[IREdge]
+          if (types(edge.name).isEmpty && edge.fields.nonEmpty) {
+            throw SchemaException(s"Cannot find ${edge.name} in $types")
+          }
+          varMap.put(
+            edge.name,
+            EdgeVar(
+              edge.name,
+              edge.fields.map(graph.graphSchema.getEdgeField(types(edge.name), _)).toSet))
+        case _ => throw UnsupportedOperationException(s"validator unsupported ${field}")
       }
     })
     SolvedModel(types, varMap.toMap, Map.empty)

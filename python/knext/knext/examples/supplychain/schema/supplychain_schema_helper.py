@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -15,113 +15,132 @@
 # PLEASE DO NOT MODIFY THIS FILE!!!
 #
 
-from knext.common.schema_helper import SPGTypeHelper, PropertyHelper, RelationHelper
+from knext.schema.model.schema_helper import (
+    SPGTypeHelper,
+    PropertyHelper,
+    RelationHelper,
+)
 
 
 class SupplyChain:
     class Company(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
-        name = PropertyHelper("name")
-        totalTransInAmt = PropertyHelper("totalTransInAmt")
-        fundTrans1Month = PropertyHelper("fundTrans1Month")
-        fundTrans6Month = PropertyHelper("fundTrans6Month")
-        cashflowDiff3Month = PropertyHelper("cashflowDiff3Month")
-        fundTrans6MonthIn = PropertyHelper("fundTrans6MonthIn")
+        class fundTrans(RelationHelper):
+            transAmt = PropertyHelper("transAmt")
+            transDate = PropertyHelper("transDate")
+
         cashflowDiff6Month = PropertyHelper("cashflowDiff6Month")
+        name = PropertyHelper("name")
+        fundTrans3MonthIn = PropertyHelper("fundTrans3MonthIn")
+        cashflowDiff3Month = PropertyHelper("cashflowDiff3Month")
+        cashflowDiff1Month = PropertyHelper("cashflowDiff1Month")
+        description = PropertyHelper("description")
+        fundTrans1Month = PropertyHelper("fundTrans1Month")
+        id = PropertyHelper("id")
+        fundTrans6MonthIn = PropertyHelper("fundTrans6MonthIn")
+        fundTrans6Month = PropertyHelper("fundTrans6Month")
+        totalTransInAmt = PropertyHelper("totalTransInAmt")
         fundTrans1MonthIn = PropertyHelper("fundTrans1MonthIn")
         product = PropertyHelper("product")
         fundTrans3Month = PropertyHelper("fundTrans3Month")
-        fundTrans3MonthIn = PropertyHelper("fundTrans3MonthIn")
-        cashflowDiff1Month = PropertyHelper("cashflowDiff1Month")
 
-        belongToIndustry = RelationHelper("belongToIndustry")
         mainSupply = RelationHelper("mainSupply")
-        fundTrans = RelationHelper("fundTrans")
+        belongToIndustry = RelationHelper("belongToIndustry")
         sameLegalRepresentative = RelationHelper("sameLegalRepresentative")
 
+        fundTrans = fundTrans("fundTrans")
+
     class CompanyEvent(SPGTypeHelper):
+
+        leadTo = PropertyHelper("leadTo")
+        name = PropertyHelper("name")
+        eventTime = PropertyHelper("eventTime")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
-        name = PropertyHelper("name")
-        index = PropertyHelper("index")
-        leadTo = PropertyHelper("leadTo")
-        belongTo = PropertyHelper("belongTo")
         trend = PropertyHelper("trend")
+        belongTo = PropertyHelper("belongTo")
+        index = PropertyHelper("index")
         subject = PropertyHelper("subject")
-        eventTime = PropertyHelper("eventTime")
 
     class Index(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
+
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
 
     class Industry(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
+
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
 
     class Person(SPGTypeHelper):
+
+        certNo = PropertyHelper("certNo")
+        legalRepresentative = PropertyHelper("legalRepresentative")
+        name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
-        name = PropertyHelper("name")
         age = PropertyHelper("age")
-        legalRepresentative = PropertyHelper("legalRepresentative")
-        certNo = PropertyHelper("certNo")
 
     class Product(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
+
         name = PropertyHelper("name")
         hasSupplyChain = PropertyHelper("hasSupplyChain")
-        belongTo = PropertyHelper("belongTo")
-        belongToIndustry = PropertyHelper("belongToIndustry")
-
-    class ProductChainEvent(SPGTypeHelper):
         description = PropertyHelper("description")
         id = PropertyHelper("id")
+        belongToIndustry = PropertyHelper("belongToIndustry")
+        belongTo = PropertyHelper("belongTo")
+
+    class ProductChainEvent(SPGTypeHelper):
+
         name = PropertyHelper("name")
+        eventTime = PropertyHelper("eventTime")
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
+        trend = PropertyHelper("trend")
         belongTo = PropertyHelper("belongTo")
         index = PropertyHelper("index")
         subject = PropertyHelper("subject")
-        trend = PropertyHelper("trend")
-        eventTime = PropertyHelper("eventTime")
 
         leadTo = RelationHelper("leadTo")
 
     class TaxOfCompanyEvent(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
+
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
 
     class TaxOfProdEvent(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
+
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
 
         leadTo = RelationHelper("leadTo")
 
     class TaxOfProduct(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
+
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
 
     class Trend(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
+
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
+        description = PropertyHelper("description")
+        id = PropertyHelper("id")
 
     Company = Company("SupplyChain.Company")
     CompanyEvent = CompanyEvent("SupplyChain.CompanyEvent")

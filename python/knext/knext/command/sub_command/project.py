@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -20,17 +20,17 @@ from typing import Optional
 import click
 from tabulate import tabulate
 
-from knext import rest
+from knext.common import project as rest
 from knext.common.template import copytree, render_template
 
 TEMPLATES_TO_RENDER = (
     (".knext.cfg.tmpl",),
     ("README.md.tmpl",),
     ("schema", "${project}.schema.tmpl"),
-    ("reasoner", "demo.dsl.tmpl"),
-    ("builder", "operator", "demo_extract_op.py"),
-    ("builder", "job", "data", "Demo.csv"),
-    ("builder", "job", "demo.py.tmpl"),
+    ("reasoner", "company.dsl.tmpl"),
+    ("builder", "operator", "address_extract_op.py.tmpl"),
+    ("builder", "job", "data", "company.csv"),
+    ("builder", "job", "company.py.tmpl"),
 )
 
 

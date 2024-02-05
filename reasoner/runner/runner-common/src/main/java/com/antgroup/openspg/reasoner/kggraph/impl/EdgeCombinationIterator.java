@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -37,6 +37,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
+/**
+ * This class implements an iterator that combines edges into a path. taking as input a map of
+ * schema and edges.
+ *
+ * <p>example1: schema is [A -E1-> B, B -E2-> C], edgeMap is {E1:[a1_b1, a1_b2], E2:[b1_c1, b1_c2]}
+ * output is {E1:[a1_b1],E2:[b1_c1]}, {E1:[a1_b1],E2:[b1_c2]}
+ */
 public class EdgeCombinationIterator implements Iterator<KgGraph<IVertexId>> {
   private static final Logger log = LoggerFactory.getLogger(EdgeCombinationIterator.class);
 

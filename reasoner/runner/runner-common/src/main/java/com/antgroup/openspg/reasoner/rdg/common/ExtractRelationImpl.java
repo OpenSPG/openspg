@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -26,11 +26,12 @@ import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
 import com.antgroup.openspg.reasoner.lube.block.AddPredicate;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
+import com.antgroup.openspg.reasoner.lube.common.pattern.Connection;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Element;
 import com.antgroup.openspg.reasoner.lube.common.pattern.EntityElement;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
 import com.antgroup.openspg.reasoner.lube.common.pattern.PatternElement;
-import com.antgroup.openspg.reasoner.rule.RuleRunner;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
 import com.google.common.collect.Lists;
@@ -40,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import lombok.Getter;
 import scala.collection.JavaConversions;
 
 public class ExtractRelationImpl implements Serializable {
@@ -48,7 +48,7 @@ public class ExtractRelationImpl implements Serializable {
   private static final long serialVersionUID = 3442064493302533370L;
   private final AddPredicate addPredicate;
 
-  @Getter private final String predicate;
+  private final String predicate;
   private final Direction direction;
   private final boolean withReverseEdge;
 
@@ -94,11 +94,29 @@ public class ExtractRelationImpl implements Serializable {
           Constants.EDGE_TO_ID_KEY, Lists.newArrayList("'" + targetEntityElement.id() + "'"));
     } else {
       targetPatternElement = (PatternElement) te;
-      this.propertyRuleMap.put(
-          Constants.EDGE_TO_ID_KEY, Lists.newArrayList(targetPatternElement.alias() + ".id"));
+      String edgeAlias = null;
+      for (Connection connection : RunnerUtil.getConnectionSet(this.kgGraphSchema)) {
+        if (connection.target().equals(targetPatternElement.alias())) {
+          edgeAlias = connection.alias();
+          break;
+        }
+      }
+      if (!this.propertyRuleMap.containsKey(Constants.EDGE_TO_ID_KEY)) {
+        this.propertyRuleMap.put(
+            Constants.EDGE_TO_ID_KEY,
+            Lists.newArrayList(
+                targetPatternElement.alias()
+                    + ".id==null ? "
+                    + edgeAlias
+                    + ".__to_id__ : "
+                    + targetPatternElement.alias()
+                    + ".id"));
+      }
     }
-    this.propertyRuleMap.put(
-        Constants.EDGE_FROM_ID_KEY, Lists.newArrayList(sourceElement.alias() + ".id"));
+    if (!this.propertyRuleMap.containsKey(Constants.EDGE_FROM_ID_KEY)) {
+      this.propertyRuleMap.put(
+          Constants.EDGE_FROM_ID_KEY, Lists.newArrayList(sourceElement.alias() + ".id"));
+    }
 
     this.sourceElement = sourceElement;
     this.targetEntityElement = targetEntityElement;
@@ -110,8 +128,19 @@ public class ExtractRelationImpl implements Serializable {
     IVertexId s = kgGraph.getVertex(sourceElement.alias()).get(0).getId();
     IVertexId o = getTargetVertexId(targetEntityElement, targetPatternElement, kgGraph);
 
+    long useVersion = version;
+    IProperty property = getEdgeProperty(kgGraph);
+    Object versionObj = property.get(Constants.DDL_EDGE_VERSION_KEY);
+    if (null != versionObj) {
+      try {
+        useVersion = Long.parseLong(String.valueOf(versionObj));
+      } catch (Throwable e) {
+        // pass
+      }
+    }
+
     IEdge<IVertexId, IProperty> willAddedEdge =
-        new Edge<>(s, o, getEdgeProperty(kgGraph), version, direction, getEdgeType(s, o));
+        new Edge<>(s, o, getEdgeProperty(kgGraph), useVersion, direction, getEdgeType(s, o));
 
     Map<String, Set<IEdge<IVertexId, IProperty>>> alias2EdgeMap = new HashMap<>();
     alias2EdgeMap.put(this.addPredicate.predicate().alias(), Sets.newHashSet(willAddedEdge));
@@ -159,5 +188,14 @@ public class ExtractRelationImpl implements Serializable {
   /** need add reverse edge */
   public boolean withReverseEdge() {
     return this.withReverseEdge;
+  }
+
+  /**
+   * Getter method for property <tt>predicate</tt>.
+   *
+   * @return property value of predicate
+   */
+  public String getPredicate() {
+    return predicate;
   }
 }

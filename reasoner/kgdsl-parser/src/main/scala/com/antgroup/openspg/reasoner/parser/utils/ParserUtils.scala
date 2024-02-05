@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,7 +16,9 @@ package com.antgroup.openspg.reasoner.parser.utils
 import com.antgroup.openspg.reasoner.common.Utils
 import com.antgroup.openspg.reasoner.common.table.Field
 import com.antgroup.openspg.reasoner.common.types.KTString
-import com.antgroup.openspg.reasoner.lube.block.{Block, TableResultBlock}
+import com.antgroup.openspg.reasoner.lube.block.{Block, MatchBlock, TableResultBlock}
+import scala.collection.JavaConverters._
+import scala.collection.mutable
 
 object ParserUtils {
 
@@ -32,6 +34,24 @@ object ParserUtils {
           })
       case _ => null
     }
+  }
+
+  def getAllEntityName(javaBlockList: java.util.List[Block]): java.util.Set[String] = {
+    val blockList: List[Block] = javaBlockList.asScala.toList
+    val entityNames = new mutable.HashSet[String]()
+    if (blockList != null && blockList.nonEmpty) {
+      blockList.foreach(block => {
+        block.transform[Unit] {
+          case (MatchBlock(_, patterns), _) =>
+            patterns.values
+              .map(_.graphPattern.nodes)
+              .flatMap(_.values)
+              .foreach(node => entityNames ++= node.typeNames)
+          case _ =>
+        }
+      })
+    }
+    entityNames.toSet.asJava
   }
 
 }

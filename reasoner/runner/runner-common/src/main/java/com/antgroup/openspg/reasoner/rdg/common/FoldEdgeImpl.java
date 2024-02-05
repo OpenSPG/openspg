@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -35,6 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.collections4.CollectionUtils;
 
 public class FoldEdgeImpl implements Serializable {
 
@@ -65,7 +66,7 @@ public class FoldEdgeImpl implements Serializable {
     Set<IVertex<IVertexId, IProperty>> newVertexSet = new HashSet<>();
     Set<IEdge<IVertexId, IProperty>> newEdgeSet = new HashSet<>();
     for (IVertex<IVertexId, IProperty> vertex : vertexSet) {
-      IVertex<IVertexId, IProperty> newVertex = new MirrorVertex<>(vertex);
+      IVertex<IVertexId, IProperty> newVertex = new MirrorVertex<>(vertex.getId());
       newVertexSet.add(newVertex);
 
       IEdge<IVertexId, IProperty> newEdge = new OptionalEdge<>(vertex.getId(), vertex.getId());
@@ -104,7 +105,7 @@ public class FoldEdgeImpl implements Serializable {
 
         Set<IVertex<IVertexId, IProperty>> newVertexSet = new HashSet<>();
         for (IVertex<IVertexId, IProperty> vertex : fromVertexSet) {
-          newVertexSet.add(new MirrorVertex<>(vertex));
+          newVertexSet.add(new MirrorVertex<>(vertex.getId()));
         }
         kgGraph.getAlias2VertexMap().put(this.foldRepeatEdgeInfo.getToVertexAlias(), newVertexSet);
         kgGraph.getAlias2EdgeMap().put(this.foldRepeatEdgeInfo.getToEdgeAlias(), fromEdgeSet);
@@ -114,7 +115,7 @@ public class FoldEdgeImpl implements Serializable {
     }
 
     if (null == pathEdgeSet) {
-      // Construct the pathEdge in the first wind
+      // 第一个wind，构造PathEdge
       Set<IEdge<IVertexId, IProperty>> toEdgeSet = new HashSet<>();
       for (IEdge<IVertexId, IProperty> edge : fromEdgeSet) {
         PathEdge<IVertexId, IProperty, IProperty> pathEdge =
@@ -123,7 +124,7 @@ public class FoldEdgeImpl implements Serializable {
       }
       kgGraph.getAlias2EdgeMap().put(this.foldRepeatEdgeInfo.getToEdgeAlias(), toEdgeSet);
 
-      // Rename node
+      // 重命名点
       kgGraph
           .getAlias2VertexMap()
           .put(
@@ -133,9 +134,9 @@ public class FoldEdgeImpl implements Serializable {
       return result;
     }
 
-    // An existing PathEdge is present; increase the length of the PathEdge.
+    // 已经存在PathEdge，增加PathEdge的长度
 
-    // This map has only one value.
+    // 一般这个map只有一个value
     Set<IVertex<IVertexId, IProperty>> toVertexSet =
         kgGraph.getAlias2VertexMap().get(this.foldRepeatEdgeInfo.getToVertexAlias());
     Map<IVertexId, IVertex<IVertexId, IProperty>> toVertexMap = new HashMap<>();
@@ -148,7 +149,7 @@ public class FoldEdgeImpl implements Serializable {
       fromEdgeMap.computeIfAbsent(edge.getSourceId(), k -> new ArrayList<>()).add(edge);
     }
 
-    // Construct a new PathEdge.
+    // 开始构造新的PathEdge
     Set<IEdge<IVertexId, IProperty>> newPathEdgeSet = new HashSet<>();
     for (IEdge<IVertexId, IProperty> edge : pathEdgeSet) {
       PathEdge<IVertexId, IProperty, IProperty> pathEdge =
@@ -166,6 +167,10 @@ public class FoldEdgeImpl implements Serializable {
         }
         newPathEdgeSet.add(newPathEdge);
       }
+    }
+
+    if (CollectionUtils.isEmpty(newPathEdgeSet)) {
+      return result;
     }
 
     kgGraph.getAlias2EdgeMap().put(this.foldRepeatEdgeInfo.getToEdgeAlias(), newPathEdgeSet);

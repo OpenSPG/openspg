@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,6 +17,7 @@ import com.antgroup.openspg.reasoner.common.types.KTBoolean$;
 import com.antgroup.openspg.reasoner.common.types.KTDouble$;
 import com.antgroup.openspg.reasoner.common.types.KTInteger$;
 import com.antgroup.openspg.reasoner.common.types.KTLong$;
+import com.antgroup.openspg.reasoner.common.types.KTObject$;
 import com.antgroup.openspg.reasoner.common.types.KTString$;
 import com.antgroup.openspg.reasoner.common.types.KgType;
 import java.io.Serializable;
@@ -28,7 +29,7 @@ public enum FieldType implements Serializable {
   DOUBLE(KTDouble$.MODULE$),
   BOOLEAN(KTBoolean$.MODULE$),
   UNKNOWN(KTString$.MODULE$),
-  ;
+  OBJECT(KTObject$.MODULE$);
 
   private final KgType kgType;
 

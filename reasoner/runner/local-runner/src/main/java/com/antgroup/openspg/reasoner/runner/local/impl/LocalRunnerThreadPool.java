@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -30,7 +30,7 @@ public class LocalRunnerThreadPool {
   private static final long KEEP_ALIVE_TIME_SECONDS = 5 * 60;
 
   private static final int DEFAULT_CORE_POOL_SIZE = 10;
-  private static final int DEFAULT_MAXIMUM_POOL_SIZE = 30;
+  private static final int DEFAULT_MAXIMUM_POOL_SIZE = 300;
 
   private static final int WORK_QUEUE_SIZE = 1000;
 

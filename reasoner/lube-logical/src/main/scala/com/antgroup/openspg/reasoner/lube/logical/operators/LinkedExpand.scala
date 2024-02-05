@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,7 +14,7 @@
 package com.antgroup.openspg.reasoner.lube.logical.operators
 
 import com.antgroup.openspg.reasoner.lube.common.pattern.{EdgePattern, LinkedPatternConnection}
-import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, Var}
+import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, SolvedModel, Var}
 
 final case class LinkedExpand(
     in: LogicalOperator,
@@ -33,12 +33,12 @@ final case class LinkedExpand(
    *
    * @return
    */
-  override def refFields: List[Var] = List.empty
+  override def refFields: List[Var] = List.apply(solved.getVar(edgePattern.edge.alias))
 
   /**
    * the output fields of current operator
    *
    * @return
    */
-  override def fields: List[Var] = in.fields
+  override def fields: List[Var] = in.fields ++ refFields
 }

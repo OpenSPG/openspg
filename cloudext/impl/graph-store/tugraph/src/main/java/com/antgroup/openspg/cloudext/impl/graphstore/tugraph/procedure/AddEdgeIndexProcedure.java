@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ public class AddEdgeIndexProcedure extends BaseTuGraphProcedure {
 
   /** The template of cypher */
   public static final String ADD_EDGE_INDEX_CYPHER_TEMPLATE =
-      "CALL db.addEdgeIndex('${labelName}', '${fieldName}', ${isUnique}, false)";
+      "CALL db.addEdgeIndex('${labelName}', '${fieldName}', ${isUnique}, ${isGlobal})";
 
   private final String labelName;
 

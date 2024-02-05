@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,19 +17,27 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.lube.block.Desc;
 import com.antgroup.openspg.reasoner.lube.block.SortItem;
-import com.antgroup.openspg.reasoner.lube.common.expr.GetField;
-import com.antgroup.openspg.reasoner.lube.common.expr.Ref;
-import com.antgroup.openspg.reasoner.lube.common.expr.UnaryOpExpr;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class KgGraphSortItem implements Comparable<KgGraphSortItem> {
   private final scala.collection.immutable.List<SortItem> sortItems;
+  private final List<List<String>> ruleList;
   private final KgGraph<IVertexId> kgGraph;
+  private final String taskId;
 
   public KgGraphSortItem(
-      scala.collection.immutable.List<SortItem> sortItems, KgGraph<IVertexId> kgGraph) {
+      scala.collection.immutable.List<SortItem> sortItems,
+      List<List<String>> ruleList,
+      KgGraph<IVertexId> kgGraph,
+      String taskId) {
     this.sortItems = sortItems;
+    this.ruleList = ruleList;
     this.kgGraph = kgGraph;
+    this.taskId = taskId;
   }
 
   /**
@@ -66,15 +74,12 @@ public class KgGraphSortItem implements Comparable<KgGraphSortItem> {
   }
 
   private Object[] getValues() {
+    Map<String, Object> context = RunnerUtil.kgGraph2Context(new HashMap<>(), this.kgGraph);
     Object[] values = new Object[this.sortItems.size()];
     for (int i = 0; i < this.sortItems.size(); ++i) {
-      SortItem sortItem = this.sortItems.apply(i);
-      UnaryOpExpr unaryOpExpr = (UnaryOpExpr) sortItem.expr();
-      GetField name = (GetField) unaryOpExpr.name();
-      Ref ref = (Ref) unaryOpExpr.arg();
-      String alias = ref.refName();
-      String propertyName = name.fieldName();
-      values[i] = RunnerUtil.getProperty(this.kgGraph, alias, propertyName);
+      List<String> ruleList = this.ruleList.get(i);
+      Object value = RuleRunner.getInstance().executeExpression(context, ruleList, this.taskId);
+      values[i] = value;
     }
     return values;
   }

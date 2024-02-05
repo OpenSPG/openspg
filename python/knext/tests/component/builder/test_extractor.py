@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -13,13 +13,11 @@ import json
 import os
 from typing import Dict, List
 
-from pytest_mock import mocker
-
-from knext.client.operator import OperatorClient
-from knext.component.builder import UserDefinedExtractor, LLMBasedExtractor
-from knext.operator.op import ExtractOp, PromptOp
-from knext.operator.spg_record import SPGRecord
-from knext import rest
+from knext.builder.component import UserDefinedExtractor, LLMBasedExtractor
+from knext.builder.operator.op import ExtractOp, PromptOp
+from knext.builder.operator.spg_record import SPGRecord
+from knext.builder import rest
+from knext.common.base.client import Client
 
 
 def get_op_config(op_name, params):
@@ -48,8 +46,8 @@ def get_llm_based_extractor_config(nn_config):
     params["model_config"] = json.dumps(nn_config)
     params["prompt_config"] = json.dumps(
         [
-            OperatorClient().serialize(operator_config_1),
-            OperatorClient().serialize(operator_config_2),
+            Client.serialize(operator_config_1),
+            Client.serialize(operator_config_2),
         ]
     )
 
@@ -62,14 +60,14 @@ def get_llm_based_extractor_config(nn_config):
 def get_test_extract_data():
     properties = {"phone": "+86-12345678", "addr": "China", "name": "taobao"}
 
-    return SPGRecord("Company", properties)
+    return SPGRecord("Company").upsert_properties(properties)
 
 
 class TestExtractOp(ExtractOp):
     def invoke(self, record: Dict[str, str]) -> List[SPGRecord]:
         spg_type = record["type"]
         properties = json.loads(record["properties"])
-        return [SPGRecord(spg_type, properties)]
+        return [SPGRecord(spg_type).upsert_properties()]
 
 
 class TestPromptOp1(PromptOp):
@@ -146,7 +144,7 @@ def test_llm_based_extractor():
 
 # def test_builtin_online_extractor():
 #
-#     from knext.operator.builtin.online_runner import _BuiltInOnlineExtractor
+#     from knext.builder.operator.builtin.online_runner import _BuiltInOnlineExtractor
 #
 #     extract_op = _BuiltInOnlineExtractor(params)
 #     from nn4k.invoker import LLMInvoker

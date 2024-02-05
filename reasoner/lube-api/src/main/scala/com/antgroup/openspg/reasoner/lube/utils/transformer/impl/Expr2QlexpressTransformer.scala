@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,7 +16,9 @@ package com.antgroup.openspg.reasoner.lube.utils.transformer.impl
 import com.antgroup.openspg.reasoner.common.trees.Transform
 import com.antgroup.openspg.reasoner.common.types.KTString
 import com.antgroup.openspg.reasoner.lube.common.expr._
+import com.antgroup.openspg.reasoner.lube.common.graph.IRNode
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
+import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 import com.antgroup.openspg.reasoner.lube.utils.transformer.ExprTransformer
 
 class Expr2QlexpressTransformer extends ExprTransformer[String] {
@@ -51,14 +53,36 @@ class Expr2QlexpressTransformer extends ExprTransformer[String] {
     case GetField(fieldName) => "%s." + fieldName
   }
 
+  def lambdaFuncParse(curVariableSet: Set[String], lambdaFunc: Expr): (String, String) = {
+    val qlExpress = transform(lambdaFunc).head
+    val fields = ExprUtils.getAllInputFieldInRule(lambdaFunc, Set.empty, Set.empty)
+    val params = fields.map(f => {
+      if (curVariableSet.contains(f.name)) {
+        null
+      } else {
+        f match {
+          case IRNode(name, fields) => fields.map(attr => name + "." + attr).toList
+          case _ => List.apply(f.name)
+        }
+      }
+    }).filter(_ != null).flatten
+    if (params.nonEmpty) {
+      (qlExpress, "context_capturer([" + params.map(v => "\"" + v +"\"").mkString(",") +
+        "],[" + params.mkString(",") + "])")
+    } else {
+      (qlExpress, null)
+    }
+  }
+
+
   def trans(e: Expr, params: List[String]): String = {
     val opTrans: PartialFunction[Expr, String] = {
       case BinaryOpExpr(name, l, r) =>
         val opStr = binaryOpSetTrans(name)
         name match {
-          case BIn|BLike|BRLike|BAssign
-               |BEqual|BNotEqual|BGreaterThan
-               |BNotGreaterThan|BSmallerThan|BNotSmallerThan => params.head + opStr + params(1)
+          case BIn | BLike | BRLike | BAssign | BEqual | BNotEqual | BGreaterThan |
+               BNotGreaterThan | BSmallerThan | BNotSmallerThan =>
+            params.head + opStr + params(1)
           case _ =>
             val leftStr = l match {
               case c: BinaryOpExpr => "(" + params.head + ")"
@@ -73,6 +97,45 @@ class Expr2QlexpressTransformer extends ExprTransformer[String] {
       case UnaryOpExpr(name, arg) => unaryOpSetTrans(name).format(params.head)
       case FunctionExpr(name, funcArgs) => "%s(%s)".format(name, params.mkString(","))
       case Ref(refName) => refName
+      case ListOpExpr(name, _) =>
+        name match {
+          case Constraint(pre, cur, reduceFunc) =>
+            val curVariableSet = Set.apply(pre, cur)
+            val lambdaFuncRst = lambdaFuncParse(curVariableSet, reduceFunc)
+            if (lambdaFuncRst._2 == null) {
+              "repeat_constraint(__slot__, \"%s\", \"%s\", '%s')"
+                .format(pre, cur, lambdaFuncRst._1)
+            } else {
+              "repeat_constraint(__slot__, \"%s\", \"%s\", '%s', %s)"
+                .format(pre, cur, lambdaFuncRst._1, lambdaFuncRst._2)
+            }
+          case Reduce(ele, res, reduceFunc, initValue) =>
+            val curVariableSet = Set.apply(ele, res)
+            val initValueStr = transform(initValue).head
+            val lambdaFuncRst = lambdaFuncParse(curVariableSet, reduceFunc)
+            if (lambdaFuncRst._2 == null) {
+              "repeat_reduce(__slot__, %s, \"%s\", \"%s\", \"%s\")"
+                .format(initValueStr, res, ele, lambdaFuncRst._1)
+            } else {
+              "repeat_reduce(__slot__, %s, \"%s\", \"%s\", \"%s\", %s)"
+                .format(initValueStr, res, ele, lambdaFuncRst._1, lambdaFuncRst._2)
+
+            }
+          case Slice(start, end) => "slice(__slot__, %s, %s)".format(start, end)
+          case Get(index) => "get_list(__slot__, %s)".format(index)
+        }
+      case PathOpExpr(name, _) =>
+        name match {
+          case GetNodesExpr => params.head + ".nodes"
+          case GetEdgesExpr => params.head + ".edges"
+        }
+      case OpChainExpr(_, _) =>
+        if (params.size == 2) {
+          params.head.replace("__slot__", params(1))
+        } else {
+          params.head
+        }
+
       case AggOpExpr(name, _) =>
         name match {
           case StrJoin(tok) => "StrJoin('%s', %s)".format(tok, params.mkString(","))

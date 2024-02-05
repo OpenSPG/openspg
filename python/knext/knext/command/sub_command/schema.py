@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -16,8 +16,8 @@ from pathlib import Path
 
 import click
 
-from knext.client.marklang.concept_rule_ml import SPGConceptRuleMarkLang
-from knext.client.marklang.schema_ml import SPGSchemaMarkLang
+from knext.schema.marklang.concept_rule_ml import SPGConceptRuleMarkLang
+from knext.schema.marklang.schema_ml import SPGSchemaMarkLang
 from knext.common.template import copytree
 
 TEMPLATE_TO_RENDER = "${project}_schema_helper.py.tmpl"

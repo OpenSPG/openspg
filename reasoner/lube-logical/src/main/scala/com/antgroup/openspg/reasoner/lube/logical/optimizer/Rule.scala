@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -23,10 +23,26 @@ case object Down extends Direction
 
 trait Rule {
 
-  def rule(implicit
-      context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator]
+  def ruleWithContext(implicit context: LogicalPlannerContext): PartialFunction[
+    (LogicalOperator, Map[String, Object]),
+    (LogicalOperator, Map[String, Object])]
 
   def direction: Direction
 
   def maxIterations: Int
+}
+
+abstract class SimpleRule extends Rule {
+
+  override def ruleWithContext(implicit context: LogicalPlannerContext): PartialFunction[
+    (LogicalOperator, Map[String, Object]),
+    (LogicalOperator, Map[String, Object])] = {
+    case (operator, c) if rule.isDefinedAt(operator) =>
+      val transformedOperator = rule(context)(operator)
+      (transformedOperator, c)
+  }
+
+  def rule(implicit
+      context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator]
+
 }

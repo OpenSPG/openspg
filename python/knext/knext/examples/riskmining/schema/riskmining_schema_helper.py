@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -15,68 +15,83 @@
 # PLEASE DO NOT MODIFY THIS FILE!!!
 #
 
-from knext.common.schema_helper import SPGTypeHelper, PropertyHelper, RelationHelper
+from knext.schema.model.schema_helper import (
+    SPGTypeHelper,
+    PropertyHelper,
+    RelationHelper,
+)
 
 
 class RiskMining:
     class App(SPGTypeHelper):
-        description = PropertyHelper("description")
+
         id = PropertyHelper("id")
-        name = PropertyHelper("name")
-        riskMark = PropertyHelper("riskMark")
+        description = PropertyHelper("description")
         belongTo = PropertyHelper("belongTo")
         useCert = PropertyHelper("useCert")
+        name = PropertyHelper("name")
+        riskMark = PropertyHelper("riskMark")
 
     class Cert(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
+
         name = PropertyHelper("name")
+        id = PropertyHelper("id")
+        description = PropertyHelper("description")
         certNum = PropertyHelper("certNum")
 
     class Company(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
+
         name = PropertyHelper("name")
+        id = PropertyHelper("id")
+        description = PropertyHelper("description")
         hasPhone = PropertyHelper("hasPhone")
 
-        hasCert = RelationHelper("hasCert")
         holdShare = RelationHelper("holdShare")
+        hasCert = RelationHelper("hasCert")
 
     class Device(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
-        name = PropertyHelper("name")
-        umid = PropertyHelper("umid")
+
         install = PropertyHelper("install")
+        id = PropertyHelper("id")
+        umid = PropertyHelper("umid")
+        description = PropertyHelper("description")
+        name = PropertyHelper("name")
 
     class Person(SPGTypeHelper):
-        description = PropertyHelper("description")
-        id = PropertyHelper("id")
-        name = PropertyHelper("name")
-        belongTo = PropertyHelper("belongTo")
+        class fundTrans(RelationHelper):
+            transDate = PropertyHelper("transDate")
+            transAmt = PropertyHelper("transAmt")
+
         hasPhone = PropertyHelper("hasPhone")
+        id = PropertyHelper("id")
+        description = PropertyHelper("description")
+        belongTo = PropertyHelper("belongTo")
         age = PropertyHelper("age")
+        name = PropertyHelper("name")
 
         holdShare = RelationHelper("holdShare")
+        developed = RelationHelper("developed")
         hasDevice = RelationHelper("hasDevice")
         hasCert = RelationHelper("hasCert")
-        fundTrans = RelationHelper("fundTrans")
         release = RelationHelper("release")
-        developed = RelationHelper("developed")
+
+        fundTrans = fundTrans("fundTrans")
 
     class TaxOfRiskApp(SPGTypeHelper):
-        description = PropertyHelper("description")
+
         id = PropertyHelper("id")
-        name = PropertyHelper("name")
-        stdId = PropertyHelper("stdId")
         alias = PropertyHelper("alias")
+        description = PropertyHelper("description")
+        stdId = PropertyHelper("stdId")
+        name = PropertyHelper("name")
 
     class TaxOfRiskUser(SPGTypeHelper):
-        description = PropertyHelper("description")
+
         id = PropertyHelper("id")
-        name = PropertyHelper("name")
         alias = PropertyHelper("alias")
+        description = PropertyHelper("description")
         stdId = PropertyHelper("stdId")
+        name = PropertyHelper("name")
 
     App = App("RiskMining.App")
     Cert = Cert("RiskMining.Cert")

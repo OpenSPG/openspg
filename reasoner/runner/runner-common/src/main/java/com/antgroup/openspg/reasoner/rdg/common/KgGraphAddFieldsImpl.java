@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -23,7 +23,7 @@ import com.antgroup.openspg.reasoner.lube.logical.EdgeVar;
 import com.antgroup.openspg.reasoner.lube.logical.NodeVar;
 import com.antgroup.openspg.reasoner.lube.logical.PropertyVar;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
-import com.antgroup.openspg.reasoner.rule.RuleRunner;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.util.KgGraphSchema;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import java.io.Serializable;

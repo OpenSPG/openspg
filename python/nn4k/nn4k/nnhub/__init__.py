@@ -1,4 +1,4 @@
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -8,6 +8,8 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
+
+import os
 
 from abc import ABC, abstractmethod
 from typing import Optional, Union, Tuple, Type
@@ -125,6 +127,10 @@ class SimpleNNHub(NNHub):
     def get_model_executor(
         self, name: str, version: str = None
     ) -> Optional[NNExecutor]:
+        from nn4k.consts import NN_VERSION_DEFAULT
+
+        if version is None:
+            version = NN_VERSION_DEFAULT
         if self._model_executors.get(name) is None:
             return None
         executor = self._model_executors.get(name).get(version)
@@ -134,13 +140,59 @@ class SimpleNNHub(NNHub):
         executor = self._create_model_executor(cls, init_args, kwargs, weights)
         return executor
 
-    def _add_local_executor(self, nn_config):
+    def _get_local_executor_class(self, nn_config: dict) -> Type[NNExecutor]:
+        from nn4k.consts import NN_EXECUTOR_KEY, NN_EXECUTOR_TEXT
         from nn4k.consts import NN_NAME_KEY, NN_NAME_TEXT
         from nn4k.consts import NN_VERSION_KEY, NN_VERSION_TEXT
-        from nn4k.executor.hugging_face import HfLLMExecutor
+        from nn4k.consts import NN_LOCAL_HF_MODEL_CONFIG_FILE
+        from nn4k.consts import NN_LOCAL_SENTENCE_TRANSFORMERS_CONFIG_FILE
+        from nn4k.executor.hugging_face import HFLLMExecutor
+        from nn4k.executor.hugging_face import HFEmbeddingExecutor
         from nn4k.utils.config_parsing import get_string_field
 
-        executor = HfLLMExecutor.from_config(nn_config)
+        nn_executor = nn_config.get(NN_EXECUTOR_KEY)
+        if nn_executor is not None:
+            nn_executor = get_string_field(
+                self.init_args, NN_EXECUTOR_KEY, NN_EXECUTOR_TEXT
+            )
+            executor_class = dynamic_import_class(nn_executor, NN_EXECUTOR_TEXT)
+            if not issubclass(executor_class, NNExecutor):
+                message = "%r is not an %s class" % (nn_executor, NN_EXECUTOR_TEXT)
+                raise RuntimeError(message)
+            return executor_class
+
+        nn_name = nn_config.get(NN_NAME_KEY)
+        if nn_name is not None:
+            nn_name = get_string_field(nn_config, NN_NAME_KEY, NN_NAME_TEXT)
+            if os.path.isdir(nn_name):
+                file_path = os.path.join(nn_name, NN_LOCAL_HF_MODEL_CONFIG_FILE)
+                if os.path.isfile(file_path):
+                    file_path = os.path.join(
+                        nn_name, NN_LOCAL_SENTENCE_TRANSFORMERS_CONFIG_FILE
+                    )
+                    if os.path.isfile(file_path):
+                        executor_class = HFEmbeddingExecutor
+                    else:
+                        executor_class = HFLLMExecutor
+                return executor_class
+
+        nn_version = nn_config.get(NN_VERSION_KEY)
+        if nn_version is not None:
+            nn_version = get_string_field(nn_config, NN_VERSION_KEY, NN_VERSION_TEXT)
+        message = "can not determine local executor class for NN config"
+        if nn_name is not None:
+            message += "; model: %r" % nn_name
+            if nn_version is not None:
+                message += ", version: %r" % nn_version
+        raise RuntimeError(message)
+
+    def _add_local_executor(self, nn_config: dict):
+        from nn4k.consts import NN_NAME_KEY, NN_NAME_TEXT
+        from nn4k.consts import NN_VERSION_KEY, NN_VERSION_TEXT
+        from nn4k.utils.config_parsing import get_string_field
+
+        executor_class = self._get_local_executor_class(nn_config)
+        executor = executor_class.from_config(nn_config)
         nn_name = get_string_field(nn_config, NN_NAME_KEY, NN_NAME_TEXT)
         nn_version = nn_config.get(NN_VERSION_KEY)
         if nn_version is not None:

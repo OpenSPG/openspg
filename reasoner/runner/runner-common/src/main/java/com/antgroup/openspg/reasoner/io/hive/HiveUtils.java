@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -204,7 +204,7 @@ public class HiveUtils {
 
   private static final String HIVE_METASTORE_CONFIG_KEY = "hive.metastore.uris";
 
-  /** get hive metastore url */
+  /** 获取hive metastore url */
   public static String getHiveMetaStoreUrl(Statement stmt) {
     String getHiveMetaStoreUrisSql = "set " + HIVE_METASTORE_CONFIG_KEY;
 

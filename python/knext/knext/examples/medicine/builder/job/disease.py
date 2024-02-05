@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -12,9 +12,14 @@
 
 from nn4k.invoker import NNInvoker
 
-from knext.api.component import CSVReader, LLMBasedExtractor, SPGTypeMapping, KGWriter
-from knext.api.auto_prompt import REPrompt
-from knext.client.model.builder_job import BuilderJob
+from knext.builder.component import (
+    CSVReader,
+    LLMBasedExtractor,
+    SPGTypeMapping,
+    KGWriter,
+)
+from knext.builder.operator import REPrompt
+from knext.builder.model.builder_job import BuilderJob
 
 
 from schema.medicine_schema_helper import Medicine

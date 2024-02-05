@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
+/** Data structure that transmits messages between workers */
 public interface KgGraph<K> {
 
   /**
@@ -207,4 +208,7 @@ public interface KgGraph<K> {
 
   /** check duplicate vertex */
   boolean checkDuplicateVertex();
+
+  /** find vertex from kggraph */
+  IVertex<IVertexId, IProperty> findVertex(IVertexId id);
 }

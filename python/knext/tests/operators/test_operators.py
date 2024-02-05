@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -11,10 +11,10 @@
 # or implied.
 
 import json
-from knext.operator.spg_record import SPGRecord
+from knext.builder.operator.spg_record import SPGRecord
 from knext.common.class_register import register_from_package
-from knext.operator.base import BaseOp
-from knext.operator.op import ExtractOp, LinkOp, FuseOp, PredictOp
+from knext.builder.operator.base import BaseOp
+from knext.builder.operator.op import ExtractOp, LinkOp, FuseOp, PredictOp
 
 register_from_package("./operators", BaseOp)
 register_from_package("./operators", ExtractOp)
@@ -34,7 +34,7 @@ def get_test_extract_data():
 def get_test_record():
     properties = {"phone": "+86-12345678", "addr": "China", "name": "taobao"}
 
-    return SPGRecord("Company", properties)
+    return SPGRecord("Company").upsert_properties(properties)
 
 
 def test_get_op():

@@ -1,4 +1,4 @@
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -11,7 +11,7 @@
 
 import unittest
 
-from knext.api.chain import BuilderChain
+from knext.builder.chain import BuilderChain
 
 
 class TestBuilderClient(unittest.TestCase):

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,13 +17,12 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
+import com.antgroup.openspg.reasoner.common.exception.{SystemError, UnsupportedOperationException}
 import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph
 import com.antgroup.openspg.reasoner.lube.common.pattern._
 import com.antgroup.openspg.reasoner.lube.common.pattern.ElementOps.toPattenElement
 import com.antgroup.openspg.reasoner.lube.logical.SolvedModel
 import com.antgroup.openspg.reasoner.lube.logical.operators._
-
 /**
  * QueryPath splitting
  * @param pattern GraphPath, some times are called QueryGraph
@@ -31,51 +30,74 @@ import com.antgroup.openspg.reasoner.lube.logical.operators._
 class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPlannerContext) {
 
   def plan(dependency: LogicalOperator): LogicalOperator = {
-    val chosen = new mutable.HashSet[String]()
-    plan(dependency, chosen)
+    val chosenNodes = new mutable.HashSet[String]()
+    val chosenEdges = new mutable.HashSet[Connection]()
+    plan(dependency, chosenNodes, chosenEdges)
   }
 
   private def plan(
       dependency: LogicalOperator,
-      chosen: mutable.HashSet[String]): LogicalOperator = {
+      chosenNodes: mutable.HashSet[String],
+      chosenEdges: mutable.HashSet[Connection]): LogicalOperator = {
     val root = getRoot
-    val parts: (GraphPattern, GraphPattern, Set[Connection]) = split(root, chosen)
+    val parts: (GraphPattern, GraphPattern, Set[Connection]) =
+      split(root, chosenNodes, chosenEdges)
     var lhsOperator = dependency
     if (parts._1 != null) {
       val lhsPlanner = new PatternMatchPlanner(parts._1)
-      lhsOperator = lhsPlanner.plan(root, dependency, chosen)
+      lhsOperator = lhsPlanner.plan(root, dependency, chosenNodes, chosenEdges)
     }
     if (!parts._3.isEmpty) {
-      for (connection <- parts._3.filter(_.isInstanceOf[PatternConnection])) {
-        val driving = Driving(dependency.graph, connection.source, dependency.solved)
-        val scan = PatternScan(driving, buildEdgePattern(connection))
-        val rhsPlanner = new PatternMatchPlanner(parts._2.copy(rootAlias = connection.source))
-        val rhsOperator = rhsPlanner.plan(scan, chosen)
-        lhsOperator = connection match {
-          case conn: PatternConnection =>
-            if (rhsOperator == null) {
-              lhsOperator
-            } else {
-              Optional(lhsOperator, rhsOperator)
+      val optionalConnections = parts._3
+        .filter(_.isInstanceOf[PatternConnection])
+        .groupBy(c => getSrcAndDst(c, chosenNodes)._1)
+      for (groupConnections <- optionalConnections) {
+        val src = groupConnections._1
+        var rhsOperator: LogicalOperator = null
+        for (connection <- groupConnections._2) {
+          if (!chosenEdges.contains(connection)) {
+            val dst = getSrcAndDst(connection, chosenNodes)._2
+            chosenEdges.add(connection)
+            val driving = Driving(dependency.graph, src, dependency.solved)
+            val scan = PatternScan(driving, buildEdgePattern(src, connection))
+            val rhsPlanner = new PatternMatchPlanner(parts._2.copy(rootAlias = dst))
+            val oneRhsOperator = rhsPlanner.plan(scan, chosenNodes.clone(), chosenEdges.clone())
+            if (oneRhsOperator != null && rhsOperator != null) {
+              rhsOperator = PatternJoin(rhsOperator, oneRhsOperator, FullOuterJoin)
+            } else if (rhsOperator == null) {
+              rhsOperator = oneRhsOperator
             }
-          case _ => throw UnsupportedOperationException(s"unsupported $connection")
+          }
+        }
+        lhsOperator = if (rhsOperator != null) {
+          Optional(lhsOperator, rhsOperator)
+        } else {
+          lhsOperator
         }
       }
+
       for (connection <- parts._3.filter(_.isInstanceOf[VariablePatternConnection])) {
-        val rhsPlanner = new PatternMatchPlanner(parts._2.copy(rootAlias = connection.source))
-        val rhsOperator =
-          rhsPlanner.plan(Driving(dependency.graph, connection.source, dependency.solved), chosen)
-        lhsOperator = connection match {
-          case conn: VariablePatternConnection =>
-            val edgePattern =
-              buildEdgePattern(conn).asInstanceOf[EdgePattern[VariablePatternConnection]]
-            val repeatOperator = buildBoundVarLenExpand(edgePattern, lhsOperator)
-            if (rhsOperator == null) {
-              repeatOperator
-            } else {
-              PatternJoin(repeatOperator, rhsOperator)
-            }
-          case _ => throw UnsupportedOperationException(s"unsupported $connection")
+        if (!chosenEdges.contains(connection)) {
+          val (src, dst) = getSrcAndDst(connection, chosenNodes)
+          chosenEdges.add(connection)
+          val rhsPlanner = new PatternMatchPlanner(parts._2.copy(rootAlias = dst))
+          val rhsOperator =
+            rhsPlanner.plan(
+              Driving(dependency.graph, dst, dependency.solved),
+              chosenNodes,
+              chosenEdges)
+          lhsOperator = connection match {
+            case conn: VariablePatternConnection =>
+              val edgePattern =
+                buildEdgePattern(src, conn).asInstanceOf[EdgePattern[VariablePatternConnection]]
+              val repeatOperator = buildBoundVarLenExpand(src, edgePattern, lhsOperator)
+              if (rhsOperator == null) {
+                repeatOperator
+              } else {
+                PatternJoin(repeatOperator, rhsOperator, InnerJoin)
+              }
+            case _ => throw UnsupportedOperationException(s"unsupported $connection")
+          }
         }
       }
     }
@@ -86,8 +108,24 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
     }
   }
 
-  private def buildEdgePattern(conn: Connection) = {
-    EdgePattern(pattern.getNode(conn.source), pattern.getNode(conn.target), conn)
+  private def buildEdgePattern(root: String, conn: Connection) = {
+    if (root.equals(conn.source)) {
+      EdgePattern(pattern.getNode(conn.source), pattern.getNode(conn.target), conn)
+    } else if (root.equals(conn.target)) {
+      EdgePattern(pattern.getNode(conn.target), pattern.getNode(conn.source), conn.reverse)
+    } else {
+      throw SystemError(s"PatternMatchPlanner error, root=${root}, conn=${conn}")
+    }
+  }
+
+  private def getSrcAndDst(
+      connection: Connection,
+      chosenNodes: mutable.HashSet[String]): (String, String) = {
+    if (chosenNodes.contains(connection.source)) {
+      (connection.source, connection.target)
+    } else {
+      (connection.target, connection.source)
+    }
   }
 
   /**
@@ -96,9 +134,11 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
    */
   private def split(
       root: String,
-      chosen: mutable.HashSet[String]): (GraphPattern, GraphPattern, Set[Connection]) = {
+      chosenNodes: mutable.HashSet[String],
+      chosenEdges: mutable.HashSet[Connection]): (GraphPattern, GraphPattern, Set[Connection]) = {
     val queue = new mutable.Queue[String]()
     val visited = new mutable.HashSet[String]()
+    visited.++=(chosenNodes)
     queue.enqueue(root)
     val lhsNodes = new mutable.HashMap[String, Element]()
     val lhsEdges = new mutable.HashMap[String, Set[Connection]]()
@@ -106,7 +146,7 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
     while (!queue.isEmpty) {
       val r = queue.dequeue()
       if (!visited.contains(r)) {
-        if (pattern.nodes.contains(r) && !chosen.contains(r)) {
+        if (pattern.nodes.contains(r)) {
           lhsNodes.put(r, pattern.getNode(r))
         }
         if (pattern.edges.contains(r)) {
@@ -117,22 +157,33 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
           normalEdges.map(_.target).foreach(queue.enqueue(_))
         }
         for (pair <- pattern.edges) {
-          val connections = pair._2.filter(_.target.equals(r))
-          val normalEdges = connections.filter(!isSplitConnection(_))
-          splitEdges ++= connections.filter(isSplitConnection(_))
-          if (!lhsEdges.contains(pair._1)) {
-            lhsEdges.put(pair._1, normalEdges)
-          } else {
-            lhsEdges.put(pair._1, lhsEdges(pair._1) ++ normalEdges)
+          if (!pair._1.equals(r) && !visited.contains(r)) {
+            val connections = pair._2.filter(_.target.equals(r))
+            val normalEdges = connections.filter(!isSplitConnection(_))
+            splitEdges ++= connections.filter(isSplitConnection(_))
+            if (!lhsEdges.contains(pair._1)) {
+              lhsEdges.put(pair._1, normalEdges)
+            } else {
+              lhsEdges.put(pair._1, lhsEdges(pair._1) ++ normalEdges)
+            }
+            if (!normalEdges.isEmpty) {
+              queue.enqueue(pair._1)
+            }
           }
-          queue.enqueue(pair._1)
         }
       }
       visited.add(r)
     }
-    val rhsNodes = pattern.nodes.filter(P => !lhsNodes.contains(P._1))
+    val rhsNodes =
+      pattern.nodes.filter(p => !lhsNodes.contains(p._1) && !chosenNodes.contains(p._1))
     val rhsEdges = pattern.edges
-      .map(p => (p._1, p._2.diff(lhsEdges.getOrElse(p._1, Set.empty)).diff(splitEdges)))
+      .map(p =>
+        (
+          p._1,
+          p._2
+            .diff(lhsEdges.getOrElse(p._1, Set.empty))
+            .diff(splitEdges)
+            .filter(e => !chosenEdges.contains(e))))
       .filter(p => p._2 != null && !p._2.isEmpty)
 
     val lhsPattern = if (lhsNodes.isEmpty && lhsEdges.values.flatten.isEmpty) {
@@ -143,7 +194,7 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
     val rhsPattern = if (rhsNodes.isEmpty && rhsEdges.values.flatten.isEmpty) {
       null
     } else {
-      pattern.copy(nodes = rhsNodes + (root -> pattern.getNode(root)), edges = rhsEdges)
+      pattern.copy(nodes = rhsNodes, edges = rhsEdges)
     }
     (lhsPattern, rhsPattern, splitEdges.toSet)
   }
@@ -159,19 +210,20 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
   private def plan(
       root: String,
       dependency: LogicalOperator,
-      chosen: mutable.HashSet[String]): LogicalOperator = {
-    chosen.add(root)
-    val patternList = buildPattern(chosen, root)
+      chosenNodes: mutable.HashSet[String],
+      chosenEdges: mutable.HashSet[Connection]): LogicalOperator = {
+    chosenNodes.add(root)
+    val patternList = buildPattern(root, chosenNodes, chosenEdges)
     var in: LogicalOperator =
-      constructLogicalOperator(patternList, true, null, dependency)
+      constructLogicalOperator(patternList, pattern.getNode(root), dependency)
 
-    var nextRoot = getMaxDegree(chosen)
+    var nextRoot = getMaxDegree(chosenNodes)
     while (nextRoot != null) {
-      val expandIntoPattern = buildPattern(chosen, nextRoot)
+      val expandIntoPattern = buildPattern(nextRoot, chosenNodes, chosenEdges)
       val targetNode = pattern.getNode(nextRoot)
-      in = constructLogicalOperator(expandIntoPattern, false, targetNode, in)
-      chosen.add(nextRoot)
-      nextRoot = getMaxDegree(chosen)
+      in = constructLogicalOperator(expandIntoPattern, targetNode, in)
+      chosenNodes.add(nextRoot)
+      nextRoot = getMaxDegree(chosenNodes)
     }
     in
   }
@@ -188,7 +240,6 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
 
   private def constructLogicalOperator(
       patternList: List[Pattern],
-      isPatternScan: Boolean,
       targetNode: PatternElement,
       dependency: LogicalOperator): LogicalOperator = {
     var in: LogicalOperator = dependency
@@ -196,18 +247,15 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
       if (pattern.isInstanceOf[EdgePattern[_ <: Connection]]) {
         in = buildEdgePattern(pattern.asInstanceOf[EdgePattern[Connection]], in)
       } else {
-        if (isPatternScan) {
-          in = in match {
-            case start: Start =>
-              PatternScan(
-                in.asInstanceOf[Start]
-                  .copy(types = pattern.root.typeNames, alias = pattern.root.alias),
-                pattern)
-            case driving: Driving =>
-              PatternScan(in, pattern)
-          }
-        } else {
-          in = ExpandInto(in, targetNode, pattern)
+        in = in match {
+          case start: Start =>
+            PatternScan(
+              in.asInstanceOf[Start]
+                .copy(types = pattern.root.typeNames, alias = pattern.root.alias),
+              pattern)
+          case driving: Driving =>
+            PatternScan(in, pattern)
+          case _ => ExpandInto(in, targetNode, pattern)
         }
       }
     }
@@ -229,12 +277,21 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
   }
 
   private def buildBoundVarLenExpand(
+      curRoot: String,
       edgePattern: EdgePattern[VariablePatternConnection],
       dependency: LogicalOperator): LogicalOperator = {
     var preRoot = dependency
-    for (i <- 1 to edgePattern.edge.upper) {
-      val rhs = varLenLogicalOperator(dependency.graph, dependency.solved, edgePattern, i)
-      preRoot = BoundedVarLenExpand(preRoot, rhs, edgePattern, i)
+    val finalEdgePattern = if (edgePattern.src.alias.equals(curRoot)) {
+      edgePattern
+    } else {
+      EdgePattern(
+        edgePattern.dst,
+        edgePattern.src,
+        edgePattern.edge.reverse.asInstanceOf[VariablePatternConnection])
+    }
+    for (i <- 1 to finalEdgePattern.edge.upper) {
+      val rhs = varLenLogicalOperator(dependency.graph, dependency.solved, finalEdgePattern, i)
+      preRoot = BoundedVarLenExpand(preRoot, rhs, finalEdgePattern, i)
     }
     preRoot
   }
@@ -300,7 +357,10 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
     }
   }
 
-  private def buildPattern(chosen: mutable.HashSet[String], root: String): List[Pattern] = {
+  private def buildPattern(
+      root: String,
+      chosenNodes: mutable.HashSet[String],
+      chosenEdges: mutable.HashSet[Connection]): List[Pattern] = {
     val connections = mutable.HashSet[Connection]()
     val nodes = mutable.HashMap[String, PatternElement]()
     val specialConnections = new mutable.HashSet[Connection]()
@@ -308,20 +368,21 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
       pair._2.foreach(conn => {
         conn match {
           case PatternConnection(_, _, _, _, _, _, _, _, false) =>
-            if (conn.source.equals(root) && !chosen.contains(conn.target)) {
+            if (conn.source.equals(root) && !chosenNodes.contains(conn.target)) {
               connections.add(conn)
               nodes.put(conn.target, pattern.getNode(conn.target))
-            } else if (conn.target.equals(root) && !chosen.contains(conn.source)) {
+            } else if (conn.target.equals(root) && !chosenNodes.contains(conn.source)) {
               connections.add(conn.reverse)
               nodes.put(conn.source, pattern.getNode(conn.source))
             }
           case _ =>
-            if (conn.source.equals(root) && !chosen.contains(conn.target)) {
+            if (conn.source.equals(root) && !chosenNodes.contains(conn.target)) {
               specialConnections.add(conn)
-            } else if (conn.target.equals(root) && !chosen.contains(conn.source)) {
+            } else if (conn.target.equals(root) && !chosenNodes.contains(conn.source)) {
               specialConnections.add(conn.reverse)
             }
         }
+        chosenEdges.add(conn)
       }))
 
     val result = new ListBuffer[Pattern]()

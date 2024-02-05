@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.reasoner.graphstate.impl;
 
+import com.antgroup.openspg.reasoner.common.IConceptTree;
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
@@ -27,6 +29,7 @@ import com.antgroup.openspg.reasoner.graphstate.model.MergeTypeEnum;
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,7 +45,11 @@ import org.slf4j.LoggerFactory;
 import scala.Tuple3;
 import scala.Tuple5;
 
-public class MemGraphState implements GraphState<IVertexId> {
+/**
+ * Graph State based on memory The multi-version vertex is implemented through the multi-version
+ * property The multi-version edge is implemented through multiple edges
+ */
+public class MemGraphState implements GraphState<IVertexId>, IConceptTree {
   private static final Logger log = LoggerFactory.getLogger(MemGraphState.class);
 
   /**
@@ -232,7 +239,7 @@ public class MemGraphState implements GraphState<IVertexId> {
       IVertexId o = pot._2();
       Long version = pot._3();
       if (endVersion != null && endVersion != 0) {
-        // Make a judgment only in the presence of a multi-version scenario.
+        // 存在多版本场景下才做判断
         if (!RunnerUtil.between(startVersion, endVersion, version)) {
           continue;
         }
@@ -374,4 +381,49 @@ public class MemGraphState implements GraphState<IVertexId> {
 
   @Override
   public void close() {}
+
+  @Override
+  public List<String> getBelongToConcept(IVertexId id, String edgeType, Direction direction) {
+    List<String> result = new ArrayList<>();
+    List<IEdge<IVertexId, IProperty>> edgeList =
+        this.getEdges(id, null, null, Sets.newHashSet(edgeType), direction);
+    for (IEdge<IVertexId, IProperty> edge : edgeList) {
+      result.add((String) edge.getValue().get(Constants.EDGE_TO_ID_KEY));
+    }
+    return result;
+  }
+
+  private Set<String> getEdgeTypeSet(String conceptType) {
+    Set<String> edgeTypeSet = new HashSet<>();
+    for (String hypernym : Constants.CONCEPT_HYPERNYM_EDGE_TYPE_SET) {
+      edgeTypeSet.add(conceptType + "_" + hypernym + "_" + conceptType);
+    }
+    return edgeTypeSet;
+  }
+
+  @Override
+  public String getUpper(String conceptType, String concept) {
+    IVertexId id = IVertexId.from(concept, conceptType);
+    List<IEdge<IVertexId, IProperty>> edgeList =
+        this.getEdges(id, null, null, getEdgeTypeSet(conceptType), Direction.OUT);
+    if (CollectionUtils.isEmpty(edgeList)) {
+      return null;
+    }
+    return (String) edgeList.get(0).getValue().get(Constants.EDGE_TO_ID_KEY);
+  }
+
+  @Override
+  public List<String> getLower(String conceptType, String concept) {
+    List<String> result = new ArrayList<>();
+    IVertexId id = IVertexId.from(concept, conceptType);
+    List<IEdge<IVertexId, IProperty>> edgeList =
+        this.getEdges(id, null, null, getEdgeTypeSet(conceptType), Direction.IN);
+    if (CollectionUtils.isEmpty(edgeList)) {
+      return result;
+    }
+    for (IEdge<IVertexId, IProperty> edge : edgeList) {
+      result.add((String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY));
+    }
+    return result;
+  }
 }

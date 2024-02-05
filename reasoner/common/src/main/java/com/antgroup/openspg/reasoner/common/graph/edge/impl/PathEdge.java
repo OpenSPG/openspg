@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -20,6 +20,7 @@ import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -152,6 +153,22 @@ public class PathEdge<K, VV, EV> implements IEdge<K, EV> {
         Lists.newArrayList(this.edgeList), Lists.newArrayList(this.vertexList), this.value);
   }
 
+  @Override
+  public PathEdge<K, VV, EV> reverse() {
+    List<Edge<K, EV>> newEdgeList = new ArrayList<>(this.edgeList.size());
+    List<Vertex<K, VV>> newVertexList = new ArrayList<>(this.vertexList.size());
+    for (Edge<K, EV> edge : this.edgeList) {
+      newEdgeList.add(edge.reverse());
+    }
+    for (Vertex<K, VV> vertex : this.vertexList) {
+      newVertexList.add(vertex);
+    }
+    Collections.reverse(newEdgeList);
+    Collections.reverse(newVertexList);
+    return new PathEdge<>(
+        Lists.newArrayList(this.edgeList), Lists.newArrayList(this.vertexList), this.value);
+  }
+
   /** servers repeat edge tail */
   public Tuple2<Edge<K, EV>, Vertex<K, VV>> seversTail() {
     return new Tuple2<>(
@@ -221,5 +238,24 @@ public class PathEdge<K, VV, EV> implements IEdge<K, EV> {
   @Override
   public EV getValue() {
     return value;
+  }
+
+  @Override
+  public String toString() {
+    String rst =
+        "PathEdge(s="
+            + getSourceId()
+            + ",p="
+            + getType()
+            + ",o="
+            + getTargetId()
+            + ",vertexSize="
+            + (null == vertexList ? 0 : vertexList.size())
+            + ",edgeSize="
+            + (null == edgeList ? 0 : edgeList.size());
+    if (null != edgeList && edgeList.size() > 0) {
+      rst += ",firstEdge=" + edgeList.get(0);
+    }
+    return rst;
   }
 }

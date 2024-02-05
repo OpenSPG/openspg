@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,6 +16,7 @@ package com.antgroup.openspg.reasoner.runner.local.rdg;
 import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
+import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexProperty;
@@ -36,12 +37,22 @@ import com.antgroup.openspg.reasoner.lube.block.SortItem;
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field;
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
-import com.antgroup.openspg.reasoner.lube.common.pattern.*;
+import com.antgroup.openspg.reasoner.lube.common.pattern.Connection;
+import com.antgroup.openspg.reasoner.lube.common.pattern.EdgePattern;
+import com.antgroup.openspg.reasoner.lube.common.pattern.LinkedPatternConnection;
+import com.antgroup.openspg.reasoner.lube.common.pattern.NodePattern;
+import com.antgroup.openspg.reasoner.lube.common.pattern.PartialGraphPattern;
+import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
+import com.antgroup.openspg.reasoner.lube.common.pattern.PatternElement;
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
+import com.antgroup.openspg.reasoner.lube.logical.NodeVar;
 import com.antgroup.openspg.reasoner.lube.logical.PropertyVar;
 import com.antgroup.openspg.reasoner.lube.logical.RichVar;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
-import com.antgroup.openspg.reasoner.lube.physical.planning.JoinType;
+import com.antgroup.openspg.reasoner.lube.logical.planning.FullOuterJoin$;
+import com.antgroup.openspg.reasoner.lube.logical.planning.InnerJoin$;
+import com.antgroup.openspg.reasoner.lube.logical.planning.JoinType;
+import com.antgroup.openspg.reasoner.lube.logical.planning.LeftOuterJoin$;
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG;
 import com.antgroup.openspg.reasoner.lube.physical.rdg.Row;
 import com.antgroup.openspg.reasoner.pattern.PatternMatcher;
@@ -49,22 +60,31 @@ import com.antgroup.openspg.reasoner.rdg.common.ExtractRelationImpl;
 import com.antgroup.openspg.reasoner.rdg.common.ExtractVertexImpl;
 import com.antgroup.openspg.reasoner.rdg.common.FoldEdgeImpl;
 import com.antgroup.openspg.reasoner.rdg.common.FoldRepeatEdgeInfo;
+import com.antgroup.openspg.reasoner.rdg.common.GroupByKeyItem;
 import com.antgroup.openspg.reasoner.rdg.common.GroupByKgGraphImpl;
 import com.antgroup.openspg.reasoner.rdg.common.KgGraphAddFieldsImpl;
 import com.antgroup.openspg.reasoner.rdg.common.KgGraphAggregateImpl;
 import com.antgroup.openspg.reasoner.rdg.common.KgGraphDropFieldsImpl;
+import com.antgroup.openspg.reasoner.rdg.common.KgGraphEdgeDirectionImpl;
 import com.antgroup.openspg.reasoner.rdg.common.KgGraphFirstEdgeAggImpl;
-import com.antgroup.openspg.reasoner.rdg.common.KgGraphJoinImpl;
 import com.antgroup.openspg.reasoner.rdg.common.KgGraphListProcess;
+import com.antgroup.openspg.reasoner.rdg.common.KgGraphRenameImpl;
 import com.antgroup.openspg.reasoner.rdg.common.KgGraphSortImpl;
+import com.antgroup.openspg.reasoner.rdg.common.LinkEdgeImpl;
+import com.antgroup.openspg.reasoner.rdg.common.ReasonerJoinImpl;
+import com.antgroup.openspg.reasoner.rdg.common.SelectRowImpl;
 import com.antgroup.openspg.reasoner.rdg.common.SinkRelationImpl;
 import com.antgroup.openspg.reasoner.rdg.common.UnfoldEdgeImpl;
+import com.antgroup.openspg.reasoner.rdg.common.UnfoldReduceDuplicateImpl;
 import com.antgroup.openspg.reasoner.rdg.common.UnfoldRepeatEdgeInfo;
+import com.antgroup.openspg.reasoner.rdg.common.model.JoinItem;
 import com.antgroup.openspg.reasoner.recorder.EmptyRecorder;
 import com.antgroup.openspg.reasoner.recorder.IExecutionRecorder;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
+import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
 import com.antgroup.openspg.reasoner.util.KgGraphSchema;
+import com.antgroup.openspg.reasoner.util.PathConnection;
 import com.antgroup.openspg.reasoner.utils.PredicateKgGraph;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
@@ -79,8 +99,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import scala.Tuple2;
@@ -162,7 +184,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     java.util.List<String> rootVertexRuleList = WareHouseUtils.getVertexRuleList(pattern);
     java.util.Map<String, java.util.List<String>> dstVertexRuleMap =
         WareHouseUtils.getDstVertexRuleList(pattern);
-    java.util.Map<Connection, java.util.List<String>> edgeRuleMap =
+    java.util.Map<String, java.util.List<String>> edgeRuleMap =
         WareHouseUtils.getEdgeRuleMap(pattern);
     java.util.Map<String, java.util.List<Rule>> edgeTypeRuleMap =
         WareHouseUtils.getEdgeTypeRuleMap(pattern);
@@ -253,10 +275,11 @@ public class LocalRDG extends RDG<LocalRDG> {
 
     long count = 0;
     long targetVertexSize = 0;
+    LinkEdgeImpl linkEdge =
+        new LinkEdgeImpl(
+            this.taskId, this.kgGraphSchema, staticParameters, pattern, udtfMeta, null, graphState);
     for (KgGraph<IVertexId> kgGraph : this.kgGraphList) {
-      java.util.List<KgGraph<IVertexId>> splitedKgGraphList =
-          RunnerUtil.linkEdge(
-              this.taskId, kgGraph, this.kgGraphSchema, staticParameters, pattern, udtfMeta, null);
+      java.util.List<KgGraph<IVertexId>> splitedKgGraphList = linkEdge.link(kgGraph);
       if (CollectionUtils.isNotEmpty(splitedKgGraphList)) {
         KgGraph<IVertexId> result = new KgGraphImpl();
         result.merge(splitedKgGraphList, null);
@@ -287,7 +310,7 @@ public class LocalRDG extends RDG<LocalRDG> {
       PartialGraphPattern matchPattern,
       java.util.List<String> vertexRuleList,
       java.util.Map<String, java.util.List<String>> dstVertexRuleMap,
-      java.util.Map<Connection, java.util.List<String>> edgeRuleMap,
+      java.util.Map<String, java.util.List<String>> edgeRuleMap,
       java.util.Map<String, java.util.List<Rule>> edgeTypeRuleMap,
       PartialGraphPattern afterKgGraphSchema,
       ThreadPoolExecutor threadPoolExecutor) {
@@ -381,7 +404,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     java.util.List<String> vertexRuleList = WareHouseUtils.getVertexRuleList(pattern);
     java.util.Map<String, java.util.List<String>> dstVertexRuleMap =
         WareHouseUtils.getDstVertexRuleList(pattern);
-    java.util.Map<Connection, java.util.List<String>> edgeRuleMap =
+    java.util.Map<String, java.util.List<String>> edgeRuleMap =
         WareHouseUtils.getEdgeRuleMap(pattern);
     java.util.Map<String, java.util.List<Rule>> edgeTypeRuleMap =
         WareHouseUtils.getEdgeTypeRuleMap(pattern);
@@ -396,8 +419,8 @@ public class LocalRDG extends RDG<LocalRDG> {
             + JSON.toJSONString(edgeRuleMap));
 
     PartialGraphPattern afterKgGraphSchema =
-        KgGraphSchema.expandSchema(this.kgGraphSchema, pattern);
-
+        KgGraphSchema.expandSchema(
+            this.kgGraphSchema, KgGraphSchema.convert2KgGraphSchema(pattern));
     PartialGraphPattern matchPattern = KgGraphSchema.convert2KgGraphSchema(pattern);
     java.util.Set<String> intersectionAliasSet =
         RunnerUtil.getIntersectionAliasSet(this.kgGraphSchema, matchPattern);
@@ -485,9 +508,8 @@ public class LocalRDG extends RDG<LocalRDG> {
 
     KgGraphSplitStaticParameters staticParameters =
         new KgGraphSplitStaticParameters(null, this.kgGraphSchema);
-    java.util.Map<String, Object> initRuleContext =
-        RunnerUtil.getKgGraphInitContext(this.kgGraphSchema);
 
+    SelectRowImpl impl = new SelectRowImpl(columns, kgGraphSchema, true);
     java.util.List<Object[]> rows = new ArrayList<>();
     for (KgGraph<IVertexId> kgGraph : this.kgGraphList) {
       Predicate<KgGraph<IVertexId>> filter = null;
@@ -501,16 +523,7 @@ public class LocalRDG extends RDG<LocalRDG> {
         if (null == path) {
           continue;
         }
-        java.util.Map<String, Object> context = RunnerUtil.kgGraph2Context(initRuleContext, path);
-        java.util.Map<String, Object> flattenContext = RunnerUtil.flattenContext(context);
-        Object[] row = new Object[columns.size()];
-        for (int i = 0; i < columns.size(); ++i) {
-          Var var = columns.get(i);
-          PropertyVar propertyVar = (PropertyVar) var;
-          String key =
-              propertyVar.name() + RunnerUtil.FLATTEN_SEPARATOR + propertyVar.field().name();
-          row[i] = Utils.objValue2Str(flattenContext.get(key));
-        }
+        Object[] row = impl.toRow(path);
         rows.add(row);
         count++;
         if (null != maxPathLimit && count >= maxPathLimit) {
@@ -529,9 +542,11 @@ public class LocalRDG extends RDG<LocalRDG> {
     Tuple2<java.util.Set<String>, java.util.Set<Connection>> tuple2 =
         RunnerUtil.getRuleUseVertexAndEdgeSet(rule, this.kgGraphSchema);
     java.util.Set<String> vertexSet = new HashSet<>(tuple2._1());
+    java.util.Set<String> edgeSet = new HashSet<>();
     for (Connection pc : tuple2._2()) {
       vertexSet.add(pc.source());
       vertexSet.add(pc.target());
+      edgeSet.add(pc.alias());
     }
 
     java.util.List<String> exprStringSet = WareHouseUtils.getRuleList(rule);
@@ -545,6 +560,7 @@ public class LocalRDG extends RDG<LocalRDG> {
           RunnerUtil.filterKgGraph(
               kgGraph,
               vertexSet,
+              edgeSet,
               this.kgGraphSchema,
               staticParameters,
               exprStringSet,
@@ -565,7 +581,9 @@ public class LocalRDG extends RDG<LocalRDG> {
   }
 
   private void groupByVariableThenAggregate(
-      java.util.List<String> byAliasList, KgGraphListProcess kgGraphListProcess) {
+      java.util.List<String> byAliasList,
+      java.util.List<Tuple2<String, String>> byPropertyList,
+      KgGraphListProcess kgGraphListProcess) {
     boolean isGlobalTopK = byAliasList.isEmpty();
     if (!byAliasList.isEmpty()) {
       if (!byAliasList.contains(this.kgGraphSchema.rootAlias())) {
@@ -586,7 +604,11 @@ public class LocalRDG extends RDG<LocalRDG> {
       java.util.List<KgGraph<IVertexId>> newKgGraphList = new ArrayList<>();
       GroupByKgGraphImpl impl =
           new GroupByKgGraphImpl(
-              byAliasList, kgGraphListProcess, this.kgGraphSchema, this.maxPathLimit);
+              byAliasList,
+              byPropertyList,
+              kgGraphListProcess,
+              this.kgGraphSchema,
+              this.maxPathLimit);
       java.util.List<KgGraph<IVertexId>> sameRootKgGraphList = new ArrayList<>();
       IVertexId lastKgGraphId = null;
       if (isGlobalTopK) {
@@ -621,7 +643,8 @@ public class LocalRDG extends RDG<LocalRDG> {
 
   @Override
   public LocalRDG orderBy(List<Var> groupKey, List<SortItem> sortItems, int limit) {
-    KgGraphSortImpl impl = new KgGraphSortImpl(groupKey, sortItems, this.kgGraphSchema, limit);
+    KgGraphSortImpl impl =
+        new KgGraphSortImpl(groupKey, sortItems, this.kgGraphSchema, limit, taskId);
     this.kgGraphList = impl.reduce(this.kgGraphList);
     this.executionRecorder.stageResult(
         "orderBy(" + RunnerUtil.getReadableByKey(groupKey) + ").limit(" + limit + ")",
@@ -631,7 +654,40 @@ public class LocalRDG extends RDG<LocalRDG> {
 
   @Override
   public LocalRDG groupBy(List<Var> by, Map<Var, Aggregator> aggregations) {
-    java.util.List<String> byAliasList = convertGroupByVar2AliasSet(by);
+    java.util.List<String> tmpByAliasList = new ArrayList<>();
+    java.util.List<Tuple2<String, String>> byPropertyList = new ArrayList<>();
+    JavaConversions.seqAsJavaList(by.toSeq())
+        .forEach(
+            var -> {
+              if (var instanceof NodeVar) {
+                tmpByAliasList.add(var.name());
+              } else if (var instanceof PropertyVar) {
+                PropertyVar propertyVar = (PropertyVar) var;
+                byPropertyList.add(new Tuple2<>(propertyVar.name(), propertyVar.field().name()));
+              }
+            });
+
+    java.util.Set<String> validRootAlias = new HashSet<>();
+    for (Connection connection : RunnerUtil.getConnectionSet(this.kgGraphSchema)) {
+      if (tmpByAliasList.contains(connection.source())) {
+        validRootAlias.add(connection.source());
+      }
+      if (!(connection instanceof PathConnection)) {
+        if (tmpByAliasList.contains(connection.target())) {
+          validRootAlias.add(connection.target());
+        }
+      }
+    }
+    if (CollectionUtils.isEmpty(validRootAlias)) {
+      throw new UnsupportedOperationException("unsupported group by repeat edge", null);
+    }
+
+    java.util.List<String> byAliasList =
+        RunnerUtil.sortGroupByAlias(tmpByAliasList, validRootAlias);
+    if (CollectionUtils.isEmpty(byAliasList)) {
+      throw new UnsupportedOperationException("unsupported group by property", null);
+    }
+
     // agg first edge
     java.util.List<String> firstEdgeAliasList = RunnerUtil.getFirstEdgeAliasList(aggregations);
     if (null != firstEdgeAliasList && byAliasList.contains(this.kgGraphSchema.rootAlias())) {
@@ -640,7 +696,7 @@ public class LocalRDG extends RDG<LocalRDG> {
 
     KgGraphListProcess kgGraphListProcess;
     java.util.Map<Var, Aggregator> aggregatorMap;
-    if (null == aggregations) {
+    if (null == aggregations || 0 == aggregations.size()) {
       // no aggregator, only merge
       kgGraphListProcess =
           new KgGraphListProcess() {
@@ -675,7 +731,7 @@ public class LocalRDG extends RDG<LocalRDG> {
           };
     }
 
-    groupByVariableThenAggregate(byAliasList, kgGraphListProcess);
+    groupByVariableThenAggregate(byAliasList, byPropertyList, kgGraphListProcess);
     this.executionRecorder.stageResult(
         "groupBy(" + RunnerUtil.getReadableByKey(by) + ")", this.kgGraphList.size());
     return this;
@@ -728,8 +784,7 @@ public class LocalRDG extends RDG<LocalRDG> {
 
   private void shuffleAndGroup(String vertexAlias, boolean merge) {
     if (vertexAlias.equals(this.kgGraphSchema.rootAlias())) {
-      // The current root Alias of KgGraph is the same as the root Alias that requires shuffling; no
-      // action is needed.
+      // 当前KgGraph的根Alias和需要shuffler的根Alias相同，不需要做任何事情
       return;
     }
 
@@ -934,7 +989,6 @@ public class LocalRDG extends RDG<LocalRDG> {
 
       // add to result list
       this.resultVertexSet.add(willAddedVertex);
-      this.graphState.addVertex(willAddedVertex);
       count++;
     }
 
@@ -949,6 +1003,43 @@ public class LocalRDG extends RDG<LocalRDG> {
     return this;
   }
 
+  private static java.util.Map<GroupByKeyItem, java.util.List<KgGraph<IVertexId>>> groupByAliasList(
+      List<String> vertexAliasList,
+      java.util.List<KgGraph<IVertexId>> kgGraphList,
+      PartialGraphPattern kgGraphSchema,
+      Long maxPathLimit) {
+    java.util.Set<String> splitAliasSet =
+        new HashSet<>(JavaConversions.seqAsJavaList(vertexAliasList));
+    KgGraphSplitStaticParameters staticParameters =
+        new KgGraphSplitStaticParameters(splitAliasSet, kgGraphSchema);
+    scala.collection.immutable.List<Var> varList =
+        Convert2ScalaUtil.toScalaList(
+            JavaConversions.seqAsJavaList(vertexAliasList).stream()
+                .map((Function<String, Var>) s -> new NodeVar(s, null))
+                .collect(Collectors.toList()));
+    java.util.Map<GroupByKeyItem, java.util.List<KgGraph<IVertexId>>> mergeMap =
+        new java.util.HashMap<>();
+    for (KgGraph<IVertexId> kgGraph : kgGraphList) {
+      java.util.List<KgGraph<IVertexId>> splitList =
+          kgGraph.split(splitAliasSet, kgGraphSchema, staticParameters, null, maxPathLimit);
+      for (KgGraph<IVertexId> kgGraphSpited : splitList) {
+        Object[] keys = RunnerUtil.getVarFromKgGraph(kgGraph, varList);
+        java.util.List<KgGraph<IVertexId>> sameIdKgGraph =
+            mergeMap.computeIfAbsent(new GroupByKeyItem(keys), k -> new ArrayList<>());
+        sameIdKgGraph.add(kgGraphSpited);
+      }
+    }
+    return mergeMap;
+  }
+
+  private static final java.util.Set<JoinType> SUPPORTED_JOIN_TYPE = new HashSet<>();
+
+  static {
+    SUPPORTED_JOIN_TYPE.add(LeftOuterJoin$.MODULE$);
+    SUPPORTED_JOIN_TYPE.add(InnerJoin$.MODULE$);
+    SUPPORTED_JOIN_TYPE.add(FullOuterJoin$.MODULE$);
+  }
+
   @Override
   public LocalRDG join(
       LocalRDG other,
@@ -956,76 +1047,97 @@ public class LocalRDG extends RDG<LocalRDG> {
       List<Tuple2<String, String>> onAlias,
       Map<Var, Var> lhsSchemaMapping,
       Map<Var, Var> rhsSchemaMapping) {
+
     try {
       if (null == other.getKgGraphList()) {
         // other KgGraph is ddl result, nothing to join
         return this;
       }
 
-      java.util.List<String> leftJoinAliasList = new ArrayList<>();
-      java.util.List<String> rightJoinAliasList = new ArrayList<>();
-      for (Tuple2<String, String> tuple2 : JavaConversions.seqAsJavaList(onAlias)) {
-        leftJoinAliasList.add(tuple2._1());
-        rightJoinAliasList.add(tuple2._2());
+      if (!SUPPORTED_JOIN_TYPE.contains(joinType)) {
+        throw new NotImplementedException("not supported join type " + joinType, null);
       }
 
-      String rightJoinAlias = rightJoinAliasList.get(0);
-      java.util.Map<IVertexId, java.util.Collection<KgGraph<IVertexId>>> rightDataMap =
-          new HashMap<>();
-      other.groupByVariableThenAggregate(
-          rightJoinAliasList,
-          new KgGraphListProcess() {
-            @Override
-            public java.util.List<KgGraph<IVertexId>> reduce(
-                Collection<KgGraph<IVertexId>> kgGraphs) {
-              IVertexId id = kgGraphs.iterator().next().getVertex(rightJoinAlias).get(0).getId();
-              rightDataMap.put(id, kgGraphs);
-              return new ArrayList<>();
-            }
-          });
-      other.kgGraphSchema = KgGraphSchema.schemaChangeRoot(other.kgGraphSchema, rightJoinAlias);
+      java.util.List<String> joinAlias =
+          RunnerUtil.joinAliasAfterMapping(onAlias, lhsSchemaMapping);
+      String splitVertexAlias = joinAlias.get(0);
 
-      String leftJoinAlias = leftJoinAliasList.get(0);
-      java.util.Map<IVertexId, java.util.Collection<KgGraph<IVertexId>>> leftDataMap =
-          new HashMap<>();
-      this.groupByVariableThenAggregate(
-          leftJoinAliasList,
-          new KgGraphListProcess() {
-            @Override
-            public java.util.List<KgGraph<IVertexId>> reduce(
-                Collection<KgGraph<IVertexId>> kgGraphs) {
-              IVertexId id = kgGraphs.iterator().next().getVertex(leftJoinAlias).get(0).getId();
-              leftDataMap.put(id, kgGraphs);
-              return new ArrayList<>();
-            }
-          });
-      this.kgGraphSchema = KgGraphSchema.schemaChangeRoot(this.kgGraphSchema, leftJoinAlias);
-
-      java.util.List<KgGraph<IVertexId>> newKgGraphList = new ArrayList<>();
-      KgGraphJoinImpl joinImpl =
-          new KgGraphJoinImpl(
-              joinType,
-              onAlias,
-              lhsSchemaMapping,
-              rhsSchemaMapping,
-              other.kgGraphSchema,
-              this.maxPathLimit);
-
-      Iterator<java.util.Map.Entry<IVertexId, java.util.Collection<KgGraph<IVertexId>>>> it =
-          leftDataMap.entrySet().iterator();
-      while (it.hasNext()) {
-        java.util.Map.Entry<IVertexId, java.util.Collection<KgGraph<IVertexId>>> entry = it.next();
-        IVertexId id = entry.getKey();
-        java.util.Collection<KgGraph<IVertexId>> left = entry.getValue();
-        it.remove();
-        java.util.Collection<KgGraph<IVertexId>> right = rightDataMap.remove(id);
-        java.util.List<KgGraph<IVertexId>> rst = joinImpl.join(left, right);
-        newKgGraphList.addAll(rst);
+      // mapping left
+      java.util.List<KgGraph<IVertexId>> left = this.kgGraphList;
+      PartialGraphPattern leftSchema = this.kgGraphSchema;
+      KgGraphRenameImpl leftRenameImpl = new KgGraphRenameImpl(lhsSchemaMapping);
+      if (leftRenameImpl.needAction()) {
+        left = left.stream().map(leftRenameImpl::rename).collect(Collectors.toList());
+        leftSchema = KgGraphSchema.schemaAliasMapping(leftSchema, lhsSchemaMapping);
       }
-      this.kgGraphList = newKgGraphList;
-      this.kgGraphSchema =
-          RunnerUtil.getAfterJoinSchema(
-              this.kgGraphSchema, other.kgGraphSchema, onAlias, rhsSchemaMapping);
+
+      // split left
+      boolean leftNeedSplit =
+          joinAlias.size() > 1 || !splitVertexAlias.equals(leftSchema.rootAlias());
+      if (leftNeedSplit) {
+        leftSchema = KgGraphSchema.schemaChangeRoot(leftSchema, splitVertexAlias);
+        java.util.Map<GroupByKeyItem, java.util.List<KgGraph<IVertexId>>> leftMergeMap =
+            groupByAliasList(
+                Convert2ScalaUtil.toScalaList(joinAlias), left, leftSchema, this.maxPathLimit);
+        left = new ArrayList<>();
+        for (java.util.List<KgGraph<IVertexId>> kgGraphs : leftMergeMap.values()) {
+          left.addAll(kgGraphs);
+        }
+      }
+
+      // mapping right
+      java.util.List<KgGraph<IVertexId>> right = other.kgGraphList;
+      PartialGraphPattern rightSchema = other.kgGraphSchema;
+      rhsSchemaMapping = RunnerUtil.newRhsSchemaMapping(rhsSchemaMapping, onAlias);
+      KgGraphRenameImpl rightRenameImpl = new KgGraphRenameImpl(rhsSchemaMapping);
+      if (rightRenameImpl.needAction()) {
+        right = right.stream().map(rightRenameImpl::rename).collect(Collectors.toList());
+        rightSchema = KgGraphSchema.schemaAliasMapping(rightSchema, rhsSchemaMapping);
+      }
+
+      // split right
+      boolean rightNeedSplit =
+          joinAlias.size() > 1 || !splitVertexAlias.equals(rightSchema.rootAlias());
+      if (rightNeedSplit) {
+        rightSchema = KgGraphSchema.schemaChangeRoot(rightSchema, splitVertexAlias);
+        java.util.Map<GroupByKeyItem, java.util.List<KgGraph<IVertexId>>> rightMergeMap =
+            groupByAliasList(
+                Convert2ScalaUtil.toScalaList(joinAlias), right, rightSchema, this.maxPathLimit);
+        right = new ArrayList<>();
+        for (java.util.List<KgGraph<IVertexId>> kgGraphs : rightMergeMap.values()) {
+          right.addAll(kgGraphs);
+        }
+      }
+
+      // change direction
+      java.util.Map<String, Tuple2<Direction, Direction>> diffEdgeDirectionMap =
+          RunnerUtil.getOverlapEdgeDirectionDiff(leftSchema, rightSchema);
+      if (!diffEdgeDirectionMap.isEmpty()) {
+        KgGraphEdgeDirectionImpl edgeDirection = new KgGraphEdgeDirectionImpl(diffEdgeDirectionMap);
+        left =
+            left.stream()
+                .map(
+                    new Function<KgGraph<IVertexId>, KgGraph<IVertexId>>() {
+                      @Override
+                      public KgGraph<IVertexId> apply(KgGraph<IVertexId> kgGraph) {
+                        return edgeDirection.convert((KgGraphImpl) kgGraph);
+                      }
+                    })
+                .collect(Collectors.toList());
+      }
+
+      // convert to join item
+      java.util.List<JoinItem> joinItemList =
+          left.stream().map(kgGraph -> new JoinItem(true, kgGraph)).collect(Collectors.toList());
+      joinItemList.addAll(
+          right.stream().map(kgGraph -> new JoinItem(false, kgGraph)).collect(Collectors.toList()));
+
+      // do join
+      ReasonerJoinImpl reasonerJoin =
+          new ReasonerJoinImpl(joinType, joinAlias, leftSchema, rightSchema, this.maxPathLimit);
+      this.kgGraphList = reasonerJoin.join(joinItemList);
+
+      this.kgGraphSchema = KgGraphSchema.getAfterJoinSchema(leftSchema, rightSchema);
     } finally {
       other.clear();
       this.executionRecorder.leaveRDG();
@@ -1048,7 +1160,21 @@ public class LocalRDG extends RDG<LocalRDG> {
     }
     this.kgGraphList = newKgGraphList;
     this.kgGraphSchema = KgGraphSchema.schemaChangeRoot(this.kgGraphSchema, null);
+
+    // duplicates need to be removed after unfold
+    java.util.List<String> byAliasList =
+        Lists.newArrayList(RunnerUtil.getAllVertexAlias(this.kgGraphSchema));
+    this.groupByVariableThenAggregate(
+        byAliasList,
+        new ArrayList<>(),
+        new UnfoldReduceDuplicateImpl(this.kgGraphSchema, unfoldRepeatEdgeInfo.getEdgeAlias()));
+    this.executionRecorder.stageResult("unfold", this.kgGraphList.size());
     return this;
+  }
+
+  @Override
+  public LocalRDG union(LocalRDG other) {
+    throw new NotImplementedException("union not supported yet", null);
   }
 
   @Override
@@ -1064,6 +1190,7 @@ public class LocalRDG extends RDG<LocalRDG> {
       newKgGraphList.addAll(rst);
     }
     this.kgGraphList = newKgGraphList;
+    this.executionRecorder.stageResult("fold", this.kgGraphList.size());
     return this;
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,10 +15,10 @@ package com.antgroup.openspg.reasoner.lube.logical.optimizer.rules
 
 import com.antgroup.openspg.reasoner.lube.logical.NodeVar
 import com.antgroup.openspg.reasoner.lube.logical.operators.{Aggregate, LogicalOperator, Select}
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, SimpleRule, Up}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 
-case object DistinctGet extends Rule {
+case object DistinctGet extends SimpleRule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {

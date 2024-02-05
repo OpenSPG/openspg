@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ package com.antgroup.openspg.reasoner.lube.logical
 import scala.collection.mutable
 import scala.language.implicitConversions
 
-import com.antgroup.openspg.reasoner.common.exception.InvalidRefVariable
+import com.antgroup.openspg.reasoner.common.exception.{InvalidRefVariable, UnsupportedOperationException}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.graph.IRVariable
 
@@ -43,11 +43,24 @@ case class SolvedModel(
     tmpFields.get(field).get
   }
 
+  def getVar(name: String): Var = {
+    val value = fields.get(name)
+    if (value.isDefined) {
+      value.get
+    } else if (tmpFields.contains(IRVariable(name))) {
+      tmpFields(IRVariable(name))
+    } else {
+      throw InvalidRefVariable(s"not found variable: ${name}")
+    }
+  }
+
   def getField(alias: String, fieldName: String): Field = {
     fields(alias) match {
       case NodeVar(_, fields) => fields.filter(_.name.equals(fieldName)).head
       case EdgeVar(_, fields) => fields.filter(_.name.equals(fieldName)).head
-      case _ => null
+      case RepeatPathVar(pathVar, _, _) =>
+        pathVar.elements(1).asInstanceOf[EdgeVar].fields.filter(_.name.equals(fieldName)).head
+      case _ => throw UnsupportedOperationException(s"connot support ${fields(alias)}")
     }
   }
 
@@ -65,7 +78,10 @@ case class SolvedModel(
   }
 
   def getEdgeAliasSet: Set[String] = {
-    fields.filter(pair => pair._2.isInstanceOf[EdgeVar]).map(_._1).toSet
+    fields
+      .filter(pair => pair._2.isInstanceOf[EdgeVar] || pair._2.isInstanceOf[RepeatPathVar])
+      .map(_._1)
+      .toSet
   }
 
   def getTypes(alias: String): Set[String] = {
@@ -75,7 +91,9 @@ case class SolvedModel(
 }
 
 object SolvedModel {
+
   implicit class SolvedModelOps(solvedModel: SolvedModel) {
+
     implicit def merge(other: SolvedModel): SolvedModel = {
       if (other == null) {
         solvedModel
@@ -85,7 +103,9 @@ object SolvedModel {
       }
     }
 
-    private def fieldsMerge(fields: Map[String, Var], other: Map[String, Var]): Map[String, Var] = {
+    private def fieldsMerge(
+        fields: Map[String, Var],
+        other: Map[String, Var]): Map[String, Var] = {
       val varMap = new mutable.HashMap[String, Var]()
       for (field <- fields) {
         varMap.put(field._1, field._2)

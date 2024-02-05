@@ -12,7 +12,9 @@ services:
       - elasticsearch
     command: [
       '--server.repository.impl.jdbc.host=mysql',
-      '--server.repository.impl.jdbc.password=openspg'
+      '--server.repository.impl.jdbc.password=openspg',
+      '--cloudext.graphstore.url=tugraph://tugraph:9090?graphName=default&timeout=50000&accessId=admin&accessKey=73@TuGraph',
+      '--cloudext.searchengine.url=elasticsearch://elasticsearch:9200?scheme=http'
     ]
 
   mysql:
@@ -32,7 +34,7 @@ services:
     ]
 
   tugraph:
-    image: tugraph/tugraph-runtime-centos7:4.1.0
+    image: tugraph/tugraph-runtime-centos7:4.0.1
     container_name: release-openspg-tugraph
     # default username is admin and default password is 73@TuGraph
     ports:
@@ -49,8 +51,3 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-
-
-
-
-

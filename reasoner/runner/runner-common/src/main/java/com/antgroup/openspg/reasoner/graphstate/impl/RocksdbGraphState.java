@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,7 +13,9 @@
 
 package com.antgroup.openspg.reasoner.graphstate.impl;
 
+import com.antgroup.openspg.reasoner.common.IConceptTree;
 import com.antgroup.openspg.reasoner.common.Utils;
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
@@ -28,20 +30,33 @@ import com.antgroup.openspg.reasoner.common.utils.PropertyUtil;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.model.MergeTypeEnum;
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
+import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.utils.RocksDBUtil;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.rocksdb.ReadOptions;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
@@ -55,15 +70,29 @@ import scala.Tuple2;
  * GraphState based on Rocksdb vertex key is V_TYPEID_ID_PLACEHOLDER_WINDOWS, value is vertex
  * property edge key is E_EDGETYPE_DIRECTION_VERTEXID_WINDOW, value is edges
  */
-public class RocksdbGraphState implements GraphState<IVertexId> {
+public class RocksdbGraphState implements GraphState<IVertexId>, IConceptTree {
   private static final Logger log = LoggerFactory.getLogger(RocksdbGraphState.class);
-
   public final transient RocksDB rocksDB;
   private final transient IRocksDBGraphStateHelper helper;
+  private final transient boolean disableEdgeSpotDuplicateRemove;
+  private transient String edgeExtraIdentifier;
 
-  public RocksdbGraphState(RocksDB rocksDB, IRocksDBGraphStateHelper helper) {
+  public RocksdbGraphState(
+      RocksDB rocksDB, IRocksDBGraphStateHelper helper, Map<String, Object> params) {
     this.rocksDB = rocksDB;
     this.helper = helper;
+    Map<String, Object> parsedParamMap = RunnerUtil.getOfflineDslParams(params, false);
+    this.disableEdgeSpotDuplicateRemove =
+        ("true"
+            .equals(
+                String.valueOf(
+                        parsedParamMap.getOrDefault(
+                            ConfigKey.KG_REASONER_DISABLE_EDGE_SPOT_DUPLICATE_REMOVE, "false"))
+                    .toLowerCase(Locale.ROOT)));
+    if (parsedParamMap.containsKey(ConfigKey.EDGE_EXTRA_IDENTIFIER)) {
+      this.edgeExtraIdentifier =
+          String.valueOf(parsedParamMap.get(ConfigKey.EDGE_EXTRA_IDENTIFIER));
+    }
   }
 
   /**
@@ -306,26 +335,44 @@ public class RocksdbGraphState implements GraphState<IVertexId> {
   private List<Tuple2<byte[], IProperty>> wrapEdge(
       List<IEdge<IVertexId, IProperty>> edges, Direction direction, IVertexId vertexId) {
     List<Tuple2<byte[], IProperty>> wrapEdgeList = new ArrayList<>();
-    Map<String, Map<Long, List<IEdge<IVertexId, IProperty>>>> type2Version2EdgeMap =
-        new HashMap<>();
+    Map<String, Map<Long, Set<IEdge<IVertexId, IProperty>>>> type2Version2EdgeMap = new HashMap<>();
     for (IEdge<IVertexId, IProperty> edge : edges) {
+      // if set edgeExtraIdentifier, then append it to version
+      StringBuffer newVersion = new StringBuffer(String.valueOf(edge.getVersion()));
+      if (StringUtils.isNotBlank(edgeExtraIdentifier)) {
+        Set<String> extraIdentifierSet =
+            Arrays.stream(edgeExtraIdentifier.split(","))
+                .map(String::trim)
+                .collect(Collectors.toSet());
+        for (String key : extraIdentifierSet) {
+          if (edge.getValue().isKeyExist(key)) {
+            newVersion.append(edge.getValue().get(key));
+          }
+        }
+        edge.setVersion(
+            UUID.nameUUIDFromBytes(newVersion.toString().getBytes()).getMostSignificantBits());
+      }
+
       String p = edge.getType();
-      Map<Long, List<IEdge<IVertexId, IProperty>>> version2EdgeListMap =
+      Map<Long, Set<IEdge<IVertexId, IProperty>>> version2EdgeListMap =
           type2Version2EdgeMap.computeIfAbsent(p, k -> new HashMap<>());
-      List<IEdge<IVertexId, IProperty>> edgeList =
+      Set<IEdge<IVertexId, IProperty>> edgeSet =
           version2EdgeListMap.computeIfAbsent(
-              this.helper.getWriteWindow(edge.getVersion()), k -> new ArrayList<>());
-      edgeList.add(edge);
+              this.helper.getWriteWindow(edge.getVersion()), k -> new HashSet<>());
+      if (this.disableEdgeSpotDuplicateRemove && edgeSet.contains(edge)) {
+        edge.setVersion(UUID.randomUUID().getMostSignificantBits());
+      }
+      edgeSet.add(edge);
     }
     for (String type : type2Version2EdgeMap.keySet()) {
-      Map<Long, List<IEdge<IVertexId, IProperty>>> version2EdgeListMap =
+      Map<Long, Set<IEdge<IVertexId, IProperty>>> version2EdgeListMap =
           type2Version2EdgeMap.get(type);
       byte[] edgeKeyPrefix =
           RocksDBUtil.buildRocksDBEdgeKeyWithoutWindow(type, direction, vertexId);
       for (long window : version2EdgeListMap.keySet()) {
         byte[] edgeKey = RocksDBUtil.rocksdbKeyAppendWindow(edgeKeyPrefix, window);
         IProperty edgeProperty = new EdgeProperty();
-        edgeProperty.put("edges", version2EdgeListMap.get(window));
+        edgeProperty.put("edges", Lists.newArrayList(version2EdgeListMap.get(window)));
         wrapEdgeList.add(new Tuple2<>(edgeKey, edgeProperty));
       }
     }
@@ -737,5 +784,89 @@ public class RocksdbGraphState implements GraphState<IVertexId> {
   @Override
   public void close() {
     this.rocksDB.close();
+  }
+
+  @Override
+  public List<String> getBelongToConcept(IVertexId id, String edgeType, Direction direction) {
+    List<String> result = new ArrayList<>();
+    List<IEdge<IVertexId, IProperty>> edgeList =
+        this.getEdges(id, null, null, Sets.newHashSet(edgeType), direction);
+    for (IEdge<IVertexId, IProperty> edge : edgeList) {
+      result.add((String) edge.getValue().get(Constants.EDGE_TO_ID_KEY));
+    }
+    return result;
+  }
+
+  private Set<String> getEdgeTypeSet(String conceptType) {
+    Set<String> edgeTypeSet = new HashSet<>();
+    for (String hypernym : Constants.CONCEPT_HYPERNYM_EDGE_TYPE_SET) {
+      edgeTypeSet.add(conceptType + "_" + hypernym + "_" + conceptType);
+    }
+    return edgeTypeSet;
+  }
+
+  private final LoadingCache<String, List<String>> conceptCache =
+      CacheBuilder.newBuilder()
+          .maximumSize(2000)
+          .expireAfterAccess(30, TimeUnit.MINUTES)
+          .build(
+              new CacheLoader<String, List<String>>() {
+                @Override
+                public List<String> load(String key) throws Exception {
+                  List<String> kl = Lists.newArrayList(Splitter.on("|").split(key));
+                  String concept = kl.get(0);
+                  String conceptType = kl.get(1);
+                  String upper = kl.get(2);
+                  if ("u".equals(upper)) {
+                    return Lists.newArrayList(doGetUpper(conceptType, concept));
+                  }
+                  return doGetLower(conceptType, concept);
+                }
+              });
+
+  @Override
+  public String getUpper(String conceptType, String concept) {
+    try {
+      List<String> upper = conceptCache.get(concept + "|" + conceptType + "|u");
+      if (CollectionUtils.isEmpty(upper)) {
+        return null;
+      }
+      return upper.get(0);
+    } catch (ExecutionException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private String doGetUpper(String conceptType, String concept) {
+    IVertexId id = IVertexId.from(concept, conceptType);
+    List<IEdge<IVertexId, IProperty>> edgeList =
+        this.getEdges(id, null, null, getEdgeTypeSet(conceptType), Direction.OUT);
+    if (CollectionUtils.isEmpty(edgeList)) {
+      return null;
+    }
+    return (String) edgeList.get(0).getValue().get(Constants.EDGE_TO_ID_KEY);
+  }
+
+  @Override
+  public List<String> getLower(String conceptType, String concept) {
+    try {
+      return conceptCache.get(concept + "|" + conceptType + "|l");
+    } catch (ExecutionException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private List<String> doGetLower(String conceptType, String concept) {
+    List<String> result = new ArrayList<>();
+    IVertexId id = IVertexId.from(concept, conceptType);
+    List<IEdge<IVertexId, IProperty>> edgeList =
+        this.getEdges(id, null, null, getEdgeTypeSet(conceptType), Direction.IN);
+    if (CollectionUtils.isEmpty(edgeList)) {
+      return result;
+    }
+    for (IEdge<IVertexId, IProperty> edge : edgeList) {
+      result.add((String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY));
+    }
+    return result;
   }
 }

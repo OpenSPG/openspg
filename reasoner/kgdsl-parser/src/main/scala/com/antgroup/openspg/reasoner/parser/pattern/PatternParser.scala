@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -154,8 +154,9 @@ class PatternParser extends Serializable {
     parseSourceAndMatchBlock(Map.empty, pathMaps)
   }
 
-  def parseSourceAndMatchBlock(refFieldsMap: Map[String, Set[String]],
-                               patterns: Map[String, GraphPath]): MatchBlock = {
+  def parseSourceAndMatchBlock(
+      refFieldsMap: Map[String, Set[String]],
+      patterns: Map[String, GraphPath]): MatchBlock = {
     val nodesProp = new mutable.HashMap[String, IRNode]()
     val edgesProp = new mutable.HashMap[String, IREdge]()
     patterns.foreach(path => {
@@ -213,6 +214,7 @@ class PatternParser extends Serializable {
 
     MatchBlock(List.apply(SourceBlock(KG(nodesProp.toMap, edgesProp.toMap))), patternMaps)
   }
+
   def parseGraphStructureBody(
       ctx: Graph_structure_bodyContext,
       head: Element,
@@ -344,8 +346,10 @@ class PatternParser extends Serializable {
         parseLowerBound(ctx.repeat_time.lower_bound()),
         parseUpperBound(ctx.repeat_time().upper_bound()))
     }
-    GraphPath("", GraphPattern(null, Map.empty, Map.apply(s.alias -> Set.apply(p)),
-      Map.empty), false)
+    GraphPath(
+      "",
+      GraphPattern(null, Map.empty, Map.apply(s.alias -> Set.apply(p)), Map.empty),
+      false)
   }
 
   def parseLowerBound(ctx: Lower_boundContext): Integer = {
@@ -446,11 +450,15 @@ class PatternParser extends Serializable {
     val ele = parseElementInfo(ctx.vertex_name().getText, labels)
 
     if (labelProperties.contains(PROPERTY_START_FLAG_KEY)) {
-      GraphPath("", GraphPattern(ele.alias, Map.apply((ele.alias -> ele)), Map.empty,
-        Map.empty), false)
+      GraphPath(
+        "",
+        GraphPattern(ele.alias, Map.apply((ele.alias -> ele)), Map.empty, Map.empty),
+        false)
     } else {
-      GraphPath("", GraphPattern(null, Map.apply((ele.alias -> ele)), Map.empty,
-        Map.empty), false)
+      GraphPath(
+        "",
+        GraphPattern(null, Map.apply((ele.alias -> ele)), Map.empty, Map.empty),
+        false)
     }
   }
 
@@ -461,8 +469,7 @@ class PatternParser extends Serializable {
       .vertex_name()
       .asScala
       .foreach(x => nodes += (x.getText -> parseElementInfo(x.getText, labels)))
-    GraphPath("", GraphPattern(null, nodes, Map.empty,
-      Map.empty), false)
+    GraphPath("", GraphPattern(null, nodes, Map.empty, Map.empty), false)
   }
 
   def parsePathPatternList(
@@ -510,8 +517,7 @@ class PatternParser extends Serializable {
 
       retPathList += GraphPath(
         path.pathName,
-        GraphPattern(path.graphPattern.rootAlias, nodesSet, topology,
-          Map.empty),
+        GraphPattern(path.graphPattern.rootAlias, nodesSet, topology, Map.empty),
         path.optional)
     }
     retPathList
@@ -545,7 +551,10 @@ class PatternParser extends Serializable {
     }
     GraphPath(
       pathName,
-      GraphPattern(rootAlias, graphPath.graphPattern.nodes, graphPath.graphPattern.edges,
+      GraphPattern(
+        rootAlias,
+        graphPath.graphPattern.nodes,
+        graphPath.graphPattern.edges,
         Map.empty),
       optionalPath)
   }
@@ -691,8 +700,7 @@ class PatternParser extends Serializable {
         topology += (newEdge.source -> Set.apply(newEdge))
       }
     }
-    GraphPath(defaultPathName, GraphPattern(null, nodes, topology,
-      Map.empty), false)
+    GraphPath(defaultPathName, GraphPattern(null, nodes, topology, Map.empty), false)
   }
 
   def parseOneEdgePattern(
@@ -884,8 +892,12 @@ class PatternParser extends Serializable {
       eleName = ctx.element_variable_declaration().getText
     }
     val whereClause = parseElePatternWhereClause(ctx.element_pattern_where_clause())
-    if (null != ctx.linked_edge()) {
-      val linkedEdge = parseLinkedEdge(ctx.linked_edge())
+    if (null == ctx.element_lookup()) {
+      return new PatternDeclarationInfo(eleName, Set[LabelType](), whereClause)
+    }
+
+    if (null != ctx.element_lookup().linked_edge()) {
+      val linkedEdge = parseLinkedEdge(ctx.element_lookup().linked_edge())
       val entityLabelType = EntityLabelType(
         eleName.toLowerCase() + linkedEdge.name.capitalize + getDefaultAliasNum)
       val linkedEdgeDefaultType = Set.apply(entityLabelType.asInstanceOf[LabelType])
@@ -895,7 +907,7 @@ class PatternParser extends Serializable {
         whereClause,
         linkedEdge)
     }
-    val typeNames = parseLabelExpress(ctx.label_expression())
+    val typeNames = parseLabelExpress(ctx.element_lookup().label_expression())
     new PatternDeclarationInfo(eleName, typeNames, whereClause)
   }
 
@@ -914,7 +926,11 @@ class PatternParser extends Serializable {
   def parseLabelExpress(ctx: Label_expressionContext): Set[LabelType] = {
     var labels = Set[LabelType]()
     if (ctx != null && !ctx.isEmpty) {
-      ctx.label_name().asScala.foreach(x => labels += parseLabelName(x))
+      labels = labels ++ Set.apply(parseLabelName(ctx.label_name()))
+      if (ctx.label_expression_lookup() != null && !ctx.label_expression_lookup().isEmpty) {
+        labels = labels ++
+          ctx.label_expression_lookup().asScala.map(x => parseLabelName(x.label_name()))
+      }
     }
     labels
   }

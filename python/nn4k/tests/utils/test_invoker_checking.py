@@ -1,4 +1,4 @@
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -22,6 +22,7 @@ class TestInvokerChecking(unittest.TestCase):
 
         self.assertTrue(is_openai_invoker({"nn_name": "gpt-3.5-turbo"}))
         self.assertTrue(is_openai_invoker({"nn_name": "gpt-4"}))
+        self.assertTrue(is_openai_invoker({"nn_name": "text-embedding-ada-002"}))
         self.assertFalse(is_openai_invoker({"nn_name": "dummy"}))
 
         self.assertTrue(is_openai_invoker({"openai_api_key": "EMPTY"}))
@@ -29,6 +30,7 @@ class TestInvokerChecking(unittest.TestCase):
             is_openai_invoker({"openai_api_base": "http://localhost:38000/v1"})
         )
         self.assertTrue(is_openai_invoker({"openai_max_tokens": 1000}))
+        self.assertTrue(is_openai_invoker({"openai_organization": "test_org"}))
         self.assertFalse(is_openai_invoker({"foo": "bar"}))
 
     def testIsLocalInvoker(self):

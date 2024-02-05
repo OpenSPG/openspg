@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -60,7 +60,7 @@ public class UnfoldEdgeImpl implements Serializable {
           for (IVertex<IVertexId, IProperty> v :
               kgGraph.getAlias2VertexMap().get(this.unfoldRepeatEdgeInfo.getAnchorVertexAlias())) {
             if (v.getId().equals(anchorVertexId)) {
-              newAnchorVertex = new MirrorVertex<>(v);
+              newAnchorVertex = new MirrorVertex<>(v.getId());
               break;
             }
           }

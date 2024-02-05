@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -772,5 +772,14 @@ public class UdfTest {
     randomMeta = mng.getUdfMeta("randomLong", Lists.newArrayList());
     value = randomMeta.invoke();
     Assert.assertTrue(value instanceof Long);
+  }
+
+  @Test
+  public void testToTimeStamp() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    IUdfMeta toTimestampUdf = mng.getUdfMeta("to_timestamp", Lists.newArrayList(KTLong$.MODULE$));
+    Assert.assertTrue(toTimestampUdf.getCompatibleNames().contains("ToTimestamp"));
+    System.out.println(toTimestampUdf.invoke(1688545587325L));
+    Assert.assertEquals(toTimestampUdf.invoke(1688545587325L), "2023-07-05 16:26:27");
   }
 }

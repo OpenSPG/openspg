@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,7 +16,11 @@ package com.antgroup.openspg.reasoner.rdg.common;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field;
-import com.antgroup.openspg.reasoner.lube.logical.*;
+import com.antgroup.openspg.reasoner.lube.logical.EdgeVar;
+import com.antgroup.openspg.reasoner.lube.logical.NodeVar;
+import com.antgroup.openspg.reasoner.lube.logical.PathVar;
+import com.antgroup.openspg.reasoner.lube.logical.RepeatPathVar;
+import com.antgroup.openspg.reasoner.lube.logical.Var;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,7 +112,6 @@ public class KgGraphDropFieldsImpl implements Serializable {
           JavaConversions.setAsJavaSet(edgeField.fields()).stream()
               .map(Field::name)
               .collect(Collectors.toSet());
-      dropEdge(alias, propertyNameSet);
     }
     return new Tuple2<>(alias, propertyNameSet);
   }

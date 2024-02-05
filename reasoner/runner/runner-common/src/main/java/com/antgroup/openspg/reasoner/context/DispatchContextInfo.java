@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,10 +17,9 @@ import com.antgroup.openspg.reasoner.task.TaskRecord;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.Getter;
 
 public class DispatchContextInfo implements Serializable {
-  @Getter private final TaskRecord taskRecord;
+  private final TaskRecord taskRecord;
 
   private final Map<Class<? extends BaseContextInitializer>, Object> contextObjectMap =
       new HashMap<>();
@@ -34,6 +33,10 @@ public class DispatchContextInfo implements Serializable {
 
   public Map<Class<? extends BaseContextInitializer>, Object> getContextObjectMap() {
     return contextObjectMap;
+  }
+
+  public TaskRecord getTaskRecord() {
+    return taskRecord;
   }
 
   public boolean isEmpty() {

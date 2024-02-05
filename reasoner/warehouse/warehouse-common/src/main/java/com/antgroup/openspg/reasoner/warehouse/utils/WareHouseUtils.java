@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -10,6 +10,7 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
+
 package com.antgroup.openspg.reasoner.warehouse.utils;
 
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import scala.Option;
 import scala.Tuple2;
+import scala.Tuple3;
 import scala.collection.JavaConversions;
 import scala.collection.immutable.Set;
 
@@ -82,8 +84,8 @@ public class WareHouseUtils {
    * @param pattern
    * @return
    */
-  public static Map<Connection, List<String>> getEdgeRuleMap(Pattern pattern) {
-    Map<Connection, List<String>> edgeRuleMap = new HashMap<>();
+  public static Map<String, List<String>> getEdgeRuleMap(Pattern pattern) {
+    Map<String, List<String>> edgeRuleMap = new HashMap<>();
     Option<Set<Connection>> patternConnectionSet = pattern.topology().get(pattern.root().alias());
     if (!patternConnectionSet.isEmpty()) {
       for (Connection patternConnection :
@@ -92,7 +94,7 @@ public class WareHouseUtils {
           continue;
         }
         List<String> edgeRuleList =
-            edgeRuleMap.computeIfAbsent(patternConnection, k -> new ArrayList<>());
+            edgeRuleMap.computeIfAbsent(patternConnection.alias(), k -> new ArrayList<>());
         edgeRuleList.addAll(
             JavaConversions.asJavaCollection(EXPR_TRANSFORMER.transform(patternConnection.rule())));
       }
@@ -145,5 +147,27 @@ public class WareHouseUtils {
       throw new RuntimeException("rule ir field size > 1, ruleList=" + ruleList);
     }
     return new Tuple2<>(irFieldList.get(0).name(), ruleList);
+  }
+
+  /** transform rule to qlexpress */
+  public static Tuple3<String, String, List<String>> getRuleListWithAlias(
+      Rule rule, java.util.Set<String> endVertexAliasSet) {
+    List<String> ruleList =
+        Lists.newArrayList(JavaConversions.asJavaIterable(EXPR_TRANSFORMER.transform(rule)));
+    List<IRField> irFieldList =
+        JavaConversions.seqAsJavaList(RuleUtils.getAllInputFieldInRule(rule, null, null));
+    if (irFieldList.size() > 2) {
+      throw new RuntimeException("rule ir field size > 2, ruleList=" + ruleList);
+    } else if (2 == irFieldList.size()) {
+      String alias1 = irFieldList.get(0).name();
+      String alias2 = irFieldList.get(1).name();
+      if (endVertexAliasSet.contains(alias1)) {
+        String tmp = alias1;
+        alias1 = alias2;
+        alias2 = tmp;
+      }
+      return new Tuple3<>(alias1, alias2, ruleList);
+    }
+    return new Tuple3<>(irFieldList.get(0).name(), null, ruleList);
   }
 }

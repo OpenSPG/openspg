@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,10 +15,7 @@ package com.antgroup.openspg.reasoner.lube.logical.validate.semantic
 
 import com.antgroup.openspg.reasoner.lube.block.Block
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
-import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.rules.{
-  ConceptExplain,
-  SpatioTemporalExplain
-}
+import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.rules.{ConceptExplain, NodeIdTransform, SpatioTemporalExplain}
 
 object SemanticExplainer {
 

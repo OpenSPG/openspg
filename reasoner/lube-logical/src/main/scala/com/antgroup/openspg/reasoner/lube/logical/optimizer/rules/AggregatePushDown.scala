@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -19,16 +19,16 @@ import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.trees.{BottomUp, TopDown}
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern
-import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, SolvedModel, Var}
+import com.antgroup.openspg.reasoner.lube.logical._
 import com.antgroup.openspg.reasoner.lube.logical.operators.{Filter, _}
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, SimpleRule, Up}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.utils.{ExprUtils, RuleUtils}
 
 /**
  * Aggregation push down
  */
-object AggregatePushDown extends Rule {
+object AggregatePushDown extends SimpleRule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
@@ -107,9 +107,9 @@ object AggregatePushDown extends Rule {
             .filter(p =>
               p._1.isInstanceOf[EdgeVar] &&
                 p._2.isInstanceOf[AggOpExpr] && p._2
-                .asInstanceOf[AggOpExpr]
-                .name
-                .isInstanceOf[First.type])
+                  .asInstanceOf[AggOpExpr]
+                  .name
+                  .isInstanceOf[First.type])
           val fullAggregations = aggregations.filter(p => !partialAggregations.contains(p._1))
           var newRoot = expandInto
           if (!partialAggregations.isEmpty) {
@@ -133,9 +133,22 @@ object AggregatePushDown extends Rule {
         patternScan
     }
 
-    val newRoot = BottomUp[LogicalOperator](rewriter).transform(aggregate).asInstanceOf[Aggregate]
+    var newRoot = BottomUp[LogicalOperator](rewriter).transform(aggregate).asInstanceOf[Aggregate]
     if (!allAgg.isEmpty) {
-      newRoot.copy(aggregations = allAgg.values.flatten.toMap)
+      val edgeAggregations = allAgg.values.flatten.toMap.filter(e =>
+        e._1.isInstanceOf[EdgeVar] || e._1.isInstanceOf[RepeatPathVar] || e._1
+          .isInstanceOf[PathVar])
+      val nodeAggregations =
+        allAgg.values.flatten.toMap.filter(e => !edgeAggregations.contains(e._1))
+      if (!edgeAggregations.isEmpty && !nodeAggregations.isEmpty) {
+        newRoot = newRoot.copy(in = newRoot.in, aggregations = edgeAggregations)
+        newRoot = newRoot.copy(in = newRoot, aggregations = nodeAggregations)
+      } else if (nodeAggregations.isEmpty) {
+        newRoot = newRoot.copy(in = newRoot.in, aggregations = edgeAggregations)
+      } else {
+        newRoot = newRoot.copy(in = newRoot.in, aggregations = nodeAggregations)
+      }
+      newRoot
     } else {
       newRoot.in
     }
@@ -186,9 +199,7 @@ object AggregatePushDown extends Rule {
     useFields.toSet
   }
 
-  private def getGroupVar(
-      logicalOperator: LogicalOperator,
-      groups: List[Var]): List[Var] = {
+  private def getGroupVar(logicalOperator: LogicalOperator, groups: List[Var]): List[Var] = {
     var curRoot: String = null
     val roots = logicalOperator
       .transform[Set[Var]] {

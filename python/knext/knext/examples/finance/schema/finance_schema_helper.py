@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -15,74 +15,34 @@
 # PLEASE DO NOT MODIFY THIS FILE!!!
 #
 
-from knext.common.schema_helper import SPGTypeHelper, PropertyHelper, RelationHelper
+from knext.schema.model.schema_helper import (
+    SPGTypeHelper,
+    PropertyHelper,
+    RelationHelper,
+)
 
 
 class Finance:
-    class AdministrativeArea(SPGTypeHelper):
-
-        name = PropertyHelper("name")
-        id = PropertyHelper("id")
-        stdId = PropertyHelper("stdId")
-        description = PropertyHelper("description")
-        alias = PropertyHelper("alias")
-
-    class AreaRiskEvent(SPGTypeHelper):
-
-        name = PropertyHelper("name")
-        id = PropertyHelper("id")
-        subject = PropertyHelper("subject")
-        eventTime = PropertyHelper("eventTime")
-        description = PropertyHelper("description")
-        object = PropertyHelper("object")
-
-    class Company(SPGTypeHelper):
-
-        regArea = PropertyHelper("regArea")
-        name = PropertyHelper("name")
-        businessScope = PropertyHelper("businessScope")
-        id = PropertyHelper("id")
-        regCapital = PropertyHelper("regCapital")
-        description = PropertyHelper("description")
-        legalPerson = PropertyHelper("legalPerson")
-        orgCertNo = PropertyHelper("orgCertNo")
-        establishDate = PropertyHelper("establishDate")
-
-    class CompanyEvent(SPGTypeHelper):
-
-        name = PropertyHelper("name")
-        location = PropertyHelper("location")
-        id = PropertyHelper("id")
-        happenedTime = PropertyHelper("happenedTime")
-        subject = PropertyHelper("subject")
-        eventTime = PropertyHelper("eventTime")
-        description = PropertyHelper("description")
-        object = PropertyHelper("object")
-
     class Indicator(SPGTypeHelper):
 
         name = PropertyHelper("name")
         id = PropertyHelper("id")
-        stdId = PropertyHelper("stdId")
-        description = PropertyHelper("description")
         alias = PropertyHelper("alias")
+        description = PropertyHelper("description")
+        stdId = PropertyHelper("stdId")
 
-    class State(SPGTypeHelper):
+    class IndicatorEvent(SPGTypeHelper):
 
         name = PropertyHelper("name")
+        eventTime = PropertyHelper("eventTime")
         id = PropertyHelper("id")
-        stdId = PropertyHelper("stdId")
         description = PropertyHelper("description")
-        alias = PropertyHelper("alias")
+        trend = PropertyHelper("trend")
+        value = PropertyHelper("value")
+        date = PropertyHelper("date")
+        subject = PropertyHelper("subject")
 
-        derivedFrom = RelationHelper("derivedFrom")
-        causes = RelationHelper("causes")
-
-    AdministrativeArea = AdministrativeArea("Finance.AdministrativeArea")
-    AreaRiskEvent = AreaRiskEvent("Finance.AreaRiskEvent")
-    Company = Company("Finance.Company")
-    CompanyEvent = CompanyEvent("Finance.CompanyEvent")
     Indicator = Indicator("Finance.Indicator")
-    State = State("Finance.State")
+    IndicatorEvent = IndicatorEvent("Finance.IndicatorEvent")
 
     pass

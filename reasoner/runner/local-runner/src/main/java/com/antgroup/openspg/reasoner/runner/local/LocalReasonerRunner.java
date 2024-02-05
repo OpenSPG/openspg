@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -24,8 +24,7 @@ import com.antgroup.openspg.reasoner.lube.physical.operators.PhysicalOperator;
 import com.antgroup.openspg.reasoner.lube.physical.operators.Select;
 import com.antgroup.openspg.reasoner.lube.physical.operators.Start;
 import com.antgroup.openspg.reasoner.lube.physical.util.PhysicalOperatorUtil;
-import com.antgroup.openspg.reasoner.parser.KgDslParser;
-import com.antgroup.openspg.reasoner.rule.RuleRunner;
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.impl.LocalPropertyGraph;
 import com.antgroup.openspg.reasoner.runner.local.impl.LocalReasonerSession;
@@ -36,6 +35,7 @@ import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.reasoner.runner.local.rdg.LocalRDG;
 import com.antgroup.openspg.reasoner.runner.local.rdg.LocalRow;
 import com.antgroup.openspg.reasoner.runner.local.rdg.TypeTags;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.collect.Lists;
@@ -50,6 +50,15 @@ import scala.collection.JavaConversions;
 
 @Slf4j
 public class LocalReasonerRunner {
+  private final ParserInterface parser;
+
+  public LocalReasonerRunner() {
+    this.parser = new OpenSPGDslParser();
+  }
+
+  public LocalReasonerRunner(ParserInterface parser) {
+    this.parser = parser;
+  }
 
   /** run dsl task on local runner */
   public LocalReasonerResult run(LocalReasonerTask task) {
@@ -86,7 +95,6 @@ public class LocalReasonerRunner {
           && task.getStartIdList().size() > 0) {
         task.getParams().put(Constants.START_LABEL, task.getStartIdList().get(0)._2);
       }
-      ParserInterface parser = new KgDslParser();
       session = new LocalReasonerSession(parser, catalog, TypeTags.rdgTypeTag(), graphState);
       dslDagList =
           Lists.newArrayList(

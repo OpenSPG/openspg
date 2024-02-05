@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -25,7 +25,7 @@ import com.antgroup.openspg.reasoner.lube.common.rule.{Rule => LogicalRule}
 import com.antgroup.openspg.reasoner.lube.logical.NodeVar
 import com.antgroup.openspg.reasoner.lube.logical.PatternOps.PatternOps
 import com.antgroup.openspg.reasoner.lube.logical.operators.{ExpandInto, LogicalOperator, PatternScan}
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, Rule}
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Down, SimpleRule}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.utils.RuleUtils
 
@@ -37,7 +37,7 @@ import com.antgroup.openspg.reasoner.lube.utils.RuleUtils
  * 3. cur node is advanced, then travel down to find cur node is transferred from a attribute.
  * All possibilities require a downward traversal, and the downward traversal can cover all cases.
  */
-object EdgeToProperty extends Rule {
+object EdgeToProperty extends SimpleRule {
 
   override def rule(implicit
       context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {

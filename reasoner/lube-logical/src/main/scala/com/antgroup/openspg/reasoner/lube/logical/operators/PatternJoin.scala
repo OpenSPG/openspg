@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,10 +16,18 @@ package com.antgroup.openspg.reasoner.lube.logical.operators
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, Var}
+import com.antgroup.openspg.reasoner.lube.logical.planning.JoinType
 
+/**
+ * This operator express join between two patterns, though lhs.join(rhs, joinType)
+ * @param lhs
+ * @param rhs
+ * @param joinType
+ */
 case class PatternJoin(
     lhs: LogicalOperator,
-    rhs: LogicalOperator)
+    rhs: LogicalOperator,
+    joinType: JoinType)
     extends BinaryLogicalOperator {
 
   /**

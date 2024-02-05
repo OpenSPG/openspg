@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -28,10 +28,11 @@ public class RLike {
    * @return
    */
   @UdfDefine(name = "rlike", udfType = UdfOperatorTypeEnum.OPERATOR)
-  public Boolean inStr(String inputStr, String regex) {
-    // 创建正则表达式模式
+  public Boolean rlike(String inputStr, String regex) {
+    if (inputStr == null) {
+      return false;
+    }
     Pattern pattern = Pattern.compile(regex);
-    // 创建Matcher对象
     Matcher matcher = pattern.matcher(inputStr);
     return matcher.find();
   }

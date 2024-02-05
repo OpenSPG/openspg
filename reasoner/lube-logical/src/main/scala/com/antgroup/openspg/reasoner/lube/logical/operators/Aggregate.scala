@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,10 +15,11 @@ package com.antgroup.openspg.reasoner.lube.logical.operators
 
 import scala.collection.mutable
 
-import com.antgroup.openspg.reasoner.common.types.KTObject
-import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
+import com.antgroup.openspg.reasoner.common.exception.InvalidRefVariable
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator
+import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode}
 import com.antgroup.openspg.reasoner.lube.logical._
+import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 
 final case class Aggregate(
     in: LogicalOperator,
@@ -43,31 +44,40 @@ final case class Aggregate(
   }
 
   override def refFields: List[Var] = {
-    val refPair = aggregations.values.map(ExprUtil.getReferProperties(_)).toList.flatten
+    val refPair =
+      aggregations.values.map(ExprUtils.getAllInputFieldInRule(_, null, null)).toList.flatten
     val fieldsMap = new mutable.HashMap[String, Var]()
     for (ref <- refPair) {
-      ref match {
-        case (null, name) =>
-          solved.fields.get(name).get match {
-            case NodeVar(_, _) =>
-              val node = NodeVar(name, Set.empty)
-              fieldsMap.put(name, node.merge(fieldsMap.get(name)))
-            case EdgeVar(_, _) =>
-              val edge = EdgeVar(name, Set.empty)
-              fieldsMap.put(name, edge.merge(fieldsMap.get(name)))
-            case _ =>
-          }
-        case (alias, filedName) =>
-          solved.fields.get(ref._1).get match {
-            case NodeVar(name, _) =>
-              val node = NodeVar(name, Set.apply(new Field(ref._2, KTObject, true)))
-              fieldsMap.put(name, node.merge(fieldsMap.get(name)))
-            case EdgeVar(name, _) =>
-              val edge = EdgeVar(name, Set.apply(new Field(ref._2, KTObject, true)))
-              fieldsMap.put(name, edge.merge(fieldsMap.get(name)))
-            case _ =>
-          }
+      val fieldName = ref.name
+      if (!solved.fields.contains(fieldName)) {
+        throw InvalidRefVariable(s"cannot find ref ${ref}")
       }
+      solved.fields(fieldName) match {
+        case nodeVar: NodeVar =>
+          val node = if (ref.isInstanceOf[IRNode]) {
+            NodeVar(
+              fieldName,
+              nodeVar.fields.filter(f => ref.asInstanceOf[IRNode].fields.contains(f.name)))
+          } else {
+            NodeVar(fieldName, Set.empty)
+          }
+          fieldsMap.put(fieldName, node.merge(fieldsMap.get(fieldName)))
+        case edgeVar: EdgeVar =>
+          val edge = if (ref.isInstanceOf[IRNode]) {
+            EdgeVar(
+              fieldName,
+              edgeVar.fields.filter(f => ref.asInstanceOf[IRNode].fields.contains(f.name)))
+          } else {
+            EdgeVar(fieldName, Set.empty)
+          }
+          fieldsMap.put(fieldName, edge.merge(fieldsMap.get(fieldName)))
+        case pathVar: PathVar =>
+          fieldsMap.put(fieldName, pathVar)
+        case repeatPathVar: RepeatPathVar =>
+          fieldsMap.put(fieldName, repeatPathVar)
+        case _ =>
+      }
+
     }
     fieldsMap.values.toList
   }

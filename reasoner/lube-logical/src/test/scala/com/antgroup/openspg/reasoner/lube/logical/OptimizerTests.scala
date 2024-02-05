@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -31,7 +31,7 @@ import com.antgroup.openspg.reasoner.lube.logical.optimizer.rules._
 import com.antgroup.openspg.reasoner.lube.logical.planning.{LogicalPlanner, LogicalPlannerContext}
 import com.antgroup.openspg.reasoner.lube.logical.validate.Validator
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
-import com.antgroup.openspg.reasoner.parser.KgDslParser
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
@@ -86,7 +86,7 @@ class OptimizerTests extends AnyFunSpec {
         |}
         |""".stripMargin
     catalog.init()
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     implicit val context: LogicalPlannerContext =
       LogicalPlannerContext(catalog, parser, Map.empty)
@@ -187,7 +187,7 @@ class OptimizerTests extends AnyFunSpec {
         "sumAmt"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     implicit val context: LogicalPlannerContext =
       LogicalPlannerContext(catalog, parser, Map.empty)
@@ -222,7 +222,7 @@ class OptimizerTests extends AnyFunSpec {
         |  get(u.id as uid, u.name as uname, o.id as oid)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] =
       Map.apply(
@@ -263,7 +263,7 @@ class OptimizerTests extends AnyFunSpec {
         |  get(A.id, countB, countC)
         |}
         |""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     val schema: Map[String, Set[String]] =
       Map.apply(
@@ -305,4 +305,43 @@ class OptimizerTests extends AnyFunSpec {
     cnt should equal(2)
   }
 
+  it("test groups to node") {
+    val dsl =
+      """
+        |GraphStructure {
+        |  (A:User)-[e1:lk]->(B:User)-[e2:lk]->(C:User)
+        |}
+        |Rule {
+        |  R1(""): e1.weight < e2.weight
+        |  R2(""): C.height > 170
+        |  countB = group(A.id, A.name).count(B)
+        |  countC = group(A.id, A.name).count(C)
+        |}
+        |Action {
+        |  get(A.id, countB, countC)
+        |}
+        |""".stripMargin
+    val parser = new OpenSPGDslParser()
+    val block = parser.parse(dsl)
+    val schema: Map[String, Set[String]] =
+      Map.apply(
+        "User" -> Set.apply("id", "name", "age", "height", "weight"),
+        "User_lk_User" -> Set.apply("weight"))
+    val catalog = new PropertyGraphCatalog(schema)
+    catalog.init()
+    implicit val context: LogicalPlannerContext =
+      LogicalPlannerContext(
+        catalog,
+        parser,
+        Map
+          .apply((Constants.SPG_REASONER_MULTI_VERSION_ENABLE, true))
+          .asInstanceOf[Map[String, Object]])
+    val dag = Validator.validate(List.apply(block))
+    val logicalPlan = LogicalPlanner.plan(dag).popRoot()
+    val rule = Seq(GroupNode, FilterPushDown, ExpandIntoPure, FilterMerge, SolvedModelPure)
+    val optimizedLogicalPlan = LogicalOptimizer.optimize(logicalPlan, rule)
+    optimizedLogicalPlan.findExactlyOne { case Aggregate(_, group, _, _) =>
+      group should equal(List.apply(NodeVar("A", Set.empty)))
+    }
+  }
 }

@@ -1,4 +1,4 @@
-# Copyright 2023 Ant Group CO., Ltd.
+# Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
 # in compliance with the License. You may obtain a copy of the License at
@@ -11,12 +11,12 @@
 
 # for amd64
 docker build -f Dockerfile --platform linux/amd64 --push \
-  -t openspg/openspg-server-amd64:0.0.2-beta1 \
+  -t openspg/openspg-server-amd64:0.0.2-beta2 \
   -t openspg/openspg-server-amd64:latest \
   .
 
 # for arm64-v8
 docker build -f Dockerfile --platform linux/arm64/v8 --push \
-  -t openspg/openspg-server-arm64v8:0.0.2-beta1 \
+  -t openspg/openspg-server-arm64v8:0.0.2-beta2 \
   -t openspg/openspg-server-arm64v8:latest \
   .

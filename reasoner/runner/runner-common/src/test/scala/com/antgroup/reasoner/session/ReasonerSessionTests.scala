@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -24,8 +24,8 @@ import com.antgroup.openspg.reasoner.lube.logical.optimizer.LogicalOptimizer
 import com.antgroup.openspg.reasoner.lube.logical.planning.{LogicalPlanner, LogicalPlannerContext}
 import com.antgroup.openspg.reasoner.lube.physical.operators._
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
-import com.antgroup.openspg.reasoner.parser.KgDslParser
-import com.antgroup.openspg.reasoner.rule.RuleRunner
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner
 import com.antgroup.openspg.reasoner.util.LoaderUtil
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{contain, convertToAnyShouldWrapper, equal}
@@ -75,7 +75,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "TuringCore.TravelEvent_travelEndpoint_CKG.AdministrativeArea" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val rst = session.plan(dsl, Map.empty)
     rst.foreach(session.getResult(_))
     val node = catalog.getGraph(IRGraph.defaultGraphName).getNode("TuringCore.AlipayUser")
@@ -98,7 +98,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "Subway_centerS2CellId_STD.S2CellId" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val physicalOperatorList = session.plan(dsl, Map.empty)
     val definePhysicalOp = physicalOperatorList.head
     val expandIntoCount = definePhysicalOp.transform[Int] {
@@ -134,7 +134,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "Park_boundaryS2CellId_STD.S2CellId" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val physicalOperatorList = session.plan(
       dsl,
       Map
@@ -185,7 +185,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "PE.AntPOI_locationS2CellId_STD.S2CellId" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val physicalOperatorList = session.plan(
       dsl,
       Map
@@ -200,7 +200,7 @@ class ReasonerSessionTests extends AnyFunSpec {
     val physicalOpOrder = getPhysicalPlanOrder(subqueryPhysicalOp)
     println(physicalOpOrder)
     physicalOpOrder should equal(
-      "Start,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,PatternScan,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,ExpandInto,ExpandInto,Drop,Filter,Drop,Select")
+      "Start,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,PatternScan,Cache,DrivingRDG,PatternScan,LinkedExpand,ExpandInto,ExpandInto,Drop,Filter,Drop,DDL,Join,ExpandInto,Drop,Filter,Drop,Select")
   }
 
   private def getPhysicalPlanOrder[T <: RDG[T]](physicalOperator: PhysicalOperator[T]) = {
@@ -257,7 +257,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "Park_SameCity_BusinessArea" -> Set.apply("city"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val physicalOperatorList = session.plan(dsl, Map.empty)
     physicalOperatorList.size should equal(2)
     val definePhysicalPlan = physicalOperatorList.head
@@ -318,7 +318,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "User_trade_User" -> Set.apply("trade_num", "trade_time"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val rst = session.plan(dsl, Map.empty)
     rst.foreach(session.getResult(_))
     val edge = catalog.getGraph(IRGraph.defaultGraphName).getEdge("User_tradeInfo_User")
@@ -345,7 +345,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "User_trade_User" -> Set.apply("trade_num", "trade_time"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     implicit val context: LogicalPlannerContext =
       LogicalPlannerContext(catalog, parser, Map.empty)
@@ -388,7 +388,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "AttributePOC.BrinsonAttribute_factorValue_AttributePOC.BrinsonAttribute" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -444,7 +444,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "AttributePOC.BrinsonAttribute_factorValue_AttributePOC.BrinsonAttribute" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     try {
       val rst = session.plan(
         dsl,
@@ -480,7 +480,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "FilmDirector_t1_FilmDirector" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -512,7 +512,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "SupplyChain.Product_belongTo_SupplyChain.Industry" -> Set.apply("payDate", "bizComment"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -532,7 +532,7 @@ class ReasonerSessionTests extends AnyFunSpec {
           cnt.sum
         }
     }
-    cnt should equal(2)
+    cnt should equal(1)
   }
 
 
@@ -555,7 +555,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "RiskMining.App_belongTo_RiskMining.TaxOfRiskApp" -> Set.apply("payDate", "bizComment"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -575,7 +575,7 @@ class ReasonerSessionTests extends AnyFunSpec {
           cnt.sum
         }
     }
-    cnt should equal(6)
+    cnt should equal(3)
   }
 
 
@@ -601,7 +601,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       "CustFundKG.Yeb_transfer_CustFundKG.Yeb" -> Set.apply("payDate", "bizComment"))
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -657,7 +657,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -678,7 +678,7 @@ class ReasonerSessionTests extends AnyFunSpec {
           cnt.sum
         }
     }
-    cnt should equal(2)
+    cnt should equal(1)
   }
 
   it("test id push down 4") {
@@ -703,7 +703,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val rst = session.plan(
       dsl,
       Map
@@ -749,7 +749,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     try {
       session.plan(
         dsl,
@@ -760,8 +760,8 @@ class ReasonerSessionTests extends AnyFunSpec {
           .asInstanceOf[Map[String, Object]])
     } catch {
       case ex: SchemaException =>
-        println(ex.getMessage)
-        ex.getMessage.contains("Cannot find p3 types in") should equal(true)
+        ex.printStackTrace()
+        ex.getMessage.contains("Cannot find p3") should equal(true)
     }
   }
 
@@ -788,7 +788,7 @@ class ReasonerSessionTests extends AnyFunSpec {
       Map.apply("User" -> Set.apply("id"), "User_trans_User" -> Set.empty)
     val catalog = new PropertyGraphCatalog(schema)
     catalog.init()
-    val session = new EmptySession(new KgDslParser(), catalog)
+    val session = new EmptySession(new OpenSPGDslParser(), catalog)
     try {
       session.plan(
         dsl,
@@ -799,8 +799,8 @@ class ReasonerSessionTests extends AnyFunSpec {
           .asInstanceOf[Map[String, Object]])
     } catch {
       case ex: SchemaException =>
-        println(ex.getMessage)
-        ex.getMessage.contains("Cannot find IRNode(D,Set()).name") should equal(true)
+        ex.printStackTrace()
+        ex.getMessage.contains("Cannot find D") should equal(true)
     }
   }
 }

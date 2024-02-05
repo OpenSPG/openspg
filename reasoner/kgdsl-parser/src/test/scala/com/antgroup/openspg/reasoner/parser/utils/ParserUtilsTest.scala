@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,9 +15,11 @@ package com.antgroup.openspg.reasoner.parser.utils
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.table.FieldType
-import com.antgroup.openspg.reasoner.parser.KgDslParser
+import com.antgroup.openspg.reasoner.lube.block.Block
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
+import scala.collection.JavaConverters._
 
 class ParserUtilsTest extends AnyFunSpec {
 
@@ -31,7 +33,7 @@ class ParserUtilsTest extends AnyFunSpec {
         |        o = "abc"
         |    }
         |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     val columnList = ParserUtils.getResultTableColumns(block, null)
     columnList should equal(null)
@@ -54,7 +56,7 @@ class ParserUtilsTest extends AnyFunSpec {
         |Action {
         |  get(A.name,B.name,F1.type,F4.source)
         |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     val columnList = ParserUtils.getResultTableColumns(block, null)
     columnList.length should equal(4)
@@ -78,7 +80,7 @@ class ParserUtilsTest extends AnyFunSpec {
         |Action {
         |  get(A.name as an,B.name as bn,C.id as cid,D.id,E.name as en)
         |}""".stripMargin
-    val parser = new KgDslParser()
+    val parser = new OpenSPGDslParser()
     val block = parser.parse(dsl)
     val columnList = ParserUtils.getResultTableColumns(
       block,
@@ -92,5 +94,37 @@ class ParserUtilsTest extends AnyFunSpec {
         FieldType.STRING,
         FieldType.STRING,
         FieldType.STRING))
+  }
+  it("test getAllEntityName") {
+    // scalastyle:off
+    val dsl =
+      """
+        |Define (s:User)-[p:belongTo]->(o:Crowd/`Men`) {
+        |	GraphStructure {
+        |    (evt:TradeEvent)-[pr:relateUser]->(s:User)
+        |	}
+        |  Rule{
+        |    R1: s.sex  == '男'
+        |    R2: evt.statPriod in ['日', '月']
+        |    DayliyAmount = group(s).if(evt.statPriod=='日').sum(evt.amount)
+        |    MonthAmount = group(s).if(evt.statPriod=='月').sum(evt.amount)
+        |    R3: DayliyAmount > 300
+        |    R4: MonthAmount < 500
+        |    R5: (R3 and R1) and (not(R4 and R1))
+        |  }
+        |}
+        |GraphStructure {
+        | (a:Crowd/`Men`)
+        |}
+        |Rule {
+        |}
+        |Action {
+        |  get(a.id)
+        |}
+        |""".stripMargin
+    val parser = new OpenSPGDslParser()
+    val blockList: List[Block] = parser.parseMultipleStatement(dsl)
+    val entityNameSet: Set[String] = ParserUtils.getAllEntityName(blockList.asJava).asScala.toSet
+    entityNameSet should equal(Set.apply("User", "TradeEvent", "Crowd/Men"))
   }
 }

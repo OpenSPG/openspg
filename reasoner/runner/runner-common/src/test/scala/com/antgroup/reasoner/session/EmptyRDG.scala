@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,8 +17,8 @@ import com.antgroup.openspg.reasoner.lube.block.{DDLOp, SortItem}
 import com.antgroup.openspg.reasoner.lube.common.expr.{Aggregator, Expr}
 import com.antgroup.openspg.reasoner.lube.common.pattern.{EdgePattern, LinkedPatternConnection, Pattern, PatternElement}
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
+import com.antgroup.openspg.reasoner.lube.logical.planning.JoinType
 import com.antgroup.openspg.reasoner.lube.logical.{RichVar, Var}
-import com.antgroup.openspg.reasoner.lube.physical.planning.JoinType
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 
 class EmptyRDG extends RDG[EmptyRDG] {
@@ -164,4 +164,12 @@ class EmptyRDG extends RDG[EmptyRDG] {
       rhsSchemaMapping: Map[Var, Var]): EmptyRDG = this
 
   override def unfold(mapping: List[(RichVar, List[Var])]): EmptyRDG = this
+
+  /**
+   * Merge another RDG with current RDG.
+   *
+   * @param other
+   * @return
+   */
+  override def union(other: EmptyRDG): EmptyRDG = this
 }
