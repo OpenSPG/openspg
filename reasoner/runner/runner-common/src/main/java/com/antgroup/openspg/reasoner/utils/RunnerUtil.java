@@ -86,7 +86,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import scala.Tuple2;
@@ -1022,27 +1021,12 @@ public class RunnerUtil {
   }
 
   /** get edge string id */
-  public static String getEdgeIdentifier(
-      IEdge<IVertexId, IProperty> edge, String edgeExtraIdentifier) {
-    StringBuilder edgeIdentifier =
-        new StringBuilder(
-            edge.getSourceId().getInternalId()
-                + edge.getType()
-                + edge.getTargetId().getInternalId()
-                + edge.getVersion()
-                + edge.getDirection());
-    if (StringUtils.isNotBlank(edgeExtraIdentifier)) {
-      Set<String> extraIdentifierSet =
-          Arrays.stream(edgeExtraIdentifier.split(","))
-              .map(String::trim)
-              .collect(Collectors.toSet());
-      for (String key : extraIdentifierSet) {
-        if (edge.getValue().isKeyExist(key)) {
-          edgeIdentifier.append(edge.getValue().get(key));
-        }
-      }
-    }
-    return edgeIdentifier.toString();
+  public static String getEdgeIdentifier(IEdge<IVertexId, IProperty> edge) {
+    return edge.getSourceId().getInternalId()
+        + edge.getType()
+        + edge.getTargetId().getInternalId()
+        + edge.getVersion()
+        + edge.getDirection();
   }
 
   /** init type id mapping */
