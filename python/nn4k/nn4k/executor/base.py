@@ -152,10 +152,34 @@ class LLMExecutor(NNExecutor):
         """
         raise NotImplementedError(f"{self.__class__.__name__} does not support SFT.")
 
-    def execute_rl_tuning(self, args=None, callbacks=None, **kwargs):
+
+class AlignExecutor(LLMExecutor):
+    """An executor for X-Alignment"""
+
+    @classmethod
+    def from_config(cls, nn_config: Union[str, dict]) -> "NNExecutor":
+        return super().from_config(nn_config)
+
+    def execute_rm(self, args=None, callbacks=None, **kwargs):
         """
-        The entry point of SFT execution in a certain pod.
+        Execute reward model(rm) training.
         """
         raise NotImplementedError(
-            f"{self.__class__.__name__} does not support RL-Tuning."
+            f"{self.__class__.__name__} does not support execute_rm yet."
+        )
+
+    def execute_dpo(self, args=None, callbacks=None, **kwargs):
+        """
+        Execute DPO training.
+        """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support execute_dpo yet."
+        )
+
+    def execute_ppo(self, args=None, callbacks=None, **kwargs):
+        """
+        Execute PPO training.
+        """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not support execute_ppo yet."
         )
