@@ -137,6 +137,7 @@ class SPGSchemaMarkLang:
     last_indent_level = 0
     namespace = None
     types = {}
+    defined_types = {}
 
     def __init__(self, filename):
         self.schema_file = filename
@@ -457,7 +458,7 @@ class SPGSchemaMarkLang:
         predicate_class_ns = predicate_class
         if "." not in predicate_class:
             predicate_class_ns = f"{self.namespace}.{predicate_class}"
-        assert predicate_class_ns in self.types, self.error_msg(
+        assert predicate_class_ns in self.types or predicate_class_ns in self.defined_types, self.error_msg(
             f"{predicate_class} is illegal, please ensure that it appears in this schema."
         )
         object_type = self.types[predicate_class_ns]
@@ -554,7 +555,7 @@ class SPGSchemaMarkLang:
                     f"{predicate_name} is a semantic predicate, please add the semantic prefix"
                 )
 
-        if self.get_type_name_with_ns(predicate_class) not in self.types and predicate_class not in self.internal_type:
+        if "." in predicate_class and predicate_class not in self.types and predicate_class not in self.internal_type:
             try:
                 cross_type = self.schema.query_spg_type(self.get_type_name_with_ns(predicate_class))
                 self.types[self.get_type_name_with_ns(predicate_class)] = cross_type
@@ -566,6 +567,7 @@ class SPGSchemaMarkLang:
         assert (
             self.get_type_name_with_ns(predicate_class) in self.types
             or predicate_class in self.internal_type
+            or predicate_class in self.defined_types
         ), self.error_msg(
             f"{predicate_class} is illegal, please ensure that it appears in this schema."
         )
@@ -574,22 +576,35 @@ class SPGSchemaMarkLang:
             f"property {predicate_name} is the default property of type"
         )
         if predicate_class not in self.internal_type:
-            predicate_type = self.types[self.get_type_name_with_ns(predicate_class)]
-            if predicate_type is not None:
-                if cur_type.spg_type_enum == SpgTypeEnum.Concept:
-                    assert (
-                        predicate_type.spg_type_enum == SpgTypeEnum.Concept
-                    ), self.error_msg(
-                        "Concept type only allow relationships that point to themselves"
-                    )
-                elif cur_type.spg_type_enum == SpgTypeEnum.Entity:
-                    assert (
-                        predicate_type.spg_type_enum != SpgTypeEnum.Event
-                    ), self.error_msg(
-                        "Relationships of entity types are not allowed to point to event types; "
-                        "instead, they are only permitted to point from event types to entity types, "
-                        "adhering to the principle of moving from dynamic to static."
-                    )
+            spg_type_enum = SpgTypeEnum.Entity
+            if self.get_type_name_with_ns(predicate_class) in self.types:
+                predicate_type = self.types[self.get_type_name_with_ns(predicate_class)]
+                spg_type_enum = predicate_type.spg_type_enum
+            elif predicate_class in self.defined_types:
+                spg_type_enum_txt = self.defined_types[predicate_class]
+                if spg_type_enum_txt == "EntityType":
+                    spg_type_enum = SpgTypeEnum.Entity
+                elif spg_type_enum_txt == "ConceptType":
+                    spg_type_enum = SpgTypeEnum.Concept
+                elif spg_type_enum_txt == "EventType":
+                    spg_type_enum = SpgTypeEnum.Event
+                elif spg_type_enum_txt == "StandardType":
+                    spg_type_enum = SpgTypeEnum.Standard
+
+            if cur_type.spg_type_enum == SpgTypeEnum.Concept:
+                assert (
+                    spg_type_enum == SpgTypeEnum.Concept
+                ), self.error_msg(
+                    "Concept type only allow relationships that point to themselves"
+                )
+            elif cur_type.spg_type_enum == SpgTypeEnum.Entity:
+                assert (
+                    spg_type_enum != SpgTypeEnum.Event
+                ), self.error_msg(
+                    "Relationships of entity types are not allowed to point to event types; "
+                    "instead, they are only permitted to point from event types to entity types, "
+                    "adhering to the principle of moving from dynamic to static."
+                )
 
         if self.parsing_register[RegisterUnit.Relation] is not None:
             assert (
@@ -671,7 +686,7 @@ class SPGSchemaMarkLang:
 
                         if "." not in subject_type:
                             subject_type = f"{self.namespace}.{predicate_class}"
-                        assert subject_type in self.types, self.error_msg(
+                        assert subject_type in self.types or predicate_class in self.defined_types, self.error_msg(
                             f"{predicate_class} is illegal, please ensure that it appears in this schema."
                         )
 
@@ -693,7 +708,7 @@ class SPGSchemaMarkLang:
             assert not predicate_class.startswith("STD."), self.error_msg(
                 f"{predicate_class} is not allow appear in the definition of relation."
             )
-            assert predicate_class in self.types, self.error_msg(
+            assert predicate_class in self.types or predicate_class.split(".")[1] in self.defined_types, self.error_msg(
                 f"{predicate_class} is illegal, please ensure that it appears in this schema."
             )
             assert (
@@ -889,6 +904,24 @@ class SPGSchemaMarkLang:
 
         return rule.strip()
 
+    def preload_types(self, lines: list):
+        """
+        Pre analyze the script to obtain defined types
+        """
+
+        for line in lines:
+            type_match = re.match(
+                r"^([a-zA-Z0-9\.]+)\((\w+)\):\s*?([a-zA-Z0-9,]+)$", line
+            )
+            if type_match:
+                self.defined_types[type_match.group(1)] = type_match.group(3).strip()
+                continue
+            sub_type_match = re.match(
+                r"^([a-zA-Z0-9]+)\((\w+)\)\s*?->\s*?([a-zA-Z0-9\.]+):$", line
+            )
+            if sub_type_match:
+                self.defined_types[sub_type_match.group(1)] = type_match.group(3).strip()
+
     def load_script(self):
         """
         Load and then parse the script file
@@ -896,6 +929,7 @@ class SPGSchemaMarkLang:
 
         file = open(self.schema_file, "r", encoding="utf-8")
         lines = file.read().splitlines()
+        self.preload_types(lines)
         for line in lines:
             self.current_line_num += 1
             strip_line = line.strip()
