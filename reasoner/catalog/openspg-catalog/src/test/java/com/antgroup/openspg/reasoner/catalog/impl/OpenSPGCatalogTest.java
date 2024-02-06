@@ -15,16 +15,13 @@ package com.antgroup.openspg.reasoner.catalog.impl;
 
 import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph;
 import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
 
-@Ignore
 public class OpenSPGCatalogTest {
 
   public static final KgSchemaConnectionInfo connInfo =
       new KgSchemaConnectionInfo("http://127.0.0.1:8887", "a8bB6398B6Da9170");
 
-  @Test
+  // @Test
   public void testGet() {
     long projectId = 2L;
 
