@@ -723,7 +723,8 @@ class SPGSchemaMarkLang:
             )
 
             predicate = Relation(name=predicate_name, object_type_name=predicate_class)
-            predicate.object_spg_type = self.types[predicate_class].spg_type_enum
+            if predicate_class in self.types:
+                predicate.object_spg_type = self.types[predicate_class].spg_type_enum
             self.parsing_register[RegisterUnit.Type].add_relation(predicate)
             self.save_register(RegisterUnit.Relation, predicate)
         predicate.name_zh = predicate_name_zh
