@@ -31,12 +31,12 @@ OpenSPG Core Capabilities:
   * Abstracts KGDSL (Knowledge Graph Domain Specific Language) to provide programmable symbolic representation of logic rules.
   * Supports downstream tasks, such as rule inference, neural/symbolic fusion learning, KG2Prompt linked LLM knowledge extraction/knowledge reasoning, represented in machine-understandable symbolic form.
   * Define dependency and transfer between knowledge through predicate semantics and logic rules, and support modeling and analysis of complex business scenarios.
-* Programmable Framework -- KNext 
-  * As a programmable framework of knownledge graph, KNext offers a set of extensible, procedural, and user-friendly components;
+* Programmable Framework -- KNext
+  * As a programmable framework of knowledge graph, KNext offers a set of extensible, procedural, and user-friendly components;
   * It abstracts the core capabilities of knowledge graphs, congealing them into componentized, framework-oriented, and engine-built-in capabilities;
   * Achieves isolation between the engine and business logic, domain models, facilitating rapid definition of knowledge graph solutions for businesses;
   * Constructs a controllable AI technology stack driven by knowledge, based on the OpenSPG engine, connecting deep learning capabilities such as LLM and GraphLearning.
-* Cloud Adaptation Layer -- Cloudext 
+* Cloud Adaptation Layer -- Cloudext
   * Business systems build their own characteristic business front-end by interfacing with open SDKs
   * Extensible/adaptable customized graph storage/graph calculation engine
   * Extensible/adaptable machine learning framework suitable for their own business characteristics
