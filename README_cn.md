@@ -4,7 +4,7 @@
 
 (OpenSPG)[https://spg.openkg.cn] 是蚂蚁集团结合多年金融领域多元场景知识图谱构建与应用业务经验的总结，并与OpenKG联合推出的基于SPG(Semantic-enhanced Programmable Graph)框架研发的知识图谱引擎。
 
-![OpenSPG Architecture](https://mdn.alipayobjects.com/huamei_xgb3qj/afts/img/A*YYSpQoItezMAAAAAAAAAAAAADtmcAQ/original)
+![OpenSPG Architecture](https://mdn.alipayobjects.com/huamei_xgb3qj/afts/img/A*DsIHS7Fe78AAAAAAAAAAAAAADtmcAQ/original)
 
 # SPG背景介绍
 
@@ -30,7 +30,12 @@ OpenSPG核心能力模型包括：
   * 抽象了KGDSL(Knowledge Graph Domain Specific Language)，为逻辑规则提供可编程的符号化表示。
   * 以机器可理解的符号表示支持下游规则推理、神经/符号融合学习、KG2Prompt联动LLM知识抽取/知识推理等。
   * 通过谓词语义和逻辑规则来定义知识之间的依赖和传递，并且支持对复杂的业务场景的建模和分析。
-* 可扩展SDK框架
+* 可编程框架KNext
+  * KNext作为图谱可编程框架，提供了一套可扩展，流程化，对用户友好的组件化能力；
+  * 抽象了图谱核心能力，沉淀为组件化、框架化、引擎内置的能力；
+  * 实现引擎与业务逻辑、领域模型的隔离，方便业务快速定义图谱解决方案；
+  * 构建以OpenSPG引擎为基础，知识驱动的可控AI技术栈，链接LLM、GraphLearning等深度学习能力。
+* 云适配层Cloudext
   * 业务系统通过SDK对接开放引擎，构建自身特色的业务前端
   * 可扩展/适配自定义的图存储/图计算引擎
   * 可扩展/适配适合自身业务特点的机器学习框架
@@ -39,18 +44,15 @@ OpenSPG核心能力模型包括：
 
 ## Get Started
 
-* [安装说明](https://spg.openkg.cn/quick-start/install)
+* [安装说明](https://openspg.yuque.com/ndx6g9/ooil9x/xht6kkegvs33cwwr)
 * 通过案例快速上手:
-  * [企业供应链图谱](https://spg.openkg.cn/example/enterprise-supply-chain)
-  * [黑产挖掘图谱](https://spg.openkg.cn/example/risk-mining)
-  * [医疗知识图谱](https://spg.openkg.cn/example/medical)
+  * [企业供应链图谱](https://openspg.yuque.com/ndx6g9/ooil9x/bf5kppyi5w0g7se5)
+  * [黑产挖掘图谱](https://openspg.yuque.com/ndx6g9/ooil9x/pst9v980k2u2p17o)
+  * [医疗知识图谱](https://openspg.yuque.com/ndx6g9/ooil9x/odbzpk4694lc7yfd)
 
 ## 进阶教程
 
-* [KNext命令行工具和SDK教程](https://spg.openkg.cn/tutorial/knext)
-* [知识建模Schema教程](https://spg.openkg.cn/tutorial/spgschema)
-* [逻辑规则推理KGDSL教程](https://spg.openkg.cn/tutorial/spgreasoner)
-* [适配新的图数据库教程](https://spg.openkg.cn/tutorial/spg2lpg)
+* [用户手册](https://openspg.yuque.com/ndx6g9/ooil9x)
 
 # 如何贡献代码
 
