@@ -198,7 +198,7 @@ class LLMInvoker(NNInvoker):
                 message += "is not found in the model hub"
                 raise RuntimeError(message)
         self._nn_executor: NNExecutor = executor
-        self._nn_executor.load_model()
+        self._nn_executor.load_model(mode="inference")
         self._nn_executor.warmup_inference()
 
     @classmethod
