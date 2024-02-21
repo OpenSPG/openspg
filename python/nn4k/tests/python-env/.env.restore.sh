@@ -33,4 +33,5 @@ rm -rf ${_SCRIPT_DIR_PATH}/.env
 python3 -m venv ${_SCRIPT_DIR_PATH}/.env
 source ${_SCRIPT_DIR_PATH}/.env/bin/activate
 python -m pip install --upgrade pip
+python -m pip install transformers==4.37.2 peft==0.5.0 torch==2.0.0 deprecation==2.1.0
 python -m pip freeze > ${_SCRIPT_DIR_PATH}/.env/requirements.txt

@@ -13,7 +13,7 @@ import sys
 import unittest
 import unittest.mock
 
-from nn4k.executor.hugging_face import HFLLMExecutor
+from nn4k.executor.huggingface.hf_decode_only_executor import HFDecodeOnlyExecutor
 
 
 class TestHFLLMExecutor(unittest.TestCase):
@@ -45,8 +45,8 @@ class TestHFLLMExecutor(unittest.TestCase):
             "nn_version": "default",
         }
 
-        executor = HFLLMExecutor.from_config(nn_config)
-        executor.load_model()
+        executor = HFDecodeOnlyExecutor.from_config(nn_config)
+        executor.load_model(mode="inference")
         executor.inference("input")
 
         self._mocked_transformers.AutoTokenizer.from_pretrained.assert_called()
