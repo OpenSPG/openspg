@@ -15,6 +15,7 @@ from typing import Optional
 from transformers import TrainingArguments
 
 from nn4k.executor import NNAdapterModelArgs
+from nn4k.executor.base import NNInferenceArgs
 
 
 @dataclass
@@ -50,6 +51,13 @@ class HFModelArgs(NNAdapterModelArgs):
         default=False,
         metadata={
             "help": " Load the model weights from a TensorFlow checkpoint save file, default to False"
+        },
+    )
+    padding_side: Optional[str] = field(
+        default=None,
+        metadata={
+            "help": "Padding side of the tokenizer when padding batch inputs",
+            "choices": [None, "left", "right"],
         },
     )
 
@@ -105,3 +113,45 @@ class HFSftArgs(HFModelArgs, TrainingArguments):
             print(
                 f"a eval_dataset_path is set but do_eval flag is not set, automatically set do_eval to True"
             )
+
+
+@dataclass
+class HFInferArgs(NNInferenceArgs):
+    delete_heading_new_lines: bool = field(
+        default=False,
+        metadata={
+            "help": "sometimes the output will have a additional question mark and new line marks in the beginning"
+            "try to get rid of these marks by setting this to True. Different model will have different "
+            "behavior, please check the result carefully."
+        },
+    )
+
+    tokenize_config: dict = field(
+        default_factory=lambda: {
+            "add_special_tokens": False,
+            "padding": False,
+            "truncation": False,
+        },
+        metadata={
+            "help": "padding: https://huggingface.co/docs/transformers/pad_truncation#padding-and-truncation"
+        },
+    )
+
+    decode_config: dict = field(
+        default_factory=lambda: {
+            "skip_special_tokens": True,
+            "clean_up_tokenization_spaces": True,
+        },
+        metadata={
+            "help": "check https://huggingface.co/docs/transformers/main_classes/tokenizer#transformers.PreTrainedTokenizer.__call__"
+        },
+    )
+
+    def __post_init__(self):
+        super().__post_init__()
+
+        # HF specific map
+        self.update_if_not_none(
+            "max_output_length", "generate_config", "max_new_tokens"
+        )
+        self.update_if_not_none("max_input_length", "tokenize_config", "max_length")

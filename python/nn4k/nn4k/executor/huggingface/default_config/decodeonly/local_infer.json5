@@ -1,0 +1,10 @@
+
+{
+  // -- base model info
+  "nn_model_path": "/Path/to/model_dir", // local model path
+  "nn_invoker": "nn4k.invoker.base.LLMInvoker", // invoker to use
+  "nn_executor": "nn4k.executor.huggingface.hf_decode_only_executor.HFDecodeOnlyExecutor", // executor to use
+  // the following are optional
+  "adapter_name": "adapter_name", // adapter_name must be given to enable adapter; with adapter_path along has no effect!
+  "adapter_path": "/path/to/adapter"
+}

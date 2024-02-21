@@ -14,7 +14,10 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import Union
 
-from nn4k.executor import NNExecutor
+from nn4k.utils.class_importing import dynamic_import_class
+
+from nn4k.executor import LLMExecutor
+from nn4k.utils.args_utils import ArgsUtils
 
 
 class SubmitMode(Enum):
@@ -36,6 +39,7 @@ class NNInvoker(ABC):
     def __init__(self, init_args: dict, **kwargs):
         self._init_args = init_args
         self._kwargs = kwargs
+        self.inference_warmed_up = False
 
     @property
     def init_args(self):
@@ -71,7 +75,6 @@ class NNInvoker(ABC):
         from nn4k.consts import NN_INVOKER_KEY, NN_INVOKER_TEXT
         from nn4k.utils.config_parsing import preprocess_config
         from nn4k.utils.config_parsing import get_string_field
-        from nn4k.utils.class_importing import dynamic_import_class
 
         nn_config = preprocess_config(nn_config)
         nn_invoker = nn_config.get(NN_INVOKER_KEY)
@@ -141,9 +144,7 @@ class LLMInvoker(NNInvoker):
         raise NotImplementedError(f"{self.__class__.__name__} does not support SFT.")
 
     def local_sft(self, args: dict = None):
-        sft_args = copy.deepcopy(self.init_args)
-        args = args or {}
-        sft_args.update(args)
+        sft_args = ArgsUtils.update_args(self.init_args, args)
 
         from nn4k.executor import LLMExecutor
 
@@ -161,29 +162,46 @@ class LLMInvoker(NNInvoker):
         """
         Implement local inference for local invoker.
         """
-        return self._nn_executor.inference(data, **kwargs)
+        args = ArgsUtils.handle_dict_config(kwargs)
+
+        if not self.inference_warmed_up:
+            print(
+                "warming up the model for inference, only happen for the first time..."
+            )
+            self.warmup_local_model()
+            self.inference_warmed_up = True
+            print("inference model is warmed up")
+
+        return self._nn_executor.inference(inputs=data, **args)
 
     def warmup_local_model(self):
         """
         Implement local model warming up logic for local invoker.
         """
+        nn_config = self.init_args
+
         from nn4k.nnhub import NNHub
-        from nn4k.consts import NN_EXECUTOR_KEY, NN_EXECUTOR_TEXT
         from nn4k.consts import NN_NAME_KEY, NN_NAME_TEXT
         from nn4k.consts import NN_VERSION_KEY, NN_VERSION_TEXT
         from nn4k.utils.config_parsing import get_string_field
-        from nn4k.utils.class_importing import dynamic_import_class
+        from transformers import HfArgumentParser
+        from nn4k.executor import NNModelArgs
 
-        nn_executor = self.init_args.get(NN_EXECUTOR_KEY)
+        parser = HfArgumentParser(NNModelArgs)
+        model_args: NNModelArgs
+        model_args, *_ = parser.parse_dict(self.init_args, allow_extra_keys=True)
+
+        from nn4k.consts import NN_EXECUTOR_KEY, NN_EXECUTOR_TEXT
+
+        nn_executor = nn_config.get(NN_EXECUTOR_KEY)
         if nn_executor is not None:
-            nn_executor = get_string_field(
-                self.init_args, NN_EXECUTOR_KEY, NN_EXECUTOR_TEXT
-            )
+            from nn4k.executor import NNExecutor
+
             executor_class = dynamic_import_class(nn_executor, NN_EXECUTOR_TEXT)
             if not issubclass(executor_class, NNExecutor):
                 message = "%r is not an %s class" % (nn_executor, NN_EXECUTOR_TEXT)
                 raise RuntimeError(message)
-            executor = executor_class.from_config(self.init_args)
+            executor = executor_class.from_config(nn_config)
         else:
             nn_name = get_string_field(self.init_args, NN_NAME_KEY, NN_NAME_TEXT)
             nn_version = self.init_args.get(NN_VERSION_KEY)
@@ -193,11 +211,15 @@ class LLMInvoker(NNInvoker):
                 )
             hub = NNHub.get_instance()
             executor = hub.get_model_executor(nn_name, nn_version)
-            if executor is None:
-                message = "model %r version %r " % (nn_name, nn_version)
-                message += "is not found in the model hub"
-                raise RuntimeError(message)
-        self._nn_executor: NNExecutor = executor
+
+        if executor is None:
+            message = "model %r version %r " % (
+                model_args.nn_name,
+                model_args.nn_version,
+            )
+            message += "is not found in the model hub, you should provide a valid nn_executor class path"
+            raise RuntimeError(message)
+        self._nn_executor: LLMExecutor = executor
         self._nn_executor.load_model(mode="inference")
         self._nn_executor.warmup_inference()
 
