@@ -14,8 +14,6 @@ import os
 from abc import ABC, abstractmethod
 from typing import Optional, Union, Tuple, Type
 
-from deprecation import deprecated
-
 from nn4k.executor import NNExecutor
 from nn4k.utils.class_importing import dynamic_import_class
 
@@ -149,7 +147,7 @@ class SimpleNNHub(NNHub):
         from nn4k.consts import NN_VERSION_KEY, NN_VERSION_TEXT
         from nn4k.consts import NN_LOCAL_HF_MODEL_CONFIG_FILE
         from nn4k.consts import NN_LOCAL_SENTENCE_TRANSFORMERS_CONFIG_FILE
-        from nn4k.executor.hugging_face import HFEmbeddingExecutor
+        from nn4k.executor.huggingface.hf_embedding_executor import HFEmbeddingExecutor
         from nn4k.executor.huggingface.base.hf_llm_executor import HFLLMExecutor
         from nn4k.utils.config_parsing import get_string_field
 
@@ -193,7 +191,6 @@ class SimpleNNHub(NNHub):
         from nn4k.invoker import LLMInvoker
         from nn4k.invoker.openai import OpenAIInvoker
         from nn4k.utils.invoker_checking import is_openai_invoker
-        from nn4k.utils.invoker_checking import is_local_invoker
 
         if is_openai_invoker(nn_config):
             invoker = OpenAIInvoker.from_config(nn_config)
