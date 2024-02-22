@@ -32,6 +32,7 @@ header:
     - '**/*.schema'
     - '**/*.rule'
     - '**/*.json'
+    - '**/*.json5'
     - '**/*.in'
     - '**/META-INF/services/*'
     - '**/*.conf'

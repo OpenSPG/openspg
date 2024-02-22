@@ -22,8 +22,7 @@ NN_INVOKER_TEXT = "NN invoker"
 NN_EXECUTOR_KEY = "nn_executor"
 NN_EXECUTOR_TEXT = "NN executor"
 
-NN_DEVICE_KEY = "device"
-NN_TRUST_REMOTE_CODE_KEY = "trust_remote_code"
+NN_DEVICE_KEY = "nn_device"
 
 NN_OPENAI_MODEL_NAME_KEY = NN_NAME_KEY
 NN_OPENAI_MODEL_NAME_TEXT = "openai model name"

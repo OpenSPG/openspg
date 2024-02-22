@@ -61,10 +61,15 @@ class TestBaseInvoker(unittest.TestCase):
         self.assertEqual(invoker.kwargs, {"test_stub_invoker": True})
 
     def testInvokerNotExists(self):
+        """
+        now the default invoker is LLMInvoker
+        """
         from nn4k.invoker import NNInvoker
 
-        with self.assertRaises(RuntimeError):
-            invoker = NNInvoker.from_config({"nn_name": "not_exists"})
+        invoker = NNInvoker.from_config({"nn_name": "not_exists"})
+        from nn4k.invoker.base import LLMInvoker
+
+        assert type(invoker) == LLMInvoker
 
     def testLocalInvoker(self):
         from nn4k.invoker import NNInvoker

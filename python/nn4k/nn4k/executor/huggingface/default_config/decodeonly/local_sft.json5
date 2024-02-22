@@ -1,0 +1,41 @@
+{
+  // -- base model and training args
+  "nn_model_path": "/model/path/to/Baichuan-7B-Chat", // local model path
+  "train_dataset_path": "/data/train/dataset.json", // train dataset path
+  "nn_invoker": "nn4k.invoker.base.LLMInvoker", // invoker to use
+  "nn_executor": "nn4k.executor.huggingface.hf_decode_only_executor.HFDecodeOnlyExecutor", // executor to use
+  "output_dir": "/path/to/output/dir", // trained model output dir
+// ----- The following args are optional-----
+
+  //   "eval_dataset_path": "/data/eval/dataset-eval.json", // eval dataset path, if you want to do eval
+  // -- adapter model info, only if you want to train lora adapter
+//   "adapter_name": "YouYou", //set it to a not "default" string value to enable adapter sft
+//   "adapter_type": "lora", // adapter type. Don't need it if adapter_name is not set
+//   "adapter_config": { // only necessary if adapter_name is set, same as peft LoraConfig args if tyep is 'lora'
+//     "r": 8,
+//     "lora_alpha": 16,
+//     "lora_dropout": 0.05,
+//     "bias": "none",
+//     "target_modules": ["W_pack", "o_proj"], // this is only an example for BaiChuan lora training
+//     "task_type": "CAUSAL_LM"
+//   },
+//   "qlora_bits_and_bytes_config": { // only necessary if you want to quantinize load model
+//     "load_in_4bit": true,
+//     "bnb_4bit_compute_dtype": "bfloat16",
+//     "bnb_4bit_use_double_quant": true,
+//     "bnb_4bit_quant_type": "nf4"
+//   }
+  //-- start training args
+//   "resume_from_checkpoint": "True", // only necessary if you want to resume training from checkpoint
+  "trust_remote_code": true,
+  "max_input_length": 256, // input max length. Inputs will be cut down to this length
+  //-- start: same as huggingface trainer args
+  "per_device_train_batch_size": 1,
+  "gradient_accumulation_steps": 1,
+  "lr_scheduler_type": "cosine", // adjust learning rate scheduler
+  "logging_steps": 20,
+  "save_steps": 10000,
+  "learning_rate": 4e-5,
+  "num_train_epochs": 1.0
+  //-- end: huggingface trainer args
+}

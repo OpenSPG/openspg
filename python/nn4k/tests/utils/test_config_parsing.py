@@ -10,6 +10,25 @@
 # or implied.
 
 import unittest
+from dataclasses import dataclass, field
+from typing import List, Optional
+
+
+@dataclass
+class TestArgs:
+    input_columns: Optional[List[str]] = field(
+        default=None,
+        metadata={"help": ""},
+    )
+    is_bool: Optional[bool] = field(
+        default=None,
+        metadata={"help": ""},
+    )
+    max_input_length: int = field(
+        default=1024,
+        metadata={"help": ""},
+    )
+    lora_config: Optional[dict] = field(default=None)
 
 
 class TestConfigParsing(unittest.TestCase):
@@ -97,6 +116,27 @@ class TestConfigParsing(unittest.TestCase):
         nn_config = {"foo": "bar", "baz": 0}
         with self.assertRaises(ValueError):
             value = get_positive_int_field(nn_config, "baz", "Baz")
+
+    def testTransformerArgsParseDict(self):
+        from transformers import HfArgumentParser
+
+        args = {
+            "input_columns": ["column1", "column2"],
+            "is_bool": False,
+            "max_input_length": 256,
+            "lora_config": {"r": 1, "type": "lora"},
+            "is_bool_int": 1,
+            "extra_arg": "extra_configs",
+        }
+
+        parser = HfArgumentParser(TestArgs)
+        parsed_args: TestArgs
+        parsed_args, *rest = parser.parse_dict(args, allow_extra_keys=True)
+
+        self.assertEqual(parsed_args.input_columns, ["column1", "column2"])
+        self.assertEqual(parsed_args.is_bool, False)
+        self.assertEqual(parsed_args.lora_config, {"type": "lora", "r": 1})
+        self.assertEqual(parsed_args.max_input_length, 256)
 
 
 if __name__ == "__main__":

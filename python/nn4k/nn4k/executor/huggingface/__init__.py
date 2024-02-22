@@ -9,4 +9,5 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from nn4k.executor.base import NNExecutor, LLMExecutor, NNModelArgs, NNAdapterModelArgs
+from nn4k.executor.huggingface.base.hf_llm_executor import HFLLMExecutor
+from nn4k.executor.huggingface.base.hf_args import HFModelArgs, HFSftArgs

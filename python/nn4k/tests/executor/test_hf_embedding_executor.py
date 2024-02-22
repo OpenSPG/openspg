@@ -13,7 +13,7 @@ import sys
 import unittest
 import unittest.mock
 
-from nn4k.executor.hugging_face import HFEmbeddingExecutor
+from nn4k.executor.huggingface.hf_embedding_executor import HFEmbeddingExecutor
 
 
 class TestHFEmbeddingExecutor(unittest.TestCase):
