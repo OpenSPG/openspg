@@ -6,5 +6,9 @@
   "nn_executor": "nn4k.executor.huggingface.hf_decode_only_executor.HFDecodeOnlyExecutor", // executor to use
   // the following are optional
   "adapter_name": "adapter_name", // adapter_name must be given to enable adapter; with adapter_path along has no effect!
-  "adapter_path": "/path/to/adapter"
+  "adapter_path": "/path/to/adapter",
+  "generate_config":{
+      "temperature": 0.2,
+      "do_sample": true
+  }
 }

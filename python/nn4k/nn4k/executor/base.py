@@ -330,7 +330,8 @@ class NNInferenceArgs:
     def update_if_not_none(self, from_key, to_dict, to_key=None):
         to_key = to_key or from_key
         from_value = self.__getattribute__(from_key)
-        if from_value is not None:
+        value_in_to_dict = self.__getattribute__(to_dict).get(to_key, None)
+        if value_in_to_dict is None and from_value is not None:
             self.__getattribute__(to_dict)[to_key] = from_value
 
     def __post_init__(self):
