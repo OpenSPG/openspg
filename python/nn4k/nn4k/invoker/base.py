@@ -178,9 +178,6 @@ class LLMInvoker(NNInvoker):
         """
         Implement local model warming up logic for local invoker.
         """
-        if self.inference_warmed_up:
-            return
-
         nn_config = self.init_args
 
         from nn4k.nnhub import NNHub
