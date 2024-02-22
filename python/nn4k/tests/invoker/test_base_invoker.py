@@ -89,7 +89,10 @@ class TestBaseInvoker(unittest.TestCase):
     def testLocalLLMInvokerWithCustomExecutor(self):
         from nn4k.invoker import LLMInvoker
 
-        nn_config = {"nn_model_path":"/path/to/model", "nn_executor": "invoker_test_stub.StubExecutor"}
+        nn_config = {
+            "nn_model_path": "/path/to/model",
+            "nn_executor": "invoker_test_stub.StubExecutor",
+        }
         invoker = LLMInvoker.from_config(nn_config)
         self.assertTrue(isinstance(invoker, LLMInvoker))
         self.assertEqual(invoker.init_args, nn_config)
