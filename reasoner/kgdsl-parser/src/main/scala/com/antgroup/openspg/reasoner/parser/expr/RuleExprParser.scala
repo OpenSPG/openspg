@@ -849,10 +849,6 @@ class RuleExprParser extends Serializable {
     }
   }
 
-  def parseRetType(expr: Expr): KgType = {
-    KTObject
-  }
-
   def parseRuleExpression(ctx: Rule_expressionContext): Rule = {
     ctx.getChild(0) match {
       case c: Logic_rule_expressionContext => parseLogicRuleExpression(c)
@@ -878,10 +874,9 @@ class RuleExprParser extends Serializable {
     if (ctx.property_name() != null) {
       ProjectRule(
         IRProperty(ctx.identifier().getText, ctx.property_name().getText),
-        parseRetType(expr),
         expr)
     } else {
-      ProjectRule(IRVariable(ctx.identifier().getText), parseRetType(expr), expr)
+      ProjectRule(IRVariable(ctx.identifier().getText), expr)
     }
 
   }

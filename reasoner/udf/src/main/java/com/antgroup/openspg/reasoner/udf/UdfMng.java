@@ -19,10 +19,12 @@ import com.antgroup.openspg.reasoner.udf.model.RuntimeUdfMeta;
 import com.antgroup.openspg.reasoner.udf.model.UdafMeta;
 import com.antgroup.openspg.reasoner.udf.model.UdfParameterTypeHint;
 import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
+
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public interface UdfMng {
+public interface UdfMng extends Serializable {
   /**
    * Query UDF meta information, which can be used to determine whether UDF exists KgType is
    * compatible with java Object type

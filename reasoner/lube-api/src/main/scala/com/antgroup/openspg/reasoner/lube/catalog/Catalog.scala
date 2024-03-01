@@ -13,10 +13,12 @@
 
 package com.antgroup.openspg.reasoner.lube.catalog
 
+import scala.collection.mutable
+
 import com.antgroup.openspg.reasoner.common.exception.{ConnectionNotFoundException, GraphAlreadyExistsException, GraphNotFoundException}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
-import scala.collection.mutable
+import com.antgroup.openspg.reasoner.udf.{UdfMng, UdfMngFactory}
 
 
 /**
@@ -27,6 +29,7 @@ import scala.collection.mutable
  */
 abstract class Catalog() extends Serializable {
   protected val graphRepository = new mutable.HashMap[String, SemanticPropertyGraph]()
+  private val udfRepo = UdfMngFactory.getUdfMng
   private val connections = new mutable.HashMap[String, mutable.HashSet[AbstractConnection]]()
 
   /**
@@ -95,6 +98,8 @@ abstract class Catalog() extends Serializable {
 
     graphRepository.get(graphName).orNull
   }
+
+  def getUdfRepo: UdfMng = udfRepo
 
   /**
    * Get schema from knowledge graph
