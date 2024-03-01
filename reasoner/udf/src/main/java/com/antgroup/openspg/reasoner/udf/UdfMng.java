@@ -19,7 +19,6 @@ import com.antgroup.openspg.reasoner.udf.model.RuntimeUdfMeta;
 import com.antgroup.openspg.reasoner.udf.model.UdafMeta;
 import com.antgroup.openspg.reasoner.udf.model.UdfParameterTypeHint;
 import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
