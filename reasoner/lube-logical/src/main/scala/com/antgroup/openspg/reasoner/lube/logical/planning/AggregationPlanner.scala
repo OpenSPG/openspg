@@ -14,7 +14,6 @@
 package com.antgroup.openspg.reasoner.lube.logical.planning
 
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
 
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.types.{KgType, KTObject}

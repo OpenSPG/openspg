@@ -80,7 +80,7 @@ class ProjectPlanner(projects: ProjectFields)(implicit context: LogicalPlannerCo
           node.fields.foreach(f => referTypes.put(IRProperty(v.name, f.name), f.kgType))
         case edge: EdgeVar =>
           edge.fields.foreach(f => referTypes.put(IRProperty(v.name, f.name), f.kgType))
-        case _ => throw UnsupportedOperationException(s"cannot support $v")
+        case _ =>
       }
     }
     referTypes.++=(resolved.tmpFields.map(p => (p._1, p._2.field.kgType)))

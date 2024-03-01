@@ -83,7 +83,12 @@ object ExprUtil {
 
   def getTargetType(expr: Expr, referVars: Map[IRField, KgType], udfRepo: UdfMng): KgType = {
     expr match {
-      case Ref(name) => referVars(IRVariable(name))
+      case Ref(name) =>
+        if (referVars.contains(IRVariable(name))) {
+          referVars(IRVariable(name))
+        } else {
+          KTObject
+        }
       case UnaryOpExpr(GetField(name), Ref(alis)) => referVars(IRProperty(alis, name))
       case BinaryOpExpr(name, l, r) =>
         name match {
@@ -106,7 +111,7 @@ object ExprUtil {
       case FunctionExpr(name, funcArgs) =>
         val types = funcArgs.map(getTargetType(_, referVars, udfRepo))
         name match {
-          case "rule_value" => types.head
+          case "rule_value" => types(1)
           case "cast_type" | "Cast" =>
             funcArgs(1).asInstanceOf[VString].value match {
               case "int" | "bigint" | "long" => KTLong
@@ -130,8 +135,8 @@ object ExprUtil {
             getTargetType(args, referVars, udfRepo)
           case StrJoin(_) => KTString
           case Count => KTLong
-          case AggUdf(name, funcArgs) =>
-            val types = getTargetType(funcArgs.head, referVars, udfRepo)
+          case AggUdf(name, _) =>
+            val types = getTargetType(args.head, referVars, udfRepo)
             val udf = udfRepo.getUdafMeta(name, types)
             if (udf != null) {
               udf.getResultType
@@ -139,6 +144,13 @@ object ExprUtil {
               throw UnsupportedOperationException(s"cannot find UDAF ${name}")
             }
           case _ => throw UnsupportedOperationException(s"express cannot support ${name}")
+        }
+      case OpChainExpr(curExpr, _) => getTargetType(curExpr, referVars, udfRepo)
+      case ListOpExpr(name, _) =>
+        name match {
+          case Reduce(_, _, _, initValue) => getTargetType(initValue, referVars, udfRepo)
+          case Constraint(_, _, _) => KTBoolean
+          case Get(_) | Slice(_, _) => KTObject
         }
       case AggIfOpExpr(op, _) => getTargetType(op, referVars, udfRepo)
       case VNull | VString(_) => KTString
