@@ -246,8 +246,11 @@ class SPGSchemaMarkLang:
             assert type_class in self.keyword_type, self.error_msg(
                 f"{type_class} is illegal, please define it before current line"
             )
-            assert type_name.startswith("STD.") or "." not in type_name or type_name.startswith(
-                f'{self.namespace}.'), self.error_msg(
+            assert (
+                type_name.startswith("STD.")
+                or "." not in type_name
+                or type_name.startswith(f"{self.namespace}.")
+            ), self.error_msg(
                 f"The name space of {type_name} does not belong to current project."
             )
 
@@ -458,7 +461,9 @@ class SPGSchemaMarkLang:
         predicate_class_ns = predicate_class
         if "." not in predicate_class:
             predicate_class_ns = f"{self.namespace}.{predicate_class}"
-        assert predicate_class_ns in self.types or predicate_class_ns in self.defined_types, self.error_msg(
+        assert (
+            predicate_class_ns in self.types or predicate_class_ns in self.defined_types
+        ), self.error_msg(
             f"{predicate_class} is illegal, please ensure that it appears in this schema."
         )
         object_type = self.types[predicate_class_ns]
@@ -555,14 +560,22 @@ class SPGSchemaMarkLang:
                     f"{predicate_name} is a semantic predicate, please add the semantic prefix"
                 )
 
-        if "." in predicate_class and predicate_class not in self.types and predicate_class not in self.internal_type:
+        if (
+            "." in predicate_class
+            and predicate_class not in self.types
+            and predicate_class not in self.internal_type
+        ):
             try:
-                cross_type = self.schema.query_spg_type(self.get_type_name_with_ns(predicate_class))
+                cross_type = self.schema.query_spg_type(
+                    self.get_type_name_with_ns(predicate_class)
+                )
                 self.types[self.get_type_name_with_ns(predicate_class)] = cross_type
             except Exception as e:
-                raise ValueError(self.error_msg(
-                    f"{predicate_class} is illegal, please ensure the name space or type name is correct."
-                ))
+                raise ValueError(
+                    self.error_msg(
+                        f"{predicate_class} is illegal, please ensure the name space or type name is correct."
+                    )
+                )
 
         assert (
             self.get_type_name_with_ns(predicate_class) in self.types
@@ -592,15 +605,11 @@ class SPGSchemaMarkLang:
                     spg_type_enum = SpgTypeEnum.Standard
 
             if cur_type.spg_type_enum == SpgTypeEnum.Concept:
-                assert (
-                    spg_type_enum == SpgTypeEnum.Concept
-                ), self.error_msg(
+                assert spg_type_enum == SpgTypeEnum.Concept, self.error_msg(
                     "Concept type only allow relationships that point to themselves"
                 )
             elif cur_type.spg_type_enum == SpgTypeEnum.Entity:
-                assert (
-                    spg_type_enum != SpgTypeEnum.Event
-                ), self.error_msg(
+                assert spg_type_enum != SpgTypeEnum.Event, self.error_msg(
                     "Relationships of entity types are not allowed to point to event types; "
                     "instead, they are only permitted to point from event types to entity types, "
                     "adhering to the principle of moving from dynamic to static."
@@ -686,7 +695,10 @@ class SPGSchemaMarkLang:
 
                         if "." not in subject_type:
                             subject_type = f"{self.namespace}.{predicate_class}"
-                        assert subject_type in self.types or predicate_class in self.defined_types, self.error_msg(
+                        assert (
+                            subject_type in self.types
+                            or predicate_class in self.defined_types
+                        ), self.error_msg(
                             f"{predicate_class} is illegal, please ensure that it appears in this schema."
                         )
 
@@ -708,7 +720,10 @@ class SPGSchemaMarkLang:
             assert not predicate_class.startswith("STD."), self.error_msg(
                 f"{predicate_class} is not allow appear in the definition of relation."
             )
-            assert predicate_class in self.types or predicate_class.split(".")[1] in self.defined_types, self.error_msg(
+            assert (
+                predicate_class in self.types
+                or predicate_class.split(".")[1] in self.defined_types
+            ), self.error_msg(
                 f"{predicate_class} is illegal, please ensure that it appears in this schema."
             )
             assert (
@@ -921,7 +936,9 @@ class SPGSchemaMarkLang:
                 r"^([a-zA-Z0-9]+)\((\w+)\)\s*?->\s*?([a-zA-Z0-9\.]+):$", line
             )
             if sub_type_match:
-                self.defined_types[sub_type_match.group(1)] = type_match.group(3).strip()
+                self.defined_types[sub_type_match.group(1)] = type_match.group(
+                    3
+                ).strip()
 
     def load_script(self):
         """
@@ -1071,7 +1088,9 @@ class SPGSchemaMarkLang:
 
         # generate the delete list of spg type
         for spg_type in session.spg_types:
-            if not spg_type.startswith("STD.") and not spg_type.startswith(f'{self.namespace}.'):
+            if not spg_type.startswith("STD.") and not spg_type.startswith(
+                f"{self.namespace}."
+            ):
                 continue
             unique_id = session.spg_types[spg_type]._rest_model.ontology_id.unique_id
             if spg_type in self.internal_type and unique_id < 1000:
@@ -1083,7 +1102,9 @@ class SPGSchemaMarkLang:
 
         for spg_type in self.types:
             # generate the creation list of spg type
-            if not spg_type.startswith("STD.") and not spg_type.startswith(f'{self.namespace}.'):
+            if not spg_type.startswith("STD.") and not spg_type.startswith(
+                f"{self.namespace}."
+            ):
                 continue
             if spg_type not in session.spg_types:
                 session.create_type(self.types[spg_type])
