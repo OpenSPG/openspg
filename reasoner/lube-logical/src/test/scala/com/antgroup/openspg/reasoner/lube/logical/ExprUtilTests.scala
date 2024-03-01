@@ -47,7 +47,7 @@ class ExprUtilTests extends AnyFunSpec {
     ExprUtil.getTargetType(expr, map, udfRepo) should equal(KTInteger)
 
     expr = parser.parse("A.age + 1")
-    ExprUtil.getTargetType(expr, map, udfRepo) should equal(KTInteger)
+    ExprUtil.getTargetType(expr, map, udfRepo) should equal(KTLong)
 
     expr = parser.parse("A.age > 10")
     ExprUtil.getTargetType(expr, map, udfRepo) should equal(KTBoolean)
@@ -60,6 +60,9 @@ class ExprUtilTests extends AnyFunSpec {
 
     expr = parser.parse("concat(A.age, \",\")")
     ExprUtil.getTargetType(expr, map, udfRepo) should equal(KTString)
+
+    expr = parser.parse("cast_type(A.age, 'string')")
+    ExprUtil.getTargetType(expr, map, udfRepo) should equal(KTString)
   }
 
   it("test rule output type") {
@@ -71,6 +74,6 @@ class ExprUtilTests extends AnyFunSpec {
     val r1 = ProjectRule(IRVariable("age"), parser.parse("A.age"))
     rule.addDependency(r1)
 
-    ExprUtil.getTargetType(rule, map, udfRepo) should equal(KTInteger)
+    ExprUtil.getTargetType(rule, map, udfRepo) should equal(KTLong)
   }
 }

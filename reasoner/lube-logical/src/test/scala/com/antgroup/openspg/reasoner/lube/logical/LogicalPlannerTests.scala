@@ -334,7 +334,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |  (s)-[p2:followPM]->(o)
         |}
         |Rule {
-        |	c = rule_value(p.avgProfit > 0, 1,0 ) + rule_value(p2.times>3, 1,0)
+        |	c = rule_value(p.avgProfit > 0, 1,0 ) && rule_value(p2.times>3, 1,0)
         |
         |}
         |Action {

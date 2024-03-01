@@ -105,12 +105,25 @@ object ExprUtil {
         }
       case FunctionExpr(name, funcArgs) =>
         val types = funcArgs.map(getTargetType(_, referVars, udfRepo))
-        val udf = udfRepo.getUdfMeta(name, types.asJava)
-        if (udf != null) {
-          udf.getResultType
-        } else {
-          throw UnsupportedOperationException(s"cannot find UDF: ${name}")
+        name match {
+          case "rule_value" => types.head
+          case "cast_type" | "Cast" =>
+            funcArgs(1).asInstanceOf[VString].value match {
+              case "int" | "bigint" | "long" => KTLong
+              case "float" | "double" => KTDouble
+              case "varchar" | "string" => KTString
+              case _ =>
+                throw UnsupportedOperationException(s"cannot support ${name} to ${funcArgs(1)}")
+            }
+          case _ =>
+            val udf = udfRepo.getUdfMeta(name, types.asJava)
+            if (udf != null) {
+              udf.getResultType
+            } else {
+              throw UnsupportedOperationException(s"cannot find UDF: ${name}")
+            }
         }
+
       case AggOpExpr(name, args) =>
         name match {
           case Min | Max | Sum | Avg | First | Accumulate(_) =>
@@ -155,4 +168,5 @@ object ExprUtil {
       right
     }
   }
+
 }
