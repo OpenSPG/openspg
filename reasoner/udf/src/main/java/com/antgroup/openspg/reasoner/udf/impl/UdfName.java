@@ -13,10 +13,9 @@
 
 package com.antgroup.openspg.reasoner.udf.impl;
 
-import java.io.Serializable;
 import java.util.Locale;
 
-public class UdfName implements Serializable {
+public class UdfName {
   private final String name;
 
   public UdfName(String name) {

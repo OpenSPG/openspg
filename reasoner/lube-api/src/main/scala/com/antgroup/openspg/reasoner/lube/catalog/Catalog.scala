@@ -29,8 +29,7 @@ import com.antgroup.openspg.reasoner.udf.{UdfMng, UdfMngFactory}
  */
 abstract class Catalog() extends Serializable {
   protected val graphRepository = new mutable.HashMap[String, SemanticPropertyGraph]()
-  @transient
-  private val udfRepo = UdfMngFactory.getUdfMng
+  @transient private val udfRepo = UdfMngFactory.getUdfMng
   private val connections = new mutable.HashMap[String, mutable.HashSet[AbstractConnection]]()
 
   /**
