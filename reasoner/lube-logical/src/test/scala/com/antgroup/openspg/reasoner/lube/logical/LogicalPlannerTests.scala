@@ -163,66 +163,6 @@ class LogicalPlannerTests extends AnyFunSpec {
     println(optimizedLogicalPlan.pretty)
   }
 
-  it("online") {
-    val dsl = """Define (s:User)-[p:redPacket]->(o:Int) {
-                |	GraphStructure {
-                | (s)
-                | }
-                |  Rule {
-                |LatestHighFrequencyMonthPayCount=s.ngfe_tag__pay_cnt_m
-                |Latest30DayPayCount=s.ngfe_tag__pay_cnt_d
-                |Latest7DayPayCount=s.ngfe_tag__pay_cnt_d
-                |LatestTTT = Latest7DayPayCount.accumulate(+)
-                |LatestHighFrequencyMonthAveragePayCount=get_first_notnull(maximum(LatestHighFrequencyMonthPayCount), 0.0) / 30.0
-                |Latest7DayPayCountSum=Latest7DayPayCount
-                |Latest7DayPayCountAverage=Latest7DayPayCountSum / 7.0
-                |HighReduceValue=(LatestHighFrequencyMonthAveragePayCount - Latest7DayPayCountAverage)/LatestHighFrequencyMonthAveragePayCount
-                |HighLost("高频降频100%"):HighReduceValue == 1
-                |HighReduce80("高频降频80%"):HighReduceValue >= 0.8 and HighReduceValue < 1
-                |HighReduce50("高频降频50%"):HighReduceValue >= 0.5 and HighReduceValue < 0.8
-                |HighReduce30("高频降频30%"):HighReduceValue >= 0.3 and HighReduceValue < 0.5
-                |HighReduce10("高频降频10%"):HighReduceValue >= 0.1 and HighReduceValue < 0.3
-                |Latest3060DayPayCount=s.ngfe_tag__pay_cnt_d
-                |Latest30DayPayDayCount=size(Latest30DayPayCount)
-                |Latest3060DayPayDayCount=size(Latest3060DayPayCount)
-                |High1("高频用户1"):Latest3060DayPayDayCount < 13 and Latest30DayPayDayCount >= 13
-                |High2("高频用户2"):Latest3060DayPayDayCount > 12 and Latest30DayPayDayCount >= 13
-                |Middle1("中频用户1"):Latest3060DayPayDayCount == 0 and Latest30DayPayDayCount >= 4 and Latest30DayPayDayCount <= 12
-                |Middle2("中频用户2"):Latest3060DayPayDayCount >= 1 and Latest3060DayPayDayCount <= 3 and Latest30DayPayDayCount >= 4 and Latest30DayPayDayCount <= 12
-                |Middle3("中频用户3"):Latest3060DayPayDayCount >= 4 and Latest30DayPayDayCount >= 4 and Latest30DayPayDayCount <= 12
-                |Low1("低频用户1"):Latest3060DayPayDayCount >= 1 and Latest3060DayPayDayCount <= 3 and Latest30DayPayDayCount >= 1 and Latest30DayPayDayCount <= 3
-                |Low2("低频用户2"):(Latest3060DayPayDayCount > 3 or Latest3060DayPayDayCount == 0) and Latest30DayPayDayCount >= 1 and Latest30DayPayDayCount <= 3
-                |Latest6090DayPayCount=s.ngfe_tag__pay_cnt_d
-                |Latest6090DayPayDayCount=size(Latest6090DayPayCount)
-                |Latest60DayPayCount=s.ngfe_tag__pay_cnt_d
-                |Latest60DayPayDayCount=size(Latest60DayPayCount)
-                |Sleep1("沉睡用户1"):Latest6090DayPayDayCount > 0 and Latest60DayPayDayCount == 0
-                |Sleep2("沉睡用户2"):Latest3060DayPayDayCount > 0 and Latest30DayPayDayCount == 0
-                |HistoricallyPay=s.ngfe_tag__pay_cnt_total
-                |HistoricallyPayCount=size(HistoricallyPay)
-                |New("新用户"):HistoricallyPayCount == 0 and Latest30DayPayDayCount == 0
-                |Latest90DayPayCount=s.ngfe_tag__pay_cnt_d
-                |Latest90DayPayDayCount=size(Latest90DayPayCount)
-                |Lost("流失用户"):HistoricallyPayCount > 0 and Latest90DayPayDayCount == 0
-                |o=get_first_notnull(rule_value(HighLost, "high_lost"), rule_value(HighReduce80, "high_reduce_80"),rule_value(HighReduce50, "high_reduce_50"), rule_value(HighReduce30, "high_reduce_30"), rule_value(HighReduce10, "high_reduce_10"), rule_value(High1, "high_1"), rule_value(High2, "high_2"), rule_value(Middle1, "middle_1"), rule_value(Middle2, "middle_2"), rule_value(Middle3, "middle_3"), rule_value(Low1, "low_1"), rule_value(Low2, "low_2"), rule_value(Sleep1, "sleep_1"), rule_value(Sleep2, "sleep_2"), rule_value(New, "new"), rule_value(Lost, "lost"))
-                |  }
-                |}""".stripMargin
-    val parser = new OpenSPGDslParser()
-    val block = parser.parse(dsl)
-    println(block.pretty)
-    val schema: Map[String, Set[String]] = Map.apply(
-      "User" -> Set
-        .apply("ngfe_tag__pay_cnt_m", "ngfe_tag__pay_cnt_total", "ngfe_tag__pay_cnt_d"))
-    val catalog = new PropertyGraphCatalog(schema)
-    catalog.init()
-    implicit val context: LogicalPlannerContext =
-      LogicalPlannerContext(catalog, parser, Map.empty)
-    val logicalPlan = LogicalPlanner.plan(block)
-    println(logicalPlan.head.pretty)
-    val optimizedLogicalPlan = LogicalOptimizer.optimize(logicalPlan.head)
-    println(optimizedLogicalPlan.pretty)
-  }
-
   it("test start flag") {
     val dsl =
       """
@@ -394,7 +334,7 @@ class LogicalPlannerTests extends AnyFunSpec {
         |  (s)-[p2:followPM]->(o)
         |}
         |Rule {
-        |	c = rule_value(p.avgProfit > 0, 1,0 ) + rule_value(p2.times>3, 1,0)
+        |	c = rule_value(p.avgProfit > 0, 1,0 ) && rule_value(p2.times>3, 1,0)
         |
         |}
         |Action {

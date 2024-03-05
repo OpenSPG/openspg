@@ -158,7 +158,6 @@ class OpenSPGDslParser extends ParserInterface {
               IRProperty(s.alias, propertyName) ->
                 ProjectRule(
                   IRProperty(s.alias, propertyName),
-                  propertyType,
                   Ref(ddlBlockWithNodes._3.target.alias)))))
         DDLBlock(Set.apply(ddlBlockOp), List.apply(prjBlk))
       case AddPredicate(predicate) =>
@@ -399,7 +398,7 @@ class OpenSPGDslParser extends ParserInterface {
                 ProjectBlock(
                   List.apply(opBlock),
                   ProjectFields(Map.apply(lValueName ->
-                    ProjectRule(lValueName, exprParser.parseRetType(opChain.curExpr), opChain))))
+                    ProjectRule(lValueName, opChain))))
             }
           case AggIfOpExpr(_, _) | AggOpExpr(_, _) =>
             ProjectBlock(
@@ -409,7 +408,6 @@ class OpenSPGDslParser extends ParserInterface {
                   lValueName ->
                     ProjectRule(
                       lValueName,
-                      exprParser.parseRetType(opChain.curExpr),
                       opChain.curExpr))))
           case _ => null
         }
@@ -461,8 +459,8 @@ class OpenSPGDslParser extends ParserInterface {
           List.empty)
       case _ =>
         rule match {
-          case ProjectRule(_, lvalueType, _) =>
-            val projectRule = ProjectRule(lvalueFiled, lvalueType, expr)
+          case ProjectRule(_, _) =>
+            val projectRule = ProjectRule(lvalueFiled, expr)
             ProjectBlock(
               List.apply(preBlock),
               ProjectFields(Map.apply(lvalueFiled -> projectRule)))
@@ -727,7 +725,7 @@ class OpenSPGDslParser extends ParserInterface {
       exprParser.parseUnbrokenCharacterStringLiteral(ctx.unbroken_character_string_literal()))
     val defaultName = "const_output_" + patternParser.getDefaultAliasNum
     val columnName = parseAsAliasWithComment(ctx.as_alias_with_comment(), defaultName)
-    (ProjectRule(IRVariable(defaultName), KTString, expr), columnName, true)
+    (ProjectRule(IRVariable(defaultName), expr), columnName, true)
   }
 
   def parseGraphStructure(
@@ -744,7 +742,7 @@ class OpenSPGDslParser extends ParserInterface {
     val defaultColumnName = parseExpr2ElementStr(expr)
     val columnName = parseAsAliasWithComment(ctx.as_alias_with_comment(), defaultColumnName)
     (
-      ProjectRule(IRVariable(defaultColumnName), exprParser.parseRetType(expr), expr),
+      ProjectRule(IRVariable(defaultColumnName), expr),
       columnName,
       false)
   }
@@ -861,7 +859,7 @@ class OpenSPGDslParser extends ParserInterface {
     val defaultColumnName = parseExpr2ElementStr(expr)
     val columnName = parseReturnAlias(ctx.return_item_alias(), defaultColumnName)
     (
-      ProjectRule(IRVariable(defaultColumnName), exprParser.parseRetType(expr), expr),
+      ProjectRule(IRVariable(defaultColumnName), expr),
       columnName,
       false)
   }

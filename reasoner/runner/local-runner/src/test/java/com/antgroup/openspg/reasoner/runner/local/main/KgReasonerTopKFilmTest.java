@@ -403,7 +403,7 @@ public class KgReasonerTopKFilmTest {
             + " o->star [starOfFilm] as sf2\n"
             + "}\n"
             + "Rule {\n"
-            + "total = sf.joinTs + sf2.joinTs\n"
+            + "total = cast_type(sf.joinTs, 'bigint') + cast_type(sf2.joinTs, 'bigint')\n"
             + "R2: top(total, 1)\n"
             + "}\n"
             + "Action {\n"
