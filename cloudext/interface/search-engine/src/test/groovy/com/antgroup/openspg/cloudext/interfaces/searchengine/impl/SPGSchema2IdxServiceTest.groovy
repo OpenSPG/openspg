@@ -29,7 +29,6 @@ import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier
 import com.antgroup.openspg.core.schema.model.predicate.Property
 import com.antgroup.openspg.core.schema.model.predicate.PropertyAdvancedConfig
 import com.antgroup.openspg.core.schema.model.type.*
-import com.antgroup.openspg.schema.model.type.*
 import com.google.common.collect.Lists
 import com.google.common.collect.Sets
 import spock.lang.Specification
