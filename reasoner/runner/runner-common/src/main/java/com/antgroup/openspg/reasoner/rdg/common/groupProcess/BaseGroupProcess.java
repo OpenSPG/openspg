@@ -19,6 +19,9 @@ import com.antgroup.openspg.reasoner.lube.common.expr.AggUdf;
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator;
 import com.antgroup.openspg.reasoner.lube.common.expr.AggregatorOpSet;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
+import com.antgroup.openspg.reasoner.lube.common.expr.GetField;
+import com.antgroup.openspg.reasoner.lube.common.expr.Ref;
+import com.antgroup.openspg.reasoner.lube.common.expr.UnaryOpExpr;
 import com.antgroup.openspg.reasoner.lube.logical.PropertyVar;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils;
@@ -139,6 +142,9 @@ public abstract class BaseGroupProcess implements Serializable {
    */
   public abstract Expr getAggEle();
 
+  /** get parsed agg ele */
+  public abstract ParsedAggEle getParsedAggEle();
+
   public Set<String> parseExprUseAliasSet() {
     scala.collection.immutable.List<String> aliasList = ExprUtils.getRefVariableByExpr(getAggEle());
     return new HashSet<>(JavaConversions.seqAsJavaList(aliasList));
@@ -146,6 +152,26 @@ public abstract class BaseGroupProcess implements Serializable {
 
   public List<String> parseExprRuleList() {
     return WareHouseUtils.getRuleList(getAggEle());
+  }
+
+  protected ParsedAggEle parsedAggEle() {
+    String sourceAlias = null;
+    String sourcePropertyName = null;
+    List<String> exprStrList = null;
+    Expr aggEle = getAggEle();
+    if (aggEle instanceof Ref) {
+      Ref sourceRef = (Ref) aggEle;
+      sourceAlias = sourceRef.refName();
+    } else if (aggEle instanceof UnaryOpExpr) {
+      UnaryOpExpr expr = (UnaryOpExpr) aggEle;
+      GetField getField = (GetField) expr.name();
+      sourceAlias = ((Ref) expr.arg()).refName();
+      sourcePropertyName = getField.fieldName();
+    } else if (1 == this.exprUseAliasSet.size()) {
+      sourceAlias = this.exprUseAliasSet.iterator().next();
+      exprStrList = this.exprRuleString;
+    }
+    return new ParsedAggEle(sourceAlias, sourcePropertyName, exprStrList);
   }
 
   /**

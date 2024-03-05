@@ -138,7 +138,7 @@ object RuleUtils {
       case logicRule: LogicRule =>
         LogicRule(ruleNameStr, logicRule.ruleExplain, expr)
       case _ =>
-        ProjectRule(IRVariable(ruleNameStr), rule.getLvalueType, expr)
+        ProjectRule(IRVariable(ruleNameStr), expr)
     }
     val oldDependencies = rule.getDependencies
     if (oldDependencies != null) {
@@ -162,7 +162,7 @@ object RuleUtils {
       case logicRule: LogicRule =>
         LogicRule(rule.getName, logicRule.ruleExplain, expr)
       case _ =>
-        ProjectRule(rule.getOutput, rule.getLvalueType, expr)
+        ProjectRule(rule.getOutput, expr)
     }
     val oldDependencies = rule.getDependencies
     if (oldDependencies != null) {

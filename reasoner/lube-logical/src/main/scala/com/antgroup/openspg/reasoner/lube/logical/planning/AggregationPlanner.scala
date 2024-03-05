@@ -16,7 +16,7 @@ package com.antgroup.openspg.reasoner.lube.logical.planning
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
-import com.antgroup.openspg.reasoner.common.types.KTObject
+import com.antgroup.openspg.reasoner.common.types.{KgType, KTObject}
 import com.antgroup.openspg.reasoner.lube.block.Aggregations
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator
@@ -26,7 +26,8 @@ import com.antgroup.openspg.reasoner.lube.logical.operators.{Aggregate, LogicalL
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 import org.apache.commons.lang3.StringUtils
 
-class AggregationPlanner(group: List[IRField], aggregations: Aggregations) {
+class AggregationPlanner(group: List[IRField], aggregations: Aggregations)(implicit
+    context: LogicalPlannerContext) {
 
   def plan(dependency: LogicalOperator): LogicalOperator = {
     val groupVar: List[Var] = group.map(toVar(_, dependency.solved))
@@ -47,6 +48,21 @@ class AggregationPlanner(group: List[IRField], aggregations: Aggregations) {
           v
         }
       })
+
+      val referTypes = new mutable.HashMap[IRField, KgType]()
+      for (v <- ruleFields) {
+        resolved.getVar(v.name) match {
+          case p: PropertyVar => referTypes.put(v, p.field.kgType)
+          case node: NodeVar =>
+            node.fields.foreach(f => referTypes.put(IRProperty(v.name, f.name), f.kgType))
+          case edge: EdgeVar =>
+            edge.fields.foreach(f => referTypes.put(IRProperty(v.name, f.name), f.kgType))
+          case _ => throw UnsupportedOperationException(s"cannot support $v")
+        }
+      }
+      referTypes.++=(resolved.tmpFields.map(p => (p._1, p._2.field.kgType)))
+      val ruleRetType = ExprUtil.getTargetType(p._2, referTypes.toMap, context.catalog.getUdfRepo)
+
       val renameVar = ruleFields
         .filter(_.isInstanceOf[IRVariable])
         .map(v => (v, propertyVarToIr(resolved.tmpFields(v.asInstanceOf[IRVariable]))))
@@ -56,21 +72,21 @@ class AggregationPlanner(group: List[IRField], aggregations: Aggregations) {
       val field = getAggregateTarget(referFields, resolved, dependency)
       field match {
         case IRNode(alias, _) =>
-          val propertyVar = PropertyVar(alias, new Field(p._1.name, KTObject, true))
+          val propertyVar = PropertyVar(alias, new Field(p._1.name, ruleRetType, true))
           aggMap.put(propertyVar, newAggExpr)
           resolved = resolved.addField((p._1.asInstanceOf[IRVariable], propertyVar))
         case IREdge(alias, _) =>
           if (resolved.getVar(alias).isInstanceOf[RepeatPathVar]) {
             aggMap.put(resolved.getVar(alias).asInstanceOf[RepeatPathVar].pathVar, newAggExpr)
           } else {
-            val propertyVar = PropertyVar(alias, new Field(p._1.name, KTObject, true))
+            val propertyVar = PropertyVar(alias, new Field(p._1.name, ruleRetType, true))
             resolved = resolved.addField((p._1.asInstanceOf[IRVariable], propertyVar))
             aggMap.put(propertyVar, newAggExpr)
           }
         case IRVariable(alias) =>
           val tmpPropertyVar = resolved.tmpFields(IRVariable(alias))
           val propertyVar =
-            PropertyVar(tmpPropertyVar.name, new Field(p._1.name, KTObject, true))
+            PropertyVar(tmpPropertyVar.name, new Field(p._1.name, ruleRetType, true))
           aggMap.put(propertyVar, newAggExpr)
           resolved = resolved.addField((p._1.asInstanceOf[IRVariable], propertyVar))
         case _ =>
