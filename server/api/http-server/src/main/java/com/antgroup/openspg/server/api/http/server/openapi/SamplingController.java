@@ -1,9 +1,9 @@
 package com.antgroup.openspg.server.api.http.server.openapi;
 
-import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.server.api.facade.dto.service.request.RelationSamplingRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.request.SPGTypeSamplingRequest;
+import com.antgroup.openspg.server.api.facade.dto.service.response.RelationInstance;
+import com.antgroup.openspg.server.api.facade.dto.service.response.SPGTypeInstance;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
@@ -24,12 +24,12 @@ public class SamplingController extends BaseController {
   @RequestMapping(method = RequestMethod.GET, value = "/spgType")
   public ResponseEntity<Object> spgTypeSampling(SPGTypeSamplingRequest request) {
     return HttpBizTemplate.execute(
-        new HttpBizCallback<List<VertexRecord>>() {
+        new HttpBizCallback<List<SPGTypeInstance>>() {
           @Override
           public void check() {}
 
           @Override
-          public List<VertexRecord> action() {
+          public List<SPGTypeInstance> action() {
             return samplingManager.spgTypeSampling(request);
           }
         });
@@ -38,12 +38,12 @@ public class SamplingController extends BaseController {
   @RequestMapping(method = RequestMethod.GET, value = "/relation")
   public ResponseEntity<Object> relationSampling(RelationSamplingRequest request) {
     return HttpBizTemplate.execute(
-        new HttpBizCallback<List<EdgeRecord>>() {
+        new HttpBizCallback<List<RelationInstance>>() {
           @Override
           public void check() {}
 
           @Override
-          public List<EdgeRecord> action() {
+          public List<RelationInstance> action() {
             return samplingManager.relationSampling(request);
           }
         });

@@ -28,6 +28,7 @@ public abstract class BaseLPGRecordQuery extends BaseQuery {
   public enum LpgRecordQueryType {
     SCRIPT(TABLE),
     VERTEX(GRAPH),
+    BATCH_VERTEX(GRAPH),
     SCAN(GRAPH),
     ONE_HOP_SUBGRAPH(GRAPH),
     ;
