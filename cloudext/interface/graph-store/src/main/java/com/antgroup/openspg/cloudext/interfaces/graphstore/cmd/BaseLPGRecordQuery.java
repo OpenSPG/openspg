@@ -26,10 +26,7 @@ public abstract class BaseLPGRecordQuery extends BaseQuery {
 
   @Getter
   public enum LpgRecordQueryType {
-    // 基于脚本的查询方式底层存储返回 TableLpgRecordStruct
     SCRIPT(TABLE),
-
-    // 查询点详情，或者查询一跳子图方式，底层存储返回 GraphLpgRecordStruct
     VERTEX(GRAPH),
     SCAN(GRAPH),
     ONE_HOP_SUBGRAPH(GRAPH),
