@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.reasoner.lube.logical
 
+import java.util.Locale
+
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
@@ -110,7 +112,7 @@ object ExprUtil {
         }
       case FunctionExpr(name, funcArgs) =>
         val types = funcArgs.map(getTargetType(_, referVars, udfRepo))
-        name match {
+        name.toLowerCase(Locale.getDefault) match {
           case "rule_value" => types(1)
           case "cast_type" | "Cast" =>
             funcArgs(1).asInstanceOf[VString].value match {
