@@ -112,7 +112,7 @@ object ExprUtil {
         }
       case FunctionExpr(name, funcArgs) =>
         val types = funcArgs.map(getTargetType(_, referVars, udfRepo))
-        name match {
+        name.toLowerCase(Locale.getDefault) match {
           case "rule_value" => types(1)
           case "cast_type" | "Cast" =>
             funcArgs(1).asInstanceOf[VString].value.toLowerCase(Locale.getDefault) match {
