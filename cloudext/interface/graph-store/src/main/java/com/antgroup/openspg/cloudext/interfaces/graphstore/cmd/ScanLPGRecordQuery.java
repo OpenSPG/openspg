@@ -29,14 +29,21 @@ public class ScanLPGRecordQuery extends BaseLPGRecordQuery {
 
   @Override
   public String toScript(LPGTypeNameConvertor lpgTypeNameConvertor) {
-    String convertedTypeName = null;
-    if (typeName instanceof EdgeTypeName) {
-      convertedTypeName = lpgTypeNameConvertor.convertEdgeTypeName((EdgeTypeName) typeName);
-    } else {
-      convertedTypeName = lpgTypeNameConvertor.convertVertexTypeName(typeName.toString());
-    }
     StringBuilder sb = new StringBuilder();
-    sb.append(String.format("MATCH (s:%s) RETURN s", convertedTypeName));
+    if (typeName instanceof EdgeTypeName) {
+      EdgeTypeName edgeTypeName = (EdgeTypeName) typeName;
+      sb.append(
+          String.format(
+              "MATCH (s:%s)-[p:%s]->(o:%s) RETURN p",
+              lpgTypeNameConvertor.convertVertexTypeName(edgeTypeName.getStartVertexType()),
+              lpgTypeNameConvertor.convertEdgeTypeName(edgeTypeName),
+              lpgTypeNameConvertor.convertVertexTypeName(edgeTypeName.getEndVertexType())));
+    } else {
+      sb.append(
+          String.format(
+              "MATCH (s:%s) RETURN s",
+              lpgTypeNameConvertor.convertVertexTypeName(typeName.toString())));
+    }
     if (limit != null) {
       sb.append(" LIMIT ").append(limit);
     }
