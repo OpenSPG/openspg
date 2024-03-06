@@ -115,7 +115,7 @@ object ExprUtil {
         name.toLowerCase(Locale.getDefault) match {
           case "rule_value" => types(1)
           case "cast_type" | "Cast" =>
-            funcArgs(1).asInstanceOf[VString].value match {
+            funcArgs(1).asInstanceOf[VString].value.toLowerCase(Locale.getDefault) match {
               case "int" | "bigint" | "long" => KTLong
               case "float" | "double" => KTDouble
               case "varchar" | "string" => KTString
