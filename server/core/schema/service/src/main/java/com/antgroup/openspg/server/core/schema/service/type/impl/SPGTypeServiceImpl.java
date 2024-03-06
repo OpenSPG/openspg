@@ -93,7 +93,8 @@ public class SPGTypeServiceImpl implements SPGTypeService {
   @Override
   public int delete(BaseAdvancedType advancedType) {
     List<ProjectOntologyRel> references =
-        projectOntologyRelRepository.queryReferences(advancedType.getUniqueId(), SPGOntologyEnum.TYPE);
+        projectOntologyRelRepository.queryReferences(
+            advancedType.getUniqueId(), SPGOntologyEnum.TYPE);
     if (CollectionUtils.isNotEmpty(references)) {
       throw SchemaException.existReference(advancedType.getName());
     }
