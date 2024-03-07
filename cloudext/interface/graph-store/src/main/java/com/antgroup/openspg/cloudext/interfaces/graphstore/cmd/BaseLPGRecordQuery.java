@@ -31,6 +31,7 @@ public abstract class BaseLPGRecordQuery extends BaseQuery {
     BATCH_VERTEX(GRAPH),
     SCAN(GRAPH),
     ONE_HOP_SUBGRAPH(GRAPH),
+    OBJECT_VERTEX(GRAPH),
     ;
 
     private final LPGRecordStructEnum struct;
