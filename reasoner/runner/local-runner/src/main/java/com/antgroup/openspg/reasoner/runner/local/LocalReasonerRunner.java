@@ -30,6 +30,7 @@ import com.antgroup.openspg.reasoner.runner.local.impl.LocalPropertyGraph;
 import com.antgroup.openspg.reasoner.runner.local.impl.LocalReasonerSession;
 import com.antgroup.openspg.reasoner.runner.local.impl.LocalRunnerThreadPool;
 import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphLoader;
+import com.antgroup.openspg.reasoner.runner.local.loader.MockLocalGraphLoader;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.reasoner.runner.local.rdg.LocalRDG;
@@ -155,6 +156,14 @@ public class LocalReasonerRunner {
         localPropertyGraph.setStartIdTuple2List(task.getStartIdList());
       } else {
         localPropertyGraph.setStartIdTuple2List(null);
+      }
+
+      // 判断是否存在
+      if (task.getParams().containsKey(ConfigKey.KG_REASONER_MOCK_GRAPH_DATA)) {
+        String demoGraph = task.getParams().get(ConfigKey.KG_REASONER_MOCK_GRAPH_DATA).toString();
+        MockLocalGraphLoader mockLocalGraphLoader = new MockLocalGraphLoader(demoGraph);
+        mockLocalGraphLoader.setGraphState(localPropertyGraph.getGraphState());
+        mockLocalGraphLoader.load();
       }
 
       if (physicalOpRoot instanceof Select) {

@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.runner.local.main;
 
+import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.main.basetest.TransBaseTestData;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,40 @@ public class KgReasonerAliasSetKFilmTest {
 
   @Before
   public void init() {}
+
+  @Test
+  public void test0() {
+    FileMutex.runTestWithMutex(this::doTest0);
+  }
+
+  private void doTest0() {
+    String dsl =
+            "\n"
+            + "GraphStructure {\n"
+            + "    (A:User)-[p1:trans]->(B:User)\n"
+            + "}\n"
+            + "Rule {\n"
+            + "}\n"
+            + "Action {\n"
+            + "    get(A.id, B.id)\n"
+            + "}";
+    List<String[]> result =
+            TransBaseTestData.runTestResult(
+                    dsl,
+                    new HashMap<String, Object>() {
+                      {
+                        put(ConfigKey.KG_REASONER_MOCK_GRAPH_DATA, "Graph {\n"
+                                                                   + "    A [User]\n"
+                                                                   + "    B [User]\n"
+                                                                   + "    A->B [trans]\n"
+                                                                   + "}");
+                      }
+                    });
+    Assert.assertEquals(1, result.size());
+    Assert.assertEquals(2, result.get(0).length);
+    Assert.assertEquals("A", result.get(0)[0]);
+    Assert.assertEquals("B", result.get(0)[1]);
+  }
 
   @Test
   public void test1() {
