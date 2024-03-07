@@ -24,7 +24,6 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.Edge
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.google.common.collect.Lists;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Strategy for translation from alter item of {@link ConceptRecord} to {@link LPGRecordAlterItem}s.
