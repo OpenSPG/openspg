@@ -1340,7 +1340,8 @@ class SPGSchemaMarkLang:
 
         spg_types = []
         for spg_type_name in sorted(session.spg_types):
-            if spg_type_name.startswith("STD.") or spg_type_name in self.internal_type:
+            if spg_type_name.startswith("STD.") or not spg_type_name.startswith(
+                    self.namespace) or spg_type_name in self.internal_type:
                 continue
 
             sub_properties = {}
