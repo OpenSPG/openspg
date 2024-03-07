@@ -89,6 +89,6 @@ public class SPGTypeMappingProcessor extends BaseProcessor<SPGTypeMappingNodeCon
       return Collections.emptyList();
     }
 
-    return mappingHelper.toSPGRecords(record);
+    return mappingHelper.toSPGRecords(record, true);
   }
 }

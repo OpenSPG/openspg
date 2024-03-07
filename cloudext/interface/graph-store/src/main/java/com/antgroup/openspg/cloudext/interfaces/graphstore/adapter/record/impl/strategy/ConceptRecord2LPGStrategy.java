@@ -74,6 +74,6 @@ public class ConceptRecord2LPGStrategy extends SPGTypeRecord2LPGStrategy {
 
   private boolean isRootConcept(ConceptRecord conceptRecord) {
     ConceptIdentifier name = conceptRecord.getConceptName();
-    return StringUtils.isBlank(name.getFatherId());
+    return name.isRootConcept();
   }
 }
