@@ -14,8 +14,6 @@
 package com.antgroup.openspg.reasoner.kggraph.impl;
 
 import com.alibaba.fastjson.JSON;
-
-import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.exception.InvalidGraphException;
 import com.antgroup.openspg.reasoner.common.exception.KGValueException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
@@ -181,26 +179,27 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
       scala.collection.Iterator<Connection> it = schema.topology().get(key).get().iterator();
       while (it.hasNext()) {
         Connection connection = it.next();
-        Set<String> sourceVertexRelatedEdgeAliasSet = vertexAliasToEdgeAliasMap.computeIfAbsent(connection.source(),
-                k -> new HashSet<>());
+        Set<String> sourceVertexRelatedEdgeAliasSet =
+            vertexAliasToEdgeAliasMap.computeIfAbsent(connection.source(), k -> new HashSet<>());
         sourceVertexRelatedEdgeAliasSet.add(connection.alias());
-        Set<String> targetVertexRelatedEdgeAliasSet = vertexAliasToEdgeAliasMap.computeIfAbsent(connection.target(),
-                k -> new HashSet<>());
+        Set<String> targetVertexRelatedEdgeAliasSet =
+            vertexAliasToEdgeAliasMap.computeIfAbsent(connection.target(), k -> new HashSet<>());
         targetVertexRelatedEdgeAliasSet.add(connection.alias());
       }
     }
-    vertexAliases.removeIf(vertexAlias -> {
-      Boolean isSingleVertex = 1 == this.alias2VertexMap.get(vertexAlias).size();
-      Set<String> relatedEdgeAliasSet = vertexAliasToEdgeAliasMap.get(vertexAlias);
-      Boolean isRelatedEdgeSingle = true;
-      for (String edgeAlias : relatedEdgeAliasSet) {
-        isRelatedEdgeSingle = 1 == this.alias2EdgeMap.get(edgeAlias).size();
-        if (!isRelatedEdgeSingle) {
-          break;
-        }
-      }
-      return isSingleVertex && isRelatedEdgeSingle;
-    });
+    vertexAliases.removeIf(
+        vertexAlias -> {
+          Boolean isSingleVertex = 1 == this.alias2VertexMap.get(vertexAlias).size();
+          Set<String> relatedEdgeAliasSet = vertexAliasToEdgeAliasMap.get(vertexAlias);
+          Boolean isRelatedEdgeSingle = true;
+          for (String edgeAlias : relatedEdgeAliasSet) {
+            isRelatedEdgeSingle = 1 == this.alias2EdgeMap.get(edgeAlias).size();
+            if (!isRelatedEdgeSingle) {
+              break;
+            }
+          }
+          return isSingleVertex && isRelatedEdgeSingle;
+        });
     if (vertexAliases.isEmpty()) {
       // not need split
       if (null != filter && !filter.test(this)) {
