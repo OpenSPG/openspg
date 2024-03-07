@@ -243,6 +243,12 @@ public class UdfMngImpl implements UdfMng {
   }
 
   @Override
+  public List<UdafMeta> getUdafMetas(String name) {
+    Map<String, UdafMeta> subMetaMap = this.udafMetaMap.get(UdfName.from(name));
+    return Lists.newArrayList(subMetaMap.values());
+  }
+
+  @Override
   public UdtfMeta getUdtfMeta(String name, List<KgType> rowDataTypes) {
     return getMeta(name, rowDataTypes, this.udtfMetaMap);
   }

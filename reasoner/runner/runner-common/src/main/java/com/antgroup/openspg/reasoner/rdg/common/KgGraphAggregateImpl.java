@@ -36,8 +36,7 @@ import com.antgroup.openspg.reasoner.rdg.common.groupProcess.AggIfOpProcessBaseG
 import com.antgroup.openspg.reasoner.rdg.common.groupProcess.AggOpProcessBaseGroupProcess;
 import com.antgroup.openspg.reasoner.rdg.common.groupProcess.BaseGroupProcess;
 import com.antgroup.openspg.reasoner.rdg.common.groupProcess.ParsedAggEle;
-import com.antgroup.openspg.reasoner.udf.model.BaseUdaf;
-import com.antgroup.openspg.reasoner.udf.model.UdafMeta;
+import com.antgroup.openspg.reasoner.udf.model.LazyUdaf;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.collect.Lists;
@@ -150,11 +149,10 @@ public class KgGraphAggregateImpl implements Serializable {
       PropertyVar var = (PropertyVar) aggInfo.getVar();
 
       // 进行聚合计算
-      UdafMeta udafMeta = aggInfo.getUdafMeta();
-      Object[] udafInitParams = aggInfo.getUdfInitParams();
+      LazyUdaf udafMeta = aggInfo.getLazyUdaf();
       List<String> ruleList = aggInfo.getRuleList();
       List<KgGraph<IVertexId>> valueFilteredList = getValueFilteredList(values, ruleList);
-      Object aggValue = doAggregation(valueFilteredList, udafMeta, udafInitParams, aggInfo);
+      Object aggValue = doAggregation(valueFilteredList, udafMeta, aggInfo);
       String targetPropertyName = var.field().name();
       propertyMap.put(targetPropertyName, aggValue);
     }
@@ -229,11 +227,10 @@ public class KgGraphAggregateImpl implements Serializable {
         Var var = aggInfo.getVar();
 
         // 进行聚合计算
-        UdafMeta udafMeta = aggInfo.getUdafMeta();
-        Object[] udafInitParams = aggInfo.getUdfInitParams();
+        LazyUdaf udaf = aggInfo.getLazyUdaf();
         List<String> ruleList = aggInfo.getRuleList();
         List<KgGraph<IVertexId>> valueFilteredList = getValueFilteredList(values, ruleList);
-        Object aggValue = doAggregation(valueFilteredList, udafMeta, udafInitParams, aggInfo);
+        Object aggValue = doAggregation(valueFilteredList, udaf, aggInfo);
 
         // 聚合结果赋值
         if (var instanceof NodeVar) {
@@ -333,21 +330,9 @@ public class KgGraphAggregateImpl implements Serializable {
     return newEdge;
   }
 
-  private void updateUdafDataFromProperty(BaseUdaf udaf, IProperty property, String propertyName) {
-    if (property.isKeyExist(propertyName)) {
-      udaf.update(property.get(propertyName));
-    }
-  }
-
   private Object doAggregation(
-      List<KgGraph<IVertexId>> valueFilteredList,
-      UdafMeta udafMeta,
-      Object[] udafInitParams,
-      BaseGroupProcess aggInfo) {
-    BaseUdaf udaf = udafMeta.createAggregateFunction();
-    if (null != udafInitParams) {
-      udaf.initialize(udafInitParams);
-    }
+      List<KgGraph<IVertexId>> valueFilteredList, LazyUdaf udaf, BaseGroupProcess aggInfo) {
+    udaf.reset();
     ParsedAggEle parsedAggEle;
     Set<String> aliasList = aggInfo.getExprUseAliasSet();
     if (aliasList.size() <= 1) {
@@ -383,7 +368,9 @@ public class KgGraphAggregateImpl implements Serializable {
             vertexList.forEach(udaf::update);
           } else {
             vertexList.forEach(
-                v -> updateUdafDataFromProperty(udaf, v.getValue(), finalSourcePropertyName));
+                v ->
+                    RunnerUtil.updateUdafDataFromProperty(
+                        udaf, v.getValue(), finalSourcePropertyName));
           }
         } else {
           List<IEdge<IVertexId, IProperty>> edgeList =
@@ -402,7 +389,9 @@ public class KgGraphAggregateImpl implements Serializable {
             edgeList.forEach(udaf::update);
           } else {
             edgeList.forEach(
-                e -> updateUdafDataFromProperty(udaf, e.getValue(), finalSourcePropertyName));
+                e ->
+                    RunnerUtil.updateUdafDataFromProperty(
+                        udaf, e.getValue(), finalSourcePropertyName));
           }
         }
       }
