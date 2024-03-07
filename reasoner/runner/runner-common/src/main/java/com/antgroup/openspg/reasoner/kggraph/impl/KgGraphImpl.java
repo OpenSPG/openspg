@@ -14,6 +14,8 @@
 package com.antgroup.openspg.reasoner.kggraph.impl;
 
 import com.alibaba.fastjson.JSON;
+
+import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.exception.InvalidGraphException;
 import com.antgroup.openspg.reasoner.common.exception.KGValueException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
@@ -173,8 +175,32 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
       Long limit) {
     Set<String> vertexAliases = Sets.newHashSet(inputVertexAliases);
 
-    // remove alias that vertex set size is 1
-    vertexAliases.removeIf(vertexAlias -> 1 == this.alias2VertexMap.get(vertexAlias).size());
+    // remove alias that vertex set size is 1 and its related edge size is 1
+    Map<String, Set<String>> vertexAliasToEdgeAliasMap = new HashMap<>();
+    for (String key : JavaConversions.setAsJavaSet(schema.topology().keySet())) {
+      scala.collection.Iterator<Connection> it = schema.topology().get(key).get().iterator();
+      while (it.hasNext()) {
+        Connection connection = it.next();
+        Set<String> sourceVertexRelatedEdgeAliasSet = vertexAliasToEdgeAliasMap.computeIfAbsent(connection.source(),
+                k -> new HashSet<>());
+        sourceVertexRelatedEdgeAliasSet.add(connection.alias());
+        Set<String> targetVertexRelatedEdgeAliasSet = vertexAliasToEdgeAliasMap.computeIfAbsent(connection.target(),
+                k -> new HashSet<>());
+        targetVertexRelatedEdgeAliasSet.add(connection.alias());
+      }
+    }
+    vertexAliases.removeIf(vertexAlias -> {
+      Boolean isSingleVertex = 1 == this.alias2VertexMap.get(vertexAlias).size();
+      Set<String> relatedEdgeAliasSet = vertexAliasToEdgeAliasMap.get(vertexAlias);
+      Boolean isRelatedEdgeSingle = true;
+      for (String edgeAlias : relatedEdgeAliasSet) {
+        isRelatedEdgeSingle = 1 == this.alias2EdgeMap.get(edgeAlias).size();
+        if (!isRelatedEdgeSingle) {
+          break;
+        }
+      }
+      return isSingleVertex && isRelatedEdgeSingle;
+    });
     if (vertexAliases.isEmpty()) {
       // not need split
       if (null != filter && !filter.test(this)) {
@@ -201,8 +227,7 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
       return resultList;
     }
 
-    Map<Bytes, KgGraph<IVertexId>> resultMap = new HashMap<>();
-    List<String> vertexAliasList = Lists.newArrayList(vertexAliases);
+    List<KgGraph<IVertexId>> result = new ArrayList<>();
     EdgeCombinationIterator it =
         new EdgeCombinationIterator(
             staticParameters.getEdgeIterateInfoList(),
@@ -218,15 +243,13 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
       if (null != filter && !filter.test(path)) {
         continue;
       }
-      Bytes key = getKgGraphKeyBySplitVertex(vertexAliasList, path);
-      KgGraph<IVertexId> kgGraph = resultMap.computeIfAbsent(key, k -> new KgGraphImpl());
-      kgGraph.merge(Lists.newArrayList(path), schema);
-      if (null != limit && resultMap.size() >= limit) {
+      result.add(path);
+      if (null != limit && result.size() >= limit) {
         // reach max path limit
         break;
       }
     }
-    return Lists.newArrayList(resultMap.values());
+    return result;
   }
 
   /**
@@ -419,8 +442,7 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
             alias2VertexMap,
             alias2EdgeMap);
     it.setScope(limit);
-    List<String> sortedVertexAliasList = Lists.newArrayList(vertexAliases);
-    Map<KgGraphKey, KgGraph<IVertexId>> result = new HashMap<>();
+    List<KgGraph<IVertexId>> result = new ArrayList<>();
     long count = 0;
     while (it.hasNext()) {
       KgGraph<IVertexId> kgg = it.next();
@@ -436,29 +458,12 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
       if (kgGraph.checkDuplicateVertex()) {
         continue;
       }
-
-      KgGraphKey kgGraphKey = getKgGraphKey(kgGraph, sortedVertexAliasList);
-      KgGraph<IVertexId> oldKgGraph = result.get(kgGraphKey);
-      if (null == oldKgGraph) {
-        result.put(kgGraphKey, kgGraph);
-      } else {
-        oldKgGraph.merge(Lists.newArrayList(kgGraph), schema);
-      }
+      result.add(kgGraph);
       if (null != limit && count >= limit) {
         break;
       }
     }
-    return Lists.newArrayList(result.values());
-  }
-
-  private KgGraphKey getKgGraphKey(KgGraph<IVertexId> kgGraph, List<String> vertexAliases) {
-    IVertexId[] vertexIds = new IVertexId[vertexAliases.size()];
-    for (int i = 0; i < vertexAliases.size(); ++i) {
-      String alias = vertexAliases.get(i);
-      IVertexId vertexId = kgGraph.getVertex(alias).get(0).getId();
-      vertexIds[i] = vertexId;
-    }
-    return new KgGraphKey(vertexIds);
+    return result;
   }
 
   /**
