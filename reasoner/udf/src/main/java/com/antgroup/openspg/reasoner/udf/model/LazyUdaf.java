@@ -34,7 +34,7 @@ public class LazyUdaf {
     this.udfInitParams = udfInitParams;
     List<UdafMeta> udafMetas = UdfMngFactory.getUdfMng().getUdafMetas(this.name);
     if (CollectionUtils.isEmpty(udafMetas)) {
-      throw new RuntimeException("can not found udaf by name " + this.name);
+      throw new RuntimeException("unsupported aggregator function, type=" + this.name);
     } else if (1 == udafMetas.size()) {
       this.udafMeta = udafMetas.get(0);
     }
