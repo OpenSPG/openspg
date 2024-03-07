@@ -127,4 +127,13 @@ public class SPGTypeMappingNodeConfig extends BaseNodeConfig {
         .filter(MappingConfig::isSubRelationLinking)
         .collect(Collectors.toList());
   }
+
+  public String getSourceFromTarget(String target) {
+    for (MappingConfig config : mappingConfigs) {
+      if (config.getTarget().equals(target)) {
+        return config.getSource();
+      }
+    }
+    throw new RuntimeException("no source for target=" + target);
+  }
 }

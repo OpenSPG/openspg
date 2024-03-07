@@ -47,7 +47,6 @@ public class ConceptRecord extends BaseAdvancedRecord {
   private void addNameProperty() {
     Property property = conceptType.getPropertyMap().get(NAME);
     if (property != null) {
-      // 把原来的属性中的name删除，补上从id里面抽取出来的name
       properties.removeIf(record -> NAME.equals(record.getName()));
       SPGPropertyValue spgPropertyValue = new SPGPropertyValue(conceptName.getName());
       this.properties.add(new SPGPropertyRecord(property, spgPropertyValue));
