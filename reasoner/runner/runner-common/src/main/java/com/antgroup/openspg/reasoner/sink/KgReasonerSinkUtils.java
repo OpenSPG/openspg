@@ -13,36 +13,43 @@
 
 package com.antgroup.openspg.reasoner.sink;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.reasoner.io.model.AbstractTableInfo;
 import com.antgroup.openspg.reasoner.io.model.CanvasTableInfo;
 import com.antgroup.openspg.reasoner.io.model.HiveTableInfo;
 import com.antgroup.openspg.reasoner.io.model.OdpsTableInfo;
+import com.antgroup.openspg.reasoner.io.model.SLSTableInfo;
 import com.antgroup.openspg.reasoner.progress.DecryptUtils;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 public class KgReasonerSinkUtils {
 
-  /** get sink type from config params */
-  public static KgReasonerSinkType getKgReasonerSinkType(Map<String, Object> params) {
-    JSONObject outputTableConfig = getOutputTableConfig(params);
-    if (null == outputTableConfig) {
-      return KgReasonerSinkType.LOG;
+    /**
+     * get sink type from config params
+     */
+    public static KgReasonerSinkType getKgReasonerSinkType(Map<String, Object> params) {
+        JSONObject outputTableConfig = getOutputTableConfig(params);
+        if (null == outputTableConfig) {
+            return KgReasonerSinkType.LOG;
+        }
+        String outputType = outputTableConfig.getString("type");
+        return KgReasonerSinkType.valueOf(outputType);
     }
-    String outputType = outputTableConfig.getString("type");
-    return KgReasonerSinkType.valueOf(outputType);
-  }
 
-  /** get sink table info from config */
-  public static AbstractTableInfo getSinkTableInfo(Map<String, Object> params) {
-    KgReasonerSinkType sinkType = getKgReasonerSinkType(params);
-    if (KgReasonerSinkType.ODPS.equals(sinkType)) {
-      JSONObject outputTableConfig = getOutputTableConfig(params);
-      assert outputTableConfig != null;
-      // odps config
+    /**
+     * get sink table info from config
+     */
+    public static AbstractTableInfo getSinkTableInfo(Map<String, Object> params) {
+        KgReasonerSinkType sinkType = getKgReasonerSinkType(params);
+        if (KgReasonerSinkType.ODPS.equals(sinkType)) {
+            JSONObject outputTableConfig = getOutputTableConfig(params);
+            assert outputTableConfig != null;
+            // odps config
       JSONObject odpsConfig =
           outputTableConfig.getJSONArray(KgReasonerSinkType.ODPS.name()).getJSONObject(0);
       OdpsTableInfo odpsTableInfo = new OdpsTableInfo();
@@ -63,13 +70,26 @@ public class KgReasonerSinkUtils {
     } else if (KgReasonerSinkType.HIVE.equals(sinkType)) {
       String tableInfoStr = String.valueOf(params.get(ConfigKey.KG_REASONER_SINK_TABLE_INFO));
       return JSON.parseObject(tableInfoStr, HiveTableInfo.class);
-    } else if (KgReasonerSinkType.CANVAS.equals(sinkType)) {
-      JSONObject outputTableConfig = getOutputTableConfig(params);
-      assert outputTableConfig != null;
-      CanvasTableInfo canvasTableInfo = new CanvasTableInfo();
-      canvasTableInfo.setQueryId(outputTableConfig.getString("queryId"));
-      canvasTableInfo.setApiPath(outputTableConfig.getString("canvasUrl"));
-      return canvasTableInfo;
+        } else if (KgReasonerSinkType.CANVAS.equals(sinkType)) {
+            JSONObject outputTableConfig = getOutputTableConfig(params);
+            assert outputTableConfig != null;
+            CanvasTableInfo canvasTableInfo = new CanvasTableInfo();
+            canvasTableInfo.setQueryId(outputTableConfig.getString("queryId"));
+            canvasTableInfo.setApiPath(outputTableConfig.getString("canvasUrl"));
+            return canvasTableInfo;
+        } else if (KgReasonerSinkType.realTime.equals(sinkType)) {
+            JSONObject outputTableConfig = getOutputTableConfig(params);
+            assert outputTableConfig != null;
+            String slsConfigStr = outputTableConfig.getString("SLS");
+            assert slsConfigStr != null;
+            JSONObject slsConfigs = JSON.parseObject(slsConfigStr);
+            SLSTableInfo slsTableInfo = new SLSTableInfo();
+            slsTableInfo.setProject(slsConfigs.getString("project"));
+            slsTableInfo.setEndpoint(slsConfigs.getString("endpoint"));
+            slsTableInfo.setLogStore(slsConfigs.getString("logStore"));
+            slsTableInfo.setAccessId(slsConfigs.getString("accessId"));
+            slsTableInfo.setAccessKey(DecryptUtils.decryptAccessInfo(slsConfigs.getString("accessKey")));
+            return slsTableInfo;
     }
     return null;
   }
