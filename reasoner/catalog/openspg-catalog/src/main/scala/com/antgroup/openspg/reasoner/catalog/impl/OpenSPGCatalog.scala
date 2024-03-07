@@ -16,6 +16,7 @@ package com.antgroup.openspg.reasoner.catalog.impl
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+
 import com.antgroup.openspg.core.schema.model.`type`.{BaseAdvancedType, BaseSPGType, BasicType, ProjectSchema}
 import com.antgroup.openspg.core.schema.model.predicate.{Property, Relation}
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic
