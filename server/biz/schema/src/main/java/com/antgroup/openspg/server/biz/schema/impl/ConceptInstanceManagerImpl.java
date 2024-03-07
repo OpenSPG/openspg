@@ -2,6 +2,7 @@ package com.antgroup.openspg.server.biz.schema.impl;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGDataQueryService;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.BatchVertexLPGRecordQuery;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.ObjectVertexRecordQuery;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.Direction;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.GraphLPGRecordStruct;
@@ -16,6 +17,8 @@ import com.antgroup.openspg.server.biz.schema.ConceptInstanceManager;
 import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
 import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
 import com.google.common.collect.Sets;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +59,17 @@ public class ConceptInstanceManagerImpl implements ConceptInstanceManager {
     return toResponse(request, graph);
   }
 
+  @Override
+  public List<ConceptInstanceResponse> query(String conceptType, Set<String> conceptInstanceIds) {
+    LPGDataQueryService graphStoreClient = getGraphStoreClient();
+
+    GraphLPGRecordStruct graph =
+        (GraphLPGRecordStruct)
+            graphStoreClient.queryRecord(
+                new BatchVertexLPGRecordQuery(conceptInstanceIds, conceptType));
+    return toResponse(graph);
+  }
+
   private LPGDataQueryService getGraphStoreClient() {
     return (LPGDataQueryService)
         GraphStoreClientDriverManager.getClient(appEnvConfig.getGraphStoreUrl());
@@ -66,16 +80,19 @@ public class ConceptInstanceManagerImpl implements ConceptInstanceManager {
     ConceptLevelInstanceResponse response = new ConceptLevelInstanceResponse();
     response.setConceptType(request.getConceptType());
     response.setRootConceptInstance(request.getRootConceptInstance());
-    response.setChildren(
-        graph.getVertices().stream()
-            .map(
-                vertex -> {
-                  ConceptInstanceResponse instance = new ConceptInstanceResponse();
-                  instance.setId(vertex.getId());
-                  instance.setProperties(vertex.toPropertyMap());
-                  return instance;
-                })
-            .collect(Collectors.toList()));
+    response.setChildren(toResponse(graph));
     return response;
+  }
+
+  private List<ConceptInstanceResponse> toResponse(GraphLPGRecordStruct graph) {
+    return graph.getVertices().stream()
+        .map(
+            vertex -> {
+              ConceptInstanceResponse instance = new ConceptInstanceResponse();
+              instance.setId(vertex.getId());
+              instance.setProperties(vertex.toPropertyMap());
+              return instance;
+            })
+        .collect(Collectors.toList());
   }
 }
