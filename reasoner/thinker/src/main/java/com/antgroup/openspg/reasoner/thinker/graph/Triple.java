@@ -16,16 +16,15 @@ import lombok.Data;
 
 @Data
 public class Triple implements Element {
-    private Element subject;
-    private Element predicate;
-    private Element object;
+  private Element subject;
+  private Element predicate;
+  private Element object;
 
-    public Triple() {
-    }
+  public Triple() {}
 
-    public Triple(Element subject, Element predicate, Element object) {
-        this.subject = subject;
-        this.predicate = predicate;
-        this.object = object;
-    }
+  public Triple(Element subject, Element predicate, Element object) {
+    this.subject = subject;
+    this.predicate = predicate;
+    this.object = object;
+  }
 }

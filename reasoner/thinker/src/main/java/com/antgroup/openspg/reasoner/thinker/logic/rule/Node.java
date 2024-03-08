@@ -15,10 +15,9 @@ package com.antgroup.openspg.reasoner.thinker.logic.rule;
 
 import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleNodeVisitor;
 import com.antgroup.openspg.reasoner.warehouse.common.VertexSubGraph;
-
 import java.io.Serializable;
 import java.util.Map;
 
 public interface Node extends Serializable {
-    <R> R accept(VertexSubGraph vertexGraph, Map<String, Object> context,  RuleNodeVisitor<R> visitor);
+  <R> R accept(VertexSubGraph vertexGraph, Map<String, Object> context, RuleNodeVisitor<R> visitor);
 }

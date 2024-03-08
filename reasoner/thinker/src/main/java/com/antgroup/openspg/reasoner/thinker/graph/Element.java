@@ -15,5 +15,4 @@ package com.antgroup.openspg.reasoner.thinker.graph;
 
 import java.io.Serializable;
 
-public interface Element extends Serializable {
-}
+public interface Element extends Serializable {}

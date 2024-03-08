@@ -12,5 +12,4 @@
  */
 package com.antgroup.openspg.reasoner.thinker.graph;
 
-public class NodeAny implements Element {
-}
+public class NodeAny implements Element {}

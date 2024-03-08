@@ -16,12 +16,11 @@ import lombok.Data;
 
 @Data
 public class Node implements Element {
-    private String type;
+  private String type;
 
-    private Node() {
-    }
+  private Node() {}
 
-    private Node(String type) {
-        this.type = type;
-    }
+  private Node(String type) {
+    this.type = type;
+  }
 }

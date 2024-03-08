@@ -15,17 +15,17 @@ package com.antgroup.openspg.reasoner.thinker.logic.rule.exact;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleNodeVisitor;
 import com.antgroup.openspg.reasoner.warehouse.common.VertexSubGraph;
-import lombok.Data;
-
 import java.util.List;
 import java.util.Map;
+import lombok.Data;
 
 @Data
 public class Or implements Node {
-    private List<Node> children;
+  private List<Node> children;
 
-    @Override
-    public <R> R accept(VertexSubGraph vertexGraph, Map<String, Object> context, RuleNodeVisitor<R> visitor) {
-        return visitor.visitOr(this, vertexGraph, context);
-    }
+  @Override
+  public <R> R accept(
+      VertexSubGraph vertexGraph, Map<String, Object> context, RuleNodeVisitor<R> visitor) {
+    return visitor.visitOr(this, vertexGraph, context);
+  }
 }
