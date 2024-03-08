@@ -90,6 +90,6 @@ public class LazyUdaf {
   }
 
   public Object evaluate() {
-    return this.baseUdaf.evaluate();
+    return this.getBaseUdaf().evaluate();
   }
 }
