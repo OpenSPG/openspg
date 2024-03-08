@@ -200,8 +200,6 @@ class HFLLMExecutor(LLMExecutor):
 
         self.model_mode = mode
         self._tokenizer = self._hf_tokenizer_loader(hf_model_args)
-
-        # TODO thinking about resume checkpoint in loading steps
         self._model = self._hf_model_loader(
             args=hf_model_args, mode=mode, device=hf_model_args.nn_device
         )

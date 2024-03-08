@@ -120,8 +120,8 @@ class HFInferArgs(NNInferenceArgs):
     delete_heading_new_lines: bool = field(
         default=False,
         metadata={
-            "help": "sometimes the output will have a additional question mark and new line marks in the beginning"
-            "try to get rid of these marks by setting this to True. Different model will have different "
+            "help": "an additional question mark or new line marks sometimes occurs at the beginning of output."
+            "Try to get rid of these marks by setting this parameter to True. Different model may have different "
             "behavior, please check the result carefully."
         },
     )
