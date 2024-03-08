@@ -1,0 +1,14 @@
+
+{
+  // -- base model info
+  "nn_model_path": "/gruntdata/event_graph/llm_models/Baichuan2-13B-Chat", // local model path
+  "nn_invoker": "nn4k.invoker.base.LLMInvoker", // invoker to use
+  "nn_executor": "nn4k.executor.huggingface.hf_decode_only_executor.HFDecodeOnlyExecutor", // executor to use
+  // the following are optional
+  "adapter_name": "baichuan2", // adapter_name must be given to enable adapter; with adapter_path along has no effect!
+  "adapter_path": "/gruntdata/event_graph/zhongjin.ghh/lora_results/ie-v2/checkpoint-7830",
+  "generate_config":{
+      "temperature": 1.0,
+      "do_sample": false,
+  }
+}
