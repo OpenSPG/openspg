@@ -13,9 +13,22 @@ from nn4k.invoker.base import NNInvoker
 
 
 def main():
-    NNInvoker.from_config("local_sft.json5").local_sft()
-    # Inference example, not implemented yet.
-    # NNInvoker.from_config("inferece_args.json").local_inference("你是谁")
+    # example for local sft
+    # NNInvoker.from_config("local_sft.json5").local_sft()
+
+    # example for local inference
+    invoker = NNInvoker.from_config("local_infer.json5")
+    answer = invoker.local_inference(
+        "What could LLM do for human?",
+        tokenize_config={"padding": True},
+        delete_heading_new_lines=True,
+    )
+    # doing so to avoid load model everytime. You could hold a invoker, which has alreday load the model at the first time.
+    answer2 = invoker.local_inference(
+        "What could LLM do for a programmer",
+        tokenize_config={"padding": True},
+        delete_heading_new_lines=True,
+    )
 
 
 if __name__ == "__main__":
