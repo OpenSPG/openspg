@@ -137,7 +137,12 @@ public class PropertyChecker {
               "objectTypeRef.typeName of property/relation: %s can not be null",
               property.getBasicInfo().getName()));
     }
-    if (!context.containSpgType(property.getObjectTypeRef().getBaseSpgIdentifier())) {
+    if (!context.containSpgType(property.getObjectTypeRef().getBaseSpgIdentifier())
+        && property
+            .getObjectTypeRef()
+            .getBaseSpgIdentifier()
+            .getNamespace()
+            .equals(property.getSubjectTypeRef().getBaseSpgIdentifier().getNamespace())) {
       throw new IllegalArgumentException(
           String.format(
               "property/relation: %s depends on type: %s, but not exist",

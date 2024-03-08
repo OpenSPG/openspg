@@ -28,7 +28,7 @@ import com.antgroup.openspg.reasoner.lube.catalog.{AbstractConnection, Catalog, 
 import com.antgroup.openspg.reasoner.lube.catalog.struct.{Edge, Field, Node}
 import com.antgroup.openspg.server.api.facade.ApiResponse
 import com.antgroup.openspg.server.api.facade.client.{ConceptFacade, SchemaFacade}
-import com.antgroup.openspg.server.api.facade.dto.schema.request.{ConceptRequest, ProjectSchemaRequest}
+import com.antgroup.openspg.server.api.facade.dto.schema.request.{ConceptRequest, ProjectSchemaRequest, SPGTypeRequest}
 import com.antgroup.openspg.server.api.http.client.{HttpConceptFacade, HttpSchemaFacade}
 import com.antgroup.openspg.server.api.http.client.util.{ConnectionInfo, HttpClientBootstrap}
 import org.apache.commons.collections4.CollectionUtils
@@ -115,8 +115,12 @@ class OpenSPGCatalog(val projectId: Long,
   private def toField(projectSchema: ProjectSchema,
                       spgType: BaseSPGType,
                       spgProperty: Property): Field = {
-    val propertyType = PropertySchemaOps
-      .stringToKgType2(projectSchema.getByRef(spgProperty.getObjectTypeRef))
+    var objectType = projectSchema.getByRef(spgProperty.getObjectTypeRef)
+    if (objectType == null) {
+      objectType = resultOf(spgSchemaFacade.querySPGType(
+        new SPGTypeRequest(spgProperty.getObjectTypeRef.getName)))
+    }
+    val propertyType = PropertySchemaOps.stringToKgType2(objectType)
     val rule = spgProperty.getLogicalRule
     val predicateName = spgProperty.getName
     if (rule != null && StringUtils.isNotBlank(rule.getContent)) {
