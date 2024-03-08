@@ -71,7 +71,7 @@ class NNExecutor(ABC):
             f"{self.__class__.__name__} does not support batch inference."
         )
 
-    def inference(self, data, args=None, **kwargs):
+    def inference(self, inputs, **kwargs):
         """
         The entry point of inference. Usually for local invokers or model services.
         """
@@ -248,3 +248,103 @@ class NNAdapterModelArgs(NNModelArgs):
 
     def __post_init__(self):
         super().__post_init__()
+
+
+@dataclass
+class NNInferenceArgs:
+    max_input_length: Optional[int] = field(
+        default=None,
+        metadata={
+            "help": "Controls the maximum length to use by one of the truncation/padding parameters. "
+            "In HuggingFace executors, known as max_length in tokenize callable function config."
+        },
+    )
+    max_output_length: Optional[int] = field(
+        default=None,
+        metadata={
+            "help": "The maximum numbers of tokens to generate. In HuggingFace executors, this arg will be tread as "
+            "max_new_tokens."
+        },
+    )
+    return_input_text: Optional[bool] = field(
+        default=False,
+        metadata={"help": "Whether return input texts together with output texts."},
+    )
+    stop_sequence: Optional[str] = field(
+        default=None,
+        metadata={
+            "help": "Generation will stop when stop sequence encountered in the output."
+        },
+    )
+    do_sample: bool = field(
+        default=False,
+        metadata={
+            "help": "If false, generation will be in greedy search mode, otherwise will sampling the probable tokens."
+        },
+    )
+    temperature: float = field(
+        default=1.0,
+        metadata={"help": "The creativity and diversity of the text generated."},
+    )
+    top_k: Optional[int] = field(
+        default=50,
+        metadata={
+            "help": "In nucleus sampling, model will only sampling the tokens with the highest top_p(percentage) "
+            "probability"
+        },
+    )
+    top_p: Optional[float] = field(
+        default=1.0,
+        metadata={
+            "help": "In nucleus sampling, model will only sampling the tokens with the highest top_k(count) probability"
+        },
+    )
+    repetition_penalty: Optional[float] = field(
+        default=1.0,
+        metadata={"help": "By default 1.0 means no penalty."},
+    )
+
+    generate_config: dict = field(
+        default_factory=lambda: {},
+        metadata={"help": "Config dict that will be use in model generation"},
+    )
+
+    tokenize_return_tensors: str = field(
+        default="pt",
+        metadata={
+            "help": "Tokenizer return type, will be merged into tokenize_config and pass into tokenize function"
+        },
+    )
+    tokenize_config: dict = field(
+        default_factory=lambda: {},
+        metadata={
+            "help": "Tokenize function config, will be pass into tokenize function"
+        },
+    )
+
+    decode_config: dict = field(
+        default_factory=lambda: {},
+        metadata={"help": "Configs to be pass into tokenizer.decode fucntion"},
+    )
+
+    def update_if_not_none(self, from_key, to_dict, to_key=None):
+        to_key = to_key or from_key
+        from_value = self.__getattribute__(from_key)
+        value_in_to_dict = self.__getattribute__(to_dict).get(to_key, None)
+        if value_in_to_dict is None and from_value is not None:
+            self.__getattribute__(to_dict)[to_key] = from_value
+
+    def __post_init__(self):
+        # merging generation args
+        self.update_if_not_none("max_output_length", "generate_config")
+        self.update_if_not_none("do_sample", "generate_config")
+        self.update_if_not_none("temperature", "generate_config")
+        self.update_if_not_none("top_k", "generate_config")
+        self.update_if_not_none("top_p", "generate_config")
+        self.update_if_not_none("repetition_penalty", "generate_config")
+
+        # merging tokenize args
+        self.update_if_not_none("max_input_length", "tokenize_config", "max_length")
+        self.update_if_not_none(
+            "tokenize_return_tensors", "tokenize_config", "return_tensors"
+        )

@@ -53,7 +53,7 @@ class HFEmbeddingExecutor(LLMExecutor):
             )
             self._model = model
 
-    def inference(self, data, args=None, **kwargs):
+    def inference(self, inputs, **kwargs):
         model = self.model
-        embeddings = model.encode(data)
+        embeddings = model.encode(inputs)
         return embeddings
