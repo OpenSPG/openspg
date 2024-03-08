@@ -41,7 +41,8 @@ public class EsMapping extends BaseValObj {
 
     Map<String, PropertyConfig> properties = new HashMap<>();
     for (IdxField idxField : idxMapping.getIdxFields()) {
-      properties.put(idxField.getName(), new PropertyConfig("text"));
+      properties.put(
+          idxField.getName(), new PropertyConfig(idxField.getBasicType().name().toLowerCase()));
     }
     return new EsMapping(properties);
   }

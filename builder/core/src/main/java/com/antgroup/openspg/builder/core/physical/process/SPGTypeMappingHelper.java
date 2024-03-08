@@ -23,15 +23,13 @@ import com.antgroup.openspg.builder.core.strategy.predicting.RecordPredicting;
 import com.antgroup.openspg.builder.core.strategy.predicting.RecordPredictingImpl;
 import com.antgroup.openspg.builder.model.exception.BuilderRecordException;
 import com.antgroup.openspg.builder.model.pipeline.config.SPGTypeMappingNodeConfig;
-import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
-import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
-import com.antgroup.openspg.builder.model.record.BuilderRecord;
-import com.antgroup.openspg.builder.model.record.RelationRecord;
+import com.antgroup.openspg.builder.model.record.*;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.EdgeRecordConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.adapter.util.VertexRecordConvertor;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.BaseOntology;
 import com.antgroup.openspg.core.schema.model.identifier.BaseSPGIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGIdentifierTypeEnum;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
@@ -113,11 +111,19 @@ public class SPGTypeMappingHelper {
     return true;
   }
 
-  public List<BaseSPGRecord> toSPGRecords(BuilderRecord record) {
+  public List<BaseSPGRecord> toSPGRecords(BuilderRecord record, boolean first) {
     Map<String, String> propertyValues = propertyMapping(record);
-    Map<String, String> relationValues = relationMapping(record);
 
     List<BaseSPGRecord> results = new ArrayList<>();
+    if (first && spgType.isConceptType()) {
+      List<BuilderRecord> fatherConcepts = hypernymPredicate(record, propertyValues);
+      for (BuilderRecord fatherConcept : fatherConcepts) {
+        results.addAll(toSPGRecords(fatherConcept, false));
+      }
+    }
+
+    Map<String, String> relationValues = relationMapping(record);
+
     List<BaseAdvancedRecord> advancedRecords = toAdvancedRecord(propertyValues, relationValues);
     for (BaseAdvancedRecord advancedRecord : advancedRecords) {
       if (CollectionUtils.isNotEmpty(advancedRecord.getRelationRecords())) {
@@ -153,6 +159,25 @@ public class SPGTypeMappingHelper {
       }
     }
     return propertyValues;
+  }
+
+  private List<BuilderRecord> hypernymPredicate(
+      BuilderRecord record, Map<String, String> propertyValues) {
+    String bizId = propertyValues.get("id");
+    if (StringUtils.isBlank(bizId)) {
+      throw new BuilderRecordException("id is not in propertyValues");
+    }
+
+    List<BuilderRecord> fatherBuilderRecord = new ArrayList<>();
+    String fatherId = new ConceptIdentifier(bizId).getFatherId();
+    while (StringUtils.isNotBlank(fatherId)) {
+      Map<String, String> fatherProps = new HashMap<>(1);
+      fatherProps.put(config.getSourceFromTarget("id"), fatherId);
+      fatherBuilderRecord.add(record.withNewProps(fatherProps));
+
+      fatherId = new ConceptIdentifier(fatherId).getFatherId();
+    }
+    return fatherBuilderRecord;
   }
 
   public Map<String, String> relationMapping(BuilderRecord record) {
@@ -194,7 +219,7 @@ public class SPGTypeMappingHelper {
       Map<String, String> propertyValues, Map<String, String> relationValues) {
     String bizId = propertyValues.get("id");
     if (StringUtils.isBlank(bizId)) {
-      throw new BuilderRecordException("");
+      throw new BuilderRecordException("id is not in propertyValues");
     }
 
     BaseAdvancedRecord advancedRecord =

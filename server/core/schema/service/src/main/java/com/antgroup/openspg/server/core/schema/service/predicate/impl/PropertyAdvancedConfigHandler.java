@@ -14,18 +14,26 @@
 package com.antgroup.openspg.server.core.schema.service.predicate.impl;
 
 import com.antgroup.openspg.core.schema.model.alter.AlterOperationEnum;
+import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.predicate.PropertyAdvancedConfig;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
 import com.antgroup.openspg.core.schema.model.semantic.PredicateSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.type.RefSourceEnum;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.server.core.schema.service.predicate.SubPropertyService;
 import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleProperty;
 import com.antgroup.openspg.server.core.schema.service.predicate.repository.ConstraintRepository;
 import com.antgroup.openspg.server.core.schema.service.predicate.repository.PropertyRepository;
 import com.antgroup.openspg.server.core.schema.service.semantic.LogicalRuleService;
 import com.antgroup.openspg.server.core.schema.service.semantic.SemanticService;
+import com.antgroup.openspg.server.core.schema.service.type.model.ProjectOntologyRel;
+import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
+import com.antgroup.openspg.server.core.schema.service.type.repository.ProjectOntologyRelRepository;
+import com.antgroup.openspg.server.core.schema.service.type.repository.SPGTypeRepository;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,9 +49,12 @@ public class PropertyAdvancedConfigHandler {
   @Autowired private SubPropertyService subPropertyService;
   @Autowired private SemanticService semanticService;
   @Autowired private LogicalRuleService logicalRuleService;
+  @Autowired private ProjectOntologyRelRepository projectOntologyRelRepository;
+  @Autowired private SPGTypeRepository spgTypeRepository;
 
   public void alterAdvancedConfig(Property property, AlterOperationEnum alterOperation) {
     PropertyAdvancedConfig advancedConfig = property.getAdvancedConfig();
+    alterOntologyReference(property, alterOperation);
     switch (alterOperation) {
       case CREATE:
         this.createAdvancedConfig(advancedConfig);
@@ -166,5 +177,46 @@ public class PropertyAdvancedConfigHandler {
                         || AlterOperationEnum.CREATE.equals(e.getAlterOperation()))
             .collect(Collectors.toList());
     saveOrUpdateSemantics.forEach(e -> semanticService.saveOrUpdate(e));
+  }
+
+  private void alterOntologyReference(Property property, AlterOperationEnum alterOperation) {
+    SPGTypeRef refType = property.getObjectTypeRef();
+    if (refType.getSpgTypeEnum() == SPGTypeEnum.BASIC_TYPE
+        || refType.getSpgTypeEnum() == SPGTypeEnum.STANDARD_TYPE
+        || property
+            .getSubjectTypeRef()
+            .getBaseSpgIdentifier()
+            .getNamespace()
+            .equals(refType.getBaseSpgIdentifier().getNamespace())) {
+      return;
+    }
+    if (refType.getUniqueId() == null) {
+      SimpleSPGType crossType = spgTypeRepository.queryByName(refType.getName());
+      refType.setOntologyId(crossType.getOntologyId());
+    }
+    ProjectOntologyRel reference =
+        projectOntologyRelRepository.queryByOntologyId(
+            refType.getUniqueId(), SPGOntologyEnum.TYPE, property.getProjectId());
+    switch (alterOperation) {
+      case CREATE:
+      case UPDATE:
+        if (reference == null) {
+          ProjectOntologyRel projectOntology =
+              new ProjectOntologyRel(
+                  null,
+                  property.getProjectId(),
+                  refType.getUniqueId(),
+                  SPGOntologyEnum.TYPE,
+                  1,
+                  AlterStatusEnum.ONLINE,
+                  RefSourceEnum.PROJECT);
+          projectOntologyRelRepository.save(projectOntology);
+        }
+        break;
+      case DELETE:
+        projectOntologyRelRepository.delete(refType.getUniqueId(), property.getProjectId());
+        break;
+      default:
+    }
   }
 }
