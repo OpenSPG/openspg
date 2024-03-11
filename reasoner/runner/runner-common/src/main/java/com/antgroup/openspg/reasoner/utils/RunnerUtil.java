@@ -59,6 +59,7 @@ import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.session.KGReasonerSession;
 import com.antgroup.openspg.reasoner.udf.UdfMng;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
+import com.antgroup.openspg.reasoner.udf.model.LazyUdaf;
 import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
@@ -1238,5 +1239,12 @@ public class RunnerUtil {
       PartialGraphPattern leftSchema, PartialGraphPattern rightSchema) {
     return JavaConversions.mapAsJavaMap(
         KgGraphSchema.getEdgeDirectionDiff(leftSchema, rightSchema));
+  }
+
+  public static void updateUdafDataFromProperty(
+      LazyUdaf udaf, IProperty property, String propertyName) {
+    if (property.isKeyExist(propertyName)) {
+      udaf.update(property.get(propertyName));
+    }
   }
 }
