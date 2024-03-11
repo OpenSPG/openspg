@@ -37,7 +37,7 @@ class StubExecutor(NNExecutor):
     def warmup_inference(self, args=None, **kwargs):
         self.warmup_inference_called = True
 
-    def inference(self, data, args=None, **kwargs):
+    def inference(self, inputs, args=None, **kwargs):
         return self.inference_result
 
     @classmethod

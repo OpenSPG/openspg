@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class AggIfOpProcessBaseGroupProcess extends BaseGroupProcess implements Serializable {
+  private final ParsedAggEle parsedAggEle;
 
   /**
    * constructor
@@ -33,6 +34,7 @@ public class AggIfOpProcessBaseGroupProcess extends BaseGroupProcess implements 
    */
   public AggIfOpProcessBaseGroupProcess(String taskId, Var var, Aggregator aggregator) {
     super(taskId, var, aggregator);
+    parsedAggEle = parsedAggEle();
   }
 
   /**
@@ -57,5 +59,10 @@ public class AggIfOpProcessBaseGroupProcess extends BaseGroupProcess implements 
   @Override
   public Expr getAggEle() {
     return getAggIfOpExpr().aggOpExpr().aggEleExpr();
+  }
+
+  @Override
+  public ParsedAggEle getParsedAggEle() {
+    return parsedAggEle;
   }
 }

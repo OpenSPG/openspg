@@ -50,7 +50,7 @@ class TransformerTest extends AnyFunSpec {
             false)))),
       ProjectFields(
         Map.apply(IRVariable("total_domain_num") ->
-          ProjectRule(IRVariable("total_domain_num"), KTInteger, Ref("o")))))
+          ProjectRule(IRVariable("total_domain_num"), Ref("o")))))
     val p = BlockUtils.transBlock2Graph(block)
     p.size should equal(1)
     p.head.graphPattern.nodes.size should equal(2)
@@ -120,7 +120,6 @@ class TransformerTest extends AnyFunSpec {
   it("rename_rule") {
     val rule = ProjectRule(
       IRVariable("a"),
-      KTObject,
       BinaryOpExpr(
         BEqual,
         UnaryOpExpr(GetField("birthDate"), Ref("e")),
@@ -153,12 +152,10 @@ class TransformerTest extends AnyFunSpec {
   it("variable_rule") {
     val rule = ProjectRule(
       IRVariable("a"),
-      KTObject,
       BinaryOpExpr(BEqual, UnaryOpExpr(GetField("birthDate"), Ref("e")), Ref("b")))
 
     val rule2 = ProjectRule(
       IRVariable("b"),
-      KTObject,
       BinaryOpExpr(
         BEqual,
         UnaryOpExpr(GetField("attr1"), Ref("e")),
@@ -174,7 +171,6 @@ class TransformerTest extends AnyFunSpec {
   def getDependenceRule(): Rule = {
     val r0 = ProjectRule(
       IRVariable("r0"),
-      KTLong,
       BinaryOpExpr(BAssign, Ref("r0"), VLong("123"))
     )
     val r1 = LogicRule(
@@ -230,7 +226,6 @@ class TransformerTest extends AnyFunSpec {
     val r0 = LogicRule("tmp", "",
       BinaryOpExpr(BGreaterThan, UnaryOpExpr(GetField("amount"), Ref("E1")), VLong("10")))
     val r = ProjectRule(IRVariable("g"),
-      KTLong,
       OpChainExpr(
         GraphAggregatorExpr(
           "unresolved_default_path",

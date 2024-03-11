@@ -34,6 +34,10 @@
       <artifactId>reasoner-common</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-udf</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
     </dependency>

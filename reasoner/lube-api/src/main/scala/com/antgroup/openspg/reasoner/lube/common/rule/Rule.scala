@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.reasoner.lube.common.rule
 
-import com.antgroup.openspg.reasoner.common.types.KgType
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.common.graph.IRField
 
@@ -38,13 +37,6 @@ trait Rule extends Cloneable{
    * @return
    */
   def getExpr: Expr
-
-
-  /**
-   * get lvalue type
-   * @return
-   */
-  def getLvalueType: KgType
 
   /**
    * get dependencies

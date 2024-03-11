@@ -71,13 +71,6 @@ final case class LogicRule(ruleName: String, ruleExplain: String, expr: Expr)
    */
   override def getExpr: Expr = expr
 
-  /**
-   * get lvalue type
-   *
-   * @return
-   */
-  override def getLvalueType: KgType = KTBoolean
-
   override def andRule(rule: Rule): Rule = {
     val andExpr = BinaryOpExpr(BAnd, getExpr, rule.getExpr)
 
@@ -129,7 +122,7 @@ final case class LogicRule(ruleName: String, ruleExplain: String, expr: Expr)
  * @param lvalueType
  * @param expr
  */
-final case class ProjectRule(output: IRField, lvalueType: KgType, expr: Expr)
+final case class ProjectRule(output: IRField, expr: Expr)
     extends DependencyRule {
 
   /**
@@ -158,12 +151,6 @@ final case class ProjectRule(output: IRField, lvalueType: KgType, expr: Expr)
    */
   override def getExpr: Expr = expr
 
-  /**
-   * get lvalue type
-   *
-   * @return
-   */
-  override def getLvalueType: KgType = lvalueType
 
   override def andRule(rule: Rule): Rule = {
     throw UnsupportedOperationException("ProjectRule cannot support andRule")

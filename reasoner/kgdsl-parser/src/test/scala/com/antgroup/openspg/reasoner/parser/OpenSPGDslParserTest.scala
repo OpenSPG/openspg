@@ -15,7 +15,6 @@ package com.antgroup.openspg.reasoner.parser
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.exception.{KGDSLGrammarException, KGDSLInvalidTokenException, KGDSLOneTaskException}
-import com.antgroup.openspg.reasoner.common.types.{KTInteger, KTString}
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.graph._
@@ -296,8 +295,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
     print(block.pretty)
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
     val proj = block.dependencies.head.asInstanceOf[ProjectBlock]
-    proj.projects.items.head._2 should equal(
-      ProjectRule(IRProperty("s", "totalText"), KTString, Ref("o")))
+    proj.projects.items.head._2 should equal(ProjectRule(IRProperty("s", "totalText"), Ref("o")))
   }
 
   it("addproperies with constraint") {
@@ -314,8 +312,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
     print(block.pretty)
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
     val proj = block.dependencies.head.asInstanceOf[ProjectBlock]
-    proj.projects.items.head._2 should equal(
-      ProjectRule(IRProperty("s", "totalText"), KTString, Ref("o")))
+    proj.projects.items.head._2 should equal(ProjectRule(IRProperty("s", "totalText"), Ref("o")))
   }
 
   it("addproperies2") {
@@ -334,7 +331,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
     val proj = block.dependencies.head.asInstanceOf[ProjectBlock]
     proj.projects.items.head._2 should equal(
-      ProjectRule(IRProperty("s", "total_domain_num"), KTInteger, Ref("o")))
+      ProjectRule(IRProperty("s", "total_domain_num"), Ref("o")))
   }
   it("addproperies") {
     val dsl = """Define (s:DomainFamily)-[p:total_domain_num]->(o:Int) {
@@ -352,7 +349,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
     val proj = block.dependencies.head.asInstanceOf[ProjectBlock]
     proj.projects.items.head._2 should equal(
-      ProjectRule(IRProperty("s", "total_domain_num"), KTInteger, Ref("o")))
+      ProjectRule(IRProperty("s", "total_domain_num"), Ref("o")))
   }
   it("addNode") {
     val dsl = """Define (s:DomainFamily)-[p:total_domain_num]->(o:Int) {
@@ -661,7 +658,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
       .asInstanceOf[AddPredicate]
       .predicate
       .fields
-      .keySet should contain ("same_domain_num")
+      .keySet should contain("same_domain_num")
 
     blocks(1).asInstanceOf[DDLBlock].ddlOp.head.isInstanceOf[AddProperty] should equal(true)
     blocks(1)
@@ -1048,7 +1045,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
     val block = parser.parse(dsl)
     print(block.pretty)
     val text = """└─DDLBlock(ddlOp=Set(AddProperty((s:CustFundKG.Account),aggTransAmountNumByDay,KTBoolean)))
-                 |    └─ProjectBlock(projects=ProjectFields(Map(IRProperty(s,aggTransAmountNumByDay) -> ProjectRule(IRProperty(s,aggTransAmountNumByDay),KTBoolean,Ref(refName=o)))))
+                 |    └─ProjectBlock(projects=ProjectFields(Map(IRProperty(s,aggTransAmountNumByDay) -> ProjectRule(IRProperty(s,aggTransAmountNumByDay),Ref(refName=o)))))
                  |        └─AggregationBlock(aggregations=Aggregations(Map(IRVariable(o) -> AggOpExpr(name=AggUdf(groupByAttrDoCount,List(VString(value=tranDate), VLong(value=50)))))), group=List(IRNode(s,Set())))
                  |            └─FilterBlock(rules=LogicRule(R1,当月交易,BinaryOpExpr(name=BNotSmallerThan)))
                  |                └─MatchBlock(patterns=Map(unresolved_default_path -> GraphPath(unresolved_default_path,GraphPattern(s,Map(u -> (u:CustFundKG.Account), s -> (s:CustFundKG.Account)),Map(u -> Set((u)<-[t:accountFundContact]-(s)))),Map(u -> Set(), s -> Set(), t -> Set(transDate))),false)))
@@ -1081,7 +1078,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
     val block = parser.parse(dsl)
     print(block.pretty)
     val text = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(s,id), IRVariable(o))), asList=List(s.id, b))
-                 *    └─ProjectBlock(projects=ProjectFields(Map(IRVariable(o) -> ProjectRule(IRVariable(o),KTObject,FunctionExpr(name=rule_value)))))
+                 *    └─ProjectBlock(projects=ProjectFields(Map(IRVariable(o) -> ProjectRule(IRVariable(o),FunctionExpr(name=rule_value)))))
                  *        └─FilterBlock(rules=LogicRule(R6,长得高,BinaryOpExpr(name=BOr)))
                  *            └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R5) -> LogicRule(R5,颜值高,BinaryOpExpr(name=BGreaterThan)))))
                  *                └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R4) -> LogicRule(R4,女性,BinaryOpExpr(name=BEqual)))))

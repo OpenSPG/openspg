@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.reasoner.common.types
 
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
+
 trait KgType {
   def isNullable: Boolean = false
 }
@@ -64,3 +66,16 @@ final case class KTAdvanced(label: String) extends KgType
  * @param elementType
  */
 final case class KTMultiVersion(elementType: KgType) extends KgType
+
+object KgType {
+
+  def getNumberSeq(kgType: KgType): Int = {
+    kgType match {
+      case KTInteger => 1
+      case KTLong => 2
+      case KTDouble => 3
+      case _ => throw UnsupportedOperationException(s"cannot support number type $kgType")
+    }
+  }
+
+}
