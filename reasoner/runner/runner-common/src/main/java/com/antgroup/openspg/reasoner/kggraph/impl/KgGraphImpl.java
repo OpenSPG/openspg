@@ -174,19 +174,8 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
     Set<String> vertexAliases = Sets.newHashSet(inputVertexAliases);
 
     // remove alias that vertex set size is 1 and its related edge size is 1
-    Map<String, Set<String>> vertexAliasToEdgeAliasMap = new HashMap<>();
-    for (String key : JavaConversions.setAsJavaSet(schema.topology().keySet())) {
-      scala.collection.Iterator<Connection> it = schema.topology().get(key).get().iterator();
-      while (it.hasNext()) {
-        Connection connection = it.next();
-        Set<String> sourceVertexRelatedEdgeAliasSet =
-            vertexAliasToEdgeAliasMap.computeIfAbsent(connection.source(), k -> new HashSet<>());
-        sourceVertexRelatedEdgeAliasSet.add(connection.alias());
-        Set<String> targetVertexRelatedEdgeAliasSet =
-            vertexAliasToEdgeAliasMap.computeIfAbsent(connection.target(), k -> new HashSet<>());
-        targetVertexRelatedEdgeAliasSet.add(connection.alias());
-      }
-    }
+    Map<String, Set<String>> vertexAliasToEdgeAliasMap =
+        staticParameters.getVertexAliasToEdgeAliasMap();
     vertexAliases.removeIf(
         vertexAlias -> {
           Boolean isSingleVertex = 1 == this.alias2VertexMap.get(vertexAlias).size();
