@@ -13,14 +13,12 @@
 
 package com.antgroup.openspg.reasoner.common.graph.vertex.impl;
 
-import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.exception.IllegalArgumentException;
 import com.antgroup.openspg.reasoner.common.graph.type.MapType2IdFactory;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IInternalIdGenerator;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.google.common.primitives.UnsignedBytes;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Comparator;
@@ -117,16 +115,16 @@ public class VertexId implements IVertexId {
   public static long generateInternalId(String bizId, String type) {
     return MumUtil.toGlobalHashId(bizId, type);
 
-    //if (null != internalIdGenerator) {
+    // if (null != internalIdGenerator) {
     //  return internalIdGenerator.gen(bizId, type);
-    //}
+    // }
     //// for mock graph
-    //byte[] bizBytes = bizId.getBytes(StandardCharsets.UTF_8);
-    //byte[] typeBytes = type.getBytes(StandardCharsets.UTF_8);
-    //ByteBuffer byteBuffer = ByteBuffer.allocate(bizBytes.length + typeBytes.length);
-    //byteBuffer.put(bizBytes);
-    //byteBuffer.put(typeBytes);
-    //byte[] allBytes = byteBuffer.array();
-    //return Utils.hash64(allBytes, allBytes.length);
+    // byte[] bizBytes = bizId.getBytes(StandardCharsets.UTF_8);
+    // byte[] typeBytes = type.getBytes(StandardCharsets.UTF_8);
+    // ByteBuffer byteBuffer = ByteBuffer.allocate(bizBytes.length + typeBytes.length);
+    // byteBuffer.put(bizBytes);
+    // byteBuffer.put(typeBytes);
+    // byte[] allBytes = byteBuffer.array();
+    // return Utils.hash64(allBytes, allBytes.length);
   }
 }
