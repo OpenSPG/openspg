@@ -41,8 +41,8 @@ import scala.collection.mutable
 object LoaderUtil {
 
   def getLoaderConfig(
-                       logicalPlans: List[LogicalOperator],
-                       catalog: Catalog): GraphLoaderConfig = {
+      logicalPlans: List[LogicalOperator],
+      catalog: Catalog): GraphLoaderConfig = {
     val loaderConfig = new GraphLoaderConfig()
     for (logicalPlan <- logicalPlans) {
       loaderConfig.merge(getLoaderConfig(logicalPlan, catalog))
@@ -74,8 +74,8 @@ object LoaderUtil {
   }
 
   private def findNotNeedLoadVertex(
-                                     logicalPlan: LogicalOperator,
-                                     solvedModel: SolvedModel): Set[String] = {
+      logicalPlan: LogicalOperator,
+      solvedModel: SolvedModel): Set[String] = {
     val allVertexSet = new mutable.HashSet[String]()
     for (field <- solvedModel.fields.values.map(f => f.flatten).flatten) {
       field match {
@@ -142,7 +142,7 @@ object LoaderUtil {
   }
 
   private def mergeDirectionMaps(
-                                  directionMaps: List[Map[String, Direction]]): Map[String, Direction] = {
+      directionMaps: List[Map[String, Direction]]): Map[String, Direction] = {
     directionMaps.foldLeft(Map.empty[String, Direction]) { (acc, map) =>
       acc ++ map.map { case (key, value) =>
         key -> mergeDirection(acc.getOrElse(key, null), value)
@@ -151,7 +151,7 @@ object LoaderUtil {
   }
 
   private def mergeVertexAlias2TypeMap(
-                                        alis2TypesMapList: List[Map[String, Set[String]]]): Map[String, Set[String]] = {
+      alis2TypesMapList: List[Map[String, Set[String]]]): Map[String, Set[String]] = {
     alis2TypesMapList.foldLeft(Map.empty[String, Set[String]]) { (acc, map) =>
       acc ++ map.map { case (key, value) =>
         key -> (acc.getOrElse(key, Set.empty[String]) ++ value)
@@ -188,9 +188,9 @@ object LoaderUtil {
   }
 
   private def getEdgeLoadDirectionMapFromPattern(
-                                                  pattern: Pattern,
-                                                  alias2TypesMap: Map[String, Set[String]],
-                                                  graph: SemanticPropertyGraph): Map[String, Direction] = {
+      pattern: Pattern,
+      alias2TypesMap: Map[String, Set[String]],
+      graph: SemanticPropertyGraph): Map[String, Direction] = {
 
     val resultMap = new mutable.HashMap[String, Direction]()
     val rootAlias = pattern.root.alias
@@ -268,7 +268,7 @@ object LoaderUtil {
   }
 
   private def mergeEdgeEndVertexAliasMap(
-                                          list: List[Map[String, Set[String]]]): Map[String, Set[String]] = {
+      list: List[Map[String, Set[String]]]): Map[String, Set[String]] = {
     list.foldLeft(Map[String, Set[String]]()) { (acc, m) =>
       m.foldLeft(acc) { (accInner, kv) =>
         val (key, valueSet) = kv
@@ -293,7 +293,7 @@ object LoaderUtil {
   }
 
   private def getAllowIsolateVertexFromEdgeLoadDirectionMap(
-                                                             edgeLoadDirectionMap: Map[String, Direction]): Set[String] = {
+      edgeLoadDirectionMap: Map[String, Direction]): Set[String] = {
     val isolateVertexMap = new mutable.HashMap[String, mutable.HashMap[SPO, Direction]]()
 
     edgeLoadDirectionMap.toList
@@ -333,8 +333,8 @@ object LoaderUtil {
   }
 
   def getConceptEdgeExpandSolvedModel(
-                                       graph: SemanticPropertyGraph,
-                                       edgePattern: EdgePattern[LinkedPatternConnection]): SolvedModel = {
+      graph: SemanticPropertyGraph,
+      edgePattern: EdgePattern[LinkedPatternConnection]): SolvedModel = {
     val conceptMap = getConceptHypernym(graph, edgePattern.dst.typeNames)
     val hypernymEdgeAlias = getHypernymEdgeAlias()
     val alias2Types: Map[String, Set[String]] =
@@ -371,10 +371,10 @@ object LoaderUtil {
   }
 
   private def generateEdgeTypeSet(
-                                   srcTypeSet: Set[String],
-                                   dstTypeSet: Set[String],
-                                   edgeSet: Set[String],
-                                   direction: Direction): Set[String] = {
+      srcTypeSet: Set[String],
+      dstTypeSet: Set[String],
+      edgeSet: Set[String],
+      direction: Direction): Set[String] = {
     var set1 = srcTypeSet;
     var set3 = dstTypeSet
     if (Direction.IN.equals(direction)) {
@@ -397,8 +397,8 @@ object LoaderUtil {
   }
 
   private def getConceptHypernym(
-                                  graph: SemanticPropertyGraph,
-                                  conceptTypeSet: Set[String]): Map[String, String] = {
+      graph: SemanticPropertyGraph,
+      conceptTypeSet: Set[String]): Map[String, String] = {
     val r = generateEdgeTypeSet(
       conceptTypeSet,
       conceptTypeSet,
@@ -556,7 +556,7 @@ object LoaderUtil {
   }
 
   private def mergeRuleMap(ruleMapList: List[Map[String, mutable.MutableList[Rule]]])
-  : Map[String, mutable.MutableList[Rule]] = {
+      : Map[String, mutable.MutableList[Rule]] = {
     val rstRuleMap = new mutable.HashMap[String, mutable.MutableList[Rule]]()
     ruleMapList.foreach(map =>
       map.toList.foreach(kv =>
