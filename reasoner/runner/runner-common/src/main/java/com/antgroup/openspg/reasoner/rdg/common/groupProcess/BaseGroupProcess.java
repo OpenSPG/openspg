@@ -26,6 +26,7 @@ import com.antgroup.openspg.reasoner.lube.logical.PropertyVar;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
+import com.antgroup.openspg.reasoner.udf.model.LazyUdaf;
 import com.antgroup.openspg.reasoner.udf.model.UdafMeta;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
@@ -38,8 +39,7 @@ import scala.collection.JavaConversions;
 
 public abstract class BaseGroupProcess implements Serializable {
   protected Var var;
-  protected UdafMeta udafMeta;
-  protected Object[] udfInitParams;
+  protected LazyUdaf lazyUdaf;
   protected List<String> ruleList;
   protected Aggregator aggOp;
   protected String taskId;
@@ -59,8 +59,7 @@ public abstract class BaseGroupProcess implements Serializable {
     this.var = var;
     this.aggOp = aggregator;
     this.ruleList = parseRuleList();
-    this.udfInitParams = parseUdfInitParams();
-    this.udafMeta = parseUdafMeta();
+    this.lazyUdaf = createLazyUdafMeta();
 
     this.exprUseAliasSet = parseExprUseAliasSet();
     this.exprRuleString = parseExprRuleList();
@@ -110,6 +109,15 @@ public abstract class BaseGroupProcess implements Serializable {
       udfInitParams = getUdafInitializeParams(JavaConversions.seqAsJavaList(aggUdf.funcArgs()));
     }
     return udfInitParams;
+  }
+
+  public LazyUdaf createLazyUdafMeta() {
+    String udafName = getUdafStrName(getAggOpSet());
+    return new LazyUdaf(udafName, parseUdfInitParams());
+  }
+
+  public LazyUdaf getLazyUdaf() {
+    return lazyUdaf;
   }
 
   protected UdafMeta parseUdafMeta() {
@@ -181,24 +189,6 @@ public abstract class BaseGroupProcess implements Serializable {
    */
   public Var getVar() {
     return var;
-  }
-
-  /**
-   * getter
-   *
-   * @return
-   */
-  public UdafMeta getUdafMeta() {
-    return udafMeta;
-  }
-
-  /**
-   * getter
-   *
-   * @return
-   */
-  public Object[] getUdfInitParams() {
-    return udfInitParams;
   }
 
   /**

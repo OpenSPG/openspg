@@ -32,26 +32,9 @@ def preprocess_config(nn_config: Union[str, dict]) -> dict:
         if isinstance(nn_config, dict):
             return nn_config
         elif isinstance(nn_config, str):
-            if nn_config.endswith(".json"):
-                import json
+            from nn4k.utils.args_utils import ArgsUtils
 
-                with open(Path(nn_config), "r", encoding="utf-8") as open_json_file:
-                    data = json.load(open_json_file)
-                    nn_config = data
-                    return nn_config
-            if nn_config.endswith(".json5"):
-                import json5
-
-                with open(Path(nn_config), "r", encoding="utf-8") as open_json5_file:
-                    data = json5.load(open_json5_file)
-                    nn_config = data
-                    return nn_config
-            from nn4k.utils.io.file_utils import FileUtils
-
-            raise ValueError(
-                f"Config file with extension type {FileUtils.get_extension(nn_config)} is not supported."
-                f"use json or json5 instead."
-            )
+            return ArgsUtils.load_config_dict_from_file(nn_config)
         else:
             raise ValueError(
                 f"nn_config could be dict or str, {type(nn_config)} is not yet supported."

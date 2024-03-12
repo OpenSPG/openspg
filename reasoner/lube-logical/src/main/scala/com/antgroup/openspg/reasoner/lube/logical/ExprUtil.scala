@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.reasoner.lube.logical
 
+import java.util.Locale
+
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
@@ -113,7 +115,7 @@ object ExprUtil {
         name match {
           case "rule_value" => types(1)
           case "cast_type" | "Cast" =>
-            funcArgs(1).asInstanceOf[VString].value match {
+            funcArgs(1).asInstanceOf[VString].value.toLowerCase(Locale.getDefault) match {
               case "int" | "bigint" | "long" => KTLong
               case "float" | "double" => KTDouble
               case "varchar" | "string" => KTString

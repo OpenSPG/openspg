@@ -235,6 +235,6 @@ public class KgReasonerAliasSetKFilmTest {
     Assert.assertEquals("1", result.get(0)[0]);
     Assert.assertEquals("2", result.get(0)[1]);
     Assert.assertEquals("3", result.get(0)[2]);
-    Assert.assertEquals("700.0", result.get(0)[3]);
+    Assert.assertEquals("700", result.get(0)[3]);
   }
 }

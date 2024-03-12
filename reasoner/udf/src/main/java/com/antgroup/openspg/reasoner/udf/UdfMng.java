@@ -55,6 +55,14 @@ public interface UdfMng {
   UdafMeta getUdafMeta(String name, KgType rowDataType);
 
   /**
+   * query UDAF mete list from name
+   *
+   * @param name
+   * @return
+   */
+  List<UdafMeta> getUdafMetas(String name);
+
+  /**
    * Query UDTF meta information
    *
    * @param name
