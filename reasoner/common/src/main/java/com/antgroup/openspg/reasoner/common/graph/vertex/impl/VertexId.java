@@ -115,16 +115,18 @@ public class VertexId implements IVertexId {
 
   /** generate internal id */
   public static long generateInternalId(String bizId, String type) {
-    if (null != internalIdGenerator) {
-      return internalIdGenerator.gen(bizId, type);
-    }
-    // for mock graph
-    byte[] bizBytes = bizId.getBytes(StandardCharsets.UTF_8);
-    byte[] typeBytes = type.getBytes(StandardCharsets.UTF_8);
-    ByteBuffer byteBuffer = ByteBuffer.allocate(bizBytes.length + typeBytes.length);
-    byteBuffer.put(bizBytes);
-    byteBuffer.put(typeBytes);
-    byte[] allBytes = byteBuffer.array();
-    return Utils.hash64(allBytes, allBytes.length);
+    return MumUtil.toGlobalHashId(bizId, type);
+
+    //if (null != internalIdGenerator) {
+    //  return internalIdGenerator.gen(bizId, type);
+    //}
+    //// for mock graph
+    //byte[] bizBytes = bizId.getBytes(StandardCharsets.UTF_8);
+    //byte[] typeBytes = type.getBytes(StandardCharsets.UTF_8);
+    //ByteBuffer byteBuffer = ByteBuffer.allocate(bizBytes.length + typeBytes.length);
+    //byteBuffer.put(bizBytes);
+    //byteBuffer.put(typeBytes);
+    //byte[] allBytes = byteBuffer.array();
+    //return Utils.hash64(allBytes, allBytes.length);
   }
 }
