@@ -158,6 +158,13 @@ public class LocalReasonerRunner {
         localPropertyGraph.setStartIdTuple2List(null);
       }
 
+      String isGraphOutput =
+          String.valueOf(
+              task.getParams().computeIfAbsent(ConfigKey.KG_REASONER_OUTPUT_GRAPH, k -> "false"));
+      if ("true".equals(isGraphOutput)) {
+        localPropertyGraph.setCarryTraversalGraph(true);
+      }
+
       // 判断是否存在
       if (task.getParams().containsKey(ConfigKey.KG_REASONER_MOCK_GRAPH_DATA)) {
         String demoGraph = task.getParams().get(ConfigKey.KG_REASONER_MOCK_GRAPH_DATA).toString();
@@ -167,15 +174,18 @@ public class LocalReasonerRunner {
       }
 
       if (physicalOpRoot instanceof Select) {
-        String isGraphOutput =
-            String.valueOf(
-                task.getParams().computeIfAbsent(ConfigKey.KG_REASONER_OUTPUT_GRAPH, k -> "false"));
+        LocalRow row = (LocalRow) ((Select<LocalRDG>) physicalOpRoot).row();
+        result = row.getResult();
         if ("true".equals(isGraphOutput)) {
           LocalRDG rdg = ((Select<LocalRDG>) physicalOpRoot).in().rdg();
-          result = rdg.getRDGGraph();
-        } else {
-          LocalRow row = (LocalRow) ((Select<LocalRDG>) physicalOpRoot).row();
-          result = row.getResult();
+          LocalReasonerResult graphRes = rdg.getRDGGraph();
+          result =
+              new LocalReasonerResult(
+                  result.getColumns(),
+                  result.getRows(),
+                  graphRes.getVertexList(),
+                  graphRes.getEdgeList(),
+                  true);
         }
       } else {
         LocalRDG rdg = physicalOpRoot.rdg();
