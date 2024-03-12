@@ -54,6 +54,12 @@ object NodeIdToEdgeProperty extends Rule {
       } else {
         filterUpdate(filter, map) -> map
       }
+    case (project: Project, map) =>
+      if (map.isEmpty) {
+        project -> map
+      } else {
+        projectUpdate(project, map) -> map
+      }
     case (select: Select, map) =>
       if (map.isEmpty) {
         select -> map
@@ -113,6 +119,36 @@ object NodeIdToEdgeProperty extends Rule {
       val newRule = RuleUtils.renameVariableInRule(filter.rule, replaceVar.toMap)
       filter.copy(rule = newRule)
     }
+  }
+
+  private def projectUpdate(project: Project, map: Map[String, Object]): Project = {
+    val exprMap = new mutable.HashMap[Var, Expr]()
+    for (expr <- project.expr) {
+      val input = ExprUtils.getAllInputFieldInRule(
+        expr._2,
+        project.solved.getNodeAliasSet,
+        project.solved.getEdgeAliasSet)
+      val replaceVar = new mutable.HashMap[IRField, IRField]
+      for (irField <- input) {
+        if (irField.isInstanceOf[IRNode] && map.contains(irField.name)) {
+          for (propName <- irField.asInstanceOf[IRNode].fields) {
+            if (NODE_DEFAULT_PROPS.contains(propName)) {
+              val edgeInfo = map(irField.name).asInstanceOf[Connection]
+              replaceVar.put(
+                IRProperty(irField.name, propName),
+                IRProperty(edgeInfo.alias, genField(edgeInfo.direction, propName)))
+              replaceVar.put(IRVariable(irField.name), IRVariable(edgeInfo.alias))
+            }
+          }
+        }
+      }
+      if (replaceVar.isEmpty) {
+        exprMap.+=(expr)
+      } else {
+        exprMap.put(expr._1, ExprUtils.renameVariableInExpr(expr._2, replaceVar.toMap))
+      }
+    }
+    project.copy(expr = exprMap.toMap)
   }
 
   private def selectUpdate(select: Select, map: Map[String, Object]): Select = {
