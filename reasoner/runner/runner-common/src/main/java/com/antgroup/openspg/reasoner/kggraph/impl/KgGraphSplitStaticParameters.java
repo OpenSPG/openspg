@@ -56,10 +56,13 @@ public class KgGraphSplitStaticParameters implements Serializable {
   private final List<EdgeIterateInfo> subEdgeIterateInfoList;
   private final Map<String, Integer> subEdgeIterateOrderMap;
 
-  /** 将KgGraph中重复调用的逻辑抽出来，在初始化中一次完成 */
+  private final Map<String, Set<String>> vertexAliasToEdgeAliasMap;
+
+  // Abstract the logic of repeated calls in KgGraph and do it all at once in initialization
   public KgGraphSplitStaticParameters(Set<String> splitVertexAliases, Pattern schema) {
     this.edgeIterateInfoList = initEdgeIterateInfo(schema);
     this.edgeIterateOrderMap = initEdgeIterateOrderMap(this.edgeIterateInfoList);
+    this.vertexAliasToEdgeAliasMap = parseVertexAliasToEdgeAliasMap(schema);
 
     if (CollectionUtils.isNotEmpty(splitVertexAliases)) {
       this.needSplitEdgeSet = getNeedSplitEdgeSet(splitVertexAliases, schema);
@@ -94,6 +97,23 @@ public class KgGraphSplitStaticParameters implements Serializable {
       this.subEdgeIterateInfoList = null;
       this.subEdgeIterateOrderMap = null;
     }
+  }
+
+  private static Map<String, Set<String>> parseVertexAliasToEdgeAliasMap(Pattern schema) {
+    Map<String, Set<String>> vertexAliasToEdgeAliasMap = new HashMap<>();
+    for (String key : JavaConversions.setAsJavaSet(schema.topology().keySet())) {
+      scala.collection.Iterator<Connection> it = schema.topology().get(key).get().iterator();
+      while (it.hasNext()) {
+        Connection connection = it.next();
+        Set<String> sourceVertexRelatedEdgeAliasSet =
+            vertexAliasToEdgeAliasMap.computeIfAbsent(connection.source(), k -> new HashSet<>());
+        sourceVertexRelatedEdgeAliasSet.add(connection.alias());
+        Set<String> targetVertexRelatedEdgeAliasSet =
+            vertexAliasToEdgeAliasMap.computeIfAbsent(connection.target(), k -> new HashSet<>());
+        targetVertexRelatedEdgeAliasSet.add(connection.alias());
+      }
+    }
+    return vertexAliasToEdgeAliasMap;
   }
 
   /**
@@ -166,6 +186,15 @@ public class KgGraphSplitStaticParameters implements Serializable {
    */
   public Map<String, Integer> getSubEdgeIterateOrderMap() {
     return subEdgeIterateOrderMap;
+  }
+
+  /**
+   * Getter method for property <tt>vertexAliasToEdgeAliasMap</tt>.
+   *
+   * @return property value of vertexAliasToEdgeAliasMap
+   */
+  public Map<String, Set<String>> getVertexAliasToEdgeAliasMap() {
+    return vertexAliasToEdgeAliasMap;
   }
 
   public boolean canDoSampleSplit(Map<String, Set<IVertex<IVertexId, IProperty>>> alias2VertexMap) {
