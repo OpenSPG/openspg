@@ -58,7 +58,7 @@ public class KgGraphSplitStaticParameters implements Serializable {
 
   private final Map<String, Set<String>> vertexAliasToEdgeAliasMap;
 
-  /** 将KgGraph中重复调用的逻辑抽出来，在初始化中一次完成 */
+  // Abstract the logic of repeated calls in KgGraph and do it all at once in initialization
   public KgGraphSplitStaticParameters(Set<String> splitVertexAliases, Pattern schema) {
     this.edgeIterateInfoList = initEdgeIterateInfo(schema);
     this.edgeIterateOrderMap = initEdgeIterateOrderMap(this.edgeIterateInfoList);
