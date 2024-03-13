@@ -18,7 +18,7 @@ import scala.collection.mutable
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.types.KTObject
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
-import com.antgroup.openspg.reasoner.lube.common.expr.{Directly, Expr}
+import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode}
 import com.antgroup.openspg.reasoner.lube.logical._
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
@@ -30,7 +30,6 @@ final case class Project(in: LogicalOperator, expr: Map[Var, Expr], solved: Solv
     val fieldsMap = new mutable.HashMap[String, Var]()
     for (pair <- expr) {
       pair._2 match {
-        case Directly => fieldsMap.put(pair._1.name, pair._1)
         case e: Expr =>
           val fields =
             ExprUtils.getAllInputFieldInRule(e, solved.getNodeAliasSet, solved.getEdgeAliasSet)
