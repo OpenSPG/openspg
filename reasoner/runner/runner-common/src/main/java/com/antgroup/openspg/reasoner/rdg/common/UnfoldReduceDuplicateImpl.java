@@ -17,34 +17,75 @@ import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
+import com.antgroup.openspg.reasoner.lube.common.pattern.Connection;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
+import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class UnfoldReduceDuplicateImpl implements KgGraphListProcess {
-  private final Pattern schema;
   private final String edgeAlias;
+  private final List<String> edgeAliasList = new ArrayList<>();
 
   public UnfoldReduceDuplicateImpl(Pattern schema, String edgeAlias) {
-    this.schema = schema;
     this.edgeAlias = edgeAlias;
+    for (Connection connection : RunnerUtil.getConnectionSet(schema)) {
+      if (connection.alias().equals(this.edgeAlias)) {
+        continue;
+      }
+      this.edgeAliasList.add(connection.alias());
+    }
   }
 
   @Override
   public List<KgGraph<IVertexId>> reduce(Collection<KgGraph<IVertexId>> kgGraphs) {
-    Set<IEdge<IVertexId, IProperty>> pathEdgeSet = new HashSet<>();
+    Set<PathDuplicateKey> pathEdgeKeySet = new HashSet<>();
     List<KgGraph<IVertexId>> result = new ArrayList<>();
     for (KgGraph<IVertexId> kgGraph : kgGraphs) {
-      IEdge<IVertexId, IProperty> edge = kgGraph.getEdge(edgeAlias).get(0);
-      if (pathEdgeSet.contains(edge)) {
+      PathDuplicateKey key = new PathDuplicateKey(kgGraph);
+      if (pathEdgeKeySet.contains(key)) {
         continue;
       }
-      pathEdgeSet.add(edge);
+      pathEdgeKeySet.add(key);
       result.add(kgGraph);
     }
     return result;
+  }
+
+  private class PathDuplicateKey {
+    private final List<IEdge<IVertexId, IProperty>> edgeList = new ArrayList<>();
+
+    public PathDuplicateKey(KgGraph<IVertexId> kgGraph) {
+      addEdges(kgGraph);
+    }
+
+    public void addEdges(KgGraph<IVertexId> kgGraph) {
+      this.edgeList.add(kgGraph.getEdge(edgeAlias).get(0));
+      for (String edgeAlias : edgeAliasList) {
+        IEdge<IVertexId, IProperty> edge = kgGraph.getEdge(edgeAlias).get(0);
+        this.edgeList.add(edge);
+      }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      PathDuplicateKey that = (PathDuplicateKey) o;
+      return Arrays.equals(this.edgeList.toArray(), that.edgeList.toArray());
+    }
+
+    @Override
+    public int hashCode() {
+      return Arrays.hashCode(this.edgeList.toArray());
+    }
   }
 }
