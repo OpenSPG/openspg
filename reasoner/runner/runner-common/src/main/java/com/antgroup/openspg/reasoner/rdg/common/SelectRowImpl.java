@@ -50,6 +50,7 @@ public class SelectRowImpl implements Serializable {
       KgType fieldType;
       if (var instanceof PathVar) {
         selectValue = getSelectValue(null, Constants.GET_PATH_KEY, context);
+        selectValue = RunnerUtil.getPathInfo(path);
         fieldType = KTString$.MODULE$;
       } else {
         PropertyVar propertyVar = (PropertyVar) var;
