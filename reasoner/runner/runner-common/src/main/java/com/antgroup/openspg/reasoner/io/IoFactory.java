@@ -42,10 +42,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import scala.Tuple2;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -53,6 +49,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import scala.Tuple2;
 
 @Slf4j
 public class IoFactory {
@@ -142,7 +141,6 @@ public class IoFactory {
         TABLE_WRITER_CACHE.put(cacheKey, slsWriter);
       }
       return TABLE_WRITER_CACHE.getIfPresent(cacheKey);
-
     }
     throw new NotImplementedException(
         "table type not support," + tableInfo.getClass().getName(), null);

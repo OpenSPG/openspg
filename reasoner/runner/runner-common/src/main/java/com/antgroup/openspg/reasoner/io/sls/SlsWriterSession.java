@@ -9,15 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SlsWriterSession {
-    private static final Logger log = LoggerFactory.getLogger(SlsWriterSession.class);
-    private final SLSTableInfo slsTableInfo;
+  private static final Logger log = LoggerFactory.getLogger(SlsWriterSession.class);
+  private final SLSTableInfo slsTableInfo;
 
-    public SlsWriterSession(SLSTableInfo slsTableInfo) {
-        this.slsTableInfo = slsTableInfo;
-    }
+  public SlsWriterSession(SLSTableInfo slsTableInfo) {
+    this.slsTableInfo = slsTableInfo;
+  }
 
-    public String getSessionId() {
-        return String.valueOf(this.slsTableInfo.hashCode());
-    }
-
+  public String getSessionId() {
+    return String.valueOf(this.slsTableInfo.hashCode());
+  }
 }

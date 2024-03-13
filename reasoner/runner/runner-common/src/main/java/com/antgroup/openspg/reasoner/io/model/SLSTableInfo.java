@@ -12,33 +12,21 @@ import lombok.Data;
  */
 @Data
 public class SLSTableInfo extends AbstractTableInfo {
-    /**
-     * sls project
-     */
-    private String project;
+  /** sls project */
+  private String project;
 
-    /**
-     * sls endpoint
-     */
-    private String endpoint;
+  /** sls endpoint */
+  private String endpoint;
 
-    /**
-     * sls logStore
-     */
-    private String logStore;
+  /** sls logStore */
+  private String logStore;
 
-    /**
-     * sls accessId
-     */
-    private String accessId;
+  /** sls accessId */
+  private String accessId;
 
-    /**
-     * sls accessKey
-     */
-    private String accessKey;
+  /** sls accessKey */
+  private String accessKey;
 
-    /**
-     * Task id
-     */
-    private String taskId;
+  /** akg Task dev id */
+  private String taskId;
 }
