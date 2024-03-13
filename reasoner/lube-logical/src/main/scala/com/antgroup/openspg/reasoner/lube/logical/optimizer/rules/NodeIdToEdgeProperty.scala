@@ -20,11 +20,16 @@ import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.graph.edge
 import com.antgroup.openspg.reasoner.common.types.KTString
-import com.antgroup.openspg.reasoner.lube.block.{AddPredicate, DDLOp}
+import com.antgroup.openspg.reasoner.lube.block.{AddPredicate, AddProperty, AddVertex, DDLOp}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.common.graph.{IRField, IRNode, IRProperty, IRVariable}
-import com.antgroup.openspg.reasoner.lube.common.pattern.{Connection, NodePattern, Pattern, VariablePatternConnection}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{
+  Connection,
+  NodePattern,
+  Pattern,
+  VariablePatternConnection
+}
 import com.antgroup.openspg.reasoner.lube.logical.{NodeVar, PropertyVar, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
@@ -124,31 +129,56 @@ object NodeIdToEdgeProperty extends Rule {
   private def projectUpdate(project: Project, map: Map[String, Object]): Project = {
     val exprMap = new mutable.HashMap[Var, Expr]()
     for (expr <- project.expr) {
-      val input = ExprUtils.getAllInputFieldInRule(
-        expr._2,
-        project.solved.getNodeAliasSet,
-        project.solved.getEdgeAliasSet)
-      val replaceVar = new mutable.HashMap[IRField, IRField]
-      for (irField <- input) {
-        if (irField.isInstanceOf[IRNode] && map.contains(irField.name)) {
-          for (propName <- irField.asInstanceOf[IRNode].fields) {
-            if (NODE_DEFAULT_PROPS.contains(propName)) {
-              val edgeInfo = map(irField.name).asInstanceOf[Connection]
-              replaceVar.put(
-                IRProperty(irField.name, propName),
-                IRProperty(edgeInfo.alias, genField(edgeInfo.direction, propName)))
-              replaceVar.put(IRVariable(irField.name), IRVariable(edgeInfo.alias))
-            }
+      exprMap.put(
+        expr._1,
+        exprRewrite(expr._2, project.solved.getNodeAliasSet, project.solved.getEdgeAliasSet, map))
+    }
+    project.copy(expr = exprMap.toMap)
+  }
+
+  private def exprRewrite(
+                           expr: Expr,
+                           nodes: Set[String],
+                           edges: Set[String],
+                           map: Map[String, Object]): Expr = {
+    val input = ExprUtils.getAllInputFieldInRule(expr, nodes, edges)
+    val replaceVar = new mutable.HashMap[IRField, IRField]
+    for (irField <- input) {
+      if (irField.isInstanceOf[IRNode] && map.contains(irField.name)) {
+        for (propName <- irField.asInstanceOf[IRNode].fields) {
+          if (NODE_DEFAULT_PROPS.contains(propName)) {
+            val edgeInfo = map(irField.name).asInstanceOf[Connection]
+            replaceVar.put(
+              IRProperty(irField.name, propName),
+              IRProperty(edgeInfo.alias, genField(edgeInfo.direction, propName)))
+            replaceVar.put(IRVariable(irField.name), IRVariable(edgeInfo.alias))
           }
         }
       }
-      if (replaceVar.isEmpty) {
-        exprMap.+=(expr)
-      } else {
-        exprMap.put(expr._1, ExprUtils.renameVariableInExpr(expr._2, replaceVar.toMap))
+    }
+    if (replaceVar.isEmpty) {
+      expr
+    } else {
+      ExprUtils.renameVariableInExpr(expr, replaceVar.toMap)
+    }
+  }
+
+  private def ddlUpdate(ddl: DDL, map: Map[String, Object]): DDL = {
+    val nodes = ddl.solved.getNodeAliasSet
+    val edges = ddl.solved.getEdgeAliasSet
+    val newOps = new mutable.HashSet[DDLOp]()
+    for (ddlOp <- ddl.ddlOp) {
+      ddlOp match {
+        case ddlOp: AddProperty => newOps.add(ddlOp)
+        case AddVertex(s, props) =>
+          val newProps = props.map(p => (p._1, exprRewrite(p._2, nodes, edges, map)))
+          newOps.add(AddVertex(s, newProps))
+        case AddPredicate(predicate) =>
+          val newProps = predicate.fields.map(p => (p._1, exprRewrite(p._2, nodes, edges, map)))
+          newOps.add(AddPredicate(predicate.copy(fields = newProps)))
       }
     }
-    project.copy(expr = exprMap.toMap)
+    ddl.copy(ddlOp = newOps.toSet)
   }
 
   private def selectUpdate(select: Select, map: Map[String, Object]): Select = {
@@ -172,40 +202,6 @@ object NodeIdToEdgeProperty extends Rule {
     select.copy(fields = newFields.toList)
   }
 
-  private def ddlUpdate(ddl: DDL, map: Map[String, Object]): DDL = {
-    val ddlOps = new mutable.HashSet[DDLOp]()
-    for (ddlOp <- ddl.ddlOp) {
-      ddlOp match {
-        case AddPredicate(predicate) =>
-          val newFields = new mutable.HashMap[String, Expr]()
-          for (field <- predicate.fields) {
-            val input = ExprUtils.getAllInputFieldInRule(field._2, null, null)
-            val replaceVar = new mutable.HashMap[IRField, IRProperty]
-            for (irField <- input) {
-              if (irField.isInstanceOf[IRNode] && map.contains(irField.name)) {
-                for (propName <- irField.asInstanceOf[IRNode].fields) {
-                  if (NODE_DEFAULT_PROPS.contains(propName)) {
-                    val edgeInfo = map(irField.name).asInstanceOf[Connection]
-                    replaceVar.put(
-                      IRProperty(irField.name, propName),
-                      IRProperty(edgeInfo.alias, genField(edgeInfo.direction, propName)))
-                  }
-                }
-              }
-            }
-            if (replaceVar.isEmpty) {
-              newFields.put(field._1, field._2)
-            } else {
-              newFields.put(field._1, ExprUtils.renameVariableInExpr(field._2, replaceVar.toMap))
-            }
-          }
-          ddlOps.add(AddPredicate(predicate.copy(fields = newFields.toMap)))
-        case _ => ddlOps.add(ddlOp)
-      }
-    }
-    ddl.copy(ddlOp = ddlOps.toSet)
-  }
-
   private def targetConnection(expandInto: ExpandInto): Connection = {
     val alias = expandInto.pattern.root.alias
     val edgeAlias = expandInto.transform[Connection] {
@@ -216,6 +212,12 @@ object NodeIdToEdgeProperty extends Rule {
           list.head
         } else {
           targetConnection(alias, expandInto.pattern)
+        }
+      case (linkedExpand: LinkedExpand, list) =>
+        if (!list.isEmpty && list.head != null) {
+          list.head
+        } else {
+          targetConnection(alias, linkedExpand.edgePattern)
         }
       case (_, list) =>
         if (list.isEmpty) {
