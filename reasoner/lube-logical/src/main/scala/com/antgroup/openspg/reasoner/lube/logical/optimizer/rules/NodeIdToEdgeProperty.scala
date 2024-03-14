@@ -24,12 +24,7 @@ import com.antgroup.openspg.reasoner.lube.block.{AddPredicate, AddProperty, AddV
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.common.graph.{IRField, IRNode, IRProperty, IRVariable}
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  Connection,
-  NodePattern,
-  Pattern,
-  VariablePatternConnection
-}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{Connection, NodePattern, Pattern, VariablePatternConnection}
 import com.antgroup.openspg.reasoner.lube.logical.{NodeVar, PropertyVar, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
@@ -90,8 +85,10 @@ object NodeIdToEdgeProperty extends Rule {
 
   private def genField(direction: edge.Direction, fieldName: String): String = {
     (direction, fieldName) match {
-      case (edge.Direction.OUT, Constants.NODE_ID_KEY) => Constants.EDGE_TO_ID_KEY
-      case (edge.Direction.OUT, Constants.CONTEXT_LABEL) => Constants.EDGE_TO_ID_TYPE_KEY
+      case (edge.Direction.OUT | edge.Direction.BOTH, Constants.NODE_ID_KEY) =>
+        Constants.EDGE_TO_ID_KEY
+      case (edge.Direction.OUT | edge.Direction.BOTH, Constants.CONTEXT_LABEL) =>
+        Constants.EDGE_TO_ID_TYPE_KEY
       case (edge.Direction.IN, Constants.NODE_ID_KEY) => Constants.EDGE_FROM_ID_KEY
       case (edge.Direction.IN, Constants.CONTEXT_LABEL) => Constants.EDGE_FROM_ID_TYPE_KEY
       case (_, _) =>
@@ -137,10 +134,10 @@ object NodeIdToEdgeProperty extends Rule {
   }
 
   private def exprRewrite(
-                           expr: Expr,
-                           nodes: Set[String],
-                           edges: Set[String],
-                           map: Map[String, Object]): Expr = {
+      expr: Expr,
+      nodes: Set[String],
+      edges: Set[String],
+      map: Map[String, Object]): Expr = {
     val input = ExprUtils.getAllInputFieldInRule(expr, nodes, edges)
     val replaceVar = new mutable.HashMap[IRField, IRField]
     for (irField <- input) {
