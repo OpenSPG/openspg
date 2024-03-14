@@ -173,7 +173,10 @@ public class OntologyIdHandler {
       SPGTypeIdentifier objectTypeIdentifier = property.getObjectTypeRef().getBaseSpgIdentifier();
       BaseSPGType objectType = spgTypeMap.get(objectTypeIdentifier);
       if (null == objectType) {
-        throw SchemaException.spgTypeNotExist(objectTypeIdentifier.toString());
+        objectType = spgTypeService.querySPGTypeByIdentifier(objectTypeIdentifier);
+        if (null == objectType) {
+          throw SchemaException.spgTypeNotExist(objectTypeIdentifier.toString());
+        }
       }
       property.getObjectTypeRef().setOntologyId(objectType.getOntologyId());
     }

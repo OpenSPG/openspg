@@ -19,10 +19,14 @@ import com.antgroup.openspg.reasoner.lube.common.expr.AggUdf;
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator;
 import com.antgroup.openspg.reasoner.lube.common.expr.AggregatorOpSet;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
+import com.antgroup.openspg.reasoner.lube.common.expr.GetField;
+import com.antgroup.openspg.reasoner.lube.common.expr.Ref;
+import com.antgroup.openspg.reasoner.lube.common.expr.UnaryOpExpr;
 import com.antgroup.openspg.reasoner.lube.logical.PropertyVar;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
+import com.antgroup.openspg.reasoner.udf.model.LazyUdaf;
 import com.antgroup.openspg.reasoner.udf.model.UdafMeta;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
@@ -35,8 +39,7 @@ import scala.collection.JavaConversions;
 
 public abstract class BaseGroupProcess implements Serializable {
   protected Var var;
-  protected UdafMeta udafMeta;
-  protected Object[] udfInitParams;
+  protected LazyUdaf lazyUdaf;
   protected List<String> ruleList;
   protected Aggregator aggOp;
   protected String taskId;
@@ -56,8 +59,7 @@ public abstract class BaseGroupProcess implements Serializable {
     this.var = var;
     this.aggOp = aggregator;
     this.ruleList = parseRuleList();
-    this.udfInitParams = parseUdfInitParams();
-    this.udafMeta = parseUdafMeta();
+    this.lazyUdaf = createLazyUdafMeta();
 
     this.exprUseAliasSet = parseExprUseAliasSet();
     this.exprRuleString = parseExprRuleList();
@@ -109,6 +111,15 @@ public abstract class BaseGroupProcess implements Serializable {
     return udfInitParams;
   }
 
+  public LazyUdaf createLazyUdafMeta() {
+    String udafName = getUdafStrName(getAggOpSet());
+    return new LazyUdaf(udafName, parseUdfInitParams());
+  }
+
+  public LazyUdaf getLazyUdaf() {
+    return lazyUdaf;
+  }
+
   protected UdafMeta parseUdafMeta() {
     String udafName = getUdafStrName(getAggOpSet());
     UdafMeta udafMeta = UdfMngFactory.getUdfMng().getUdafMeta(udafName, KTString$.MODULE$);
@@ -139,6 +150,9 @@ public abstract class BaseGroupProcess implements Serializable {
    */
   public abstract Expr getAggEle();
 
+  /** get parsed agg ele */
+  public abstract ParsedAggEle getParsedAggEle();
+
   public Set<String> parseExprUseAliasSet() {
     scala.collection.immutable.List<String> aliasList = ExprUtils.getRefVariableByExpr(getAggEle());
     return new HashSet<>(JavaConversions.seqAsJavaList(aliasList));
@@ -148,6 +162,26 @@ public abstract class BaseGroupProcess implements Serializable {
     return WareHouseUtils.getRuleList(getAggEle());
   }
 
+  protected ParsedAggEle parsedAggEle() {
+    String sourceAlias = null;
+    String sourcePropertyName = null;
+    List<String> exprStrList = null;
+    Expr aggEle = getAggEle();
+    if (aggEle instanceof Ref) {
+      Ref sourceRef = (Ref) aggEle;
+      sourceAlias = sourceRef.refName();
+    } else if (aggEle instanceof UnaryOpExpr) {
+      UnaryOpExpr expr = (UnaryOpExpr) aggEle;
+      GetField getField = (GetField) expr.name();
+      sourceAlias = ((Ref) expr.arg()).refName();
+      sourcePropertyName = getField.fieldName();
+    } else if (1 == this.exprUseAliasSet.size()) {
+      sourceAlias = this.exprUseAliasSet.iterator().next();
+      exprStrList = this.exprRuleString;
+    }
+    return new ParsedAggEle(sourceAlias, sourcePropertyName, exprStrList);
+  }
+
   /**
    * getter
    *
@@ -155,24 +189,6 @@ public abstract class BaseGroupProcess implements Serializable {
    */
   public Var getVar() {
     return var;
-  }
-
-  /**
-   * getter
-   *
-   * @return
-   */
-  public UdafMeta getUdafMeta() {
-    return udafMeta;
-  }
-
-  /**
-   * getter
-   *
-   * @return
-   */
-  public Object[] getUdfInitParams() {
-    return udfInitParams;
   }
 
   /**

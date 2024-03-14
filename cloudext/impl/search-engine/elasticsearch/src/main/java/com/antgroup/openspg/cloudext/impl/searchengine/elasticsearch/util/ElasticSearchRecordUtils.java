@@ -116,7 +116,12 @@ public class ElasticSearchRecordUtils {
       query = boolQuery;
     }
 
-    ForestResponse<String> response = client.search(request.getIndexName(), query);
+    ForestResponse<String> response = null;
+    if (request.getIndexName() == null) {
+      response = client.searchAll(query, request.getFrom(), request.getSize());
+    } else {
+      response = client.search(request.getIndexName(), query);
+    }
     if (!response.isSuccess()) {
       throw new RuntimeException("search error, errorMsg=" + response.getContent());
     }
@@ -130,7 +135,7 @@ public class ElasticSearchRecordUtils {
     return esHits.toIdxRecord();
   }
 
-  public static Object convertQueryToObject(BaseQuery baseQuery) {
+  public static JSONObject convertQueryToObject(BaseQuery baseQuery) {
     JSONObject resultObj = new JSONObject();
     if (baseQuery instanceof MatchQuery) {
       MatchQuery matchQuery = (MatchQuery) baseQuery;

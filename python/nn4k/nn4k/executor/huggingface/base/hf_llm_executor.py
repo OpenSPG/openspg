@@ -18,8 +18,9 @@ from torch.utils.data import Dataset
 from transformers import AutoConfig, AutoTokenizer, Trainer
 
 from nn4k.executor import LLMExecutor
-from .hf_args import HFSftArgs, HFModelArgs
+from .hf_args import HFInferArgs, HFSftArgs, HFModelArgs
 from nn4k.executor.huggingface.nn_hf_trainer import NNHFTrainer
+from nn4k.utils.args_utils import ArgsUtils
 
 
 class HFLLMExecutor(LLMExecutor):
@@ -188,57 +189,85 @@ class HFLLMExecutor(LLMExecutor):
         if self.model_mode == mode and self._model is not None:
             return
 
+        args = args or self._init_args
+
         from transformers import HfArgumentParser
         from nn4k.executor.huggingface import HFModelArgs
 
         parser = HfArgumentParser(HFModelArgs)
+        hf_model_args: HFModelArgs
         hf_model_args, *_ = parser.parse_dict(args, allow_extra_keys=True)
 
         self.model_mode = mode
         self._tokenizer = self._hf_tokenizer_loader(hf_model_args)
         self._model = self._hf_model_loader(
-            hf_model_args, mode, hf_model_args.nn_device
+            args=hf_model_args, mode=mode, device=hf_model_args.nn_device
         )
 
         if self.tokenizer.eos_token_id is None:
             self.tokenizer.eos_token_id = self.model.config.eos_token_id
         if self.tokenizer.pad_token_id is None:
             self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
+        if hf_model_args.padding_side is not None:
+            self.tokenizer.padding_side = hf_model_args.padding_side
 
-    def inference(
-        self,
-        data,
-        max_input_length: int = 1024,
-        max_output_length: int = 1024,
-        do_sample: bool = False,
-        **kwargs,
-    ):
+    def inference(self, inputs, **kwargs):
+        infer_args = ArgsUtils.update_args(self.init_args, kwargs)
+
+        from transformers import HfArgumentParser
+
+        parser = HfArgumentParser(HFInferArgs)
+        hf_infer_args: HFInferArgs
+        hf_infer_args, *_ = parser.parse_dict(infer_args, allow_extra_keys=True)
+
         model = self.model
         tokenizer = self.tokenizer
+
         input_ids = tokenizer(
-            data,
-            padding=True,
-            return_token_type_ids=False,
-            return_tensors="pt",
-            truncation=True,
-            max_length=max_input_length,
+            inputs,
+            **hf_infer_args.tokenize_config,
         ).to(model.device)
+
+        if hf_infer_args.stop_sequence is not None:
+            stop_sequence = hf_infer_args.stop_sequence
+            stop_sequence_ids = self.tokenizer.encode(
+                stop_sequence, add_special_tokens=False
+            )
+            if len(stop_sequence_ids) > 1:
+                print(  # TODO: use logger instead
+                    "Warning: Stopping on a multiple token sequence is not yet supported on transformers. "
+                    "The first token of the stop sequence will be used as the stop sequence string in the interim."
+                )
+            hf_infer_args.generate_config["eos_token_id"] = stop_sequence_ids[0]
+
         output_ids = model.generate(
             **input_ids,
-            max_new_tokens=max_output_length,
-            do_sample=do_sample,
-            eos_token_id=tokenizer.eos_token_id,
-            pad_token_id=tokenizer.pad_token_id,
-            **kwargs,
+            **hf_infer_args.generate_config,
         )
 
-        outputs = [
-            tokenizer.decode(
-                output_id[len(input_ids["input_ids"][idx]) :], skip_special_tokens=True
+        output_texts = []
+        for idx, output_id in enumerate(output_ids):
+            if not hf_infer_args.return_input_text:
+                output_id = output_id[len(input_ids["input_ids"][idx]) :]
+            output_text = self.tokenizer.decode(
+                output_id, **hf_infer_args.decode_config
             )
-            for idx, output_id in enumerate(output_ids)
-        ]
-        return outputs
+
+            if (
+                not hf_infer_args.return_input_text
+                and hf_infer_args.delete_heading_new_lines
+            ):
+                import re
+
+                match = re.search("(\\n)+", output_text)
+                if match is not None:
+                    start_index = match.end()
+                    if start_index < len(output_text) - 1:
+                        output_text = output_text[start_index:]
+
+            output_texts.append(output_text)
+
+        return output_texts
 
     @abstractmethod
     def _hf_model_loader(

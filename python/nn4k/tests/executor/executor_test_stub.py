@@ -22,7 +22,7 @@ class StubExecutor(LLMExecutor):
     def warmup_inference(self, args=None, **kwargs):
         pass
 
-    def inference(self, data, args=None, **kwargs):
+    def inference(self, inputs, args=None, **kwargs):
         pass
 
     @classmethod

@@ -39,10 +39,11 @@ public interface ProjectOntologyRelRepository {
    * Delete the definition or reference relationship between the project and {@link BaseSPGType} or
    * {@link Relation}
    *
-   * @param uniqueId unique id of relationship
+   * @param uniqueId unique id of type
+   * @param projectId project id
    * @return record count
    */
-  int delete(Long uniqueId);
+  int delete(Long uniqueId, Long projectId);
 
   /**
    * Query the relationship by project id.
@@ -69,4 +70,23 @@ public interface ProjectOntologyRelRepository {
    * @return list of relationship
    */
   List<ProjectOntologyRel> queryByOntologyId(List<Long> uniqueIds, SPGOntologyEnum ontologyEnum);
+
+  /**
+   * Query the reference by ontology id, ontology type and project
+   *
+   * @param uniqueId
+   * @param ontologyEnum
+   * @param projectId
+   * @return
+   */
+  ProjectOntologyRel queryByOntologyId(Long uniqueId, SPGOntologyEnum ontologyEnum, Long projectId);
+
+  /**
+   * Query the reference by ontology id, ontology type
+   *
+   * @param uniqueId
+   * @param ontologyEnum
+   * @return
+   */
+  List<ProjectOntologyRel> queryReferences(Long uniqueId, SPGOntologyEnum ontologyEnum);
 }
