@@ -30,7 +30,7 @@ import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 object Pure extends SimpleRule {
 
   override def rule(implicit
-                    context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
+      context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
     case leaf: LogicalLeafOperator => leaf
     case ddl @ DDL(in, _) =>
       val projects = ddl.refFields.map((_, Directly)).toMap
@@ -71,17 +71,20 @@ object Pure extends SimpleRule {
       }
     }
 
-    varMap.values.map(f => {
-      if (f.isInstanceOf[PathVar]) {
-        f
-      } else if (!solved.fields.contains(f.name)) {
-        throw InvalidRefVariable(s"can not find $f")
-      } else if (solved.fields.get(f.name).get.isInstanceOf[RepeatPathVar]) {
-        f.intersect(solved.fields.get(f.name).get.asInstanceOf[RepeatPathVar].pathVar.elements(1))
-      } else {
-        f.intersect(solved.fields.get(f.name).get)
-      }
-    }).toList
+    varMap.values
+      .map(f => {
+        if (f.isInstanceOf[PathVar]) {
+          f
+        } else if (!solved.fields.contains(f.name)) {
+          throw InvalidRefVariable(s"can not find $f")
+        } else if (solved.fields.get(f.name).get.isInstanceOf[RepeatPathVar]) {
+          f.intersect(
+            solved.fields.get(f.name).get.asInstanceOf[RepeatPathVar].pathVar.elements(1))
+        } else {
+          f.intersect(solved.fields.get(f.name).get)
+        }
+      })
+      .toList
   }
 
   override def direction: Direction = Down
