@@ -30,7 +30,7 @@ import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 object Pure extends SimpleRule {
 
   override def rule(implicit
-      context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
+                    context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
     case leaf: LogicalLeafOperator => leaf
     case ddl @ DDL(in, _) =>
       val projects = ddl.refFields.map((_, Directly)).toMap
@@ -39,8 +39,8 @@ object Pure extends SimpleRule {
       val projects = select.refFields.map((_, Directly)).toMap
       select.withNewChildren(Array.apply(Project(in, projects, in.solved)))
     case project @ Project(in, _, _) =>
-      if (in.isInstanceOf[Project] || in.isInstanceOf[ExpandInto] || in
-          .isInstanceOf[PatternScan] || in.isInstanceOf[BinaryLogicalOperator]) {
+      if (in.isInstanceOf[Project] || in.isInstanceOf[ExpandInto] || in.isInstanceOf[LinkedExpand]
+        || in.isInstanceOf[PatternScan] || in.isInstanceOf[BinaryLogicalOperator]) {
         project
       } else {
         val projectOutput: List[Var] = project.fields
