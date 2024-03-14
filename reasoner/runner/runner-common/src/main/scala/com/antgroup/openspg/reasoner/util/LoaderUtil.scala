@@ -95,7 +95,7 @@ object LoaderUtil {
       case (ExpandInto(_, _, pattern), typeSets) =>
         typeSets.flatten.toSet ++ pattern.root.typeNames
       case (LinkedExpand(_, linkedEdgePattern), typeSets) =>
-        typeSets.flatten.toSet ++ linkedEdgePattern.src.typeNames
+        typeSets.flatten.toSet ++ linkedEdgePattern.src.typeNames ++ linkedEdgePattern.dst.typeNames
       case (_, typeSets) => typeSets.flatten.toSet
     }
     allVertexSet.toSet -- rootVertexTypeSet
