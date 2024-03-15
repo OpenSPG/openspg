@@ -91,7 +91,16 @@ object ExprUtil {
         } else {
           KTObject
         }
-      case UnaryOpExpr(GetField(name), Ref(alis)) => referVars(IRProperty(alis, name))
+      case UnaryOpExpr(GetField(name), Ref(alis)) =>
+        val kgType = referVars(IRProperty(alis, name))
+        if (kgType.isInstanceOf[BasicKgType]) {
+          kgType
+        } else {
+          kgType match {
+            case KTStd(_, basicType, _) => basicType
+            case _ => KTObject
+          }
+        }
       case BinaryOpExpr(name, l, r) =>
         name match {
           case BAnd | BEqual | BNotEqual | BGreaterThan | BNotGreaterThan | BSmallerThan |
