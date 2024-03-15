@@ -30,7 +30,7 @@ import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 object Pure extends SimpleRule {
 
   override def rule(implicit
-                    context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
+      context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
     case leaf: LogicalLeafOperator => leaf
     case ddl @ DDL(in, _) =>
       val projects = ddl.refFields.map((_, Directly)).toMap
