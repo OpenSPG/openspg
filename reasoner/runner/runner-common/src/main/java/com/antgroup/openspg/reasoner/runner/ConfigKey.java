@@ -112,6 +112,9 @@ public class ConfigKey {
   /** expect batch num */
   public static final String KG_REASONER_EXPECT_BATCH_NUM = "kg.reasoner.expect.batch.num";
 
+  /** batch size control */
+  public static final String KG_REASONER_BATCH_SIZE_MAP = "kg.reasoner.batch.size.map";
+
   /** output graph config */
   public static final String KG_REASONER_OUTPUT_GRAPH = "kg.reasoner.output.graph";
 
