@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.reasoner.runner.local.main.transitive;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
@@ -122,6 +124,33 @@ public class KgReasonerTransitiveTest {
     Assert.assertEquals(2, result.getRows().get(0).length);
     Assert.assertEquals(result.getRows().get(0)[0], "P1");
     Assert.assertEquals(result.getRows().get(0)[1], "C5");
+  }
+
+  @Test
+  public void testTransitiveWithPathLongestWithPath() {
+    String dsl =
+            "GraphStructure {\n"
+                    + "  A [RelatedParty, __start__='true']\n"
+                    + "  B [RelatedParty]\n"
+                    + "  A->B [holdShare] repeat(1,10) as e\n"
+                    + "}\n"
+                    + "Rule {\n"
+                    + "  R1(\"只保留最长的路径\"): group(A).keep_longest_path(e)\n"
+                    + "}\n"
+                    + "Action {\n"
+                    + "  get(A.id,B.id,__path__)  \n"
+                    + "}";
+    LocalReasonerResult result = doProcess(dsl);
+    // check result
+    Assert.assertEquals(1, result.getRows().size());
+    Assert.assertEquals(3, result.getRows().get(0).length);
+    Assert.assertEquals(result.getRows().get(0)[0], "P1");
+    Assert.assertTrue("C2,C5".contains(result.getRows().get(0)[1].toString()));
+    //check path format
+    JSONArray path = JSON.parseArray(result.getRows().get(0)[2].toString());
+    Assert.assertEquals(path.size(), 9);
+    Assert.assertEquals(path.getJSONObject(0).get(Constants.CONTEXT_TYPE), "vertex");
+    Assert.assertEquals(path.getJSONObject(5).get(Constants.CONTEXT_TYPE), "edge");
   }
 
   @Test
@@ -307,6 +336,39 @@ public class KgReasonerTransitiveTest {
   }
 
   @Test
+  public void testTransitiveWithRule2WithPath() {
+    String dsl =
+            "GraphStructure {\n"
+                    + "  A [RelatedParty, __start__='true']\n"
+                    + "  B,C [RelatedParty]\n"
+                    + "  B->C [trans] repeat(1,10) as e\n"
+                    + "  A->B [trans] as f\n"
+                    + "}\n"
+                    + "Rule {\n"
+                    + "R1(\"要求转账logId一致\"): e.edges().constraint((pre,cur) => cur.logId == f.logId)"
+                    + "R2(\"时间大于第一个\"): e.edges().constraint((pre,cur) => cur.payDate > f.payDate)"
+                    + "R11(\"要求前一个时间小于后一个时间\"): e.edges().constraint((pre,cur) => cur.payDate > pre.payDate)"
+                    + "R3(\"只保留最长的路径\"): group(A).keep_longest_path(e)\n"
+                    + "}\n"
+                    + "Action {\n"
+                    + "  get(A.id,C.id,__path__)  \n"
+                    + "}";
+    LocalReasonerResult result = doProcess(dsl);
+    // check result
+    Assert.assertEquals(1, result.getRows().size());
+    Assert.assertEquals(3, result.getRows().get(0).length);
+    Assert.assertEquals(result.getRows().get(0)[0], "P1");
+    Assert.assertEquals(result.getRows().get(0)[1], "C5");
+    //check path format
+    JSONArray path = JSON.parseArray(result.getRows().get(0)[2].toString());
+    Assert.assertEquals(path.size(), 9);
+    Assert.assertEquals(path.getJSONObject(0).get("entityType"), "PERSON");
+    Assert.assertEquals(path.getJSONObject(4).get("name"), "C6");
+    Assert.assertEquals(path.getJSONObject(8).get("amount"), 5);
+
+  }
+
+  @Test
   public void testTransitive1() {
     String dsl =
         "GraphStructure {\n"
@@ -408,6 +470,57 @@ public class KgReasonerTransitiveTest {
     LocalReasonerResult result = runner.run(task);
     // check result
     Assert.assertEquals(5, result.getRows().size());
+  }
+
+  @Test
+  public void transitiveAndOptionTestWithPath() {
+    String dsl =
+            "GraphStructure {\n"
+                    + "  X [T,__start__='true']\n"
+                    + "  A [T1]\n"
+                    + "  B, C, D [T2]\n"
+                    + "  X->A [ET1] as e1\n"
+                    + "  A->B [ET2, __optional__='true'] as e2\n"
+                    + "  A->C [ET3, __optional__='true'] as e3\n"
+                    + "  C->D [ET4] repeat(0,1) as e4\n"
+                    + "}\n"
+                    + "Rule {\n"
+                    + "}\n"
+                    + "Action {\n"
+                    + "  get(X.id,A.id,B.id,C.id,D.id, __path__)\n"
+                    + "}";
+    System.out.println(dsl);
+    LocalReasonerTask task = new LocalReasonerTask();
+    task.setDsl(dsl);
+    // add mock catalog
+    Map<String, Set<String>> schema = new HashMap<>();
+    schema.put("T", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+    schema.put("T1", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+    schema.put("T2", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+    schema.put("T_ET1_T1", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put("T1_ET2_T2", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put("T1_ET3_T2", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put("T2_ET4_T2", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
+    catalog.init();
+    task.setCatalog(catalog);
+    task.setGraphLoadClass(
+            "com.antgroup.openspg.reasoner.runner.local.main.transitive.KgReasonerTransitiveTest$GraphLoader2");
+    // enable subquery
+    Map<String, Object> params = new HashMap<>();
+    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
+    params.put(ConfigKey.KG_REASONER_BINARY_PROPERTY, "false");
+    params.put(Constants.SPG_REASONER_MULTI_VERSION_ENABLE, "true");
+    task.setParams(params);
+    LocalReasonerRunner runner = new LocalReasonerRunner();
+    LocalReasonerResult result = runner.run(task);
+    // check result
+    Assert.assertEquals(5, result.getRows().size());
+    // check path format
+    JSONArray path = JSON.parseArray(result.getRows().get(0)[5].toString());
+    Assert.assertEquals(path.size(), 9);
+    Assert.assertEquals(path.getJSONObject(1).get(Constants.NONE_VERTEX_FLAG), true);
+    Assert.assertEquals(path.getJSONObject(8).get(Constants.OPTIONAL_EDGE_FLAG), true);
   }
 
   public static class GraphLoader2 extends AbstractLocalGraphLoader {
