@@ -141,11 +141,6 @@ public class LocalRDG extends RDG<LocalRDG> {
 
   private final java.util.Set<IEdge<IVertexId, IProperty>> resultEdgeSet = new HashSet<>();
 
-  /** traversal graph vertex set */
-  private final java.util.Set<IVertex<IVertexId, IProperty>> traversalVertexSet = new HashSet<>();
-  /** traversal graph edge set */
-  private final java.util.Set<IEdge<IVertexId, IProperty>> traversalEdgeSet = new HashSet<>();
-
   private final PatternMatcher patternMatcher;
 
   private final String taskId;
@@ -255,7 +250,6 @@ public class LocalRDG extends RDG<LocalRDG> {
       }
       count++;
       newKgGraphList.add(kgGraph);
-      this.append2TraversalGraphSet(kgGraph);
       if (null != this.strictMaxPathLimit && newKgGraphList.size() > this.strictMaxPathLimit) {
         throw new RuntimeException("exceeding strict max path limit " + this.strictMaxPathLimit);
       }
@@ -295,7 +289,6 @@ public class LocalRDG extends RDG<LocalRDG> {
       if (CollectionUtils.isNotEmpty(splitedKgGraphList)) {
         KgGraph<IVertexId> result = new KgGraphImpl();
         result.merge(splitedKgGraphList, null);
-        this.append2TraversalGraphSet(result);
         newKgGraphList.add(result);
         count++;
         targetVertexSize += splitedKgGraphList.size();
@@ -495,7 +488,6 @@ public class LocalRDG extends RDG<LocalRDG> {
         continue;
       }
       count += resultKgGraph.size();
-      resultKgGraph.forEach(this::append2TraversalGraphSet);
       newKgGraphList.addAll(resultKgGraph);
       if (null != this.strictMaxPathLimit && newKgGraphList.size() > this.strictMaxPathLimit) {
         throw new RuntimeException("exceeding strict max path limit " + this.strictMaxPathLimit);
@@ -548,7 +540,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     log.info("LocalRDG select,,matchCount=" + rows.size());
     this.executionRecorder.stageResultWithDesc(
         "select(" + RunnerUtil.getReadableAsList(as) + ")", this.kgGraphList.size(), "select");
-    return new LocalRow(cols, this, as, rows);
+    return new LocalRow(cols, this, as, rows, getRDGGraph());
   }
 
   @Override
@@ -1230,41 +1222,38 @@ public class LocalRDG extends RDG<LocalRDG> {
         Lists.newArrayList(resultVertexSet), Lists.newArrayList(resultEdgeSet), true);
   }
 
-  /**
-   * add graph to traversal graph
-   *
-   * @param graph
-   */
-  private void append2TraversalGraphSet(KgGraph<IVertexId> graph) {
+  /** add graph to traversal graph */
+  private LocalReasonerResult getRDGGraph() {
     if (!isCarryTraversalGraph) {
-      return;
+      return new LocalReasonerResult(Lists.newArrayList(), Lists.newArrayList(), false);
     }
-    for (String alias : graph.getVertexAlias()) {
-      this.traversalVertexSet.addAll(graph.getVertex(alias));
-    }
-    for (String alias : graph.getEdgeAlias()) {
-      java.util.List<IEdge<IVertexId, IProperty>> edges = graph.getEdge(alias);
-      for (IEdge<IVertexId, IProperty> edge : edges) {
-        if (edge instanceof PathEdge) {
-          this.traversalVertexSet.addAll(
-              ((PathEdge<IVertexId, IProperty, IProperty>) edge).getVertexList());
-          this.traversalEdgeSet.addAll(
-              ((PathEdge<IVertexId, IProperty, IProperty>) edge).getEdgeList());
-        }
-        this.traversalEdgeSet.add(edge);
-      }
-    }
-  }
-  /**
-   * get all RDG Edges and Nodes
-   *
-   * @return
-   */
-  public LocalReasonerResult getRDGGraph() {
-    return new LocalReasonerResult(
-        Lists.newArrayList(this.traversalVertexSet),
-        Lists.newArrayList(this.traversalEdgeSet),
-        true);
+    LocalReasonerResult localReasonerResult = getResult();
+    this.kgGraphList.forEach(
+        graph -> {
+          for (String alias : graph.getVertexAlias()) {
+            localReasonerResult.getVertexList().addAll(graph.getVertex(alias));
+          }
+          for (String alias : graph.getEdgeAlias()) {
+            java.util.List<IEdge<IVertexId, IProperty>> edges = graph.getEdge(alias);
+            for (IEdge<IVertexId, IProperty> edge : edges) {
+              if (edge instanceof PathEdge) {
+                if (((PathEdge<?, ?, ?>) edge).getVertexList() != null) {
+                  localReasonerResult
+                      .getVertexList()
+                      .addAll(((PathEdge<IVertexId, IProperty, IProperty>) edge).getVertexList());
+                }
+                if (((PathEdge<?, ?, ?>) edge).getEdgeList() != null) {
+                  localReasonerResult
+                      .getEdgeList()
+                      .addAll(((PathEdge<IVertexId, IProperty, IProperty>) edge).getEdgeList());
+                }
+              }
+              localReasonerResult.getEdgeList().add(edge);
+            }
+            localReasonerResult.getEdgeList().addAll(graph.getEdge(alias));
+          }
+        });
+    return localReasonerResult;
   }
 
   /**

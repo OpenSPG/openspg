@@ -176,17 +176,6 @@ public class LocalReasonerRunner {
       if (physicalOpRoot instanceof Select) {
         LocalRow row = (LocalRow) ((Select<LocalRDG>) physicalOpRoot).row();
         result = row.getResult();
-        if ("true".equals(isGraphOutput)) {
-          LocalRDG rdg = ((Select<LocalRDG>) physicalOpRoot).in().rdg();
-          LocalReasonerResult graphRes = rdg.getRDGGraph();
-          result =
-              new LocalReasonerResult(
-                  result.getColumns(),
-                  result.getRows(),
-                  graphRes.getVertexList(),
-                  graphRes.getEdgeList(),
-                  true);
-        }
       } else {
         LocalRDG rdg = physicalOpRoot.rdg();
         result = rdg.getResult();

@@ -27,17 +27,20 @@ import scala.collection.JavaConversions;
 public class LocalRow extends Row<LocalRDG> {
   private final List<String> columns;
   private final List<Object[]> rowList;
+  private final LocalReasonerResult graphRst;
 
   /** row implement */
   public LocalRow(
       scala.collection.immutable.List<Var> orderedFields,
       LocalRDG rdg,
       scala.collection.immutable.List<String> as,
-      List<Object[]> rows) {
+      List<Object[]> rows,
+      LocalReasonerResult graphResult) {
     super(orderedFields, rdg);
     this.columns = new ArrayList<>();
     this.columns.addAll(Lists.newArrayList(JavaConversions.asJavaCollection(as)));
     this.rowList = rows;
+    this.graphRst = graphResult;
   }
 
   @Override
@@ -52,6 +55,11 @@ public class LocalRow extends Row<LocalRDG> {
 
   /** get select result */
   public LocalReasonerResult getResult() {
-    return new LocalReasonerResult(columns, rowList);
+    return new LocalReasonerResult(
+        columns,
+        rowList,
+        graphRst.getVertexList(),
+        graphRst.getEdgeList(),
+        graphRst.isGraphResult());
   }
 }

@@ -126,7 +126,7 @@ class OpenSPGDslParser extends ParserInterface {
       return DDLBlock(ddlInfo._2, List.apply(ruleBlock))
     }
     ddlBlockOp match {
-      case AddProperty(s, propertyName, propertyType) =>
+      case AddProperty(s, propertyName, _) =>
         val isLastAssignTargetAlis = ruleBlock match {
           case ProjectBlock(_, projects) =>
             var tmpIsAssign = false
@@ -172,14 +172,15 @@ class OpenSPGDslParser extends ParserInterface {
         attrFields.put(
           Constants.EDGE_FROM_ID_TYPE_KEY,
           VString(predicate.source.typeNames.head))
-        if (predicate.target.isInstanceOf[EntityElement]) {
-          attrFields.put(
-            Constants.EDGE_TO_ID_KEY,
-            VString(predicate.target.asInstanceOf[EntityElement].id))
-        } else {
-          attrFields.put(
-            Constants.EDGE_TO_ID_KEY,
-            UnaryOpExpr(GetField(Constants.NODE_ID_KEY), Ref(predicate.target.alias)))
+        predicate.target match {
+          case element: EntityElement =>
+            attrFields.put(
+              Constants.EDGE_TO_ID_KEY,
+              VString(element.id))
+          case _ =>
+            attrFields.put(
+              Constants.EDGE_TO_ID_KEY,
+              UnaryOpExpr(GetField(Constants.NODE_ID_KEY), Ref(predicate.target.alias)))
         }
         attrFields.put(
           Constants.EDGE_TO_ID_TYPE_KEY,
@@ -231,7 +232,7 @@ class OpenSPGDslParser extends ParserInterface {
       ctx.full_edge_pointing_right().element_pattern_declaration_and_filler(),
       ctx.full_edge_pointing_right().edge_pattern_pernodelimit_clause(),
       Direction.OUT,
-      false)
+      isOptional = false)
 
     val predicateElement =
       PredicateElement(p.relTypes.head, p.alias, s, o, Map.empty, Direction.OUT)
@@ -284,6 +285,19 @@ class OpenSPGDslParser extends ParserInterface {
       case _: OpChainExpr => true
       case _: OrderAndLimit => true
       case _ => false
+    }
+  }
+
+  def isFilter2ProjectBlock(rule: Rule, ruleRefRelate: Map[Rule, Set[Rule]]): Boolean = {
+    rule.getExpr match {
+      case _: OrderAndLimit => true
+      case _: GraphAggregatorExpr => true
+      case _: OpChainExpr => true
+      case _ => if (!ruleRefRelate.contains(rule)) {
+        false
+      } else {
+        true
+      }
     }
   }
 
@@ -488,18 +502,24 @@ class OpenSPGDslParser extends ParserInterface {
       rule: Rule,
       preBlock: Block,
       kg: IRGraph): Block = {
-    val isGenerateStep = isGenerateOneStepBlockExpr(rule)
-    if (isNeedDependenceExpr(rule, ruleRefRelate) && !isGenerateStep) {
-      // if ref equal 1, and without graph group we add to dependencies
-      ruleRefRelate(rule).head.addDependency(rule)
-      null
-    } else {
-      genBlockOp(
-        rule,
-        preBlock,
-        (ruleRefRelate.contains(rule) && ruleRefRelate(rule).size > 1) || isGenerateStep,
-        kg)
-    }
+    val isFilter2ProjectStep = isFilter2ProjectBlock(rule, ruleRefRelate)
+    genBlockOp(
+      rule,
+      preBlock,
+      isFilter2ProjectStep,
+      kg)
+//    val isGenerateStep = isGenerateOneStepBlockExpr(rule)
+//    if (isNeedDependenceExpr(rule, ruleRefRelate) && !isGenerateStep) {
+//      // if ref equal 1, and without graph group we add to dependencies
+//      ruleRefRelate(rule).head.addDependency(rule)
+//      null
+//    } else {
+//      genBlockOp(
+//        rule,
+//        preBlock,
+//        (ruleRefRelate.contains(rule) && ruleRefRelate(rule).size > 1) || isGenerateStep,
+//        kg)
+//    }
   }
 
   def parseRule(ctx: The_ruleContext, matchBlock: MatchBlock): Block = {
@@ -540,7 +560,7 @@ class OpenSPGDslParser extends ParserInterface {
     var ruleInstructs = Map[Rule, Set[Rule]]()
 
     rules.foreach(rule => {
-      val refRules = getRefRules(rule, rules.toList)
+      val refRules = getRefRules(rule, rules)
       for (ref <- refRules) {
         if (ruleInstructs.contains(ref)) {
           ruleInstructs += ref -> ruleInstructs(ref).union(Set.apply(rule))
@@ -792,7 +812,7 @@ class OpenSPGDslParser extends ParserInterface {
   def parseBaseJob(ctx: Base_jobContext, param: Map[String, Object]): Block = {
     var head: PatternElement = null
     if (param.contains(Constants.START_LABEL)) {
-      head = PatternElement(null, Set.apply(param(Constants.START_LABEL).toString), null);
+      head = PatternElement(null, Set.apply(param(Constants.START_LABEL).toString), null)
     }
 
     if (param.contains(Constants.START_ALIAS)) {

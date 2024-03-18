@@ -31,7 +31,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 public class GraphLoaderConfig implements Serializable {
   /** edge truncate threshold for each edge type */
-  public static final int DEFAULT_EDGE_TRUNCATE_THRESHOLD = 8 * 10000;
+  public static final int DEFAULT_EDGE_TRUNCATE_THRESHOLD = 3 * 10000;
 
   /** edge truncate threshold for all edge */
   public static final int DEFAULT_EDGE_TRUNCATE_THRESHOLD_GLOBALLY = 10 * 10000;

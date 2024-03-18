@@ -237,4 +237,47 @@ public class KgReasonerAliasSetKFilmTest {
     Assert.assertEquals("3", result.get(0)[2]);
     Assert.assertEquals("700", result.get(0)[3]);
   }
+
+  @Test
+  public void test5() {
+    FileMutex.runTestWithMutex(this::doTest5);
+  }
+
+  private void doTest5() {
+    String dsl =
+        "\n"
+            + "GraphStructure {\n"
+            + "    (A:User)-[p1:trans]->(B:User)-[p2:trans]->(C:User)-[p3:trans]->(A)\n"
+            + "}\n"
+            + "Rule {\n"
+            + "p1_amt = cast_type(p1.amount,'long')\n"
+            + "p2_amt = cast_type(p2.amount,'long')\n"
+            + "p3_amt = cast_type(p3.amount,'long')\n"
+            + "R1: A.id == $idSet1\n"
+            + "R2: B.id in $idSet2\n"
+            + "R3: C.id in $idSet2\n"
+            + "totalTrans1 = group(A,B,C).sum(p1_amt)\n"
+            + "totalTrans2 = group(A,B,C).sum(p2_amt)\n"
+            + "totalTrans3 = group(A,B,C).sum(p3_amt)\n"
+            + "totalTrans = totalTrans1 + totalTrans2 + totalTrans3\n"
+            + "R2('取top2'): top(totalTrans, 2)"
+            + "}\n"
+            + "Action {\n"
+            + "    get(A.id, B.id, C.id, totalTrans, p1_amt)\n"
+            + "}";
+    List<String[]> result =
+        TransBaseTestData.runTestResult(
+            dsl,
+            new HashMap<String, Object>() {
+              {
+                put("idSet1", "'1'");
+                put("idSet2", "['2', '3']");
+              }
+            });
+    Assert.assertEquals(1, result.size());
+    Assert.assertEquals(5, result.get(0).length);
+    Assert.assertEquals("1", result.get(0)[0]);
+    Assert.assertEquals("2", result.get(0)[1]);
+    Assert.assertEquals("3", result.get(0)[2]);
+  }
 }
