@@ -39,8 +39,8 @@ object Pure extends SimpleRule {
       val projects = select.refFields.map((_, Directly)).toMap
       select.withNewChildren(Array.apply(Project(in, projects, in.solved)))
     case project @ Project(in, _, _) =>
-      if (in.isInstanceOf[Project] || in.isInstanceOf[ExpandInto] || in
-          .isInstanceOf[PatternScan] || in.isInstanceOf[BinaryLogicalOperator]) {
+      if (in.isInstanceOf[Project] || in.isInstanceOf[ExpandInto] || in.isInstanceOf[LinkedExpand]
+        || in.isInstanceOf[PatternScan] || in.isInstanceOf[BinaryLogicalOperator]) {
         project
       } else {
         val projectOutput: List[Var] = project.fields
@@ -71,17 +71,20 @@ object Pure extends SimpleRule {
       }
     }
 
-    varMap.values.map(f => {
-      if (f.isInstanceOf[PathVar]) {
-        f
-      } else if (!solved.fields.contains(f.name)) {
-        throw InvalidRefVariable(s"can not find $f")
-      } else if (solved.fields.get(f.name).get.isInstanceOf[RepeatPathVar]) {
-        f.intersect(solved.fields.get(f.name).get.asInstanceOf[RepeatPathVar].pathVar.elements(1))
-      } else {
-        f.intersect(solved.fields.get(f.name).get)
-      }
-    }).toList
+    varMap.values
+      .map(f => {
+        if (f.isInstanceOf[PathVar]) {
+          f
+        } else if (!solved.fields.contains(f.name)) {
+          throw InvalidRefVariable(s"can not find $f")
+        } else if (solved.fields.get(f.name).get.isInstanceOf[RepeatPathVar]) {
+          f.intersect(
+            solved.fields.get(f.name).get.asInstanceOf[RepeatPathVar].pathVar.elements(1))
+        } else {
+          f.intersect(solved.fields.get(f.name).get)
+        }
+      })
+      .toList
   }
 
   override def direction: Direction = Down

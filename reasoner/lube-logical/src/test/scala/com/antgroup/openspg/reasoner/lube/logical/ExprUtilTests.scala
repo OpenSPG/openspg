@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.reasoner.lube.logical
 
-import com.antgroup.openspg.reasoner.common.types.{KgType, KTBoolean, KTDouble, KTInteger, KTLong, KTString}
+import com.antgroup.openspg.reasoner.common.types._
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.{Expr, Ref, UnaryOpExpr}
 import com.antgroup.openspg.reasoner.lube.common.graph.{IRField, IRProperty, IRVariable}
@@ -75,5 +75,24 @@ class ExprUtilTests extends AnyFunSpec {
     rule.addDependency(r1)
 
     ExprUtil.getTargetType(rule, map, udfRepo) should equal(KTLong)
+  }
+
+  it("test advanced type") {
+    val parser = new RuleExprParser()
+    val udfRepo = UdfMngFactory.getUdfMng
+    val map = Map
+      .apply(IRProperty("e", "eventTime") -> KTStd("STD.Timestamp", KTLong, false))
+      .asInstanceOf[Map[IRField, KgType]]
+
+    val r1 = ProjectRule(
+      IRVariable("eventDay"),
+      parser.parse("from_unix_time_ms(e.eventTime, 'yyyyMMdd')"))
+
+    val r2 = ProjectRule(
+      IRVariable("timeInDay"),
+      parser.parse("from_unix_time_ms(e.eventTime, 'yyyyMMdd') in ['20240311', '20240312']"))
+
+    ExprUtil.getTargetType(r1, map, udfRepo) should equal(KTString)
+    ExprUtil.getTargetType(r2, map, udfRepo) should equal(KTBoolean)
   }
 }
