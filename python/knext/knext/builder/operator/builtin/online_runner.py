@@ -60,12 +60,13 @@ class _BuiltInOnlineExtractor(ExtractOp):
                 retry_times = 0
                 while retry_times < self.max_retry_times:
                     try:
-                        query = op.build_prompt(input_param)
-                        response = self.model.remote_inference(query)
-                        collector.extend(op.parse_response(response))
-                        next_params.extend(
-                            op._build_next_variables(input_param, response)
-                        )
+                        querys = op.build_prompt(input_param)
+                        for query in querys:
+                            response = self.model.remote_inference(query)
+                            collector.extend(op.parse_response(response))
+                            next_params.extend(
+                                op._build_next_variables(input_param, response)
+                            )
                         break
                     except Exception as e:
                         retry_times += 1

@@ -13,7 +13,7 @@
 import json
 import re
 from abc import ABC
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Any
 
 from knext.schema.client import SchemaClient
 from knext.schema.model.schema_helper import SPGTypeName, PropertyName, RelationName
@@ -56,7 +56,7 @@ class AutoPrompt(PromptOp, ABC):
                 _rel.object_type_name,
             )
         for _prop in spg_type.properties.values():
-            self.property_info_zh[_prop.name_zh] = (
+            self.property_info_zh[_prop.name_zh] = (  # name_zh哪来的
                 _prop.name,
                 _prop.desc,
                 _prop.object_type_name,
@@ -218,6 +218,7 @@ input:${input}
         self.template = self.template.replace("${schema}", schema_text).replace(
             "${predicate}", predicate_text
         )
+     
 
 
 class EEPrompt(AutoPrompt):
@@ -251,8 +252,8 @@ class EEPrompt(AutoPrompt):
         self.property_names = property_names
         self.relation_names = relation_names
 
-        self._init_render_variables()
-        self._render()
+        self._init_render_variables()  # 这是什么意思
+        self._render()    # 往instruction(template里填内容)
 
         self.params = {
             "event_type_name": event_type_name,
