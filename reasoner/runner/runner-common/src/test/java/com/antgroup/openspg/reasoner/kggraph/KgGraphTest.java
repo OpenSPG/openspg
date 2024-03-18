@@ -98,7 +98,8 @@ public class KgGraphTest {
             new KgGraphSplitStaticParameters(splitVertexAliasSet2, schemaB),
             null,
             null);
-    Assert.assertTrue(splitRst.size() == kgGraph.getAlias2VertexMap().get("B").size());
+    // B size is 1, but its adjacent edge size is more than 1
+    Assert.assertTrue(splitRst.size() == 2);
     splitRst.stream()
         .map(kgGraph -> ((KgGraphImpl) kgGraph))
         .forEach(kgGraph -> Assert.assertTrue(kgGraph.getAlias2VertexMap().get("B").size() == 1));

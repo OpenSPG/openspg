@@ -19,53 +19,57 @@ trait KgType {
   def isNullable: Boolean = false
 }
 
-case object KTString extends KgType
-case object KTCharacter extends KgType
-case object KTInteger extends KgType
-case object KTLong extends KgType
-case object KTDouble extends KgType
+trait BasicKgType extends KgType
+
+trait AdvancedKgType extends KgType
+
+case object KTString extends BasicKgType
+case object KTCharacter extends BasicKgType
+case object KTInteger extends BasicKgType
+case object KTLong extends BasicKgType
+case object KTDouble extends BasicKgType
 // corresponding to java object
-case object KTObject extends KgType
-case object KTDate extends KgType
-case object KTBoolean extends KgType
-case object KTParameter extends KgType
+case object KTObject extends BasicKgType
+case object KTDate extends BasicKgType
+case object KTBoolean extends BasicKgType
 
 /**
  * list type
  * @param elementType element type
  */
-final case class KTList(elementType: KgType) extends KgType
+final case class KTList(elementType: KgType) extends AdvancedKgType
 
 /**
  * array type
  * @param elementType element type
  */
-final case class KTArray(elementType: KgType) extends KgType
+final case class KTArray(elementType: KgType) extends AdvancedKgType
 
 /**
  * Standard entity in Knowledge Graph.
  * @param label entity type name
  * @param spreadable is spreadable.
  */
-final case class KTStd(label: String, spreadable: Boolean) extends KgType
+final case class KTStd(label: String, basicType: BasicKgType, spreadable: Boolean)
+    extends AdvancedKgType
 
 /**
  * Meta concept in Knowledge Graph.
  * @param label meta concept name
  */
-final case class KTConcept(label: String) extends KgType
+final case class KTConcept(label: String) extends AdvancedKgType
 
 /**
  * Custom semantic type, which linked to entity in Knowledge Graph.
  * @param label entity type  TODO add link function
  */
-final case class KTAdvanced(label: String) extends KgType
+final case class KTAdvanced(label: String) extends AdvancedKgType
 
 /**
  * multi version property, default version number unit is ms
  * @param elementType
  */
-final case class KTMultiVersion(elementType: KgType) extends KgType
+final case class KTMultiVersion(elementType: KgType) extends AdvancedKgType
 
 object KgType {
 
