@@ -15,7 +15,7 @@ package com.antgroup.openspg.reasoner.catalog.impl
 
 import scala.language.implicitConversions
 
-import com.antgroup.openspg.core.schema.model.`type`.{BaseSPGType, BasicType, ConceptType, EntityType, EventType, SPGTypeEnum, StandardType}
+import com.antgroup.openspg.core.schema.model.`type`._
 import com.antgroup.openspg.reasoner.catalog.impl.struct.PropertyMeta
 import com.antgroup.openspg.reasoner.common.exception.KGValueException
 import com.antgroup.openspg.reasoner.common.types._
@@ -30,9 +30,15 @@ object PropertySchemaOps {
       case "CONCEPT" =>
         KTConcept(propertySchema.getPropRange.getRangeEntityName)
       case "STANDARD" =>
-        KTStd(propertySchema.getPropRange.getRangeEntityName, propertySchema.isSpreadable)
+        KTStd(
+          propertySchema.getPropRange.getRangeEntityName,
+          toKgType(propertySchema.getPropRange.getAttrRangeTypeEnum),
+          propertySchema.isSpreadable)
       case "PROPERTY" =>
-        KTStd(propertySchema.getPropRange.getRangeEntityName, propertySchema.isSpreadable)
+        KTStd(
+          propertySchema.getPropRange.getRangeEntityName,
+          toKgType(propertySchema.getPropRange.getAttrRangeTypeEnum),
+          propertySchema.isSpreadable)
       case "ENTITY" =>
         KTAdvanced(propertySchema.getPropRange.getRangeEntityName)
       case _ => throw KGValueException(s"unsupported type: ${propertySchema.getCategory}")
@@ -49,7 +55,8 @@ object PropertySchemaOps {
         // todo
         KTAdvanced(eventType.getName)
       case standardType: StandardType =>
-        KTStd(spgType.getName, standardType.getSpreadable)
+        // todo basicType support
+        KTStd(spgType.getName, null, standardType.getSpreadable)
       case basicType: BasicType =>
         toKgType(basicType.getBasicType.name())
       case _ =>
@@ -57,7 +64,7 @@ object PropertySchemaOps {
     }
   }
 
-  private def toKgType(basicType: String): KgType = {
+  private def toKgType(basicType: String): BasicKgType = {
     basicType.toUpperCase() match {
       case "INTEGER" => KTLong
       case "LONG" => KTLong
