@@ -25,5 +25,8 @@ public enum KgReasonerSinkType implements Serializable {
   /** hive table */
   HIVE,
   /** openspg canvas */
-  CANVAS
+  CANVAS,
+
+  /** sls */
+  REALTIME;
 }
