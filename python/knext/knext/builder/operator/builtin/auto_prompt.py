@@ -56,7 +56,7 @@ class AutoPrompt(PromptOp, ABC):
                 _rel.object_type_name,
             )
         for _prop in spg_type.properties.values():
-            self.property_info_zh[_prop.name_zh] = (  # name_zh哪来的
+            self.property_info_zh[_prop.name_zh] = (  
                 _prop.name,
                 _prop.desc,
                 _prop.object_type_name,
@@ -252,8 +252,8 @@ class EEPrompt(AutoPrompt):
         self.property_names = property_names
         self.relation_names = relation_names
 
-        self._init_render_variables()  # 这是什么意思
-        self._render()    # 往instruction(template里填内容)
+        self._init_render_variables()  
+        self._render()   
 
         self.params = {
             "event_type_name": event_type_name,

@@ -70,7 +70,7 @@ class DeepKE_REPrompt(AutoPrompt):
             instructions.append(
                 json.dumps({
                     "instruction": self.template,
-                    "schema": schema,
+                    "schema": schema,  # [{'subject_type': '人物', 'predicate': '出生地', 'object_type': '地点'}, {'subject_type': '人物', 'predicate': '出生日期', 'object_type': '日期]
                     "input": variables.get("input"),
                 },ensure_ascii=False,)
             )
