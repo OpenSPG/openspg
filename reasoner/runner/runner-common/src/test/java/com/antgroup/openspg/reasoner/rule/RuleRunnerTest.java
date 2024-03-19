@@ -447,6 +447,38 @@ public class RuleRunnerTest {
     Assert.assertFalse(rst);
   }
 
+  @Test
+  public void testKeywordConvert() {
+    RuleExprParser ruleExprParser = new RuleExprParser();
+    Expr e = ruleExprParser.parse("A.__alias == B.__if && A.__when == B.id");
+
+    Expr2QlexpressTransformer transformer = new Expr2QlexpressTransformer();
+
+    List<String> rules =
+        Lists.newArrayList(JavaConversions.asJavaCollection(transformer.transform(e)));
+    Map<String, Object> context = new HashMap<>();
+    context.put(
+        "A",
+        new HashMap<String, String>() {
+          {
+            put(RuleRunner.convertPropertyName("alias"), "alias_value");
+            put(RuleRunner.convertPropertyName("when"), "id_value");
+          }
+        });
+
+    context.put(
+        "B",
+        new HashMap<String, String>() {
+          {
+            put(RuleRunner.convertPropertyName("if"), "alias_value");
+            put(RuleRunner.convertPropertyName("id"), "id_value");
+          }
+        });
+
+    boolean rst = RuleRunner.getInstance().check(context, rules, "");
+    Assert.assertTrue(rst);
+  }
+
   private Map<String, Object> getRepeatTestContext() {
     Map<String, Set<IVertex<IVertexId, IProperty>>> alias2VertexMap = new HashMap<>();
     alias2VertexMap.put(
