@@ -19,7 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DynamicBatchSize {
+public class DynamicBatchSize implements IBatchSize {
   private static final Logger log = LoggerFactory.getLogger(DynamicBatchSize.class);
   private final List<Integer> costs = new ArrayList<>();
   private final List<Long> batchSizes = new ArrayList<>();
@@ -53,6 +53,7 @@ public class DynamicBatchSize {
     return cost;
   }
 
+  @Override
   public long remainSize() {
     long remain = allSize - processSize;
     if (remain < 0) {
@@ -61,10 +62,12 @@ public class DynamicBatchSize {
     return remain;
   }
 
+  @Override
   public long getAllSize() {
     return allSize;
   }
 
+  @Override
   public long getProcessSize() {
     return processSize;
   }
@@ -81,6 +84,7 @@ public class DynamicBatchSize {
    *
    * @return
    */
+  @Override
   public long getNextBatchSize() {
     if (allSize - processSize <= 0) {
       return 0;

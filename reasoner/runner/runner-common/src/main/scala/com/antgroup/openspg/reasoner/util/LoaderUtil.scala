@@ -19,12 +19,22 @@ import com.antgroup.openspg.reasoner.common.types.KTString
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.VString
-import com.antgroup.openspg.reasoner.lube.common.pattern.{EdgePattern, LinkedPatternConnection, PartialGraphPattern, Pattern, PatternConnection}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{
+  EdgePattern,
+  LinkedPatternConnection,
+  PartialGraphPattern,
+  Pattern,
+  PatternConnection
+}
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, SolvedModel, Var}
 import com.antgroup.openspg.reasoner.lube.logical.PatternOps.PatternOps
 import com.antgroup.openspg.reasoner.lube.logical.operators._
-import com.antgroup.openspg.reasoner.warehouse.common.config.{EdgeLoaderConfig, GraphLoaderConfig, VertexLoaderConfig}
+import com.antgroup.openspg.reasoner.warehouse.common.config.{
+  EdgeLoaderConfig,
+  GraphLoaderConfig,
+  VertexLoaderConfig
+}
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
@@ -58,9 +68,37 @@ object LoaderUtil {
   private def findAllTypesAllowIsolateVertex(logicalPlan: LogicalOperator): Set[String] = {
     logicalPlan.transform[Set[String]] {
       case (LinkedExpand(_, linkedEdgePattern), typeSets) =>
-        typeSets.flatMap(_.headOption).toSet ++ linkedEdgePattern.src.typeNames
-      case (_, typeSets) => typeSets.flatMap(_.headOption).toSet
+        typeSets.flatten.toSet ++ linkedEdgePattern.src.typeNames
+      case (_, typeSets) => typeSets.flatten.toSet
     }
+  }
+
+  private def findNotNeedLoadVertex(
+      logicalPlan: LogicalOperator,
+      solvedModel: SolvedModel): Set[String] = {
+    val allVertexSet = new mutable.HashSet[String]()
+    for (field <- solvedModel.fields.values.map(f => f.flatten).flatten) {
+      field match {
+        case nodeVar: NodeVar =>
+          for (typeName <- solvedModel.getTypes(nodeVar.name)) {
+            val node = logicalPlan.graph.getNode(typeName.split("/")(0))
+            if (node.resolved) {
+              allVertexSet.add(node.typeName)
+            }
+          }
+        case _ =>
+      }
+    }
+    val rootVertexTypeSet = logicalPlan.transform[Set[String]] {
+      case (PatternScan(_, pattern), typeSets) =>
+        typeSets.flatten.toSet ++ pattern.root.typeNames
+      case (ExpandInto(_, _, pattern), typeSets) =>
+        typeSets.flatten.toSet ++ pattern.root.typeNames
+      case (LinkedExpand(_, linkedEdgePattern), typeSets) =>
+        typeSets.flatten.toSet ++ linkedEdgePattern.src.typeNames ++ linkedEdgePattern.dst.typeNames
+      case (_, typeSets) => typeSets.flatten.toSet
+    }
+    allVertexSet.toSet -- rootVertexTypeSet
   }
 
   def merge(cur: SolvedModel, other: SolvedModel): SolvedModel = {
@@ -294,8 +332,8 @@ object LoaderUtil {
       .toSet
   }
 
-
-  def getConceptEdgeExpandSolvedModel(graph: SemanticPropertyGraph,
+  def getConceptEdgeExpandSolvedModel(
+      graph: SemanticPropertyGraph,
       edgePattern: EdgePattern[LinkedPatternConnection]): SolvedModel = {
     val conceptMap = getConceptHypernym(graph, edgePattern.dst.typeNames)
     val hypernymEdgeAlias = getHypernymEdgeAlias()
@@ -331,11 +369,12 @@ object LoaderUtil {
         Set(new Field(Constants.NODE_ID_KEY, KTString, true))))
     SolvedModel(alias2Types, fields, Map.empty)
   }
+
   private def generateEdgeTypeSet(
-                                   srcTypeSet: Set[String],
-                                   dstTypeSet: Set[String],
-                                   edgeSet: Set[String],
-                                   direction: Direction): Set[String] = {
+      srcTypeSet: Set[String],
+      dstTypeSet: Set[String],
+      edgeSet: Set[String],
+      direction: Direction): Set[String] = {
     var set1 = srcTypeSet;
     var set3 = dstTypeSet
     if (Direction.IN.equals(direction)) {
@@ -349,14 +388,17 @@ object LoaderUtil {
       s3 <- set3
     } yield s"$s1$separator$s2$separator$s3"
   }
+
   var index = 0;
+
   private def getHypernymEdgeAlias(): String = {
     index = index + 1
     "hypernym_" + index
   }
+
   private def getConceptHypernym(
-                                  graph: SemanticPropertyGraph,
-                                  conceptTypeSet: Set[String]): Map[String, String] = {
+      graph: SemanticPropertyGraph,
+      conceptTypeSet: Set[String]): Map[String, String] = {
     val r = generateEdgeTypeSet(
       conceptTypeSet,
       conceptTypeSet,
@@ -377,6 +419,7 @@ object LoaderUtil {
       .toMap
     r
   }
+
   def getConceptEdgeExpandMap(logicalPlan: LogicalOperator): Map[String, String] = {
     logicalPlan.transform[Map[String, String]] {
       case (LinkedExpand(_, edgePattern), list) =>
@@ -393,7 +436,6 @@ object LoaderUtil {
         }
     }
   }
-
 
   private def getLoaderConfig(logicalPlan: LogicalOperator, catalog: Catalog) = {
     val solvedModel = logicalPlan.transform[SolvedModel] {
@@ -430,6 +472,7 @@ object LoaderUtil {
     val vertexLoaderConfigMap = new mutable.HashMap[String, VertexLoaderConfig]()
     val edgeLoaderConfigMap = new mutable.HashMap[String, EdgeLoaderConfig]()
     val edgeEndVertexAliasSet = getEdgeEndVertexAliasSet(logicalPlan)
+    val notNeedLoadVertexTypeSet = findNotNeedLoadVertex(logicalPlan, solvedModel)
     for (field <- solvedModel.fields.values.map(f => f.flatten).flatten) {
       field match {
         case nodeVar: NodeVar =>
@@ -452,7 +495,9 @@ object LoaderUtil {
               if (broadcastConceptMap.contains(node.typeName)) {
                 vertexLoaderConfig.setConceptHypernym(broadcastConceptMap(node.typeName))
               }
-              vertexLoaderConfigMap.put(node.typeName, vertexLoaderConfig)
+              if (!notNeedLoadVertexTypeSet.contains(node.typeName)) {
+                vertexLoaderConfigMap.put(node.typeName, vertexLoaderConfig)
+              }
             }
           }
         case edgeVar: EdgeVar =>
