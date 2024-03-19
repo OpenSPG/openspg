@@ -54,4 +54,11 @@ object ParserUtils {
     entityNames.toSet.asJava
   }
 
+  def checkDistinctGet(dsl: String): Boolean = {
+    if (null == dsl || dsl.isEmpty) {
+      return false
+    }
+    dsl.toLowerCase().contains("distinctget")
+  }
+
 }
