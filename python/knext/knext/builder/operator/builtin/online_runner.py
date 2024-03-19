@@ -61,6 +61,8 @@ class _BuiltInOnlineExtractor(ExtractOp):
                 while retry_times < self.max_retry_times:
                     try:
                         querys = op.build_prompt(input_param)
+                        if isinstance(querys, str):
+                            querys = [querys]
                         for query in querys:
                             response = self.model.remote_inference(query)
                             collector.extend(op.parse_response(response))
