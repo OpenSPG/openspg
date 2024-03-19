@@ -325,10 +325,10 @@ public class RunnerUtil {
     List<Map<String, Object>> context = new ArrayList<>();
     if (null == kgGraph) {
       return JSON.toJSONString(
-              context,
-              SerializerFeature.PrettyFormat,
-              SerializerFeature.DisableCircularReferenceDetect,
-              SerializerFeature.SortField);
+          context,
+          SerializerFeature.PrettyFormat,
+          SerializerFeature.DisableCircularReferenceDetect,
+          SerializerFeature.SortField);
     }
     for (String alias : kgGraph.getVertexAlias()) {
       List<IVertex<IVertexId, IProperty>> vertexList = kgGraph.getVertex(alias);
@@ -352,24 +352,24 @@ public class RunnerUtil {
       }
       if (edge instanceof PathEdge) {
         flattenPathEdgeContext(
-                (PathEdge<IVertexId, IProperty, IProperty>) edge, null, kgGraph, context);
+            (PathEdge<IVertexId, IProperty, IProperty>) edge, null, kgGraph, context);
       } else {
         Map<String, Object> eMap = getEdgePropertyMap(edge, null, kgGraph, alias);
         context.add(eMap);
       }
     }
     return JSON.toJSONString(
-            context,
-            SerializerFeature.PrettyFormat,
-            SerializerFeature.DisableCircularReferenceDetect,
-            SerializerFeature.SortField);
+        context,
+        SerializerFeature.PrettyFormat,
+        SerializerFeature.DisableCircularReferenceDetect,
+        SerializerFeature.SortField);
   }
 
   public static void flattenPathEdgeContext(
-          PathEdge<IVertexId, IProperty, IProperty> edge,
-          String edgeType,
-          KgGraph<IVertexId> kgGraph,
-          List<Map<String, Object>> context) {
+      PathEdge<IVertexId, IProperty, IProperty> edge,
+      String edgeType,
+      KgGraph<IVertexId> kgGraph,
+      List<Map<String, Object>> context) {
     List<Vertex<IVertexId, IProperty>> vertexList = edge.getVertexList();
     if (CollectionUtils.isNotEmpty(vertexList)) {
       for (Vertex<IVertexId, IProperty> v : vertexList) {
@@ -387,7 +387,7 @@ public class RunnerUtil {
   }
 
   public static Map<String, Object> getEdgePropertyMap(
-          IEdge<IVertexId, IProperty> edge, String edgeType, KgGraph<IVertexId> kgGraph, String alias) {
+      IEdge<IVertexId, IProperty> edge, String edgeType, KgGraph<IVertexId> kgGraph, String alias) {
     Map<String, Object> edgeProperty = new HashMap<>();
     if (edge instanceof OptionalEdge) {
       edgeProperty.put(Constants.CONTEXT_LABEL, edgeType);
