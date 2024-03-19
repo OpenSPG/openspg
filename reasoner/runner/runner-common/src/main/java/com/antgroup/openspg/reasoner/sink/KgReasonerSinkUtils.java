@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.reasoner.sink;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.reasoner.io.model.AbstractTableInfo;
 import com.antgroup.openspg.reasoner.io.model.CanvasTableInfo;
 import com.antgroup.openspg.reasoner.io.model.HiveTableInfo;
@@ -20,12 +22,8 @@ import com.antgroup.openspg.reasoner.io.model.OdpsTableInfo;
 import com.antgroup.openspg.reasoner.io.model.SLSTableInfo;
 import com.antgroup.openspg.reasoner.progress.DecryptUtils;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
-
 import java.util.HashMap;
 import java.util.Map;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
 public class KgReasonerSinkUtils {
 

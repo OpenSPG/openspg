@@ -18,25 +18,15 @@ import java.io.Serializable;
 public enum KgReasonerSinkType implements Serializable {
   /** log */
   LOG,
-  /**
-   * loca csv file
-   */
+  /** loca csv file */
   FILE,
-  /**
-   * odps table
-   */
+  /** odps table */
   ODPS,
-  /**
-   * hive table
-   */
+  /** hive table */
   HIVE,
-  /**
-   * openspg canvas
-   */
+  /** openspg canvas */
   CANVAS,
 
-  /**
-   * sls
-   */
+  /** sls */
   REALTIME;
 }
