@@ -157,4 +157,7 @@ public class ConfigKey {
 
   /** edge extra identifier, separated by commas */
   public static final String EDGE_EXTRA_IDENTIFIER = "kg.reasoner.edge.extra.identifier";
+
+  /** the devId of akg task */
+  public static final String DEV_ID = "devId";
 }

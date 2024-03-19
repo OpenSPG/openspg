@@ -353,6 +353,14 @@
       </dependency>
       <!-- hive end -->
 
+      <!-- sls start -->
+      <dependency>
+        <groupId>com.aliyun.openservices</groupId>
+        <artifactId>log-loghub-producer</artifactId>
+        <version>0.1.4</version>
+      </dependency>
+      <!-- sls end -->
+
       <dependency>
         <groupId>com.opencsv</groupId>
         <artifactId>opencsv</artifactId>
