@@ -11,6 +11,7 @@ from typing import Dict, List
 from urllib import request
 
 from knext.builder.operator import ExtractOp, SPGRecord
+from knext.builder.operator.sub_graph import SubGraph
 from knext.schema.client import SchemaClient
 from knext.schema.marklang.schema_ml import SPGSchemaMarkLang
 from knext.schema.model.base import SpgTypeEnum
@@ -99,76 +100,71 @@ class AntGPTClient(object):
     def mock_response(self, s=[]):
         mock_response = """
 Company(公司): EntityType
-	properties:
-		name(名称): Text
-			desc: 公司的名称
-		address(地址): Text
-			desc: 注册地址
-		registrationDate(注册日期): Text
-			desc: 公司注册成立的日期
+    properties:
+        name(名称): Text
+            desc: 公司的正式名称
+        address(地址): Text
+            desc: 公司注册的地址
+        business(业务): Text
+            desc: 公司主要的业务和产品
 
-Person(人物): EntityType
-	properties:
-		name(姓名): Text
-			desc: 人物的姓名
-		joinDate(加入日期): Text
-			desc: 加人加入公司的日期
+Individual(个人): EntityType
+    properties:
+        name(姓名): Text
+            desc: 个人的姓名
 
-InvestmentEvent(投资事件): EventType
-	properties:
-		subject(主体): Company
-		object(客体): Company
-		investmentAmount(投资金额): Float
-		stakePercentage(股权百分比): Float
-		eventTime(发生时间): Text
+Investment(投资事件): EventType
+    properties:
+        subject(主体): Company
+        object(客体): Company
+            constraint: MultiValue
+        amount(金额): Float
+        stake(股份): Float
+        eventTime(发生时间): Text
 
-PartnershipEvent(合作事件): EventType
-	properties:
-		subject(主体): Company
-		object(客体): Company
-		memoSigned(备忘录签署): Text
-			desc: 是否签署了合作备忘录
-		partnershipDate(合作日期): Text
-			desc: 开始合作的日期
+UserMilestone(用户里程碑事件): EventType
+    properties:
+        subject(主体): Company
+        userCount(用户数量): Integer
+        eventTime(发生时间): Text
 
-VisitEvent(参观考察事件): EventType
-	properties:
-		subject(主体): Person
-		object(客体): Company
-		visitDate(参观日期): Text
-			desc: 参观考察发生的日期
+Partnership(合作伙伴关系事件): EventType
+    properties:
+        subject(主体): Company
+        object(客体): Company
+            constraint: MultiValue
+        eventTime(发生时间): Text
 
-ProductLaunchEvent(产品发布事件): EventType
-	properties:
-		subject(主体): Company
-		productName(产品名称): Text
-		launchDate(发布日期): Text
+Visit(参观访问事件): EventType
+    properties:
+        subject(主体): Individual
+        object(客体): Company
+        eventTime(发生时间): Text
 
-OrganizationChangeEvent(组织变动事件): EventType
-	properties:
-		subject(主体): Company
-		changeType(变动类型): Text
-			desc: 组织变动的类型（如架构调整、党委成立等）
-		eventDate(变动日期): Text
+ProductLaunch(产品发布事件): EventType
+    properties:
+        subject(主体): Company
+        productName(产品名称): Text
+        eventTime(发生时间): Text
 
-FoundingEvent(公司成立事件): EventType
-	properties:
-		subject(主体): Company
-		founders(创始人): Person
-			constraint: MultiValue
-		eventTime(发生时间): Text
+OrganizationEstablishment(组织成立事件): EventType
+    properties:
+        subject(主体): Company
+        structure(结构): Text
+        eventTime(发生时间): Text
 
-MilestoneEvent(公司里程碑事件): EventType
-	properties:
-		subject(主体): Company
-		milestone(里程碑): Text
-		eventTime(发生时间): Text
+BusinessIntegration(业务整合事件): EventType
+    properties:
+        subject(主体): Company
+        integratedEntity(被整合实体): Company
+        eventTime(发生时间): Text
 
-AcquisitionEvent(收购事件): EventType
-	properties:
-		subject(主体): Company
-		object(客体): Company
-		acquisitionDate(收购日期): Text
+Reorganization(公司重组事件): EventType
+    properties:
+        subject(主体): Company
+        newStructure(新架构): Text
+            constraint: MultiValue
+        eventTime(发生时间): Text
         """
         return mock_response
 
@@ -202,13 +198,13 @@ class MayaOpenClient(object):
 
     def mock_ae_response(self, s=""):
         mock_response = """
-    {"公司": {"腾讯": {"注册地": "广东省深圳市", "业务活动": "拓展无线网络寻呼系统"}, "华谊兄弟传媒股份有限公司": {"股权比例": "4.6%"}, "艺龙网": {"股权比例": "16%"}, "珂兰钻石": {}, "腾讯电商控股公司": {}}}    
+     {"公司": {"深圳市腾讯计算机系统有限公司": {}, "腾讯": {"业务": "拓展无线网络寻呼系统"}}}    
            """
         return mock_response
 
     def mock_ee_response(self, s=""):
         mock_response = """
-    {"投资事件": [{"trigger": "投资", "arguments": {"投资方": "腾讯", "受投企业": "艺龙网", "投资金额": "8440万美元", "投资日期": "2011年5月17日", "获得股权": "16%"}}], "合作事件": [], "里程碑事件": [], "公司结构变更事件": [], "官方访问事件": [], "产品发布事件": [{"trigger": "推出", "arguments": {"公司": "腾讯", "产品": "微信", "发布日期": "2011年1月21日"}}], "组织成立事件": [{"trigger": "成立", "arguments": {"组织": "腾讯公司党委", "公司": "NAN", "成立日期": "1998年11月11日"}}]}        
+     {"投资事件": [{"trigger": "投资", "arguments": {"主体": "腾讯", "客体": "DST", "金额": "约3亿美元", "股份": "NAN", "发生时间": "2010年4月12日"}}, {"trigger": "投资", "arguments": {"主体": "腾讯", "客体": "华谊兄弟传媒股份有限公司", "金额": "4.5亿元", "股份": "NAN", "发生时间": "2011年1月21日"}}, {"trigger": "投资", "arguments": {"主体": "腾讯", "客体": "艺龙网", "金额": "8440万美元", "股份": "NAN", "发生时间": "2011年5月17日"}}, {"trigger": "投资", "arguments": {"主体": "腾讯", "客体": "珂兰钻石", "金额": "数千万美元", "股份": "NAN", "发生时间": "2011年6月21日"}}], "用户里程碑事件": [{"trigger": "1亿", "arguments": {"主体": "腾讯", "用户数量": "1亿", "发生时间": "2010年3月5日"}}], "合作伙伴关系事件": [{"trigger": "合作伙伴", "arguments": {"主体": "腾讯", "客体": "美国思科公司", "发生时间": "2010年6月17日"}}], "参观访问事件": [{"trigger": "参观", "arguments": {"主体": "时任中共中央总书记、国家主席、中央军委主席胡锦涛一行", "客体": "腾讯公司", "发生时间": "2010年9月5日下午"}}], "产品发布事件": [{"trigger": "推出", "arguments": {"主体": "腾讯", "产品名称": "微信", "发生时间": "2011年1月21日"}}], "组织成立事件": [{"trigger": "成立", "arguments": {"主体": "深圳市腾讯计算机系统有限公司", "结构": "NAN", "发生时间": "1998年11月11日"}}], "业务整合事件": [], "公司重组事件": []}        
            """
         return mock_response
 
@@ -338,7 +334,7 @@ class AutoSchemaBuilder(ExtractOp):
             print("---------------------SPGRecords---------------------")
             print(spg_records)
             print("---------------------SPGRecords---------------------")
-            return spg_records
+            return SubGraph.from_spg_record(spg_types, spg_records)
 
         raise ValueError("Exceeded maximum retry count, entity and event extract failed.")
 

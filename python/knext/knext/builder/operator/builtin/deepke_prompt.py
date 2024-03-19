@@ -261,7 +261,7 @@ class DeepKE_KGPrompt(AutoPrompt):
             type_en, _ = self.spg_type_schema_info_zh[type_zh]
             if type_value and isinstance(type_value, dict):
                 for name, attrs in type_value.items():
-                    spg_record = SPGRecord(type_en).upsert_properties({"id": name, "name": name})
+                    spg_record = SPGRecord(type_en).upsert_properties({"name": name})
                     for attr_zh, attr_value in attrs.items():
                         if isinstance(attr_value, list):
                             attr_value = ','.join(attr_value)
