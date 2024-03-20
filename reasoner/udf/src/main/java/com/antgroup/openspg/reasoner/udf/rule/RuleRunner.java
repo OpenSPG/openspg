@@ -58,12 +58,25 @@ public class RuleRunner {
     keywordSet.addAll(Arrays.asList(keyWordDefine4Java.keyWords));
   }
 
+  private static final String CONFLICT_KEY_PREFIX = "__ConflictKey_";
   /** convert vertex or edge property name to prevent keyword conflicts */
   public static String convertPropertyName(String propertyName) {
     if (keywordSet.contains(propertyName)) {
-      return "__" + propertyName;
+      return CONFLICT_KEY_PREFIX + propertyName;
     }
     return propertyName;
+  }
+
+  /** recover property name */
+  public static String recoverPropertyName(String propertyName) {
+    if (!propertyName.startsWith(CONFLICT_KEY_PREFIX)) {
+      return propertyName;
+    }
+    return propertyName.substring(CONFLICT_KEY_PREFIX.length());
+  }
+
+  public static boolean isConflictPropertyName(String propertyName) {
+    return propertyName.startsWith(CONFLICT_KEY_PREFIX);
   }
 
   /**
