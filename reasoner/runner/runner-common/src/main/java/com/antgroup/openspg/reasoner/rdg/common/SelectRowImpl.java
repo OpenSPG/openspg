@@ -25,6 +25,7 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
 import com.antgroup.openspg.reasoner.lube.logical.PathVar;
 import com.antgroup.openspg.reasoner.lube.logical.PropertyVar;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import java.io.Serializable;
 import java.util.List;
@@ -107,6 +108,6 @@ public class SelectRowImpl implements Serializable {
           SerializerFeature.SortField);
     }
     Map<String, Object> propertyMap = (Map<String, Object>) context.get(alias);
-    return propertyMap.get(propertyName);
+    return propertyMap.get(RuleRunner.convertPropertyName(propertyName));
   }
 }
