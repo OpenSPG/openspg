@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.udf.test;
 
+import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.reasoner.common.types.KTArray;
 import com.antgroup.openspg.reasoner.common.types.KTBoolean$;
 import com.antgroup.openspg.reasoner.common.types.KTDouble$;
@@ -51,6 +52,36 @@ public class UdfTest {
   @Before
   public void init() {
     DateUtils.timeZone = TimeZone.getTimeZone("Asia/Shanghai");
+  }
+
+  @Test
+  public void testJsonGet() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    String params = "{'v':'123'}";
+    IUdfMeta udfMeta =
+        mng.getUdfMeta("json_get", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
+    Object rst = udfMeta.invoke(params, "$.v");
+    Assert.assertEquals(rst, "123");
+  }
+
+  @Test
+  public void testRdfProperty() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    String params =
+        "{\n"
+            + "  \"B\": {\n"
+            + "    \"extInfo\": \"gen_pic_gamble_hitsp_flag=1\",\n"
+            + "    \"lbs\": \"{'v':'123'}\"\n"
+            + "  }\n"
+            + "}";
+    ;
+    Map<String, Object> paramsMap = JSONObject.parseObject(params, Map.class);
+    paramsMap.put("basicInfo", "{'v':'123'}");
+    IUdfMeta udfMeta =
+        mng.getUdfMeta(
+            "get_rdf_property", Lists.newArrayList(KTObject$.MODULE$, KTString$.MODULE$));
+    Object rst = udfMeta.invoke(paramsMap, "v");
+    Assert.assertEquals(rst, "123");
   }
 
   @Test
