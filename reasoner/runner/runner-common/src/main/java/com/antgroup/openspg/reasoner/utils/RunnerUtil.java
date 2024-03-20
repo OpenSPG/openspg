@@ -331,7 +331,7 @@ public class RunnerUtil {
     IProperty property = vertex.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        vertexProperty.put(key, property.get(key));
+        vertexProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     vertexProperty.put(Constants.CONTEXT_LABEL, getVertexType(vertex));
@@ -383,7 +383,7 @@ public class RunnerUtil {
     IProperty property = edge.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        edgeProperty.put(key, property.get(key));
+        edgeProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     edgeProperty.put(Constants.CONTEXT_LABEL, edgeType);
@@ -408,7 +408,7 @@ public class RunnerUtil {
     IProperty property = edge.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        edgeProperty.put(key, property.get(key));
+        edgeProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     edgeProperty.put(Constants.REPEAT_EDGE_FLAG, true);
@@ -446,7 +446,7 @@ public class RunnerUtil {
     IProperty property = optionalEdge.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        edgeProperty.put(key, property.get(key));
+        edgeProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     edgeProperty.put(Constants.OPTIONAL_EDGE_FLAG, true);
