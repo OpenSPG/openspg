@@ -268,26 +268,6 @@ class OpenSPGDslParser extends ParserInterface {
     }
   }
 
-  def isNeedDependenceExpr(rule: Rule, ruleRefRelate: Map[Rule, Set[Rule]]): Boolean = {
-    if (!ruleRefRelate.contains(rule) || ruleRefRelate(rule).size != 1) {
-      return false
-    }
-    val refRule = ruleRefRelate(rule).head
-    refRule.getExpr match {
-      case _: OrderAndLimit => false
-      case _ => true
-    }
-  }
-
-  def isGenerateOneStepBlockExpr(rule: Rule): Boolean = {
-    rule.getExpr match {
-      case _: GraphAggregatorExpr => true
-      case _: OpChainExpr => true
-      case _: OrderAndLimit => true
-      case _ => false
-    }
-  }
-
   def isFilter2ProjectBlock(rule: Rule, ruleRefRelate: Map[Rule, Set[Rule]]): Boolean = {
     rule.getExpr match {
       case _: OrderAndLimit => true
@@ -508,18 +488,6 @@ class OpenSPGDslParser extends ParserInterface {
       preBlock,
       isFilter2ProjectStep,
       kg)
-//    val isGenerateStep = isGenerateOneStepBlockExpr(rule)
-//    if (isNeedDependenceExpr(rule, ruleRefRelate) && !isGenerateStep) {
-//      // if ref equal 1, and without graph group we add to dependencies
-//      ruleRefRelate(rule).head.addDependency(rule)
-//      null
-//    } else {
-//      genBlockOp(
-//        rule,
-//        preBlock,
-//        (ruleRefRelate.contains(rule) && ruleRefRelate(rule).size > 1) || isGenerateStep,
-//        kg)
-//    }
   }
 
   def parseRule(ctx: The_ruleContext, matchBlock: MatchBlock): Block = {

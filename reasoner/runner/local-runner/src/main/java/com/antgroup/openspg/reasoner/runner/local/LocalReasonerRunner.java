@@ -165,7 +165,7 @@ public class LocalReasonerRunner {
         localPropertyGraph.setCarryTraversalGraph(true);
       }
 
-      // 判断是否存在
+      // judge is need add same mock graph
       if (task.getParams().containsKey(ConfigKey.KG_REASONER_MOCK_GRAPH_DATA)) {
         String demoGraph = task.getParams().get(ConfigKey.KG_REASONER_MOCK_GRAPH_DATA).toString();
         MockLocalGraphLoader mockLocalGraphLoader = new MockLocalGraphLoader(demoGraph);
