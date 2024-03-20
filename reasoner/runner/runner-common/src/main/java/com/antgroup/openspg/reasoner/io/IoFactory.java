@@ -30,9 +30,12 @@ import com.antgroup.openspg.reasoner.io.hive.HiveWriterSession;
 import com.antgroup.openspg.reasoner.io.model.AbstractTableInfo;
 import com.antgroup.openspg.reasoner.io.model.HiveTableInfo;
 import com.antgroup.openspg.reasoner.io.model.OdpsTableInfo;
+import com.antgroup.openspg.reasoner.io.model.SLSTableInfo;
 import com.antgroup.openspg.reasoner.io.odps.OdpsReader;
 import com.antgroup.openspg.reasoner.io.odps.OdpsUtils;
 import com.antgroup.openspg.reasoner.io.odps.OdpsWriter;
+import com.antgroup.openspg.reasoner.io.sls.SlsWriter;
+import com.antgroup.openspg.reasoner.io.sls.SlsWriterSession;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -74,6 +77,11 @@ public class IoFactory {
       HiveWriterSession hiveWriterSession = HiveUtils.createHiveWriterSession(hiveTableInfo);
       sessionId = hiveWriterSession.getSessionId();
       SESSION_MAP.put(hiveTableInfo, new Tuple2<>(sessionId, hiveWriterSession));
+    } else if (tableInfo instanceof SLSTableInfo) {
+      SLSTableInfo slsTableInfo = (SLSTableInfo) tableInfo;
+      SlsWriterSession slsWriterSession = new SlsWriterSession(slsTableInfo);
+      sessionId = slsWriterSession.getSessionId();
+      SESSION_MAP.put(slsTableInfo, new Tuple2<>(sessionId, slsWriterSession));
     }
     log.info(
         "createWriterSession,table_info="
@@ -116,6 +124,21 @@ public class IoFactory {
         HiveWriter hiveWriter = new HiveWriter();
         hiveWriter.open(index, parallel, tableInfo);
         TABLE_WRITER_CACHE.put(cacheKey, hiveWriter);
+      }
+      return TABLE_WRITER_CACHE.getIfPresent(cacheKey);
+    } else if (tableInfo instanceof SLSTableInfo) {
+      resultWriter = TABLE_WRITER_CACHE.getIfPresent(cacheKey);
+      if (null != resultWriter) {
+        return resultWriter;
+      }
+      synchronized (TABLE_WRITER_CACHE) {
+        resultWriter = TABLE_WRITER_CACHE.getIfPresent(cacheKey);
+        if (null != resultWriter) {
+          return resultWriter;
+        }
+        SlsWriter slsWriter = new SlsWriter();
+        slsWriter.open(index, parallel, tableInfo);
+        TABLE_WRITER_CACHE.put(cacheKey, slsWriter);
       }
       return TABLE_WRITER_CACHE.getIfPresent(cacheKey);
     }
