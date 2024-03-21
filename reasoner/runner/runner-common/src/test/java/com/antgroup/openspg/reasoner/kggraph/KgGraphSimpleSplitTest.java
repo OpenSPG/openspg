@@ -46,6 +46,7 @@ public class KgGraphSimpleSplitTest {
     Pattern schema = pattern1();
     KgGraph<IVertexId> kgGraph = kgGraph1();
 
+    // B,C,D size is 1, but its adjacent edge is more than 1
     Set<String> splitVertexAliasSet = Sets.newHashSet("B", "C", "D");
     List<KgGraph<IVertexId>> rst1 =
         kgGraph.split(
@@ -54,9 +55,9 @@ public class KgGraphSimpleSplitTest {
             new KgGraphSplitStaticParameters(splitVertexAliasSet, schema),
             null,
             null);
-    Assert.assertEquals(1, rst1.size());
-    Assert.assertEquals(rst1.get(0), kgGraph);
+    Assert.assertEquals(2, rst1.size());
 
+    // D size is 1 and  its adjacent edge is 1
     Set<String> splitVertexAliasSet2 = Sets.newHashSet("D");
     List<KgGraph<IVertexId>> rst2 =
         kgGraph.split(
@@ -207,11 +208,11 @@ public class KgGraphSimpleSplitTest {
             new KgGraphSplitStaticParameters(splitVertexAliasSet3, schema),
             null,
             null);
-    Assert.assertEquals(2, rst3.size());
+    Assert.assertEquals(4, rst3.size());
     rst3.stream()
         .forEach(
             iVertexIdKgGraph -> {
-              Assert.assertEquals(2, iVertexIdKgGraph.getVertex("A").size());
+              Assert.assertEquals(1, iVertexIdKgGraph.getVertex("A").size());
               Assert.assertEquals(1, iVertexIdKgGraph.getVertex("B").size());
               Assert.assertEquals(1, iVertexIdKgGraph.getVertex("C").size());
               Assert.assertEquals(1, iVertexIdKgGraph.getVertex("D").size());
