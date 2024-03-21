@@ -17,6 +17,7 @@ from typing import List, Dict, Tuple
 
 
 from knext.schema.client import SchemaClient
+from knext.schema.marklang.schema_ml import SPGSchemaMarkLang
 from knext.schema.model.base import BaseSpgType
 from knext.schema.model.schema_helper import SPGTypeName, PropertyName, RelationName
 from knext.builder.operator.op import PromptOp
@@ -24,8 +25,41 @@ from knext.builder.operator.spg_record import SPGRecord
 import uuid
 
 
+class SchemaPrompt(PromptOp):
+    template: str = """
+你是知识图谱领域的建模专家，从下述文本中整理出${entity_type}类型相关的schema（包括事件类型EventType和实体类型EntityType），schema定义尽量精简。
+文本：
+${input}
+输出格式要求：
+1. 不需要返回额外说明和注释
+2. 基本属性类型包括Text/Integer/Float
+3. 事件类型的主体和客体必须为已经定义的实体类型，并且必须定义主体属性
+4. 注意缩进，实体/事件类型定义在第一层缩进，属性/关系定义在第三层缩进
+5. 使用constraint: MultiValue表示属性支持多值
+6. 属性英文名必须定义为驼峰式，不允许包括下划线
+输出示例：
+Company(公司): EntityType
+    desc: 公司的描述
+    properties:
+        address(地址): Text
+            desc: 公司地址的描述
+Person(人物): EntityType
+	properties:
+		workAt(就职于): Company
+FiredEvent(公司解雇事件): EventType
+    properties:
+        subject(主体): Company
+        object(客体): Person
+            constraint: MultiValue
+        eventTime(发生时间): Text
+"""
+
+    def build_prompt(self, variables: Dict[str, str]) -> str:
+        return self.template.replace("${entity_type}", variables.get("entity_type")).replace("${input}", variables.get("input"))
+
+
 class AutoPrompt(PromptOp, ABC):
-    spg_types: List[BaseSpgType]
+    spg_types: List[BaseSpgType] = list()
 
     def __init__(self, spg_type_names: List[SPGTypeName]):
         super().__init__()
@@ -33,12 +67,6 @@ class AutoPrompt(PromptOp, ABC):
         for spg_type_name in spg_type_names:
             spg_type = schema_session.get(spg_type_name=spg_type_name)
             self.spg_types.append(spg_type)
-
-    @property
-    def params(self):
-        params = locals()
-        params.pop("self")
-        return params
 
     def _init_render_variables(self):
         self.property_info_zh = {}

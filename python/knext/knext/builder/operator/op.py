@@ -10,7 +10,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 from abc import ABC
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Union
 
 import knext.common.cache
 from knext.schema.model.schema_helper import SPGTypeName, TripletName
@@ -149,7 +149,7 @@ class PromptOp(BaseOp, ABC):
     def __init__(self, **kwargs):
         super().__init__()
 
-    def build_prompt(self, variables: Dict[str, str]) -> str:
+    def build_prompt(self, variables: Dict[str, str]) -> Union[List[str], str]:
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `build_prompt` method."
         )

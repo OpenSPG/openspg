@@ -140,6 +140,7 @@ class SPGSchemaMarkLang:
     defined_types = {}
 
     def __init__(self, filename):
+        self.reset()
         self.schema_file = filename
         self.current_line_num = 0
         self.schema = SchemaClient()
@@ -157,6 +158,27 @@ class SPGSchemaMarkLang:
             ]:
                 self.internal_type.add(spg_type.name)
         self.load_script()
+
+    def reset(self):
+        self.internal_type = set()
+        self.entity_internal_property = set()
+        self.event_internal_property = {"eventTime"}
+        self.concept_internal_property = {"stdId", "alias"}
+        self.keyword_type = {"EntityType", "ConceptType", "EventType", "StandardType"}
+
+        self.parsing_register = {
+            RegisterUnit.Type: None,
+            RegisterUnit.Property: None,
+            RegisterUnit.Relation: None,
+            RegisterUnit.SubProperty: None,
+        }
+        self.indent_level_pos = [None, None, None, None, None, None]
+        self.rule_quote_predicate = None
+        self.rule_quote_open = False
+        self.current_parsing_level = 0
+        self.last_indent_level = 0
+        self.namespace = None
+        self.types = {}
 
     def save_register(self, element: RegisterUnit, value):
         """
