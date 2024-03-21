@@ -18,7 +18,6 @@ import com.antgroup.openspg.reasoner.lube.block.{Block, MatchBlock, TableResultB
 import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode, IRPath}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.Explain
-
 import scala.collection.mutable
 
 object PathExplain extends Explain {
@@ -29,7 +28,7 @@ object PathExplain extends Explain {
     case tableResultBlock@TableResultBlock(dependencies, selectList, asList) =>
       if (selectList.fields.isEmpty) {
         tableResultBlock
-      } else{
+      } else {
         val newSelectFields = selectList.fields.map {
           case path@IRPath(_, elements) =>
             val newPathField = elements.map {
