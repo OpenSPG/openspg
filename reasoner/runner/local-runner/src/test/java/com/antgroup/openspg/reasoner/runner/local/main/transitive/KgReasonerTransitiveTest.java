@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.reasoner.runner.local.main.transitive;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
@@ -122,6 +124,33 @@ public class KgReasonerTransitiveTest {
     Assert.assertEquals(2, result.getRows().get(0).length);
     Assert.assertEquals(result.getRows().get(0)[0], "P1");
     Assert.assertEquals(result.getRows().get(0)[1], "C5");
+  }
+
+  @Test
+  public void testTransitiveWithPathLongestWithPath() {
+    String dsl =
+        "GraphStructure {\n"
+            + "  A [RelatedParty, __start__='true']\n"
+            + "  B [RelatedParty]\n"
+            + "  A->B [holdShare] repeat(1,10) as e\n"
+            + "}\n"
+            + "Rule {\n"
+            + "  R1(\"只保留最长的路径\"): group(A).keep_longest_path(e)\n"
+            + "}\n"
+            + "Action {\n"
+            + "  get(A.id,B.id,__path__)  \n"
+            + "}";
+    LocalReasonerResult result = doProcess(dsl);
+    // check result
+    Assert.assertEquals(1, result.getRows().size());
+    Assert.assertEquals(3, result.getRows().get(0).length);
+    Assert.assertEquals(result.getRows().get(0)[0], "P1");
+    Assert.assertTrue("C2,C5".contains(result.getRows().get(0)[1].toString()));
+    // check path format
+    JSONArray path = JSON.parseArray(result.getRows().get(0)[2].toString());
+    Assert.assertEquals(path.size(), 9);
+    Assert.assertEquals(path.getJSONObject(0).get(Constants.CONTEXT_TYPE), "vertex");
+    Assert.assertEquals(path.getJSONObject(5).get(Constants.CONTEXT_TYPE), "edge");
   }
 
   @Test
@@ -304,6 +333,38 @@ public class KgReasonerTransitiveTest {
     Assert.assertEquals(2, result.getRows().get(0).length);
     Assert.assertEquals(result.getRows().get(0)[0], "P1");
     Assert.assertEquals(result.getRows().get(0)[1], "C5");
+  }
+
+  @Test
+  public void testTransitiveWithRule2WithPath() {
+    String dsl =
+        "GraphStructure {\n"
+            + "  A [RelatedParty, __start__='true']\n"
+            + "  B,C [RelatedParty]\n"
+            + "  B->C [trans] repeat(1,10) as e\n"
+            + "  A->B [trans] as f\n"
+            + "}\n"
+            + "Rule {\n"
+            + "R1(\"要求转账logId一致\"): e.edges().constraint((pre,cur) => cur.logId == f.logId)"
+            + "R2(\"时间大于第一个\"): e.edges().constraint((pre,cur) => cur.payDate > f.payDate)"
+            + "R11(\"要求前一个时间小于后一个时间\"): e.edges().constraint((pre,cur) => cur.payDate > pre.payDate)"
+            + "R3(\"只保留最长的路径\"): group(A).keep_longest_path(e)\n"
+            + "}\n"
+            + "Action {\n"
+            + "  get(A.id,C.id,__path__)  \n"
+            + "}";
+    LocalReasonerResult result = doProcess(dsl);
+    // check result
+    Assert.assertEquals(1, result.getRows().size());
+    Assert.assertEquals(3, result.getRows().get(0).length);
+    Assert.assertEquals(result.getRows().get(0)[0], "P1");
+    Assert.assertEquals(result.getRows().get(0)[1], "C5");
+    // check path format
+    JSONArray path = JSON.parseArray(result.getRows().get(0)[2].toString());
+    Assert.assertEquals(path.size(), 9);
+    Assert.assertEquals(path.getJSONObject(0).get("entityType"), "PERSON");
+    Assert.assertEquals(path.getJSONObject(4).get("name"), "C6");
+    Assert.assertEquals(path.getJSONObject(8).get("amount"), 5);
   }
 
   @Test
