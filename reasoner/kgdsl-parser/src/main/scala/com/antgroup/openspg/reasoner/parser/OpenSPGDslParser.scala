@@ -18,20 +18,36 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.exception.{KGDSLGrammarException, KGDSLOneTaskException}
+import com.antgroup.openspg.reasoner.common.exception.{
+  KGDSLGrammarException,
+  KGDSLOneTaskException
+}
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction
 import com.antgroup.openspg.reasoner.common.trees.BottomUp
 import com.antgroup.openspg.reasoner.common.types._
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.graph._
-import com.antgroup.openspg.reasoner.lube.common.pattern.{Element, EntityElement, GraphPath, PatternElement, PredicateElement}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{
+  Element,
+  EntityElement,
+  GraphPath,
+  PatternElement,
+  PredicateElement
+}
 import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, ProjectRule, Rule}
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface
 import com.antgroup.openspg.reasoner.lube.utils.{ExprUtils, RuleUtils}
-import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.{Expr2QlexpressTransformer, Rule2ExprTransformer}
+import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.{
+  Expr2QlexpressTransformer,
+  Rule2ExprTransformer
+}
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
-import com.antgroup.openspg.reasoner.parser.pattern.{ConceptLabelType, EntityLabelType, PatternParser}
+import com.antgroup.openspg.reasoner.parser.pattern.{
+  ConceptLabelType,
+  EntityLabelType,
+  PatternParser
+}
 
 /**
  * parse dsl to Block
@@ -169,9 +185,7 @@ class OpenSPGDslParser extends ParserInterface {
         attrFields.put(
           Constants.EDGE_FROM_ID_KEY,
           UnaryOpExpr(GetField(Constants.NODE_ID_KEY), Ref(predicate.source.alias)))
-        attrFields.put(
-          Constants.EDGE_FROM_ID_TYPE_KEY,
-          VString(predicate.source.typeNames.head))
+        attrFields.put(Constants.EDGE_FROM_ID_TYPE_KEY, VString(predicate.source.typeNames.head))
         if (predicate.target.isInstanceOf[EntityElement]) {
           attrFields.put(
             Constants.EDGE_TO_ID_KEY,
@@ -181,10 +195,7 @@ class OpenSPGDslParser extends ParserInterface {
             Constants.EDGE_TO_ID_KEY,
             UnaryOpExpr(GetField(Constants.NODE_ID_KEY), Ref(predicate.target.alias)))
         }
-        attrFields.put(
-          Constants.EDGE_TO_ID_TYPE_KEY,
-          VString(predicate.target.typeNames.head))
-
+        attrFields.put(Constants.EDGE_TO_ID_TYPE_KEY, VString(predicate.target.typeNames.head))
 
         val depBlk = ruleBlock
 
@@ -397,18 +408,16 @@ class OpenSPGDslParser extends ParserInterface {
               case _ =>
                 ProjectBlock(
                   List.apply(opBlock),
-                  ProjectFields(Map.apply(lValueName ->
-                    ProjectRule(lValueName, opChain))))
+                  ProjectFields(
+                    Map.apply(lValueName ->
+                      ProjectRule(lValueName, opChain))))
             }
           case AggIfOpExpr(_, _) | AggOpExpr(_, _) =>
             ProjectBlock(
               List.apply(opBlock),
               ProjectFields(
-                Map.apply(
-                  lValueName ->
-                    ProjectRule(
-                      lValueName,
-                      opChain.curExpr))))
+                Map.apply(lValueName ->
+                  ProjectRule(lValueName, opChain.curExpr))))
           case _ => null
         }
       }
@@ -667,7 +676,7 @@ class OpenSPGDslParser extends ParserInterface {
 
   def parseGetAndAs(
       ctx: Get_actionContext,
-      preBlock: Block): (List[String], List[String], List[Expr], Block, String) = {
+      preBlock: Block): (List[String], List[String], List[Expr], Block, String, Boolean) = {
     var newPreBlock: Block = preBlock
     var columnNames = List[String]()
     var columnExpr = List[Expr]()
@@ -704,12 +713,23 @@ class OpenSPGDslParser extends ParserInterface {
         })
     }
     newPreBlock = addRuleToBlock(columnProjectRule.toSet, newPreBlock)
-    (columnNames, outputColumnNames, columnExpr, newPreBlock, viewName)
+    val isDistinctGet = ctx.action_get().getText match {
+      case "distinctGet" => true
+      case _ => false
+    }
+    (columnNames, outputColumnNames, columnExpr, newPreBlock, viewName, isDistinctGet)
   }
 
   def parseGetAction(ctx: Get_actionContext, preBlock: Block): Block = {
-    val (columnNames, outputColumnNames, _, newPreBlock, _) = parseGetAndAs(ctx, preBlock)
-    parseTableResultBlock(columnNames, outputColumnNames, Set.empty, List.empty, newPreBlock)
+    val (columnNames, outputColumnNames, _, newPreBlock, _, isDistinctGet) =
+      parseGetAndAs(ctx, preBlock)
+    parseTableResultBlock(
+      isDistinctGet,
+      columnNames,
+      outputColumnNames,
+      Set.empty,
+      List.empty,
+      newPreBlock)
   }
 
   def parseOneElementInGet(ctx: One_element_in_getContext): (Rule, String, Boolean) = {
@@ -741,10 +761,7 @@ class OpenSPGDslParser extends ParserInterface {
       ctx.non_parenthesized_value_expression_primary_with_property())
     val defaultColumnName = parseExpr2ElementStr(expr)
     val columnName = parseAsAliasWithComment(ctx.as_alias_with_comment(), defaultColumnName)
-    (
-      ProjectRule(IRVariable(defaultColumnName), expr),
-      columnName,
-      false)
+    (ProjectRule(IRVariable(defaultColumnName), expr), columnName, false)
   }
 
   def parseAsAliasWithComment(ctx: As_alias_with_commentContext, defaultName: String): String = {
@@ -858,13 +875,11 @@ class OpenSPGDslParser extends ParserInterface {
     val expr = exprParser.parseValueExpression(ctx.value_expression())
     val defaultColumnName = parseExpr2ElementStr(expr)
     val columnName = parseReturnAlias(ctx.return_item_alias(), defaultColumnName)
-    (
-      ProjectRule(IRVariable(defaultColumnName), expr),
-      columnName,
-      false)
+    (ProjectRule(IRVariable(defaultColumnName), expr), columnName, false)
   }
 
   def parseTableResultBlock(
+      isDistinctGet: Boolean,
       columnNames: List[String],
       outputColumnNames: List[String],
       rules: Set[Rule],
@@ -941,7 +956,11 @@ class OpenSPGDslParser extends ParserInterface {
     }
 
     if (rules.isEmpty) {
-      TableResultBlock(List.apply(dependency), OrderedFields(resultFields), outputColumnNames)
+      TableResultBlock(
+        List.apply(dependency),
+        OrderedFields(resultFields),
+        outputColumnNames,
+        isDistinctGet)
     } else {
       TableResultBlock(
         List.apply(
@@ -949,7 +968,8 @@ class OpenSPGDslParser extends ParserInterface {
             List.apply(dependency),
             ProjectFields(rules.map(x => (x.getOutput, x)).toMap))),
         OrderedFields(resultFields),
-        outputColumnNames)
+        outputColumnNames,
+        isDistinctGet)
     }
   }
 
@@ -974,6 +994,7 @@ class OpenSPGDslParser extends ParserInterface {
       .filter(x => x != null)
 
     parseTableResultBlock(
+      false,
       columnNames,
       outputColumnNames,
       columnProjectRule.toSet,

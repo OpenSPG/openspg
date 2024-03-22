@@ -57,7 +57,7 @@ abstract class RDG[T <: RDG[T]] extends Result {
    * @param cols columns to select.
    * @return
    */
-  def select(cols: List[Var], as: List[String]): Records
+  def select(cols: List[Var], as: List[String], isDistinctGet: Boolean): Records
 
   /**
    * Returns a [[RDG]] containing only data where the given expression evaluates to

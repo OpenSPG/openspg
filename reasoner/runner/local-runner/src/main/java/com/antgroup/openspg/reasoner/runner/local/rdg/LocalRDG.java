@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.runner.local.rdg;
 
 import com.alibaba.fastjson.JSON;
+import com.antgroup.openspg.common.util.ArrayWrapper;
 import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
@@ -502,7 +503,7 @@ public class LocalRDG extends RDG<LocalRDG> {
   }
 
   @Override
-  public Row<LocalRDG> select(List<Var> cols, List<String> as) {
+  public Row<LocalRDG> select(List<Var> cols, List<String> as, boolean isDistinctGet) {
     java.util.List<String> crossBorderRuleList = new ArrayList<>();
     java.util.List<Var> columns = Lists.newArrayList(JavaConversions.asJavaCollection(cols));
 
@@ -530,6 +531,11 @@ public class LocalRDG extends RDG<LocalRDG> {
           break;
         }
       }
+    }
+    if (isDistinctGet) {
+      java.util.Set<ArrayWrapper> rowSet = new HashSet<>();
+      rows.forEach(row -> rowSet.add(new ArrayWrapper(row)));
+      rows = rowSet.stream().map(ArrayWrapper::getValue).collect(Collectors.toList());
     }
     log.info("LocalRDG select,,matchCount=" + rows.size());
     this.executionRecorder.stageResultWithDesc(

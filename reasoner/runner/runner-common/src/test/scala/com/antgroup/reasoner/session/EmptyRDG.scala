@@ -15,7 +15,12 @@ package com.antgroup.reasoner.session
 
 import com.antgroup.openspg.reasoner.lube.block.{DDLOp, SortItem}
 import com.antgroup.openspg.reasoner.lube.common.expr.{Aggregator, Expr}
-import com.antgroup.openspg.reasoner.lube.common.pattern.{EdgePattern, LinkedPatternConnection, Pattern, PatternElement}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{
+  EdgePattern,
+  LinkedPatternConnection,
+  Pattern,
+  PatternElement
+}
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 import com.antgroup.openspg.reasoner.lube.logical.planning.JoinType
 import com.antgroup.openspg.reasoner.lube.logical.{RichVar, Var}
@@ -49,7 +54,8 @@ class EmptyRDG extends RDG[EmptyRDG] {
    * @param cols columns to select.
    * @return
    */
-  override def select(cols: List[Var], as: List[String]): EmptyRow = new EmptyRow(cols, this)
+  override def select(cols: List[Var], as: List[String], isDistinctGet: Boolean): EmptyRow =
+    new EmptyRow(cols, this)
 
   /**
    * Returns a [[RDG]] containing only data where the given expression evaluates to

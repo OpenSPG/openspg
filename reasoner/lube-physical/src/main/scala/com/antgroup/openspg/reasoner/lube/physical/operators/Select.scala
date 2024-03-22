@@ -21,8 +21,9 @@ import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 final case class Select[T <: RDG[T]: TypeTag](
     in: PhysicalOperator[T],
     orderedFields: List[Var],
-    as: List[String])
+    as: List[String],
+    isDistinctGet: Boolean)
     extends PhysicalOperator[T] {
-  def row: T#Records = in.rdg.select(orderedFields, as)
+  def row: T#Records = in.rdg.select(orderedFields, as, isDistinctGet)
   override def meta: List[Var] = orderedFields
 }
