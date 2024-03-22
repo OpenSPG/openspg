@@ -21,15 +21,13 @@ import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.Explain
 import scala.collection.mutable.ListBuffer
 
 object PathExplain extends Explain {
-  private var pathNodes: ListBuffer[String] = ListBuffer[String]()
-  private var pathEdges: ListBuffer[String] = ListBuffer[String]()
   override def explain(implicit context: LogicalPlannerContext): PartialFunction[Block, Block] = {
     case tableResultBlock@TableResultBlock(dependencies, selectList, asList) =>
       if (selectList.fields.isEmpty) {
         tableResultBlock
       } else {
-        //        val pathNodes = ListBuffer[String]()
-        //        val pathEdges = ListBuffer[String]()
+        val pathNodes = ListBuffer[String]()
+        val pathEdges = ListBuffer[String]()
         val newSelectFields = selectList.fields.map {
           case path@IRPath(_, elements) =>
             val newPathField = elements.map {
@@ -47,9 +45,12 @@ object PathExplain extends Explain {
         }
         val newSelectList = selectList.copy(orderedFields = newSelectFields)
         val newTableResultBlock = TableResultBlock(dependencies, newSelectList, asList)
-        newTableResultBlock
+        newTableResultBlock.rewriteTopDown(explainMatch(pathNodes, pathEdges))
       }
+  }
 
+  private def explainMatch(pathNodes: ListBuffer[String],
+                           pathEdges: ListBuffer[String]): PartialFunction[Block, Block] = {
     case matchBlock@MatchBlock(dependencies, patterns) =>
       if (patterns.isEmpty) {
         matchBlock
@@ -68,8 +69,6 @@ object PathExplain extends Explain {
             val newPath = p._2.copy(graphPattern = pattern.copy(properties = newProperties))
             (p._1, newPath)
         }
-        pathNodes.clear()
-        pathEdges.clear()
         MatchBlock(dependencies, newPatterns)
       }
   }
