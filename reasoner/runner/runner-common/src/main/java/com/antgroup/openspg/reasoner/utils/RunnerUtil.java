@@ -337,7 +337,7 @@ public class RunnerUtil {
       }
       Map<String, Object> vc = vertexContext(vertexList.get(0));
       vc.put(Constants.CONTEXT_TYPE, "vertex");
-      vc.put("__alias__", alias);
+      vc.put(Constants.CONTEXT_ALIAS, alias);
       context.add(vc);
     }
 
@@ -401,7 +401,7 @@ public class RunnerUtil {
     } else {
       edgeProperty.putAll(edgeContext(edge, edgeType, kgGraph));
     }
-    edgeProperty.put("__alias__", alias);
+    edgeProperty.put(Constants.CONTEXT_ALIAS, alias);
     edgeProperty.put(Constants.CONTEXT_TYPE, "edge");
     return edgeProperty;
   }
