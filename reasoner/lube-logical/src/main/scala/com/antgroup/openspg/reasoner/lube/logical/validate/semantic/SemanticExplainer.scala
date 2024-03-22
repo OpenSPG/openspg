@@ -15,7 +15,7 @@ package com.antgroup.openspg.reasoner.lube.logical.validate.semantic
 
 import com.antgroup.openspg.reasoner.lube.block.Block
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
-import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.rules.{ConceptExplain, NodeIdTransform, PathExplain, SpatioTemporalExplain}
+import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.rules.{ConceptExplain, PathExplain, SpatioTemporalExplain}
 
 object SemanticExplainer {
 
