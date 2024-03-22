@@ -78,4 +78,7 @@ public class Constants {
       Sets.newHashSet("isA", "locateAt");
 
   public static final String CONCEPT_EDGE_EXPAND_FUNC_NAME = "concept_edge_expand";
+
+  /** result remove duplicate */
+  public static final String REMOVE_DUPLICATE = "remove_duplicate";
 }
