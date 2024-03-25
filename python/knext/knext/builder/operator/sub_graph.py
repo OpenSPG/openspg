@@ -57,13 +57,14 @@ class Edge(object):
         self.properties = properties
 
     @classmethod
-    def from_spg_record(cls, from_node: Node, object_record: SPGRecord, label: str):
+    def from_spg_record(cls, subject_record: SPGRecord, object_record: SPGRecord, label: str):
+        from_node = Node.from_spg_record(subject_record)
         to_node = Node.from_spg_record(object_record)
 
         return cls(
             from_node=from_node,
             to_node=to_node,
-            label=f'{from_node.label}_{label}_{object_record.spg_type_name}',
+            label=label,
             properties={}
         )
 
@@ -105,6 +106,6 @@ class SubGraph(object):
                 object_type_name = spg_type.properties.get(prop_name).object_type_name
                 for object_record in spg_records:
                     if object_record.spg_type_name == object_type_name and object_record.get_property("name") == prop_value:
-                        edge = Edge.from_spg_record(from_node, object_record, prop_name)
+                        edge = Edge.from_spg_record(subject_record, object_record, prop_name)
                         edges.add(edge)
         return cls(nodes=list(nodes), edges=list(edges)).to_dict()
