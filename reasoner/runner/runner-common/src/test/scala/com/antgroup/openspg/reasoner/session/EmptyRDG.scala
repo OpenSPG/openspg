@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.reasoner.session
+package com.antgroup.openspg.reasoner.session
 
 import com.antgroup.openspg.reasoner.lube.block.{DDLOp, SortItem}
 import com.antgroup.openspg.reasoner.lube.common.expr.{Aggregator, Expr}
