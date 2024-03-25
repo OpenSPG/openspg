@@ -1143,7 +1143,7 @@ public class LocalOptionalTest {
     }
   }
 
-  // @Test
+  @Test
   public void doTestOptional2() {
     String dsl =
         "Define (s: ProfMedV1.PatientIndex)-[p: belongTo]->(o: `ProfMedV1.Index`/`前列腺肿瘤-突破前列腺包膜`) {\n"

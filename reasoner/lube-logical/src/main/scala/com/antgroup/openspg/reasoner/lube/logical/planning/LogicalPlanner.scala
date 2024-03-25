@@ -57,9 +57,9 @@ object LogicalPlanner {
     val source = resolve(input)
     val groups = getStarts(input)
     val planWithoutResult = if (groups.isEmpty) {
-      planBlock(input.dependencies.head, None, source)
+      planBlock(input.dependencies.head, input, None, source)
     } else {
-      planBlock(input.dependencies.head, None, source)(
+      planBlock(input.dependencies.head, input, None, source)(
         context.addParam(Constants.START_ALIAS, groups.head))
     }
     val plan = input match {
@@ -195,14 +195,17 @@ object LogicalPlanner {
     }
   }
 
-  private def planBlock(input: Block, plan: Option[LogicalOperator], solvedModel: SolvedModel)(
-      implicit context: LogicalPlannerContext): LogicalOperator = {
+  private def planBlock(
+      input: Block,
+      root: Block,
+      plan: Option[LogicalOperator],
+      solvedModel: SolvedModel)(implicit context: LogicalPlannerContext): LogicalOperator = {
     if (input.dependencies.isEmpty) {
       planLeaf(input, solvedModel)
     } else {
       // plan one of the block dependencies
-      val dependency = planBlock(input.dependencies.head, plan, solvedModel)
-      planNonLeaf(input, solvedModel, dependency)
+      val dependency = planBlock(input.dependencies.head, root, plan, solvedModel)
+      planNonLeaf(input, root, solvedModel, dependency)
     }
   }
 
@@ -217,8 +220,11 @@ object LogicalPlanner {
     }
   }
 
-  private def planNonLeaf(block: Block, solvedModel: SolvedModel, plan: LogicalOperator)(implicit
-      context: LogicalPlannerContext): LogicalOperator = {
+  private def planNonLeaf(
+      block: Block,
+      root: Block,
+      solvedModel: SolvedModel,
+      plan: LogicalOperator)(implicit context: LogicalPlannerContext): LogicalOperator = {
     block match {
       case MatchBlock(_, matches) =>
         // TODO: plan the first one in current
@@ -226,7 +232,7 @@ object LogicalPlanner {
       case FilterBlock(_, rule) =>
         planFilter(rule, plan)
       case ProjectBlock(_, projects) =>
-        planProject(projects, plan)
+        planProject(projects, root, plan)
       case AggregationBlock(_, aggregations, group) =>
         planAggregate(aggregations, group, plan)
       case OrderAndSliceBlock(_, orderBy, limit, group) =>
@@ -366,9 +372,9 @@ object LogicalPlanner {
    * @param context
    * @return
    */
-  private def planProject(projects: ProjectFields, dependency: LogicalOperator)(implicit
-      context: LogicalPlannerContext): LogicalOperator = {
-    val projectPlanner = new ProjectPlanner(projects)
+  private def planProject(projects: ProjectFields, root: Block, dependency: LogicalOperator)(
+      implicit context: LogicalPlannerContext): LogicalOperator = {
+    val projectPlanner = new ProjectPlanner(projects, root)
     projectPlanner.plan(dependency)
   }
 
