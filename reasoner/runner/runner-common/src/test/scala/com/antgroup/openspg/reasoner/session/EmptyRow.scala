@@ -25,4 +25,11 @@ class EmptyRow(orderedFields: List[Var], rdg: EmptyRDG)
    * @param rows number of rows to print
    */
   override def show(rows: Int): Unit = {}
+
+  /**
+   * Remove duplicate result in row
+   *
+   * @return
+   */
+  override def distinct(): Row[EmptyRDG] = this
 }
