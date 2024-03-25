@@ -163,7 +163,8 @@ public class RuleRunnerTest {
     RuleExprParser parser = new RuleExprParser();
 
     Expr expr = parser.parse("\"\"");
-    Expr2QlexpressTransformer transformer = new Expr2QlexpressTransformer();
+    Expr2QlexpressTransformer transformer =
+        new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
     List<String> rules =
         Lists.newArrayList(JavaConversions.asJavaCollection(transformer.transform(expr)));
     Map<String, Object> context = new HashMap<>();
@@ -402,7 +403,8 @@ public class RuleRunnerTest {
                 + "and "
                 + "not contains_any(s.status, [\"无\", \"不\", \"未见\"])");
 
-    Expr2QlexpressTransformer transformer = new Expr2QlexpressTransformer();
+    Expr2QlexpressTransformer transformer =
+        new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
 
     List<String> rules =
         Lists.newArrayList(JavaConversions.asJavaCollection(transformer.transform(e)));
@@ -427,7 +429,8 @@ public class RuleRunnerTest {
     RuleExprParser ruleExprParser = new RuleExprParser();
     Expr e = ruleExprParser.parse("contains_any(s.entity, '包膜') and contains_any(s.entity, a)");
 
-    Expr2QlexpressTransformer transformer = new Expr2QlexpressTransformer();
+    Expr2QlexpressTransformer transformer =
+        new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
 
     List<String> rules =
         Lists.newArrayList(JavaConversions.asJavaCollection(transformer.transform(e)));
@@ -445,6 +448,39 @@ public class RuleRunnerTest {
 
     boolean rst = RuleRunner.getInstance().check(context, rules, "");
     Assert.assertFalse(rst);
+  }
+
+  @Test
+  public void testKeywordConvert() {
+    RuleExprParser ruleExprParser = new RuleExprParser();
+    Expr e = ruleExprParser.parse("A.alias == B.alias && A.when == B.id");
+
+    Expr2QlexpressTransformer transformer =
+        new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
+
+    List<String> rules =
+        Lists.newArrayList(JavaConversions.asJavaCollection(transformer.transform(e)));
+    Map<String, Object> context = new HashMap<>();
+    context.put(
+        "A",
+        new HashMap<String, String>() {
+          {
+            put(RuleRunner.convertPropertyName("alias"), "alias_value");
+            put(RuleRunner.convertPropertyName("when"), "id_value");
+          }
+        });
+
+    context.put(
+        "B",
+        new HashMap<String, String>() {
+          {
+            put(RuleRunner.convertPropertyName("alias"), "alias_value");
+            put(RuleRunner.convertPropertyName("id"), "id_value");
+          }
+        });
+
+    boolean rst = RuleRunner.getInstance().check(context, rules, "");
+    Assert.assertTrue(rst);
   }
 
   private Map<String, Object> getRepeatTestContext() {
@@ -535,7 +571,8 @@ public class RuleRunnerTest {
     Assert.assertTrue(aliasSet.contains("A"));
     Assert.assertTrue(aliasSet.contains("B"));
     Assert.assertTrue(aliasSet.contains("e"));
-    Expr2QlexpressTransformer transformer = new Expr2QlexpressTransformer();
+    Expr2QlexpressTransformer transformer =
+        new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
     List<String> rules =
         Lists.newArrayList(JavaConversions.asJavaCollection(transformer.transform(e)));
     Assert.assertEquals(
@@ -550,7 +587,8 @@ public class RuleRunnerTest {
   @Test
   public void testRepeatReduce2() {
     Expr e = ruleExprParser.parse("e.edges().reduce((pre, cur) => cur.rate * pre, 1)");
-    Expr2QlexpressTransformer transformer = new Expr2QlexpressTransformer();
+    Expr2QlexpressTransformer transformer =
+        new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
     List<String> rules =
         Lists.newArrayList(JavaConversions.asJavaCollection(transformer.transform(e)));
     Assert.assertEquals(
