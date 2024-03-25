@@ -16,7 +16,11 @@ package com.antgroup.openspg.reasoner.lube.block
 import com.antgroup.openspg.reasoner.common.types.KgType
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.common.graph._
-import com.antgroup.openspg.reasoner.lube.common.pattern.{Element, PatternElement, PredicateElement}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{
+  Element,
+  PatternElement,
+  PredicateElement
+}
 
 /**
  * every operator block tree of root is result block
@@ -32,7 +36,8 @@ abstract class ResultBlock[B <: Binds] extends BasicBlock[B](BlockType("result")
 final case class TableResultBlock(
     dependencies: List[Block],
     selectList: OrderedFields,
-    asList: List[String])
+    asList: List[String],
+    distinct: Boolean)
     extends ResultBlock[OrderedFields] {
 
   /**

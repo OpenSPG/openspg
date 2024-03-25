@@ -23,4 +23,10 @@ abstract class Row[T <: RDG[T]](val orderedFields: List[Var], val rdg: T) extend
    * @param rows number of rows to print
    */
   def show(rows: Int = 20): Unit
+
+  /**
+   * Remove duplicate result in row
+   * @return
+   */
+  def distinct(): Row[T]
 }

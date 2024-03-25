@@ -15,7 +15,11 @@ package com.antgroup.openspg.reasoner.lube.logical.operators
 
 import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, Var}
 
-final case class Select(in: LogicalOperator, fields: List[Var], as: List[String])
+final case class Select(
+    in: LogicalOperator,
+    fields: List[Var],
+    as: List[String],
+    distinct: Boolean)
     extends StackingLogicalOperator {
 
   override def refFields: List[Var] = {

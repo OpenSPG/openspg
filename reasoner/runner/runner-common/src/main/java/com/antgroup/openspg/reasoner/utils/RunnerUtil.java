@@ -15,11 +15,13 @@ package com.antgroup.openspg.reasoner.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
+import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.OptionalEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.PathEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
@@ -28,6 +30,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.MirrorVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
 import com.antgroup.openspg.reasoner.common.utils.CombinationIterator;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
@@ -311,6 +314,97 @@ public class RunnerUtil {
       context.put(connection.target(), new HashMap<>());
     }
     return context;
+  }
+
+  /**
+   * KgGraph 2 PathInfo in flat format
+   *
+   * @param kgGraph
+   * @return
+   */
+  public static String getPathInfo(KgGraph<IVertexId> kgGraph) {
+    List<Map<String, Object>> context = new ArrayList<>();
+    if (null == kgGraph) {
+      return JSON.toJSONString(
+          context,
+          SerializerFeature.PrettyFormat,
+          SerializerFeature.DisableCircularReferenceDetect,
+          SerializerFeature.SortField);
+    }
+    for (String alias : kgGraph.getVertexAlias()) {
+      List<IVertex<IVertexId, IProperty>> vertexList = kgGraph.getVertex(alias);
+      if (CollectionUtils.isEmpty(vertexList)) {
+        continue;
+      }
+      Map<String, Object> vc = vertexContext(vertexList.get(0));
+      vc.put(Constants.CONTEXT_TYPE, "vertex");
+      vc.put(Constants.CONTEXT_ALIAS, alias);
+      context.add(vc);
+    }
+
+    for (String alias : kgGraph.getEdgeAlias()) {
+      List<IEdge<IVertexId, IProperty>> edgeList = kgGraph.getEdge(alias);
+      if (CollectionUtils.isEmpty(edgeList)) {
+        continue;
+      }
+      IEdge<IVertexId, IProperty> edge = edgeList.get(0);
+      if (null == edge) {
+        continue;
+      }
+      if (edge instanceof PathEdge) {
+        flattenPathEdgeContext(
+            (PathEdge<IVertexId, IProperty, IProperty>) edge, null, kgGraph, context);
+      } else {
+        Map<String, Object> eMap = getEdgePropertyMap(edge, null, kgGraph, alias);
+        context.add(eMap);
+      }
+    }
+    return JSON.toJSONString(
+        context,
+        SerializerFeature.PrettyFormat,
+        SerializerFeature.DisableCircularReferenceDetect,
+        SerializerFeature.SortField);
+  }
+
+  public static void flattenPathEdgeContext(
+      PathEdge<IVertexId, IProperty, IProperty> edge,
+      String edgeType,
+      KgGraph<IVertexId> kgGraph,
+      List<Map<String, Object>> context) {
+    List<Vertex<IVertexId, IProperty>> vertexList = edge.getVertexList();
+    if (CollectionUtils.isNotEmpty(vertexList)) {
+      for (Vertex<IVertexId, IProperty> v : vertexList) {
+        Map<String, Object> vc = vertexContext(v);
+        vc.put(Constants.CONTEXT_TYPE, "vertex");
+        context.add(vc);
+      }
+    }
+    List<Edge<IVertexId, IProperty>> edgeList = edge.getEdgeList();
+    if (CollectionUtils.isNotEmpty(edgeList)) {
+      for (Edge<IVertexId, IProperty> e : edgeList) {
+        context.add(getEdgePropertyMap(e, edgeType, kgGraph, null));
+      }
+    }
+  }
+
+  public static Map<String, Object> getEdgePropertyMap(
+      IEdge<IVertexId, IProperty> edge, String edgeType, KgGraph<IVertexId> kgGraph, String alias) {
+    Map<String, Object> edgeProperty = new HashMap<>();
+    if (edge instanceof OptionalEdge) {
+      edgeProperty.put(Constants.CONTEXT_LABEL, edgeType);
+      IProperty property = edge.getValue();
+      if (null != property) {
+        for (String key : property.getKeySet()) {
+          edgeProperty.put(key, property.get(key));
+        }
+      }
+      edgeProperty.put(Constants.OPTIONAL_EDGE_FLAG, true);
+    } else {
+      edgeProperty.putAll(edgeContext(edge, edgeType, kgGraph));
+    }
+    edgeProperty.put(Constants.CONTEXT_ALIAS, alias);
+    edgeProperty.put(Constants.CONTEXT_TYPE, "edge");
+    return edgeProperty;
   }
 
   /** get vertex context in alias */
