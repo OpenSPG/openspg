@@ -37,7 +37,7 @@ final case class TableResultBlock(
     dependencies: List[Block],
     selectList: OrderedFields,
     asList: List[String],
-    isDistinctGet: Boolean)
+    distinct: Boolean)
     extends ResultBlock[OrderedFields] {
 
   /**

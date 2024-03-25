@@ -22,12 +22,11 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.{
   PatternElement
 }
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
-import com.antgroup.openspg.reasoner.lube.logical.planning.JoinType
 import com.antgroup.openspg.reasoner.lube.logical.{RichVar, Var}
+import com.antgroup.openspg.reasoner.lube.logical.planning.JoinType
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 
 class EmptyRDG extends RDG[EmptyRDG] {
-  override type Records = EmptyRow
 
   /**
    * Match the giving pattern on Graph
@@ -54,7 +53,7 @@ class EmptyRDG extends RDG[EmptyRDG] {
    * @param cols columns to select.
    * @return
    */
-  override def select(cols: List[Var], as: List[String], isDistinctGet: Boolean): EmptyRow =
+  override def select(cols: List[Var], as: List[String]): EmptyRow =
     new EmptyRow(cols, this)
 
   /**

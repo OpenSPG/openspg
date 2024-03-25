@@ -713,18 +713,18 @@ class OpenSPGDslParser extends ParserInterface {
         })
     }
     newPreBlock = addRuleToBlock(columnProjectRule.toSet, newPreBlock)
-    val isDistinctGet = ctx.action_get().getText match {
+    val distinct = ctx.action_get().getText match {
       case "distinctGet" => true
       case _ => false
     }
-    (columnNames, outputColumnNames, columnExpr, newPreBlock, viewName, isDistinctGet)
+    (columnNames, outputColumnNames, columnExpr, newPreBlock, viewName, distinct)
   }
 
   def parseGetAction(ctx: Get_actionContext, preBlock: Block): Block = {
-    val (columnNames, outputColumnNames, _, newPreBlock, _, isDistinctGet) =
+    val (columnNames, outputColumnNames, _, newPreBlock, _, distinct) =
       parseGetAndAs(ctx, preBlock)
     parseTableResultBlock(
-      isDistinctGet,
+      distinct,
       columnNames,
       outputColumnNames,
       Set.empty,
@@ -879,7 +879,7 @@ class OpenSPGDslParser extends ParserInterface {
   }
 
   def parseTableResultBlock(
-      isDistinctGet: Boolean,
+      distinct: Boolean,
       columnNames: List[String],
       outputColumnNames: List[String],
       rules: Set[Rule],
@@ -960,7 +960,7 @@ class OpenSPGDslParser extends ParserInterface {
         List.apply(dependency),
         OrderedFields(resultFields),
         outputColumnNames,
-        isDistinctGet)
+        distinct)
     } else {
       TableResultBlock(
         List.apply(
@@ -969,7 +969,7 @@ class OpenSPGDslParser extends ParserInterface {
             ProjectFields(rules.map(x => (x.getOutput, x)).toMap))),
         OrderedFields(resultFields),
         outputColumnNames,
-        isDistinctGet)
+        distinct)
     }
   }
 

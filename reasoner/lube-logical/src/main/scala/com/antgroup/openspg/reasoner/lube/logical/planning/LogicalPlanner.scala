@@ -81,7 +81,7 @@ object LogicalPlanner {
               case _ => throw UnsupportedOperationException(s"unsupported ${x}")
             }),
           t.asList,
-          t.isDistinctGet)
+          t.distinct)
       case d: DDLBlock =>
         val newDDLs = new mutable.HashSet[DDLOp]()
         for (ddl <- d.ddlOp) {

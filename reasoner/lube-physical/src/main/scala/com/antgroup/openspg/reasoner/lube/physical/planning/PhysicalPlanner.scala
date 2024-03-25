@@ -58,8 +58,8 @@ object PhysicalPlanner {
         PatternScan(plan[T](in, workingRdgName), pattern, input.fields)
       case LogicalOperators.ExpandInto(in, target, pattern) =>
         ExpandInto(plan[T](in, workingRdgName), target, pattern, input.fields)
-      case LogicalOperators.Select(in, orderedFields, as, isDistinctGet) =>
-        Select(plan[T](in, workingRdgName), orderedFields, as, isDistinctGet)
+      case LogicalOperators.Select(in, orderedFields, as, distinct) =>
+        Select(plan[T](in, workingRdgName), orderedFields, as, distinct)
       case LogicalOperators.Filter(in, expr) => Filter(plan[T](in, workingRdgName), expr)
       case LogicalOperators.DDL(in, ddlOp) => DDL(plan[T](in, workingRdgName), ddlOp)
       case LogicalOperators.Aggregate(in, group, aggregations, _) =>

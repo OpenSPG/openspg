@@ -19,7 +19,7 @@ final case class Select(
     in: LogicalOperator,
     fields: List[Var],
     as: List[String],
-    isDistinctGet: Boolean)
+    distinct: Boolean)
     extends StackingLogicalOperator {
 
   override def refFields: List[Var] = {

@@ -33,8 +33,6 @@ import com.antgroup.openspg.reasoner.lube.logical.planning.JoinType
 abstract class RDG[T <: RDG[T]] extends Result {
   this: T =>
 
-  type Records <: Row[T]
-
   /**
    * Match the giving pattern on Graph
    * @param pattern specific pattern, see more [[Pattern]]
@@ -57,7 +55,7 @@ abstract class RDG[T <: RDG[T]] extends Result {
    * @param cols columns to select.
    * @return
    */
-  def select(cols: List[Var], as: List[String], isDistinctGet: Boolean): Records
+  def select(cols: List[Var], as: List[String]): Row[T]
 
   /**
    * Returns a [[RDG]] containing only data where the given expression evaluates to
