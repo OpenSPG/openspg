@@ -27,7 +27,7 @@ import uuid
 
 class SchemaPrompt(PromptOp):
     template: str = """
-你是知识图谱领域的建模专家，从下述文本中整理出${entity_type}类型相关的schema（包括事件类型EventType和实体类型EntityType），schema定义尽量精简。
+你是知识图谱领域的建模专家，从下述文本中整理出schema结构（包括事件类型EventType和实体类型EntityType），schema定义尽量精简。
 文本：
 ${input}
 输出格式要求：
@@ -55,7 +55,7 @@ FiredEvent(公司解雇事件): EventType
 """
 
     def build_prompt(self, variables: Dict[str, str]) -> str:
-        return self.template.replace("${entity_type}", variables.get("entity_type")).replace("${input}", variables.get("input"))
+        return self.template.replace("${input}", variables.get("input"))
 
 
 class AutoPrompt(PromptOp, ABC):

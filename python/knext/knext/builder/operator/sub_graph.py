@@ -65,8 +65,8 @@ class Edge(object):
 
     def to_dict(self):
         return {
-            "fromId": self.from_id,
-            "toId": self.to_id,
+            "from": self.from_id,
+            "to": self.to_id,
             "fromType": self.from_type,
             "toType": self.to_type,
             "label": self.label,
