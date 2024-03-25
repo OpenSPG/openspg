@@ -9,6 +9,7 @@ class Node(object):
     name: str
     label: str
     properties: Dict[str, str]
+    hash_map: Dict[SPGRecord, str] = dict()
 
     def __init__(self, _id: str, name: str, label: str, properties: Dict[str, str]):
         self.name = name
@@ -20,8 +21,11 @@ class Node(object):
 
     @classmethod
     def from_spg_record(cls, spg_record: SPGRecord):
+        _id = None
+        if spg_record in cls.hash_map:
+            _id = cls.hash_map[spg_record]
         return cls(
-                _id=spg_record.get_property("id"),
+                _id=_id or spg_record.get_property("id"),
                 name=spg_record.get_property("name"),
                 label=spg_record.spg_type_name,
                 properties=spg_record.properties,
@@ -93,6 +97,7 @@ class SubGraph(object):
         nodes, edges = set(), set()
         for subject_record in spg_records:
             from_node = Node.from_spg_record(subject_record)
+            Node.hash_map[subject_record] = from_node.id
             nodes.add(from_node)
             spg_type_name = subject_record.spg_type_name
             spg_type = spg_types.get(spg_type_name)
