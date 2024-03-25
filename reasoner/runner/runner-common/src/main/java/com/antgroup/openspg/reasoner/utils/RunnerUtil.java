@@ -91,6 +91,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import scala.Tuple2;
 import scala.collection.JavaConversions;
@@ -425,7 +426,7 @@ public class RunnerUtil {
     IProperty property = vertex.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        vertexProperty.put(key, property.get(key));
+        vertexProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     vertexProperty.put(Constants.CONTEXT_LABEL, getVertexType(vertex));
@@ -477,7 +478,7 @@ public class RunnerUtil {
     IProperty property = edge.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        edgeProperty.put(key, property.get(key));
+        edgeProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     edgeProperty.put(Constants.CONTEXT_LABEL, edgeType);
@@ -502,7 +503,7 @@ public class RunnerUtil {
     IProperty property = edge.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        edgeProperty.put(key, property.get(key));
+        edgeProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     edgeProperty.put(Constants.REPEAT_EDGE_FLAG, true);
@@ -540,7 +541,7 @@ public class RunnerUtil {
     IProperty property = optionalEdge.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        edgeProperty.put(key, property.get(key));
+        edgeProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     edgeProperty.put(Constants.OPTIONAL_EDGE_FLAG, true);
@@ -565,6 +566,31 @@ public class RunnerUtil {
           Constants.VERTEX_INTERNAL_ID_KEY, edgeContext.get(Constants.EDGE_FROM_INTERNAL_ID_KEY));
     }
     return vertexProperty;
+  }
+
+  /** recover context keys */
+  public static Map<String, Object> recoverContextKeys(Map<String, Object> context) {
+    Map<String, Object> conflictKey = new HashMap<>();
+    Iterator<Map.Entry<String, Object>> it = context.entrySet().iterator();
+    while (it.hasNext()) {
+      Map.Entry<String, Object> entry = it.next();
+      if (!RuleRunner.isConflictPropertyName(entry.getKey())) {
+        continue;
+      }
+      it.remove();
+      conflictKey.put(RuleRunner.recoverPropertyName(entry.getKey()), entry.getValue());
+    }
+    if (MapUtils.isNotEmpty(conflictKey)) {
+      context.putAll(conflictKey);
+    }
+    return context;
+  }
+
+  public static Object recoverContextKeys(Object context) {
+    if (!(context instanceof Map)) {
+      return context;
+    }
+    return recoverContextKeys((Map<String, Object>) context);
   }
 
   public static final String FLATTEN_SEPARATOR = ".";
