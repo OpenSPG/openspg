@@ -16,13 +16,22 @@ package com.antgroup.openspg.reasoner.lube.physical.operators
 import scala.reflect.runtime.universe.TypeTag
 
 import com.antgroup.openspg.reasoner.lube.logical.Var
-import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
+import com.antgroup.openspg.reasoner.lube.physical.rdg.{RDG, Row}
 
 final case class Select[T <: RDG[T]: TypeTag](
     in: PhysicalOperator[T],
     orderedFields: List[Var],
-    as: List[String])
+    as: List[String],
+    distinct: Boolean)
     extends PhysicalOperator[T] {
-  def row: T#Records = in.rdg.select(orderedFields, as)
+
+  def row: Row[T] = {
+    var row = in.rdg.select(orderedFields, as)
+    if (distinct) {
+      row = row.distinct()
+    }
+    row
+  }
+
   override def meta: List[Var] = orderedFields
 }
