@@ -359,7 +359,7 @@ class DeepKE_EEPrompt(AutoPrompt):
             type_en, _ = self.spg_type_schema_info_zh[type_zh]
             if type_values and isinstance(type_values, list):
                 for type_value in type_values:
-                    spg_record = SPGRecord(type_en)
+                    spg_record = SPGRecord(type_en).upsert_property("name", type_zh)
                     arguments = type_value.get("arguments")
                     if arguments and isinstance(arguments, dict):
                         for attr_zh, attr_value in arguments.items():
