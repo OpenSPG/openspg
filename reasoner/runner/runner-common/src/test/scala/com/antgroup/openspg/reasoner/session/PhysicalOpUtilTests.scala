@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.reasoner.session
+package com.antgroup.openspg.reasoner.session
 
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog
 import com.antgroup.openspg.reasoner.lube.physical.util.PhysicalOperatorUtil
