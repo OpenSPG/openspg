@@ -553,7 +553,6 @@ public class KgReasonerTransitiveTest {
             + "  Rule {\n"
             + "    p.id = L.id\n"
             + "    p.version = L.__id__\n"
-            //                    + "    p.L = L.__property_json__\n"
             + "    p.L = L\n"
             + "  }\n"
             + "}\n";
@@ -564,12 +563,12 @@ public class KgReasonerTransitiveTest {
             + "  A [Function]\n"
             + "  B [Function]\n"
             + "  API -> A [api2function]\n"
-            + "  A -> B [related] repeat(1,2) as e\n"
+            + "  A -> B [related] repeat(1,2)\n"
             + "}\n"
             + "Rule {\n"
             + "}\n"
             + "Action {\n"
-            + "  get(e, __path__ as p)\n"
+            + "  get(__path__ as p)\n"
             + "}";
 
     System.out.println(dsl);
@@ -603,12 +602,21 @@ public class KgReasonerTransitiveTest {
     // enable subquery
     Map<String, Object> params = new HashMap<>();
     params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
-    params.put(ConfigKey.KG_REASONER_BINARY_PROPERTY, "false");
     params.put(Constants.SPG_REASONER_MULTI_VERSION_ENABLE, "true");
     task.setParams(params);
 
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
+
+    // check result
+    Assert.assertEquals(2, result.getRows().size());
+    // check path format
+    JSONArray path = JSON.parseArray(result.getRows().get(1)[0].toString());
+    Assert.assertEquals(path.size(), 7);
+    Assert.assertEquals(path.getJSONObject(0).get("name"), "A1");
+    Assert.assertEquals(path.getJSONObject(1).get("name"), "B2");
+    Assert.assertEquals(path.getJSONObject(4).get(Constants.CONTEXT_TYPE), "edge");
+    Assert.assertEquals(path.getJSONObject(4).getJSONObject("L").get("name"), "L1");
   }
 
   public static class FunctionGraphLoader extends AbstractLocalGraphLoader {
