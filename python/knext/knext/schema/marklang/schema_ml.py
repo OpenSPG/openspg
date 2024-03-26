@@ -936,7 +936,7 @@ class SPGSchemaMarkLang:
                 r"^([a-zA-Z0-9]+)\((\w+)\)\s*?->\s*?([a-zA-Z0-9\.]+):$", line
             )
             if sub_type_match:
-                self.defined_types[sub_type_match.group(1)] = type_match.group(
+                self.defined_types[sub_type_match.group(1)] = sub_type_match.group(
                     3
                 ).strip()
 

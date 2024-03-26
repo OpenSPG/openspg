@@ -22,6 +22,7 @@ import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
 import com.antgroup.openspg.reasoner.lube.utils.RuleUtils;
 import com.antgroup.openspg.reasoner.lube.utils.transformer.ExprTransformer;
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +36,8 @@ import scala.collection.immutable.Set;
 
 public class WareHouseUtils {
 
-  private static final ExprTransformer<String> EXPR_TRANSFORMER = new Expr2QlexpressTransformer();
+  private static final ExprTransformer<String> EXPR_TRANSFORMER =
+      new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
 
   /**
    * get vertex rule string

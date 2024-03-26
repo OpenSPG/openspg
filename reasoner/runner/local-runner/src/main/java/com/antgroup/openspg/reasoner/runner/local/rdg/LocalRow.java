@@ -13,20 +13,24 @@
 
 package com.antgroup.openspg.reasoner.runner.local.rdg;
 
+import com.antgroup.openspg.common.util.ArrayWrapper;
 import com.antgroup.openspg.reasoner.lube.logical.Var;
 import com.antgroup.openspg.reasoner.lube.physical.rdg.Row;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import scala.collection.JavaConversions;
 
 @Slf4j
 public class LocalRow extends Row<LocalRDG> {
   private final List<String> columns;
-  private final List<Object[]> rowList;
+  private List<Object[]> rowList;
 
   /** row implement */
   public LocalRow(
@@ -48,6 +52,14 @@ public class LocalRow extends Row<LocalRDG> {
       log.info("(" + i + ") " + Arrays.toString(row));
     }
     log.info("###############GeaflowRowShow###############");
+  }
+
+  @Override
+  public Row<LocalRDG> distinct() {
+    Set<ArrayWrapper> rowSet = new HashSet<>();
+    this.rowList.forEach(row -> rowSet.add(new ArrayWrapper(row)));
+    this.rowList = rowSet.stream().map(ArrayWrapper::getValue).collect(Collectors.toList());
+    return this;
   }
 
   /** get select result */
