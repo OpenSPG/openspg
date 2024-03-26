@@ -1,0 +1,6 @@
+{
+    "hub_infer_url": "http://121.41.29.31:8000/v2/models/vllm_model/generate",  
+    "generate_config": {
+        "temperature": 0.6
+    }
+}
