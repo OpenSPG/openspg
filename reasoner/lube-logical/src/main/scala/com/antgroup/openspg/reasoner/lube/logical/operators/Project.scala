@@ -78,4 +78,8 @@ final case class Project(in: LogicalOperator, expr: Map[Var, Expr], solved: Solv
     fieldsMap.values.toList
   }
 
+
+  override def withNewChildren(newChildren: Array[LogicalOperator]): LogicalOperator = {
+    this.copy(in = newChildren.head)
+  }
 }
