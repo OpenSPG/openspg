@@ -38,7 +38,7 @@
   <properties>
     <antlr4.version>4.8</antlr4.version>
     <dropwizard.metrics.version>4.2.9</dropwizard.metrics.version>
-    <geotools.version>28.0</geotools.version>
+    <geotools.version>27.0</geotools.version>
     <google.s2.version>2.0.0</google.s2.version>
     <groovy.version>3.0.9</groovy.version>
     <gson.version>2.10.1</gson.version>
