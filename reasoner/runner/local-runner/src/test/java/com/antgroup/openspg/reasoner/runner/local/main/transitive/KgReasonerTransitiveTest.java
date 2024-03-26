@@ -584,10 +584,10 @@ public class KgReasonerTransitiveTest {
         Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name", "apiName")));
     schema.put(
         "Function_function2link_LinkID",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("extInfo1")));
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
         "LinkID_link2function_Function",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("extInfo1")));
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
         "ServiceApi_api2function_Function",
         Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
@@ -615,8 +615,8 @@ public class KgReasonerTransitiveTest {
     Assert.assertEquals(path.size(), 7);
     Assert.assertEquals(path.getJSONObject(0).get("name"), "A1");
     Assert.assertEquals(path.getJSONObject(1).get("name"), "B2");
-    Assert.assertEquals(path.getJSONObject(5).get(Constants.CONTEXT_TYPE), "edge");
-    Assert.assertEquals(path.getJSONObject(5).getJSONObject("L").get("name"), "L1");
+    Assert.assertEquals(path.getJSONObject(5).getJSONObject(
+            "L").get(Constants.CONTEXT_LABEL), "LinkID");
   }
 
   public static class FunctionGraphLoader extends AbstractLocalGraphLoader {
@@ -635,10 +635,10 @@ public class KgReasonerTransitiveTest {
     public List<IEdge<String, IProperty>> genEdgeList() {
       return Lists.newArrayList(
           constructionEdge("S1", "api2function", "A1"),
-          constructionEdge("A1", "function2link", "L1", "extInfo1", "f2link_1"),
-          constructionEdge("L1", "link2function", "B1", "extInfo1", "link2f_1"),
-          constructionEdge("B1", "function2link", "L2", "extInfo1", "f2link_2"),
-          constructionEdge("L2", "link2function", "B2", "extInfo1", "link2f_2"));
+          constructionEdge("A1", "function2link", "L1", "info", "f2link_1"),
+          constructionEdge("L1", "link2function", "B1", "info", "link2f_1"),
+          constructionEdge("B1", "function2link", "L2", "info", "f2link_2"),
+          constructionEdge("L2", "link2function", "B2", "info", "link2f_2"));
     }
   }
 }
