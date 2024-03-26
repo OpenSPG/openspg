@@ -11,22 +11,14 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.sink;
+package com.antgroup.openspg.reasoner.batching;
 
-import java.io.Serializable;
+public interface IBatchSize {
+  long getAllSize();
 
-public enum KgReasonerSinkType implements Serializable {
-  /** log */
-  LOG,
-  /** loca csv file */
-  FILE,
-  /** odps table */
-  ODPS,
-  /** hive table */
-  HIVE,
-  /** openspg canvas */
-  CANVAS,
+  long getProcessSize();
 
-  /** sls */
-  REALTIME;
+  long getNextBatchSize();
+
+  long remainSize();
 }

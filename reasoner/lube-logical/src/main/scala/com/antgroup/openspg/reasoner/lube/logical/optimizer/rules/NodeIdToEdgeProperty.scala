@@ -24,7 +24,12 @@ import com.antgroup.openspg.reasoner.lube.block.{AddPredicate, AddProperty, AddV
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.common.graph.{IRField, IRNode, IRProperty, IRVariable}
-import com.antgroup.openspg.reasoner.lube.common.pattern.{Connection, NodePattern, Pattern, VariablePatternConnection}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{
+  Connection,
+  NodePattern,
+  Pattern,
+  VariablePatternConnection
+}
 import com.antgroup.openspg.reasoner.lube.logical.{NodeVar, PropertyVar, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}

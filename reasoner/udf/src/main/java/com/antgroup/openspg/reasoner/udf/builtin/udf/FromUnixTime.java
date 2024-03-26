@@ -56,4 +56,9 @@ public class FromUnixTime {
     long msLong = Long.parseLong(ms);
     return fromUnixTimeMs(msLong, format);
   }
+
+  @UdfDefine(name = "from_unix_time_ms")
+  public String fromUnixTimeMs(Object ms, String format) {
+    return fromUnixTimeMs(String.valueOf(ms), format);
+  }
 }

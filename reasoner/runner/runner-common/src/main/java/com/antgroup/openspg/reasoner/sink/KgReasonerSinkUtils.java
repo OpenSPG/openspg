@@ -19,6 +19,7 @@ import com.antgroup.openspg.reasoner.io.model.AbstractTableInfo;
 import com.antgroup.openspg.reasoner.io.model.CanvasTableInfo;
 import com.antgroup.openspg.reasoner.io.model.HiveTableInfo;
 import com.antgroup.openspg.reasoner.io.model.OdpsTableInfo;
+import com.antgroup.openspg.reasoner.io.model.SLSTableInfo;
 import com.antgroup.openspg.reasoner.progress.DecryptUtils;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class KgReasonerSinkUtils {
       return KgReasonerSinkType.LOG;
     }
     String outputType = outputTableConfig.getString("type");
-    return KgReasonerSinkType.valueOf(outputType);
+    return KgReasonerSinkType.valueOf(outputType.toUpperCase());
   }
 
   /** get sink table info from config */
@@ -70,6 +71,22 @@ public class KgReasonerSinkUtils {
       canvasTableInfo.setQueryId(outputTableConfig.getString("queryId"));
       canvasTableInfo.setApiPath(outputTableConfig.getString("canvasUrl"));
       return canvasTableInfo;
+    } else if (KgReasonerSinkType.REALTIME.equals(sinkType)) {
+      JSONObject outputTableConfig = getOutputTableConfig(params);
+      assert outputTableConfig != null;
+      String slsConfigStr = outputTableConfig.getString("SLS");
+      assert slsConfigStr != null;
+      JSONObject slsConfigs = JSON.parseObject(slsConfigStr);
+      Object devId = params.get(ConfigKey.DEV_ID);
+      assert devId != null;
+      SLSTableInfo slsTableInfo = new SLSTableInfo();
+      slsTableInfo.setProject(slsConfigs.getString("project"));
+      slsTableInfo.setEndpoint(slsConfigs.getString("endpoint"));
+      slsTableInfo.setLogStore(slsConfigs.getString("logStore"));
+      slsTableInfo.setAccessId(slsConfigs.getString("accessId"));
+      slsTableInfo.setAccessKey(DecryptUtils.decryptAccessInfo(slsConfigs.getString("accessKey")));
+      slsTableInfo.setTaskId(String.valueOf(devId));
+      return slsTableInfo;
     }
     return null;
   }
