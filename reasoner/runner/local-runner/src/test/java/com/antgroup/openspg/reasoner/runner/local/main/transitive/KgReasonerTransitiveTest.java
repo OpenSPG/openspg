@@ -615,8 +615,8 @@ public class KgReasonerTransitiveTest {
     Assert.assertEquals(path.size(), 7);
     Assert.assertEquals(path.getJSONObject(0).get("name"), "A1");
     Assert.assertEquals(path.getJSONObject(1).get("name"), "B2");
-    Assert.assertEquals(path.getJSONObject(5).getJSONObject(
-            "L").get(Constants.CONTEXT_LABEL), "LinkID");
+    Assert.assertEquals(
+        path.getJSONObject(5).getJSONObject("L").get(Constants.CONTEXT_LABEL), "LinkID");
   }
 
   public static class FunctionGraphLoader extends AbstractLocalGraphLoader {
