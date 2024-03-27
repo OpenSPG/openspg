@@ -69,3 +69,21 @@ def is_local_invoker(nn_config: dict) -> bool:
             if os.path.isfile(file_path):
                 return True
     return False
+
+
+def is_hub_invoker(nn_config: dict) -> bool:
+    """
+    Check whether `nn_config` specifies hub invoker.
+
+    :type nn_config: dict
+    :rtype: bool
+    """
+    from nn4k.consts import NN_HUB_INFER_URL_KEY, NN_HUB_INFER_URL_TEXT
+    from nn4k.utils.config_parsing import get_string_field
+
+    hub_infer_url = nn_config.get(NN_HUB_INFER_URL_KEY)
+    if hub_infer_url is not None:
+        hub_infer_url = get_string_field(nn_config, NN_HUB_INFER_URL_KEY, NN_HUB_INFER_URL_TEXT)
+        return True
+
+    return False

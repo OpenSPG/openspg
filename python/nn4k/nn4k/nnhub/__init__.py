@@ -15,6 +15,7 @@ from abc import ABC, abstractmethod
 from typing import Optional, Union, Tuple, Type
 
 from nn4k.executor import NNExecutor
+from nn4k.invoker.base import NNInvoker
 from nn4k.utils.class_importing import dynamic_import_class
 
 
@@ -190,16 +191,17 @@ class SimpleNNHub(NNHub):
     def get_invoker(self, nn_config: dict) -> Optional["NNInvoker"]:
         from nn4k.invoker import LLMInvoker
         from nn4k.invoker.openai import OpenAIInvoker
-        from nn4k.utils.invoker_checking import is_openai_invoker
+        from nn4k.utils.invoker_checking import is_openai_invoker, is_hub_invoker
 
         if is_openai_invoker(nn_config):
             invoker = OpenAIInvoker.from_config(nn_config)
             return invoker
-        # TODO NN4K: this will be replaced once we publish the SimpleHub solution. Now we only have openai invoker
-        #  and LLMInvoker
-        # if is_local_invoker(nn_config):
+        # TODO NN4K: this will be replaced once we publish the SimpleHub solution. Now we only have openai invoker, 
+        #  LLMInvoker and HubInvoker.
+        elif is_hub_invoker(nn_config):
+            from nn4k.invoker.hub_invoker import HubInvoker
+            invoker = HubInvoker.from_config(nn_config)
+            return invoker
         else:
             invoker = LLMInvoker.from_config(nn_config)
             return invoker
-
-        # return None
