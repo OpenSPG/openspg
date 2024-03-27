@@ -553,7 +553,7 @@ public class KgReasonerTransitiveTest {
             + "  Rule {\n"
             + "    p.id = L.id\n"
             + "    p.version = L.__id__\n"
-            + "    p.L = L\n"
+            + "    p.L = L.__property_json__\n"
             + "  }\n"
             + "}\n";
     dsl =
