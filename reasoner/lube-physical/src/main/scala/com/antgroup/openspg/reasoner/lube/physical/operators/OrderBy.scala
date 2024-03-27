@@ -24,11 +24,15 @@ final case class OrderBy[T <: RDG[T]: TypeTag](
     sortItem: Seq[SortItem],
     group: List[Var],
     limit: Option[Int])
-    extends PhysicalOperator[T] {
+    extends StackingPhysicalOperator[T] {
 
   override def rdg: T = {
     in.rdg.orderBy(group, sortItem.toList, limit.get)
   }
 
   override def meta: List[Var] = in.meta
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    this.copy(in = newChildren.head)
+  }
 }

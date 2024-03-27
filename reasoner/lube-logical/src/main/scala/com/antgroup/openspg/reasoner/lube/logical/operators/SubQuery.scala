@@ -54,5 +54,9 @@ final case class SubQuery(lhs: LogicalOperator, rhs: LogicalOperator)
     varMap.values.toList
   }
 
+  override def withNewChildren(newChildren: Array[LogicalOperator]): LogicalOperator = {
+    this.copy(lhs = newChildren.apply(0), rhs = newChildren.apply(1))
+  }
+
 }
 

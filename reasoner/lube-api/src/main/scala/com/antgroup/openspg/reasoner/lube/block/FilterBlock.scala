@@ -29,4 +29,8 @@ final case class FilterBlock(dependencies: List[Block], rules: Rule)
     dependencies.head.binds
   }
 
+  override def withNewChildren(newChildren: Array[Block]): Block = {
+    this.copy(dependencies = newChildren.toList)
+  }
+
 }

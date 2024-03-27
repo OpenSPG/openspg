@@ -23,6 +23,10 @@ final case class OrderAndSliceBlock(
     group: List[String])
     extends BasicBlock[Binds](BlockType("order-and-slice")) {
   override def binds: Binds = dependencies.head.binds
+
+  override def withNewChildren(newChildren: Array[Block]): Block = {
+    this.copy(dependencies = newChildren.toList)
+  }
 }
 
 sealed trait SortItem {

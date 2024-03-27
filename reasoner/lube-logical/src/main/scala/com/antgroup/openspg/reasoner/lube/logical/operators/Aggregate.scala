@@ -15,7 +15,7 @@ package com.antgroup.openspg.reasoner.lube.logical.operators
 
 import scala.collection.mutable
 
-import com.antgroup.openspg.reasoner.common.exception.InvalidRefVariable
+import com.antgroup.openspg.reasoner.common.exception.{InvalidRefVariable, UnsupportedOperationException}
 import com.antgroup.openspg.reasoner.lube.common.expr.Aggregator
 import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode}
 import com.antgroup.openspg.reasoner.lube.logical._
@@ -80,6 +80,10 @@ final case class Aggregate(
 
     }
     fieldsMap.values.toList
+  }
+
+  override def withNewChildren(newChildren: Array[LogicalOperator]): LogicalOperator = {
+    this.copy(in = newChildren.head)
   }
 
 }

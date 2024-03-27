@@ -27,4 +27,8 @@ final case class Select(
   }
 
   override def solved: SolvedModel = in.solved.solve
+
+  override def withNewChildren(newChildren: Array[LogicalOperator]): LogicalOperator = {
+    this.copy(in = newChildren.head)
+  }
 }

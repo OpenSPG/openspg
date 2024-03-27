@@ -27,7 +27,7 @@ final case class Join[T <: RDG[T]: TypeTag](
     joinType: JoinType,
     lhsSchemaMapping: Map[Var, Var],
     rhsSchemaMapping: Map[Var, Var])
-    extends PhysicalOperator[T] {
+    extends BinaryPhysicalOperator[T] {
 
   /**
    * The output of the current operator
@@ -56,5 +56,9 @@ final case class Join[T <: RDG[T]: TypeTag](
       }
     }
     varMap.values.toList
+  }
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    Union(newChildren.apply(0), newChildren.apply(1))
   }
 }

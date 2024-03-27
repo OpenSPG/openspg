@@ -22,7 +22,7 @@ import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 final case class Unfold[T <: RDG[T]: TypeTag](
     in: PhysicalOperator[T],
     foldMapping: List[(RichVar, List[Var])])
-    extends PhysicalOperator[T] {
+    extends StackingPhysicalOperator[T] {
 
   override def rdg: T = in.rdg.unfold(foldMapping)
 
@@ -46,5 +46,9 @@ final case class Unfold[T <: RDG[T]: TypeTag](
       }
     }
     outMeta.toList
+  }
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    this.copy(in = newChildren.head)
   }
 }

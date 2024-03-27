@@ -25,4 +25,8 @@ final case class PatternScan(in: LogicalOperator, pattern: Pattern)
   override def fields: List[Var] = pattern.toVar(solved, graph)
 
   override def solved: SolvedModel = in.solved
+
+  override def withNewChildren(newChildren: Array[LogicalOperator]): LogicalOperator = {
+    this.copy(in = newChildren.head)
+  }
 }
