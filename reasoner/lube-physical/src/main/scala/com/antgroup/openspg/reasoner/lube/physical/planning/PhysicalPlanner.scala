@@ -20,7 +20,13 @@ import scala.reflect.runtime.universe.TypeTag
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction
 import com.antgroup.openspg.reasoner.lube.common.expr.Directly
-import com.antgroup.openspg.reasoner.lube.logical.{operators => LogicalOperators, NodeVar, PathVar, RepeatPathVar, Var}
+import com.antgroup.openspg.reasoner.lube.logical.{
+  operators => LogicalOperators,
+  NodeVar,
+  PathVar,
+  RepeatPathVar,
+  Var
+}
 import com.antgroup.openspg.reasoner.lube.logical.operators.LogicalOperator
 import com.antgroup.openspg.reasoner.lube.logical.planning.{InnerJoin, LeftOuterJoin}
 import com.antgroup.openspg.reasoner.lube.physical.operators._
@@ -52,8 +58,8 @@ object PhysicalPlanner {
         PatternScan(plan[T](in, workingRdgName), pattern, input.fields)
       case LogicalOperators.ExpandInto(in, target, pattern) =>
         ExpandInto(plan[T](in, workingRdgName), target, pattern, input.fields)
-      case LogicalOperators.Select(in, orderedFields, as) =>
-        Select(plan[T](in, workingRdgName), orderedFields, as)
+      case LogicalOperators.Select(in, orderedFields, as, distinct) =>
+        Select(plan[T](in, workingRdgName), orderedFields, as, distinct)
       case LogicalOperators.Filter(in, expr) => Filter(plan[T](in, workingRdgName), expr)
       case LogicalOperators.DDL(in, ddlOp) => DDL(plan[T](in, workingRdgName), ddlOp)
       case LogicalOperators.Aggregate(in, group, aggregations, _) =>

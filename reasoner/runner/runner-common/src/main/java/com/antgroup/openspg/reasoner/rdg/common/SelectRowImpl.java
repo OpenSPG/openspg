@@ -50,7 +50,7 @@ public class SelectRowImpl implements Serializable {
       Object selectValue;
       KgType fieldType;
       if (var instanceof PathVar) {
-        selectValue = getSelectValue(null, Constants.GET_PATH_KEY, context);
+        selectValue = RunnerUtil.getPathInfo(path);
         fieldType = KTString$.MODULE$;
       } else {
         PropertyVar propertyVar = (PropertyVar) var;
@@ -94,13 +94,16 @@ public class SelectRowImpl implements Serializable {
 
   private Object getSelectValue(String alias, String propertyName, Map<String, Object> context) {
     if (Constants.PROPERTY_JSON_KEY.equals(propertyName)) {
-      Object propertyMap = context.get(alias);
+      Object propertyMap = RunnerUtil.recoverContextKeys(context.get(alias));
       return JSON.toJSONString(
           propertyMap,
           SerializerFeature.PrettyFormat,
           SerializerFeature.DisableCircularReferenceDetect,
           SerializerFeature.SortField);
     } else if (Constants.GET_PATH_KEY.equals(propertyName)) {
+      for (Map.Entry<String, Object> entry : context.entrySet()) {
+        RunnerUtil.recoverContextKeys(entry.getValue());
+      }
       return JSON.toJSONString(
           context,
           SerializerFeature.PrettyFormat,
