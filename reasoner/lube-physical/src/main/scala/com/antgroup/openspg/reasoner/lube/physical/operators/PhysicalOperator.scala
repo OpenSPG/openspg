@@ -15,6 +15,7 @@ package com.antgroup.openspg.reasoner.lube.physical.operators
 
 import scala.reflect.runtime.universe.TypeTag
 
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.trees.AbstractTreeNode
 import com.antgroup.openspg.reasoner.lube.logical.Var
 import com.antgroup.openspg.reasoner.lube.physical.planning.PhysicalPlannerContext
@@ -40,4 +41,32 @@ abstract class PhysicalOperator[T <: RDG[T]: TypeTag]
    * @return
    */
   def meta: List[Var]
+}
+
+abstract class PhysicalLeafOperator[T <: RDG[T]: TypeTag] extends PhysicalOperator[T] {
+  override def children: Array[PhysicalOperator[T]] = Array.empty
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    throw UnsupportedOperationException("LogicalLeafOperator cannot construct children")
+  }
+
+}
+
+abstract class StackingPhysicalOperator[T <: RDG[T]: TypeTag] extends PhysicalOperator[T] {
+
+  /**
+   * the input physical operator
+   * @return
+   */
+  def in: PhysicalOperator[T]
+
+  override def children: Array[PhysicalOperator[T]] = Array.apply(in)
+}
+
+abstract class BinaryPhysicalOperator[T <: RDG[T]: TypeTag] extends PhysicalOperator[T] {
+  def lhs: PhysicalOperator[T]
+
+  def rhs: PhysicalOperator[T]
+
+  override def children: Array[PhysicalOperator[T]] = Array.apply(lhs, rhs)
 }

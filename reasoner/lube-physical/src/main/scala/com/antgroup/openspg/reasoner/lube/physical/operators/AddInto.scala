@@ -21,7 +21,7 @@ import com.antgroup.openspg.reasoner.lube.logical.Var
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 
 final case class AddInto[T <: RDG[T]: TypeTag](in: PhysicalOperator[T], fields: Map[Var, Expr])
-    extends PhysicalOperator[T] {
+    extends StackingPhysicalOperator[T] {
   override def rdg: T = in.rdg.addFields(fields)
 
   override def meta: List[Var] = {
@@ -37,4 +37,7 @@ final case class AddInto[T <: RDG[T]: TypeTag](in: PhysicalOperator[T], fields: 
     fieldMap.values.toList
   }
 
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    this.copy(in = newChildren.head)
+  }
 }

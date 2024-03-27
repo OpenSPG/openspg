@@ -43,6 +43,8 @@ abstract class Block extends AbstractTreeNode[Block] {
    * @return
    */
   def graph: IRGraph
+
+  override def children: Array[Block] = dependencies.toArray
 }
 
 final case class BlockType(name: String)
