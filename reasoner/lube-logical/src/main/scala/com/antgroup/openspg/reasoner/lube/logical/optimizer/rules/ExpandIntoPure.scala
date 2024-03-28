@@ -42,14 +42,15 @@ object ExpandIntoPure extends Rule {
     case (order: OrderAndLimit, map) =>
       order -> merge(map, order.refFields, order.solved.getNodeAliasSet)
     case (expandInto @ ExpandInto(in, _, _), map) =>
+      val newMap = merge(map, expandInto.refFields, expandInto.solved.getNodeAliasSet)
       val needPure = canPure(
         expandInto,
-        map.asInstanceOf[Map[String, Var]],
+        newMap.asInstanceOf[Map[String, Var]],
         context.catalog.getGraph(Catalog.defaultGraphName))
       if (needPure) {
-        in -> map
+        in -> newMap
       } else {
-        expandInto -> map
+        expandInto -> newMap
       }
 
   }
