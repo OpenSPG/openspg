@@ -17,18 +17,19 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.types.KgType
-import com.antgroup.openspg.reasoner.lube.block.ProjectFields
+import com.antgroup.openspg.reasoner.lube.block.{AggregationBlock, Block, ProjectFields}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.{Directly, Expr}
 import com.antgroup.openspg.reasoner.lube.common.graph._
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 import com.antgroup.openspg.reasoner.lube.logical._
-import com.antgroup.openspg.reasoner.lube.logical.operators.{LogicalOperator, Project, StackingLogicalOperator}
+import com.antgroup.openspg.reasoner.lube.logical.operators.{Driving, LogicalOperator, Project, Start}
 import com.antgroup.openspg.reasoner.lube.utils.RuleUtils
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Rule2ExprTransformer
 import org.apache.commons.lang3.StringUtils
 
-class ProjectPlanner(projects: ProjectFields)(implicit context: LogicalPlannerContext) {
+class ProjectPlanner(projects: ProjectFields, root: Block)(implicit
+    context: LogicalPlannerContext) {
 
   def plan(dependency: LogicalOperator): LogicalOperator = {
     val projectMap = new mutable.HashMap[Var, Expr]()
@@ -88,7 +89,7 @@ class ProjectPlanner(projects: ProjectFields)(implicit context: LogicalPlannerCo
 
     left match {
       case IRVariable(name) =>
-        if (referVars.size == 1) {
+        if (referVars.map(_.name).toSet.size == 1) {
           PropertyVar(referVars.head.name, new Field(name, ruleRetType, true))
         } else {
           val aliasSet = new mutable.HashSet[String]()
@@ -110,11 +111,38 @@ class ProjectPlanner(projects: ProjectFields)(implicit context: LogicalPlannerCo
 
   }
 
+  private def getGroups: Set[String] = {
+    root.transform[Set[String]] {
+      case (AggregationBlock(_, _, group), groupList) =>
+        val groupAlias = group.map(_.name).toSet
+        if (groupList.head.isEmpty) {
+          groupAlias
+        } else {
+          val commonGroups = groupList.head.intersect(groupAlias)
+          if (commonGroups.isEmpty) {
+            throw UnsupportedOperationException(
+              s"cannot support groups ${groupAlias}, ${groupList.head}")
+          } else {
+            commonGroups
+          }
+        }
+      case (_, groupList) =>
+        if (groupList.isEmpty) {
+          Set.empty
+        } else {
+          groupList.head
+        }
+    }
+  }
+
   private def getTargetAlias(aliasSet: Set[String], dependency: LogicalOperator): String = {
+    val groups = getGroups
     val aliasOrder = dependency.transform[String] {
-      case (stackOp: StackingLogicalOperator, list) =>
+      case (start: Start, _) => ""
+      case (driving: Driving, _) => ""
+      case (stackOp: LogicalOperator, list) =>
         if (StringUtils.isEmpty(list.head)) {
-          val curAliasSet = stackOp.fields.map(_.name).toSet
+          val curAliasSet = stackOp.fields.map(_.name).toSet.diff(groups)
           if (aliasSet.diff(curAliasSet).isEmpty) {
             if (aliasSet.isEmpty) {
               curAliasSet.head
@@ -126,12 +154,6 @@ class ProjectPlanner(projects: ProjectFields)(implicit context: LogicalPlannerCo
           }
         } else {
           list.head
-        }
-      case (_, list) =>
-        if (!list.isEmpty && StringUtils.isNotEmpty(list.head)) {
-          list.head
-        } else {
-          ""
         }
     }
     aliasOrder

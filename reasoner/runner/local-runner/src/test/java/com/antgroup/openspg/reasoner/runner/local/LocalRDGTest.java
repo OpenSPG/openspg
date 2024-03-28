@@ -51,7 +51,8 @@ public class LocalRDGTest {
             1000,
             "",
             "",
-            null);
+            null,
+            false);
     localRDG.limit(1);
     localRDG.show(10);
   }
@@ -66,7 +67,8 @@ public class LocalRDGTest {
             1000,
             "",
             "",
-            null);
+            null,
+            false);
 
     List<KgGraph<IVertexId>> kgGraphList = new ArrayList<>();
     Map<String, Set<IVertex<IVertexId, IProperty>>> alias2VertexMap = new HashMap<>();

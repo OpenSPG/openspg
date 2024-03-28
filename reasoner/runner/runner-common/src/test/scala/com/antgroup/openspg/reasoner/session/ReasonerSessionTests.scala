@@ -14,18 +14,16 @@
 package com.antgroup.openspg.reasoner.session
 
 import scala.collection.mutable.ListBuffer
-
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.exception.SchemaException
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog
-import com.antgroup.openspg.reasoner.lube.common.expr.{AggIfOpExpr, BAnd, BinaryOpExpr}
+import com.antgroup.openspg.reasoner.lube.common.expr.{AggIfOpExpr, BAnd, BinaryOpExpr, GetField, Ref, UnaryOpExpr}
 import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.LogicalOptimizer
 import com.antgroup.openspg.reasoner.lube.logical.planning.{LogicalPlanner, LogicalPlannerContext}
 import com.antgroup.openspg.reasoner.lube.physical.operators._
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser
-import com.antgroup.openspg.reasoner.udf.rule.RuleRunner
 import com.antgroup.openspg.reasoner.util.LoaderUtil
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{contain, convertToAnyShouldWrapper, equal}
@@ -616,7 +614,9 @@ class ReasonerSessionTests extends AnyFunSpec {
             a._2 match {
               case AggIfOpExpr(
                     _,
-                    BinaryOpExpr(BAnd, BinaryOpExpr(_, _, _), BinaryOpExpr(_, _, _))) =>
+                    BinaryOpExpr(BAnd,
+                    UnaryOpExpr(GetField("R1"), Ref("t")),
+                    UnaryOpExpr(GetField("R2"), Ref("t")))) =>
                 1
               case _ => 0
             }

@@ -72,6 +72,21 @@ public class LocalReasonerResult {
     this.errMsg = "";
   }
 
+  /** output graph and row */
+  public LocalReasonerResult(
+      List<String> columns,
+      List<Object[]> rows,
+      List<IVertex<IVertexId, IProperty>> vertexList,
+      List<IEdge<IVertexId, IProperty>> edgeList,
+      boolean graphResult) {
+    this.columns = columns;
+    this.rows = rows;
+    this.graphResult = graphResult;
+    this.vertexList = vertexList;
+    this.edgeList = edgeList;
+    this.errMsg = "";
+  }
+
   /**
    * Getter method for property <tt>ddlResult</tt>.
    *
