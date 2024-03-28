@@ -138,9 +138,9 @@ class OpenSPGDslParser extends ParserInterface {
       parseBaseRuleDefine(ctx.base_rule_define(), ddlBlockWithNodes._2, ddlBlockWithNodes._3)
     val ddlBlockOp = ddlBlockWithNodes._1.ddlOp.head
     val ruleBlock = ddlInfo._1
-    if (ddlInfo._2.nonEmpty) {
-      return DDLBlock(ddlInfo._2, List.apply(ruleBlock))
-    }
+//    if (ddlInfo._2.nonEmpty) {
+//      return DDLBlock(ddlInfo._2, List.apply(ruleBlock))
+//    }
     ddlBlockOp match {
       case AddProperty(s, propertyName, propertyType) =>
         val isLastAssignTargetAlis = ruleBlock match {
@@ -175,7 +175,7 @@ class OpenSPGDslParser extends ParserInterface {
                 ProjectRule(
                   IRProperty(s.alias, propertyName),
                   Ref(ddlBlockWithNodes._3.target.alias)))))
-        DDLBlock(Set.apply(ddlBlockOp), List.apply(prjBlk))
+        DDLBlock(Set.apply(ddlBlockOp) ++ ddlInfo._2, List.apply(prjBlk))
       case AddPredicate(predicate) =>
         val attrFields = new mutable.HashMap[String, Expr]()
         addPropertiesMap.foreach(x =>
@@ -208,9 +208,9 @@ class OpenSPGDslParser extends ParserInterface {
                 predicate.source,
                 predicate.target,
                 attrFields.toMap,
-                predicate.direction))),
+                predicate.direction))) ++ ddlInfo._2,
           List.apply(depBlk))
-      case _ => DDLBlock(Set.apply(ddlBlockOp), List.apply(ruleBlock))
+      case _ => DDLBlock(Set.apply(ddlBlockOp) ++ ddlInfo._2, List.apply(ruleBlock))
     }
   }
 
