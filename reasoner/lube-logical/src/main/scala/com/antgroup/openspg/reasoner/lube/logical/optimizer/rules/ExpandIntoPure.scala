@@ -15,6 +15,7 @@ package com.antgroup.openspg.reasoner.lube.logical.optimizer.rules
 
 import scala.collection.mutable
 
+import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
 import com.antgroup.openspg.reasoner.lube.common.pattern.NodePattern
 import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, PropertyVar, Var}
@@ -93,8 +94,10 @@ object ExpandIntoPure extends Rule {
       if (!map.contains(alias) || map(alias).isEmpty) {
         true
       } else {
+        val usedPros =
+          map(alias).asInstanceOf[NodeVar].fields.filter(!_.name.equals(Constants.NODE_ID_KEY))
         val originalProps = types.map(graph.getNode(_).properties).flatten
-        if (map(alias).asInstanceOf[NodeVar].fields.intersect(originalProps).isEmpty) {
+        if (usedPros.intersect(originalProps).isEmpty) {
           true
         } else {
           false
