@@ -92,7 +92,8 @@ public class SelectRowImpl implements Serializable {
     return row;
   }
 
-  private Object getSelectValue(String alias, String propertyName, Map<String, Object> context) {
+  public static Object getSelectValue(
+      String alias, String propertyName, Map<String, Object> context) {
     if (Constants.PROPERTY_JSON_KEY.equals(propertyName)) {
       Object propertyMap = RunnerUtil.recoverContextKeys(context.get(alias));
       return JSON.toJSONString(
