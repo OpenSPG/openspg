@@ -74,7 +74,7 @@ object ExpandIntoPure extends Rule {
             EdgeVar(field.name, Set.apply(field.asInstanceOf[PropertyVar].field)))
         }
       } else {
-        varMap.put(field.name, field)
+        field.flatten.foreach(v => varMap.put(v.name, v))
       }
     }
     varMap.toMap
