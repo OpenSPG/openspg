@@ -83,7 +83,9 @@ def is_hub_invoker(nn_config: dict) -> bool:
 
     hub_infer_url = nn_config.get(NN_HUB_INFER_URL_KEY)
     if hub_infer_url is not None:
-        hub_infer_url = get_string_field(nn_config, NN_HUB_INFER_URL_KEY, NN_HUB_INFER_URL_TEXT)
+        hub_infer_url = get_string_field(
+            nn_config, NN_HUB_INFER_URL_KEY, NN_HUB_INFER_URL_TEXT
+        )
         return True
 
     return False

@@ -21,6 +21,7 @@ class HubInvoker(NNInvoker):
     """
     Invoking Entry Interfaces for remote inference service.
     """
+
     def __init__(self, nn_config: dict, **kwargs):
         super().__init__(nn_config, **kwargs)
         parser = HfArgumentParser(HubInvokerArgs)
@@ -37,35 +38,36 @@ class HubInvoker(NNInvoker):
             )
         else:
             prompt = input
-        
+
         return prompt
-    
+
     def _call_service(self, prompt):
         """
         Call the remote services to do the inference.
         """
         url = self.invoker_args.hub_infer_url
-        headers = {'Content-Type': 'application/json'}
+        headers = {"Content-Type": "application/json"}
 
-        data = {
-            "text_input": prompt,
-            "parameters": self.invoker_args.generate_config
-        }
+        data = {"text_input": prompt, "parameters": self.invoker_args.generate_config}
 
         response = requests.post(url=url, headers=headers, data=json.dumps(data))
 
         if response.status_code == 200:
-            response_result = response.json()['text_output']
-            newline_pos = response_result.find("\n")
-            if newline_pos != -1:
-                return response_result[newline_pos+1: ]
-            else:
+            response_result = response.json()["text_output"]
+
+            if isinstance(response_result, list):
                 return response_result
+            else:
+                newline_pos = response_result.find("\n")
+                if newline_pos != -1:
+                    return [response_result[newline_pos + 1 :]]
+                else:
+                    return [response_result]
         else:
             raise NN4KException(
                 f"response error No: {response.status_code},  response error text: {response.text}"
             )
-    
+
     def remote_inference(self, input, **kwargs):
         """
         Inference via existing remote services.
@@ -75,7 +77,6 @@ class HubInvoker(NNInvoker):
 
         return output
 
-    
     @classmethod
     def from_config(cls, nn_config: dict) -> "HubInvoker":
         """
@@ -91,13 +92,12 @@ class HubInvokerArgs:
     """
     Base HubInvoker-supported related args.
     """
+
     hub_infer_url: Optional[str] = field(
-        default=None,
-        metadata={"help": ("The remote inference service url.")}
+        default=None, metadata={"help": ("The remote inference service url.")}
     )
     generate_config: Optional[dict] = field(
-        default=None,
-        metadata={"help": ("Inference related configs.")}
+        default=None, metadata={"help": ("Inference related configs.")}
     )
 
 
@@ -105,4 +105,5 @@ class NN4KException(Exception):
     """
     Wrapping a NN4K Exception class.
     """
+
     pass

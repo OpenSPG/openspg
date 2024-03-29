@@ -196,10 +196,11 @@ class SimpleNNHub(NNHub):
         if is_openai_invoker(nn_config):
             invoker = OpenAIInvoker.from_config(nn_config)
             return invoker
-        # TODO NN4K: this will be replaced once we publish the SimpleHub solution. Now we only have openai invoker, 
+        # TODO NN4K: this will be replaced once we publish the SimpleHub solution. Now we only have openai invoker,
         #  LLMInvoker and HubInvoker.
         elif is_hub_invoker(nn_config):
             from nn4k.invoker.hub_invoker import HubInvoker
+
             invoker = HubInvoker.from_config(nn_config)
             return invoker
         else:
