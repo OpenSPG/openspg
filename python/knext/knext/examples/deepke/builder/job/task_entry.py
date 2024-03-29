@@ -9,7 +9,6 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-
 from nn4k.invoker import NNInvoker
 from knext.builder.component import (
     CSVReader,
@@ -19,8 +18,8 @@ from knext.builder.component import (
 )
 from knext.builder.operator import OneKE_KGPrompt
 from knext.builder.model.builder_job import BuilderJob
-from schema.deepke_schema_helper import DeepKE
 
+from schema.deepke_schema_helper import DeepKE
 
 
 class Disease(BuilderJob):
@@ -61,4 +60,3 @@ class Disease(BuilderJob):
         sink = KGWriter()
 
         return source >> extract >> mappings >> sink
-
