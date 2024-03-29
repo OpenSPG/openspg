@@ -25,60 +25,60 @@ from knext.schema.model.schema_helper import (
 class DeepKE:
     class BodyPart(SPGTypeHelper):
 
+        description = PropertyHelper("description")
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
-        description = PropertyHelper("description")
         alias = PropertyHelper("alias")
         id = PropertyHelper("id")
 
     class Disease(SPGTypeHelper):
         class abnormal(RelationHelper):
             shape = PropertyHelper("shape")
-            color = PropertyHelper("color")
             range = PropertyHelper("range")
+            color = PropertyHelper("color")
 
-        name = PropertyHelper("name")
-        diseaseSite = PropertyHelper("diseaseSite")
-        department = PropertyHelper("department")
         description = PropertyHelper("description")
         applicableDrug = PropertyHelper("applicableDrug")
-        complication = PropertyHelper("complication")
+        name = PropertyHelper("name")
         commonSymptom = PropertyHelper("commonSymptom")
+        complication = PropertyHelper("complication")
         id = PropertyHelper("id")
+        department = PropertyHelper("department")
+        diseaseSite = PropertyHelper("diseaseSite")
 
         abnormal = abnormal("abnormal")
 
     class Drug(SPGTypeHelper):
 
-        name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
+        name = PropertyHelper("name")
 
     class HospitalDepartment(SPGTypeHelper):
 
+        description = PropertyHelper("description")
         name = PropertyHelper("name")
         stdId = PropertyHelper("stdId")
-        description = PropertyHelper("description")
         alias = PropertyHelper("alias")
         id = PropertyHelper("id")
 
     class Indicator(SPGTypeHelper):
 
-        name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
+        name = PropertyHelper("name")
 
     class Symptom(SPGTypeHelper):
 
-        name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
+        name = PropertyHelper("name")
 
-    BodyPart = BodyPart("Medicine.BodyPart")
-    Disease = Disease("Medicine.Disease")
-    Drug = Drug("Medicine.Drug")
-    HospitalDepartment = HospitalDepartment("Medicine.HospitalDepartment")
-    Indicator = Indicator("Medicine.Indicator")
-    Symptom = Symptom("Medicine.Symptom")
+    BodyPart = BodyPart("DeepKE.BodyPart")
+    Disease = Disease("DeepKE.Disease")
+    Drug = Drug("DeepKE.Drug")
+    HospitalDepartment = HospitalDepartment("DeepKE.HospitalDepartment")
+    Indicator = Indicator("DeepKE.Indicator")
+    Symptom = Symptom("DeepKE.Symptom")
 
     pass

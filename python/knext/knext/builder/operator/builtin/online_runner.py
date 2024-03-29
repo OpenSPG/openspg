@@ -43,7 +43,7 @@ class _BuiltInOnlineExtractor(ExtractOp):
 
             op_clazz = getattr(module, op_config["className"])
             params = op_config.get("params", {})
-            op_obj = op_clazz(**params)
+            op_obj = op_clazz(*params.values())
             if self.debug:
                 print(f'{op_config["className"]}.template: {op_obj.template}')
             prompt_ops.append(op_obj)

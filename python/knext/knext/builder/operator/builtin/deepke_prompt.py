@@ -12,29 +12,23 @@
 
 import json
 import re
-from abc import ABC
-from typing import List, Dict, Tuple, Any
+from typing import List, Dict, Any
 from collections import defaultdict
 
-from knext.schema.client import SchemaClient
-from knext.schema.model.schema_helper import SPGTypeName, PropertyName, RelationName
-from knext.builder.operator.op import PromptOp
+from knext.schema.model.schema_helper import SPGTypeName
 from knext.builder.operator.spg_record import SPGRecord
 from knext.builder.operator.builtin.auto_prompt import AutoPrompt
-import uuid
 
 
 class OneKEPrompt(AutoPrompt):
     template_zh: str = ""
     template_en: str = ""
 
-    def __init__(
-        self,
-        types_list: List[SPGTypeName],
-        language: str = "zh",
-        with_description: bool = False,
-        split_num: int = 4,
-    ):
+    def __init__(self, **kwargs):
+        types_list = kwargs.get("types_list", [])
+        language = kwargs.get("language", "zh")
+        with_description = kwargs.get("language", False)
+        split_num = kwargs.get("split_num", 4)
         super().__init__(types_list)
         if language == "zh":
             self.template = self.template_zh
@@ -45,6 +39,8 @@ class OneKEPrompt(AutoPrompt):
 
         self._init_render_variables()
         self._render()
+
+        self.params = kwargs
 
     def build_prompt(self, variables: Dict[str, str]) -> List[str]:
         instructions = []
@@ -95,7 +91,12 @@ class OneKE_NERPrompt(OneKEPrompt):
         with_description: bool = False,
         split_num: int = 4,
     ):
-        super().__init__(entity_types, language, with_description, split_num)
+        super().__init__(
+            types_list=entity_types,
+            language=language,
+            with_description=with_description,
+            split_num=split_num,
+        )
 
     def parse_response(self, response: str) -> List[SPGRecord]:
         if isinstance(response, list) and len(response) > 0:
@@ -140,7 +141,12 @@ class OneKE_SPOPrompt(OneKEPrompt):
         with_description: bool = False,
         split_num: int = 4,
     ):
-        super().__init__(spo_types, language, with_description, split_num)
+        super().__init__(
+            types_list=spo_types,
+            language=language,
+            with_description=with_description,
+            split_num=split_num,
+        )
         self.properties_mapper = {}
         self.relations_mapper = {}
 
@@ -275,7 +281,12 @@ class OneKE_KGPrompt(OneKEPrompt):
         with_description: bool = False,
         split_num: int = 4,
     ):
-        super().__init__(entity_types, language, with_description, split_num)
+        super().__init__(
+            types_list=entity_types,
+            language=language,
+            with_description=with_description,
+            split_num=split_num,
+        )
 
     def parse_response(self, response: str) -> List[SPGRecord]:
         if isinstance(response, list) and len(response) > 0:
@@ -304,7 +315,9 @@ class OneKE_KGPrompt(OneKEPrompt):
                         if isinstance(attr_value, list):
                             attr_value = ",".join(attr_value)
                         if attr_zh in self.property_info_zh[type_zh]:
-                            attr_en, _, _ = self.property_info_zh[type_zh][attr_zh]
+                            attr_en, _, object_type = self.property_info_zh[type_zh][
+                                attr_zh
+                            ]
                             spg_record.upsert_property(attr_en, attr_value)
                         elif attr_zh in self.relation_info_zh[type_zh]:
                             attr_en, _, object_type = self.relation_info_zh[type_zh][
@@ -313,6 +326,15 @@ class OneKE_KGPrompt(OneKEPrompt):
                             spg_record.upsert_relation(attr_en, object_type, attr_value)
                         else:
                             print(f"Unrecognized attribute: {attr_zh}")
+                            continue
+                        if object_type == "Integer":
+                            matches = re.findall(r"\d+", attr_value)
+                            if matches:
+                                spg_record.upsert_property(attr_en, matches[0])
+                        elif object_type == "Float":
+                            matches = re.findall(r"\d+(?:\.\d+)?", attr_value)
+                            if matches:
+                                spg_record.upsert_property(attr_en, matches[0])
                     spg_records.append(spg_record)
         return spg_records
 
@@ -320,8 +342,20 @@ class OneKE_KGPrompt(OneKEPrompt):
         spo_list = []
         for spg_type in self.spg_types:
             attributes = []
-            attributes.extend([v.name_zh for v in spg_type.properties.values()])
-            attributes.extend([v.name_zh for v in spg_type.relations.values()])
+            attributes.extend(
+                [
+                    v.name_zh
+                    for k, v in spg_type.properties.items()
+                    if k not in ["id", "description", "stdId"]
+                ]
+            )
+            attributes.extend(
+                [
+                    v.name_zh
+                    for k, v in spg_type.relations.items()
+                    if v not in attributes and k not in ["isA"]
+                ]
+            )
             entity_type = spg_type.name_zh
             spo_list.append({"entity_type": entity_type, "attributes": attributes})
 
@@ -339,7 +373,12 @@ class OneKE_EEPrompt(OneKEPrompt):
         with_description: bool = False,
         split_num: int = 4,
     ):
-        super().__init__(event_types, language, with_description, split_num)
+        super().__init__(
+            types_list=event_types,
+            language=language,
+            with_description=with_description,
+            split_num=split_num,
+        )
 
     def parse_response(self, response: str) -> List[SPGRecord]:
         if isinstance(response, list) and len(response) > 0:
@@ -361,14 +400,16 @@ class OneKE_EEPrompt(OneKEPrompt):
             type_en, _ = self.spg_type_schema_info_zh[type_zh]
             if type_values and isinstance(type_values, list):
                 for type_value in type_values:
-                    spg_record = SPGRecord(type_en)
+                    spg_record = SPGRecord(type_en).upsert_property("name", type_zh)
                     arguments = type_value.get("arguments")
                     if arguments and isinstance(arguments, dict):
                         for attr_zh, attr_value in arguments.items():
                             if isinstance(attr_value, list):
                                 attr_value = ",".join(attr_value)
                             if attr_zh in self.property_info_zh[type_zh]:
-                                attr_en, _, _ = self.property_info_zh[type_zh][attr_zh]
+                                attr_en, _, object_type = self.property_info_zh[
+                                    type_zh
+                                ][attr_zh]
                                 spg_record.upsert_property(attr_en, attr_value)
                             elif attr_zh in self.relation_info_zh[type_zh]:
                                 attr_en, _, object_type = self.relation_info_zh[
@@ -379,6 +420,15 @@ class OneKE_EEPrompt(OneKEPrompt):
                                 )
                             else:
                                 print(f"Unrecognized attribute: {attr_zh}")
+                                continue
+                            if object_type == "Integer":
+                                matches = re.findall(r"\d+", attr_value)
+                                if matches:
+                                    spg_record.upsert_property(attr_en, matches[0])
+                            elif object_type == "Float":
+                                matches = re.findall(r"\d+(?:\.\d+)?", attr_value)
+                                if matches:
+                                    spg_record.upsert_property(attr_en, matches[0])
                     spg_records.append(spg_record)
         return spg_records
 
@@ -386,8 +436,20 @@ class OneKE_EEPrompt(OneKEPrompt):
         event_list = []
         for spg_type in self.spg_types:
             arguments = []
-            arguments.extend([v.name_zh for v in spg_type.properties.values()])
-            arguments.extend([v.name_zh for v in spg_type.relations.values()])
+            arguments.extend(
+                [
+                    v.name_zh
+                    for k, v in spg_type.properties.items()
+                    if k not in ["id", "name", "description"]
+                ]
+            )
+            arguments.extend(
+                [
+                    v.name_zh
+                    for k, v in spg_type.relations.items()
+                    if v.name_zh not in arguments
+                ]
+            )
             event_type = spg_type.name_zh
             event_list.append(
                 {"event_type": event_type, "trigger": True, "arguments": arguments}

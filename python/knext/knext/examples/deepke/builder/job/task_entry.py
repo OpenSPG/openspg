@@ -32,18 +32,17 @@ class Disease(BuilderJob):
         )
 
         extract = LLMBasedExtractor(
-            llm=NNInvoker.from_config("builder/model/local_infer.json"),
+            llm=NNInvoker.from_config("builder/model/remote_infer.json"),
             prompt_ops=[
                 OneKE_KGPrompt(
-                    spg_type_name=DeepKE.Disease,
-                    property_names=[
-                        DeepKE.Disease.complication,
-                        DeepKE.Disease.commonSymptom,
-                        DeepKE.Disease.applicableDrug,
-                        DeepKE.Disease.department,
-                        DeepKE.Disease.diseaseSite,
-                    ],
-                    relation_names=[(DeepKE.Disease.abnormal, DeepKE.Indicator)],
+                    entity_types=[
+                        DeepKE.Disease,
+                        DeepKE.BodyPart,
+                        DeepKE.Drug,
+                        DeepKE.HospitalDepartment,
+                        DeepKE.Symptom,
+                        DeepKE.Indicator,
+                    ]
                 )
             ],
         )

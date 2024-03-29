@@ -29,16 +29,11 @@ class AutoPrompt(PromptOp, ABC):
 
     def __init__(self, spg_type_names: List[SPGTypeName]):
         super().__init__()
+        self.spg_types = []
         schema_session = SchemaClient().create_session()
         for spg_type_name in spg_type_names:
             spg_type = schema_session.get(spg_type_name=spg_type_name)
             self.spg_types.append(spg_type)
-
-    @property
-    def params(self):
-        params = locals()
-        params.pop("self")
-        return params
 
     def _init_render_variables(self):
         self.property_info_zh = {}
