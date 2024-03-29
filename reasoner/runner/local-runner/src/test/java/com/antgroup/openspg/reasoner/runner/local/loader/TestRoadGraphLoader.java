@@ -13,13 +13,12 @@
 
 package com.antgroup.openspg.reasoner.runner.local.loader;
 
-import java.util.List;
-
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphLoader;
 import com.google.common.collect.Lists;
+import java.util.List;
 
 public class TestRoadGraphLoader extends AbstractLocalGraphLoader {
   @Override
@@ -27,12 +26,11 @@ public class TestRoadGraphLoader extends AbstractLocalGraphLoader {
     return Lists.newArrayList(
         constructionVertex("张三", "Road.Researcher"),
         constructionVertex("江西yy校", "Road.Area", "name", "江西yy校"),
-            constructionVertex("湖北xx地", "Road.Area", "name", "湖北xx地"),
-            constructionVertex("江西省", "Road.AdministrativeRegion", "name", "江西省"),
-            constructionVertex("湖北省", "Road.AdministrativeRegion", "name", "湖北省"),
-
-            constructionVertex("E1", "Road.Event", "kgstartDateRaw", "20230901"),
-            constructionVertex("E2", "Road.Event", "kgstartDateRaw", "20230901"));
+        constructionVertex("湖北xx地", "Road.Area", "name", "湖北xx地"),
+        constructionVertex("江西省", "Road.AdministrativeRegion", "name", "江西省"),
+        constructionVertex("湖北省", "Road.AdministrativeRegion", "name", "湖北省"),
+        constructionVertex("E1", "Road.Event", "kgstartDateRaw", "20230901"),
+        constructionVertex("E2", "Road.Event", "kgstartDateRaw", "20230901"));
   }
 
   @Override
@@ -40,11 +38,9 @@ public class TestRoadGraphLoader extends AbstractLocalGraphLoader {
     return Lists.newArrayList(
         constructionEdge("E1", "subject", "张三"),
         constructionEdge("E1", "object", "江西yy校"),
-            constructionEdge("E1", "province", "江西省"),
-
-            constructionEdge("E2", "subject", "张三"),
-            constructionEdge("E2", "object", "湖北xx地"),
-            constructionEdge("E2", "province", "湖北省")
-    );
+        constructionEdge("E1", "province", "江西省"),
+        constructionEdge("E2", "subject", "张三"),
+        constructionEdge("E2", "object", "湖北xx地"),
+        constructionEdge("E2", "province", "湖北省"));
   }
 }

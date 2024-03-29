@@ -39,13 +39,19 @@ public class LocalRunnerTest {
 
   @Test
   public void doTestFilter() {
-    String dsl = "GraphStructure {\n"
-                 + "        (s1:Road.Event)-[p1:subject]-(o1:Road.Researcher)\n"
-                 + "        (s1:Road.Event)-[p3:object]-(o3:Road.Area)\n"
-                 + "        (s1:Road.Event)-[p2:province]-(o2:Road.AdministrativeRegion)\n" + "}\n"
-                 + "Rule {\n" + "        R0: o1.id == \"张三\"\n"
-                 + "        R1: o2.name rlike \"江西省\"\n" + "}\n" + "Action {\n"
-                 + "    get(o3.name)\n" + "}";
+    String dsl =
+        "GraphStructure {\n"
+            + "        (s1:Road.Event)-[p1:subject]-(o1:Road.Researcher)\n"
+            + "        (s1:Road.Event)-[p3:object]-(o3:Road.Area)\n"
+            + "        (s1:Road.Event)-[p2:province]-(o2:Road.AdministrativeRegion)\n"
+            + "}\n"
+            + "Rule {\n"
+            + "        R0: o1.id == \"张三\"\n"
+            + "        R1: o2.name rlike \"江西省\"\n"
+            + "}\n"
+            + "Action {\n"
+            + "    get(o3.name)\n"
+            + "}";
 
     LocalReasonerTask task = new LocalReasonerTask();
     task.setDsl(dsl);
@@ -58,20 +64,22 @@ public class LocalRunnerTest {
     Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
     schema.put("Road.Researcher", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
     schema.put(
-            "Road.Event",
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "kgstartDateRaw")));
+        "Road.Event",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "kgstartDateRaw")));
     schema.put("Road.Area", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
-    schema.put("Road.AdministrativeRegion", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
+    schema.put(
+        "Road.AdministrativeRegion",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
 
     schema.put(
-            "Road.Event_subject_Road.Researcher",
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("holdRet")));
+        "Road.Event_subject_Road.Researcher",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("holdRet")));
     schema.put(
-            "Road.Event_object_Road.Area",
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("holdRet")));
+        "Road.Event_object_Road.Area",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("holdRet")));
     schema.put(
-            "Road.Event_province_Road.AdministrativeRegion",
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("holdRet")));
+        "Road.Event_province_Road.AdministrativeRegion",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("holdRet")));
     Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
     catalog.init();
     task.setCatalog(catalog);
