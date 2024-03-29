@@ -45,3 +45,6 @@ NN_OPENAI_EMBEDDING_PREFIX = "text-embedding"
 
 NN_LOCAL_HF_MODEL_CONFIG_FILE = "config.json"
 NN_LOCAL_SENTENCE_TRANSFORMERS_CONFIG_FILE = "config_sentence_transformers.json"
+
+NN_HUB_INFER_URL_KEY = "hub_infer_url"
+NN_HUB_INFER_URL_TEXT = "hub inference url"
