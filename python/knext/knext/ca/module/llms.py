@@ -29,7 +29,6 @@ class LLMClient(object):
                 'stream': False,
                 'temperature': temperature,
                 'max_tokens': max_tokens,
-                # 'exclude_inputs_in_outputs': True,
             }
         }
 
@@ -44,15 +43,15 @@ class LLMClient(object):
             else:
                 return response_result
         else:
-            return (f'Error: {response.status_code} - {response.text}')
+            return f'Error: {response.status_code} - {response.text}'
 
     def display_model_config(self):
         response = requests.get(self.fetch_config_url)
 
         if response.status_code == 200:
-            # 将结果解析为JSON格式
+            # Parse the result into JSON format
             config = response.json()
-            # 结构化打印JSON结果
+            # Structured printing of JSON results
             print(json.dumps(config, indent=2))
         else:
             print(f"Error: {response.status_code} - {response.text}")
