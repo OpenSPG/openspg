@@ -227,7 +227,6 @@ input:${input}
         self.template = self.template.replace("${schema}", schema_text).replace(
             "${predicate}", predicate_text
         )
-     
 
 
 class EEPrompt(AutoPrompt):
@@ -261,8 +260,8 @@ class EEPrompt(AutoPrompt):
         self.property_names = property_names
         self.relation_names = relation_names
 
-        self._init_render_variables()  
-        self._render()   
+        self._init_render_variables()
+        self._render()
 
     def build_prompt(self, variables: Dict[str, str]) -> str:
         return self.template.replace("${input}", variables.get("input"))

@@ -25,13 +25,13 @@ import uuid
 
 
 class OneKEPrompt(AutoPrompt):
-    template_zh: str = ''
-    template_en: str = ''
+    template_zh: str = ""
+    template_en: str = ""
 
     def __init__(
         self,
         types_list: List[SPGTypeName],
-        language: str = 'zh',
+        language: str = "zh",
         with_description: bool = False,
         split_num: int = 4,
     ):
@@ -50,11 +50,14 @@ class OneKEPrompt(AutoPrompt):
         instructions = []
         for schema in self.schema_list:
             instructions.append(
-                json.dumps({
-                    "instruction": self.template,
-                    "schema": schema,
-                    "input": variables.get("input"),
-                },ensure_ascii=False,)
+                json.dumps(
+                    {
+                        "instruction": self.template,
+                        "schema": schema,
+                        "input": variables.get("input"),
+                    },
+                    ensure_ascii=False,
+                )
             )
         return instructions
 
@@ -64,12 +67,11 @@ class OneKEPrompt(AutoPrompt):
     def _render(self):
         raise NotImplementedError
 
-
     def multischema_split_by_num(self, split_num, schemas: List[Any]):
         negative_length = max(len(schemas) // split_num, 1) * split_num
         total_schemas = []
         for i in range(0, negative_length, split_num):
-            total_schemas.append(schemas[i:i+split_num])
+            total_schemas.append(schemas[i : i + split_num])
 
         remain_len = max(1, split_num // 2)
         tmp_schemas = schemas[negative_length:]
@@ -81,18 +83,19 @@ class OneKEPrompt(AutoPrompt):
 
 
 class OneKE_NERPrompt(OneKEPrompt):
-    template_zh: str = "你是专门进行实体抽取的专家。请从input中抽取出符合schema定义的实体，不存在的实体类型返回空列表。请按照JSON字符串的格式回答。"
+    template_zh: str = (
+        "你是专门进行实体抽取的专家。请从input中抽取出符合schema定义的实体，不存在的实体类型返回空列表。请按照JSON字符串的格式回答。"
+    )
     template_en: str = "You are an expert in named entity recognition. Please extract entities that match the schema definition from the input. Return an empty list if the entity type does not exist. Please respond in the format of a JSON string."
 
     def __init__(
         self,
         entity_types: List[SPGTypeName],
-        language: str = 'zh',
+        language: str = "zh",
         with_description: bool = False,
         split_num: int = 4,
     ):
         super().__init__(entity_types, language, with_description, split_num)
-
 
     def parse_response(self, response: str) -> List[SPGRecord]:
         if isinstance(response, list) and len(response) > 0:
@@ -105,7 +108,7 @@ class OneKE_NERPrompt(OneKEPrompt):
         if type(ent_obj) != dict:
             print("DeepKE_NERPrompt response type error.")
             return []
-        
+
         spg_records = []
         for type_zh, values in ent_obj.items():
             if type_zh not in self.spg_type_schema_info_zh:
@@ -124,15 +127,16 @@ class OneKE_NERPrompt(OneKEPrompt):
         self.schema_list = self.multischema_split_by_num(self.split_num, entity_list)
 
 
-
 class OneKE_SPOPrompt(OneKEPrompt):
-    template_zh: str = "你是专门进行SPO三元组抽取的专家。请从input中抽取出符合schema定义的spo关系三元组，不存在的关系返回空列表。请按照JSON字符串的格式回答。"
+    template_zh: str = (
+        "你是专门进行SPO三元组抽取的专家。请从input中抽取出符合schema定义的spo关系三元组，不存在的关系返回空列表。请按照JSON字符串的格式回答。"
+    )
     template_en: str = "You are an expert in spo(subject, predicate, object) triples extraction. Please extract SPO relationship triples that match the schema definition from the input. Return an empty list for relationships that do not exist. Please respond in the format of a JSON string."
 
     def __init__(
         self,
         spo_types: List[SPGTypeName],
-        language: str = 'zh',
+        language: str = "zh",
         with_description: bool = False,
         split_num: int = 4,
     ):
@@ -159,12 +163,16 @@ class OneKE_SPOPrompt(OneKEPrompt):
                 continue
             if values and isinstance(values, list):
                 for value in values:
-                    if type(value) != dict or 'subject' not in value or 'object' not in value:
+                    if (
+                        type(value) != dict
+                        or "subject" not in value
+                        or "object" not in value
+                    ):
                         print("DeepKE_REPrompt response type error.")
                         continue
-                    s_zh, o_zh = value.get('subject', ''), value.get('object', '')
+                    s_zh, o_zh = value.get("subject", ""), value.get("object", "")
                     relation_dcir[relation_zh].append((s_zh, o_zh))
-        
+
         spg_records = []
         for relation_zh, sub_obj_list in relation_dcir.items():
             sub_dict = defaultdict(list)
@@ -174,21 +182,29 @@ class OneKE_SPOPrompt(OneKEPrompt):
                 if s_zh in self.spg_type_schema_info_zh:
                     print(f"Unrecognized subject_type: {s_zh}")
                     continue
-                object_value = ','.join(o_list)
+                object_value = ",".join(o_list)
                 s_type_zh = self.properties_mapper.get(relation_zh, None)
                 if s_type_zh is not None:
                     s_type_en, _ = self.spg_type_schema_info_zh[s_type_zh]
                     relation_en, _ = self.property_info_zh[relation_zh]
-                    spg_record = SPGRecord(s_type_en).upsert_properties({"id": s_zh, "name": s_zh})
+                    spg_record = SPGRecord(s_type_en).upsert_properties(
+                        {"id": s_zh, "name": s_zh}
+                    )
                     spg_record.upsert_property(relation_en, object_value)
                 else:
-                    s_type_zh, o_type_zh = self.relations_mapper.get(relation_zh, [None, None])
+                    s_type_zh, o_type_zh = self.relations_mapper.get(
+                        relation_zh, [None, None]
+                    )
                     if s_type_zh is None or o_type_zh is None:
                         print(f"Unrecognized relation: {relation_zh}")
                         continue
                     s_type_en, _ = self.spg_type_schema_info_zh[s_type_zh]
-                    spg_record = SPGRecord(s_type_en).upsert_properties({"id": s_zh, "name": s_zh})
-                    relation_en, _, object_type = self.relation_info_zh[s_type_zh][relation_zh]
+                    spg_record = SPGRecord(s_type_en).upsert_properties(
+                        {"id": s_zh, "name": s_zh}
+                    )
+                    relation_en, _, object_type = self.relation_info_zh[s_type_zh][
+                        relation_zh
+                    ]
                     spg_record.upsert_relation(relation_en, object_type, object_value)
                 spg_records.append(spg_record)
         return spg_records
@@ -198,29 +214,41 @@ class OneKE_SPOPrompt(OneKEPrompt):
         for spg_type in self.spg_types:
             type_en, _ = self.spg_type_schema_info_zh[spg_type]
             for v in spg_type.properties.values():
-                spo_list.append({'subject_type':spg_type.name_zh, 'predicate':v.name_zh, 'object_type':'文本'})
+                spo_list.append(
+                    {
+                        "subject_type": spg_type.name_zh,
+                        "predicate": v.name_zh,
+                        "object_type": "文本",
+                    }
+                )
                 self.properties_mapper[v.name_zh] = spg_type
-            for v in spg_type.relations.values(): 
+            for v in spg_type.relations.values():
                 _, _, object_type = self.relation_info_en[type_en][v.name]
-                spo_list.append({'subject_type':spg_type.name_zh, 'predicate':v.name_zh, 'object_type':object_type})
+                spo_list.append(
+                    {
+                        "subject_type": spg_type.name_zh,
+                        "predicate": v.name_zh,
+                        "object_type": object_type,
+                    }
+                )
                 self.relations_mapper[v.name_zh] = [spg_type, object_type]
         self.schema_list = self.multischema_split_by_num(self.split_num, spo_list)
 
 
-
 class OneKE_REPrompt(OneKE_SPOPrompt):
-    template_zh: str = "你是专门进行关系抽取的专家。请从input中抽取出符合schema定义的关系三元组，不存在的关系返回空列表。请按照JSON字符串的格式回答。"
+    template_zh: str = (
+        "你是专门进行关系抽取的专家。请从input中抽取出符合schema定义的关系三元组，不存在的关系返回空列表。请按照JSON字符串的格式回答。"
+    )
     template_en: str = "You are an expert in relationship extraction. Please extract relationship triples that match the schema definition from the input. Return an empty list for relationships that do not exist. Please respond in the format of a JSON string."
 
     def __init__(
         self,
         relation_types: List[SPGTypeName],
-        language: str = 'zh',
+        language: str = "zh",
         with_description: bool = False,
         split_num: int = 4,
     ):
         super().__init__(relation_types, language, with_description, split_num)
-
 
     def _render(self):
         re_list = []
@@ -229,12 +257,11 @@ class OneKE_REPrompt(OneKE_SPOPrompt):
             for v in spg_type.properties.values():
                 re_list.append(v.name_zh)
                 self.properties_mapper[v.name_zh] = spg_type
-            for v in spg_type.relations.values(): 
+            for v in spg_type.relations.values():
                 v_zh, _, object_type = self.relation_info_en[type_en][v.name]
                 re_list.append(v.name_zh)
                 self.relations_mapper[v.name_zh] = [spg_type, object_type]
         self.schema_list = self.multischema_split_by_num(self.split_num, re_list)
-
 
 
 class OneKE_KGPrompt(OneKEPrompt):
@@ -244,12 +271,11 @@ class OneKE_KGPrompt(OneKEPrompt):
     def __init__(
         self,
         entity_types: List[SPGTypeName],
-        language: str = 'zh',
+        language: str = "zh",
         with_description: bool = False,
         split_num: int = 4,
     ):
         super().__init__(entity_types, language, with_description, split_num)
-
 
     def parse_response(self, response: str) -> List[SPGRecord]:
         if isinstance(response, list) and len(response) > 0:
@@ -271,15 +297,19 @@ class OneKE_KGPrompt(OneKEPrompt):
             type_en, _ = self.spg_type_schema_info_zh[type_zh]
             if type_value and isinstance(type_value, dict):
                 for name, attrs in type_value.items():
-                    spg_record = SPGRecord(type_en).upsert_properties({"id": name, "name": name})
+                    spg_record = SPGRecord(type_en).upsert_properties(
+                        {"id": name, "name": name}
+                    )
                     for attr_zh, attr_value in attrs.items():
                         if isinstance(attr_value, list):
-                            attr_value = ','.join(attr_value)
+                            attr_value = ",".join(attr_value)
                         if attr_zh in self.property_info_zh[type_zh]:
                             attr_en, _, _ = self.property_info_zh[type_zh][attr_zh]
                             spg_record.upsert_property(attr_en, attr_value)
                         elif attr_zh in self.relation_info_zh[type_zh]:
-                            attr_en, _, object_type = self.relation_info_zh[type_zh][attr_zh]
+                            attr_en, _, object_type = self.relation_info_zh[type_zh][
+                                attr_zh
+                            ]
                             spg_record.upsert_relation(attr_en, object_type, attr_value)
                         else:
                             print(f"Unrecognized attribute: {attr_zh}")
@@ -293,29 +323,23 @@ class OneKE_KGPrompt(OneKEPrompt):
             attributes.extend([v.name_zh for v in spg_type.properties.values()])
             attributes.extend([v.name_zh for v in spg_type.relations.values()])
             entity_type = spg_type.name_zh
-            spo_list.append({
-                "entity_type": entity_type,
-                "attributes": attributes
-            })
+            spo_list.append({"entity_type": entity_type, "attributes": attributes})
 
         self.schema_list = self.multischema_split_by_num(self.split_num, spo_list)
-
 
 
 class OneKE_EEPrompt(OneKEPrompt):
     template_zh: str = "你是专门进行事件提取的专家。请从input中抽取出符合schema定义的事件，不存在的事件返回空列表，不存在的论元返回NAN，如果论元存在多值请返回列表。请按照JSON字符串的格式回答。"
     template_en: str = "You are an expert in event extraction. Please extract events from the input that conform to the schema definition. Return an empty list for events that do not exist, and return NAN for arguments that do not exist. If an argument has multiple values, please return a list. Respond in the format of a JSON string."
 
-
     def __init__(
         self,
         event_types: List[SPGTypeName],
-        language: str = 'zh',
+        language: str = "zh",
         with_description: bool = False,
         split_num: int = 4,
     ):
         super().__init__(event_types, language, with_description, split_num)
-
 
     def parse_response(self, response: str) -> List[SPGRecord]:
         if isinstance(response, list) and len(response) > 0:
@@ -342,18 +366,21 @@ class OneKE_EEPrompt(OneKEPrompt):
                     if arguments and isinstance(arguments, dict):
                         for attr_zh, attr_value in arguments.items():
                             if isinstance(attr_value, list):
-                                attr_value = ','.join(attr_value)
+                                attr_value = ",".join(attr_value)
                             if attr_zh in self.property_info_zh[type_zh]:
                                 attr_en, _, _ = self.property_info_zh[type_zh][attr_zh]
                                 spg_record.upsert_property(attr_en, attr_value)
                             elif attr_zh in self.relation_info_zh[type_zh]:
-                                attr_en, _, object_type = self.relation_info_zh[type_zh][attr_zh]
-                                spg_record.upsert_relation(attr_en, object_type, attr_value)
+                                attr_en, _, object_type = self.relation_info_zh[
+                                    type_zh
+                                ][attr_zh]
+                                spg_record.upsert_relation(
+                                    attr_en, object_type, attr_value
+                                )
                             else:
                                 print(f"Unrecognized attribute: {attr_zh}")
                     spg_records.append(spg_record)
         return spg_records
-
 
     def _render(self):
         event_list = []
@@ -362,9 +389,7 @@ class OneKE_EEPrompt(OneKEPrompt):
             arguments.extend([v.name_zh for v in spg_type.properties.values()])
             arguments.extend([v.name_zh for v in spg_type.relations.values()])
             event_type = spg_type.name_zh
-            event_list.append({
-                "event_type": event_type,
-                "trigger": True,
-                "arguments": arguments
-            })
-        self.schema_list = self. multischema_split_by_num(self.split_num, event_list)
+            event_list.append(
+                {"event_type": event_type, "trigger": True, "arguments": arguments}
+            )
+        self.schema_list = self.multischema_split_by_num(self.split_num, event_list)
