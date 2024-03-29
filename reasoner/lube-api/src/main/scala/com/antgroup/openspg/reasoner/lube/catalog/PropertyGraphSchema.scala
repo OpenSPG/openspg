@@ -39,6 +39,9 @@ class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutab
   }
 
   def getNodeField(nodeType: String, fieldName: String): Field = {
+    if (fieldName.equals(Constants.NODE_ID_KEY) || fieldName.equals(Constants.PROPERTY_JSON_KEY)) {
+      return new Field(fieldName, KTString, true)
+    }
     val node = nodes.get(nodeType)
     if (node.isEmpty) {
       null
@@ -73,7 +76,8 @@ class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutab
   def getEdgeField(spoStr: Set[String], fieldName: String): Field = {
     if (fieldName.equals(Constants.EDGE_FROM_ID_KEY) || fieldName.equals(
       Constants.EDGE_TO_ID_KEY) || fieldName.equals(
-      Constants.EDGE_FROM_ID_TYPE_KEY) || fieldName.equals(Constants.EDGE_TO_ID_TYPE_KEY)) {
+      Constants.EDGE_FROM_ID_TYPE_KEY) || fieldName.equals(Constants.EDGE_TO_ID_TYPE_KEY) ||
+      fieldName.equals(Constants.PROPERTY_JSON_KEY)) {
       return new Field(fieldName, KTString, true)
     }
     for (spo <- spoStr) {
@@ -113,7 +117,8 @@ class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutab
       fieldName: String): Field = {
     if (fieldName.equals(Constants.EDGE_FROM_ID_KEY) || fieldName.equals(
         Constants.EDGE_TO_ID_KEY) || fieldName.equals(
-        Constants.EDGE_FROM_ID_TYPE_KEY) || fieldName.equals(Constants.EDGE_TO_ID_TYPE_KEY)) {
+        Constants.EDGE_FROM_ID_TYPE_KEY) || fieldName.equals(Constants.EDGE_TO_ID_TYPE_KEY) ||
+        fieldName.equals(Constants.PROPERTY_JSON_KEY)) {
       return new Field(fieldName, KTString, true)
     }
     val spo = new SPO(startNode, typeName, endNode)

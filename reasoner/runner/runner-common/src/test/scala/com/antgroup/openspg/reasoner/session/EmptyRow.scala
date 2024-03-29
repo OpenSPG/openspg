@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.reasoner.session
+package com.antgroup.openspg.reasoner.session
 
 import com.antgroup.openspg.reasoner.lube.logical.Var
 import com.antgroup.openspg.reasoner.lube.physical.rdg.Row
@@ -25,4 +25,11 @@ class EmptyRow(orderedFields: List[Var], rdg: EmptyRDG)
    * @param rows number of rows to print
    */
   override def show(rows: Int): Unit = {}
+
+  /**
+   * Remove duplicate result in row
+   *
+   * @return
+   */
+  override def distinct(): Row[EmptyRDG] = this
 }

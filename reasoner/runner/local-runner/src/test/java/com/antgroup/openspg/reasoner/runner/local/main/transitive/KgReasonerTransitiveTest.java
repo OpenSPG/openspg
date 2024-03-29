@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.reasoner.runner.local.main.transitive;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
@@ -122,6 +124,33 @@ public class KgReasonerTransitiveTest {
     Assert.assertEquals(2, result.getRows().get(0).length);
     Assert.assertEquals(result.getRows().get(0)[0], "P1");
     Assert.assertEquals(result.getRows().get(0)[1], "C5");
+  }
+
+  @Test
+  public void testTransitiveWithPathLongestWithPath() {
+    String dsl =
+        "GraphStructure {\n"
+            + "  A [RelatedParty, __start__='true']\n"
+            + "  B [RelatedParty]\n"
+            + "  A->B [holdShare] repeat(1,10) as e\n"
+            + "}\n"
+            + "Rule {\n"
+            + "  R1(\"只保留最长的路径\"): group(A).keep_longest_path(e)\n"
+            + "}\n"
+            + "Action {\n"
+            + "  get(A.id,B.id,__path__)  \n"
+            + "}";
+    LocalReasonerResult result = doProcess(dsl);
+    // check result
+    Assert.assertEquals(1, result.getRows().size());
+    Assert.assertEquals(3, result.getRows().get(0).length);
+    Assert.assertEquals(result.getRows().get(0)[0], "P1");
+    Assert.assertTrue("C2,C5".contains(result.getRows().get(0)[1].toString()));
+    // check path format
+    JSONArray path = JSON.parseArray(result.getRows().get(0)[2].toString());
+    Assert.assertEquals(path.size(), 9);
+    Assert.assertEquals(path.getJSONObject(0).get(Constants.CONTEXT_TYPE), "vertex");
+    Assert.assertEquals(path.getJSONObject(5).get(Constants.CONTEXT_TYPE), "edge");
   }
 
   @Test
@@ -307,6 +336,38 @@ public class KgReasonerTransitiveTest {
   }
 
   @Test
+  public void testTransitiveWithRule2WithPath() {
+    String dsl =
+        "GraphStructure {\n"
+            + "  A [RelatedParty, __start__='true']\n"
+            + "  B,C [RelatedParty]\n"
+            + "  B->C [trans] repeat(1,10) as e\n"
+            + "  A->B [trans] as f\n"
+            + "}\n"
+            + "Rule {\n"
+            + "R1(\"要求转账logId一致\"): e.edges().constraint((pre,cur) => cur.logId == f.logId)"
+            + "R2(\"时间大于第一个\"): e.edges().constraint((pre,cur) => cur.payDate > f.payDate)"
+            + "R11(\"要求前一个时间小于后一个时间\"): e.edges().constraint((pre,cur) => cur.payDate > pre.payDate)"
+            + "R3(\"只保留最长的路径\"): group(A).keep_longest_path(e)\n"
+            + "}\n"
+            + "Action {\n"
+            + "  get(A.id,C.id,__path__)  \n"
+            + "}";
+    LocalReasonerResult result = doProcess(dsl);
+    // check result
+    Assert.assertEquals(1, result.getRows().size());
+    Assert.assertEquals(3, result.getRows().get(0).length);
+    Assert.assertEquals(result.getRows().get(0)[0], "P1");
+    Assert.assertEquals(result.getRows().get(0)[1], "C5");
+    // check path format
+    JSONArray path = JSON.parseArray(result.getRows().get(0)[2].toString());
+    Assert.assertEquals(path.size(), 9);
+    Assert.assertEquals(path.getJSONObject(0).get("entityType"), "PERSON");
+    Assert.assertEquals(path.getJSONObject(4).get("name"), "C6");
+    Assert.assertEquals(path.getJSONObject(8).get("amount"), 5);
+  }
+
+  @Test
   public void testTransitive1() {
     String dsl =
         "GraphStructure {\n"
@@ -478,6 +539,106 @@ public class KgReasonerTransitiveTest {
           constructionEdge("A2", "test", "C2"),
           constructionEdge("C2", "t1", "D21"),
           constructionEdge("D21", "t1", "D22"));
+    }
+  }
+
+  @Test
+  public void testTransitiveWithDefinePath() {
+    String dsl =
+        "Define (A:Function)-[p:related]->(B:Function) {\n"
+            + "  GraphStructure {\n"
+            + "    (A)-[:function2link]->(L:LinkID)\n"
+            + "    (L)-[:link2function]->(B)\n"
+            + "  }\n"
+            + "  Rule {\n"
+            + "    p.id = L.id\n"
+            + "    p.version = L.__id__\n"
+            + "    p.L = L.__property_json__\n"
+            + "  }\n"
+            + "}\n";
+    dsl =
+        dsl
+            + "GraphStructure {\n"
+            + "  API [ServiceApi, __start__='true']\n"
+            + "  A [Function]\n"
+            + "  B [Function]\n"
+            + "  API -> A [api2function]\n"
+            + "  A -> B [related] repeat(1,2)\n"
+            + "}\n"
+            + "Rule {\n"
+            + "}\n"
+            + "Action {\n"
+            + "  get(__path__ as p)\n"
+            + "}";
+
+    System.out.println(dsl);
+    LocalReasonerTask task = new LocalReasonerTask();
+    task.setDsl(dsl);
+
+    // add mock catalog
+    Map<String, Set<String>> schema = new HashMap<>();
+    schema.put("Function", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
+    schema.put("LinkID", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
+    schema.put(
+        "ServiceApi",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name", "apiName")));
+    schema.put(
+        "Function_function2link_LinkID",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+        "LinkID_link2function_Function",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+        "ServiceApi_api2function_Function",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+
+    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
+    catalog.init();
+    task.setCatalog(catalog);
+
+    task.setGraphLoadClass(
+        "com.antgroup.openspg.reasoner.runner.local.main.transitive.KgReasonerTransitiveTest$FunctionGraphLoader");
+
+    // enable subquery
+    Map<String, Object> params = new HashMap<>();
+    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
+    params.put(Constants.SPG_REASONER_MULTI_VERSION_ENABLE, "true");
+    task.setParams(params);
+
+    LocalReasonerRunner runner = new LocalReasonerRunner();
+    LocalReasonerResult result = runner.run(task);
+
+    // check result
+    Assert.assertEquals(2, result.getRows().size());
+    // check path format
+    JSONArray path = JSON.parseArray(result.getRows().get(1)[0].toString());
+    Assert.assertEquals(path.size(), 7);
+    Assert.assertEquals(path.getJSONObject(0).get("name"), "A1");
+    Assert.assertEquals(path.getJSONObject(1).get("name"), "B2");
+    Assert.assertEquals(
+        path.getJSONObject(5).getJSONObject("L").get(Constants.CONTEXT_LABEL), "LinkID");
+  }
+
+  public static class FunctionGraphLoader extends AbstractLocalGraphLoader {
+    @Override
+    public List<IVertex<String, IProperty>> genVertexList() {
+      return Lists.newArrayList(
+          constructionVertex("A1", "Function", "name", "A1", "id", "a1"),
+          constructionVertex("B1", "Function", "name", "B1", "id", "b1"),
+          constructionVertex("B2", "Function", "name", "B2", "id", "b2"),
+          constructionVertex("L1", "LinkID", "name", "L1", "id", "l1"),
+          constructionVertex("L2", "LinkID", "name", "L2", "id", "l2"),
+          constructionVertex("S1", "ServiceApi", "name", "S1", "id", "s1", "apiName", "api"));
+    }
+
+    @Override
+    public List<IEdge<String, IProperty>> genEdgeList() {
+      return Lists.newArrayList(
+          constructionEdge("S1", "api2function", "A1"),
+          constructionEdge("A1", "function2link", "L1", "info", "f2link_1"),
+          constructionEdge("L1", "link2function", "B1", "info", "link2f_1"),
+          constructionEdge("B1", "function2link", "L2", "info", "f2link_2"),
+          constructionEdge("L2", "link2function", "B2", "info", "link2f_2"));
     }
   }
 }

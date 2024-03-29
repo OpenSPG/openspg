@@ -10,23 +10,12 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-
-package com.antgroup.openspg.reasoner.lube.physical.rdg
-
-import com.antgroup.openspg.reasoner.lube.logical.Var
-
-abstract class Row[T <: RDG[T]](val orderedFields: List[Var], val rdg: T) extends Result {
-
-  /**
-   * Print the result, usually used for debug.
-   *
-   * @param rows number of rows to print
-   */
-  def show(rows: Int = 20): Unit
-
-  /**
-   * Remove duplicate result in row
-   * @return
-   */
-  def distinct(): Row[T]
+package com.antgroup.openspg.reasoner.common.utils;
+/**
+ * @author peilong.zpl
+ * @version $Id: FunctionUtils.java, v 0.1 2024-03-19 21:42 peilong.zpl Exp $$
+ */
+@FunctionalInterface
+public interface JavaFunctionCaller<T, R> {
+  R apply(T t);
 }

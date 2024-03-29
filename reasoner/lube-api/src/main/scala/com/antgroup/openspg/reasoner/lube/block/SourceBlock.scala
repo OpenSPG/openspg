@@ -13,10 +13,15 @@
 
 package com.antgroup.openspg.reasoner.lube.block
 
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
 
 case class SourceBlock(override val graph: IRGraph)
     extends BasicBlock[Binds](BlockType("source")) {
   override val dependencies: List[Block] = List.empty
   override val binds: Binds = Binds.empty
+
+  override def withNewChildren(newChildren: Array[Block]): Block =
+    throw UnsupportedOperationException("cannot support")
+
 }

@@ -11,14 +11,13 @@
  * or implied.
  */
 
-package com.antgroup.reasoner.session
+package com.antgroup.openspg.reasoner.session
 
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog
 import com.antgroup.openspg.reasoner.lube.logical.RepeatPathVar
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface
 import com.antgroup.openspg.reasoner.lube.physical.PropertyGraph
 import com.antgroup.openspg.reasoner.warehouse.common.config.GraphLoaderConfig
-import com.antgroup.openspg.reasoner.session.KGReasonerSession
 
 class EmptyPropertyGraph extends PropertyGraph[EmptyRDG] {
 

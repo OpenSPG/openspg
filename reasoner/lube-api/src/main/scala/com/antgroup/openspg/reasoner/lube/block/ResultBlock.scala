@@ -32,7 +32,8 @@ abstract class ResultBlock[B <: Binds] extends BasicBlock[B](BlockType("result")
 final case class TableResultBlock(
     dependencies: List[Block],
     selectList: OrderedFields,
-    asList: List[String])
+    asList: List[String],
+    distinct: Boolean)
     extends ResultBlock[OrderedFields] {
 
   /**
@@ -41,6 +42,11 @@ final case class TableResultBlock(
    * @return
    */
   override def binds: OrderedFields = selectList
+
+  override def withNewChildren(newChildren: Array[Block]): Block = {
+    this.copy(dependencies = newChildren.toList)
+  }
+
 }
 
 /**
@@ -52,6 +58,11 @@ final case class TableResultBlock(
 final case class GraphResultBlock(dependencies: List[Block], outputGraphPath: List[String])
     extends ResultBlock[Binds] {
   override val binds: Binds = dependencies.head.binds
+
+  override def withNewChildren(newChildren: Array[Block]): Block = {
+    this.copy(dependencies = newChildren.toList)
+  }
+
 }
 
 /**
@@ -95,6 +106,9 @@ case class DDLBlock(ddlOp: Set[DDLOp], dependencies: List[Block]) extends Result
    * @return
    */
   override def binds: Fields = Fields.empty
+
+  override def withNewChildren(newChildren: Array[Block]): Block =
+    this.copy(dependencies = newChildren.toList)
 
 }
 

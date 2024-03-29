@@ -31,9 +31,13 @@ import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.Operator;
 import com.ql.util.express.exception.QLCompileException;
+import com.ql.util.express.parse.KeyWordDefine4Java;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,10 +46,38 @@ import scala.Tuple2;
 public class RuleRunner {
   private static final Logger log = LoggerFactory.getLogger(RuleRunner.class);
 
-  private static Cache<String, Map<String, Object>> contextCache =
+  private static final Cache<String, Map<String, Object>> contextCache =
       CacheBuilder.newBuilder().maximumSize(100).expireAfterWrite(24, TimeUnit.HOURS).build();
 
   private final ExpressRunner EXPRESS_RUNNER = new ExpressRunner();
+
+  private static final Set<String> keywordSet = new HashSet<>();
+
+  static {
+    KeyWordDefine4Java keyWordDefine4Java = new KeyWordDefine4Java();
+    keywordSet.addAll(Arrays.asList(keyWordDefine4Java.keyWords));
+  }
+
+  private static final String CONFLICT_KEY_PREFIX = "__ConflictKey_";
+  /** convert vertex or edge property name to prevent keyword conflicts */
+  public static String convertPropertyName(String propertyName) {
+    if (keywordSet.contains(propertyName)) {
+      return CONFLICT_KEY_PREFIX + propertyName;
+    }
+    return propertyName;
+  }
+
+  /** recover property name */
+  public static String recoverPropertyName(String propertyName) {
+    if (!propertyName.startsWith(CONFLICT_KEY_PREFIX)) {
+      return propertyName;
+    }
+    return propertyName.substring(CONFLICT_KEY_PREFIX.length());
+  }
+
+  public static boolean isConflictPropertyName(String propertyName) {
+    return propertyName.startsWith(CONFLICT_KEY_PREFIX);
+  }
 
   /**
    * set running context

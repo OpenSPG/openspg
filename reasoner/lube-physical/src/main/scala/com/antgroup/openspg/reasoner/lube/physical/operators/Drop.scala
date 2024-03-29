@@ -20,7 +20,7 @@ import com.antgroup.openspg.reasoner.lube.logical.Var
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 
 final case class Drop[T <: RDG[T]: TypeTag](in: PhysicalOperator[T], fields: Set[Var])
-  extends PhysicalOperator[T] {
+  extends StackingPhysicalOperator[T] {
   override def rdg: T = in.rdg.dropFields(fields)
   override def meta: List[Var] = {
     val fieldMap = new mutable.HashMap[String, Var]()
@@ -31,5 +31,9 @@ final case class Drop[T <: RDG[T]: TypeTag](in: PhysicalOperator[T], fields: Set
       fieldMap.put(v.name, fieldMap(v.name).diff(v))
     }
     fieldMap.values.toList
+  }
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    this.copy(in = newChildren.head)
   }
 }

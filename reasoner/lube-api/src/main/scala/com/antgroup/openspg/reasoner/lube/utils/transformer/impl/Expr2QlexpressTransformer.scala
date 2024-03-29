@@ -15,13 +15,21 @@ package com.antgroup.openspg.reasoner.lube.utils.transformer.impl
 
 import com.antgroup.openspg.reasoner.common.trees.Transform
 import com.antgroup.openspg.reasoner.common.types.KTString
+import com.antgroup.openspg.reasoner.common.utils.JavaFunctionCaller
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.graph.IRNode
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 import com.antgroup.openspg.reasoner.lube.utils.transformer.ExprTransformer
 
-class Expr2QlexpressTransformer extends ExprTransformer[String] {
+
+class Expr2QlexpressTransformer(
+                                 fieldNameTransFunc: JavaFunctionCaller[String, String]
+                                 = new JavaFunctionCaller[String, String] {
+                                   override def apply(t: String): String = t
+                                 }
+                               )
+  extends ExprTransformer[String] {
 
   val binaryOpSetTrans: PartialFunction[BinaryOpSet, String] = {
     case BAdd => " + "
@@ -50,7 +58,7 @@ class Expr2QlexpressTransformer extends ExprTransformer[String] {
     case Abs => "abs(%s)"
     case Floor => "floor(%s)"
     case Ceil => "ceil(%s)"
-    case GetField(fieldName) => "%s." + fieldName
+    case GetField(fieldName) => "%s." + fieldNameTransFunc(fieldName)
   }
 
   def lambdaFuncParse(curVariableSet: Set[String], lambdaFunc: Expr): (String, String) = {
