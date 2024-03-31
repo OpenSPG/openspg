@@ -33,7 +33,8 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.{
   EntityElement,
   GraphPath,
   PatternElement,
-  PredicateElement
+  PredicateElement,
+  VariablePatternConnection
 }
 import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, ProjectRule, Rule}
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface
@@ -514,18 +515,43 @@ class OpenSPGDslParser extends ParserInterface {
     parseRuleBlock(rules, matchBlock.patterns)
   }
 
+  def findAllPathAlias(patterns: Map[String, GraphPath]): Map[String, IRPath] = {
+    patterns.values
+      .flatMap(path =>
+        path.graphPattern.edges.flatMap(pair => pair._2.map {
+          case connection: VariablePatternConnection =>
+            val start = IRNode(connection.source, Set.empty)
+            val end = IRNode(connection.target, Set.empty)
+            val irEdge = IREdge(connection.alias, Set.empty)
+            connection.alias -> IRPath(connection.alias, List.apply(start, irEdge, end))
+          case _ => null
+        }.filter(_ != null).toMap))
+      .toMap
+  }
+
+  def addIntoRefFieldsMap(fieldName: String,
+                          fields: Set[String],
+                          refFieldsMap: Map[String, Set[String]]): Map[String, Set[String]] = {
+    var attrs = fields
+    if (refFieldsMap.contains(fieldName)) {
+      attrs = attrs ++ refFieldsMap(fieldName)
+    }
+    refFieldsMap + (fieldName -> attrs)
+  }
+
   def parseRuleBlock(rules: List[Rule], patterns: Map[String, GraphPath]): Block = {
     var refFieldsMap: Map[String, Set[String]] = Map.empty
+    val allRepeatPath = findAllPathAlias(patterns)
     if (rules.nonEmpty) {
       rules.foreach(rule => {
         val irFields = RuleUtils.getAllInputFieldInRule(rule, Set.empty, Set.empty)
-        irFields.foreach {
+        val repeatIrFields = ExprUtils.getRepeatPathInputFieldInRule(rule.getExpr, allRepeatPath)
+        val totalIrFields = irFields ++ repeatIrFields
+        totalIrFields.foreach {
           case c: IRNode =>
-            var attrs = c.fields
-            if (refFieldsMap.contains(c.name)) {
-              attrs = attrs ++ refFieldsMap(c.name)
-            }
-            refFieldsMap += (c.name -> attrs)
+            refFieldsMap = addIntoRefFieldsMap(c.name, c.fields, refFieldsMap)
+          case c: IREdge =>
+            refFieldsMap = addIntoRefFieldsMap(c.name, c.fields, refFieldsMap)
           case c => c
         }
       })
