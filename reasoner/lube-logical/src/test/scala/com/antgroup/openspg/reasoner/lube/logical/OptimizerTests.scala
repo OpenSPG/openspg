@@ -109,7 +109,7 @@ class OptimizerTests extends AnyFunSpec {
           cnt.sum
         }
     }
-    cnt should equal(1)
+    cnt should equal(2)
   }
 
   it("test filter merge") {

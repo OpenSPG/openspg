@@ -94,8 +94,7 @@ object ExpandIntoPure extends Rule {
       if (!map.contains(alias) || map(alias).isEmpty) {
         true
       } else {
-        val usedPros =
-          map(alias).asInstanceOf[NodeVar].fields.filter(!_.name.equals(Constants.NODE_ID_KEY))
+        val usedPros = map(alias).asInstanceOf[NodeVar].fields
         val originalProps = types.map(graph.getNode(_).properties).flatten
         if (usedPros.intersect(originalProps).isEmpty) {
           true
