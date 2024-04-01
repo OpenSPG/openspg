@@ -402,10 +402,22 @@ object LogicalPlanner {
         val starts = new mutable.HashSet[String]()
         for (ddl <- ddlOp) {
           ddl match {
-            case AddProperty(s, _, _) => starts.add(s.alias)
+            case AddProperty(s, _, _) =>
+              if (starts.isEmpty) {
+                starts.add(s.alias)
+              } else {
+                val common = starts.intersect(Set.apply(s.alias))
+                starts.clear()
+                starts.++=(common)
+              }
             case AddPredicate(p) =>
-              starts.add(p.source.alias)
-              starts.add(p.target.alias)
+              if (starts.isEmpty) {
+                starts.++=(Set.apply(p.source.alias, p.target.alias))
+              } else {
+                val common = starts.intersect(Set.apply(p.source.alias, p.target.alias))
+                starts.clear()
+                starts.++=(common)
+              }
             case _ =>
           }
         }
