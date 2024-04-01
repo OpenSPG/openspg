@@ -66,4 +66,8 @@ final case class OrderAndLimit(
   override def fields: List[Var] = in.fields
 
   override def solved: SolvedModel = in.solved.solve
+
+  override def withNewChildren(newChildren: Array[LogicalOperator]): LogicalOperator = {
+    this.copy(in = newChildren.head)
+  }
 }

@@ -23,7 +23,11 @@ final case class LinkedExpand[T <: RDG[T]: TypeTag](
     in: PhysicalOperator[T],
     pattern: EdgePattern[LinkedPatternConnection],
     meta: List[Var])
-    extends PhysicalOperator[T] {
+    extends StackingPhysicalOperator[T] {
 
   override def rdg: T = in.rdg.linkedExpand(pattern)
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    this.copy(in = newChildren.head)
+  }
 }

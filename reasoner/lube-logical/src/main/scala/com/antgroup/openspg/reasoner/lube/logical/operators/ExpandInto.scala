@@ -37,4 +37,8 @@ final case class ExpandInto(in: LogicalOperator, target: PatternElement, pattern
   override def solved: SolvedModel = in.solved
 
   override def refFields: List[Var] = pattern.toVar(solved, graph)
+
+  override def withNewChildren(newChildren: Array[LogicalOperator]): LogicalOperator = {
+    this.copy(in = newChildren.head)
+  }
 }

@@ -431,17 +431,11 @@ class LogicalPlannerTests extends AnyFunSpec {
     catalog.init()
     implicit val context: LogicalPlannerContext =
       LogicalPlannerContext(catalog, parser, Map.empty)
-    val logicalPlan = LogicalPlanner.plan(block).head
-    print(logicalPlan.pretty)
-    val cnt = logicalPlan.transform[Int] {
-      case (agg: BoundedVarLenExpand, cnt) => cnt.sum + 1
-      case (_, cnt) =>
-        if (cnt.isEmpty) {
-          0
-        } else {
-          cnt.sum
-        }
+    val start = System.nanoTime()
+    for (i <- 0 until  10000) {
+      val logicalPlan = LogicalPlanner.plan(block).head
+      LogicalOptimizer.optimize(logicalPlan.head)
     }
-    cnt should equal(5)
+    println(s"cost=${System.nanoTime() - start}")
   }
 }

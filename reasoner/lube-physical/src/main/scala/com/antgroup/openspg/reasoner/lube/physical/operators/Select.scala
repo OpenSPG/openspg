@@ -23,7 +23,7 @@ final case class Select[T <: RDG[T]: TypeTag](
     orderedFields: List[Var],
     as: List[String],
     distinct: Boolean)
-    extends PhysicalOperator[T] {
+    extends StackingPhysicalOperator[T] {
 
   def row: Row[T] = {
     var row = in.rdg.select(orderedFields, as)
@@ -34,4 +34,8 @@ final case class Select[T <: RDG[T]: TypeTag](
   }
 
   override def meta: List[Var] = orderedFields
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    this.copy(in = newChildren.head)
+  }
 }

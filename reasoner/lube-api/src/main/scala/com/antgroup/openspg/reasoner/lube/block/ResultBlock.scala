@@ -16,11 +16,7 @@ package com.antgroup.openspg.reasoner.lube.block
 import com.antgroup.openspg.reasoner.common.types.KgType
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.common.graph._
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  Element,
-  PatternElement,
-  PredicateElement
-}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{Element, PatternElement, PredicateElement}
 
 /**
  * every operator block tree of root is result block
@@ -46,6 +42,11 @@ final case class TableResultBlock(
    * @return
    */
   override def binds: OrderedFields = selectList
+
+  override def withNewChildren(newChildren: Array[Block]): Block = {
+    this.copy(dependencies = newChildren.toList)
+  }
+
 }
 
 /**
@@ -57,6 +58,11 @@ final case class TableResultBlock(
 final case class GraphResultBlock(dependencies: List[Block], outputGraphPath: List[String])
     extends ResultBlock[Binds] {
   override val binds: Binds = dependencies.head.binds
+
+  override def withNewChildren(newChildren: Array[Block]): Block = {
+    this.copy(dependencies = newChildren.toList)
+  }
+
 }
 
 /**
@@ -100,6 +106,9 @@ case class DDLBlock(ddlOp: Set[DDLOp], dependencies: List[Block]) extends Result
    * @return
    */
   override def binds: Fields = Fields.empty
+
+  override def withNewChildren(newChildren: Array[Block]): Block =
+    this.copy(dependencies = newChildren.toList)
 
 }
 

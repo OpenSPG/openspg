@@ -24,9 +24,12 @@ final case class Aggregate[T <: RDG[T]: TypeTag](
     group: List[Var],
     aggregations: Map[Var, Aggregator],
     meta: List[Var])
-    extends PhysicalOperator[T] {
+    extends StackingPhysicalOperator[T] {
 
   override def rdg: T =
     in.rdg.groupBy(group, aggregations)
 
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    this.copy(in = newChildren.head)
+  }
 }

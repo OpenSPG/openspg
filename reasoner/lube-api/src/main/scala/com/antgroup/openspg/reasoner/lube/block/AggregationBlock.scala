@@ -31,6 +31,10 @@ final case class AggregationBlock(
     Fields(fields.toList)
   }
 
+  override def withNewChildren(newChildren: Array[Block]): Block = {
+    this.copy(dependencies = newChildren.toList)
+  }
+
 }
 
 final case class Aggregations(pairs: Map[IRField, Aggregator]) extends Binds {

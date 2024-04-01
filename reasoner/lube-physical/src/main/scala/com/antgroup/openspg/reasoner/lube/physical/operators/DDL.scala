@@ -21,7 +21,7 @@ import com.antgroup.openspg.reasoner.lube.logical.Var
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 
 final case class DDL[T <: RDG[T]: TypeTag](in: PhysicalOperator[T], ddlOp: Set[DDLOp])
-    extends PhysicalOperator[T] {
+    extends StackingPhysicalOperator[T] {
 
   override def rdg: T = {
     val list = new mutable.ListBuffer[DDLOp]()
@@ -49,4 +49,8 @@ final case class DDL[T <: RDG[T]: TypeTag](in: PhysicalOperator[T], ddlOp: Set[D
   }
 
   override def meta: List[Var] = List.empty
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    this.copy(in = newChildren.head)
+  }
 }

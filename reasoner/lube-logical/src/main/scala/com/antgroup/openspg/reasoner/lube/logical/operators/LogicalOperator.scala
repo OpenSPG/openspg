@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.lube.logical.operators
 
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.trees.AbstractTreeNode
 import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph
 import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, Var}
@@ -43,12 +44,20 @@ abstract class LogicalOperator extends AbstractTreeNode[LogicalOperator] {
   def fields: List[Var]
 }
 
-abstract class LogicalLeafOperator extends LogicalOperator
+abstract class LogicalLeafOperator extends LogicalOperator {
+  override def children: Array[LogicalOperator] = Array.empty
+
+  override def withNewChildren(newChildren: Array[LogicalOperator]): LogicalOperator = {
+    throw UnsupportedOperationException("LogicalLeafOperator cannot construct children")
+  }
+}
 
 abstract class StackingLogicalOperator extends LogicalOperator {
   def in: LogicalOperator
 
   override def graph: SemanticPropertyGraph = in.graph
+
+  override def children: Array[LogicalOperator] = Array.apply(in)
 }
 
 abstract class BinaryLogicalOperator extends LogicalOperator {
@@ -57,6 +66,8 @@ abstract class BinaryLogicalOperator extends LogicalOperator {
   def rhs: LogicalOperator
 
   override def graph: SemanticPropertyGraph = rhs.graph
+
+  override def children: Array[LogicalOperator] = Array.apply(lhs, rhs)
 }
 
 trait EmptyFields extends LogicalOperator {

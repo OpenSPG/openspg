@@ -19,10 +19,8 @@ import scala.reflect.runtime.universe.TypeTag
 import com.antgroup.openspg.reasoner.lube.logical.Var
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 
-final case class Union[T <: RDG[T]: TypeTag](
-    lhs: PhysicalOperator[T],
-    rhs: PhysicalOperator[T])
-    extends PhysicalOperator[T] {
+final case class Union[T <: RDG[T]: TypeTag](lhs: PhysicalOperator[T], rhs: PhysicalOperator[T])
+    extends BinaryPhysicalOperator[T] {
 
   /**
    * The output of the current operator
@@ -52,4 +50,9 @@ final case class Union[T <: RDG[T]: TypeTag](
     }
     varMap.values.toList
   }
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    Union(newChildren.apply(0), newChildren.apply(1))
+  }
+
 }
