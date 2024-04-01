@@ -16,6 +16,8 @@ package com.antgroup.openspg.reasoner.parser.expr
 import com.antgroup.openspg.reasoner.common.exception.KGDSLGrammarException
 import com.antgroup.openspg.reasoner.common.types.{KTObject, KTString}
 import com.antgroup.openspg.reasoner.lube.common.expr.{BinaryOpExpr, _}
+import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode, IRPath}
+import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
@@ -553,6 +555,75 @@ class ExprTest extends AnyFunSpec {
         Ref("e")
       ), null).pretty
     expr.pretty should equal(expectResult)
+    val repeatPath = Map.apply("e" -> IRPath("e", List.apply(
+      IRNode("A", Set.empty),
+      IREdge("e", Set.empty),
+      IRNode("B", Set.empty)
+    )))
+    val irFields = ExprUtils.getRepeatPathInputFieldInRule(expr, repeatPath)
+    irFields.size should equal(0)
+  }
+
+  it ("e.edges().reduce((x, y) => x + y.times, 0)") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("e.edges().reduce((x, y) => x + y.times, 0)")
+    print(expr.pretty)
+    val expectResult = OpChainExpr(
+      ListOpExpr(
+        Reduce(
+          "y",
+          "x",
+          BinaryOpExpr(BAdd, Ref("x"), UnaryOpExpr(GetField("times"), Ref("y"))),
+          VLong("0")
+        ),
+        Ref("e")
+      ),
+      OpChainExpr(
+        PathOpExpr(
+          GetEdgesExpr,
+          Ref("e")
+        ),
+        null
+      )
+    ).pretty
+    expr.pretty should equal(expectResult)
+    val repeatPath = Map.apply("e" -> IRPath("e", List.apply(
+      IRNode("A", Set.empty),
+      IREdge("e", Set.empty),
+      IRNode("B", Set.empty)
+    )))
+    val irFields = ExprUtils.getRepeatPathInputFieldInRule(expr, repeatPath)
+    irFields.size should equal(1)
+  }
+
+  it ("e.edges().constraint((cur, pre) => cur.logId == pre.logId)") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("e.edges().constraint((cur, pre) => cur.logId == pre.logId)")
+    print(expr.pretty)
+    val expectResult = OpChainExpr(
+      ListOpExpr(
+        Constraint(
+          "cur",
+          "pre",
+          BinaryOpExpr(BEqual,
+            UnaryOpExpr(GetField("logId"), Ref("cur")), UnaryOpExpr(GetField("logId"), Ref("pre")))
+        ),
+        Ref("e")
+      ),
+      OpChainExpr(
+        PathOpExpr(
+          GetEdgesExpr,
+          Ref("e")
+        ), null)
+    ).pretty
+    expr.pretty should equal(expectResult)
+    val repeatPath = Map.apply("e" -> IRPath("e", List.apply(
+      IRNode("A", Set.empty),
+      IREdge("e", Set.empty),
+      IRNode("B", Set.empty)
+    )))
+    val irFields = ExprUtils.getRepeatPathInputFieldInRule(expr, repeatPath)
+    irFields.size should equal(1)
   }
 
   it ("e.nodes().reduce((x, y) => x + y.times, 0)") {
@@ -578,6 +649,13 @@ class ExprTest extends AnyFunSpec {
       )
     ).pretty
     expr.pretty should equal(expectResult)
+    val repeatPath = Map.apply("e" -> IRPath("e", List.apply(
+      IRNode("A", Set.empty),
+      IREdge("e", Set.empty),
+      IRNode("B", Set.empty)
+    )))
+    val irFields = ExprUtils.getRepeatPathInputFieldInRule(expr, repeatPath)
+    irFields.size should equal(2)
   }
 
   it ("e.nodes().constraint((cur, pre) => cur.logId == pre.logId)") {
@@ -601,6 +679,13 @@ class ExprTest extends AnyFunSpec {
         ), null)
     ).pretty
     expr.pretty should equal(expectResult)
+    val repeatPath = Map.apply("e" -> IRPath("e", List.apply(
+      IRNode("A", Set.empty),
+      IREdge("e", Set.empty),
+      IRNode("B", Set.empty)
+    )))
+    val irFields = ExprUtils.getRepeatPathInputFieldInRule(expr, repeatPath)
+    irFields.size should equal(2)
   }
 
 

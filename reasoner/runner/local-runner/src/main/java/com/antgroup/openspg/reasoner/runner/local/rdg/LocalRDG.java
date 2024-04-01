@@ -18,6 +18,7 @@ import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
+import com.antgroup.openspg.reasoner.common.graph.edge.impl.PathEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexProperty;
 import com.antgroup.openspg.reasoner.common.graph.type.GraphItemType;
@@ -146,6 +147,9 @@ public class LocalRDG extends RDG<LocalRDG> {
 
   private final IExecutionRecorder executionRecorder;
 
+  /** carry all tranversal graph data */
+  protected boolean isCarryTraversalGraph = false;
+
   /** local rdg with graph state */
   public LocalRDG(
       GraphState<IVertexId> graphState,
@@ -154,7 +158,8 @@ public class LocalRDG extends RDG<LocalRDG> {
       long executorTimeoutMs,
       String startVertexAlias,
       String taskId,
-      IExecutionRecorder executionRecorder) {
+      IExecutionRecorder executionRecorder,
+      boolean carryTraversalGraph) {
     this.graphState = graphState;
     Pattern startIdPattern = new NodePattern(new PatternElement(startVertexAlias, null, null));
     for (IVertexId vertexId : startIdList) {
@@ -167,6 +172,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     this.startVertexAlias = startVertexAlias;
     this.taskId = taskId;
     this.patternMatcher = new PatternMatcher(this.taskId, graphState);
+    this.isCarryTraversalGraph = carryTraversalGraph;
 
     if (null == executionRecorder) {
       this.executionRecorder = new EmptyRecorder();
@@ -534,7 +540,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     log.info("LocalRDG select,,matchCount=" + rows.size());
     this.executionRecorder.stageResultWithDesc(
         "select(" + RunnerUtil.getReadableAsList(as) + ")", this.kgGraphList.size(), "select");
-    return new LocalRow(cols, this, as, rows);
+    return new LocalRow(cols, this, as, rows, getRDGGraph());
   }
 
   @Override
@@ -1216,19 +1222,34 @@ public class LocalRDG extends RDG<LocalRDG> {
         Lists.newArrayList(resultVertexSet), Lists.newArrayList(resultEdgeSet), true);
   }
 
-  /**
-   * get all RDG Edges and Nodes
-   *
-   * @return
-   */
-  public LocalReasonerResult getRDGGraph() {
-    LocalReasonerResult localReasonerResult = this.getResult();
+  /** add graph to traversal graph */
+  private LocalReasonerResult getRDGGraph() {
+    if (!isCarryTraversalGraph) {
+      return new LocalReasonerResult(Lists.newArrayList(), Lists.newArrayList(), false);
+    }
+    LocalReasonerResult localReasonerResult = getResult();
     this.kgGraphList.forEach(
         graph -> {
           for (String alias : graph.getVertexAlias()) {
             localReasonerResult.getVertexList().addAll(graph.getVertex(alias));
           }
           for (String alias : graph.getEdgeAlias()) {
+            java.util.List<IEdge<IVertexId, IProperty>> edges = graph.getEdge(alias);
+            for (IEdge<IVertexId, IProperty> edge : edges) {
+              if (edge instanceof PathEdge) {
+                if (((PathEdge<?, ?, ?>) edge).getVertexList() != null) {
+                  localReasonerResult
+                      .getVertexList()
+                      .addAll(((PathEdge<IVertexId, IProperty, IProperty>) edge).getVertexList());
+                }
+                if (((PathEdge<?, ?, ?>) edge).getEdgeList() != null) {
+                  localReasonerResult
+                      .getEdgeList()
+                      .addAll(((PathEdge<IVertexId, IProperty, IProperty>) edge).getEdgeList());
+                }
+              }
+              localReasonerResult.getEdgeList().add(edge);
+            }
             localReasonerResult.getEdgeList().addAll(graph.getEdge(alias));
           }
         });
