@@ -43,7 +43,7 @@ class _BuiltInOnlineExtractor(ExtractOp):
 
             op_clazz = getattr(module, op_config["className"])
             params = op_config.get("params", {})
-            op_obj = op_clazz(**params)
+            op_obj = op_clazz(*params.values())
             if self.debug:
                 print(f'{op_config["className"]}.template: {op_obj.template}')
             prompt_ops.append(op_obj)
@@ -60,12 +60,15 @@ class _BuiltInOnlineExtractor(ExtractOp):
                 retry_times = 0
                 while retry_times < self.max_retry_times:
                     try:
-                        query = op.build_prompt(input_param)
-                        response = self.model.remote_inference(query)
-                        collector.extend(op.parse_response(response))
-                        next_params.extend(
-                            op._build_next_variables(input_param, response)
-                        )
+                        querys = op.build_prompt(input_param)
+                        if isinstance(querys, str):
+                            querys = [querys]
+                        for query in querys:
+                            response = self.model.remote_inference(query)
+                            collector.extend(op.parse_response(response))
+                            next_params.extend(
+                                op._build_next_variables(input_param, response)
+                            )
                         break
                     except Exception as e:
                         retry_times += 1
