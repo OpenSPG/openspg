@@ -1295,32 +1295,33 @@ public class TransitiveOptionalTest {
   @Test
   public void testCreateInstance() {
     String dsl =
-            "Define (s:Custid)-[p:isAggregator]->(o:Boolean) {\n"
-                    + "    GraphStructure {\n"
-                    + "        (s)<-[e:complained]-(u1:Custid)\n"
-                    + "    }\n"
-                    + "    Rule {\n"
-                    + "        o = true\n"
-                    + "    }\n"
-                    + "    Action {\n"
-                    + "        gang = createNodeInstance(\n"
-                    + "            type=Gang,\n"
-                    + "            value={\n"
-                    + "                id=concat(s.id, \"_gang\")\n"
-                    + "            }\n"
-                    + "        )\n"
-                    + "        createEdgeInstance(\n"
-                    + "          src=gang,\n"
-                    + "          dst=s,\n"
-                    + "          type=has,\n"
-                    + "          value={\n"
-                    + "          }\n"
-                    + "        )\n"
-                    + "    }\n"
-                    + "}\n";
+        "Define (s:Custid)-[p:isAggregator]->(o:Boolean) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)<-[e:complained]-(u1:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        o = true\n"
+            + "    }\n"
+            + "    Action {\n"
+            + "        gang = createNodeInstance(\n"
+            + "            type=Gang,\n"
+            + "            value={\n"
+            + "                id=concat(s.id, \"_gang\")\n"
+            + "            }\n"
+            + "        )\n"
+            + "        createEdgeInstance(\n"
+            + "          src=gang,\n"
+            + "          dst=s,\n"
+            + "          type=has,\n"
+            + "          value={\n"
+            + "          }\n"
+            + "        )\n"
+            + "    }\n"
+            + "}\n";
 
-    dsl = dsl +
-            "GraphStructure {\n"
+    dsl =
+        dsl
+            + "GraphStructure {\n"
             + "  A [Custid, __start__='true']\n"
             + "  B [Gang]\n"
             + "  B->A [has]\n"
@@ -1340,13 +1341,14 @@ public class TransitiveOptionalTest {
     schema.put("Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("cid", "name")));
     schema.put("Gang", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("cid", "name")));
     schema.put("Gang_has_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
-    schema.put("Custid_complained_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+        "Custid_complained_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
 
     Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
     catalog.init();
     task.setCatalog(catalog);
     task.setGraphLoadClass(
-            "com.antgroup.openspg.reasoner.runner.local.main.transitive.TransitiveOptionalTest$GangGraphLoader");
+        "com.antgroup.openspg.reasoner.runner.local.main.transitive.TransitiveOptionalTest$GangGraphLoader");
 
     // enable subquery
     Map<String, Object> params = new HashMap<>();
@@ -1356,26 +1358,23 @@ public class TransitiveOptionalTest {
 
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
-
   }
 
   public static class GangGraphLoader extends AbstractLocalGraphLoader {
     @Override
     public List<IVertex<String, IProperty>> genVertexList() {
       return Lists.newArrayList(
-              constructionVertex("A1", "Custid", "name", "A1", "cid", "a1"),
-              constructionVertex("A2", "Custid", "name", "A2", "cid", "a2"),
-              constructionVertex("B1", "Gang", "name", "B2", "cid", "b1"));
-
+          constructionVertex("A1", "Custid", "name", "A1", "cid", "a1"),
+          constructionVertex("A2", "Custid", "name", "A2", "cid", "a2"),
+          constructionVertex("B1", "Gang", "name", "B2", "cid", "b1"));
     }
 
     @Override
     public List<IEdge<String, IProperty>> genEdgeList() {
       return Lists.newArrayList(
-              constructionEdge("B1", "has", "A1","info", "b1_a1"),
-              constructionEdge("B1", "has", "A2","info", "b1_a2"),
-              constructionEdge("A1", "complained", "A2","info", "a1ca2"));
+          constructionEdge("B1", "has", "A1", "info", "b1_a1"),
+          constructionEdge("B1", "has", "A2", "info", "b1_a2"),
+          constructionEdge("A1", "complained", "A2", "info", "a1ca2"));
     }
   }
-
 }

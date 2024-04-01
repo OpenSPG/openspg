@@ -304,7 +304,7 @@ class OpenSPGDslParser extends ParserInterface {
       predicate: PredicateElement): (Block, Set[DDLOp]) = {
     val matchBlock = parseGraphStructure(ctx.the_graph_structure(), head, predicate)
     val ruleBlock = parseRule(ctx.the_rule(), matchBlock)
-    val ddlOp = parseCreateAction(ctx.create_action())
+    val ddlOp = parseCreateAction(ctx.create_action(), matchBlock)
     (ruleBlock, ddlOp)
   }
 
@@ -587,11 +587,31 @@ class OpenSPGDslParser extends ParserInterface {
     curBlock
   }
 
-  def parseCreateAction(ctx: Create_actionContext): Set[DDLOp] = {
+  def parseCreateAction(ctx: Create_actionContext, matchBlock: MatchBlock): Set[DDLOp] = {
     if (ctx == null) {
       Set.empty
     } else {
-      ctx.create_action_body().asScala.map(x => parseCreateActionBody(x)).toSet
+      val ddlBlockSet = ctx.create_action_body().asScala.map(x => parseCreateActionBody(x)).toSet
+      val matchEleInfo = matchBlock.patterns.map(x => x._2.graphPattern.nodes).flatten
+      val allEleInfo = ddlBlockSet.map {
+        case AddVertex(s, _) => s.alias -> s
+        case _ => null
+      }.filter(_ != null).toMap ++ matchEleInfo
+      ddlBlockSet.map {
+        case c: AddVertex => c
+        case c: AddProperty => c
+        case c: AddPredicate => AddPredicate(
+          PredicateElement(
+            c.predicate.label,
+            c.predicate.alias,
+            allEleInfo(c.predicate.source.alias),
+            allEleInfo(c.predicate.target.alias),
+            c.predicate.fields,
+            c.predicate.direction
+          )
+        )
+      }.toSet
+
     }
   }
 
