@@ -17,7 +17,7 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.trees.{BottomUp, TopDown, Transform}
-import com.antgroup.openspg.reasoner.lube.common.expr.{Constraint, Expr, GetField, ListOpExpr, Ref, UnaryOpExpr}
+import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.graph._
 
 /**
@@ -41,6 +41,48 @@ object ExprUtils {
         }
       }
     }).transform(expr)
+  }
+
+  def getRepeatPathInputFieldInRule(expr: Expr,
+                                    repeatPathMap: Map[String, IRPath]): List[IRField] = {
+    expr match {
+      case OpChainExpr(ListOpExpr(listOp, _), OpChainExpr(PathOpExpr(name, ref), _)) =>
+        val irPath = repeatPathMap(ref.refName)
+        val props = listOp match {
+          case constraint: Constraint =>
+            getAllInputFieldInRule(constraint.reduceFunc, Set.empty, Set.empty).filter(
+              ir => ir.name.equals(constraint.cur) && ir.name.equals(constraint.pre))
+              .flatMap(t => t match {
+                case IRNode(_, fields) => fields.toList
+                case IREdge(_, fields) => fields.toList
+                case _ => List.empty
+              })
+
+          case compute: Reduce =>
+            getAllInputFieldInRule(compute.reduceFunc, Set.empty, Set.empty).filter(
+              ir => ir.name.equals(compute.ele)
+            ).flatMap(t => t match {
+              case IRNode(_, fields) => fields.toList
+              case IREdge(_, fields) => fields.toList
+              case _ => List.empty
+            })
+
+          case _ => List.empty
+        }
+        name match {
+          case GetNodesExpr =>
+            irPath.elements.filter(ele => ele.isInstanceOf[IRNode]).map {
+              case IRNode(irName, fields) => IRNode(irName, fields ++ props)
+              case _ => null
+            }.filter(_ != null)
+          case GetEdgesExpr =>
+            irPath.elements.filter(ele => ele.isInstanceOf[IREdge]).map {
+              case IREdge(irName, fields) => IREdge(irName, fields ++ props)
+              case _ => null
+            }.filter(_ != null)
+        }
+      case _ => List.empty
+    }
   }
 
   def getAllInputFieldInRule(
@@ -68,6 +110,12 @@ object ExprUtils {
                 val irList =
                   getAllInputFieldInRule(constraint.reduceFunc, nodesAlias, edgeAlias).filter(
                     ir => !ir.name.equals(constraint.cur) && !ir.name.equals(constraint.pre))
+                mergeListIRField(c.flatten ++ irList)
+              case compute: Reduce =>
+                val irList =
+                  getAllInputFieldInRule(compute.reduceFunc, nodesAlias, edgeAlias).filter(
+                    ir => !ir.name.equals(compute.ele) && !ir.name.equals(compute.res)
+                  )
                 mergeListIRField(c.flatten ++ irList)
               case _ =>
                 mergeListIRField(c.flatten)

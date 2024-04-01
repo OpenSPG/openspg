@@ -93,6 +93,7 @@ import java.util.function.Predicate;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.fs.shell.Count;
 import scala.Tuple2;
 import scala.collection.JavaConversions;
 
@@ -1363,8 +1364,10 @@ public class RunnerUtil {
 
   public static void updateUdafDataFromProperty(
       LazyUdaf udaf, IProperty property, String propertyName) {
-    if (property.isKeyExist(propertyName)) {
+    if (property != null && property.isKeyExist(propertyName)) {
       udaf.update(property.get(propertyName));
+    } else if (udaf.getName().equalsIgnoreCase(Count.NAME)) {
+      udaf.update(null);
     }
   }
 }

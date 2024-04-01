@@ -57,6 +57,9 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
   /** default path limit */
   private long defaultPathLimit = 3000;
 
+  /** carry traversal graph data */
+  private boolean isCarryTraversalGraph = false;
+
   /** local property graph */
   public LocalPropertyGraph(GraphState<IVertexId> graphState) {
     this.graphState = graphState;
@@ -72,7 +75,8 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
             executorTimeoutMs,
             alias,
             getTaskId(),
-            getExecutionRecorder());
+            getExecutionRecorder(),
+            isCarryTraversalGraph);
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
     return result;
@@ -101,7 +105,9 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
             executorTimeoutMs,
             alias,
             getTaskId(),
-            getExecutionRecorder());
+            // subquery can not carry all graph
+            getExecutionRecorder(),
+            false);
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
     return result;
@@ -166,6 +172,15 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
    */
   public void setExecutorTimeoutMs(long executorTimeoutMs) {
     this.executorTimeoutMs = executorTimeoutMs;
+  }
+
+  /**
+   * Setter method for property <tt>isCarryTraversalGraph</tt>.
+   *
+   * @param carryTraversalGraph value to be assigned to property isCarryTraversalGraph
+   */
+  public void setCarryTraversalGraph(boolean carryTraversalGraph) {
+    isCarryTraversalGraph = carryTraversalGraph;
   }
 
   /** max path limit */
