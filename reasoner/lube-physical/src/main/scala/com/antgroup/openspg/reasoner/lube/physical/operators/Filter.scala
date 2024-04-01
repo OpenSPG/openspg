@@ -20,7 +20,11 @@ import com.antgroup.openspg.reasoner.lube.logical.Var
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 
 final case class Filter[T <: RDG[T]: TypeTag](in: PhysicalOperator[T], expr: Rule)
-    extends PhysicalOperator[T] {
+    extends StackingPhysicalOperator[T] {
   override def rdg: T = in.rdg.filter(expr)
   override def meta: List[Var] = in.meta
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    this.copy(in = newChildren.head)
+  }
 }

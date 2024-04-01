@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.rdg.common;
 
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.exception.IllegalArgumentException;
 import com.antgroup.openspg.reasoner.common.graph.type.GraphItemType;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
@@ -26,6 +27,8 @@ import com.antgroup.openspg.reasoner.lube.logical.Var;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.util.KgGraphSchema;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,9 +111,7 @@ public class KgGraphAddFieldsImpl implements Serializable {
       for (AddFieldsInfo addFieldsInfo : this.addFieldsInfoList) {
         Tuple2<String, GraphItemType> key =
             new Tuple2<>(addFieldsInfo.getAlias(), addFieldsInfo.getType());
-        Object expressionResult =
-            RuleRunner.getInstance()
-                .executeExpression(context, addFieldsInfo.getExpressionList(), this.taskId);
+        Object expressionResult = getFieldValue(addFieldsInfo, context);
         Map<String, Object> propertyMap =
             alias2UpdatePropertyMap.computeIfAbsent(key, k -> new HashMap<>());
         for (String propertyName : addFieldsInfo.getPropertyNameList()) {
@@ -132,6 +133,20 @@ public class KgGraphAddFieldsImpl implements Serializable {
       result.add(path);
     }
     return result;
+  }
+
+  private Object getFieldValue(AddFieldsInfo addFieldsInfo, Map<String, Object> context) {
+    if (1 == addFieldsInfo.getExpressionList().size()) {
+      String expressionString = addFieldsInfo.getExpressionList().get(0);
+      if (expressionString.endsWith(Constants.PROPERTY_JSON_KEY)
+          || expressionString.endsWith(Constants.GET_PATH_KEY)) {
+        List<String> getPropertyList = Lists.newArrayList(Splitter.on(".").split(expressionString));
+        return SelectRowImpl.getSelectValue(
+            getPropertyList.get(0), getPropertyList.get(1), context);
+      }
+    }
+    return RuleRunner.getInstance()
+        .executeExpression(context, addFieldsInfo.getExpressionList(), this.taskId);
   }
 
   @Data

@@ -33,7 +33,8 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.{
   EntityElement,
   GraphPath,
   PatternElement,
-  PredicateElement
+  PredicateElement,
+  VariablePatternConnection
 }
 import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, ProjectRule, Rule}
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface
@@ -142,7 +143,7 @@ class OpenSPGDslParser extends ParserInterface {
 //      return DDLBlock(ddlInfo._2, List.apply(ruleBlock))
 //    }
     ddlBlockOp match {
-      case AddProperty(s, propertyName, propertyType) =>
+      case AddProperty(s, propertyName, _) =>
         val isLastAssignTargetAlis = ruleBlock match {
           case ProjectBlock(_, projects) =>
             var tmpIsAssign = false
@@ -242,7 +243,7 @@ class OpenSPGDslParser extends ParserInterface {
       ctx.full_edge_pointing_right().element_pattern_declaration_and_filler(),
       ctx.full_edge_pointing_right().edge_pattern_pernodelimit_clause(),
       Direction.OUT,
-      false)
+      isOptional = false)
 
     val predicateElement =
       PredicateElement(p.relTypes.head, p.alias, s, o, Map.empty, Direction.OUT)
@@ -278,23 +279,16 @@ class OpenSPGDslParser extends ParserInterface {
     }
   }
 
-  def isNeedDependenceExpr(rule: Rule, ruleRefRelate: Map[Rule, Set[Rule]]): Boolean = {
-    if (!ruleRefRelate.contains(rule) || ruleRefRelate(rule).size != 1) {
-      return false
-    }
-    val refRule = ruleRefRelate(rule).head
-    refRule.getExpr match {
-      case _: OrderAndLimit => false
-      case _ => true
-    }
-  }
-
-  def isGenerateOneStepBlockExpr(rule: Rule): Boolean = {
+  def isFilter2ProjectBlock(rule: Rule, ruleRefRelate: Map[Rule, Set[Rule]]): Boolean = {
     rule.getExpr match {
+      case _: OrderAndLimit => true
       case _: GraphAggregatorExpr => true
       case _: OpChainExpr => true
-      case _: OrderAndLimit => true
-      case _ => false
+      case _ => if (!ruleRefRelate.contains(rule)) {
+        false
+      } else {
+        true
+      }
     }
   }
 
@@ -497,18 +491,12 @@ class OpenSPGDslParser extends ParserInterface {
       rule: Rule,
       preBlock: Block,
       kg: IRGraph): Block = {
-    val isGenerateStep = isGenerateOneStepBlockExpr(rule)
-    if (isNeedDependenceExpr(rule, ruleRefRelate) && !isGenerateStep) {
-      // if ref equal 1, and without graph group we add to dependencies
-      ruleRefRelate(rule).head.addDependency(rule)
-      null
-    } else {
-      genBlockOp(
-        rule,
-        preBlock,
-        (ruleRefRelate.contains(rule) && ruleRefRelate(rule).size > 1) || isGenerateStep,
-        kg)
-    }
+    val isFilter2ProjectStep = isFilter2ProjectBlock(rule, ruleRefRelate)
+    genBlockOp(
+      rule,
+      preBlock,
+      isFilter2ProjectStep,
+      kg)
   }
 
   def parseRule(ctx: The_ruleContext, matchBlock: MatchBlock): Block = {
@@ -527,18 +515,43 @@ class OpenSPGDslParser extends ParserInterface {
     parseRuleBlock(rules, matchBlock.patterns)
   }
 
+  def findAllPathAlias(patterns: Map[String, GraphPath]): Map[String, IRPath] = {
+    patterns.values
+      .flatMap(path =>
+        path.graphPattern.edges.flatMap(pair => pair._2.map {
+          case connection: VariablePatternConnection =>
+            val start = IRNode(connection.source, Set.empty)
+            val end = IRNode(connection.target, Set.empty)
+            val irEdge = IREdge(connection.alias, Set.empty)
+            connection.alias -> IRPath(connection.alias, List.apply(start, irEdge, end))
+          case _ => null
+        }.filter(_ != null).toMap))
+      .toMap
+  }
+
+  def addIntoRefFieldsMap(fieldName: String,
+                          fields: Set[String],
+                          refFieldsMap: Map[String, Set[String]]): Map[String, Set[String]] = {
+    var attrs = fields
+    if (refFieldsMap.contains(fieldName)) {
+      attrs = attrs ++ refFieldsMap(fieldName)
+    }
+    refFieldsMap + (fieldName -> attrs)
+  }
+
   def parseRuleBlock(rules: List[Rule], patterns: Map[String, GraphPath]): Block = {
     var refFieldsMap: Map[String, Set[String]] = Map.empty
+    val allRepeatPath = findAllPathAlias(patterns)
     if (rules.nonEmpty) {
       rules.foreach(rule => {
         val irFields = RuleUtils.getAllInputFieldInRule(rule, Set.empty, Set.empty)
-        irFields.foreach {
+        val repeatIrFields = ExprUtils.getRepeatPathInputFieldInRule(rule.getExpr, allRepeatPath)
+        val totalIrFields = irFields ++ repeatIrFields
+        totalIrFields.foreach {
           case c: IRNode =>
-            var attrs = c.fields
-            if (refFieldsMap.contains(c.name)) {
-              attrs = attrs ++ refFieldsMap(c.name)
-            }
-            refFieldsMap += (c.name -> attrs)
+            refFieldsMap = addIntoRefFieldsMap(c.name, c.fields, refFieldsMap)
+          case c: IREdge =>
+            refFieldsMap = addIntoRefFieldsMap(c.name, c.fields, refFieldsMap)
           case c => c
         }
       })
@@ -549,7 +562,7 @@ class OpenSPGDslParser extends ParserInterface {
     var ruleInstructs = Map[Rule, Set[Rule]]()
 
     rules.foreach(rule => {
-      val refRules = getRefRules(rule, rules.toList)
+      val refRules = getRefRules(rule, rules)
       for (ref <- refRules) {
         if (ruleInstructs.contains(ref)) {
           ruleInstructs += ref -> ruleInstructs(ref).union(Set.apply(rule))
@@ -829,7 +842,7 @@ class OpenSPGDslParser extends ParserInterface {
   def parseBaseJob(ctx: Base_jobContext, param: Map[String, Object]): Block = {
     var head: PatternElement = null
     if (param.contains(Constants.START_LABEL)) {
-      head = PatternElement(null, Set.apply(param(Constants.START_LABEL).toString), null);
+      head = PatternElement(null, Set.apply(param(Constants.START_LABEL).toString), null)
     }
 
     if (param.contains(Constants.START_ALIAS)) {

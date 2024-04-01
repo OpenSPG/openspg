@@ -15,6 +15,7 @@ package com.antgroup.openspg.reasoner.lube.logical.optimizer.rules
 
 import scala.collection.mutable
 
+import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
 import com.antgroup.openspg.reasoner.lube.common.pattern.NodePattern
 import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, PropertyVar, Var}
@@ -42,14 +43,15 @@ object ExpandIntoPure extends Rule {
     case (order: OrderAndLimit, map) =>
       order -> merge(map, order.refFields, order.solved.getNodeAliasSet)
     case (expandInto @ ExpandInto(in, _, _), map) =>
+      val newMap = merge(map, expandInto.refFields, expandInto.solved.getNodeAliasSet)
       val needPure = canPure(
         expandInto,
-        map.asInstanceOf[Map[String, Var]],
+        newMap.asInstanceOf[Map[String, Var]],
         context.catalog.getGraph(Catalog.defaultGraphName))
       if (needPure) {
-        in -> map
+        in -> newMap
       } else {
-        expandInto -> map
+        expandInto -> newMap
       }
 
   }
@@ -74,7 +76,7 @@ object ExpandIntoPure extends Rule {
             EdgeVar(field.name, Set.apply(field.asInstanceOf[PropertyVar].field)))
         }
       } else {
-        varMap.put(field.name, field)
+        field.flatten.foreach(v => varMap.put(v.name, v))
       }
     }
     varMap.toMap
@@ -92,8 +94,9 @@ object ExpandIntoPure extends Rule {
       if (!map.contains(alias) || map(alias).isEmpty) {
         true
       } else {
+        val usedPros = map(alias).asInstanceOf[NodeVar].fields
         val originalProps = types.map(graph.getNode(_).properties).flatten
-        if (map(alias).asInstanceOf[NodeVar].fields.intersect(originalProps).isEmpty) {
+        if (usedPros.intersect(originalProps).isEmpty) {
           true
         } else {
           false

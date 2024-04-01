@@ -24,9 +24,13 @@ final case class ExpandInto[T <: RDG[T]: TypeTag](
     target: PatternElement,
     pattern: Pattern,
     meta: List[Var])
-    extends PhysicalOperator[T] {
+    extends StackingPhysicalOperator[T] {
 
   override def rdg: T =
     in.rdg.expandInto(target, pattern)
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    this.copy(in = newChildren.head)
+  }
 
 }

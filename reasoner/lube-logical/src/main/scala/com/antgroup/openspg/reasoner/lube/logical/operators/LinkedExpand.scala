@@ -41,4 +41,8 @@ final case class LinkedExpand(
    * @return
    */
   override def fields: List[Var] = in.fields ++ refFields
+
+  override def withNewChildren(newChildren: Array[LogicalOperator]): LogicalOperator = {
+    this.copy(in = newChildren.head)
+  }
 }

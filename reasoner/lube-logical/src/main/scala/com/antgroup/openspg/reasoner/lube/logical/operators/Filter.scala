@@ -49,4 +49,8 @@ final case class Filter(in: LogicalOperator, rule: Rule) extends StackingLogical
   }
 
   override def solved: SolvedModel = in.solved.solve
+
+  override def withNewChildren(newChildren: Array[LogicalOperator]): LogicalOperator = {
+    this.copy(in = newChildren.head)
+  }
 }

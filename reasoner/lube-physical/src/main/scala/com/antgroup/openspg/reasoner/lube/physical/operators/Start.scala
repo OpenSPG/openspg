@@ -24,7 +24,7 @@ final case class Start[T <: RDG[T]: TypeTag](
     alias: String,
     meta: List[Var],
     types: Set[String])(implicit override val context: PhysicalPlannerContext[T])
-    extends PhysicalOperator[T] {
+    extends PhysicalLeafOperator[T] {
   override def rdg: T = context.graphSession.getGraph(graphName).createRDG(alias, types)
 }
 
@@ -33,7 +33,7 @@ final case class DrivingRDG[T <: RDG[T]: TypeTag](
     meta: List[Var],
     alias: String,
     workingRdgName: String)(implicit override val context: PhysicalPlannerContext[T])
-    extends PhysicalOperator[T] {
+    extends PhysicalLeafOperator[T] {
   override def rdg: T = {
     val workingRdg = context.graphSession.getWorkingRDG(workingRdgName)
     context.graphSession.getGraph(graphName).createRDG(alias, workingRdg)

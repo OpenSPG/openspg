@@ -43,6 +43,10 @@ final case class MatchBlock(
     Fields(nodes.++(edges))
   }
 
+  override def withNewChildren(newChildren: Array[Block]): Block = {
+    this.copy(dependencies = newChildren.toList)
+  }
+
   private def edgeToIRField(edge: Connection, props: Map[String, Set[String]]) = {
     edge match {
       case connection: VariablePatternConnection =>

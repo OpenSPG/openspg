@@ -36,6 +36,10 @@ final case class ProjectBlock(
     Fields(fields.toList)
   }
 
+  override def withNewChildren(newChildren: Array[Block]): Block = {
+    this.copy(dependencies = newChildren.toList)
+  }
+
 }
 
 /**
