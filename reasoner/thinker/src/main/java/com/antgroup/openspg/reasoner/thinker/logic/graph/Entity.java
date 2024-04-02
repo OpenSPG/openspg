@@ -15,12 +15,12 @@ package com.antgroup.openspg.reasoner.thinker.logic.graph;
 import lombok.Data;
 
 @Data
-public class Entity implements Element {
-  private String id;
+public class Entity<K> implements Element {
+  private K id;
 
   public Entity() {}
 
-  public Entity(String id) {
+  public Entity(K id) {
     this.id = id;
   }
 }
