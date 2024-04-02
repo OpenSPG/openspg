@@ -1294,43 +1294,66 @@ public class TransitiveOptionalTest {
 
   @Test
   public void testCreateInstance() {
-    String dsl =
-        "Define (s:Custid)-[p:isAggregator]->(o:Boolean) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)<-[e:complained]-(u1:Custid)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            + "        o = true\n"
-            + "    }\n"
-            + "    Action {\n"
-            + "        gang = createNodeInstance(\n"
-            + "            type=Gang,\n"
-            + "            value={\n"
-            + "                id=concat(s.id, \"_gang\")\n"
-            + "            }\n"
-            + "        )\n"
-            + "        createEdgeInstance(\n"
-            + "          src=gang,\n"
-            + "          dst=s,\n"
-            + "          type=has,\n"
-            + "          value={\n"
-            + "          }\n"
-            + "        )\n"
-            + "    }\n"
-            + "}\n";
-
-    dsl =
-        dsl
-            + "GraphStructure {\n"
-            + "  A [Custid, __start__='true']\n"
-            + "  B [Gang]\n"
-            + "  B->A [has]\n"
-            + "}\n"
-            + "Rule {\n"
-            + "}\n"
-            + "Action {\n"
-            + "  get(A.id, A.isAggregator, B.id) \n"
-            + "}";
+    String dsl = "Define (s:Custid)-[p:strNum]->(o:Int) {\n"
+                 + "    GraphStructure {\n"
+                 + "        (s)<-[pp:hasCust]-(str:STR)\n"
+                 + "    }\n"
+                 + "    Rule {\n"
+                 + "        o = group(s).countIf(str.status == 'CLOSE', str)\n"
+                 + "    }\n"
+                 + "}\n"
+                 + "\n"
+                 + "Define (s:Custid)-[p:isInWhiteBlack]->(o:Boolean) {\n"
+                 + "    GraphStructure {\n"
+                 + "        (s)<-[:hasCust]-(str:STR)\n"
+                 + "    }\n"
+                 + "    Rule {\n"
+                 + "        strNum = group(s).countIf(str.conclusion == '1' AND str.status == '2', str)\n"
+                 + "        R0: s.strNum == strNum\n"
+                 + "\n"
+                 + "        R1: str.matchrule == '0202'\n"
+                 + "        R2: str.isreport == '1' \n"
+                 + "\n"
+                 + "        o = (R1 and R2) or R0\n"
+                 + "    }\n"
+                 + "}\n"
+                 + "\n"
+                 + "Define (s:Custid)-[p:isAggregator]->(o:Boolean) {\n"
+                 + "    GraphStructure {\n"
+                 + "        (s)<-[e:complained]-(u1:Custid)\n"
+                 + "    }\n"
+                 + "    Rule {\n"
+                 + "        //R0: s.isInWhiteBlack == null or s.isInWhiteBlack == false\n"
+                 + "      complainNum = group(s).count(e)\n"
+                 + "        R5(\"被投诉大于20条\"): complainNum >=20\n"
+                 + "\n"
+                 + "        o = true\n"
+                 + "    }\n"
+                 + "    Action {\n"
+                 + "        gang = createNodeInstance(\n"
+                 + "            type=Gang,\n"
+                 + "            value={\n"
+                 + "                id=concat(s.id, \"_gang\")\n"
+                 + "            }\n"
+                 + "        )\n"
+                 + "        createEdgeInstance(\n"
+                 + "            src=gang,\n"
+                 + "          dst=s,\n"
+                 + "          type=has,\n"
+                 + "          value={\n"
+                 + "          }\n"
+                 + "        )\n"
+                 + "    }\n"
+                 + "}\n"
+                 + "  A [Custid, __start__='true']\n"
+                 + "  B [Gang]\n"
+                 + "  B->A [has]\n"
+                 + "}\n"
+                 + "Rule {\n"
+                 + "}\n"
+                 + "Action {\n"
+                 + "  get(A.id, A.isAggregator, B.id) \n"
+                 + "}";
 
     System.out.println(dsl);
     LocalReasonerTask task = new LocalReasonerTask();
@@ -1338,11 +1361,15 @@ public class TransitiveOptionalTest {
 
     // add mock catalog
     Map<String, Set<String>> schema = new HashMap<>();
-    schema.put("Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("cid", "name")));
+    schema.put("Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("trdAmtIn90d","trdAmt90d","trdCntCustIn90d","custcntpty90CustNum90dInGenderFemale","custcntpty90CustNum90dInGenderMale", "name")));
+    schema.put("STR", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("conclusion", "name", "status", "matchrule", "isreport")));
+
     schema.put("Gang", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("cid", "name")));
     schema.put("Gang_has_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
-        "Custid_complained_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+        "Custid_complained_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("createMemo")));
+    schema.put(
+            "STR_hasCust_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("createMemo")));
 
     Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
     catalog.init();
