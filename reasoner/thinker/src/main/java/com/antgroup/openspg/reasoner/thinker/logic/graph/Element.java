@@ -10,6 +10,9 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-package com.antgroup.openspg.reasoner.thinker.graph;
 
-public class NodeAny implements Element {}
+package com.antgroup.openspg.reasoner.thinker.logic.graph;
+
+import java.io.Serializable;
+
+public interface Element extends Serializable {}

@@ -10,19 +10,6 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
-package com.antgroup.openspg.reasoner.thinker.graph;
+package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
-import lombok.Data;
-
-@Data
-public class Entity implements Element {
-  private String id;
-  private String type;
-
-  public Entity() {}
-
-  public Entity(String id, String type) {
-    this.id = id;
-    this.type = type;
-  }
-}
+public class NodeAny implements Element {}

@@ -35,6 +35,11 @@
       <artifactId>junit</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-runner-common</artifactId>
+    </dependency>
+
   </dependencies>
 
 </project>

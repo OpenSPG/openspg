@@ -10,9 +10,17 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
+package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
-package com.antgroup.openspg.reasoner.thinker.graph;
+import lombok.Data;
 
-import java.io.Serializable;
+@Data
+public class Node implements Element {
+  private String type;
 
-public interface Element extends Serializable {}
+  private Node() {}
+
+  private Node(String type) {
+    this.type = type;
+  }
+}
