@@ -1358,6 +1358,7 @@ public class TransitiveOptionalTest {
 
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
+    Assert.assertEquals(3, result.getRows().size());
   }
 
   public static class GangGraphLoader extends AbstractLocalGraphLoader {
