@@ -387,8 +387,8 @@ class OpenSPGDslParserTest extends AnyFunSpec {
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
-    block.asInstanceOf[DDLBlock].ddlOp.size should equal(2)
-    block.asInstanceOf[DDLBlock].ddlOp.head.isInstanceOf[AddVertex] should equal(true)
+    block.asInstanceOf[DDLBlock].ddlOp.size should equal(3)
+    block.asInstanceOf[DDLBlock].ddlOp.head.isInstanceOf[AddProperty] should equal(true)
   }
 
   it("addNodeException") {
@@ -504,8 +504,8 @@ class OpenSPGDslParserTest extends AnyFunSpec {
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[MatchBlock] should equal(true)
-    block.asInstanceOf[DDLBlock].ddlOp.size should equal(1)
-    block.asInstanceOf[DDLBlock].ddlOp.head.isInstanceOf[AddVertex] should equal(true)
+    block.asInstanceOf[DDLBlock].ddlOp.size should equal(2)
+    block.asInstanceOf[DDLBlock].ddlOp.head.isInstanceOf[AddPredicate] should equal(true)
 
   }
 
