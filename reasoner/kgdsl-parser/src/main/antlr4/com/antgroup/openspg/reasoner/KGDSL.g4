@@ -212,8 +212,8 @@ label_name : entity_type | concept_name;
 entity_type : identifier | prefix_name;
 prefix_name : identifier period identifier ;
 concept_name : meta_concept_type solidus concept_instance_id ;
-meta_concept_type : identifier ;
-concept_instance_id : identifier ;
+meta_concept_type : identifier | prefix_name;
+concept_instance_id : identifier | prefix_name;
 
 linked_edge : function_expr;
 
