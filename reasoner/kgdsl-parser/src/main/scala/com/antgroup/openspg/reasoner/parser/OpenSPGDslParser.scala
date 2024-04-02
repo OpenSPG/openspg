@@ -139,9 +139,6 @@ class OpenSPGDslParser extends ParserInterface {
       parseBaseRuleDefine(ctx.base_rule_define(), ddlBlockWithNodes._2, ddlBlockWithNodes._3)
     val ddlBlockOp = ddlBlockWithNodes._1.ddlOp.head
     val ruleBlock = ddlInfo._1
-//    if (ddlInfo._2.nonEmpty) {
-//      return DDLBlock(ddlInfo._2, List.apply(ruleBlock))
-//    }
     ddlBlockOp match {
       case AddProperty(s, propertyName, _) =>
         val isLastAssignTargetAlis = ruleBlock match {
