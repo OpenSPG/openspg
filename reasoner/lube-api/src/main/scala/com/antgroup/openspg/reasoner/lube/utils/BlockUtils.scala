@@ -41,9 +41,6 @@ object BlockUtils {
                   predicate.target.typeNames.head).toString)
             case AddProperty(s, propertyName, _) =>
               defines.add(s.typeNames.head + "." + propertyName)
-//            case AddVertex(s, _) =>
-              // defines.add(s.typeNames.head)
-//              return Set.apply("result")
             case _ =>
           }
         })
