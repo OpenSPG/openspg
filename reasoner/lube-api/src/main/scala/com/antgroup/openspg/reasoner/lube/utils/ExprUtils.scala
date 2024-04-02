@@ -119,7 +119,7 @@ object ExprUtils {
             case compute: Reduce =>
               getAllInputFieldInRule(compute.reduceFunc, nodesAlias, edgeAlias).filter(
                   ir => !ir.name.equals(compute.ele) && !ir.name.equals(compute.res)
-                )
+                ) ++ getAllInputFieldInRule(compute.initValue, nodesAlias, edgeAlias)
             case _ => List.empty
           }
         case AggOpExpr(name, _) =>
