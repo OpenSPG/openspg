@@ -4,14 +4,13 @@ import lombok.Data;
 
 @Data
 public class Value implements Element {
-    private String name;
-    private Object val;
+  private String name;
+  private Object val;
 
-    public Value() {
-    }
+  public Value() {}
 
-    public Value(String name, Object val) {
-        this.name = name;
-        this.val = val;
-    }
+  public Value(String name, Object val) {
+    this.name = name;
+    this.val = val;
+  }
 }
