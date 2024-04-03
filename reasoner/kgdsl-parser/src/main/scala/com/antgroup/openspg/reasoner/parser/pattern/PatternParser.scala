@@ -941,7 +941,7 @@ class PatternParser extends Serializable {
       case c: Concept_nameContext =>
         ConceptLabelType(
           parseIdentifier(c.meta_concept_type().identifier()),
-          parseIdentifier(c.concept_instance_id().identifier()))
+          c.concept_instance_id().EscapedSymbolicName().getText)
     }
   }
 

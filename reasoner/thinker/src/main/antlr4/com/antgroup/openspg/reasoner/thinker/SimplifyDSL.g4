@@ -37,10 +37,6 @@ define_rule_on_concept_structure:
 
 concept_declaration: left_paren concept_name right_paren;
 
-concept_name : '`' single_level_concept_name (solidus single_level_concept_name)+ '`';
-
-single_level_concept_name : EscapedSymbolicName;
-
 define_rule_on_relation_to_concept_structure:
     the_define_structure_symbol rule_name_declaration right_arrow concept_declaration rule_body;
 
@@ -56,13 +52,11 @@ rule_and_action_body: left_brace rule_body_content (action_body_structure)? righ
 
 rule_body: left_brace rule_body_content right_brace;
 
-rule_body_content : logical_statement*;
+rule_body_content : (logical_statement semicolon)*;
 
-logical_statement : rule_expression (logical_connect_operator rule_expression)*;
+logical_statement : simple_rule_expression (logical_connect_operator simple_rule_expression)*;
 
-rule_expression : (not_operator)? rule_statement;
-
-rule_statement : calculate_expression;
+simple_rule_expression : value_expression;
 
 action_body_structure : create_action_symbol assiginment_structure;
 
@@ -72,14 +66,12 @@ muliti_assignment_statement : assignment_statement*;
 
 assignment_statement : identifier assignment_operator logical_statement;
 
-calculate_expression : value_expression;
-
-not_operator : NOT_Symb;
-
 logical_connect_operator : AND | OR;
 
 bracket_right_arrow : ;
 
 right_bracket_minus : ;
+
+OR : (('O' | 'o')('R' | 'r'))|('||') ;
 
 DEFINE_PRIORITY : 'DefinePriority' ;

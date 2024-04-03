@@ -213,7 +213,8 @@ entity_type : identifier | prefix_name;
 prefix_name : identifier period identifier ;
 concept_name : meta_concept_type solidus concept_instance_id ;
 meta_concept_type : identifier | prefix_name;
-concept_instance_id : identifier | prefix_name;
+// `sub1-sub2`
+concept_instance_id : EscapedSymbolicName;
 
 linked_edge : function_expr;
 
@@ -610,7 +611,7 @@ binary_lambda_args : identifier comma identifier ;
 logic_value_expression : logic_term (or logic_term)* ;
 logic_term : logic_factor (AND logic_factor)* ;
 logic_factor : (not)? logic_test ;
-logic_test : expr ( (IS ( NOT_Latter )?|equals_operator|not_equals_operator) truth_value )? ;
+logic_test : (concept_name |expr) ( (IS ( NOT_Latter )?|equals_operator|not_equals_operator) truth_value )? ;
 truth_value : TRUE|FALSE|NULL ;
 
 
