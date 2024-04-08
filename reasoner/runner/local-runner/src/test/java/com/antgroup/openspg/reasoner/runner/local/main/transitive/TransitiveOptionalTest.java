@@ -1324,7 +1324,7 @@ public class TransitiveOptionalTest {
             + "        (s)<-[e:complained]-(u1:Custid)\n"
             + "    }\n"
             + "    Rule {\n"
-            + "        //R0: s.isInWhiteBlack == null or s.isInWhiteBlack == false\n"
+            + "      R0: s.isInWhiteBlack == null or s.isInWhiteBlack == false\n"
             + "      complainNum = group(s).count(e)\n"
             + "        R5(\"被投诉大于20条\"): complainNum >=20\n"
             + "\n"
@@ -1346,6 +1346,7 @@ public class TransitiveOptionalTest {
             + "        )\n"
             + "    }\n"
             + "}\n"
+            + "GraphStructure {"
             + "  A [Custid, __start__='true']\n"
             + "  B [Gang]\n"
             + "  B->A [has]\n"
@@ -1399,7 +1400,7 @@ public class TransitiveOptionalTest {
 
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
-    Assert.assertEquals(3, result.getRows().size());
+    Assert.assertEquals(2, result.getRows().size());
   }
 
   public static class GangGraphLoader extends AbstractLocalGraphLoader {
