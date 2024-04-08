@@ -20,66 +20,66 @@ import java.util.List;
  * @version $Id: SubAction.java, v 0.1 2024-04-08 15:32 peilong.zpl Exp $$
  */
 public class SubAction extends AbstractAction {
-    private final String               describe;
-    private final List<AbstractAction> subActionList = new ArrayList<>();
+  private final String describe;
+  private final List<AbstractAction> subActionList = new ArrayList<>();
 
-    public SubAction(String describe) {
-        super(System.currentTimeMillis());
-        this.describe = describe;
+  public SubAction(String describe) {
+    super(System.currentTimeMillis());
+    this.describe = describe;
+  }
+
+  public String getDescribe() {
+    return describe;
+  }
+
+  public List<AbstractAction> getSubActionList() {
+    return subActionList;
+  }
+
+  @Override
+  public String toString() {
+    List<String> printLineList = new ArrayList<>();
+    getPrettyLines(printLineList, "", this, true);
+
+    StringBuilder sb = new StringBuilder();
+    for (String line : printLineList) {
+      sb.append(line).append("\n");
     }
+    return sb.toString();
+  }
 
-    public String getDescribe() {
-        return describe;
-    }
-
-    public List<AbstractAction> getSubActionList() {
-        return subActionList;
-    }
-
-    @Override
-    public String toString() {
-        List<String> printLineList = new ArrayList<>();
-        getPrettyLines(printLineList, "", this, true);
-
-        StringBuilder sb = new StringBuilder();
-        for (String line : printLineList) {
-            sb.append(line).append("\n");
+  private void getPrettyLines(
+      List<String> printLines, String prefix, AbstractAction action, boolean last) {
+    if (action instanceof SampleAction) {
+      if (last) {
+        printLines.add(prefix + "└─" + action);
+      } else {
+        printLines.add(prefix + "├─" + action);
+      }
+    } else {
+      SubAction subAction = (SubAction) action;
+      String finishDescribe = "";
+      if (!subAction.subActionList.isEmpty()) {
+        AbstractAction finish = subAction.subActionList.get(subAction.subActionList.size() - 1);
+        if (finish instanceof SampleAction) {
+          SampleAction finishSampleAction = (SampleAction) finish;
+          finishDescribe = finishSampleAction.getFinishDescribe();
         }
-        return sb.toString();
-    }
+      }
+      getPrettyLines(
+          printLines, prefix, new SampleAction(finishDescribe, null, subAction.time), last);
 
-    private void getPrettyLines(
-            List<String> printLines, String prefix, AbstractAction action, boolean last) {
-        if (action instanceof SampleAction) {
-            if (last) {
-                printLines.add(prefix + "└─" + action);
-            } else {
-                printLines.add(prefix + "├─" + action);
-            }
-        } else {
-            SubAction subAction = (SubAction) action;
-            String finishDescribe = "";
-            if (!subAction.subActionList.isEmpty()) {
-                AbstractAction finish = subAction.subActionList.get(subAction.subActionList.size() - 1);
-                if (finish instanceof SampleAction) {
-                    SampleAction finishSampleAction = (SampleAction) finish;
-                    finishDescribe = finishSampleAction.getFinishDescribe();
-                }
-            }
-            getPrettyLines(
-                    printLines, prefix, new SampleAction(finishDescribe, null, subAction.time), last);
-
-            String newPrefix;
-            if (last) {
-                newPrefix = prefix + "    ";
-            } else {
-                newPrefix = prefix + "│   ";
-            }
-            for (int i = 0; i < subAction.subActionList.size(); ++i) {
-                boolean isLast = i + 1 == subAction.subActionList.size();
-                AbstractAction aa = subAction.subActionList.get(i);
-                getPrettyLines(printLines, newPrefix, aa, isLast);
-            }
-        }
+      String newPrefix;
+      if (last) {
+        newPrefix = prefix + "    ";
+      } else {
+        newPrefix = prefix + "│   ";
+      }
+      for (int i = 0; i < subAction.subActionList.size(); ++i) {
+        boolean isLast = i + 1 == subAction.subActionList.size();
+        AbstractAction aa = subAction.subActionList.get(i);
+        getPrettyLines(printLines, newPrefix, aa, isLast);
+      }
     }
+  }
 }

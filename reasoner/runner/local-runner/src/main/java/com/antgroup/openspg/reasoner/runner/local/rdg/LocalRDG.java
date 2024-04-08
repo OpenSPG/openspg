@@ -153,7 +153,8 @@ public class LocalRDG extends RDG<LocalRDG> {
   private java.util.Set<IVertexId> getStartId(java.util.List<KgGraph<IVertexId>> kgGraphList) {
     java.util.Set<IVertexId> startIdSet = new HashSet<>();
     for (KgGraph<IVertexId> kgGraph : kgGraphList) {
-      java.util.List<IVertex<IVertexId, IProperty>> startVertexList = kgGraph.getVertex(this.startVertexAlias);
+      java.util.List<IVertex<IVertexId, IProperty>> startVertexList =
+          kgGraph.getVertex(this.startVertexAlias);
       for (IVertex<IVertexId, IProperty> startId : startVertexList) {
         startIdSet.add(startId.getId());
       }
@@ -161,22 +162,21 @@ public class LocalRDG extends RDG<LocalRDG> {
     return startIdSet;
   }
 
-  private java.util.Map<String, java.util.List<IVertexId>> generateRuntimeLog(java.util.Set<IVertexId> failedStartId,
-                                                                              java.util.Set<IVertexId> successStartId) {
+  private java.util.Map<String, java.util.List<IVertexId>> generateRuntimeLog(
+      java.util.Set<IVertexId> failedStartId, java.util.Set<IVertexId> successStartId) {
     java.util.Map<String, java.util.List<IVertexId>> runtimeLogMap = new HashMap<>();
     runtimeLogMap.put("failed", Lists.newArrayList(failedStartId));
     runtimeLogMap.put("pass", Lists.newArrayList(successStartId));
     return runtimeLogMap;
   }
 
-
-  private java.util.Set<IVertexId> getRemoveHashSet(java.util.Set<IVertexId> set1, java.util.Set<IVertexId> set2) {
+  private java.util.Set<IVertexId> getRemoveHashSet(
+      java.util.Set<IVertexId> set1, java.util.Set<IVertexId> set2) {
     java.util.Set<IVertexId> updateSet = new HashSet<>();
     updateSet.addAll(set1);
     updateSet.removeAll(set2);
     return updateSet;
   }
-
 
   /** local rdg with graph state */
   public LocalRDG(
@@ -210,8 +210,9 @@ public class LocalRDG extends RDG<LocalRDG> {
     this.executionRecorder.entryRDG(startVertexAlias);
 
     this.executionRecorder.stageResultWithDetail(
-        "startId(" + startVertexAlias + ")", this.kgGraphList.size(),
-            generateRuntimeLog(new HashSet<>(), new HashSet<>(startIdList)));
+        "startId(" + startVertexAlias + ")",
+        this.kgGraphList.size(),
+        generateRuntimeLog(new HashSet<>(), new HashSet<>(startIdList)));
   }
 
   @Override
@@ -304,7 +305,7 @@ public class LocalRDG extends RDG<LocalRDG> {
         "patternScan(" + RunnerUtil.getReadablePattern(pattern) + ")",
         this.kgGraphList.size(),
         "SubPattern",
-            generateRuntimeLog(failedStartIdSet, afterStartId));
+        generateRuntimeLog(failedStartIdSet, afterStartId));
     return this;
   }
 
@@ -346,8 +347,9 @@ public class LocalRDG extends RDG<LocalRDG> {
             + ", linkedTargetVertexSize="
             + targetVertexSize);
     this.executionRecorder.stageResultWithDetail(
-        "linkedExpand(" + RunnerUtil.getReadablePattern(pattern) + ")", this.kgGraphList.size(),
-            generateRuntimeLog(failedStartIdSet, afterStartId));
+        "linkedExpand(" + RunnerUtil.getReadablePattern(pattern) + ")",
+        this.kgGraphList.size(),
+        generateRuntimeLog(failedStartIdSet, afterStartId));
     return this;
   }
 
@@ -548,8 +550,9 @@ public class LocalRDG extends RDG<LocalRDG> {
             + " cost time="
             + (System.currentTimeMillis() - startTime));
     this.executionRecorder.stageResultWithDetail(
-        "expandInto(" + RunnerUtil.getReadablePattern(pattern) + ")", this.kgGraphList.size(),
-            generateRuntimeLog(failedStartIdSet, afterStartId));
+        "expandInto(" + RunnerUtil.getReadablePattern(pattern) + ")",
+        this.kgGraphList.size(),
+        generateRuntimeLog(failedStartIdSet, afterStartId));
     return this;
   }
 
@@ -625,7 +628,10 @@ public class LocalRDG extends RDG<LocalRDG> {
     java.util.Set<IVertexId> failedStartIdSet = getRemoveHashSet(originStartId, afterStartId);
     this.kgGraphList = newKgGraphList;
     log.info("Filter,rule=" + exprStringSet + ",matchCount=" + count);
-    this.executionRecorder.stageResultWithDetail("filter("+ rule.getName() + "," + exprStringSet + ")", this.kgGraphList.size(), generateRuntimeLog(failedStartIdSet, afterStartId));
+    this.executionRecorder.stageResultWithDetail(
+        "filter(" + rule.getName() + "," + exprStringSet + ")",
+        this.kgGraphList.size(),
+        generateRuntimeLog(failedStartIdSet, afterStartId));
     return this;
   }
 

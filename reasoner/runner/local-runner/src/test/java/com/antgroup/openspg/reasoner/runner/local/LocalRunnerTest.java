@@ -413,7 +413,6 @@ public class LocalRunnerTest {
     Assert.assertEquals(result2.getVertexList().size(), 1);
     clear();
     System.out.println(task.getExecutionRecorder().toReadableString());
-
   }
 
   @Test

@@ -17,9 +17,9 @@ package com.antgroup.openspg.reasoner.recorder.action;
  * @version $Id: AbstractAction.java, v 0.1 2024-04-08 15:31 peilong.zpl Exp $$
  */
 public abstract class AbstractAction {
-    protected final long time;
+  protected final long time;
 
-    protected AbstractAction(long time) {
-        this.time = time;
-    }
+  protected AbstractAction(long time) {
+    this.time = time;
+  }
 }

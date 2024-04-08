@@ -13,13 +13,12 @@
 
 package com.antgroup.openspg.reasoner.recorder;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.recorder.action.SampleAction;
 import com.antgroup.openspg.reasoner.recorder.action.SubAction;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 public class DefaultRecorder implements IExecutionRecorder {
   private final Stack<SubAction> actionStack = new Stack<>();
@@ -62,17 +61,21 @@ public class DefaultRecorder implements IExecutionRecorder {
   }
 
   @Override
-  public void stageResultWithDetail(String stage, long result,
-                                    Map<String, List<IVertexId>> runtimeDetail) {
+  public void stageResultWithDetail(
+      String stage, long result, Map<String, List<IVertexId>> runtimeDetail) {
     SubAction nowAction = actionStack.peek();
     nowAction.getSubActionList().add(new SampleAction(stage, result, runtimeDetail));
   }
 
   @Override
-  public void stageResultWithDescAndDetail(String stage, long result,
-                                           String finishDescribe,
-                                           Map<String, List<IVertexId>> runtimeDetail) {
+  public void stageResultWithDescAndDetail(
+      String stage,
+      long result,
+      String finishDescribe,
+      Map<String, List<IVertexId>> runtimeDetail) {
     SubAction nowAction = actionStack.peek();
-    nowAction.getSubActionList().add(new SampleAction(stage, result, finishDescribe, runtimeDetail));
+    nowAction
+        .getSubActionList()
+        .add(new SampleAction(stage, result, finishDescribe, runtimeDetail));
   }
 }

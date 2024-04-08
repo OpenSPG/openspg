@@ -13,10 +13,9 @@
 
 package com.antgroup.openspg.reasoner.recorder;
 
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import java.util.List;
 import java.util.Map;
-
-import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 
 public interface IExecutionRecorder {
   /** get readable string */
@@ -38,5 +37,6 @@ public interface IExecutionRecorder {
   void stageResultWithDetail(String stage, long result, Map<String, List<IVertexId>> runtimeDetail);
 
   /** finish */
-  void stageResultWithDescAndDetail(String stage, long result, String finishDescribe, Map<String, List<IVertexId>> runtimeDetail);
+  void stageResultWithDescAndDetail(
+      String stage, long result, String finishDescribe, Map<String, List<IVertexId>> runtimeDetail);
 }
