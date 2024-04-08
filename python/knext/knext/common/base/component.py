@@ -105,7 +105,7 @@ class Component(Runnable, RESTable, ABC):
                 if len(end_nodes) > 0 and len(start_nodes) > 0:
                     for end_node in end_nodes:
                         for start_node in start_nodes:
-                            combined_dag.add_edge(end_node, start_node)
+                            dag.add_edge(end_node, start_node)
                 combined_dag = nx.compose(dag, o.dag)
                 dag_list.append(combined_dag)
         final_dag = nx.compose_all(dag_list)
