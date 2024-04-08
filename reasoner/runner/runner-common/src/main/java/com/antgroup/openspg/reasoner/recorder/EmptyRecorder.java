@@ -13,6 +13,11 @@
 
 package com.antgroup.openspg.reasoner.recorder;
 
+import java.util.List;
+import java.util.Map;
+
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+
 public class EmptyRecorder implements IExecutionRecorder {
   @Override
   public String toReadableString() {
@@ -26,8 +31,25 @@ public class EmptyRecorder implements IExecutionRecorder {
   public void leaveRDG() {}
 
   @Override
-  public void stageResult(String stage, long result) {}
+  public void stageResult(String stage, long result) {
+
+  }
 
   @Override
-  public void stageResultWithDesc(String stage, long result, String finishDescribe) {}
+  public void stageResultWithDesc(String stage, long result, String finishDescribe) {
+
+  }
+
+  @Override
+  public void stageResultWithDetail(String stage, long result,
+                                    Map<String, List<IVertexId>> runtimeDetail) {
+
+  }
+
+  @Override
+  public void stageResultWithDescAndDetail(String stage, long result,
+                                           String finishDescribe,
+                                           Map<String, List<IVertexId>> runtimeDetail) {
+
+  }
 }

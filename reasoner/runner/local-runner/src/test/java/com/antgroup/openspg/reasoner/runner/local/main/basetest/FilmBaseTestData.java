@@ -19,6 +19,7 @@ import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog;
+import com.antgroup.openspg.reasoner.recorder.DefaultRecorder;
 import com.antgroup.openspg.reasoner.runner.local.LocalReasonerRunner;
 import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphLoader;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
@@ -146,6 +147,7 @@ public class FilmBaseTestData {
     params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
     params.put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true);
     task.setParams(params);
+    task.setExecutionRecorder(new DefaultRecorder());
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("root", "Film")));
 
@@ -159,6 +161,7 @@ public class FilmBaseTestData {
       }
       rst.add(out);
     }
+    System.out.println(task.getExecutionRecorder().toReadableString());
     return rst;
   }
 
