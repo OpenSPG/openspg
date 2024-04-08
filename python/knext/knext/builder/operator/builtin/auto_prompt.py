@@ -15,7 +15,9 @@ import re
 from abc import ABC
 from typing import List, Dict, Tuple
 
+
 from knext.schema.client import SchemaClient
+from knext.schema.model.base import BaseSpgType
 from knext.schema.model.schema_helper import SPGTypeName, PropertyName, RelationName
 from knext.builder.operator.op import PromptOp
 from knext.builder.operator.spg_record import SPGRecord
@@ -23,15 +25,21 @@ import uuid
 
 
 class AutoPrompt(PromptOp, ABC):
-    spg_type_name: SPGTypeName
+    spg_types: List[BaseSpgType]
+
+    def __init__(self, spg_type_names: List[SPGTypeName]):
+        super().__init__()
+        self.spg_types = []
+        schema_session = SchemaClient().create_session()
+        for spg_type_name in spg_type_names:
+            spg_type = schema_session.get(spg_type_name=spg_type_name)
+            self.spg_types.append(spg_type)
 
     def _init_render_variables(self):
-        schema_session = SchemaClient().create_session()
-        spg_type = schema_session.get(spg_type_name=self.spg_type_name)
-        self.property_info_en = {}
         self.property_info_zh = {}
-        self.relation_info_en = {}
+        self.property_info_en = {}
         self.relation_info_zh = {}
+        self.relation_info_en = {}
         self.spg_type_schema_info_en = {
             "Text": ("文本", None),
             "Integer": ("整型", None),
@@ -42,33 +50,36 @@ class AutoPrompt(PromptOp, ABC):
             "整型": ("Integer", None),
             "浮点型": ("Float", None),
         }
-        for _rel in spg_type.relations.values():
-            if _rel.is_dynamic:
-                continue
-            self.relation_info_zh[_rel.name_zh] = (
-                _rel.name,
-                _rel.desc,
-                _rel.object_type_name,
-            )
-            self.relation_info_en[_rel.name] = (
-                _rel.name_zh,
-                _rel.desc,
-                _rel.object_type_name,
-            )
-        for _prop in spg_type.properties.values():
-            self.property_info_zh[_prop.name_zh] = (
-                _prop.name,
-                _prop.desc,
-                _prop.object_type_name,
-            )
-            self.property_info_en[_prop.name] = (
-                _prop.name_zh,
-                _prop.desc,
-                _prop.object_type_name,
-            )
-        for _type in schema_session.spg_types.values():
-            if _type.name in ["Text", "Integer", "Float"]:
-                continue
+        for spg_type in self.spg_types:
+            self.property_info_zh[spg_type.name_zh] = {}
+            self.relation_info_zh[spg_type.name_zh] = {}
+            self.property_info_en[spg_type.name] = {}
+            self.relation_info_en[spg_type.name] = {}
+            for _rel in spg_type.relations.values():
+                if _rel.is_dynamic:
+                    continue
+                self.relation_info_zh[spg_type.name_zh][_rel.name_zh] = (
+                    _rel.name,
+                    _rel.desc,
+                    _rel.object_type_name,
+                )
+                self.relation_info_en[spg_type.name][_rel.name] = (
+                    _rel.name_zh,
+                    _rel.desc,
+                    _rel.object_type_name,
+                )
+            for _prop in spg_type.properties.values():
+                self.property_info_zh[spg_type.name_zh][_prop.name_zh] = (
+                    _prop.name,
+                    _prop.desc,
+                    _prop.object_type_name,
+                )
+                self.property_info_en[spg_type.name][_prop.name] = (
+                    _prop.name_zh,
+                    _prop.desc,
+                    _prop.object_type_name,
+                )
+        for _type in self.spg_types:
             self.spg_type_schema_info_zh[_type.name_zh] = (_type.name, _type.desc)
             self.spg_type_schema_info_en[_type.name] = (_type.name_zh, _type.desc)
 
@@ -89,7 +100,7 @@ input:${input}
         relation_names: List[Tuple[RelationName, SPGTypeName]] = None,
         custom_prompt: str = None,
     ):
-        super().__init__()
+        super().__init__([spg_type_name])
 
         self.spg_type_name = spg_type_name
         if custom_prompt:
@@ -104,13 +115,6 @@ input:${input}
 
         self._init_render_variables()
         self._render()
-
-        self.params = {
-            "spg_type_name": spg_type_name,
-            "property_names": property_names,
-            "relation_names": relation_names,
-            "custom_prompt": custom_prompt,
-        }
 
     def build_prompt(self, variables: Dict[str, str]) -> str:
         return self.template.replace("${input}", variables.get("input"))
@@ -238,7 +242,7 @@ class EEPrompt(AutoPrompt):
         relation_names: List[Tuple[RelationName, SPGTypeName]] = None,
         custom_prompt: str = None,
     ):
-        super().__init__()
+        super().__init__([event_type_name])
 
         self.spg_type_name = event_type_name
         if custom_prompt:
@@ -253,13 +257,6 @@ class EEPrompt(AutoPrompt):
 
         self._init_render_variables()
         self._render()
-
-        self.params = {
-            "event_type_name": event_type_name,
-            "property_names": property_names,
-            "relation_names": relation_names,
-            "custom_prompt": custom_prompt,
-        }
 
     def build_prompt(self, variables: Dict[str, str]) -> str:
         return self.template.replace("${input}", variables.get("input"))

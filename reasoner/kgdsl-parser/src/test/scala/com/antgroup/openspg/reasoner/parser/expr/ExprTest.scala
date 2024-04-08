@@ -396,6 +396,9 @@ class ExprTest extends AnyFunSpec {
         )
       )
     )
+
+    val irFields = ExprUtils.getAllInputFieldInRule(expr, Set.empty, Set.empty)
+    irFields.size should equal(3)
   }
 
   it("group(A,B).desc(E1.amount).limit(10).sum(E1.num)") {
@@ -421,6 +424,8 @@ class ExprTest extends AnyFunSpec {
         )
       )
     )
+    val irFields = ExprUtils.getAllInputFieldInRule(expr, Set.empty, Set.empty)
+    irFields.size should equal(3)
   }
 
   it("group(A,B).if(E1.amount > E2.amount).sum(E1.num)") {
@@ -467,6 +472,8 @@ class ExprTest extends AnyFunSpec {
         )
       )
     )
+    val irFields = ExprUtils.getAllInputFieldInRule(expr, Set.empty, Set.empty)
+    irFields.size should equal(3)
   }
 
   it("top(E1.amount, 10)") {
