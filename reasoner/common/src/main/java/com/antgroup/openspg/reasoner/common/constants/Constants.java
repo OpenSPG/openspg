@@ -70,6 +70,8 @@ public class Constants {
   /** property */
   public static final String PROPERTY_JSON_KEY = "__property_json__";
 
+  public static final String EDGE_SET_KEY = "__edge_set__";
+
   public static final String GET_PATH_KEY = "__path__";
   /** load all property */
   public static final String CARRY_ALL_FLAG = "__carry_all__";

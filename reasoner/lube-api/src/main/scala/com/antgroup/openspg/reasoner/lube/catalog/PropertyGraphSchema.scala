@@ -39,7 +39,8 @@ class PropertyGraphSchema(val nodes: mutable.Map[String, Node], val edges: mutab
   }
 
   def getNodeField(nodeType: String, fieldName: String): Field = {
-    if (fieldName.equals(Constants.NODE_ID_KEY) || fieldName.equals(Constants.PROPERTY_JSON_KEY)) {
+    if (fieldName.equals(Constants.NODE_ID_KEY) || fieldName.equals(Constants.PROPERTY_JSON_KEY)
+      || fieldName.equals(Constants.EDGE_SET_KEY)) {
       return new Field(fieldName, KTString, true)
     }
     val node = nodes.get(nodeType)
