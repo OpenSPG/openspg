@@ -2,6 +2,7 @@ package com.antgroup.openspg.reasoner.thinker.logic.rule.exact;
 
 import com.antgroup.openspg.reasoner.warehouse.common.VertexSubGraph;
 import java.util.Map;
+import java.util.Objects;
 import lombok.Data;
 
 @Data
@@ -15,5 +16,22 @@ public class QlExpressCondition extends Condition {
   @Override
   public boolean execute(VertexSubGraph vertexGraph, Map<String, Object> context) {
     return false;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof QlExpressCondition)) {
+      return false;
+    }
+    QlExpressCondition that = (QlExpressCondition) o;
+    return Objects.equals(qlExpress, that.qlExpress);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(qlExpress);
   }
 }

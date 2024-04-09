@@ -190,9 +190,9 @@ one_edge_pattern: node_pattern (edge_pattern  node_pattern)+ ;
 edge_pattern : (full_edge_pattern|abbreviated_edge_pattern) graph_pattern_quantifier?;
 
 full_edge_pattern : full_edge_pointing_right|full_edge_pointing_left|full_edge_any_direction ;
-full_edge_pointing_right : minus_left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? bracket_right_arrow ;
-full_edge_pointing_left : left_arrow_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket_minus ;
-full_edge_any_direction : minus_left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket_minus;
+full_edge_pointing_right : minus_left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket right_arrow ;
+full_edge_pointing_left : left_arrow_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket minus_sign ;
+full_edge_any_direction : minus_left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket minus_sign;
 
 edge_pattern_pernodelimit_clause : per_node_limit oC_IntegerLiteral ;
 per_node_limit : PER_NODE_LIMIT ;
@@ -654,7 +654,7 @@ return_item_alias : (AS|'as') identifier ;
 dsl_special_character : space|ampersand|asterisk|colon|colon_equals|comma|dollar_sign|double_quote|double_colon|equals_operator|exclamation_mark|grave_accent|greater_than_operator|left_brace|left_bracket|left_paren|less_than_operator|minus_sign|period|plus_sign|question_mark|quote|reverse_solidus|right_brace|right_bracket|right_paren|semicolon|solidus|underscore|vertical_bar|percent|circumflex ;
 // other_language_character : 'TODO_OTHER_LANGUAGE_CHARACTER' ;
 grave_accent : '`' ;
-bracket_right_arrow : ']->' ;
+//bracket_right_arrow : ']->' ;
 concatenation_operator : '||' ;
 multiset_alternation_operator : '|+|' ;
 like_operator : LIKE ;
@@ -668,7 +668,7 @@ right_arrow : '->' ;
 both_arrow : '<->' ;
 left_arrow_bracket : '<-[' ;
 minus_left_bracket : '-[' ;
-right_bracket_minus : ']-' ;
+//right_bracket_minus : ']-' ;
 bracketed_comment_introducer : '/*' ;
 bracketed_comment_terminator : '*/' ;
 escaped_grave_accent : '``' ;
@@ -950,3 +950,68 @@ fragment VT : [\u000B] ;
 fragment US : [\u001F] ;
 
 fragment ID_Start : [\p{ID_Start}] ;
+
+// ################################################ Simplify DSL ################################################
+
+thinker_script: (
+		define_rule_on_concept
+		| define_rule_on_relation_to_concept
+		| define_proiority_rule_on_concept
+)*;
+
+/*
+Define (患者状态/`缺少血肌酐数据`) {
+	!血肌酐
+}
+*/
+define_rule_on_concept : define_rule_on_concept_structure;
+
+/*
+Define [基本用药方案]->(药品/`ACEI+噻嗪类利尿剂`) {
+  疾病/`高血压` and 药品/`多药方案`
+}
+*/
+define_rule_on_relation_to_concept : define_rule_on_relation_to_concept_structure;
+
+/*
+DefinePriority(危险水平分层) {
+  超高危=100
+  高危=80
+  中危=50
+  低危=10
+}
+*/
+define_proiority_rule_on_concept : define_priority_rule_on_concept_structure;
+
+define_rule_on_concept_structure:
+    the_define_structure_symbol concept_declaration rule_and_action_body;
+
+concept_declaration: left_paren concept_name right_paren;
+
+define_rule_on_relation_to_concept_structure:
+    the_define_structure_symbol rule_name_declaration right_arrow concept_declaration rule_and_action_body;
+
+rule_name_declaration : left_bracket identifier right_bracket ;
+
+the_define_priority_symbol : DEFINE_PRIORITY;
+
+define_priority_rule_on_concept_structure:
+    the_define_priority_symbol priority_declaration assiginment_structure;
+
+priority_declaration: left_paren identifier right_paren;
+
+rule_and_action_body: left_brace rule_body_content (action_body_structure)? right_brace;
+
+rule_body_content : (logical_statement semicolon)*;
+
+logical_statement : value_expression;
+
+action_body_structure : create_action_symbol assiginment_structure;
+
+assiginment_structure : left_brace muliti_assignment_statement right_brace;
+
+muliti_assignment_statement : assignment_statement*;
+
+assignment_statement : identifier assignment_operator logical_statement;
+
+DEFINE_PRIORITY : 'DefinePriority' ;

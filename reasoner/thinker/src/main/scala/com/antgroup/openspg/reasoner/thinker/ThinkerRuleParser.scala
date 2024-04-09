@@ -3,14 +3,15 @@ package com.antgroup.openspg.reasoner.thinker
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
+import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
-import com.antgroup.openspg.reasoner.thinker.SimplifyDSLParser._
+import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
 import com.antgroup.openspg.reasoner.thinker.logic.graph
 import com.antgroup.openspg.reasoner.thinker.logic.graph.{Concept, Element, Variable}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Node
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{And, Not, Or, QlExpressCondition}
 
-class ThinkerRuleParser extends OpenSPGRuleExprParser {
+class ThinkerRuleParser extends RuleExprParser {
   val expr2StringTransformer = new Expr2QlexpressTransformer()
 
   def thinkerParseValueExpression(
@@ -20,8 +21,6 @@ class ThinkerRuleParser extends OpenSPGRuleExprParser {
       case c: Logic_value_expressionContext => thinkerParseLogicValueExpression(c, body)
       case c: Project_value_expressionContext => thinkerParseProjectValueExpression(c, body)
     }
-
-    new Or()
   }
 
   def thinkerParseLogicValueExpression(

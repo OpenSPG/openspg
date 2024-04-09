@@ -59,25 +59,4 @@
       <artifactId>scalatest_${scala.binary.version}</artifactId>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.antlr</groupId>
-        <artifactId>antlr4-maven-plugin</artifactId>
-        <version>4.8</version>
-        <configuration>
-          <libDirectory>${project.basedir}/../kgdsl-parser/src/main/antlr4/com/antgroup/openspg/reasoner</libDirectory>
-        </configuration>
-        <executions>
-          <execution>
-            <id>antlr-simpleDSL</id>
-            <goals>
-              <goal>antlr4</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>

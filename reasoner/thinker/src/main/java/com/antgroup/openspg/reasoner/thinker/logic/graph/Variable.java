@@ -5,11 +5,13 @@
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
 import java.util.Objects;
+import lombok.Data;
 
 /**
  * @author kejian
  * @version Variable.java, v 0.1 2024年04月08日 6:00 PM kejian
  */
+@Data
 public class Variable implements Element {
   private String name;
 
