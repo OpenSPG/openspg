@@ -23,9 +23,33 @@ import lombok.Data;
 public class Or implements Node {
   private List<Node> children;
 
+  public Or() {}
+
+  public Or(List<Node> children) {
+    this.children = children;
+  }
+
   @Override
   public <R> R accept(
       VertexSubGraph vertexGraph, Map<String, Object> context, RuleNodeVisitor<R> visitor) {
     return visitor.visitOr(this, vertexGraph, context);
+  }
+
+  /**
+   * Getter method for property <tt>children</tt>.
+   *
+   * @return property value of children
+   */
+  public List<Node> getChildren() {
+    return children;
+  }
+
+  /**
+   * Setter method for property <tt>children</tt>.
+   *
+   * @param children value to be assigned to property children
+   */
+  public void setChildren(List<Node> children) {
+    this.children = children;
   }
 }

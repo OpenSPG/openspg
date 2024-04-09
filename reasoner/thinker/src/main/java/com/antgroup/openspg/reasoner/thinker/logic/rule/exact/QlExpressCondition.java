@@ -8,6 +8,10 @@ import lombok.Data;
 public class QlExpressCondition extends Condition {
   private String qlExpress;
 
+  public QlExpressCondition(String qlExpress) {
+    this.qlExpress = qlExpress;
+  }
+
   @Override
   public boolean execute(VertexSubGraph vertexGraph, Map<String, Object> context) {
     return false;

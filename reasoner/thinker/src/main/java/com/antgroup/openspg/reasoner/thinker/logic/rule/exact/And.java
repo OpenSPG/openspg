@@ -23,6 +23,12 @@ import lombok.Data;
 public class And implements Node {
   private List<Node> children;
 
+  public And() {}
+
+  public And(List<Node> children) {
+    this.children = children;
+  }
+
   @Override
   public <R> R accept(
       VertexSubGraph vertexGraph, Map<String, Object> context, RuleNodeVisitor<R> visitor) {

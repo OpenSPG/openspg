@@ -54,9 +54,7 @@ rule_body: left_brace rule_body_content right_brace;
 
 rule_body_content : (logical_statement semicolon)*;
 
-logical_statement : simple_rule_expression (logical_connect_operator simple_rule_expression)*;
-
-simple_rule_expression : value_expression;
+logical_statement : value_expression;
 
 action_body_structure : create_action_symbol assiginment_structure;
 
@@ -66,12 +64,8 @@ muliti_assignment_statement : assignment_statement*;
 
 assignment_statement : identifier assignment_operator logical_statement;
 
-logical_connect_operator : AND | OR;
-
 bracket_right_arrow : ;
 
 right_bracket_minus : ;
-
-OR : (('O' | 'o')('R' | 'r'))|('||') ;
 
 DEFINE_PRIORITY : 'DefinePriority' ;

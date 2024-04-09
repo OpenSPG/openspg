@@ -11,39 +11,27 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.parser.expr
+package com.antgroup.openspg.reasoner.thinker
 
 import java.util.Locale
 
 import scala.collection.JavaConverters._
 
-import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.common.exception.KGDSLGrammarException
 import com.antgroup.openspg.reasoner.common.types._
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.graph.{IRProperty, IRVariable}
 import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, ProjectRule, Rule}
-import com.antgroup.openspg.reasoner.parser.LexerInit
+import com.antgroup.openspg.reasoner.thinker.SimplifyDSLParser._
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory
 
 /**
  * This is the ANTLR parsing class for expressions
  */
-class RuleExprParser extends Serializable {
+class OpenSPGRuleExprParser extends Serializable {
   var parameters = Set[String]()
   var idFilterParameters: Map[String, String] = Map.empty
   var udfMetas = UdfMngFactory.getUdfMng.getAllUdfMeta.asScala
-
-  /**
-   * parse one line rule to Expr
-   * @param s
-   * @return
-   */
-  def parse(s: String): Expr = {
-    val parser = new LexerInit().initKGReasonerParser(s)
-    val ctx = parser.expression_set()
-    parseExpressionSet(ctx)
-  }
 
   /**
    * helper function: translate function name to udf name
@@ -474,6 +462,10 @@ class RuleExprParser extends Serializable {
       case concept: Concept_nameContext => ConceptExpr(concept.getText)
       case expr: ExprContext => parseExpr(expr)
     }
+    processJudgeEqualInLogicTest(ctx, bExpr)
+  }
+
+  def processJudgeEqualInLogicTest(ctx: Logic_testContext, preExpr: Expr): Expr = {
     Option(ctx.getChild(1)) match {
       case Some(x) =>
         val tExpr: Expr = str2bool(ctx.truth_value().getText)
@@ -486,10 +478,11 @@ class RuleExprParser extends Serializable {
               case _ => BEqual
             }
         }
-        BinaryOpExpr(compareStr, bExpr, tExpr)
+        BinaryOpExpr(compareStr, preExpr, tExpr)
       case None =>
-        bExpr
+        preExpr
     }
+
   }
 
   def parseLogicFactor(ctx: Logic_factorContext): Expr = {

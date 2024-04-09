@@ -22,6 +22,10 @@ import lombok.Data;
 public class Not implements Node {
   private Node child;
 
+  public Not(Node child) {
+    this.child = child;
+  }
+
   @Override
   public <R> R accept(
       VertexSubGraph vertexGraph, Map<String, Object> context, RuleNodeVisitor<R> visitor) {

@@ -626,7 +626,7 @@ assignment_expression : identifier assignment_operator expression_set;
 project_value_expression : term (plus_sign term| minus_sign term) * ;
 term : factor (asterisk factor| solidus factor| percent factor)* ;
 factor : ( sign )? project_primary ;
-project_primary : value_expression_primary|numeric_value_function ;
+project_primary : concept_name | value_expression_primary|numeric_value_function ;
 
 //数值计算函数
 numeric_value_function :
