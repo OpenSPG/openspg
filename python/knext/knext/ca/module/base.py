@@ -46,7 +46,7 @@ class CABaseModule(object):
         self.tg = asyncio.get_event_loop()
 
     def __call__(self, **kwargs):
-        return_as_native = kwargs.pop('return_as_native', False)
+        return_as_native = kwargs.pop("return_as_native", False)
         task = self.tg.create_task(self._async_invoke(**kwargs))
         if return_as_native:
             return self.tg.run_until_complete(self.wait_all_tasks_finished(task))

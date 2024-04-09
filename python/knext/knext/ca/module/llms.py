@@ -18,32 +18,34 @@ from knext.ca.module.base import CABaseModule
 
 class LLMClient(object):
     def __init__(self, url) -> None:
-        self.generate_url = f'http://{url}:8000/v2/models/vllm_model/generate'
+        self.generate_url = f"http://{url}:8000/v2/models/vllm_model/generate"
         self.fetch_config_url = f"http://{url}:8000/v2/models/vllm_model/config"
-        self.headers = {'Content-Type': 'application/json'}
+        self.headers = {"Content-Type": "application/json"}
 
     def call_service(self, prompt, max_tokens=32, temperature=0):
         data = {
-            'text_input': prompt,
-            'parameters': {
-                'stream': False,
-                'temperature': temperature,
-                'max_tokens': max_tokens,
-            }
+            "text_input": prompt,
+            "parameters": {
+                "stream": False,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+            },
         }
 
-        response = requests.post(self.generate_url, headers=self.headers, data=json.dumps(data))
+        response = requests.post(
+            self.generate_url, headers=self.headers, data=json.dumps(data)
+        )
 
         if response.status_code == 200:
             # print(f'response from server: {response.json()}')
-            response_result = response.json()['text_output']
-            newline_pos = response_result.find('\n')
+            response_result = response.json()["text_output"]
+            newline_pos = response_result.find("\n")
             if newline_pos != -1:
-                return response_result[newline_pos + 1:]
+                return response_result[newline_pos + 1 :]
             else:
                 return response_result
         else:
-            return f'Error: {response.status_code} - {response.text}'
+            return f"Error: {response.status_code} - {response.text}"
 
     def display_model_config(self):
         response = requests.get(self.fetch_config_url)
@@ -63,10 +65,10 @@ class LLMModule(CABaseModule):
         self.llm_client = LLMClient(url)
 
     def invoke(
-            self,
-            prompt,
-            max_output_len=64,
-            temperature=0,
+        self,
+        prompt,
+        max_output_len=64,
+        temperature=0,
     ):
         result = self.llm_client.call_service(
             prompt=prompt,
@@ -85,8 +87,8 @@ def main():
         max_output_len=10,
         temperature=0.5,
     )
-    print(f'response: {response}')
+    print(f"response: {response}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
