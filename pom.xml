@@ -56,6 +56,14 @@
     <tugraph.client.version>1.4.1</tugraph.client.version>
   </properties>
 
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHubApacheMavenPackages</name>
+      <url>https://maven.pkg.github.com/OpenSPG/openspg</url>
+    </repository>
+  </distributionManagement>
+
   <dependencyManagement>
     <dependencies>
       <!-- openspg start -->
