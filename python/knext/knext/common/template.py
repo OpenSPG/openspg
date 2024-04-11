@@ -21,7 +21,7 @@ from stat import S_IWUSR as OWNER_WRITE_PERMISSION
 def render_template(
     root: Union[str, os.PathLike], file: Union[str, os.PathLike], **kwargs: Any
 ) -> None:
-    env = Environment(loader=FileSystemLoader(root))
+    env = Environment(loader=FileSystemLoader(root), autoescape=True)
     template = env.get_template(str(file))
     content = template.render(kwargs)
 
