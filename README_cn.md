@@ -52,7 +52,7 @@ OpenSPG核心能力模型包括：
 
 ## 进阶教程
 
-* [用户手册](https://openspg.yuque.com/ndx6g9/ooil9x)
+* [用户手册](https://openspg.yuque.com/ndx6g9/nmwkzz)
 
 # 如何贡献代码
 
