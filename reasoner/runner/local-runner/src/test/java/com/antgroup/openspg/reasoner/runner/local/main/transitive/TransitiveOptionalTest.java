@@ -1295,29 +1295,30 @@ public class TransitiveOptionalTest {
   @Test
   public void testContextSolver() {
     String dsl =
-      "Define (A:RAC.Param)-[p:related]->(B:RAC.Param) {\n"
-              + "    GraphStructure {\n"
-              + "      (A)-[:param2link]->(L:RAC.LinkID)\n"
-              + "      (L)-[:link2param]->(B)\n"
-              + "    }\n"
-              + "    Rule {\n"
-              + "     p.id = L.id\n"
-              + "     p.context = concat(A.context, \",\", B.context)\n"
-              + "    }\n"
-              + "   }\n"
-              + " GraphStructure {\n"
-              + "   A [RAC.Param]\n\n"
-              + "   B [RAC.Param]\n"
-              + "   A -> B [related] repeat(1,10) as e\n"
-              + " }\n"
-              + " Rule {\n"
-//              + "   R1: concatStr = e.edges().reduce((res, ele) => concat(res, \",\", ele.context), \"\") \n"
-//              + "   R2: racContextSensitivitySolver(concatStr, \",\", 1) \n"
-              + "     R1: concatStr = e.edges().reduce((res, ele) => concat(res, ele.context), \"\") \n"
-              + " }"
-              + " Action {\n"
-              + "   get(A.id,B.id,__path__)"
-              + "}\n";
+        "Define (A:RAC.Param)-[p:related]->(B:RAC.Param) {\n"
+            + "    GraphStructure {\n"
+            + "      (A)-[:param2link]->(L:RAC.LinkID)\n"
+            + "      (L)-[:link2param]->(B)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "     p.id = L.id\n"
+            + "     p.context = concat(A.context, \",\", B.context)\n"
+            + "    }\n"
+            + "   }\n"
+            + " GraphStructure {\n"
+            + "   A [RAC.Param]\n\n"
+            + "   B [RAC.Param]\n"
+            + "   A -> B [related] repeat(1,10) as e\n"
+            + " }\n"
+            + " Rule {\n"
+            //              + "   R1: concatStr = e.edges().reduce((res, ele) => concat(res, \",\",
+            // ele.context), \"\") \n"
+            //              + "   R2: racContextSensitivitySolver(concatStr, \",\", 1) \n"
+            + "     R1: concatStr = e.edges().reduce((res, ele) => concat(res, ele.context), \"\") \n"
+            + " }"
+            + " Action {\n"
+            + "   get(A.id,B.id,__path__)"
+            + "}\n";
 
     System.out.println(dsl);
     LocalReasonerTask task = new LocalReasonerTask();
@@ -1325,20 +1326,25 @@ public class TransitiveOptionalTest {
 
     // add mock catalog
     Map<String, Set<String>> schema = new HashMap<>();
-    schema.put("RAC.Param", Convert2ScalaUtil.toScalaImmutableSet(
-            Sets.newHashSet("id", "parameterIndex", "context")));
-    schema.put("RAC.LinkID", Convert2ScalaUtil.toScalaImmutableSet(
+    schema.put(
+        "RAC.Param",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "parameterIndex", "context")));
+    schema.put(
+        "RAC.LinkID",
+        Convert2ScalaUtil.toScalaImmutableSet(
             Sets.newHashSet("id", "srcContext", "dstContext", "linkFieldList")));
     schema.put(
-            "RAC.Param_param2link_RAC.LinkID", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+        "RAC.Param_param2link_RAC.LinkID",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
     schema.put(
-            "RAC.LinkID_link2param_RAC.Param", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+        "RAC.LinkID_link2param_RAC.Param",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
     Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
     catalog.init();
     task.setCatalog(catalog);
 
     task.setGraphLoadClass(
-            "com.antgroup.openspg.reasoner.runner.local.main.transitive.TransitiveOptionalTest$RacGraphLoader");
+        "com.antgroup.openspg.reasoner.runner.local.main.transitive.TransitiveOptionalTest$RacGraphLoader");
 
     // enable subquery
     Map<String, Object> params = new HashMap<>();
@@ -1349,7 +1355,6 @@ public class TransitiveOptionalTest {
 
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
-
   }
 
   public static class RacGraphLoader extends AbstractLocalGraphLoader {
@@ -1357,35 +1362,68 @@ public class TransitiveOptionalTest {
     @Override
     public List<IVertex<String, IProperty>> genVertexList() {
       return Lists.newArrayList(
-        constructionVertex("C1", "RAC.Param", "id", "C1", "parameterIndex", "1", "context","0"),
-        constructionVertex("C2", "RAC.Param", "id", "C1", "parameterIndex", "1", "context","1"),
-        constructionVertex("C3", "RAC.Param", "id", "C1", "parameterIndex", "1", "context","-1"),
-        constructionVertex("C4", "RAC.Param", "id", "C1", "parameterIndex", "1", "context","-2"),
-        constructionVertex("C5", "RAC.Param", "id", "C1", "parameterIndex", "1", "context","0"),
-        constructionVertex("L1", "RAC.LinkID", "id", "L1", "srcContext", "0", "dstContext", "1",
-              "linkFieldList", "[\"com.alipay.A\",\"com.alipay.B\"]"),
-        constructionVertex("L2", "RAC.LinkID", "id", "L2", "srcContext", "-1", "dstContext", "0",
-              "linkFieldList", "[\"com.alipay.X\"]"),
-        constructionVertex("L3", "RAC.LinkID", "id", "L3", "srcContext", "-2", "dstContext", "0",
-              "linkFieldList", "[\"com.alipay.A\"]"),
-        constructionVertex("L4", "RAC.LinkID", "id", "L4", "srcContext", "-1", "dstContext", "0",
-              "linkFieldList", "[\"com.alipay.X\"]")
-      );
-
+          constructionVertex("C1", "RAC.Param", "id", "C1", "parameterIndex", "1", "context", "0"),
+          constructionVertex("C2", "RAC.Param", "id", "C1", "parameterIndex", "1", "context", "1"),
+          constructionVertex("C3", "RAC.Param", "id", "C1", "parameterIndex", "1", "context", "-1"),
+          constructionVertex("C4", "RAC.Param", "id", "C1", "parameterIndex", "1", "context", "-2"),
+          constructionVertex("C5", "RAC.Param", "id", "C1", "parameterIndex", "1", "context", "0"),
+          constructionVertex(
+              "L1",
+              "RAC.LinkID",
+              "id",
+              "L1",
+              "srcContext",
+              "0",
+              "dstContext",
+              "1",
+              "linkFieldList",
+              "[\"com.alipay.A\",\"com.alipay.B\"]"),
+          constructionVertex(
+              "L2",
+              "RAC.LinkID",
+              "id",
+              "L2",
+              "srcContext",
+              "-1",
+              "dstContext",
+              "0",
+              "linkFieldList",
+              "[\"com.alipay.X\"]"),
+          constructionVertex(
+              "L3",
+              "RAC.LinkID",
+              "id",
+              "L3",
+              "srcContext",
+              "-2",
+              "dstContext",
+              "0",
+              "linkFieldList",
+              "[\"com.alipay.A\"]"),
+          constructionVertex(
+              "L4",
+              "RAC.LinkID",
+              "id",
+              "L4",
+              "srcContext",
+              "-1",
+              "dstContext",
+              "0",
+              "linkFieldList",
+              "[\"com.alipay.X\"]"));
     }
 
     @Override
     public List<IEdge<String, IProperty>> genEdgeList() {
       return Lists.newArrayList(
-              constructionEdge("C1", "param2link", "L1"),
-              constructionEdge("L1", "link2param", "C2"),
-              constructionEdge("C2", "param2link", "L2"),
-              constructionEdge("C2", "param2link", "L3"),
-              constructionEdge("L2", "link2param", "C3"),
-              constructionEdge("L3", "link2param", "C4"),
-              constructionEdge("C4", "param2link", "L4"),
-              constructionEdge("L4", "link2param", "C5")
-      );
+          constructionEdge("C1", "param2link", "L1"),
+          constructionEdge("L1", "link2param", "C2"),
+          constructionEdge("C2", "param2link", "L2"),
+          constructionEdge("C2", "param2link", "L3"),
+          constructionEdge("L2", "link2param", "C3"),
+          constructionEdge("L3", "link2param", "C4"),
+          constructionEdge("C4", "param2link", "L4"),
+          constructionEdge("L4", "link2param", "C5"));
     }
   }
 }
