@@ -53,7 +53,7 @@ OpenSPG Core Capabilities:
 
 ## Advanced tutorials
 
-* [OpenSPG User Guide](https://openspg.yuque.com/ndx6g9/ns5nw2)
+* [OpenSPG User Guide](https://openspg.yuque.com/ndx6g9/nmwkzz)
 
 # How to contribute
 
