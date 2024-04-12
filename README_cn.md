@@ -53,8 +53,7 @@ OpenSPG核心能力模型包括：
 ## 进阶教程
 
 * [OpenSPG用户手册](https://openspg.yuque.com/ndx6g9/nmwkzz)
-* [OneKE使用文档](https://openspg.yuque.com/ndx6g9/nmwkzz/dht0wtgycuw032gd)![image](https://github.com/OpenSPG/openspg/assets/19925690/0ac1d7a7-f341-4506-b3f5-6f4cba7eeffc)
-
+* [OneKE使用文档](https://openspg.yuque.com/ndx6g9/nmwkzz/dht0wtgycuw032gd)
 
 # 如何贡献代码
 
