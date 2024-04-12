@@ -13,12 +13,17 @@
 
 package com.antgroup.openspg.reasoner.rdg.common;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.exception.IllegalArgumentException;
+import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
+import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.type.GraphItemType;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphSplitStaticParameters;
+import com.antgroup.openspg.reasoner.lube.common.pattern.Connection;
 import com.antgroup.openspg.reasoner.lube.common.pattern.PartialGraphPattern;
 import com.antgroup.openspg.reasoner.lube.logical.EdgeVar;
 import com.antgroup.openspg.reasoner.lube.logical.NodeVar;
@@ -30,11 +35,8 @@ import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import lombok.Builder;
 import lombok.Data;
 import scala.Tuple2;
@@ -111,7 +113,7 @@ public class KgGraphAddFieldsImpl implements Serializable {
       for (AddFieldsInfo addFieldsInfo : this.addFieldsInfoList) {
         Tuple2<String, GraphItemType> key =
             new Tuple2<>(addFieldsInfo.getAlias(), addFieldsInfo.getType());
-        Object expressionResult = getFieldValue(addFieldsInfo, context);
+        Object expressionResult = getFieldValue(addFieldsInfo, context, path);
         Map<String, Object> propertyMap =
             alias2UpdatePropertyMap.computeIfAbsent(key, k -> new HashMap<>());
         for (String propertyName : addFieldsInfo.getPropertyNameList()) {
@@ -135,7 +137,7 @@ public class KgGraphAddFieldsImpl implements Serializable {
     return result;
   }
 
-  private Object getFieldValue(AddFieldsInfo addFieldsInfo, Map<String, Object> context) {
+  private Object getFieldValue(AddFieldsInfo addFieldsInfo, Map<String, Object> context, KgGraph<IVertexId> path) {
     if (1 == addFieldsInfo.getExpressionList().size()) {
       String expressionString = addFieldsInfo.getExpressionList().get(0);
       if (expressionString.endsWith(Constants.PROPERTY_JSON_KEY)
@@ -143,6 +145,20 @@ public class KgGraphAddFieldsImpl implements Serializable {
         List<String> getPropertyList = Lists.newArrayList(Splitter.on(".").split(expressionString));
         return SelectRowImpl.getSelectValue(
             getPropertyList.get(0), getPropertyList.get(1), context);
+      }
+      if (expressionString.endsWith(Constants.EDGE_SET_KEY)){
+        List<Object> edges = new ArrayList<>();
+        for ( String e: path.getEdgeAlias()){
+//          Object propertyMap = ;
+          edges.add(RunnerUtil.recoverContextKeys(context.get(e)));
+        }
+//        String res = JSON.toJSONString(
+//                      edges,
+//                      SerializerFeature.PrettyFormat,
+//                      SerializerFeature.DisableCircularReferenceDetect,
+//                      SerializerFeature.SortField);
+        return edges;
+
       }
     }
     return RuleRunner.getInstance()

@@ -144,6 +144,7 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
           .map(targetId -> new Vertex(targetId))
           .forEach(v -> targetVertexSet.add(v));
     }
+    rootValue = root.getValue().clone()
   }
 
   private Bytes getKgGraphKeyBySplitVertex(List<String> vertexAliases, KgGraph<IVertexId> kgGraph) {
@@ -1143,6 +1144,9 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
                 versionProperty.remove(key);
                 continue;
               }
+//              if (value instanceof ArrayList<?>){
+//                (versionProperty.get(key),
+//              }
               versionProperty.put(key, propertyMap.get(key), version);
             }
             IVertex<IVertexId, IProperty> newVertex = vertex.clone();
