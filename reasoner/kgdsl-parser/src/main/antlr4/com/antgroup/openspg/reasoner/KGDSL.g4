@@ -1002,7 +1002,7 @@ priority_declaration: left_paren identifier right_paren;
 
 rule_and_action_body: left_brace rule_body_content (action_body_structure)? right_brace;
 
-rule_body_content : (logical_statement semicolon)*;
+rule_body_content : (identifier explain? colon logical_statement)*;
 
 logical_statement : value_expression;
 

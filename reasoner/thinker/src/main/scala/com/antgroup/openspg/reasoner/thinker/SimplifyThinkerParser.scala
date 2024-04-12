@@ -8,17 +8,22 @@ import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.parser.{LexerInit, OpenSPGDslParser}
 import com.antgroup.openspg.reasoner.thinker.logic.graph.{Concept, Element}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.{Node, Rule}
-import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.Or
+import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{Condition, Or}
 
 class SimplifyThinkerParser {
   var param: Map[String, Object] = Map.empty
-  val thinkerRuleParser: ThinkerRuleParser = new ThinkerRuleParser()
+  var thinkerRuleParser: ThinkerRuleParser = new ThinkerRuleParser()
+
+  var conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[Element]] =
+    new mutable.HashMap()
 
   def parseSimplifyDsl(
       simplifyDSL: String,
       param: Map[String, Object] = Map.empty): List[Rule] = {
     val parser = new LexerInit().initKGReasonerParser(simplifyDSL)
     this.param = param
+    conditionToElementMap = mutable.HashMap()
+    thinkerRuleParser = new ThinkerRuleParser()
     parseScript(parser.thinker_script())
   }
 
@@ -98,7 +103,9 @@ class SimplifyThinkerParser {
   }
 
   def parseOneLogicalStatement(ctx: Logical_statementContext, body: ListBuffer[Element]): Node = {
-    thinkerRuleParser.thinkerParseValueExpression(ctx.value_expression(), body)
+    val node = thinkerRuleParser.thinkerParseValueExpression(ctx.value_expression(), body)
+    conditionToElementMap ++= thinkerRuleParser.conditionToElementMap
+    node
   }
 
   def parseDefineRuleOnRelationToConcept(ctx: Define_rule_on_relation_to_conceptContext): Rule = {

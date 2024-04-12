@@ -1,6 +1,7 @@
 package com.antgroup.openspg.reasoner.thinker
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 import com.antgroup.openspg.reasoner.KGDSLParser._
@@ -9,10 +10,19 @@ import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
 import com.antgroup.openspg.reasoner.thinker.logic.graph
 import com.antgroup.openspg.reasoner.thinker.logic.graph.{Concept, Element, Variable}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Node
-import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{And, Not, Or, QlExpressCondition}
+import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{
+  And,
+  Condition,
+  Not,
+  Or,
+  QlExpressCondition
+}
 
 class ThinkerRuleParser extends RuleExprParser {
   val expr2StringTransformer = new Expr2QlexpressTransformer()
+
+  val conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[Element]] =
+    new mutable.HashMap()
 
   def thinkerParseValueExpression(
       ctx: Value_expressionContext,
@@ -53,20 +63,28 @@ class ThinkerRuleParser extends RuleExprParser {
     resultNode
   }
 
+  def insertIntoMap(condition: Condition, element: Set[Element]): Unit = {
+    val existElementSet: mutable.Set[Element] =
+      conditionToElementMap.getOrElseUpdate(condition, mutable.HashSet())
+    existElementSet ++= element
+  }
+
   def thinkerParseLogicTest(ctx: Logic_testContext, body: ListBuffer[Element]): Node = {
-    ctx.getChild(0) match {
+    val newBody: ListBuffer[Element] = new ListBuffer[Element]()
+    val resultNode: Node = ctx.getChild(0) match {
       case c: Concept_nameContext =>
-        body += new Concept(c.getText)
+        newBody += new Concept(c.getText)
         new QlExpressCondition(
           expr2StringTransformer
             .transform(super.parseLogicTest(ctx))
             .head)
-      case c: ExprContext => thinkerParseExpr(c, body)
+      case c: ExprContext => thinkerParseExpr(c, newBody)
     }
-  }
-
-  def replaceConceptName(conceptName: String): String = {
-    conceptName.replace("/", "_")
+    body ++= newBody
+    if (resultNode.isInstanceOf[Condition]) {
+      insertIntoMap(resultNode.asInstanceOf[Condition], newBody.toSet)
+    }
+    resultNode
   }
 
   def thinkerParseExpr(ctx: ExprContext, body: ListBuffer[Element]): Node = {
