@@ -21,6 +21,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
+import com.antgroup.openspg.reasoner.lube.common.expr.VString;
 import com.antgroup.openspg.reasoner.lube.logical.RepeatPathVar;
 import com.antgroup.openspg.reasoner.lube.physical.PropertyGraph;
 import com.antgroup.openspg.reasoner.recorder.EmptyRecorder;
@@ -116,8 +117,24 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
 
   @Override
   public LocalRDG createRDG(String alias, Expr id, Set<String> types) {
-    // TODO implement.
-    return createRDG(alias, types);
+    java.util.Set<IVertexId> startIdSet = new HashSet<>();
+    for (String type : JavaConversions.asJavaCollection(types)) {
+      startIdSet.add(IVertexId.from(((VString) id).value(), type));
+    }
+    LocalRDG result =
+            new LocalRDG(
+                    graphState,
+                    Lists.newArrayList(startIdSet),
+                    threadPoolExecutor,
+                    executorTimeoutMs,
+                    alias,
+                    getTaskId(),
+                    // subquery can not carry all graph
+                    getExecutionRecorder(),
+                    false);
+    result.setMaxPathLimit(getMaxPathLimit());
+    result.setStrictMaxPathLimit(getStrictMaxPathLimit());
+    return result;
   }
 
   @Override
