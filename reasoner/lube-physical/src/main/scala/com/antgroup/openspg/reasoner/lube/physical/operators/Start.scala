@@ -51,4 +51,5 @@ final case class DrivingRDG[T <: RDG[T]: TypeTag](
     context.graphSession.getGraph(graphName).createRDG(alias, workingRdg)
   }
 
+  override def types: Set[String] = Set.empty
 }

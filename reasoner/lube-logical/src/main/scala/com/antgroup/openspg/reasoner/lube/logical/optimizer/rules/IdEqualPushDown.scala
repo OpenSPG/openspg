@@ -17,30 +17,36 @@ import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.trees.BottomUp
 import com.antgroup.openspg.reasoner.lube.common.expr.{BEqual, BinaryOpExpr, Expr}
 import com.antgroup.openspg.reasoner.lube.common.graph.IRNode
-import com.antgroup.openspg.reasoner.lube.logical.operators.{Filter, LogicalOperator, Start, StartFromVertex}
-import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, SimpleRule, Up}
+import com.antgroup.openspg.reasoner.lube.logical.operators._
+import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 
-case object IdEqualPushDown extends SimpleRule {
+case object IdEqualPushDown extends Rule {
 
-  override def rule(implicit
-      context: LogicalPlannerContext): PartialFunction[LogicalOperator, LogicalOperator] = {
-    case filter: Filter =>
-      val idExpr = getIdExpr(filter)
+  override def ruleWithContext(implicit context: LogicalPlannerContext): PartialFunction[
+    (LogicalOperator, Map[String, Object]),
+    (LogicalOperator, Map[String, Object])] = {
+    case (filter: Filter, map) =>
+      val start = map.get(Constants.START_ALIAS)
+      val idExpr = getIdExpr(filter, start)
       if (idExpr == null) {
-        filter
+        filter -> map
       } else {
-        def rewriter: PartialFunction[LogicalOperator, LogicalOperator] = {
-          case start: Start =>
-            StartFromVertex(start.graph, idExpr, start.types, start.alias, start.solved)
+        def rewriter: PartialFunction[LogicalOperator, LogicalOperator] = { case start: Start =>
+          StartFromVertex(start.graph, idExpr, start.types, start.alias, start.solved)
         }
         val newFilter = BottomUp[LogicalOperator](rewriter).transform(filter).asInstanceOf[Filter]
-        newFilter.in
+        newFilter.in -> map
       }
+    case (start: Start, _) =>
+      start -> Map.apply(Constants.START_ALIAS -> start.alias)
   }
 
-  private def getIdExpr(filter: Filter): Expr = {
+  private def getIdExpr(filter: Filter, start: Option[Object]): Expr = {
+    if (start.isEmpty) {
+      return null
+    }
     filter.rule.getExpr match {
       case BinaryOpExpr(BEqual, left, right) =>
         val irFields = ExprUtils.getAllInputFieldInRule(
@@ -48,6 +54,9 @@ case object IdEqualPushDown extends SimpleRule {
           filter.solved.getNodeAliasSet,
           filter.solved.getEdgeAliasSet)
         if (irFields.size != 1 || !irFields.head.isInstanceOf[IRNode] || !irFields.head
+            .asInstanceOf[IRNode]
+            .name
+            .equals(start.get) || !irFields.head
             .asInstanceOf[IRNode]
             .fields
             .equals(Set.apply(Constants.NODE_ID_KEY))) {

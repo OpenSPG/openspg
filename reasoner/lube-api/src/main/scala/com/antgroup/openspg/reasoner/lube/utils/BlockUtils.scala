@@ -19,6 +19,7 @@ import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO
 import com.antgroup.openspg.reasoner.lube.block._
+import com.antgroup.openspg.reasoner.lube.common.expr.{BEqual, BinaryOpExpr}
 import com.antgroup.openspg.reasoner.lube.common.graph.IRNode
 import com.antgroup.openspg.reasoner.lube.common.pattern.GraphPath
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Block2GraphPathTransformer
@@ -56,7 +57,7 @@ object BlockUtils {
   }
 
   def getStarts(block: Block): Set[String] = {
-    block.transform[Set[String]] {
+    val start = block.transform[Set[String]] {
       case (AggregationBlock(_, _, group), groupList) =>
         val groupAlias = group.map(_.name).toSet
         if (groupList.head.isEmpty) {
@@ -94,24 +95,40 @@ object BlockUtils {
             commonStart
           }
         }
+      case (SourceBlock(_), _) => Set.empty
+      case (_, groupList) => groupList.head
+    }
+    if (start.isEmpty) {
+      getFilterStarts(block)
+    } else {
+      start
+    }
+  }
+
+  private def getFilterStarts(block: Block): Set[String] = {
+    block.transform[Set[String]] {
       case (FilterBlock(_, rule), list) =>
-        val irFields = ExprUtils.getAllInputFieldInRule(rule.getExpr, null, null)
-        if (irFields.size != 1 || !irFields.head.isInstanceOf[IRNode] || !irFields.head
-          .asInstanceOf[IRNode]
-          .fields
-          .equals(Set.apply(Constants.NODE_ID_KEY))) {
-          list.head
-        } else {
-          if (list.head.isEmpty) {
-            Set.apply(irFields.head.name)
-          } else {
-            val commonStart = list.head.intersect(Set.apply(irFields.head.name))
-            if (commonStart.isEmpty) {
+        rule.getExpr match {
+          case BinaryOpExpr(BEqual, _, _) =>
+            val irFields = ExprUtils.getAllInputFieldInRule(rule.getExpr, null, null)
+            if (irFields.size != 1 || !irFields.head.isInstanceOf[IRNode] || !irFields.head
+              .asInstanceOf[IRNode]
+              .fields
+              .equals(Set.apply(Constants.NODE_ID_KEY))) {
               list.head
             } else {
-              commonStart
+              if (list.head.isEmpty) {
+                Set.apply(irFields.head.name)
+              } else {
+                val commonStart = list.head.intersect(Set.apply(irFields.head.name))
+                if (commonStart.isEmpty) {
+                  list.head
+                } else {
+                  commonStart
+                }
+              }
             }
-          }
+          case _ => list.head
         }
       case (SourceBlock(_), _) => Set.empty
       case (_, groupList) => groupList.head

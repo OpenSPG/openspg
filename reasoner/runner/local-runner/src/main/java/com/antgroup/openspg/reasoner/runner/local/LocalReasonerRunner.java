@@ -20,9 +20,9 @@ import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
+import com.antgroup.openspg.reasoner.lube.physical.operators.PhysicalLeafOperator;
 import com.antgroup.openspg.reasoner.lube.physical.operators.PhysicalOperator;
 import com.antgroup.openspg.reasoner.lube.physical.operators.Select;
-import com.antgroup.openspg.reasoner.lube.physical.operators.Start;
 import com.antgroup.openspg.reasoner.lube.physical.util.PhysicalOperatorUtil;
 import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
@@ -115,7 +115,7 @@ public class LocalReasonerRunner {
       boolean isLastDsl = (i + 1 == dslDagList.size());
 
       if (isLastDsl) {
-        Start<LocalRDG> start =
+        PhysicalLeafOperator<LocalRDG> start =
             PhysicalOperatorUtil.getStartOp(
                 dslDagList.get(i),
                 com.antgroup.openspg.reasoner.runner.local.rdg.TypeTags.rdgTypeTag());

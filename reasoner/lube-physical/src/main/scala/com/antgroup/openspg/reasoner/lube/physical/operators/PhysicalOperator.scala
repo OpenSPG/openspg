@@ -50,6 +50,9 @@ abstract class PhysicalLeafOperator[T <: RDG[T]: TypeTag] extends PhysicalOperat
     throw UnsupportedOperationException("LogicalLeafOperator cannot construct children")
   }
 
+  def alias: String
+
+  def types: Set[String]
 }
 
 abstract class StackingPhysicalOperator[T <: RDG[T]: TypeTag] extends PhysicalOperator[T] {
