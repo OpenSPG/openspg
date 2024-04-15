@@ -15,8 +15,11 @@ package com.antgroup.openspg.reasoner.lube.utils
 
 import scala.collection.mutable
 
+import com.antgroup.openspg.reasoner.common.constants.Constants
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO
 import com.antgroup.openspg.reasoner.lube.block._
+import com.antgroup.openspg.reasoner.lube.common.graph.IRNode
 import com.antgroup.openspg.reasoner.lube.common.pattern.GraphPath
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Block2GraphPathTransformer
 
@@ -50,6 +53,69 @@ object BlockUtils {
       case _ => defines.add("result")
     }
     defines.toSet
+  }
+
+  def getStarts(block: Block): Set[String] = {
+    block.transform[Set[String]] {
+      case (AggregationBlock(_, _, group), groupList) =>
+        val groupAlias = group.map(_.name).toSet
+        if (groupList.head.isEmpty) {
+          groupAlias
+        } else {
+          val commonGroups = groupList.head.intersect(groupAlias)
+          if (commonGroups.isEmpty) {
+            throw UnsupportedOperationException(
+              s"cannot support groups ${groupAlias}, ${groupList.head}")
+          } else {
+            commonGroups
+          }
+        }
+      case (DDLBlock(ddlOp, _), list) =>
+        val starts = new mutable.HashSet[String]()
+        for (ddl <- ddlOp) {
+          ddl match {
+            case AddProperty(s, _, _) => starts.add(s.alias)
+            case AddPredicate(p) =>
+              starts.add(p.source.alias)
+              starts.add(p.target.alias)
+            case _ =>
+          }
+        }
+        if (list.head.isEmpty) {
+          starts.toSet
+        } else if (starts.isEmpty) {
+          list.head
+        } else {
+          val commonStart = list.head.intersect(starts)
+          if (commonStart.isEmpty) {
+            throw UnsupportedOperationException(
+              s"cannot support non-common starts ${list.head}, ${starts}")
+          } else {
+            commonStart
+          }
+        }
+      case (FilterBlock(_, rule), list) =>
+        val irFields = ExprUtils.getAllInputFieldInRule(rule.getExpr, null, null)
+        if (irFields.size != 1 || !irFields.head.isInstanceOf[IRNode] || !irFields.head
+          .asInstanceOf[IRNode]
+          .fields
+          .equals(Set.apply(Constants.NODE_ID_KEY))) {
+          list.head
+        } else {
+          if (list.head.isEmpty) {
+            Set.apply(irFields.head.name)
+          } else {
+            val commonStart = list.head.intersect(Set.apply(irFields.head.name))
+            if (commonStart.isEmpty) {
+              list.head
+            } else {
+              commonStart
+            }
+          }
+        }
+      case (SourceBlock(_), _) => Set.empty
+      case (_, groupList) => groupList.head
+    }
   }
 
 }

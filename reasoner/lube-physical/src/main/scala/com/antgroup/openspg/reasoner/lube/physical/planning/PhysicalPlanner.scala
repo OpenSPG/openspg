@@ -91,6 +91,10 @@ object PhysicalPlanner {
         Start(start.graph.graphName, start.alias, start.fields, start.types)(
           implicitly[TypeTag[T]],
           context)
+      case start: LogicalOperators.StartFromVertex =>
+        StartFromVertex(start.graph.graphName, start.alias, start.fields, start.id, start.types)(
+          implicitly[TypeTag[T]],
+          context)
       case driving: LogicalOperators.Driving =>
         DrivingRDG(start.graph.graphName, start.fields, start.alias, workingRdgName)(
           implicitly[TypeTag[T]],

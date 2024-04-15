@@ -16,11 +16,7 @@ package com.antgroup.openspg.reasoner.lube.logical.planning
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.exception.{
-  NotImplementedException,
-  SchemaException,
-  UnsupportedOperationException
-}
+import com.antgroup.openspg.reasoner.common.exception.{NotImplementedException, SchemaException, UnsupportedOperationException}
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
@@ -31,7 +27,7 @@ import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 import com.antgroup.openspg.reasoner.lube.logical._
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.validate.Dag
-import com.antgroup.openspg.reasoner.lube.utils.{ExprUtils, RuleUtils}
+import com.antgroup.openspg.reasoner.lube.utils.{BlockUtils, ExprUtils, RuleUtils}
 
 /**
  * Logical planner for KGReasoner, generate an optimal logical plan for KGDSL or GQL.
@@ -59,7 +55,7 @@ object LogicalPlanner {
    */
   def plan(input: Block)(implicit context: LogicalPlannerContext): List[LogicalOperator] = {
     val source = resolve(input)
-    val groups = getStarts(input)
+    val groups = BlockUtils.getStarts(input)
     val planWithoutResult = if (groups.isEmpty) {
       planBlock(input.dependencies.head, input, None, source)
     } else {
@@ -381,50 +377,6 @@ object LogicalPlanner {
       implicit context: LogicalPlannerContext): LogicalOperator = {
     val projectPlanner = new ProjectPlanner(projects, root)
     projectPlanner.plan(dependency)
-  }
-
-  private def getStarts(block: Block): Set[String] = {
-    block.transform[Set[String]] {
-      case (AggregationBlock(_, _, group), groupList) =>
-        val groupAlias = group.map(_.name).toSet
-        if (groupList.head.isEmpty) {
-          groupAlias
-        } else {
-          val commonGroups = groupList.head.intersect(groupAlias)
-          if (commonGroups.isEmpty) {
-            throw UnsupportedOperationException(
-              s"cannot support groups ${groupAlias}, ${groupList.head}")
-          } else {
-            commonGroups
-          }
-        }
-      case (DDLBlock(ddlOp, _), list) =>
-        val starts = new mutable.HashSet[String]()
-        for (ddl <- ddlOp) {
-          ddl match {
-            case AddProperty(s, _, _) => starts.add(s.alias)
-            case AddPredicate(p) =>
-              starts.add(p.source.alias)
-              starts.add(p.target.alias)
-            case _ =>
-          }
-        }
-        if (list.head.isEmpty) {
-          starts.toSet
-        } else if (starts.isEmpty) {
-          list.head
-        } else {
-          val commonStart = list.head.intersect(starts)
-          if (commonStart.isEmpty) {
-            throw UnsupportedOperationException(
-              s"cannot support non-common starts ${list.head}, ${starts}")
-          } else {
-            commonStart
-          }
-        }
-      case (SourceBlock(_), _) => Set.empty
-      case (_, groupList) => groupList.head
-    }
   }
 
 }

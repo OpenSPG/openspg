@@ -15,6 +15,7 @@ package com.antgroup.openspg.reasoner.lube.physical.operators
 
 import scala.reflect.runtime.universe.TypeTag
 
+import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.logical.Var
 import com.antgroup.openspg.reasoner.lube.physical.planning.PhysicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
@@ -28,14 +29,26 @@ final case class Start[T <: RDG[T]: TypeTag](
   override def rdg: T = context.graphSession.getGraph(graphName).createRDG(alias, types)
 }
 
+final case class StartFromVertex[T <: RDG[T]: TypeTag](
+    graphName: String,
+    alias: String,
+    meta: List[Var],
+    vId: Expr,
+    types: Set[String])(implicit override val context: PhysicalPlannerContext[T])
+    extends PhysicalLeafOperator[T] {
+  override def rdg: T = context.graphSession.getGraph(graphName).createRDG(alias, vId, types)
+}
+
 final case class DrivingRDG[T <: RDG[T]: TypeTag](
     graphName: String,
     meta: List[Var],
     alias: String,
     workingRdgName: String)(implicit override val context: PhysicalPlannerContext[T])
     extends PhysicalLeafOperator[T] {
+
   override def rdg: T = {
     val workingRdg = context.graphSession.getWorkingRDG(workingRdgName)
     context.graphSession.getGraph(graphName).createRDG(alias, workingRdg)
   }
+
 }

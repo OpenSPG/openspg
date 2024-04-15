@@ -20,6 +20,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.impl.MirrorVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
+import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
 import com.antgroup.openspg.reasoner.lube.logical.RepeatPathVar;
 import com.antgroup.openspg.reasoner.lube.physical.PropertyGraph;
 import com.antgroup.openspg.reasoner.recorder.EmptyRecorder;
@@ -111,6 +112,12 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
     return result;
+  }
+
+  @Override
+  public LocalRDG createRDG(String alias, Expr id, Set<String> types) {
+    // TODO implement.
+    return createRDG(alias, types);
   }
 
   @Override
