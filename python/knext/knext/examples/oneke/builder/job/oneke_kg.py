@@ -22,7 +22,7 @@ except:
     pass
 
 
-class OneKE_EntityExtract(BuilderJob):
+class OneKE_KG(BuilderJob):
 
     def build(self):
         source = CSVReader(
