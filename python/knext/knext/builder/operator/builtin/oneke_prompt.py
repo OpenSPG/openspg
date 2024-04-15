@@ -18,6 +18,7 @@ from collections import defaultdict
 from knext.schema.model.schema_helper import SPGTypeName
 from knext.builder.operator.spg_record import SPGRecord
 from knext.builder.operator.builtin.auto_prompt import AutoPrompt
+import uuid
 
 
 class OneKEPrompt(AutoPrompt):
@@ -30,6 +31,7 @@ class OneKEPrompt(AutoPrompt):
         with_description = kwargs.get("with_description", False)
         split_num = kwargs.get("split_num", 4)
         super().__init__(types_list)
+        self.language = language
         if language == "zh":
             self.template = self.template_zh
         else:
@@ -116,10 +118,11 @@ class OneKE_NERPrompt(OneKEPrompt):
                 print(f"Unrecognized entity_type: {type_zh}")
                 continue
             type_en, _ = self.spg_type_schema_info_zh[type_zh]
-            spg_record = SPGRecord(type_en)
             for value in values:
+                spg_record = SPGRecord(type_en)
                 spg_record.upsert_properties({"id": value, "name": value})
-            spg_records.append(spg_record)
+                spg_records.append(spg_record)
+        return spg_records
 
     def _render(self):
         entity_list = []
@@ -359,8 +362,8 @@ class OneKE_KGPrompt(OneKEPrompt):
                 )
             else:
                 attributes = {}
-                attributes.update({v.name_zh : v.desc for k, v in spg_type.properties.items() if k not in ["id", "name", "description", "stdId"]})
-                attributes.update({v.name_zh : v.desc for k, v in spg_type.relations.items() if v.name_zh not in attributes and k not in ["isA"]})
+                attributes.update({v.name_zh : v.desc or "" for k, v in spg_type.properties.items() if k not in ["id", "name", "description", "stdId"]})
+                attributes.update({v.name_zh : v.desc or "" for k, v in spg_type.relations.items() if v.name_zh not in attributes and k not in ["isA"]})
             entity_type = spg_type.name_zh
             spo_list.append({"entity_type": entity_type, "attributes": attributes})
 
@@ -405,7 +408,8 @@ class OneKE_EEPrompt(OneKEPrompt):
             type_en, _ = self.spg_type_schema_info_zh[type_zh]
             if type_values and isinstance(type_values, list):
                 for type_value in type_values:
-                    spg_record = SPGRecord(type_en).upsert_property("name", type_zh)
+                    uuid_4 = uuid.uuid4()
+                    spg_record = SPGRecord(type_en).upsert_property("id", str(uuid_4)).upsert_property("name", type_zh)
                     arguments = type_value.get("arguments")
                     if arguments and isinstance(arguments, dict):
                         for attr_zh, attr_value in arguments.items():
@@ -458,8 +462,8 @@ class OneKE_EEPrompt(OneKEPrompt):
                 )
             else:
                 arguments = {}
-                arguments.update({v.name_zh : v.desc for k, v in spg_type.properties.items() if k not in ["id", "name", "description"]})
-                arguments.update({v.name_zh : v.desc for k, v in spg_type.relations.items() if v.name_zh not in arguments})
+                arguments.update({v.name_zh : v.desc or "" for k, v in spg_type.properties.items() if k not in ["id", "name", "description"]})
+                arguments.update({v.name_zh : v.desc or "" for k, v in spg_type.relations.items() if v.name_zh not in arguments})
             event_type = spg_type.name_zh
             event_list.append(
                 {"event_type": event_type, "trigger": True, "arguments": arguments}
