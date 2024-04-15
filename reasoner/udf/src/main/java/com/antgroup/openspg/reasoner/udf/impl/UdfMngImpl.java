@@ -56,18 +56,45 @@ public class UdfMngImpl implements UdfMng {
     if (null == instance) {
       synchronized (UdfMngImpl.class) {
         if (null == instance) {
-          instance = createInstance();
+          instance =
+              createInstance(
+                  Lists.newArrayList(KGDSL_UDF_PACKAGE_PATH),
+                  Lists.newArrayList(KGDSL_UDAF_PACKAGE_PATH),
+                  Lists.newArrayList(KGDSL_UDTF_PACKAGE_PATH));
         }
       }
     }
     return instance;
   }
 
-  private static UdfMngImpl createInstance() {
+  /** 多路径 */
+  public static UdfMngImpl getInstance(
+      List<String> udfPackagePaths, List<String> udafPackagePaths, List<String> udtfPackagePaths) {
+    if (null == instance) {
+      synchronized (UdfMngImpl.class) {
+        if (null == instance) {
+          udfPackagePaths.add(KGDSL_UDF_PACKAGE_PATH);
+          udafPackagePaths.add(KGDSL_UDAF_PACKAGE_PATH);
+          udtfPackagePaths.add(KGDSL_UDTF_PACKAGE_PATH);
+          instance = createInstance(udfPackagePaths, udafPackagePaths, udtfPackagePaths);
+        }
+      }
+    }
+    return instance;
+  }
+
+  private static UdfMngImpl createInstance(
+      List<String> udfPackagePaths, List<String> udafPackagePaths, List<String> udtfPackagePaths) {
     UdfMngImpl udfMng = new UdfMngImpl();
-    udfMng.getAllUdf();
-    udfMng.getAllUdaf();
-    udfMng.getAllUdtf();
+    for (String packagePath : udfPackagePaths) {
+      udfMng.getUdfInPath(packagePath);
+    }
+    for (String packagePath : udafPackagePaths) {
+      udfMng.getUdafInPath(packagePath);
+    }
+    for (String packagePath : udtfPackagePaths) {
+      udfMng.getUdtfInPath(packagePath);
+    }
     udfMng.udfCheck();
     return udfMng;
   }
@@ -77,8 +104,8 @@ public class UdfMngImpl implements UdfMng {
   private static final String KGDSL_UDF_PACKAGE_PATH =
       "com.antgroup.openspg.reasoner.udf.builtin.udf";
 
-  private void getAllUdf() {
-    FastClasspathScanner classpathScanner = new FastClasspathScanner(KGDSL_UDF_PACKAGE_PATH);
+  private void getUdfInPath(String packagePath) {
+    FastClasspathScanner classpathScanner = new FastClasspathScanner(packagePath);
     classpathScanner.addClassLoader(getClass().getClassLoader());
     classpathScanner
         .matchAllStandardClasses(
@@ -130,8 +157,8 @@ public class UdfMngImpl implements UdfMng {
   private static final String KGDSL_UDAF_PACKAGE_PATH =
       "com.antgroup.openspg.reasoner.udf.builtin.udaf";
 
-  private void getAllUdaf() {
-    FastClasspathScanner classpathScanner = new FastClasspathScanner(KGDSL_UDAF_PACKAGE_PATH);
+  private void getUdafInPath(String packagePath) {
+    FastClasspathScanner classpathScanner = new FastClasspathScanner(packagePath);
     classpathScanner.addClassLoader(getClass().getClassLoader());
     classpathScanner
         .matchClassesImplementing(
@@ -158,8 +185,8 @@ public class UdfMngImpl implements UdfMng {
   private static final String KGDSL_UDTF_PACKAGE_PATH =
       "com.antgroup.openspg.reasoner.udf.builtin.udtf";
 
-  private void getAllUdtf() {
-    FastClasspathScanner classpathScanner = new FastClasspathScanner(KGDSL_UDTF_PACKAGE_PATH);
+  private void getUdtfInPath(String packagePath) {
+    FastClasspathScanner classpathScanner = new FastClasspathScanner(packagePath);
     classpathScanner.addClassLoader(getClass().getClassLoader());
     classpathScanner
         .matchClassesWithAnnotation(
