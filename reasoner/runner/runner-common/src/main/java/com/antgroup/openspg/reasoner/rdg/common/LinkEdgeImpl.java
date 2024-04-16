@@ -105,8 +105,9 @@ public class LinkEdgeImpl implements Serializable {
         paramList.add(parameter);
       }
 
+      String sourceAlias = linkedEdgePattern.src().alias();
       BaseUdtf tableFunction = udtfMeta.createTableFunction();
-      tableFunction.initialize(graphState);
+      tableFunction.initialize(graphState, sourceAlias);
       tableFunction.process(paramList);
       List<List<Object>> udtfResult = tableFunction.getCollector();
       List<LinkedUdtfResult> linkedUdtfResultList =
@@ -124,7 +125,6 @@ public class LinkEdgeImpl implements Serializable {
       if (CollectionUtils.isEmpty(linkedUdtfResultList)) {
         continue;
       }
-      String sourceAlias = linkedEdgePattern.src().alias();
       List<IVertex<IVertexId, IProperty>> sourceList = path.getVertex(sourceAlias);
       if (null == sourceList || sourceList.size() != 1) {
         throw new RuntimeException("There is more than one start vertex in kgGraph path");
