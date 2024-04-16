@@ -133,7 +133,10 @@ class NodeIdToEdgePropertyTests extends AnyFunSpec {
     val dsl =
       """
         |GraphStructure {
-        |  (A:User)-[e1:lk]->(B:User)-[e2:lk]->(C:User)
+        |  B [User, __start__ = 'true']
+        |  A, C [User]
+        |  A -> B [lk] as e1
+        |  B -> C [lk] as e2
         |}
         |Rule {
         |  R1(""): e1.weight < e2.weight
