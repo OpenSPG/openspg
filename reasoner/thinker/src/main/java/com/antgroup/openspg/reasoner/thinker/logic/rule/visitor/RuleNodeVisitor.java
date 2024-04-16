@@ -1,5 +1,6 @@
 package com.antgroup.openspg.reasoner.thinker.logic.rule.visitor;
 
+import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.And;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.Condition;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.Not;
@@ -9,11 +10,15 @@ import java.util.Map;
 
 public interface RuleNodeVisitor<R> {
 
-  R visitOr(Or node, VertexSubGraph vertexGraph, Map<String, Object> context);
+  R visit(Or node, VertexSubGraph vertexGraph, Map<String, Object> context, TreeLogger treeLogger);
 
-  R visitAnd(And and, VertexSubGraph vertexGraph, Map<String, Object> context);
+  R visit(And and, VertexSubGraph vertexGraph, Map<String, Object> context, TreeLogger treeLogger);
 
-  R visitNot(Not not, VertexSubGraph vertexGraph, Map<String, Object> context);
+  R visit(Not not, VertexSubGraph vertexGraph, Map<String, Object> context, TreeLogger treeLogger);
 
-  R visitCondition(Condition condition, VertexSubGraph vertexGraph, Map<String, Object> context);
+  R visit(
+      Condition condition,
+      VertexSubGraph vertexGraph,
+      Map<String, Object> context,
+      TreeLogger treeLogger);
 }

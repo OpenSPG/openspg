@@ -11,4 +11,5 @@ public class Rule implements Serializable {
   private List<Element> body;
   private Element head;
   private Node root;
+  private String desc;
 }
