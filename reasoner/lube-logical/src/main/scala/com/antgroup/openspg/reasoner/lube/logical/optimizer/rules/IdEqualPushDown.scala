@@ -37,7 +37,7 @@ case object IdEqualPushDown extends Rule {
           StartFromVertex(start.graph, idExpr, start.types, start.alias, start.solved)
         }
         val newFilter = BottomUp[LogicalOperator](rewriter).transform(filter).asInstanceOf[Filter]
-        newFilter.in -> map
+        newFilter -> map
       }
     case (start: Start, _) =>
       start -> Map.apply(Constants.START_ALIAS -> start.alias)
