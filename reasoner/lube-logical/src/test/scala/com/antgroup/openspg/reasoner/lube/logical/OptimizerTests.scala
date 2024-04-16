@@ -249,4 +249,42 @@ class OptimizerTests extends AnyFunSpec {
       group should equal(List.apply(NodeVar("A", Set.empty)))
     }
   }
+
+  it("test id equal push down") {
+    val dsl =
+      """
+        |GraphStructure {
+        | (s: test)-[p: abc]->(o: test)
+        |}
+        |Rule {
+        |	R1: o.id == '1111111'
+        |}
+        |Action {
+        |  get(s.id)
+        |}
+        |""".stripMargin
+    val parser = new OpenSPGDslParser()
+    val block = parser.parse(dsl)
+    val schema: Map[String, Set[String]] =
+      Map.apply(
+        "test" -> Set.apply("id"),
+        "test_abc_test" -> Set.empty)
+    val catalog = new PropertyGraphCatalog(schema)
+    catalog.init()
+    implicit val context: LogicalPlannerContext =
+      LogicalPlannerContext(
+        catalog,
+        parser,
+        Map
+          .apply((Constants.SPG_REASONER_MULTI_VERSION_ENABLE, true))
+          .asInstanceOf[Map[String, Object]])
+    val dag = Validator.validate(List.apply(block))
+    val logicalPlan = LogicalPlanner.plan(dag).popRoot()
+    val rule = Seq(IdEqualPushDown)
+    val optimizedLogicalPlan = LogicalOptimizer.optimize(logicalPlan, rule)
+    optimizedLogicalPlan.findExactlyOne { case start: StartFromVertex =>
+      start.id should equal(VString("1111111"))
+      start.alias should equal("o")
+    }
+  }
 }

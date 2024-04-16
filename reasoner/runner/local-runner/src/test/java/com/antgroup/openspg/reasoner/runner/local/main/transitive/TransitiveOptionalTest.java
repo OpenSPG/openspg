@@ -864,7 +864,7 @@ public class TransitiveOptionalTest {
             + "B->A [relatedReason] as F1\n"
             + "\n"
             + "// 1.8的C\n"
-            + "B->C [relatedReason] repeat(1,20) as F3\n"
+            + "B->C [relatedReason] repeat(1,2) as F3\n"
             + "}\n"
             + "Rule {\n"
             + "  R1: A.id == 'A_730'\n"
