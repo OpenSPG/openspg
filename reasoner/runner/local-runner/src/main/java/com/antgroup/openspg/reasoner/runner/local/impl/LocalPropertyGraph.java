@@ -136,11 +136,19 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
     } else if (idObj instanceof String[]) {
       String[] idArray = (String[]) idObj;
       idStrList.addAll(Lists.newArrayList(idArray));
+    } else if (idObj instanceof Object[]) {
+      Object[] idArray = (Object[]) idObj;
+      for (Object idO : idArray) {
+        idStrList.add(String.valueOf(idO));
+      }
     }
     for (String type : JavaConversions.asJavaCollection(types)) {
       for (String idStr : idStrList) {
         startIdSet.add(IVertexId.from(idStr, type));
       }
+    }
+    if (startIdSet.isEmpty()) {
+      throw new RuntimeException("can not extract start id list");
     }
     LocalRDG result =
         new LocalRDG(
