@@ -107,7 +107,7 @@ public class LinkEdgeImpl implements Serializable {
 
       String sourceAlias = linkedEdgePattern.src().alias();
       BaseUdtf tableFunction = udtfMeta.createTableFunction();
-      tableFunction.initialize(graphState, sourceAlias);
+      tableFunction.initialize(graphState, context, sourceAlias);
       tableFunction.process(paramList);
       List<List<Object>> udtfResult = tableFunction.getCollector();
       List<LinkedUdtfResult> linkedUdtfResultList =
