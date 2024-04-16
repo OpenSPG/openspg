@@ -14,9 +14,6 @@
 package com.antgroup.openspg.reasoner.runner.local.main.transitive;
 
 import com.antgroup.openspg.reasoner.common.constants.Constants;
-import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
-import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
-import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog;
@@ -28,11 +25,9 @@ import com.antgroup.openspg.reasoner.runner.local.loader.MockLocalGraphLoader;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
