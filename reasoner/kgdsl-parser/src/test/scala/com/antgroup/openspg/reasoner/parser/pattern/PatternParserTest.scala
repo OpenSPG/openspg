@@ -19,6 +19,36 @@ import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
 
 class PatternParserTest extends AnyFunSpec {
+  it("test key word") {
+    val s =
+      """
+        |GraphStructure {
+        |  A [`Action`]
+        |  B [Finish]
+        |  A->B [endAction]
+        |}
+        |Rule {
+        |}
+        |Action {
+        |  get(A.name,B.name)
+        |}
+        |""".stripMargin
+    val parser = new LexerInit().initKGReasonerParser(s)
+    val patternParser = new PatternParser()
+    val block = patternParser.parseGraphStructureDefine(
+      parser
+        .kg_dsl()
+        .base_job()
+        .kgdsl_old_define()
+        .the_graph_structure()
+        .graph_structure_define())
+    print(block.pretty)
+    block.isInstanceOf[MatchBlock] should equal(true)
+    val aNode = block.asInstanceOf[MatchBlock]
+      .patterns("unresolved_default_path").graphPattern.getNode("A")
+    aNode == null should equal(false)
+    aNode.typeNames.contains("Action") should equal(true)
+  }
   it("old") {
     val s =
       """

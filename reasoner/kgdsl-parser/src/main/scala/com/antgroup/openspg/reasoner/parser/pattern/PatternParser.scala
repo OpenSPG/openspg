@@ -937,7 +937,7 @@ class PatternParser extends Serializable {
 
   def parseLabelName(ctx: Label_nameContext): LabelType = {
     ctx.getChild(0) match {
-      case c: Entity_typeContext => EntityLabelType(c.getText)
+      case c: Entity_typeContext => EntityLabelType(parseIdentifier(c.identifier()))
       case c: Concept_nameContext =>
         ConceptLabelType(
           parseIdentifier(c.meta_concept_type().identifier()),

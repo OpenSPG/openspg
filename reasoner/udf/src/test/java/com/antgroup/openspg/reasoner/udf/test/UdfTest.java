@@ -55,6 +55,16 @@ public class UdfTest {
   }
 
   @Test
+  public void testReMatch() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    IUdfMeta udfMeta =
+        mng.getUdfMeta("re_match", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
+    Object rst =
+        udfMeta.invoke("Hello, my email address is example@example.com", "\\b\\w+@\\w+\\.\\w+\\b");
+    Assert.assertEquals(rst, "example@example.com");
+  }
+
+  @Test
   public void testJsonGet() {
     UdfMng mng = UdfMngFactory.getUdfMng();
     String params = "{'v':'123'}";
