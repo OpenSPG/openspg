@@ -45,15 +45,16 @@ object BlockUtils {
                   predicate.target.typeNames.head).toString)
             case AddProperty(s, propertyName, _) =>
               defines.add(s.typeNames.head + "." + propertyName)
-            case AddVertex(s, _) =>
-              // defines.add(s.typeNames.head)
-              return Set.apply("result")
             case _ =>
           }
         })
       case _ => defines.add("result")
     }
-    defines.toSet
+    if (defines.isEmpty) {
+      Set.apply("result")
+    } else {
+      defines.toSet
+    }
   }
 
   def getStarts(block: Block): Set[String] = {

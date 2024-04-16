@@ -122,16 +122,16 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
       startIdSet.add(IVertexId.from(((VString) id).value(), type));
     }
     LocalRDG result =
-            new LocalRDG(
-                    graphState,
-                    Lists.newArrayList(startIdSet),
-                    threadPoolExecutor,
-                    executorTimeoutMs,
-                    alias,
-                    getTaskId(),
-                    // subquery can not carry all graph
-                    getExecutionRecorder(),
-                    false);
+        new LocalRDG(
+            graphState,
+            Lists.newArrayList(startIdSet),
+            threadPoolExecutor,
+            executorTimeoutMs,
+            alias,
+            getTaskId(),
+            // subquery can not carry all graph
+            getExecutionRecorder(),
+            false);
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
     return result;

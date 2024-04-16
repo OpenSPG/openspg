@@ -65,7 +65,13 @@ case class SolvedModel(
   }
 
   def solve: SolvedModel = {
-    val tmp = tmpFields.values.map(p => fields(p.name).merge(Option.apply(p))).toList
+    val tmp = tmpFields.values.map(p => {
+      if (!fields.contains(p.name)) {
+        throw InvalidRefVariable(s"not found fields name : ${p} in solved fields")
+      }
+      fields(p.name).merge(Option.apply(p))
+    }
+    ).toList
     var newFields = fields
     for (t <- tmp) {
       newFields = newFields.updated(t.name, newFields(t.name).merge(Option.apply(t)))

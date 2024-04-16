@@ -379,4 +379,60 @@ object LogicalPlanner {
     projectPlanner.plan(dependency)
   }
 
+  private def getStarts(block: Block): Set[String] = {
+    block.transform[Set[String]] {
+      case (AggregationBlock(_, _, group), groupList) =>
+        val groupAlias = group.map(_.name).toSet
+        if (groupList.head.isEmpty) {
+          groupAlias
+        } else {
+          val commonGroups = groupList.head.intersect(groupAlias)
+          if (commonGroups.isEmpty) {
+            throw UnsupportedOperationException(
+              s"cannot support groups ${groupAlias}, ${groupList.head}")
+          } else {
+            commonGroups
+          }
+        }
+      case (DDLBlock(ddlOp, _), list) =>
+        val starts = new mutable.HashSet[String]()
+        for (ddl <- ddlOp) {
+          ddl match {
+            case AddProperty(s, _, _) =>
+              if (starts.isEmpty) {
+                starts.add(s.alias)
+              } else {
+                val common = starts.intersect(Set.apply(s.alias))
+                starts.clear()
+                starts.++=(common)
+              }
+            case AddPredicate(p) =>
+              if (starts.isEmpty) {
+                starts.++=(Set.apply(p.source.alias, p.target.alias))
+              } else {
+                val common = starts.intersect(Set.apply(p.source.alias, p.target.alias))
+                starts.clear()
+                starts.++=(common)
+              }
+            case _ =>
+          }
+        }
+        if (list.head.isEmpty) {
+          starts.toSet
+        } else if (starts.isEmpty) {
+          list.head
+        } else {
+          val commonStart = list.head.intersect(starts)
+          if (commonStart.isEmpty) {
+            throw UnsupportedOperationException(
+              s"cannot support non-common starts ${list.head}, ${starts}")
+          } else {
+            commonStart
+          }
+        }
+      case (SourceBlock(_), _) => Set.empty
+      case (_, groupList) => groupList.head
+    }
+  }
+
 }
