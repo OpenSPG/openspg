@@ -21,16 +21,18 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
-import com.antgroup.openspg.reasoner.lube.common.expr.VString;
 import com.antgroup.openspg.reasoner.lube.logical.RepeatPathVar;
 import com.antgroup.openspg.reasoner.lube.physical.PropertyGraph;
+import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer;
 import com.antgroup.openspg.reasoner.recorder.EmptyRecorder;
 import com.antgroup.openspg.reasoner.recorder.IExecutionRecorder;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.reasoner.runner.local.rdg.LocalRDG;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -118,8 +120,14 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
   @Override
   public LocalRDG createRDG(String alias, Expr id, Set<String> types) {
     java.util.Set<IVertexId> startIdSet = new HashSet<>();
+    Expr2QlexpressTransformer transformer =
+        new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
+    List<String> exprQlList =
+        Lists.newArrayList(JavaConversions.seqAsJavaList(transformer.transform(id)));
+    String idStr =
+        String.valueOf(RuleRunner.getInstance().executeExpression(new HashMap<>(), exprQlList, ""));
     for (String type : JavaConversions.asJavaCollection(types)) {
-      startIdSet.add(IVertexId.from(((VString) id).value(), type));
+      startIdSet.add(IVertexId.from(idStr, type));
     }
     LocalRDG result =
         new LocalRDG(
