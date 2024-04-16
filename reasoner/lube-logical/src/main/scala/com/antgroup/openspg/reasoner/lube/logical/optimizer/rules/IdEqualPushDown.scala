@@ -15,7 +15,7 @@ package com.antgroup.openspg.reasoner.lube.logical.optimizer.rules
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.trees.BottomUp
-import com.antgroup.openspg.reasoner.lube.common.expr.{BEqual, BinaryOpExpr, Expr}
+import com.antgroup.openspg.reasoner.lube.common.expr.{BEqual, BIn, BinaryOpExpr, Directly, Expr, GetField, OpChainExpr, TypeValidatedExpr, UnaryOpExpr, VConstant, VList}
 import com.antgroup.openspg.reasoner.lube.common.graph.IRNode
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
@@ -48,7 +48,7 @@ case object IdEqualPushDown extends Rule {
       return null
     }
     filter.rule.getExpr match {
-      case BinaryOpExpr(BEqual, left, right) =>
+      case BinaryOpExpr(BEqual | BIn, left, right) =>
         val irFields = ExprUtils.getAllInputFieldInRule(
           filter.rule.getExpr,
           filter.solved.getNodeAliasSet,
@@ -62,7 +62,10 @@ case object IdEqualPushDown extends Rule {
             .equals(Set.apply(Constants.NODE_ID_KEY))) {
           null
         } else {
-          right
+          left match {
+            case UnaryOpExpr(GetField(_), _) => right
+            case _ => left
+          }
         }
       case _ => null
     }
