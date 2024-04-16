@@ -124,10 +124,23 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
         new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
     List<String> exprQlList =
         Lists.newArrayList(JavaConversions.seqAsJavaList(transformer.transform(id)));
-    String idStr =
-        String.valueOf(RuleRunner.getInstance().executeExpression(new HashMap<>(), exprQlList, ""));
+    List<String> idStrList = new ArrayList<>();
+    Object idObj = RuleRunner.getInstance().executeExpression(new HashMap<>(), exprQlList, "");
+    if (idObj instanceof String) {
+      idStrList.add(String.valueOf(idObj));
+    } else if (idObj instanceof List) {
+      List idOList = (List) idObj;
+      for (Object ido : idOList) {
+        idStrList.add(String.valueOf(ido));
+      }
+    } else if (idObj instanceof String[]) {
+      String[] idArray = (String[]) idObj;
+      idStrList.addAll(Lists.newArrayList(idArray));
+    }
     for (String type : JavaConversions.asJavaCollection(types)) {
-      startIdSet.add(IVertexId.from(idStr, type));
+      for (String idStr : idStrList) {
+        startIdSet.add(IVertexId.from(idStr, type));
+      }
     }
     LocalRDG result =
         new LocalRDG(
