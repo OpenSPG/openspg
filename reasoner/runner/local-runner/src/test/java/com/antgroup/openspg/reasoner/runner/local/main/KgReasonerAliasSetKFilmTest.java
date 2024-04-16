@@ -85,7 +85,7 @@ public class KgReasonerAliasSetKFilmTest {
             + "    (A:User)-[p1:trans]->(B:User)\n"
             + "}\n"
             + "Rule {\n"
-            + " R1: A.id == 'A'"
+            + " R1: A.id in ['A']"
             + "}\n"
             + "Action {\n"
             + "    get(A.id, B.id)\n"

@@ -19,7 +19,7 @@ import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO
 import com.antgroup.openspg.reasoner.lube.block._
-import com.antgroup.openspg.reasoner.lube.common.expr.{BEqual, BinaryOpExpr}
+import com.antgroup.openspg.reasoner.lube.common.expr.{BEqual, BIn, BinaryOpExpr}
 import com.antgroup.openspg.reasoner.lube.common.graph.IRNode
 import com.antgroup.openspg.reasoner.lube.common.pattern.GraphPath
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Block2GraphPathTransformer
@@ -110,7 +110,7 @@ object BlockUtils {
     block.transform[Set[String]] {
       case (FilterBlock(_, rule), list) =>
         rule.getExpr match {
-          case BinaryOpExpr(BEqual, _, _) =>
+          case BinaryOpExpr(BEqual | BIn, _, _) =>
             val irFields = ExprUtils.getAllInputFieldInRule(rule.getExpr, null, null)
             if (irFields.size != 1 || !irFields.head.isInstanceOf[IRNode] || !irFields.head
               .asInstanceOf[IRNode]
