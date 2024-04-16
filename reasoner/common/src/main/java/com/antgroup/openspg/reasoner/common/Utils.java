@@ -84,6 +84,7 @@ public class Utils {
       case "java.util.Date":
         return KTDate$.MODULE$;
       case "java.util.List<java.lang.Object>":
+      case "java.util.List":
         return new KTList(KTObject$.MODULE$);
       case "java.util.List<null>":
         return new KTList(null);

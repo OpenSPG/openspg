@@ -99,6 +99,7 @@ import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -273,6 +274,7 @@ public class LocalRDG extends RDG<LocalRDG> {
 
   @Override
   public LocalRDG linkedExpand(EdgePattern<LinkedPatternConnection> pattern) {
+    long startTime = System.currentTimeMillis();
     java.util.List<KgGraph<IVertexId>> newKgGraphList = new ArrayList<>();
     UdtfMeta udtfMeta = RunnerUtil.chooseUdtfMeta(pattern);
 
@@ -284,8 +286,29 @@ public class LocalRDG extends RDG<LocalRDG> {
     LinkEdgeImpl linkEdge =
         new LinkEdgeImpl(
             this.taskId, this.kgGraphSchema, staticParameters, pattern, udtfMeta, null, graphState);
+    java.util.List<CompletableFuture<java.util.List<KgGraph<IVertexId>>>> futureList =
+        new ArrayList<>();
     for (KgGraph<IVertexId> kgGraph : this.kgGraphList) {
-      java.util.List<KgGraph<IVertexId>> splitedKgGraphList = linkEdge.link(kgGraph);
+      CompletableFuture<java.util.List<KgGraph<IVertexId>>> future =
+          CompletableFuture.supplyAsync(
+              new Supplier<java.util.List<KgGraph<IVertexId>>>() {
+                @Override
+                public java.util.List<KgGraph<IVertexId>> get() {
+                  return linkEdge.link(kgGraph);
+                }
+              });
+      futureList.add(future);
+    }
+    for (CompletableFuture<java.util.List<KgGraph<IVertexId>>> future : futureList) {
+      java.util.List<KgGraph<IVertexId>> splitedKgGraphList;
+      try {
+        splitedKgGraphList = future.get(this.executorTimeoutMs, TimeUnit.MILLISECONDS);
+      } catch (TimeoutException e) {
+        log.warn("linkedExpandTimeout,funcName=" + pattern.edge().funcName(), e);
+        continue;
+      } catch (Exception e) {
+        throw new RuntimeException("patternScan error " + e.getMessage(), e);
+      }
       if (CollectionUtils.isNotEmpty(splitedKgGraphList)) {
         KgGraph<IVertexId> result = new KgGraphImpl();
         result.merge(splitedKgGraphList, null);
@@ -303,7 +326,9 @@ public class LocalRDG extends RDG<LocalRDG> {
             + ",matchCount="
             + count
             + ", linkedTargetVertexSize="
-            + targetVertexSize);
+            + targetVertexSize
+            + " cost time="
+            + (System.currentTimeMillis() - startTime));
     this.executionRecorder.stageResult(
         "linkedExpand(" + RunnerUtil.getReadablePattern(pattern) + ")", this.kgGraphList.size());
     return this;
