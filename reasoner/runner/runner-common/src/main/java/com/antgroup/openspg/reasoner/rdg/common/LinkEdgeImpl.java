@@ -18,6 +18,7 @@ import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.property.impl.EdgeProperty;
+import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
@@ -147,13 +148,17 @@ public class LinkEdgeImpl implements Serializable {
           }
           for (String targetVertexType : targetVertexTypes) {
             IVertexId targetId = new VertexId(targetIdStr, targetVertexType);
+            Map<String, Object> propertyMap = new HashMap<>();
+            VertexProperty vertexProperty = new VertexProperty(propertyMap);
+            vertexProperty.put(Constants.NODE_ID_KEY, targetIdStr);
+            vertexProperty.put(Constants.CONTEXT_LABEL, targetVertexType);
             if (partitioner != null && !partitioner.canPartition(targetId)) {
               continue;
             }
             // need add property with id
             Set<IVertex<IVertexId, IProperty>> newVertexSet =
                 newAliasVertexMap.computeIfAbsent(targetAlias, k -> new HashSet<>());
-            newVertexSet.add(new Vertex<>(targetId));
+            newVertexSet.add(new Vertex<>(targetId, vertexProperty));
 
             Map<String, Object> props = new HashMap<>(linkedUdtfResult.getEdgePropertyMap());
             props.put(Constants.EDGE_TO_ID_KEY, targetIdStr);
