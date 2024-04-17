@@ -82,14 +82,18 @@ public class DefaultThinker<K> implements Thinker<K> {
   private Triple edgeToTriple(IEdge<K, IProperty> edge) {
     if (edge.getDirection() == Direction.OUT) {
       return new Triple(
-          new Entity(edge.getSourceId()),
+          new Entity(
+              edge.getSourceId(), (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)),
           new Predicate(edge.getType()),
-          new Entity(edge.getTargetId()));
+          new Entity(
+              edge.getTargetId(), (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)));
     } else {
       return new Triple(
-          new Entity(edge.getTargetId()),
+          new Entity(
+              edge.getTargetId(), (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)),
           new Predicate(edge.getType()),
-          new Entity(edge.getSourceId()));
+          new Entity(
+              edge.getSourceId(), (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)));
     }
   }
 }
