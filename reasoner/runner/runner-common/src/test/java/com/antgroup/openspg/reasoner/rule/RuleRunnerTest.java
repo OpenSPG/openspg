@@ -594,7 +594,7 @@ public class RuleRunnerTest {
     List<String> rules =
         Lists.newArrayList(JavaConversions.asJavaCollection(transformer.transform(e)));
     Assert.assertEquals(
-        rules.get(0), "repeat_reduce(e.edges, 1, \"pre\", \"cur\", \"cur.rate * pre\")");
+        rules.get(0), "repeat_reduce(e.edges, 1, 'pre', 'cur', 'cur.rate * pre')");
     Map<String, Object> context = getRepeatTestContext();
     Object rst = RuleRunner.getInstance().executeExpression(context, rules, "");
     Assert.assertEquals(rst, 0.15);
