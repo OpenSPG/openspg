@@ -11,4 +11,4 @@
 
 
 __package_name__ = "openspg-nn4k"
-__version__ = "0.0.2-beta3"
+__version__ = "0.0.3-beta1"

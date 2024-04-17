@@ -8,7 +8,3 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
-docker pull openspg/openspg-python:latest
-
-docker run --rm --net=host -it openspg/openspg-python:latest "/bin/bash"

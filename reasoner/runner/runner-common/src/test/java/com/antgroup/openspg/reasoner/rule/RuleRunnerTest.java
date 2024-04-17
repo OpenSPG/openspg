@@ -133,18 +133,20 @@ public class RuleRunnerTest {
     Map<String, Object> context = new HashMap<>();
     context.put("A", 1000);
     context.put("B", 100);
+    context.put("A/B*C", 200);
     boolean rst =
         RuleRunner.getInstance()
             .check(
                 context,
                 Lists.newArrayList(
+                    "R0 = get_value(\"A/B*C\") == 200 && get_value() == null && get_value(\"B\") == 100",
                     "R1 = A + B == 1100",
                     "R2 = A > B",
                     "R3 = A >= B",
                     "R4 = B < A",
                     "R5 = B <= A",
                     "R6 = A != B",
-                    "R1 && R2 && R3 && R4 && R5 && R6"),
+                    "R0 && R1 && R2 && R3 && R4 && R5 && R6"),
                 "");
     Assert.assertTrue(rst);
   }
