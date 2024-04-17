@@ -20,15 +20,19 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.impl.MirrorVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
+import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
 import com.antgroup.openspg.reasoner.lube.logical.RepeatPathVar;
 import com.antgroup.openspg.reasoner.lube.physical.PropertyGraph;
+import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer;
 import com.antgroup.openspg.reasoner.recorder.EmptyRecorder;
 import com.antgroup.openspg.reasoner.recorder.IExecutionRecorder;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.reasoner.runner.local.rdg.LocalRDG;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -96,6 +100,55 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
         }
         startIdSet.add(vertex.getId());
       }
+    }
+    LocalRDG result =
+        new LocalRDG(
+            graphState,
+            Lists.newArrayList(startIdSet),
+            threadPoolExecutor,
+            executorTimeoutMs,
+            alias,
+            getTaskId(),
+            // subquery can not carry all graph
+            getExecutionRecorder(),
+            false);
+    result.setMaxPathLimit(getMaxPathLimit());
+    result.setStrictMaxPathLimit(getStrictMaxPathLimit());
+    return result;
+  }
+
+  @Override
+  public LocalRDG createRDG(String alias, Expr id, Set<String> types) {
+    java.util.Set<IVertexId> startIdSet = new HashSet<>();
+    Expr2QlexpressTransformer transformer =
+        new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
+    List<String> exprQlList =
+        Lists.newArrayList(JavaConversions.seqAsJavaList(transformer.transform(id)));
+    List<String> idStrList = new ArrayList<>();
+    Object idObj = RuleRunner.getInstance().executeExpression(new HashMap<>(), exprQlList, "");
+    if (idObj instanceof String) {
+      idStrList.add(String.valueOf(idObj));
+    } else if (idObj instanceof List) {
+      List idOList = (List) idObj;
+      for (Object ido : idOList) {
+        idStrList.add(String.valueOf(ido));
+      }
+    } else if (idObj instanceof String[]) {
+      String[] idArray = (String[]) idObj;
+      idStrList.addAll(Lists.newArrayList(idArray));
+    } else if (idObj instanceof Object[]) {
+      Object[] idArray = (Object[]) idObj;
+      for (Object idO : idArray) {
+        idStrList.add(String.valueOf(idO));
+      }
+    }
+    for (String type : JavaConversions.asJavaCollection(types)) {
+      for (String idStr : idStrList) {
+        startIdSet.add(IVertexId.from(idStr, type));
+      }
+    }
+    if (startIdSet.isEmpty()) {
+      throw new RuntimeException("can not extract start id list");
     }
     LocalRDG result =
         new LocalRDG(

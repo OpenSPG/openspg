@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.lube.logical.operators
 
 import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph
+import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.logical.{SolvedModel, Var}
 
 abstract class Source extends LogicalLeafOperator {
@@ -24,6 +25,18 @@ final case class Start(
     graph: SemanticPropertyGraph,
     alias: String,
     types: Set[String],
+    solved: SolvedModel)
+    extends Source {
+  override def refFields: List[Var] = fields
+
+  override def fields: List[Var] = solved.fields.values.toList
+}
+
+final case class StartFromVertex(
+    graph: SemanticPropertyGraph,
+    id: Expr,
+    types: Set[String],
+    alias: String,
     solved: SolvedModel)
     extends Source {
   override def refFields: List[Var] = fields

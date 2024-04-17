@@ -16,11 +16,7 @@ package com.antgroup.openspg.reasoner.lube.logical.planning
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.exception.{
-  NotImplementedException,
-  SchemaException,
-  UnsupportedOperationException
-}
+import com.antgroup.openspg.reasoner.common.exception.{NotImplementedException, SchemaException, UnsupportedOperationException}
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
@@ -31,7 +27,7 @@ import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 import com.antgroup.openspg.reasoner.lube.logical._
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.validate.Dag
-import com.antgroup.openspg.reasoner.lube.utils.{ExprUtils, RuleUtils}
+import com.antgroup.openspg.reasoner.lube.utils.{BlockUtils, ExprUtils, RuleUtils}
 
 /**
  * Logical planner for KGReasoner, generate an optimal logical plan for KGDSL or GQL.
@@ -59,7 +55,7 @@ object LogicalPlanner {
    */
   def plan(input: Block)(implicit context: LogicalPlannerContext): List[LogicalOperator] = {
     val source = resolve(input)
-    val groups = getStarts(input)
+    val groups = BlockUtils.getStarts(input)
     val planWithoutResult = if (groups.isEmpty) {
       planBlock(input.dependencies.head, input, None, source)
     } else {
@@ -402,10 +398,22 @@ object LogicalPlanner {
         val starts = new mutable.HashSet[String]()
         for (ddl <- ddlOp) {
           ddl match {
-            case AddProperty(s, _, _) => starts.add(s.alias)
+            case AddProperty(s, _, _) =>
+              if (starts.isEmpty) {
+                starts.add(s.alias)
+              } else {
+                val common = starts.intersect(Set.apply(s.alias))
+                starts.clear()
+                starts.++=(common)
+              }
             case AddPredicate(p) =>
-              starts.add(p.source.alias)
-              starts.add(p.target.alias)
+              if (starts.isEmpty) {
+                starts.++=(Set.apply(p.source.alias, p.target.alias))
+              } else {
+                val common = starts.intersect(Set.apply(p.source.alias, p.target.alias))
+                starts.clear()
+                starts.++=(common)
+              }
             case _ =>
           }
         }

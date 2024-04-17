@@ -84,7 +84,7 @@ public class KgReasonerLeadToTest {
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
-    Assert.assertEquals(1, result.getVertexList().size());
+    Assert.assertEquals(2, result.getVertexList().size());
   }
 
   public static class GraphLoaderForAddVertex extends AbstractLocalGraphLoader {
