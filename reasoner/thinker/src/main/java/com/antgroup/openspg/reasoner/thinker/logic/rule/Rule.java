@@ -1,39 +1,20 @@
 package com.antgroup.openspg.reasoner.thinker.logic.rule;
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import java.io.Serializable;
 import java.util.List;
 
 public class Rule implements Serializable {
-  private String triggerName;
-  private List<Element> body;
-  private Element head;
-  private Node root;
-
-  /**
-   * Getter method for property <tt>triggerName</tt>.
-   *
-   * @return property value of triggerName
-   */
-  public String getTriggerName() {
-    return triggerName;
-  }
-
-  /**
-   * Setter method for property <tt>triggerName</tt>.
-   *
-   * @param triggerName value to be assigned to property triggerName
-   */
-  public void setTriggerName(String triggerName) {
-    this.triggerName = triggerName;
-  }
+    private List<ClauseEntry> body;
+    private ClauseEntry       head;
+    private Node              root;
+    private String            desc;
 
   /**
    * Getter method for property <tt>body</tt>.
    *
    * @return property value of body
    */
-  public List<Element> getBody() {
+  public List<ClauseEntry> getBody() {
     return body;
   }
 
@@ -42,7 +23,7 @@ public class Rule implements Serializable {
    *
    * @param body value to be assigned to property body
    */
-  public void setBody(List<Element> body) {
+  public void setBody(List<ClauseEntry> body) {
     this.body = body;
   }
 
@@ -51,7 +32,7 @@ public class Rule implements Serializable {
    *
    * @return property value of head
    */
-  public Element getHead() {
+  public ClauseEntry getHead() {
     return head;
   }
 
@@ -60,7 +41,7 @@ public class Rule implements Serializable {
    *
    * @param head value to be assigned to property head
    */
-  public void setHead(Element head) {
+  public void setHead(ClauseEntry head) {
     this.head = head;
   }
 
@@ -80,5 +61,23 @@ public class Rule implements Serializable {
    */
   public void setRoot(Node root) {
     this.root = root;
+  }
+
+  /**
+   * Getter method for property <tt>desc</tt>.
+   *
+   * @return property value of desc
+   */
+  public String getDesc() {
+    return desc;
+  }
+
+  /**
+   * Setter method for property <tt>desc</tt>.
+   *
+   * @param desc value to be assigned to property desc
+   */
+  public void setDesc(String desc) {
+    this.desc = desc;
   }
 }

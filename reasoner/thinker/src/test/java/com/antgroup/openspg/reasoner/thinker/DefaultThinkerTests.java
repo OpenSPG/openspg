@@ -9,8 +9,8 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.thinker.engine.DefaultThinker;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Any;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.NodeAny;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -75,7 +75,7 @@ public class DefaultThinkerTests {
   public void testFindForward() {
     Thinker thinker = new DefaultThinker(buildGraphState());
     List<Triple> triples =
-        thinker.find(new Entity<>(IVertexId.from("a1", "A")), new NodeAny(), new NodeAny());
+        thinker.find(new Entity<>(IVertexId.from("a1", "A"), "A"), new Any(), new Any());
     Assert.assertTrue(triples.size() == 1);
   }
 
@@ -83,7 +83,7 @@ public class DefaultThinkerTests {
   public void testBackForward() {
     Thinker thinker = new DefaultThinker(buildGraphState());
     List<Triple> triples =
-        thinker.find(new NodeAny(), new NodeAny(), new Entity<>(IVertexId.from("b", "B")));
+        thinker.find(new Any(), new Any(), new Entity<>(IVertexId.from("b", "B"), "B"));
     Assert.assertTrue(triples.size() == 2);
   }
 }

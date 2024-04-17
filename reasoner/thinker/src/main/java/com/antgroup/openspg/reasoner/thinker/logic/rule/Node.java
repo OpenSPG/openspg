@@ -19,5 +19,9 @@ import java.io.Serializable;
 import java.util.Map;
 
 public interface Node extends Serializable {
-  <R> R accept(VertexSubGraph vertexGraph, Map<String, Object> context, RuleNodeVisitor<R> visitor);
+  <R> R accept(
+      VertexSubGraph vertexGraph,
+      Map<String, Object> context,
+      RuleNodeVisitor<R> visitor,
+      TreeLogger logger);
 }

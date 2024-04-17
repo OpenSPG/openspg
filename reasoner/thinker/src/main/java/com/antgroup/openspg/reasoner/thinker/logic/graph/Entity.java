@@ -17,10 +17,12 @@ import lombok.Data;
 @Data
 public class Entity<K> implements Element {
   private K id;
+  private String type;
 
   public Entity() {}
 
-  public Entity(K id) {
+  public Entity(K id, String type) {
     this.id = id;
+    this.type = type;
   }
 }

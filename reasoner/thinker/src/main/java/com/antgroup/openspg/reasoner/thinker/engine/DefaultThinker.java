@@ -36,7 +36,7 @@ public class DefaultThinker<K> implements Thinker<K> {
   private List<Triple> match(Entity<K> s, Element p, Element o, Direction direction) {
     IVertex<K, IProperty> vertex = this.graphState.getVertex(s.getId(), null);
     List<IEdge<K, IProperty>> edges;
-    if (p instanceof NodeAny) {
+    if (p instanceof Any) {
       edges = this.graphState.getEdges(s.getId(), null, null, null, direction);
     } else if (p instanceof Predicate) {
       Set<String> types = new HashSet<>();
@@ -57,12 +57,12 @@ public class DefaultThinker<K> implements Thinker<K> {
       List<IEdge<K, IProperty>> edges) {
     List<Triple> triples = new LinkedList<>();
     for (String key : vertex.getValue().getKeySet()) {
-      if (p instanceof NodeAny || ((Predicate) p).getName().equalsIgnoreCase(key)) {
+      if (p instanceof Any || ((Predicate) p).getName().equalsIgnoreCase(key)) {
         triples.add(new Triple(s, new Predicate(key), new Value(key, vertex.getValue().get(key))));
       }
     }
     for (IEdge<K, IProperty> edge : edges) {
-      if (p instanceof NodeAny || ((Predicate) p).getName().equalsIgnoreCase(edge.getType())) {
+      if (p instanceof Any || ((Predicate) p).getName().equalsIgnoreCase(edge.getType())) {
         if (o instanceof Entity) {
           if (edge.getTargetId().equals(((Entity<?>) o).getId())) {
             triples.add(edgeToTriple(edge));
@@ -71,7 +71,7 @@ public class DefaultThinker<K> implements Thinker<K> {
           if (edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY).equals(((Node) o).getType())) {
             triples.add(edgeToTriple(edge));
           }
-        } else if (o instanceof NodeAny) {
+        } else if (o instanceof Any) {
           triples.add(edgeToTriple(edge));
         }
       }
@@ -82,14 +82,18 @@ public class DefaultThinker<K> implements Thinker<K> {
   private Triple edgeToTriple(IEdge<K, IProperty> edge) {
     if (edge.getDirection() == Direction.OUT) {
       return new Triple(
-          new Entity(edge.getSourceId()),
+          new Entity(
+              edge.getSourceId(), (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)),
           new Predicate(edge.getType()),
-          new Entity(edge.getTargetId()));
+          new Entity(
+              edge.getTargetId(), (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)));
     } else {
       return new Triple(
-          new Entity(edge.getTargetId()),
+          new Entity(
+              edge.getTargetId(), (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)),
           new Predicate(edge.getType()),
-          new Entity(edge.getSourceId()));
+          new Entity(
+              edge.getSourceId(), (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)));
     }
   }
 }
