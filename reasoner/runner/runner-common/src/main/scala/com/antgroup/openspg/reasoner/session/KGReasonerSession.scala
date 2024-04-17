@@ -162,10 +162,13 @@ abstract class KGReasonerSession[T <: RDG[T]: TypeTag](
     logger.info(
       "benchmark main plan plan2UnresolvedLogicalPlan cost = "
         + (System.currentTimeMillis() - start))
-    plan(blocks, params)
+    planBlock(blocks, params)
   }
 
-  def plan(blocks: List[Block], params: Map[String, Object]): List[PhysicalOperator[T]] = {
+  /**
+   * Generate the optimization physical plan from Blocks.
+   */
+  def planBlock(blocks: List[Block], params: Map[String, Object]): List[PhysicalOperator[T]] = {
     optimizedLogicalPlan = plan2OptimizedLogicalPlan(blocks, params)
     planLogicalPlan2PhysicalPlan(optimizedLogicalPlan, params)
   }

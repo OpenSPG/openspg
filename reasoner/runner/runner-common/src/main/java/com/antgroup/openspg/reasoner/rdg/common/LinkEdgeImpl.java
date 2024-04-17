@@ -106,8 +106,9 @@ public class LinkEdgeImpl implements Serializable {
       }
 
       String sourceAlias = linkedEdgePattern.src().alias();
+      String targetAlias = linkedEdgePattern.dst().alias();
       BaseUdtf tableFunction = udtfMeta.createTableFunction();
-      tableFunction.initialize(graphState, context, sourceAlias);
+      tableFunction.initialize(graphState, context, sourceAlias, targetAlias);
       tableFunction.process(paramList);
       List<List<Object>> udtfResult = tableFunction.getCollector();
       List<LinkedUdtfResult> linkedUdtfResultList =
@@ -138,7 +139,6 @@ public class LinkEdgeImpl implements Serializable {
       for (LinkedUdtfResult linkedUdtfResult : linkedUdtfResultList) {
         for (String targetIdStr : linkedUdtfResult.getTargetVertexIdList()) {
           // add target vertex
-          String targetAlias = pc.target();
           PatternElement targetVertexMeta = linkedEdgePattern.dst();
           List<String> targetVertexTypes =
               new ArrayList<>(JavaConversions.setAsJavaSet(targetVertexMeta.typeNames()));
