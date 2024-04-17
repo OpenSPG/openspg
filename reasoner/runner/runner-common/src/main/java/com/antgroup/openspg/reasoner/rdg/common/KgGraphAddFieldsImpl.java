@@ -30,7 +30,11 @@ import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Data;
 import scala.Tuple2;
@@ -107,7 +111,7 @@ public class KgGraphAddFieldsImpl implements Serializable {
       for (AddFieldsInfo addFieldsInfo : this.addFieldsInfoList) {
         Tuple2<String, GraphItemType> key =
             new Tuple2<>(addFieldsInfo.getAlias(), addFieldsInfo.getType());
-        Object expressionResult = getFieldValue(addFieldsInfo, context, path);
+        Object expressionResult = getFieldValue(addFieldsInfo, context);
         Map<String, Object> propertyMap =
             alias2UpdatePropertyMap.computeIfAbsent(key, k -> new HashMap<>());
         for (String propertyName : addFieldsInfo.getPropertyNameList()) {
@@ -131,8 +135,7 @@ public class KgGraphAddFieldsImpl implements Serializable {
     return result;
   }
 
-  private Object getFieldValue(
-      AddFieldsInfo addFieldsInfo, Map<String, Object> context, KgGraph<IVertexId> path) {
+  private Object getFieldValue(AddFieldsInfo addFieldsInfo, Map<String, Object> context) {
     if (1 == addFieldsInfo.getExpressionList().size()) {
       String expressionString = addFieldsInfo.getExpressionList().get(0);
       if (expressionString.endsWith(Constants.PROPERTY_JSON_KEY)
@@ -140,13 +143,6 @@ public class KgGraphAddFieldsImpl implements Serializable {
         List<String> getPropertyList = Lists.newArrayList(Splitter.on(".").split(expressionString));
         return SelectRowImpl.getSelectValue(
             getPropertyList.get(0), getPropertyList.get(1), context);
-      }
-      if (expressionString.endsWith(Constants.EDGE_SET_KEY)) {
-        List<Object> edges = new ArrayList<>();
-        for (String e : path.getEdgeAlias()) {
-          edges.add(RunnerUtil.recoverContextKeys(context.get(e)));
-        }
-        return edges;
       }
     }
     return RuleRunner.getInstance()

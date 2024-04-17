@@ -1143,9 +1143,6 @@ public class KgGraphImpl implements KgGraph<IVertexId>, Serializable {
                 versionProperty.remove(key);
                 continue;
               }
-//              if (value instanceof ArrayList<?>){
-//                (versionProperty.get(key),
-//              }
               versionProperty.put(key, propertyMap.get(key), version);
             }
             IVertex<IVertexId, IProperty> newVertex = vertex.clone();
