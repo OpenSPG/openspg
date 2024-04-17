@@ -32,6 +32,6 @@ public class And implements Node {
   @Override
   public <R> R accept(
       VertexSubGraph vertexGraph, Map<String, Object> context, RuleNodeVisitor<R> visitor) {
-    return visitor.visitAnd(this, vertexGraph, context);
+    return visitor.visit(this, vertexGraph, context);
   }
 }

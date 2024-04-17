@@ -14,7 +14,7 @@ class SimplifyThinkerParser {
   var param: Map[String, Object] = Map.empty
   var thinkerRuleParser: ThinkerRuleParser = new ThinkerRuleParser()
 
-  var conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[Element]] =
+  private var conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[Element]] =
     new mutable.HashMap()
 
   def parseSimplifyDsl(
@@ -132,6 +132,10 @@ class SimplifyThinkerParser {
 
   def parseDefinePriorityRuleOnConcept(ctx: Define_proiority_rule_on_conceptContext): Rule = {
     throw new UnsupportedOperationException("DefinePriority not support yet")
+  }
+
+  def getConditionToElementMap(): Map[Condition, Set[Element]] = {
+    conditionToElementMap.toMap.map(x => (x._1, x._2.toSet))
   }
 
 }

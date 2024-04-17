@@ -51,8 +51,8 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     assert(secondLine.isInstanceOf[QlExpressCondition])
 
     // conditionToElementMap
-    val conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[Element]] =
-      parser.conditionToElementMap
+    val conditionToElementMap: Map[Condition, Set[Element]] =
+      parser.getConditionToElementMap()
     val conditionList = getAllConditionInNode(root)
     for (condition <- conditionList) {
       assert(conditionToElementMap.contains(condition))

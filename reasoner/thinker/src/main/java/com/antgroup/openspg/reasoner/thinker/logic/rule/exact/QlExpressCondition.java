@@ -19,6 +19,11 @@ public class QlExpressCondition extends Condition {
   }
 
   @Override
+  public String getExpress() {
+    return qlExpress;
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;

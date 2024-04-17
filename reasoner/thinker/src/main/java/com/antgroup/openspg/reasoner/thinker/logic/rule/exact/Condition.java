@@ -8,8 +8,10 @@ import java.util.Map;
 public abstract class Condition implements Node {
   public final <R> R accept(
       VertexSubGraph vertexGraph, Map<String, Object> context, RuleNodeVisitor<R> visitor) {
-    return visitor.visitCondition(this, vertexGraph, context);
+    return visitor.visit(this, vertexGraph, context);
   }
 
   public abstract boolean execute(VertexSubGraph vertexGraph, Map<String, Object> context);
+
+  public abstract String getExpress();
 }
