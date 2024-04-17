@@ -12,8 +12,11 @@
  */
 package com.antgroup.openspg.reasoner.recorder.action;
 
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author peilong.zpl
@@ -26,6 +29,21 @@ public class SubAction extends AbstractAction {
   public SubAction(String describe) {
     super(System.currentTimeMillis());
     this.describe = describe;
+  }
+
+  public Map<IVertexId, DebugInfoWithStartId> getRuleRuntimeInfo() {
+    Map<IVertexId, DebugInfoWithStartId> vertexIdMap = new HashMap<>();
+    for (AbstractAction action : subActionList) {
+      Map<IVertexId, DebugInfoWithStartId> startIds = action.getRuleRuntimeInfo();
+      for (IVertexId d : startIds.keySet()) {
+        if (vertexIdMap.containsKey(d)) {
+          vertexIdMap.get(d).mergeDebugInfo(startIds.get(d));
+        } else {
+          vertexIdMap.put(d, startIds.get(d));
+        }
+      }
+    }
+    return vertexIdMap;
   }
 
   public String getDescribe() {

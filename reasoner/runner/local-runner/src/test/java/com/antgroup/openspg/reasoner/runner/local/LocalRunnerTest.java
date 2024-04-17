@@ -802,13 +802,14 @@ public class LocalRunnerTest {
     task.getParams().put(ConfigKey.KG_REASONER_CATALOG, SimpleObjSerde.ser(catalog));
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("black_app_1", "Pkg")));
+    task.setExecutionRecorder(new DefaultRecorder());
 
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
     System.out.println("##########################");
-
+    System.out.println(task.getExecutionRecorder().toReadableString());
     clear();
   }
 

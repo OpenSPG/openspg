@@ -12,6 +12,9 @@
  */
 package com.antgroup.openspg.reasoner.recorder.action;
 
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import java.util.Map;
+
 /**
  * @author peilong.zpl
  * @version $Id: AbstractAction.java, v 0.1 2024-04-08 15:31 peilong.zpl Exp $$
@@ -22,4 +25,6 @@ public abstract class AbstractAction {
   protected AbstractAction(long time) {
     this.time = time;
   }
+
+  public abstract Map<IVertexId, DebugInfoWithStartId> getRuleRuntimeInfo();
 }

@@ -13,9 +13,11 @@
 package com.antgroup.openspg.reasoner.recorder.action;
 
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +26,9 @@ import java.util.Map;
  * @version $Id: SampleAction.java, v 0.1 2024-04-08 15:31 peilong.zpl Exp $$
  */
 public class SampleAction extends AbstractAction {
-
+  public static final String PASS_START_ID_KEY = "pass";
+  public static final String FAILED_START_ID_KEY = "failed";
+  private final List<Rule> relateRules;
   private final String describe;
   private final Long num;
 
@@ -38,26 +42,34 @@ public class SampleAction extends AbstractAction {
     this.num = num;
     this.finishDescribe = null;
     this.runtimeDetail = null;
+    this.relateRules = null;
   }
 
-  public SampleAction(String describe, long num, Map<String, List<IVertexId>> runtimeDetail) {
+  public SampleAction(
+      String describe,
+      long num,
+      Map<String, List<IVertexId>> runtimeDetail,
+      List<Rule> relateRules) {
     super(System.currentTimeMillis());
     this.describe = describe;
     this.num = num;
     this.finishDescribe = null;
     this.runtimeDetail = runtimeDetail;
+    this.relateRules = relateRules;
   }
 
   public SampleAction(
       String describe,
       long num,
       String finishDescribe,
-      Map<String, List<IVertexId>> runtimeDetail) {
+      Map<String, List<IVertexId>> runtimeDetail,
+      List<Rule> relateRules) {
     super(System.currentTimeMillis());
     this.describe = describe;
     this.num = num;
     this.finishDescribe = finishDescribe;
     this.runtimeDetail = runtimeDetail;
+    this.relateRules = relateRules;
   }
 
   public SampleAction(String describe, long num, String finishDescribe) {
@@ -66,6 +78,7 @@ public class SampleAction extends AbstractAction {
     this.num = num;
     this.finishDescribe = finishDescribe;
     this.runtimeDetail = null;
+    this.relateRules = null;
   }
 
   public SampleAction(String describe, Long num, long time) {
@@ -74,10 +87,30 @@ public class SampleAction extends AbstractAction {
     this.num = num;
     this.finishDescribe = null;
     this.runtimeDetail = null;
+    this.relateRules = null;
+  }
+
+  @Override
+  public Map<IVertexId, DebugInfoWithStartId> getRuleRuntimeInfo() {
+    Map<IVertexId, DebugInfoWithStartId> startIdMap = new HashMap<>();
+    if (this.runtimeDetail == null) {
+      return startIdMap;
+    }
+    for (IVertexId passId : getRuntimeDetail().get(PASS_START_ID_KEY)) {
+      DebugInfoWithStartId debugInfo = new DebugInfoWithStartId();
+      debugInfo.setVertexId(passId);
+      debugInfo.getHitRules().addAll(this.relateRules);
+      startIdMap.put(passId, debugInfo);
+    }
+    return startIdMap;
   }
 
   public String getDescribe() {
     return describe;
+  }
+
+  public List<Rule> getRelateRules() {
+    return relateRules;
   }
 
   public Long getNum() {
@@ -101,13 +134,13 @@ public class SampleAction extends AbstractAction {
     if (runtimeDetail != null) {
       passIds.append(", [pass]{");
       for (IVertexId vertexId :
-          this.runtimeDetail.computeIfAbsent("pass", k -> new ArrayList<>())) {
+          this.runtimeDetail.computeIfAbsent(PASS_START_ID_KEY, k -> new ArrayList<>())) {
         passIds.append(" ").append(vertexId.toString());
       }
       passIds.append("}");
       failedIds.append(", [failed]{");
       for (IVertexId vertexId :
-          this.runtimeDetail.computeIfAbsent("failed", k -> new ArrayList<>())) {
+          this.runtimeDetail.computeIfAbsent(FAILED_START_ID_KEY, k -> new ArrayList<>())) {
         failedIds.append(" ").append(vertexId.toString());
       }
       failedIds.append("}");

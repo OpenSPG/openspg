@@ -14,6 +14,8 @@
 package com.antgroup.openspg.reasoner.recorder;
 
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
+import com.antgroup.openspg.reasoner.recorder.action.DebugInfoWithStartId;
 import com.antgroup.openspg.reasoner.recorder.action.SampleAction;
 import com.antgroup.openspg.reasoner.recorder.action.SubAction;
 import java.util.List;
@@ -55,6 +57,12 @@ public class DefaultRecorder implements IExecutionRecorder {
   }
 
   @Override
+  public Map<IVertexId, DebugInfoWithStartId> getCurStageDebugInfo() {
+    SubAction nowAction = actionStack.peek();
+    return nowAction.getRuleRuntimeInfo();
+  }
+
+  @Override
   public void stageResultWithDesc(String stage, long result, String finishDescribe) {
     SubAction nowAction = actionStack.peek();
     nowAction.getSubActionList().add(new SampleAction(stage, result, finishDescribe));
@@ -62,9 +70,12 @@ public class DefaultRecorder implements IExecutionRecorder {
 
   @Override
   public void stageResultWithDetail(
-      String stage, long result, Map<String, List<IVertexId>> runtimeDetail) {
+      String stage,
+      long result,
+      Map<String, List<IVertexId>> runtimeDetail,
+      List<Rule> relateRules) {
     SubAction nowAction = actionStack.peek();
-    nowAction.getSubActionList().add(new SampleAction(stage, result, runtimeDetail));
+    nowAction.getSubActionList().add(new SampleAction(stage, result, runtimeDetail, relateRules));
   }
 
   @Override
@@ -72,10 +83,11 @@ public class DefaultRecorder implements IExecutionRecorder {
       String stage,
       long result,
       String finishDescribe,
-      Map<String, List<IVertexId>> runtimeDetail) {
+      Map<String, List<IVertexId>> runtimeDetail,
+      List<Rule> relateRules) {
     SubAction nowAction = actionStack.peek();
     nowAction
         .getSubActionList()
-        .add(new SampleAction(stage, result, finishDescribe, runtimeDetail));
+        .add(new SampleAction(stage, result, finishDescribe, runtimeDetail, relateRules));
   }
 }
