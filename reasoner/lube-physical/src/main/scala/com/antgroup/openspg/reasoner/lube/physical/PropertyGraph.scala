@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.lube.physical
 
+import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.logical.RepeatPathVar
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 
@@ -34,6 +35,16 @@ trait PropertyGraph[T <: RDG[T]] {
    * @return
    */
   def createRDG(alias: String, rdg: T): T
+
+  /**
+   * Start with specific vertex.
+   *
+   * @param alias
+   * @param id
+   * @param types
+   * @return
+   */
+  def createRDG(alias: String, id: Expr, types: Set[String]): T
 
   /**
    * Start with specific rdg with specific alias which in [[RepeatPathVar]]

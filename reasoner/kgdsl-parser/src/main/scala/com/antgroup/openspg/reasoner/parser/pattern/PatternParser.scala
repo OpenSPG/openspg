@@ -383,6 +383,9 @@ class PatternParser extends Serializable {
     var entityTypeNum = 0
 
     var labels = Set[LabelType]()
+    if (null == ctx) {
+      return labels
+    }
     ctx
       .label_name()
       .asScala
@@ -406,6 +409,9 @@ class PatternParser extends Serializable {
 
   def parseLabelPropertyList(ctx: Label_property_listContext): Map[String, Object] = {
     var propertyMap = Map[String, Object]()
+    if (null == ctx) {
+      return propertyMap
+    }
     for (i <- 0 until ctx.property_key().size()) {
       val keyName = ctx.property_key(i).getText
       propertyMap += (keyName -> parsePropertyValue(ctx.property_value(i)))
