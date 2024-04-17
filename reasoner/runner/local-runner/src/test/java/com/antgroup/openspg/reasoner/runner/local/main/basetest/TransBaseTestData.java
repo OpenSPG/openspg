@@ -89,6 +89,7 @@ public class TransBaseTestData {
     params.put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true);
     params.putAll(runParams);
     task.setParams(params);
+    task.setExecutorTimeoutMs(5 * 60 * 1000);
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("1", "User")));
 

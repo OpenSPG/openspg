@@ -139,9 +139,6 @@ class OpenSPGDslParser extends ParserInterface {
       parseBaseRuleDefine(ctx.base_rule_define(), ddlBlockWithNodes._2, ddlBlockWithNodes._3)
     val ddlBlockOp = ddlBlockWithNodes._1.ddlOp.head
     val ruleBlock = ddlInfo._1
-    if (ddlInfo._2.nonEmpty) {
-      return DDLBlock(ddlInfo._2, List.apply(ruleBlock))
-    }
     ddlBlockOp match {
       case AddProperty(s, propertyName, _) =>
         val isLastAssignTargetAlis = ruleBlock match {
@@ -176,7 +173,7 @@ class OpenSPGDslParser extends ParserInterface {
                 ProjectRule(
                   IRProperty(s.alias, propertyName),
                   Ref(ddlBlockWithNodes._3.target.alias)))))
-        DDLBlock(Set.apply(ddlBlockOp), List.apply(prjBlk))
+        DDLBlock(Set.apply(ddlBlockOp) ++ ddlInfo._2, List.apply(prjBlk))
       case AddPredicate(predicate) =>
         val attrFields = new mutable.HashMap[String, Expr]()
         addPropertiesMap.foreach(x =>
@@ -209,9 +206,9 @@ class OpenSPGDslParser extends ParserInterface {
                 predicate.source,
                 predicate.target,
                 attrFields.toMap,
-                predicate.direction))),
+                predicate.direction))) ++ ddlInfo._2,
           List.apply(depBlk))
-      case _ => DDLBlock(Set.apply(ddlBlockOp), List.apply(ruleBlock))
+      case _ => DDLBlock(Set.apply(ddlBlockOp) ++ ddlInfo._2, List.apply(ruleBlock))
     }
   }
 
@@ -298,7 +295,7 @@ class OpenSPGDslParser extends ParserInterface {
       predicate: PredicateElement): (Block, Set[DDLOp]) = {
     val matchBlock = parseGraphStructure(ctx.the_graph_structure(), head, predicate)
     val ruleBlock = parseRule(ctx.the_rule(), matchBlock)
-    val ddlOp = parseCreateAction(ctx.create_action())
+    val ddlOp = parseCreateAction(ctx.create_action(), matchBlock)
     (ruleBlock, ddlOp)
   }
 
@@ -600,11 +597,31 @@ class OpenSPGDslParser extends ParserInterface {
     curBlock
   }
 
-  def parseCreateAction(ctx: Create_actionContext): Set[DDLOp] = {
+  def parseCreateAction(ctx: Create_actionContext, matchBlock: MatchBlock): Set[DDLOp] = {
     if (ctx == null) {
       Set.empty
     } else {
-      ctx.create_action_body().asScala.map(x => parseCreateActionBody(x)).toSet
+      val ddlBlockSet = ctx.create_action_body().asScala.map(x => parseCreateActionBody(x)).toSet
+      val matchEleInfo = matchBlock.patterns.map(x => x._2.graphPattern.nodes).flatten
+      val allEleInfo = ddlBlockSet.map {
+        case AddVertex(s, _) => s.alias -> s
+        case _ => null
+      }.filter(_ != null).toMap ++ matchEleInfo
+      ddlBlockSet.map {
+        case c: AddVertex => c
+        case c: AddProperty => c
+        case c: AddPredicate => AddPredicate(
+          PredicateElement(
+            c.predicate.label,
+            c.predicate.alias,
+            allEleInfo(c.predicate.source.alias),
+            allEleInfo(c.predicate.target.alias),
+            c.predicate.fields,
+            c.predicate.direction
+          )
+        )
+      }.toSet
+
     }
   }
 

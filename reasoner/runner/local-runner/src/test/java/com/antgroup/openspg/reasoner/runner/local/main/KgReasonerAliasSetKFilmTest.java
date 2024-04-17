@@ -42,6 +42,11 @@ public class KgReasonerAliasSetKFilmTest {
     FileMutex.runTestWithMutex(this::doTest0);
   }
 
+  @Test
+  public void testUseRule0() {
+    FileMutex.runTestWithMutex(this::doTestUseRule0);
+  }
+
   private void doTest0() {
     String dsl =
         "\n"
@@ -60,6 +65,36 @@ public class KgReasonerAliasSetKFilmTest {
             new HashMap<String, Object>() {
               {
                 put("id", "'A'");
+                put(Constants.START_ALIAS, "A");
+                put(
+                    ConfigKey.KG_REASONER_MOCK_GRAPH_DATA,
+                    "Graph {\n" + "    A [User]\n" + "    B [User]\n" + "    A->B [trans]\n" + "}");
+                put(ConfigKey.KG_REASONER_OUTPUT_GRAPH, "true");
+              }
+            });
+    Assert.assertEquals(1, result.size());
+    Assert.assertEquals(2, result.get(0).length);
+    Assert.assertEquals("A", result.get(0)[0]);
+    Assert.assertEquals("B", result.get(0)[1]);
+  }
+
+  private void doTestUseRule0() {
+    String dsl =
+        "\n"
+            + "GraphStructure {\n"
+            + "    (A:User)-[p1:trans]->(B:User)\n"
+            + "}\n"
+            + "Rule {\n"
+            + " R1: A.id in ['A']"
+            + "}\n"
+            + "Action {\n"
+            + "    get(A.id, B.id)\n"
+            + "}";
+    List<String[]> result =
+        TransBaseTestData.runTestResult(
+            dsl,
+            new HashMap<String, Object>() {
+              {
                 put(Constants.START_ALIAS, "A");
                 put(
                     ConfigKey.KG_REASONER_MOCK_GRAPH_DATA,

@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.session
 
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog
+import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.logical.RepeatPathVar
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface
 import com.antgroup.openspg.reasoner.lube.physical.PropertyGraph
@@ -51,6 +52,15 @@ class EmptyPropertyGraph extends PropertyGraph[EmptyRDG] {
       alias: String,
       rdg: EmptyRDG): EmptyRDG = rdg
 
+  /**
+   * Start with specific vertex.
+   *
+   * @param alias
+   * @param id
+   * @param types
+   * @return
+   */
+  override def createRDG(alias: String, id: Expr, types: Set[String]): EmptyRDG = new EmptyRDG()
 }
 
 class EmptySession(parser: ParserInterface, catalog: Catalog)

@@ -254,12 +254,10 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
                 rootAlias = predicate.target.alias
               } else if (direction == Direction.OUT && predicate.direction == Direction.IN) {
                 rootAlias == predicate.target.alias
-              } else {
+              } else if (direction != null) {
                 rootAlias == predicate.source.alias
               }
             case AddProperty(s, _, _) =>
-              rootAlias = s.alias
-            case AddVertex(s, _) =>
               rootAlias = s.alias
             case _ =>
           }
