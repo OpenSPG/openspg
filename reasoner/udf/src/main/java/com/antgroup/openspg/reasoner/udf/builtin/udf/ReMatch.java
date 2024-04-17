@@ -27,8 +27,8 @@ public class ReMatch {
    * @param regex
    * @return
    */
-  @UdfDefine(name = "re_match", udfType = UdfOperatorTypeEnum.OPERATOR)
-  public String reMatch(String inputStr, String regex) {
+  @UdfDefine(name = "regex_match", udfType = UdfOperatorTypeEnum.OPERATOR)
+  public String regexMatch(String inputStr, String regex) {
     if (inputStr == null) {
       return null;
     }
