@@ -18,6 +18,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.MirrorVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexBizId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
@@ -144,7 +145,7 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
     }
     for (String type : JavaConversions.asJavaCollection(types)) {
       for (String idStr : idStrList) {
-        startIdSet.add(IVertexId.from(idStr, type));
+        startIdSet.add(new VertexBizId(idStr, type));
       }
     }
     if (startIdSet.isEmpty()) {
