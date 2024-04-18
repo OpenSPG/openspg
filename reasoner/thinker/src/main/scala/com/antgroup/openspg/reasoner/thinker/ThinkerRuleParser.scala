@@ -7,9 +7,8 @@ import scala.collection.mutable.ListBuffer
 import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
-import com.antgroup.openspg.reasoner.thinker.logic.graph
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{Concept, Element, Variable}
-import com.antgroup.openspg.reasoner.thinker.logic.rule.Node
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity
+import com.antgroup.openspg.reasoner.thinker.logic.rule.{ClauseEntry, EntityPattern, Node}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{
   And,
   Condition,
@@ -21,12 +20,12 @@ import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{
 class ThinkerRuleParser extends RuleExprParser {
   val expr2StringTransformer = new Expr2QlexpressTransformer()
 
-  val conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[Element]] =
+  val conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[ClauseEntry]] =
     new mutable.HashMap()
 
   def thinkerParseValueExpression(
       ctx: Value_expressionContext,
-      body: ListBuffer[Element]): Node = {
+      body: ListBuffer[ClauseEntry]): Node = {
     ctx.getChild(0) match {
       case c: Logic_value_expressionContext => thinkerParseLogicValueExpression(c, body)
       case c: Project_value_expressionContext => thinkerParseProjectValueExpression(c, body)
@@ -35,7 +34,7 @@ class ThinkerRuleParser extends RuleExprParser {
 
   def thinkerParseLogicValueExpression(
       ctx: Logic_value_expressionContext,
-      body: ListBuffer[Element]): Node = {
+      body: ListBuffer[ClauseEntry]): Node = {
     val orNodeList: List[Node] =
       ctx.logic_term().asScala.toList.map(x => thinkerParseLogicTerm(x, body))
     if (orNodeList.length > 1) {
@@ -45,7 +44,7 @@ class ThinkerRuleParser extends RuleExprParser {
     }
   }
 
-  def thinkerParseLogicTerm(ctx: Logic_termContext, body: ListBuffer[Element]): Node = {
+  def thinkerParseLogicTerm(ctx: Logic_termContext, body: ListBuffer[ClauseEntry]): Node = {
     val andNodeList: List[Node] =
       ctx.logic_factor().asScala.toList.map(x => thinkerParseLogicFactor(x, body))
     if (andNodeList.length > 1) {
@@ -55,7 +54,7 @@ class ThinkerRuleParser extends RuleExprParser {
     }
   }
 
-  def thinkerParseLogicFactor(ctx: Logic_factorContext, body: ListBuffer[Element]): Node = {
+  def thinkerParseLogicFactor(ctx: Logic_factorContext, body: ListBuffer[ClauseEntry]): Node = {
     var resultNode = thinkerParseLogicTest(ctx.logic_test(), body)
     if (ctx.not() != null) {
       resultNode = new Not(resultNode)
@@ -63,17 +62,17 @@ class ThinkerRuleParser extends RuleExprParser {
     resultNode
   }
 
-  def insertIntoMap(condition: Condition, element: Set[Element]): Unit = {
-    val existElementSet: mutable.Set[Element] =
+  def insertIntoMap(condition: Condition, element: Set[ClauseEntry]): Unit = {
+    val existElementSet: mutable.Set[ClauseEntry] =
       conditionToElementMap.getOrElseUpdate(condition, mutable.HashSet())
     existElementSet ++= element
   }
 
-  def thinkerParseLogicTest(ctx: Logic_testContext, body: ListBuffer[Element]): Node = {
-    val newBody: ListBuffer[Element] = new ListBuffer[Element]()
+  def thinkerParseLogicTest(ctx: Logic_testContext, body: ListBuffer[ClauseEntry]): Node = {
+    val newBody: ListBuffer[ClauseEntry] = new ListBuffer[ClauseEntry]()
     val resultNode: Node = ctx.getChild(0) match {
       case c: Concept_nameContext =>
-        newBody += new Concept(c.getText)
+        newBody += new EntityPattern[Void](new Entity(null, c.getText))
         new QlExpressCondition(
           expr2StringTransformer
             .transform(super.parseLogicTest(ctx))
@@ -87,7 +86,7 @@ class ThinkerRuleParser extends RuleExprParser {
     resultNode
   }
 
-  def thinkerParseExpr(ctx: ExprContext, body: ListBuffer[Element]): Node = {
+  def thinkerParseExpr(ctx: ExprContext, body: ListBuffer[ClauseEntry]): Node = {
     ctx.getChild(0) match {
       case c: Binary_exprContext => thinkerParseBinaryExpr(c, body)
       case c: Unary_exprContext => thinkerParseUnaryExpr(c, body)
@@ -95,7 +94,7 @@ class ThinkerRuleParser extends RuleExprParser {
     }
   }
 
-  def thinkerParseBinaryExpr(ctx: Binary_exprContext, body: ListBuffer[Element]): Node = {
+  def thinkerParseBinaryExpr(ctx: Binary_exprContext, body: ListBuffer[ClauseEntry]): Node = {
     ctx
       .project_value_expression()
       .asScala
@@ -108,23 +107,25 @@ class ThinkerRuleParser extends RuleExprParser {
 
   def thinkerParseProjectValueExpression(
       ctx: Project_value_expressionContext,
-      body: ListBuffer[Element]): Node = {
+      body: ListBuffer[ClauseEntry]): Node = {
     ctx.term().asScala.foreach(term => thinkerParseTerm(term, body))
     new QlExpressCondition(
       expr2StringTransformer.transform(super.parseProjectValueExpression(ctx)).head)
   }
 
-  def thinkerParseTerm(ctx: TermContext, body: ListBuffer[Element]): Unit = {
+  def thinkerParseTerm(ctx: TermContext, body: ListBuffer[ClauseEntry]): Unit = {
     ctx.factor().asScala.foreach(factor => thinkerParseFactor(factor, body))
   }
 
-  def thinkerParseFactor(ctx: FactorContext, body: ListBuffer[Element]): Unit = {
+  def thinkerParseFactor(ctx: FactorContext, body: ListBuffer[ClauseEntry]): Unit = {
     thinkerParseProjectPrimary(ctx.project_primary(), body)
   }
 
-  def thinkerParseProjectPrimary(ctx: Project_primaryContext, body: ListBuffer[Element]): Unit = {
+  def thinkerParseProjectPrimary(
+      ctx: Project_primaryContext,
+      body: ListBuffer[ClauseEntry]): Unit = {
     ctx.getChild(0) match {
-      case c: Concept_nameContext => body += new Concept(c.getText)
+      case c: Concept_nameContext => body += new EntityPattern[Void](new Entity(null, c.getText))
       case c: Value_expression_primaryContext =>
         thinkerParseValueExpressionPrimary(c, body)
       case c: Numeric_value_functionContext =>
@@ -134,7 +135,7 @@ class ThinkerRuleParser extends RuleExprParser {
 
   def thinkerParseValueExpressionPrimary(
       ctx: Value_expression_primaryContext,
-      body: ListBuffer[Element]): Unit = {
+      body: ListBuffer[ClauseEntry]): Unit = {
     ctx.getChild(0) match {
       case c: Parenthesized_value_expressionContext =>
         thinkerParseValueExpression(c.value_expression(), body)
@@ -145,39 +146,14 @@ class ThinkerRuleParser extends RuleExprParser {
 
   def thinkerParseNonParentValueExpressionPrimaryWithProperty(
       ctx: Non_parenthesized_value_expression_primary_with_propertyContext,
-      body: ListBuffer[Element]): Unit = {
-    val hasProperty: Boolean = ctx.property_name() != null && !ctx.property_name().isEmpty
+      body: ListBuffer[ClauseEntry]): Unit = {
     ctx.non_parenthesized_value_expression_primary().getChild(0) match {
-      case c: Binding_variableContext =>
-        thinkParseBindingVariable(c, body, hasProperty)
-      case c: Unsigned_value_specificationContext =>
-        thinkParseUValueSpecification(c, body)
       case c: Function_exprContext => thinkerParseFunctionExpr(c, body)
-    }
-  }
-
-  def thinkParseBindingVariable(
-      ctx: Binding_variableContext,
-      body: ListBuffer[Element],
-      hasProperty: Boolean): Unit = {
-    if (hasProperty) {
-      body += new graph.Node(ctx.binding_variable_name().getText)
-    } else {
-      body += new Variable(ctx.binding_variable_name().getText)
-    }
-  }
-
-  def thinkParseUValueSpecification(
-      ctx: Unsigned_value_specificationContext,
-      body: ListBuffer[Element]): Unit = {
-    ctx.getChild(0) match {
-      case c: Parameter_value_specificationContext =>
-        body += new Variable(ctx.parameter_value_specification().getText)
       case _ =>
     }
   }
 
-  def thinkerParseFunctionExpr(ctx: Function_exprContext, body: ListBuffer[Element]): Node = {
+  def thinkerParseFunctionExpr(ctx: Function_exprContext, body: ListBuffer[ClauseEntry]): Node = {
     val argsContext: Function_argsContext = ctx.function_args()
     if (null != argsContext) {
       argsContext
@@ -193,7 +169,7 @@ class ThinkerRuleParser extends RuleExprParser {
 
   def thinkerParseNumericFunction(
       ctx: Numeric_value_functionContext,
-      body: ListBuffer[Element]): Unit = {
+      body: ListBuffer[ClauseEntry]): Unit = {
     ctx.getChild(0) match {
       case c: Absolute_value_expressionContext =>
         thinkerParseProjectValueExpression(c.project_value_expression(), body)
@@ -204,7 +180,7 @@ class ThinkerRuleParser extends RuleExprParser {
     }
   }
 
-  def thinkerParseUnaryExpr(ctx: Unary_exprContext, body: ListBuffer[Element]): Node = {
+  def thinkerParseUnaryExpr(ctx: Unary_exprContext, body: ListBuffer[ClauseEntry]): Node = {
     this.thinkerParseValueExpression(ctx.value_expression(), body)
   }
 

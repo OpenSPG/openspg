@@ -190,9 +190,9 @@ one_edge_pattern: node_pattern (edge_pattern  node_pattern)+ ;
 edge_pattern : (full_edge_pattern|abbreviated_edge_pattern) graph_pattern_quantifier?;
 
 full_edge_pattern : full_edge_pointing_right|full_edge_pointing_left|full_edge_any_direction ;
-full_edge_pointing_right : minus_left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket right_arrow ;
+full_edge_pointing_right : minus_sign left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket right_arrow ;
 full_edge_pointing_left : left_arrow_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket minus_sign ;
-full_edge_any_direction : minus_left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket minus_sign;
+full_edge_any_direction : minus_sign left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket minus_sign;
 
 edge_pattern_pernodelimit_clause : per_node_limit oC_IntegerLiteral ;
 per_node_limit : PER_NODE_LIMIT ;
@@ -538,6 +538,8 @@ REPEAT : 'repeat' ;
 WHERE : ('W' | 'w')('H' | 'h')('E' | 'e')('R' | 'r')('E' | 'e') ;
 MATCH : ('M' | 'm')('A' | 'a')('T' | 't')('C' | 'c')('H' | 'h') ;
 RETURN : ('R' | 'r')('E' | 'e')('T' | 't')('U' | 'u')('R' | 'r')('N' | 'n') ;
+DEFINE_PRIORITY : 'DefinePriority' ;
+DESCRIPTION : 'Description';
 // rule 表达式
 or : OR_Latter|OR_Symb;
 not : NOT_Latter | NOT_Symb;
@@ -667,7 +669,7 @@ not_equals_operator : '<>'|'!=' ;
 right_arrow : '->' ;
 both_arrow : '<->' ;
 left_arrow_bracket : '<-[' ;
-minus_left_bracket : '-[' ;
+//minus_left_bracket : '-[' ;
 //right_bracket_minus : ']-' ;
 bracketed_comment_introducer : '/*' ;
 bracketed_comment_terminator : '*/' ;
@@ -964,14 +966,14 @@ Define (患者状态/`缺少血肌酐数据`) {
 	!血肌酐
 }
 */
-define_rule_on_concept : define_rule_on_concept_structure;
+define_rule_on_concept : define_rule_on_concept_structure description?;
 
 /*
-Define [基本用药方案]->(药品/`ACEI+噻嗪类利尿剂`) {
+Define (Med.drug)-[基本用药方案]->(药品/`ACEI+噻嗪类利尿剂`) {
   疾病/`高血压` and 药品/`多药方案`
 }
 */
-define_rule_on_relation_to_concept : define_rule_on_relation_to_concept_structure;
+define_rule_on_relation_to_concept : define_rule_on_relation_to_concept_structure (description)?;
 
 /*
 DefinePriority(危险水平分层) {
@@ -981,7 +983,7 @@ DefinePriority(危险水平分层) {
   低危=10
 }
 */
-define_proiority_rule_on_concept : define_priority_rule_on_concept_structure;
+define_proiority_rule_on_concept : define_priority_rule_on_concept_structure description?;
 
 define_rule_on_concept_structure:
     the_define_structure_symbol concept_declaration rule_and_action_body;
@@ -989,7 +991,7 @@ define_rule_on_concept_structure:
 concept_declaration: left_paren concept_name right_paren;
 
 define_rule_on_relation_to_concept_structure:
-    the_define_structure_symbol rule_name_declaration right_arrow concept_declaration rule_and_action_body;
+    the_define_structure_symbol variable_declaration minus_sign rule_name_declaration right_arrow concept_declaration rule_and_action_body;
 
 rule_name_declaration : left_bracket identifier right_bracket ;
 
@@ -998,7 +1000,13 @@ the_define_priority_symbol : DEFINE_PRIORITY;
 define_priority_rule_on_concept_structure:
     the_define_priority_symbol priority_declaration assiginment_structure;
 
-priority_declaration: left_paren identifier right_paren;
+priority_declaration: variable_declaration;
+
+variable_declaration: left_paren entity_type right_paren;
+
+the_description_symbol : DESCRIPTION;
+
+description: the_description_symbol colon unbroken_character_string_literal;
 
 rule_and_action_body: left_brace rule_body_content (action_body_structure)? right_brace;
 
@@ -1013,5 +1021,3 @@ assiginment_structure : left_brace muliti_assignment_statement right_brace;
 muliti_assignment_statement : assignment_statement*;
 
 assignment_statement : identifier assignment_operator logical_statement;
-
-DEFINE_PRIORITY : 'DefinePriority' ;

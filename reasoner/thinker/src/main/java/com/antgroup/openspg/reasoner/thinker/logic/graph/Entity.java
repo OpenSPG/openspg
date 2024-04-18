@@ -12,9 +12,8 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
-import lombok.Data;
+import java.util.Objects;
 
-@Data
 public class Entity<K> implements Element {
   private K id;
   private String type;
@@ -24,5 +23,58 @@ public class Entity<K> implements Element {
   public Entity(K id, String type) {
     this.id = id;
     this.type = type;
+  }
+
+  /**
+   * Getter method for property <tt>id</tt>.
+   *
+   * @return property value of id
+   */
+  public K getId() {
+    return id;
+  }
+
+  /**
+   * Setter method for property <tt>id</tt>.
+   *
+   * @param id value to be assigned to property id
+   */
+  public void setId(K id) {
+    this.id = id;
+  }
+
+  /**
+   * Getter method for property <tt>type</tt>.
+   *
+   * @return property value of type
+   */
+  public String getType() {
+    return type;
+  }
+
+  /**
+   * Setter method for property <tt>type</tt>.
+   *
+   * @param type value to be assigned to property type
+   */
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Entity)) {
+      return false;
+    }
+    Entity<?> entity = (Entity<?>) o;
+    return Objects.equals(id, entity.id) && Objects.equals(type, entity.type);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, type);
   }
 }

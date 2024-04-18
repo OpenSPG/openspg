@@ -3,8 +3,14 @@ package com.antgroup.openspg.reasoner.thinker
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{Concept, Element, Variable}
-import com.antgroup.openspg.reasoner.thinker.logic.rule.{Node, Rule}
+import com.antgroup.openspg.reasoner.thinker.logic.graph.{Element, Entity}
+import com.antgroup.openspg.reasoner.thinker.logic.rule.{
+  ClauseEntry,
+  EntityPattern,
+  Node,
+  Rule,
+  TriplePattern
+}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{
   And,
   Condition,
@@ -30,15 +36,12 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     val ruleList: List[Rule] = parser.parseSimplifyDsl(thinkerDsl)
     assert(ruleList.size == 1)
     val rule: Rule = ruleList.head
-    assert(rule.getHead.isInstanceOf[Concept])
-    assert(rule.getTriggerName == null)
+    assert(rule.getHead.isInstanceOf[EntityPattern[_]])
     val body = rule.getBody.asScala
-    assert(body.size == 4)
+    assert(body.size == 1)
     // body
-    val elementCount = calculateElementCount(body.toList)
-    assert(elementCount.conceptCount == 1)
-    assert(elementCount.variableCount == 2)
-    assert(elementCount.nodeCount == 1)
+    val clauseCount = calculateClauseCount(body.toList)
+    assert(clauseCount.entityPattern == 1)
 
     val root = rule.getRoot
     assert(root.isInstanceOf[Or])
@@ -51,16 +54,11 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     assert(secondLine.isInstanceOf[QlExpressCondition])
 
     // conditionToElementMap
-    val conditionToElementMap: Map[Condition, Set[Element]] =
+    val conditionToElementMap: Map[Condition, Set[ClauseEntry]] =
       parser.getConditionToElementMap()
-    val conditionList = getAllConditionInNode(root)
-    for (condition <- conditionList) {
-      assert(conditionToElementMap.contains(condition))
-      assert(conditionToElementMap(condition).size == 1)
-    }
     assert(
       conditionToElementMap(new QlExpressCondition("get_value(\"高血压分层/`临床并发症`\")")).head
-        .equals(new Concept("高血压分层/`临床并发症`")))
+        .equals(new EntityPattern[Void](new Entity(null, "高血压分层/`临床并发症`"))))
   }
 
   def getAllConditionInNode(node: Node): List[Condition] = {
@@ -79,22 +77,19 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     conditionList.toList
   }
 
-  class ElementCount {
-    var conceptCount = 0
-    var variableCount = 0
-    var nodeCount = 0
+  class ClauseCount {
+    var entityPattern = 0
+    var triplePattern = 0
   }
 
-  def calculateElementCount(body: List[Element]): ElementCount = {
-    val elementCount = new ElementCount()
+  def calculateClauseCount(body: List[ClauseEntry]): ClauseCount = {
+    val clauseCount = new ClauseCount()
     body.foreach {
-      case concept: Concept => elementCount.conceptCount += 1
-      case variable: Variable => elementCount.variableCount += 1
-      case node: com.antgroup.openspg.reasoner.thinker.logic.graph.Node =>
-        elementCount.nodeCount += 1
+      case _: EntityPattern[_] => clauseCount.entityPattern += 1
+      case _: TriplePattern => clauseCount.triplePattern += 1
       case _ =>
     }
-    elementCount
+    clauseCount
   }
 
   it("test2 define rule on concept") {
@@ -107,7 +102,7 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
         |}
         |""".stripMargin
     val rule: Rule = parser.parseSimplifyDsl(thinkerDsl).head
-    assert(rule.getBody.size() == 4)
+    assert(rule.getBody.size() == 3)
     val root = rule.getRoot
     assert(root.isInstanceOf[Or])
     val outermostOrChildrenList = root.asInstanceOf[Or].getChildren.asScala
@@ -138,15 +133,24 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
   it("test define_rule_on_relation_to_concept") {
     val thinkerDsl =
       """
-        |Define [基本用药方案]->(药品/`ACEI+噻嗪类利尿剂`) {
+        |Define (Med.drug)-[基本用药方案]->(药品/`ACEI+噻嗪类利尿剂`) {
         |  R1: 疾病/`高血压` and 药品/`多药方案`
         |}
+        |Description: "本品与其他解热、镇痛、抗炎药物同用时可增加胃肠道不良反应，并可能导致溃疡。"
         |""".stripMargin
     val rule: Rule = parser.parseSimplifyDsl(thinkerDsl).head
-    assert(rule.getTriggerName.equals("基本用药方案"))
+    assert(rule.getHead.isInstanceOf[TriplePattern])
+    val pattern = rule.getHead.asInstanceOf[TriplePattern].getTriple
+    val subject = pattern.getSubject
+    val predicate = pattern.getPredicate
+    val object_ = pattern.getObject
+    assert(subject.isInstanceOf[Entity[_]])
+    assert(subject.asInstanceOf[Entity[_]].getType.equals("Med.drug"))
+    assert(predicate.asInstanceOf[Entity[_]].getType.equals("基本用药方案"))
+    assert(object_.asInstanceOf[Entity[_]].getType.equals("药品/`ACEI+噻嗪类利尿剂`"))
     assert(rule.getBody.size() == 2)
     assert(rule.getRoot.isInstanceOf[And])
     assert(rule.getRoot.asInstanceOf[And].getChildren.size() == 2)
+    assert(rule.getDesc.equals("\"本品与其他解热、镇痛、抗炎药物同用时可增加胃肠道不良反应，并可能导致溃疡。\""))
   }
-
 }

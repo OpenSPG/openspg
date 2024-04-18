@@ -8,17 +8,20 @@ import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.Or;
 import com.antgroup.openspg.reasoner.warehouse.common.VertexSubGraph;
 import java.util.Map;
 
-public interface RuleNodeVisitor<R> {
+public abstract class RuleNodeVisitor<R> {
+  private TreeLogger logger;
 
-  R visit(Or node, VertexSubGraph vertexGraph, Map<String, Object> context, TreeLogger treeLogger);
+  protected RuleNodeVisitor() {}
 
-  R visit(And and, VertexSubGraph vertexGraph, Map<String, Object> context, TreeLogger treeLogger);
+  protected RuleNodeVisitor(TreeLogger logger) {
+    this.logger = logger;
+  }
 
-  R visit(Not not, VertexSubGraph vertexGraph, Map<String, Object> context, TreeLogger treeLogger);
+  public abstract R visit(Or node, VertexSubGraph vertexGraph, Map<String, Object> context);
 
-  R visit(
-      Condition condition,
-      VertexSubGraph vertexGraph,
-      Map<String, Object> context,
-      TreeLogger treeLogger);
+  public abstract R visit(And node, VertexSubGraph vertexGraph, Map<String, Object> context);
+
+  public abstract R visit(Not node, VertexSubGraph vertexGraph, Map<String, Object> context);
+
+  public abstract R visit(Condition node, VertexSubGraph vertexGraph, Map<String, Object> context);
 }

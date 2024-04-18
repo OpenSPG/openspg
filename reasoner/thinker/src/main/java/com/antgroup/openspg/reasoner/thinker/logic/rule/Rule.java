@@ -4,10 +4,10 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Rule implements Serializable {
-    private List<ClauseEntry> body;
-    private ClauseEntry       head;
-    private Node              root;
-    private String            desc;
+  private List<ClauseEntry> body;
+  private ClauseEntry head;
+  private Node root;
+  private String desc;
 
   /**
    * Getter method for property <tt>body</tt>.

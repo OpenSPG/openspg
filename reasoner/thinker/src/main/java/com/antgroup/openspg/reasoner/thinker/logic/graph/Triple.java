@@ -12,9 +12,6 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
-import lombok.Data;
-
-@Data
 public class Triple implements Element {
   private Element subject;
   private Element predicate;
@@ -25,6 +22,60 @@ public class Triple implements Element {
   public Triple(Element subject, Element predicate, Element object) {
     this.subject = subject;
     this.predicate = predicate;
+    this.object = object;
+  }
+
+  /**
+   * Getter method for property <tt>subject</tt>.
+   *
+   * @return property value of subject
+   */
+  public Element getSubject() {
+    return subject;
+  }
+
+  /**
+   * Setter method for property <tt>subject</tt>.
+   *
+   * @param subject value to be assigned to property subject
+   */
+  public void setSubject(Element subject) {
+    this.subject = subject;
+  }
+
+  /**
+   * Getter method for property <tt>predicate</tt>.
+   *
+   * @return property value of predicate
+   */
+  public Element getPredicate() {
+    return predicate;
+  }
+
+  /**
+   * Setter method for property <tt>predicate</tt>.
+   *
+   * @param predicate value to be assigned to property predicate
+   */
+  public void setPredicate(Element predicate) {
+    this.predicate = predicate;
+  }
+
+  /**
+   * Getter method for property <tt>object</tt>.
+   *
+   * @return property value of object
+   */
+  public Element getObject() {
+    return object;
+  }
+
+  /**
+   * Setter method for property <tt>object</tt>.
+   *
+   * @param object value to be assigned to property object
+   */
+  public void setObject(Element object) {
     this.object = object;
   }
 }

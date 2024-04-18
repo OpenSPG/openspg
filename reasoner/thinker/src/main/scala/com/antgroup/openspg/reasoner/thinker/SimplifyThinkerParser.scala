@@ -6,15 +6,21 @@ import scala.collection.mutable.ListBuffer
 
 import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.parser.{LexerInit, OpenSPGDslParser}
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{Concept, Element}
-import com.antgroup.openspg.reasoner.thinker.logic.rule.{Node, Rule}
+import com.antgroup.openspg.reasoner.thinker.logic.graph.{Element, Entity, Triple}
+import com.antgroup.openspg.reasoner.thinker.logic.rule.{
+  ClauseEntry,
+  EntityPattern,
+  Node,
+  Rule,
+  TriplePattern
+}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{Condition, Or}
 
 class SimplifyThinkerParser {
   var param: Map[String, Object] = Map.empty
   var thinkerRuleParser: ThinkerRuleParser = new ThinkerRuleParser()
 
-  private var conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[Element]] =
+  private var conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[ClauseEntry]] =
     new mutable.HashMap()
 
   def parseSimplifyDsl(
@@ -60,15 +66,18 @@ class SimplifyThinkerParser {
 
   def parseDefineRuleOnConcept(ctx: Define_rule_on_conceptContext): Rule = {
     val rule = new Rule()
-    rule.setTriggerName(null)
     rule.setHead(
-      new Concept(
-        ctx
-          .define_rule_on_concept_structure()
-          .concept_declaration()
-          .concept_name()
-          .getText))
-
+      new EntityPattern[Void](
+        new Entity(
+          null,
+          ctx
+            .define_rule_on_concept_structure()
+            .concept_declaration()
+            .concept_name()
+            .getText)))
+    if (null != ctx.description()) {
+      rule.setDesc(ctx.description().unbroken_character_string_literal().getText)
+    }
     val ruleAndAction: Rule_and_action_bodyContext =
       ctx.define_rule_on_concept_structure().rule_and_action_body()
     parseRuleAndAction(ruleAndAction, rule)
@@ -86,8 +95,9 @@ class SimplifyThinkerParser {
     }
   }
 
-  def parseMultiLogicalStatement(ctx: List[Logical_statementContext]): (Node, List[Element]) = {
-    val body: ListBuffer[Element] = new mutable.ListBuffer[Element]()
+  def parseMultiLogicalStatement(
+      ctx: List[Logical_statementContext]): (Node, List[ClauseEntry]) = {
+    val body: ListBuffer[ClauseEntry] = new mutable.ListBuffer[ClauseEntry]()
     if (ctx.length > 1) {
       val orChildrenList: ListBuffer[Node] = new mutable.ListBuffer[Node]()
       ctx.foreach(logicalStatement => {
@@ -102,7 +112,9 @@ class SimplifyThinkerParser {
     }
   }
 
-  def parseOneLogicalStatement(ctx: Logical_statementContext, body: ListBuffer[Element]): Node = {
+  def parseOneLogicalStatement(
+      ctx: Logical_statementContext,
+      body: ListBuffer[ClauseEntry]): Node = {
     val node = thinkerRuleParser.thinkerParseValueExpression(ctx.value_expression(), body)
     conditionToElementMap ++= thinkerRuleParser.conditionToElementMap
     node
@@ -110,19 +122,31 @@ class SimplifyThinkerParser {
 
   def parseDefineRuleOnRelationToConcept(ctx: Define_rule_on_relation_to_conceptContext): Rule = {
     val rule = new Rule()
-    rule.setTriggerName(
-      ctx
-        .define_rule_on_relation_to_concept_structure()
-        .rule_name_declaration()
-        .identifier()
-        .getText)
+    val subject = ctx
+      .define_rule_on_relation_to_concept_structure()
+      .variable_declaration()
+      .entity_type()
+      .getText
+    val predicate = ctx
+      .define_rule_on_relation_to_concept_structure()
+      .rule_name_declaration()
+      .identifier()
+      .getText
+    val o = ctx
+      .define_rule_on_relation_to_concept_structure()
+      .concept_declaration()
+      .concept_name()
+      .getText
+
     rule.setHead(
-      new Concept(
-        ctx
-          .define_rule_on_relation_to_concept_structure()
-          .concept_declaration()
-          .concept_name()
-          .getText))
+      new TriplePattern(
+        new Triple(
+          new Entity[Void](null, subject),
+          new Entity[Void](null, predicate),
+          new Entity[Void](null, o))))
+    if (ctx.description() != null) {
+      rule.setDesc(ctx.description().unbroken_character_string_literal().getText)
+    }
 
     val ruleAndAction: Rule_and_action_bodyContext =
       ctx.define_rule_on_relation_to_concept_structure().rule_and_action_body()
@@ -134,7 +158,7 @@ class SimplifyThinkerParser {
     throw new UnsupportedOperationException("DefinePriority not support yet")
   }
 
-  def getConditionToElementMap(): Map[Condition, Set[Element]] = {
+  def getConditionToElementMap(): Map[Condition, Set[ClauseEntry]] = {
     conditionToElementMap.toMap.map(x => (x._1, x._2.toSet))
   }
 
