@@ -160,4 +160,7 @@ public class ConfigKey {
 
   /** the devId of akg task */
   public static final String DEV_ID = "devId";
+
+  /** disable drop */
+  public static final String REASONER_DISABLE_DROP_OP = "kg.reasoner.disable.drop.op";
 }

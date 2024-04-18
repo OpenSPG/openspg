@@ -151,6 +151,9 @@ public class LocalRDG extends RDG<LocalRDG> {
   /** carry all tranversal graph data */
   protected boolean isCarryTraversalGraph = false;
 
+  /** disable drop op */
+  protected boolean disableDropOp = false;
+
   /** local rdg with graph state */
   public LocalRDG(
       GraphState<IVertexId> graphState,
@@ -863,6 +866,9 @@ public class LocalRDG extends RDG<LocalRDG> {
 
   @Override
   public LocalRDG dropFields(Set<Var> fields) {
+    if (disableDropOp) {
+      return this;
+    }
     java.util.Set<Var> dropFieldSet = new HashSet<>(JavaConversions.asJavaCollection(fields));
     if (CollectionUtils.isEmpty(dropFieldSet)) {
       return this;
@@ -1297,5 +1303,9 @@ public class LocalRDG extends RDG<LocalRDG> {
    */
   public void setStrictMaxPathLimit(Long strictMaxPathLimit) {
     this.strictMaxPathLimit = strictMaxPathLimit;
+  }
+
+  public void setDisableDropOp(boolean disableDropOp) {
+    this.disableDropOp = disableDropOp;
   }
 }

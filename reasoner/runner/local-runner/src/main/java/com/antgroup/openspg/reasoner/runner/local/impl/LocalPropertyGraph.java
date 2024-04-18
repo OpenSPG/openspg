@@ -84,6 +84,7 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
             isCarryTraversalGraph);
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
+    result.setDisableDropOp(getDisableDropOp());
     return result;
   }
 
@@ -115,6 +116,7 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
             false);
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
+    result.setDisableDropOp(getDisableDropOp());
     return result;
   }
 
@@ -161,9 +163,10 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
             getTaskId(),
             // subquery can not carry all graph
             getExecutionRecorder(),
-            false);
+            isCarryTraversalGraph);
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
+    result.setDisableDropOp(getDisableDropOp());
     return result;
   }
 
@@ -259,6 +262,11 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
       return null;
     }
     return Long.parseLong(String.valueOf(maxPathLimitObj));
+  }
+
+  private boolean getDisableDropOp() {
+    Object disableDropOpObj = this.task.getParams().get(ConfigKey.REASONER_DISABLE_DROP_OP);
+    return "true".equals(String.valueOf(disableDropOpObj));
   }
 
   private IExecutionRecorder getExecutionRecorder() {
