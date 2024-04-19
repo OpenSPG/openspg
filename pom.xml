@@ -17,7 +17,7 @@
 
   <groupId>com.antgroup.openspg</groupId>
   <artifactId>openspg-parent</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>20240419-KGENGINE-SNAPSHOT</version>
   <packaging>pom</packaging>
   <licenses>
     <license>
