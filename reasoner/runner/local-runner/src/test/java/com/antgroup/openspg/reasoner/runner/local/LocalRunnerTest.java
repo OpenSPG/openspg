@@ -326,46 +326,47 @@ public class LocalRunnerTest {
   @Test
   public void doTestConcatAggIfDsl() {
     String dsl =
-            "\n"
-                    + "GraphStructure {\n"
-                    + "  (user:TuringCore.AlipayUser)<-[e:traveler]-(te:TuringCore.TravelEvent)\n"
-                    + "}\n"
-                    + "Rule{\n"
-                    + "  concatEps = group(user).ConcatAggIf(te.travelMode == 'train', te.travelEndpoint)\n"
-                    + "  R1: concatEps != ''\n"
-                    + "}\n"
-                    + "Action{\n"
-                    + "  get(user.id, concatEps)\n"
-                    + "}";
+        "\n"
+            + "GraphStructure {\n"
+            + "  (user:TuringCore.AlipayUser)<-[e:traveler]-(te:TuringCore.TravelEvent)\n"
+            + "}\n"
+            + "Rule{\n"
+            + "  concatEps = group(user).ConcatAggIf(te.travelMode == 'train', te.travelEndpoint)\n"
+            + "  R1: concatEps != ''\n"
+            + "}\n"
+            + "Action{\n"
+            + "  get(user.id, concatEps)\n"
+            + "}";
 
     LocalReasonerTask task = new LocalReasonerTask();
     task.setDsl(dsl);
     task.setGraphLoadClass(
-            "com.antgroup.openspg.reasoner.runner.local.loader.TestCrowdGraphLoader");
+        "com.antgroup.openspg.reasoner.runner.local.loader.TestCrowdGraphLoader");
 
     // add mock catalog
     Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
     schema.put(
-            "CKG.AdministrativeArea", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+        "CKG.AdministrativeArea", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
     schema.put(
-            "TuringCore.TravelMode", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+        "TuringCore.TravelMode", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
     schema.put(
-            "TuringCore.AlipayUser", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+        "TuringCore.AlipayUser", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
     schema.put(
-            "TuringCore.TravelEvent",
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "eventTime", "travelMode", "travelEndpoint")));
+        "TuringCore.TravelEvent",
+        Convert2ScalaUtil.toScalaImmutableSet(
+            Sets.newHashSet("id", "eventTime", "travelMode", "travelEndpoint")));
     schema.put(
-            "TuringCore.AlipayUser_workLoc_CKG.AdministrativeArea",
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+        "TuringCore.AlipayUser_workLoc_CKG.AdministrativeArea",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
     schema.put(
-            "TuringCore.TravelEvent_traveler_TuringCore.AlipayUser",
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+        "TuringCore.TravelEvent_traveler_TuringCore.AlipayUser",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
     schema.put(
-            "TuringCore.TravelEvent_travelEndpoint_CKG.AdministrativeArea",
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+        "TuringCore.TravelEvent_travelEndpoint_CKG.AdministrativeArea",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
     schema.put(
-            "TuringCore.TravelEvent_travelMode_TuringCore.TravelMode",
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+        "TuringCore.TravelEvent_travelMode_TuringCore.TravelMode",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
     Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
     catalog.init();
     task.setCatalog(catalog);
