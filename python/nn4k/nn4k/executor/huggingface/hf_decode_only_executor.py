@@ -29,6 +29,7 @@ class HFDecodeOnlyExecutor(HFLLMExecutor):
         mode,
         resume_from_checkpoint=False,
         device=None,
+        model_to_cuda=True,
         **kwargs,
     ):
         if device is None or "auto":
@@ -104,7 +105,9 @@ class HFDecodeOnlyExecutor(HFLLMExecutor):
 
         if mode == "inference":
             model.eval()
-        model.to(device)
+
+        if model_to_cuda:
+            model.to(device)
 
         return model
 

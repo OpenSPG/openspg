@@ -16,7 +16,7 @@ from nn4k.nnhub import SimpleNNHub
 
 
 class StubExecutor(LLMExecutor):
-    def load_model(self, args=None, mode=None, **kwargs):
+    def load_model(self, args=None, mode=None, model_to_cuda=True, **kwargs):
         pass
 
     def warmup_inference(self, args=None, **kwargs):
