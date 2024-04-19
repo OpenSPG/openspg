@@ -36,9 +36,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import scala.Tuple2;
 
@@ -190,37 +192,52 @@ public class UdfMngImpl implements UdfMng {
   }
 
   private void addUdfMeta(IUdfMeta udfMeta) {
-    String name = udfMeta.getName();
-    Map<String, IUdfMeta> metaMap =
-        udfMetaMap.computeIfAbsent(UdfName.from(name), k -> new HashMap<>());
-    String paramKeyString = UdfUtils.getTypeKeyString(udfMeta.getParamTypeList(), "(", ")");
-    if (metaMap.containsKey(paramKeyString)) {
-      throw new UdfExistsException("duplicated udf " + udfMeta, null);
+    Set<UdfName> nameSet = new HashSet<>();
+    nameSet.add(UdfName.from(udfMeta.getName()));
+    for (String compatibleName : udfMeta.getCompatibleNames()) {
+      nameSet.add(UdfName.from(compatibleName));
     }
-    metaMap.put(paramKeyString, udfMeta);
+    for (UdfName udfName : nameSet) {
+      Map<String, IUdfMeta> metaMap = udfMetaMap.computeIfAbsent(udfName, k -> new HashMap<>());
+      String paramKeyString = UdfUtils.getTypeKeyString(udfMeta.getParamTypeList(), "(", ")");
+      if (metaMap.containsKey(paramKeyString)) {
+        throw new UdfExistsException("duplicated udf " + udfMeta, null);
+      }
+      metaMap.put(paramKeyString, udfMeta);
+    }
   }
 
   private void addUdafMeta(UdafMeta udafMeta) {
-    String name = udafMeta.getName();
-    Map<String, UdafMeta> metaMap =
-        udafMetaMap.computeIfAbsent(UdfName.from(name), k -> new HashMap<>());
-    String paramKeyString =
-        UdfUtils.getTypeKeyString(Lists.newArrayList(udafMeta.getRowDataType()), "(", ")");
-    if (metaMap.containsKey(paramKeyString)) {
-      throw new UdfExistsException("duplicated udaf " + udafMeta, null);
+    Set<UdfName> nameSet = new HashSet<>();
+    nameSet.add(UdfName.from(udafMeta.getName()));
+    for (String compatibleName : udafMeta.getCompatibleNames()) {
+      nameSet.add(UdfName.from(compatibleName));
     }
-    metaMap.put(paramKeyString, udafMeta);
+    for (UdfName udfName : nameSet) {
+      Map<String, UdafMeta> metaMap = udafMetaMap.computeIfAbsent(udfName, k -> new HashMap<>());
+      String paramKeyString =
+          UdfUtils.getTypeKeyString(Lists.newArrayList(udafMeta.getRowDataType()), "(", ")");
+      if (metaMap.containsKey(paramKeyString)) {
+        throw new UdfExistsException("duplicated udaf " + udafMeta, null);
+      }
+      metaMap.put(paramKeyString, udafMeta);
+    }
   }
 
   private void addUdtfMeta(UdtfMeta udtfMeta) {
-    String name = udtfMeta.getName();
-    Map<String, UdtfMeta> metaMap =
-        udtfMetaMap.computeIfAbsent(UdfName.from(name), k -> new HashMap<>());
-    String paramKeyString = UdfUtils.getTypeKeyString(udtfMeta.getRowDataTypes(), "(", ")");
-    if (metaMap.containsKey(paramKeyString)) {
-      throw new UdfExistsException("duplicated udaf " + udtfMeta, null);
+    Set<UdfName> nameSet = new HashSet<>();
+    nameSet.add(UdfName.from(udtfMeta.getName()));
+    for (String compatibleName : udtfMeta.getCompatibleNames()) {
+      nameSet.add(UdfName.from(compatibleName));
     }
-    metaMap.put(paramKeyString, udtfMeta);
+    for (UdfName udfName : nameSet) {
+      Map<String, UdtfMeta> metaMap = udtfMetaMap.computeIfAbsent(udfName, k -> new HashMap<>());
+      String paramKeyString = UdfUtils.getTypeKeyString(udtfMeta.getRowDataTypes(), "(", ")");
+      if (metaMap.containsKey(paramKeyString)) {
+        throw new UdfExistsException("duplicated udaf " + udtfMeta, null);
+      }
+      metaMap.put(paramKeyString, udtfMeta);
+    }
   }
 
   @Override
