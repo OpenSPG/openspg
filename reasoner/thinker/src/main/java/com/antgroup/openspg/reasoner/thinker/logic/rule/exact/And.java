@@ -13,7 +13,6 @@
 package com.antgroup.openspg.reasoner.thinker.logic.rule.exact;
 
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Node;
-import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleNodeVisitor;
 import com.antgroup.openspg.reasoner.warehouse.common.VertexSubGraph;
 import java.util.List;
@@ -24,12 +23,15 @@ import lombok.Data;
 public class And implements Node {
   private List<Node> children;
 
+  public And() {}
+
+  public And(List<Node> children) {
+    this.children = children;
+  }
+
   @Override
   public <R> R accept(
-      VertexSubGraph vertexGraph,
-      Map<String, Object> context,
-      RuleNodeVisitor<R> visitor,
-      TreeLogger treeLogger) {
-    return visitor.visit(this, vertexGraph, context, treeLogger);
+      VertexSubGraph vertexGraph, Map<String, Object> context, RuleNodeVisitor<R> visitor) {
+    return visitor.visit(this, vertexGraph, context);
   }
 }

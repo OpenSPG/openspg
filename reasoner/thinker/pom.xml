@@ -24,22 +24,39 @@
 
   <packaging>jar</packaging>
 
+  <properties>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.antgroup.openspg.reasoner</groupId>
       <artifactId>reasoner-warehouse-common</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-kgdsl-parser</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
-
     <dependency>
       <groupId>com.antgroup.openspg.reasoner</groupId>
       <artifactId>reasoner-runner-common</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.scalatest</groupId>
+      <artifactId>scalatest_${scala.binary.version}</artifactId>
+    </dependency>
   </dependencies>
-
 </project>

@@ -12,6 +12,7 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
+import java.util.Objects;
 import lombok.Data;
 
 @Data
@@ -20,7 +21,24 @@ public class Node implements Element {
 
   private Node() {}
 
-  private Node(String type) {
+  public Node(String type) {
     this.type = type;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Node)) {
+      return false;
+    }
+    Node node = (Node) o;
+    return Objects.equals(type, node.type);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(type);
   }
 }
