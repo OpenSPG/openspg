@@ -265,7 +265,10 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
   }
 
   private boolean getDisableDropOp() {
-    Object disableDropOpObj = this.task.getParams().get(ConfigKey.REASONER_DISABLE_DROP_OP);
+    Object disableDropOpObj = null;
+    if (null != task && null != this.task.getParams()) {
+      disableDropOpObj = this.task.getParams().get(ConfigKey.REASONER_DISABLE_DROP_OP);
+    }
     return "true".equals(String.valueOf(disableDropOpObj));
   }
 
