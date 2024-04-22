@@ -1295,28 +1295,28 @@ public class TransitiveOptionalTest {
   @Test
   public void testCreateInstance() {
     String dsl =
-//        "Define (s:Custid)-[p:strNum]->(o:Int) {\n"
-//            + "    GraphStructure {\n"
-//            + "        (s)<-[pp:hasCust]-(str:STR)\n"
-//            + "    }\n"
-//            + "    Rule {\n"
-//            + "        o = group(s).countIf(str.status == 'CLOSE', str)\n"
-//            + "    }\n"
-//            + "}\n"
-//            + "\n"
-//            + "Define (s:Custid)-[p:isInWhiteBlack]->(o:Boolean) {\n"
-//            + "    GraphStructure {\n"
-//            + "        (s)<-[:hasCust]-(str:STR)\n"
-//            + "    }\n"
-//            + "    Rule {\n"
-//            + "        R1: str.matchrule == '0202'\n"
-//            + "        R2: str.isreport == '1' \n"
-//            + "\n"
-//            + "        o = (R1 and R2)\n"
-//            + "    }\n"
-//            + "}\n"
-//            + "\n"
-            " "
+        //        "Define (s:Custid)-[p:strNum]->(o:Int) {\n"
+        //            + "    GraphStructure {\n"
+        //            + "        (s)<-[pp:hasCust]-(str:STR)\n"
+        //            + "    }\n"
+        //            + "    Rule {\n"
+        //            + "        o = group(s).countIf(str.status == 'CLOSE', str)\n"
+        //            + "    }\n"
+        //            + "}\n"
+        //            + "\n"
+        //            + "Define (s:Custid)-[p:isInWhiteBlack]->(o:Boolean) {\n"
+        //            + "    GraphStructure {\n"
+        //            + "        (s)<-[:hasCust]-(str:STR)\n"
+        //            + "    }\n"
+        //            + "    Rule {\n"
+        //            + "        R1: str.matchrule == '0202'\n"
+        //            + "        R2: str.isreport == '1' \n"
+        //            + "\n"
+        //            + "        o = (R1 and R2)\n"
+        //            + "    }\n"
+        //            + "}\n"
+        //            + "\n"
+        " "
             + "Define (s:Custid)-[p:isAggregator]->(o:Boolean) {\n"
             + "    GraphStructure {\n"
             + "        (s)<-[e:complained]-(u1:Custid)\n"
@@ -1365,8 +1365,8 @@ public class TransitiveOptionalTest {
             + "        (c1)-[:trade]->(c2:Custid)\n"
             + "    }\n"
             + "    Rule {\n"
-//            + "        R1: c.isSameMedia \n"
-//            + "        R2: s.hasSameMedia \n"
+            //            + "        R1: c.isSameMedia \n"
+            //            + "        R2: s.hasSameMedia \n"
             + "        o = true \n"
             + "    }\n"
             + "    Action {\n"
@@ -1383,15 +1383,15 @@ public class TransitiveOptionalTest {
             + "GraphStructure {"
             + "  A [Custid, __start__ = 'true']\n"
             + "  B [Gang]\n"
-//            + "  C [Custid]\n"
+            //            + "  C [Custid]\n"
             + "  B->A [has] as e1\n"
-//            + "  B->C [include] as e2\n"
+            //            + "  B->C [include] as e2\n"
             + "}\n"
             + "Rule {\n"
-//            + "  R0: B.hasSameMedia || B.hasTrader\n"
+            //            + "  R0: B.hasSameMedia || B.hasTrader\n"
 
             + "  R1: B.hasSameMedia || B.hasTrader\n"
-//            + "  R2: B.hasSameMedia || B.hasTrader\n"
+            //            + "  R2: B.hasSameMedia || B.hasTrader\n"
 
             + "}\n"
             + "Action {\n"
@@ -1422,17 +1422,15 @@ public class TransitiveOptionalTest {
 
     schema.put("Gang", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("cid", "name")));
     schema.put("Gang_has_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
-//    schema.put("Gang_include_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    //    schema.put("Gang_include_Custid",
+    // Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
 
     schema.put(
-        "Custid_complained_Custid",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+        "Custid_complained_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
-            "Custid_trade_Custid",
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+        "Custid_trade_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
-            "Custid_sameMedia_Custid",
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+        "Custid_sameMedia_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
         "STR_hasCust_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("createMemo")));
 
@@ -1462,18 +1460,17 @@ public class TransitiveOptionalTest {
           constructionVertex("A3", "Custid", "name", "A3", "cid", "a3"),
           constructionVertex("A4", "Custid", "name", "A4", "cid", "a4"));
 
-//          constructionVertex("B1", "Gang", "name", "B2", "cid", "b1"));
+      //          constructionVertex("B1", "Gang", "name", "B2", "cid", "b1"));
     }
 
     @Override
     public List<IEdge<String, IProperty>> genEdgeList() {
       return Lists.newArrayList(
-//          constructionEdge("B1", "has", "A1", "info", "b1_a1"),
-//          constructionEdge("B1", "has", "A2", "info", "b1_a2"),
+          //          constructionEdge("B1", "has", "A1", "info", "b1_a1"),
+          //          constructionEdge("B1", "has", "A2", "info", "b1_a2"),
           constructionEdge("A1", "complained", "A2", "info", "a1ca2"),
           constructionEdge("A3", "trade", "A4", "info", "a2trd3"),
           constructionEdge("A2", "sameMedia", "A3", "info", "a3smda4"));
-
     }
   }
 }
