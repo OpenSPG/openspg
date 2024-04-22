@@ -1084,7 +1084,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     long count = 0;
     for (KgGraph<IVertexId> kgGraph : this.kgGraphList) {
       IVertex<IVertexId, IProperty> willAddedVertex = impl.extractVertex(kgGraph);
-
+      this.graphState.addVertex(willAddedVertex);
       // add to result list
       this.resultVertexSet.add(willAddedVertex);
       count++;

@@ -1295,36 +1295,33 @@ public class TransitiveOptionalTest {
   @Test
   public void testCreateInstance() {
     String dsl =
-        "Define (s:Custid)-[p:strNum]->(o:Int) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)<-[pp:hasCust]-(str:STR)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            + "        o = group(s).countIf(str.status == 'CLOSE', str)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "Define (s:Custid)-[p:isInWhiteBlack]->(o:Boolean) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)<-[:hasCust]-(str:STR)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            + "        R1: str.matchrule == '0202'\n"
-            + "        R2: str.isreport == '1' \n"
-            + "\n"
-            + "        o = (R1 and R2)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
+//        "Define (s:Custid)-[p:strNum]->(o:Int) {\n"
+//            + "    GraphStructure {\n"
+//            + "        (s)<-[pp:hasCust]-(str:STR)\n"
+//            + "    }\n"
+//            + "    Rule {\n"
+//            + "        o = group(s).countIf(str.status == 'CLOSE', str)\n"
+//            + "    }\n"
+//            + "}\n"
+//            + "\n"
+//            + "Define (s:Custid)-[p:isInWhiteBlack]->(o:Boolean) {\n"
+//            + "    GraphStructure {\n"
+//            + "        (s)<-[:hasCust]-(str:STR)\n"
+//            + "    }\n"
+//            + "    Rule {\n"
+//            + "        R1: str.matchrule == '0202'\n"
+//            + "        R2: str.isreport == '1' \n"
+//            + "\n"
+//            + "        o = (R1 and R2)\n"
+//            + "    }\n"
+//            + "}\n"
+//            + "\n"
+            " "
             + "Define (s:Custid)-[p:isAggregator]->(o:Boolean) {\n"
             + "    GraphStructure {\n"
             + "        (s)<-[e:complained]-(u1:Custid)\n"
             + "    }\n"
             + "    Rule {\n"
-            + "      R0: s.isInWhiteBlack == null or s.isInWhiteBlack == false\n"
-            + "      complainNum = group(s).count(e)\n"
-            + "        R5(\"被投诉大于20条\"): complainNum >=20\n"
-            + "\n"
             + "        o = true\n"
             + "    }\n"
             + "    Action {\n"
@@ -1343,15 +1340,62 @@ public class TransitiveOptionalTest {
             + "        )\n"
             + "    }\n"
             + "}\n"
+            + "Define (s:Gang)-[p:hasSameMedia]->(o:Boolean) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[:has]->(c1:Custid)\n"
+            + "        (c1)-[:sameMedia]->(c2:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        R1: c1.isAggregator \n"
+            + "        o = true \n"
+            + "    }\n"
+            + "    Action {\n"
+            + "        createEdgeInstance(\n"
+            + "            src=s,\n"
+            + "          dst=c2,\n"
+            + "          type=has,\n"
+            + "          value={\n"
+            + "          }\n"
+            + "        )\n"
+            + "    }\n"
+            + "}\n"
+            + "Define (s:Gang)-[p:hasTrader]->(o:Boolean) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[:has]->(c1:Custid)\n"
+            + "        (c1)-[:trade]->(c2:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+//            + "        R1: c.isSameMedia \n"
+//            + "        R2: s.hasSameMedia \n"
+            + "        o = true \n"
+            + "    }\n"
+            + "    Action {\n"
+            + "        createEdgeInstance(\n"
+            + "            src=s,\n"
+            + "          dst=c2,\n"
+            + "          type=has,\n"
+            + "          value={\n"
+            + "          }\n"
+            + "        )\n"
+            + "    }\n"
+            + "}\n"
+            + "\n"
             + "GraphStructure {"
-            + "  A [Custid, __start__='true']\n"
+            + "  A [Custid, __start__ = 'true']\n"
             + "  B [Gang]\n"
-            + "  B->A [has]\n"
+//            + "  C [Custid]\n"
+            + "  B->A [has] as e1\n"
+//            + "  B->C [include] as e2\n"
             + "}\n"
             + "Rule {\n"
+//            + "  R0: B.hasSameMedia || B.hasTrader\n"
+
+            + "  R1: B.hasSameMedia || B.hasTrader\n"
+//            + "  R2: B.hasSameMedia || B.hasTrader\n"
+
             + "}\n"
             + "Action {\n"
-            + "  get(A.id, A.isAggregator, B.id) \n"
+            + "  get(B.id, A.id, e1.__property_json__) \n"
             + "}";
 
     System.out.println(dsl);
@@ -1366,6 +1410,7 @@ public class TransitiveOptionalTest {
             Sets.newHashSet(
                 "trdAmtIn90d",
                 "trdAmt90d",
+                "cid",
                 "trdCntCustIn90d",
                 "custcntpty90CustNum90dInGenderFemale",
                 "custcntpty90CustNum90dInGenderMale",
@@ -1377,9 +1422,17 @@ public class TransitiveOptionalTest {
 
     schema.put("Gang", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("cid", "name")));
     schema.put("Gang_has_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+//    schema.put("Gang_include_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+
     schema.put(
         "Custid_complained_Custid",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("createMemo")));
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+            "Custid_trade_Custid",
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+            "Custid_sameMedia_Custid",
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
         "STR_hasCust_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("createMemo")));
 
@@ -1391,13 +1444,13 @@ public class TransitiveOptionalTest {
 
     // enable subquery
     Map<String, Object> params = new HashMap<>();
-    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
+    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, false);
     params.put(Constants.SPG_REASONER_MULTI_VERSION_ENABLE, "true");
     task.setParams(params);
 
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
-    Assert.assertEquals(2, result.getRows().size());
+    Assert.assertEquals(1, result.getRows().size());
   }
 
   public static class GangGraphLoader extends AbstractLocalGraphLoader {
@@ -1406,15 +1459,21 @@ public class TransitiveOptionalTest {
       return Lists.newArrayList(
           constructionVertex("A1", "Custid", "name", "A1", "cid", "a1"),
           constructionVertex("A2", "Custid", "name", "A2", "cid", "a2"),
-          constructionVertex("B1", "Gang", "name", "B2", "cid", "b1"));
+          constructionVertex("A3", "Custid", "name", "A3", "cid", "a3"),
+          constructionVertex("A4", "Custid", "name", "A4", "cid", "a4"));
+
+//          constructionVertex("B1", "Gang", "name", "B2", "cid", "b1"));
     }
 
     @Override
     public List<IEdge<String, IProperty>> genEdgeList() {
       return Lists.newArrayList(
-          constructionEdge("B1", "has", "A1", "info", "b1_a1"),
-          constructionEdge("B1", "has", "A2", "info", "b1_a2"),
-          constructionEdge("A1", "complained", "A2", "info", "a1ca2"));
+//          constructionEdge("B1", "has", "A1", "info", "b1_a1"),
+//          constructionEdge("B1", "has", "A2", "info", "b1_a2"),
+          constructionEdge("A1", "complained", "A2", "info", "a1ca2"),
+          constructionEdge("A3", "trade", "A4", "info", "a2trd3"),
+          constructionEdge("A2", "sameMedia", "A3", "info", "a3smda4"));
+
     }
   }
 }
