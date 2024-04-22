@@ -943,21 +943,30 @@ public class RunnerUtil {
   /** readable pattern */
   public static String getReadablePattern(Pattern pattern) {
     StringBuilder sb = new StringBuilder();
+    List<String> rules = new ArrayList<>();
     sb.append("root=").append(pattern.root().alias());
+    if (null != pattern.root().rule()) {
+      List<String> rootRule = WareHouseUtils.getRuleList(pattern.root().rule());
+      rules.addAll(rootRule);
+    }
     Set<Connection> connectionSet = RunnerUtil.getConnectionSet(pattern);
-    if (connectionSet.isEmpty()) {
-      return sb.toString();
-    }
-    sb.append(",edge=");
-    boolean first = true;
-    for (Connection connection : connectionSet) {
-      if (!first) {
-        sb.append(",");
-      } else {
-        first = false;
+    if (!connectionSet.isEmpty()) {
+      sb.append(",edge=");
+      boolean first = true;
+      for (Connection connection : connectionSet) {
+        if (!first) {
+          sb.append(",");
+        } else {
+          first = false;
+        }
+        sb.append(connection.alias());
       }
-      sb.append(connection.alias());
     }
+    if (rules.size() > 0) {
+      sb.append(",rule=");
+      sb.append(StringUtils.join(rules, ","));
+    }
+
     return sb.toString();
   }
 

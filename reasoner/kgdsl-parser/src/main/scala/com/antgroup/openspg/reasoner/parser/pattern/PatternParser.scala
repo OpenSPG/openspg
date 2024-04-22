@@ -943,12 +943,23 @@ class PatternParser extends Serializable {
 
   def parseLabelName(ctx: Label_nameContext): LabelType = {
     ctx.getChild(0) match {
-      case c: Entity_typeContext => EntityLabelType(c.getText)
+      case c: Entity_typeContext => parseEntityType(c)
       case c: Concept_nameContext =>
         ConceptLabelType(
           parseIdentifier(c.meta_concept_type().identifier()),
           parseIdentifier(c.concept_instance_id().identifier()))
     }
+  }
+
+  def parseEntityType(ctx: Entity_typeContext): LabelType = {
+    val name = ctx.getChild(0) match {
+      case c: IdentifierContext => parseIdentifier(c)
+      case c: Prefix_nameContext =>
+        parseIdentifier(c.identifier(0)) +
+          c.period().getText +
+          parseIdentifier(c.identifier(1))
+    }
+    EntityLabelType(name)
   }
 
   def parseIdentifier(ctx: IdentifierContext): String = {

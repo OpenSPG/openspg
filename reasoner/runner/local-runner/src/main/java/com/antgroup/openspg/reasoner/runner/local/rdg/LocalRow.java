@@ -72,6 +72,7 @@ public class LocalRow extends Row<LocalRDG> {
         rowList,
         graphRst.getVertexList(),
         graphRst.getEdgeList(),
-        graphRst.isGraphResult());
+        graphRst.isGraphResult(),
+        graphRst.getDebugTraceInfo());
   }
 }
