@@ -77,7 +77,8 @@ sealed trait DDLOp
  * @param propertyType\
  * @param isDefine
  */
-case class AddProperty(s: Element, propertyName: String, propertyType: KgType, isDefine: Boolean) extends DDLOp
+case class AddProperty(s: Element, propertyName: String,
+                       propertyType: KgType, isDefine: Boolean = false) extends DDLOp
 
 /**
  * add vertex in graph state.
@@ -92,7 +93,7 @@ case class AddVertex(s: PatternElement, props: Map[String, Expr]) extends DDLOp
  * @param predicate
  * @param isDefine
  */
-case class AddPredicate(predicate: PredicateElement, isDefine: Boolean) extends DDLOp
+case class AddPredicate(predicate: PredicateElement, isDefine: Boolean = false) extends DDLOp
 
 /**
  * output is add a property or add a predicate instance

@@ -140,7 +140,7 @@ class OpenSPGDslParser extends ParserInterface {
     val ddlBlockOp = ddlBlockWithNodes._1.ddlOp.head
     val ruleBlock = ddlInfo._1
     ddlBlockOp match {
-      case AddProperty(s, propertyName, _) =>
+      case AddProperty(s, propertyName, _, _) =>
         val isLastAssignTargetAlis = ruleBlock match {
           case ProjectBlock(_, projects) =>
             var tmpIsAssign = false
@@ -174,7 +174,7 @@ class OpenSPGDslParser extends ParserInterface {
                   IRProperty(s.alias, propertyName),
                   Ref(ddlBlockWithNodes._3.target.alias)))))
         DDLBlock(Set.apply(ddlBlockOp) ++ ddlInfo._2, List.apply(prjBlk))
-      case AddPredicate(predicate) =>
+      case AddPredicate(predicate, _) =>
         val attrFields = new mutable.HashMap[String, Expr]()
         addPropertiesMap.foreach(x =>
           if (x.name == predicate.alias) {
@@ -248,14 +248,15 @@ class OpenSPGDslParser extends ParserInterface {
     if (basicTypeSet.contains(o.typeNames.head)) {
       Tuple3(
         DDLBlock(
-          Set.apply(AddProperty(s, p.relTypes.head, parseBasicTypeFromStr(o.typeNames.head))),
+          Set.apply(AddProperty(s, p.relTypes.head, parseBasicTypeFromStr(o.typeNames.head)), true),
           List.empty),
         s,
         predicateElement)
     } else {
       val predicateElement =
         PredicateElement(p.relTypes.head, p.alias, s, o, Map.empty, Direction.OUT)
-      Tuple3(DDLBlock(Set.apply(AddPredicate(predicateElement)), List.empty), s, predicateElement)
+      Tuple3(DDLBlock(Set.apply(AddPredicate(predicateElement), true),
+        List.empty), s, predicateElement)
     }
   }
 
