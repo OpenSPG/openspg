@@ -44,14 +44,17 @@ class HFLLMExecutor(LLMExecutor):
     def execute_sft(self, args: dict = None, callbacks=None, **kwargs):
         args = args or self.init_args
 
-        self.load_model(args=args, mode="train")
-
         # parse args into HFSftArgs dataclass for more convenient features
         from transformers import HfArgumentParser
 
         parser = HfArgumentParser(HFSftArgs)
         hf_sft_args: HFSftArgs
         hf_sft_args, *_ = parser.parse_dict(args, allow_extra_keys=True)
+
+        model_to_cuda = (
+            False if hf_sft_args.deepspeed else True
+        )  # if using deepspeed, don't load model to cuda in nn4k
+        self.load_model(args=args, mode="train", model_to_cuda=model_to_cuda)
 
         # load checkpoint path if necessary.
         resume_from_checkpoint_path = self._get_last_checkpoint(hf_sft_args)
@@ -177,7 +180,7 @@ class HFLLMExecutor(LLMExecutor):
 
         return DatasetUtils.auto_dataset(data_path, split)
 
-    def load_model(self, args: dict = None, mode=None, **kwargs):
+    def load_model(self, args: dict = None, mode=None, model_to_cuda=True, **kwargs):
         """
         load model and tokenizer. If the model with the same mode is already loaded, will not load again.
         """
@@ -201,7 +204,10 @@ class HFLLMExecutor(LLMExecutor):
         self.model_mode = mode
         self._tokenizer = self._hf_tokenizer_loader(hf_model_args)
         self._model = self._hf_model_loader(
-            args=hf_model_args, mode=mode, device=hf_model_args.nn_device
+            args=hf_model_args,
+            mode=mode,
+            device=hf_model_args.nn_device,
+            model_to_cuda=model_to_cuda,
         )
 
         if self.tokenizer.eos_token_id is None:
@@ -276,6 +282,7 @@ class HFLLMExecutor(LLMExecutor):
         mode,
         resume_from_checkpoint=False,
         device=None,
+        model_to_cuda=True,
         **kwargs,
     ):
         """

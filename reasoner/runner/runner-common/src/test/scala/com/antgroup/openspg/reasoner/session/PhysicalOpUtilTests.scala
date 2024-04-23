@@ -51,6 +51,6 @@ class PhysicalOpUtilTests extends AnyFunSpec {
     catalog.init()
     val session = new EmptySession(new OpenSPGDslParser(), catalog)
     val rst = session.plan(dsl, Map.empty)
-    PhysicalOperatorUtil.getStartTypes(rst.head) should equal (Set.apply("User"))
+    PhysicalOperatorUtil.getStartOp(rst.head).alias should equal ("s")
   }
 }
