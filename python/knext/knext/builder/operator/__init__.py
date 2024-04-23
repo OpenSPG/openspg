@@ -13,7 +13,7 @@
 from knext.builder.operator.op import LinkOp, ExtractOp, FuseOp, PromptOp, PredictOp
 from knext.builder.operator.spg_record import SPGRecord
 from knext.builder.operator.builtin.auto_prompt import REPrompt, EEPrompt
-from knext.builder.operator.builtin.deepke_prompt import (
+from knext.builder.operator.builtin.oneke_prompt import (
     OneKE_NERPrompt,
     OneKE_REPrompt,
     OneKE_SPOPrompt,
