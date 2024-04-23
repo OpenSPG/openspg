@@ -15,7 +15,9 @@ import re
 from abc import ABC
 from typing import List, Dict, Tuple
 
+
 from knext.schema.client import SchemaClient
+from knext.schema.model.base import BaseSpgType
 from knext.schema.model.schema_helper import SPGTypeName, PropertyName, RelationName
 from knext.builder.operator.op import PromptOp
 from knext.builder.operator.spg_record import SPGRecord
@@ -23,15 +25,26 @@ import uuid
 
 
 class AutoPrompt(PromptOp, ABC):
-    spg_type_name: SPGTypeName
+    spg_types: List[BaseSpgType]
+    ignored_properties: List[str] = ["id", "name", "description", "stdId"]
+    ignored_relations: List[str] = ["isA"]
+
+    def __init__(self, spg_type_names: List[SPGTypeName]):
+        super().__init__()
+        self.spg_types = []
+        schema_session = SchemaClient().create_session()
+        if hasattr(self, "spg_type_name"):
+            self.spg_types = schema_session.spg_types.values()
+        else:
+            for spg_type_name in spg_type_names:
+                spg_type = schema_session.get(spg_type_name=spg_type_name)
+                self.spg_types.append(spg_type)
 
     def _init_render_variables(self):
-        schema_session = SchemaClient().create_session()
-        spg_type = schema_session.get(spg_type_name=self.spg_type_name)
-        self.property_info_en = {}
         self.property_info_zh = {}
-        self.relation_info_en = {}
+        self.property_info_en = {}
         self.relation_info_zh = {}
+        self.relation_info_en = {}
         self.spg_type_schema_info_en = {
             "Text": ("文本", None),
             "Integer": ("整型", None),
@@ -42,33 +55,36 @@ class AutoPrompt(PromptOp, ABC):
             "整型": ("Integer", None),
             "浮点型": ("Float", None),
         }
-        for _rel in spg_type.relations.values():
-            if _rel.is_dynamic:
-                continue
-            self.relation_info_zh[_rel.name_zh] = (
-                _rel.name,
-                _rel.desc,
-                _rel.object_type_name,
-            )
-            self.relation_info_en[_rel.name] = (
-                _rel.name_zh,
-                _rel.desc,
-                _rel.object_type_name,
-            )
-        for _prop in spg_type.properties.values():
-            self.property_info_zh[_prop.name_zh] = (
-                _prop.name,
-                _prop.desc,
-                _prop.object_type_name,
-            )
-            self.property_info_en[_prop.name] = (
-                _prop.name_zh,
-                _prop.desc,
-                _prop.object_type_name,
-            )
-        for _type in schema_session.spg_types.values():
-            if _type.name in ["Text", "Integer", "Float"]:
-                continue
+        for spg_type in self.spg_types:
+            self.property_info_zh[spg_type.name_zh] = {}
+            self.relation_info_zh[spg_type.name_zh] = {}
+            self.property_info_en[spg_type.name] = {}
+            self.relation_info_en[spg_type.name] = {}
+            for _rel in spg_type.relations.values():
+                if _rel.is_dynamic:
+                    continue
+                self.relation_info_zh[spg_type.name_zh][_rel.name_zh] = (
+                    _rel.name,
+                    _rel.desc,
+                    _rel.object_type_name,
+                )
+                self.relation_info_en[spg_type.name][_rel.name] = (
+                    _rel.name_zh,
+                    _rel.desc,
+                    _rel.object_type_name,
+                )
+            for _prop in spg_type.properties.values():
+                self.property_info_zh[spg_type.name_zh][_prop.name_zh] = (
+                    _prop.name,
+                    _prop.desc,
+                    _prop.object_type_name,
+                )
+                self.property_info_en[spg_type.name][_prop.name] = (
+                    _prop.name_zh,
+                    _prop.desc,
+                    _prop.object_type_name,
+                )
+        for _type in self.spg_types:
             self.spg_type_schema_info_zh[_type.name_zh] = (_type.name, _type.desc)
             self.spg_type_schema_info_en[_type.name] = (_type.name_zh, _type.desc)
 
@@ -87,13 +103,11 @@ input:${input}
         spg_type_name: SPGTypeName,
         property_names: List[PropertyName] = None,
         relation_names: List[Tuple[RelationName, SPGTypeName]] = None,
-        custom_prompt: str = None,
+        with_description: bool = False,
     ):
-        super().__init__()
-
         self.spg_type_name = spg_type_name
-        if custom_prompt:
-            self.template = custom_prompt
+        super().__init__([spg_type_name])
+
         if not property_names:
             property_names = []
         if not relation_names:
@@ -101,16 +115,10 @@ input:${input}
 
         self.property_names = property_names
         self.relation_names = relation_names
+        self.with_description = with_description
 
         self._init_render_variables()
         self._render()
-
-        self.params = {
-            "spg_type_name": spg_type_name,
-            "property_names": property_names,
-            "relation_names": relation_names,
-            "custom_prompt": custom_prompt,
-        }
 
     def build_prompt(self, variables: Dict[str, str]) -> str:
         return self.template.replace("${input}", variables.get("input"))
@@ -118,9 +126,14 @@ input:${input}
     def parse_response(self, response: str) -> List[SPGRecord]:
         if isinstance(response, list) and len(response) > 0:
             response = response[0]
-        re_obj = json.loads(response)
-        if "spo" not in re_obj.keys():
-            raise ValueError("SPO format error.")
+        try:
+            re_obj = json.loads(response)
+        except json.decoder.JSONDecodeError:
+            print("REPrompt response JSONDecodeError error.")
+            return []
+        if type(re_obj) != dict or "spo" not in re_obj.keys():
+            print("REPrompt response type error.")
+            return []
         subject_records = {}
         result = []
         for spo_item in re_obj.get("spo", []):
@@ -133,8 +146,9 @@ input:${input}
                     .upsert_property("id", s)
                     .upsert_property("name", s)
                 )
-            if p_zh in self.property_info_zh:
-                p, _, o_type = self.property_info_zh[p_zh]
+            spg_type_name_zh = self.spg_type_schema_info_en[self.spg_type_name][0]
+            if p_zh in self.property_info_zh[spg_type_name_zh]:
+                p, _, o_type = self.property_info_zh[spg_type_name_zh][p_zh]
                 o_list = re.split("[,，、;；]", o)
                 result.extend(
                     [
@@ -175,6 +189,18 @@ input:${input}
         predicates = []
         duplicate_types = set()
         duplicate_predicates = set()
+        if not self.property_names:
+            self.property_names = [
+                n
+                for n in self.property_info_en[self.spg_type_name].keys()
+                if n not in self.ignored_properties
+            ]
+        if not self.relation_names:
+            self.relation_names = [
+                n
+                for n in self.relation_info_en[self.spg_type_name].keys()
+                if n not in self.property_names and n not in self.ignored_relations
+            ]
         for _prop in self.property_names:
             s_name_zh, s_desc = self.spg_type_schema_info_en.get(self.spg_type_name)
             s_desc = (
@@ -182,15 +208,23 @@ input:${input}
                 if self.spg_type_name not in duplicate_types
                 else None
             )
-            s_info = (s_name_zh or "") + (f"({s_desc})" if s_desc else "")
-            p_name_zh, p_desc, o_type = self.property_info_en.get(_prop)
+            s_info = (s_name_zh or "") + (
+                f"({s_desc})" if self.with_description and s_desc else ""
+            )
+            p_name_zh, p_desc, o_type = self.property_info_en[self.spg_type_name].get(
+                _prop
+            )
             p_desc = (
                 (p_desc or p_name_zh) if _prop not in duplicate_predicates else None
             )
-            p_info = (p_name_zh or "") + (f"({p_desc})" if p_desc else "")
+            p_info = (p_name_zh or "") + (
+                f"({p_desc})" if self.with_description and p_desc else ""
+            )
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
             o_desc = (o_desc or o_name_zh) if o_type not in duplicate_types else None
-            o_info = (o_name_zh or "") + (f"({o_desc})" if o_desc else "")
+            o_info = (o_name_zh or "") + (
+                f"({o_desc})" if self.with_description and o_desc else ""
+            )
             spo_infos.append(f"{s_info}-{p_info}-{o_info}")
             duplicate_predicates.add(_prop)
             duplicate_types.update([self.spg_type_name, o_type])
@@ -202,13 +236,19 @@ input:${input}
                 if self.spg_type_name not in duplicate_types
                 else None
             )
-            s_info = (s_name_zh or "") + (f"({s_desc})" if s_desc else "")
-            p_name_zh, p_desc, _ = self.relation_info_en.get(_rel)
+            s_info = (s_name_zh or "") + (
+                f"({s_desc})" if self.with_description and s_desc else ""
+            )
+            p_name_zh, p_desc, _ = self.relation_info_en[self.spg_type_name].get(_rel)
             p_desc = (p_desc or p_name_zh) if _rel not in duplicate_predicates else None
-            p_info = (p_name_zh or "") + (f"({p_desc})" if p_desc else "")
+            p_info = (p_name_zh or "") + (
+                f"({p_desc})" if self.with_description and p_desc else ""
+            )
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
             o_desc = (o_desc or o_name_zh) if o_type not in duplicate_types else None
-            o_info = (o_name_zh or "") + (f"({o_desc})" if o_desc else "")
+            o_info = (o_name_zh or "") + (
+                f"({o_desc})" if self.with_description and o_desc else ""
+            )
             spo_infos.append(f"{s_info}-{p_info}-{o_info}")
             duplicate_predicates.add(_rel)
             duplicate_types.update([self.spg_type_name, o_type])
@@ -236,13 +276,11 @@ class EEPrompt(AutoPrompt):
         event_type_name: SPGTypeName,
         property_names: List[PropertyName] = None,
         relation_names: List[Tuple[RelationName, SPGTypeName]] = None,
-        custom_prompt: str = None,
+        with_description: bool = False,
     ):
-        super().__init__()
-
         self.spg_type_name = event_type_name
-        if custom_prompt:
-            self.template = custom_prompt
+        super().__init__([event_type_name])
+
         if not property_names:
             property_names = []
         if not relation_names:
@@ -250,16 +288,10 @@ class EEPrompt(AutoPrompt):
 
         self.property_names = property_names
         self.relation_names = relation_names
+        self.with_description = with_description
 
         self._init_render_variables()
         self._render()
-
-        self.params = {
-            "event_type_name": event_type_name,
-            "property_names": property_names,
-            "relation_names": relation_names,
-            "custom_prompt": custom_prompt,
-        }
 
     def build_prompt(self, variables: Dict[str, str]) -> str:
         return self.template.replace("${input}", variables.get("input"))
@@ -267,23 +299,31 @@ class EEPrompt(AutoPrompt):
     def parse_response(self, response: str) -> List[SPGRecord]:
         if isinstance(response, list) and len(response) > 0:
             response = response[0]
-        re_obj = json.loads(response)
-        if "event" not in re_obj.keys():
-            raise ValueError("EEPrompt response format error.")
+        try:
+            re_obj = json.loads(response)
+        except json.decoder.JSONDecodeError:
+            print("EEPrompt response JSONDecodeError error.")
+            return []
+        if type(re_obj) != dict or "event" not in re_obj.keys():
+            print("EEPrompt response type error.")
+            return []
         subject_records = []
         object_records = []
+        spg_type_name_zh = self.spg_type_schema_info_en[self.spg_type_name][0]
         for event_item in re_obj.get("event", []):
             if any(k not in event_item for k in ["event_type", "arguments"]):
                 continue
             event_type, arguments = event_item["event_type"], event_item["arguments"]
 
             uuid_4 = uuid.uuid4()
-            subject_record = SPGRecord(
-                spg_type_name=self.spg_type_name
-            ).upsert_property("id", uuid_4.hex)
+            subject_record = (
+                SPGRecord(spg_type_name=self.spg_type_name)
+                .upsert_property("id", uuid_4.hex)
+                .upsert_property("name", event_type)
+            )
             for p_zh, o in arguments.items():
-                if p_zh in self.property_info_zh:
-                    p, _, o_type = self.property_info_zh[p_zh]
+                if p_zh in self.property_info_zh[spg_type_name_zh]:
+                    p, _, o_type = self.property_info_zh[spg_type_name_zh][p_zh]
                     if not o:
                         continue
                     subject_record.upsert_property(p, o)
@@ -293,8 +333,8 @@ class EEPrompt(AutoPrompt):
                             .upsert_property("id", o)
                             .upsert_property("name", o)
                         )
-                elif p_zh in self.relation_info_zh:
-                    p, _, o_type = self.relation_info_zh[p_zh]
+                elif p_zh in self.relation_info_zh[spg_type_name_zh]:
+                    p, _, o_type = self.relation_info_zh[spg_type_name_zh][p_zh]
                     if not o:
                         continue
                     subject_record.upsert_relation(p, o_type, o)
@@ -313,25 +353,39 @@ class EEPrompt(AutoPrompt):
     def _render(self):
         schema = {}
         description = {}
-        arguments = ["名称"]
+        arguments = []
+        if not self.property_names:
+            self.property_names = [
+                n
+                for n in self.property_info_en[self.spg_type_name].keys()
+                if n not in self.ignored_properties
+            ]
+        if not self.relation_names:
+            self.relation_names = [
+                n
+                for n in self.relation_info_en[self.spg_type_name].keys()
+                if n not in self.property_names and n not in self.ignored_relations
+            ]
         for _prop in self.property_names:
-            p_name_zh, p_desc, o_type = self.property_info_en.get(_prop)
+            p_name_zh, p_desc, o_type = self.property_info_en[self.spg_type_name].get(
+                _prop
+            )
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
             p_desc = (
                 f"类型是{o_name_zh}"
-                + ("，" + o_desc if o_desc else "")
-                + f"。{p_desc or p_name_zh}"
+                + ("，" + o_desc if self.with_description and o_desc else "")
+                + f"。{p_desc or p_name_zh if self.with_description else ''}"
             )
             arguments.append(p_name_zh)
             description[p_name_zh] = p_desc or p_name_zh
         for _rel, o_type in self.relation_names:
-            p_name_zh, p_desc, _ = self.relation_info_en.get(_rel)
+            p_name_zh, p_desc, _ = self.relation_info_en[self.spg_type_name].get(_rel)
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
             name_zh = p_name_zh + "#" + o_name_zh
             desc = (
                 f"类型是{o_name_zh}"
-                + ("，" + o_desc if o_desc else "")
-                + f"。{p_desc or p_name_zh}"
+                + ("，" + o_desc if self.with_description and o_desc else "")
+                + f"。{p_desc or p_name_zh if self.with_description else ''}"
             )
             arguments.append(p_name_zh)
             description[name_zh] = desc

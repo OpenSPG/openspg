@@ -60,7 +60,7 @@ public class ExtractRelationImpl implements Serializable {
 
   private final String taskId;
 
-  private final PatternElement sourceElement;
+  private final Element sourceElement;
   private final EntityElement targetEntityElement;
   private final PatternElement targetPatternElement;
 
@@ -84,7 +84,7 @@ public class ExtractRelationImpl implements Serializable {
       this.propertyRuleMap.put(propertyName, rule);
     }
 
-    PatternElement sourceElement = (PatternElement) addPredicate.predicate().source();
+    Element se = addPredicate.predicate().source();
     Element te = addPredicate.predicate().target();
     EntityElement targetEntityElement = null;
     PatternElement targetPatternElement = null;
@@ -114,11 +114,10 @@ public class ExtractRelationImpl implements Serializable {
       }
     }
     if (!this.propertyRuleMap.containsKey(Constants.EDGE_FROM_ID_KEY)) {
-      this.propertyRuleMap.put(
-          Constants.EDGE_FROM_ID_KEY, Lists.newArrayList(sourceElement.alias() + ".id"));
+      this.propertyRuleMap.put(Constants.EDGE_FROM_ID_KEY, Lists.newArrayList(se.alias() + ".id"));
     }
 
-    this.sourceElement = sourceElement;
+    this.sourceElement = se;
     this.targetEntityElement = targetEntityElement;
     this.targetPatternElement = targetPatternElement;
   }

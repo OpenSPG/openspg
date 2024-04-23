@@ -15,6 +15,7 @@ package com.antgroup.openspg.reasoner.runner.local.rdg;
 
 import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.reasoner.common.Utils;
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
@@ -81,6 +82,8 @@ import com.antgroup.openspg.reasoner.rdg.common.UnfoldRepeatEdgeInfo;
 import com.antgroup.openspg.reasoner.rdg.common.model.JoinItem;
 import com.antgroup.openspg.reasoner.recorder.EmptyRecorder;
 import com.antgroup.openspg.reasoner.recorder.IExecutionRecorder;
+import com.antgroup.openspg.reasoner.recorder.action.DebugInfoWithStartId;
+import com.antgroup.openspg.reasoner.recorder.action.SampleAction;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
@@ -150,6 +153,34 @@ public class LocalRDG extends RDG<LocalRDG> {
   /** carry all tranversal graph data */
   protected boolean isCarryTraversalGraph = false;
 
+  private java.util.Set<IVertexId> getStartId(java.util.List<KgGraph<IVertexId>> kgGraphList) {
+    java.util.Set<IVertexId> startIdSet = new HashSet<>();
+    for (KgGraph<IVertexId> kgGraph : kgGraphList) {
+      java.util.List<IVertex<IVertexId, IProperty>> startVertexList =
+          kgGraph.getVertex(this.startVertexAlias);
+      for (IVertex<IVertexId, IProperty> startId : startVertexList) {
+        startIdSet.add(startId.getId());
+      }
+    }
+    return startIdSet;
+  }
+
+  private java.util.Map<String, java.util.List<IVertexId>> generateRuntimeLog(
+      java.util.Set<IVertexId> failedStartId, java.util.Set<IVertexId> successStartId) {
+    java.util.Map<String, java.util.List<IVertexId>> runtimeLogMap = new HashMap<>();
+    runtimeLogMap.put(SampleAction.FAILED_START_ID_KEY, Lists.newArrayList(failedStartId));
+    runtimeLogMap.put(SampleAction.PASS_START_ID_KEY, Lists.newArrayList(successStartId));
+    return runtimeLogMap;
+  }
+
+  private java.util.Set<IVertexId> getRemoveHashSet(
+      java.util.Set<IVertexId> set1, java.util.Set<IVertexId> set2) {
+    java.util.Set<IVertexId> updateSet = new HashSet<>();
+    updateSet.addAll(set1);
+    updateSet.removeAll(set2);
+    return updateSet;
+  }
+
   /** local rdg with graph state */
   public LocalRDG(
       GraphState<IVertexId> graphState,
@@ -180,8 +211,12 @@ public class LocalRDG extends RDG<LocalRDG> {
       this.executionRecorder = executionRecorder;
     }
     this.executionRecorder.entryRDG(startVertexAlias);
-    this.executionRecorder.stageResult(
-        "startId(" + startVertexAlias + ")", this.kgGraphList.size());
+
+    this.executionRecorder.stageResultWithDetail(
+        "startId(" + startVertexAlias + ")",
+        this.kgGraphList.size(),
+        generateRuntimeLog(new HashSet<>(), new HashSet<>(startIdList)),
+        Lists.newArrayList());
   }
 
   @Override
@@ -194,6 +229,7 @@ public class LocalRDG extends RDG<LocalRDG> {
         WareHouseUtils.getEdgeRuleMap(pattern);
     java.util.Map<String, java.util.List<Rule>> edgeTypeRuleMap =
         WareHouseUtils.getEdgeTypeRuleMap(pattern);
+    java.util.List<Rule> patternRuleLists = WareHouseUtils.getPatternRuleList(pattern);
     log.info(
         "LocalRDG patternScan,"
             + ",pattern="
@@ -254,6 +290,11 @@ public class LocalRDG extends RDG<LocalRDG> {
         throw new RuntimeException("exceeding strict max path limit " + this.strictMaxPathLimit);
       }
     }
+
+    java.util.Set<IVertexId> originStartId = getStartId(this.kgGraphList);
+    java.util.Set<IVertexId> afterStartId = getStartId(newKgGraphList);
+    java.util.Set<IVertexId> failedStartIdSet = getRemoveHashSet(originStartId, afterStartId);
+
     this.kgGraphList = newKgGraphList;
     this.kgGraphSchema = KgGraphSchema.convert2KgGraphSchema(pattern);
 
@@ -264,10 +305,13 @@ public class LocalRDG extends RDG<LocalRDG> {
             + count
             + " cost time="
             + (System.currentTimeMillis() - startTime));
-    this.executionRecorder.stageResultWithDesc(
+
+    this.executionRecorder.stageResultWithDescAndDetail(
         "patternScan(" + RunnerUtil.getReadablePattern(pattern) + ")",
         this.kgGraphList.size(),
-        "SubPattern");
+        "SubPattern",
+        generateRuntimeLog(failedStartIdSet, afterStartId),
+        patternRuleLists);
     return this;
   }
 
@@ -294,6 +338,10 @@ public class LocalRDG extends RDG<LocalRDG> {
         targetVertexSize += splitedKgGraphList.size();
       }
     }
+    java.util.Set<IVertexId> originStartId = getStartId(this.kgGraphList);
+    java.util.Set<IVertexId> afterStartId = getStartId(newKgGraphList);
+    java.util.Set<IVertexId> failedStartIdSet = getRemoveHashSet(originStartId, afterStartId);
+
     this.kgGraphList = newKgGraphList;
     this.kgGraphSchema = KgGraphSchema.expandSchema(this.kgGraphSchema, pattern);
 
@@ -304,8 +352,11 @@ public class LocalRDG extends RDG<LocalRDG> {
             + count
             + ", linkedTargetVertexSize="
             + targetVertexSize);
-    this.executionRecorder.stageResult(
-        "linkedExpand(" + RunnerUtil.getReadablePattern(pattern) + ")", this.kgGraphList.size());
+    this.executionRecorder.stageResultWithDetail(
+        "linkedExpand(" + RunnerUtil.getReadablePattern(pattern) + ")",
+        this.kgGraphList.size(),
+        generateRuntimeLog(failedStartIdSet, afterStartId),
+        Lists.newArrayList());
     return this;
   }
 
@@ -414,6 +465,7 @@ public class LocalRDG extends RDG<LocalRDG> {
         WareHouseUtils.getEdgeRuleMap(pattern);
     java.util.Map<String, java.util.List<Rule>> edgeTypeRuleMap =
         WareHouseUtils.getEdgeTypeRuleMap(pattern);
+    java.util.List<Rule> patternRuleLists = WareHouseUtils.getPatternRuleList(pattern);
 
     log.info(
         "LocalRDG expandInto,"
@@ -493,6 +545,9 @@ public class LocalRDG extends RDG<LocalRDG> {
         throw new RuntimeException("exceeding strict max path limit " + this.strictMaxPathLimit);
       }
     }
+    java.util.Set<IVertexId> originStartId = getStartId(this.kgGraphList);
+    java.util.Set<IVertexId> afterStartId = getStartId(newKgGraphList);
+    java.util.Set<IVertexId> failedStartIdSet = getRemoveHashSet(originStartId, afterStartId);
     this.kgGraphSchema = afterKgGraphSchema;
     this.kgGraphList = newKgGraphList;
     log.info(
@@ -502,8 +557,11 @@ public class LocalRDG extends RDG<LocalRDG> {
             + count
             + " cost time="
             + (System.currentTimeMillis() - startTime));
-    this.executionRecorder.stageResult(
-        "expandInto(" + RunnerUtil.getReadablePattern(pattern) + ")", this.kgGraphList.size());
+    this.executionRecorder.stageResultWithDetail(
+        "expandInto(" + RunnerUtil.getReadablePattern(pattern) + ")",
+        this.kgGraphList.size(),
+        generateRuntimeLog(failedStartIdSet, afterStartId),
+        patternRuleLists);
     return this;
   }
 
@@ -574,9 +632,16 @@ public class LocalRDG extends RDG<LocalRDG> {
       count += resultList.size();
       newKgGraphList.addAll(resultList);
     }
+    java.util.Set<IVertexId> originStartId = getStartId(this.kgGraphList);
+    java.util.Set<IVertexId> afterStartId = getStartId(newKgGraphList);
+    java.util.Set<IVertexId> failedStartIdSet = getRemoveHashSet(originStartId, afterStartId);
     this.kgGraphList = newKgGraphList;
     log.info("Filter,rule=" + exprStringSet + ",matchCount=" + count);
-    this.executionRecorder.stageResult("filter(" + exprStringSet + ")", this.kgGraphList.size());
+    this.executionRecorder.stageResultWithDetail(
+        "filter(" + rule.getName() + "," + exprStringSet + ")",
+        this.kgGraphList.size(),
+        generateRuntimeLog(failedStartIdSet, afterStartId),
+        Lists.newArrayList(rule));
     return this;
   }
 
@@ -959,14 +1024,41 @@ public class LocalRDG extends RDG<LocalRDG> {
             + property.toString());
   }
 
+  private java.util.Map<String, Object> getProcessInfo(DebugInfoWithStartId startId, String bizId) {
+    java.util.Map<String, Object> processInfo = startId.toJsonObj();
+    java.util.Map<String, Object> startIdInfo = new HashMap<>();
+    startIdInfo.put("bizId", bizId);
+    startIdInfo.put("label", startId.getVertexId().getType());
+    startIdInfo.put("id", startId.getVertexId());
+    processInfo.put("start_node", startIdInfo);
+    return processInfo;
+  }
+
   private void addRelation(AddPredicate addPredicate) {
     ExtractRelationImpl impl =
         new ExtractRelationImpl(addPredicate, this.kgGraphSchema, 0, this.taskId);
     java.util.Set<IEdge<IVertexId, IProperty>> allEdgeSet = new HashSet<>();
+    java.util.Map<IVertexId, DebugInfoWithStartId> debugInfoMap =
+        this.executionRecorder.getCurStageDebugInfo();
     for (KgGraph<IVertexId> kgGraph : this.kgGraphList) {
       IEdge<IVertexId, IProperty> edge = impl.extractEdge(kgGraph);
       allEdgeSet.add(edge);
+      if (debugInfoMap.containsKey(edge.getSourceId())) {
+        DebugInfoWithStartId startId = debugInfoMap.get(edge.getSourceId());
 
+        edge.getValue()
+            .put(
+                "__process__",
+                getProcessInfo(startId, (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY)));
+      }
+
+      if (debugInfoMap.containsKey(edge.getTargetId())) {
+        DebugInfoWithStartId startId = debugInfoMap.get(edge.getTargetId());
+        edge.getValue()
+            .put(
+                "__process__",
+                getProcessInfo(startId, (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY)));
+      }
       // add to result list
       this.resultEdgeSet.add(edge);
 
@@ -1219,13 +1311,20 @@ public class LocalRDG extends RDG<LocalRDG> {
   /** get ddl result */
   public LocalReasonerResult getResult() {
     return new LocalReasonerResult(
-        Lists.newArrayList(resultVertexSet), Lists.newArrayList(resultEdgeSet), true);
+        Lists.newArrayList(resultVertexSet),
+        Lists.newArrayList(resultEdgeSet),
+        true,
+        this.executionRecorder.toReadableString());
   }
 
   /** add graph to traversal graph */
   private LocalReasonerResult getRDGGraph() {
     if (!isCarryTraversalGraph) {
-      return new LocalReasonerResult(Lists.newArrayList(), Lists.newArrayList(), false);
+      return new LocalReasonerResult(
+          Lists.newArrayList(),
+          Lists.newArrayList(),
+          false,
+          this.executionRecorder.toReadableString());
     }
     LocalReasonerResult localReasonerResult = getResult();
     this.kgGraphList.forEach(

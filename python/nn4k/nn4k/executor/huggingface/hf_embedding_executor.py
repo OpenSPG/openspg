@@ -20,7 +20,7 @@ class HFEmbeddingExecutor(LLMExecutor):
         executor = cls(nn_config)
         return executor
 
-    def load_model(self, args=None, **kwargs):
+    def load_model(self, args=None, mode=None, model_to_cuda=True, **kwargs):
         import torch
         from sentence_transformers import SentenceTransformer
         from nn4k.consts import NN_NAME_KEY, NN_NAME_TEXT

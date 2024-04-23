@@ -28,6 +28,8 @@ public class LocalReasonerResult {
 
   private final String errMsg;
 
+  private final String debugTraceInfo;
+
   // select result
   private final List<String> columns;
   private final List<Object[]> rows;
@@ -48,6 +50,7 @@ public class LocalReasonerResult {
     this.vertexList = new ArrayList<>();
     this.edgeList = new ArrayList<>();
     this.errMsg = errMsg;
+    this.debugTraceInfo = "";
   }
   /** select result */
   public LocalReasonerResult(List<String> columns, List<Object[]> rows) {
@@ -57,19 +60,39 @@ public class LocalReasonerResult {
     this.vertexList = null;
     this.edgeList = null;
     this.errMsg = "";
+    this.debugTraceInfo = "";
   }
 
   /** ddl result */
   public LocalReasonerResult(
       List<IVertex<IVertexId, IProperty>> vertexList,
       List<IEdge<IVertexId, IProperty>> edgeList,
-      boolean graphResult) {
+      boolean graphResult,
+      String debugTraceInfo) {
     this.columns = null;
     this.rows = null;
     this.graphResult = graphResult;
     this.vertexList = vertexList;
     this.edgeList = edgeList;
     this.errMsg = "";
+    this.debugTraceInfo = debugTraceInfo;
+  }
+
+  /** output graph and row */
+  public LocalReasonerResult(
+      List<String> columns,
+      List<Object[]> rows,
+      List<IVertex<IVertexId, IProperty>> vertexList,
+      List<IEdge<IVertexId, IProperty>> edgeList,
+      boolean graphResult,
+      String debugTraceInfo) {
+    this.columns = columns;
+    this.rows = rows;
+    this.graphResult = graphResult;
+    this.vertexList = vertexList;
+    this.edgeList = edgeList;
+    this.errMsg = "";
+    this.debugTraceInfo = debugTraceInfo;
   }
 
   /** output graph and row */
@@ -130,6 +153,10 @@ public class LocalReasonerResult {
    */
   public List<IEdge<IVertexId, IProperty>> getEdgeList() {
     return edgeList;
+  }
+
+  public String getDebugTraceInfo() {
+    return debugTraceInfo;
   }
 
   @Override

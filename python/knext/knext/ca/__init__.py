@@ -8,8 +8,3 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
-docker buildx build -f Dockerfile --platform linux/amd64 --push \
-  -t openspg/openspg-python:0.0.2-beta5 \
-  -t openspg/openspg-python:latest \
-  .

@@ -19,6 +19,7 @@ import com.antgroup.openspg.reasoner.common.utils.PropertyUtil;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog;
 import com.antgroup.openspg.reasoner.progress.ProgressReport;
+import com.antgroup.openspg.reasoner.recorder.DefaultRecorder;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
@@ -393,20 +394,25 @@ public class LocalRunnerTest {
     Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
     catalog.init();
     task.setCatalog(catalog);
-
+    task.setExecutionRecorder(new DefaultRecorder());
+    task.getParams().put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println(result);
+    System.out.println(task.getExecutionRecorder().toReadableString());
     Assert.assertEquals(result.getRows().size(), 1);
     Assert.assertEquals(result.getRows().get(0)[0], "u1");
     Assert.assertEquals(result.getRows().get(0)[1], "3");
 
     task.getParams().put(ConfigKey.KG_REASONER_OUTPUT_GRAPH, true);
+
+    task.setExecutionRecorder(new DefaultRecorder());
     LocalReasonerResult result2 = runner.run(task);
     System.out.println(result2);
     Assert.assertEquals(result2.isGraphResult(), true);
     Assert.assertEquals(result2.getVertexList().size(), 1);
     clear();
+    System.out.println(task.getExecutionRecorder().toReadableString());
   }
 
   @Test
@@ -568,6 +574,7 @@ public class LocalRunnerTest {
     task.getParams().put(ConfigKey.KG_REASONER_CATALOG, SimpleObjSerde.ser(catalog));
     task.getParams().put(ConfigKey.KG_REASONER_BINARY_PROPERTY, false);
     task.getParams().put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
+    task.setExecutionRecorder(new DefaultRecorder());
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("保险产品", "InsProduct.Product")));
 
@@ -576,6 +583,7 @@ public class LocalRunnerTest {
     System.out.println("##########################");
     System.out.println(result);
     System.out.println("##########################");
+    System.out.println(task.getExecutionRecorder().toReadableString());
 
     clear();
   }
@@ -794,13 +802,14 @@ public class LocalRunnerTest {
     task.getParams().put(ConfigKey.KG_REASONER_CATALOG, SimpleObjSerde.ser(catalog));
 
     task.setStartIdList(Lists.newArrayList(new Tuple2<>("black_app_1", "Pkg")));
+    task.setExecutionRecorder(new DefaultRecorder());
 
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     System.out.println("##########################");
     System.out.println(result);
     System.out.println("##########################");
-
+    System.out.println(task.getExecutionRecorder().toReadableString());
     clear();
   }
 

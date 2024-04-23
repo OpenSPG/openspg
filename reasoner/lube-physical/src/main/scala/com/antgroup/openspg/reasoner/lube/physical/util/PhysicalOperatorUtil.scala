@@ -15,19 +15,19 @@ package com.antgroup.openspg.reasoner.lube.physical.util
 
 import scala.reflect.runtime.universe.TypeTag
 
-import com.antgroup.openspg.reasoner.lube.physical.operators.{PhysicalOperator, Start}
+import com.antgroup.openspg.reasoner.lube.physical.operators.{PhysicalLeafOperator, PhysicalOperator, Start, StartFromVertex}
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 import com.antgroup.openspg.reasoner.lube.physical.util.PhysicalOperatorOps.RichPhysicalOperator
 
 object PhysicalOperatorUtil {
 
-  def getStartTypes[T <: RDG[T]: TypeTag](physicalOp: PhysicalOperator[T]): Set[String] = {
-    getStartOp(physicalOp).types
-  }
-
-  def getStartOp[T <: RDG[T]: TypeTag](physicalOp: PhysicalOperator[T]): Start[T] = {
-    val op = physicalOp.findExactlyOne { case start: Start[T] => }
-    op.asInstanceOf[Start[T]]
+  def getStartOp[T <: RDG[T]: TypeTag](
+      physicalOp: PhysicalOperator[T]): PhysicalLeafOperator[T] = {
+    val op = physicalOp.findExactlyOne {
+      case start: Start[T] =>
+      case start: StartFromVertex[T] =>
+    }
+    op.asInstanceOf[PhysicalLeafOperator[T]]
   }
 
 }

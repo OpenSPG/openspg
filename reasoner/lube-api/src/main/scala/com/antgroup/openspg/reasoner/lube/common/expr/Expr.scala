@@ -183,7 +183,7 @@ final case class OrderAndLimit(order: OrderOpSet, limit: Limit) extends TypeVali
   override def withNewChildren(newChildren: Array[Expr]): Expr =
     OrderAndLimit(order, newChildren.head.asInstanceOf[Limit])
 
-  override def children: Array[Expr] = Array.empty
+  override def children: Array[Expr] = Array.apply(limit)
 }
 
 /**
