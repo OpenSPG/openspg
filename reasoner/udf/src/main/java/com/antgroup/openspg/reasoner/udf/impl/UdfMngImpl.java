@@ -40,6 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import scala.Tuple2;
 
 @Slf4j(topic = "userlogger")
@@ -60,7 +61,10 @@ public class UdfMngImpl implements UdfMng {
               createInstance(
                   Lists.newArrayList(KGDSL_UDF_PACKAGE_PATH),
                   Lists.newArrayList(KGDSL_UDAF_PACKAGE_PATH),
-                  Lists.newArrayList(KGDSL_UDTF_PACKAGE_PATH));
+                  Lists.newArrayList(KGDSL_UDTF_PACKAGE_PATH),
+                  null,
+                  null,
+                  null);
         }
       }
     }
@@ -69,14 +73,35 @@ public class UdfMngImpl implements UdfMng {
 
   /** 多路径 */
   public static UdfMngImpl getInstance(
-      List<String> udfPackagePaths, List<String> udafPackagePaths, List<String> udtfPackagePaths) {
+      List<String> udfPackagePaths,
+      List<String> udafPackagePaths,
+      List<String> udtfPackagePaths,
+      List<UdfMeta> udfMetaList,
+      List<UdafMeta> udafMetaList,
+      List<UdtfMeta> udtfMetaList) {
     if (null == instance) {
       synchronized (UdfMngImpl.class) {
         if (null == instance) {
-          udfPackagePaths.add(KGDSL_UDF_PACKAGE_PATH);
-          udafPackagePaths.add(KGDSL_UDAF_PACKAGE_PATH);
-          udtfPackagePaths.add(KGDSL_UDTF_PACKAGE_PATH);
-          instance = createInstance(udfPackagePaths, udafPackagePaths, udtfPackagePaths);
+          List<String> _udfPackagePaths = Lists.newArrayList(KGDSL_UDF_PACKAGE_PATH);
+          if (CollectionUtils.isNotEmpty(udfPackagePaths)) {
+            _udfPackagePaths.addAll(udfPackagePaths);
+          }
+          List<String> _udafPackagePaths = Lists.newArrayList(KGDSL_UDAF_PACKAGE_PATH);
+          if (CollectionUtils.isNotEmpty(udafPackagePaths)) {
+            _udafPackagePaths.addAll(udafPackagePaths);
+          }
+          List<String> _udtfPackagePaths = Lists.newArrayList(KGDSL_UDTF_PACKAGE_PATH);
+          if (CollectionUtils.isNotEmpty(udtfPackagePaths)) {
+            _udtfPackagePaths.addAll(udtfPackagePaths);
+          }
+          instance =
+              createInstance(
+                  _udfPackagePaths,
+                  _udafPackagePaths,
+                  _udtfPackagePaths,
+                  udfMetaList,
+                  udafMetaList,
+                  udtfMetaList);
         }
       }
     }
@@ -84,7 +109,12 @@ public class UdfMngImpl implements UdfMng {
   }
 
   private static UdfMngImpl createInstance(
-      List<String> udfPackagePaths, List<String> udafPackagePaths, List<String> udtfPackagePaths) {
+      List<String> udfPackagePaths,
+      List<String> udafPackagePaths,
+      List<String> udtfPackagePaths,
+      List<UdfMeta> udfMetaList,
+      List<UdafMeta> udafMetaList,
+      List<UdtfMeta> udtfMetaList) {
     UdfMngImpl udfMng = new UdfMngImpl();
     for (String packagePath : udfPackagePaths) {
       udfMng.getUdfInPath(packagePath);
@@ -94,6 +124,15 @@ public class UdfMngImpl implements UdfMng {
     }
     for (String packagePath : udtfPackagePaths) {
       udfMng.getUdtfInPath(packagePath);
+    }
+    if (CollectionUtils.isNotEmpty(udfMetaList)) {
+      udfMetaList.forEach(udfMng::addUdfMeta);
+    }
+    if (CollectionUtils.isNotEmpty(udafMetaList)) {
+      udafMetaList.forEach(udfMng::addUdafMeta);
+    }
+    if (CollectionUtils.isNotEmpty(udtfMetaList)) {
+      udtfMetaList.forEach(udfMng::addUdtfMeta);
     }
     udfMng.udfCheck();
     return udfMng;
