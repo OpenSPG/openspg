@@ -362,8 +362,20 @@ class OneKE_KGPrompt(OneKEPrompt):
                 )
             else:
                 attributes = {}
-                attributes.update({v.name_zh : v.desc or "" for k, v in spg_type.properties.items() if k not in ["id", "name", "description", "stdId"]})
-                attributes.update({v.name_zh : v.desc or "" for k, v in spg_type.relations.items() if v.name_zh not in attributes and k not in ["isA"]})
+                attributes.update(
+                    {
+                        v.name_zh: v.desc or ""
+                        for k, v in spg_type.properties.items()
+                        if k not in ["id", "name", "description", "stdId"]
+                    }
+                )
+                attributes.update(
+                    {
+                        v.name_zh: v.desc or ""
+                        for k, v in spg_type.relations.items()
+                        if v.name_zh not in attributes and k not in ["isA"]
+                    }
+                )
             entity_type = spg_type.name_zh
             spo_list.append({"entity_type": entity_type, "attributes": attributes})
 
@@ -409,7 +421,11 @@ class OneKE_EEPrompt(OneKEPrompt):
             if type_values and isinstance(type_values, list):
                 for type_value in type_values:
                     uuid_4 = uuid.uuid4()
-                    spg_record = SPGRecord(type_en).upsert_property("id", str(uuid_4)).upsert_property("name", type_zh)
+                    spg_record = (
+                        SPGRecord(type_en)
+                        .upsert_property("id", str(uuid_4))
+                        .upsert_property("name", type_zh)
+                    )
                     arguments = type_value.get("arguments")
                     if arguments and isinstance(arguments, dict):
                         for attr_zh, attr_value in arguments.items():
@@ -462,8 +478,20 @@ class OneKE_EEPrompt(OneKEPrompt):
                 )
             else:
                 arguments = {}
-                arguments.update({v.name_zh : v.desc or "" for k, v in spg_type.properties.items() if k not in ["id", "name", "description"]})
-                arguments.update({v.name_zh : v.desc or "" for k, v in spg_type.relations.items() if v.name_zh not in arguments})
+                arguments.update(
+                    {
+                        v.name_zh: v.desc or ""
+                        for k, v in spg_type.properties.items()
+                        if k not in ["id", "name", "description"]
+                    }
+                )
+                arguments.update(
+                    {
+                        v.name_zh: v.desc or ""
+                        for k, v in spg_type.relations.items()
+                        if v.name_zh not in arguments
+                    }
+                )
             event_type = spg_type.name_zh
             event_list.append(
                 {"event_type": event_type, "trigger": True, "arguments": arguments}

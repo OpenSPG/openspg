@@ -188,9 +188,17 @@ input:${input}
         duplicate_types = set()
         duplicate_predicates = set()
         if not self.property_names:
-            self.property_names = [n for n in self.property_info_en[self.spg_type_name].keys() if n not in ["id", "name", "description", "stdId"]]
+            self.property_names = [
+                n
+                for n in self.property_info_en[self.spg_type_name].keys()
+                if n not in ["id", "name", "description", "stdId"]
+            ]
         if not self.relation_names:
-            self.relation_names = [n for n in self.relation_info_en[self.spg_type_name].keys() if n not in self.property_names and n not in ["isA"]]
+            self.relation_names = [
+                n
+                for n in self.relation_info_en[self.spg_type_name].keys()
+                if n not in self.property_names and n not in ["isA"]
+            ]
         for _prop in self.property_names:
             s_name_zh, s_desc = self.spg_type_schema_info_en.get(self.spg_type_name)
             s_desc = (
@@ -198,15 +206,23 @@ input:${input}
                 if self.spg_type_name not in duplicate_types
                 else None
             )
-            s_info = (s_name_zh or "") + (f"({s_desc})" if self.with_description and s_desc else "")
-            p_name_zh, p_desc, o_type = self.property_info_en[self.spg_type_name].get(_prop)
+            s_info = (s_name_zh or "") + (
+                f"({s_desc})" if self.with_description and s_desc else ""
+            )
+            p_name_zh, p_desc, o_type = self.property_info_en[self.spg_type_name].get(
+                _prop
+            )
             p_desc = (
                 (p_desc or p_name_zh) if _prop not in duplicate_predicates else None
             )
-            p_info = (p_name_zh or "") + (f"({p_desc})" if self.with_description and p_desc else "")
+            p_info = (p_name_zh or "") + (
+                f"({p_desc})" if self.with_description and p_desc else ""
+            )
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
             o_desc = (o_desc or o_name_zh) if o_type not in duplicate_types else None
-            o_info = (o_name_zh or "") + (f"({o_desc})" if self.with_description and o_desc else "")
+            o_info = (o_name_zh or "") + (
+                f"({o_desc})" if self.with_description and o_desc else ""
+            )
             spo_infos.append(f"{s_info}-{p_info}-{o_info}")
             duplicate_predicates.add(_prop)
             duplicate_types.update([self.spg_type_name, o_type])
@@ -218,13 +234,19 @@ input:${input}
                 if self.spg_type_name not in duplicate_types
                 else None
             )
-            s_info = (s_name_zh or "") + (f"({s_desc})" if self.with_description and s_desc else "")
+            s_info = (s_name_zh or "") + (
+                f"({s_desc})" if self.with_description and s_desc else ""
+            )
             p_name_zh, p_desc, _ = self.relation_info_en[self.spg_type_name].get(_rel)
             p_desc = (p_desc or p_name_zh) if _rel not in duplicate_predicates else None
-            p_info = (p_name_zh or "") + (f"({p_desc})" if self.with_description and p_desc else "")
+            p_info = (p_name_zh or "") + (
+                f"({p_desc})" if self.with_description and p_desc else ""
+            )
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
             o_desc = (o_desc or o_name_zh) if o_type not in duplicate_types else None
-            o_info = (o_name_zh or "") + (f"({o_desc})" if self.with_description and o_desc else "")
+            o_info = (o_name_zh or "") + (
+                f"({o_desc})" if self.with_description and o_desc else ""
+            )
             spo_infos.append(f"{s_info}-{p_info}-{o_info}")
             duplicate_predicates.add(_rel)
             duplicate_types.update([self.spg_type_name, o_type])
@@ -292,9 +314,11 @@ class EEPrompt(AutoPrompt):
             event_type, arguments = event_item["event_type"], event_item["arguments"]
 
             uuid_4 = uuid.uuid4()
-            subject_record = SPGRecord(
-                spg_type_name=self.spg_type_name
-            ).upsert_property("id", uuid_4.hex).upsert_property("name", event_type)
+            subject_record = (
+                SPGRecord(spg_type_name=self.spg_type_name)
+                .upsert_property("id", uuid_4.hex)
+                .upsert_property("name", event_type)
+            )
             for p_zh, o in arguments.items():
                 if p_zh in self.property_info_zh[spg_type_name_zh]:
                     p, _, o_type = self.property_info_zh[spg_type_name_zh][p_zh]
@@ -329,11 +353,21 @@ class EEPrompt(AutoPrompt):
         description = {}
         arguments = []
         if not self.property_names:
-            self.property_names = [n for n in self.property_info_en[self.spg_type_name].keys() if n not in ["id", "name", "description"]]
+            self.property_names = [
+                n
+                for n in self.property_info_en[self.spg_type_name].keys()
+                if n not in ["id", "name", "description"]
+            ]
         if not self.relation_names:
-            self.relation_names = [n for n in self.relation_info_en[self.spg_type_name].keys() if n not in self.property_names and n not in ["isA"]]
+            self.relation_names = [
+                n
+                for n in self.relation_info_en[self.spg_type_name].keys()
+                if n not in self.property_names and n not in ["isA"]
+            ]
         for _prop in self.property_names:
-            p_name_zh, p_desc, o_type = self.property_info_en[self.spg_type_name].get(_prop)
+            p_name_zh, p_desc, o_type = self.property_info_en[self.spg_type_name].get(
+                _prop
+            )
             o_name_zh, o_desc = self.spg_type_schema_info_en.get(o_type)
             p_desc = (
                 f"类型是{o_name_zh}"

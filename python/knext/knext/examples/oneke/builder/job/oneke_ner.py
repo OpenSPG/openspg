@@ -15,7 +15,13 @@ from nn4k.invoker import NNInvoker
 
 from knext.builder.operator import OneKE_NERPrompt
 from knext.builder.model.builder_job import BuilderJob
-from knext.builder.component import CSVReader, LLMBasedExtractor, SPGTypeMapping, KGWriter
+from knext.builder.component import (
+    CSVReader,
+    LLMBasedExtractor,
+    SPGTypeMapping,
+    KGWriter,
+)
+
 try:
     from schema.oneke_schema_helper import OneKE
 except:
@@ -23,12 +29,9 @@ except:
 
 
 class OneKE_NER(BuilderJob):
-
     def build(self):
         source = CSVReader(
-            local_path="./builder/job/data/content.csv",
-            columns=["input"],
-            start_row=1
+            local_path="./builder/job/data/content.csv", columns=["input"], start_row=1
         )
 
         extract = LLMBasedExtractor(

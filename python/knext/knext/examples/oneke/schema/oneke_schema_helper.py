@@ -15,103 +15,81 @@
 # PLEASE DO NOT MODIFY THIS FILE!!!
 #
 
-from knext.schema.model.schema_helper import SPGTypeHelper, PropertyHelper, RelationHelper
+from knext.schema.model.schema_helper import (
+    SPGTypeHelper,
+    PropertyHelper,
+    RelationHelper,
+)
 
 
 class OneKE:
-    
     class Album(SPGTypeHelper):
-        
-    
+
         award = PropertyHelper("award")
         alias = PropertyHelper("alias")
         name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
-    
-    
-    
+
     class AwardRecipient(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         subject = PropertyHelper("subject")
         eventTime = PropertyHelper("eventTime")
         eventType = PropertyHelper("eventType")
-    
-    
-    
+
     class CertificateRecognition(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         subject = PropertyHelper("subject")
         eventTime = PropertyHelper("eventTime")
-    
-    
-    
+
     class Company(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         alias = PropertyHelper("alias")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
-    
-    
-    
+
     class Concert(SPGTypeHelper):
-        
-    
+
         name = PropertyHelper("name")
         alias = PropertyHelper("alias")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
-    
-    
-    
+
     class ConductConcert(SPGTypeHelper):
-        
-    
+
         object = PropertyHelper("object")
         name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         subject = PropertyHelper("subject")
         eventTime = PropertyHelper("eventTime")
-    
-    
-    
+
     class EstablishCompany(SPGTypeHelper):
-        
-    
+
         object = PropertyHelper("object")
         name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         subject = PropertyHelper("subject")
         eventTime = PropertyHelper("eventTime")
-    
-    
-    
+
     class Movies(SPGTypeHelper):
-        
-    
+
         award = PropertyHelper("award")
         alias = PropertyHelper("alias")
         name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
-    
-    
-    
+
     class Person(SPGTypeHelper):
-        
-    
+
         alias = PropertyHelper("alias")
         name = PropertyHelper("name")
         profession = PropertyHelper("profession")
@@ -121,33 +99,25 @@ class OneKE:
         graduated = PropertyHelper("graduated")
         ancestryPlace = PropertyHelper("ancestryPlace")
         birthDate = PropertyHelper("birthDate")
-    
-    
-    
+
     class PublishMovies(SPGTypeHelper):
-        
-    
+
         object = PropertyHelper("object")
         name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         eventTime = PropertyHelper("eventTime")
         subject = PropertyHelper("subject")
-    
-    
-    
+
     class PublishMusicAlbum(SPGTypeHelper):
-        
-    
+
         object = PropertyHelper("object")
         name = PropertyHelper("name")
         description = PropertyHelper("description")
         id = PropertyHelper("id")
         subject = PropertyHelper("subject")
         eventTime = PropertyHelper("eventTime")
-    
-    
-    
+
     Album = Album("OneKE.Album")
     AwardRecipient = AwardRecipient("OneKE.AwardRecipient")
     CertificateRecognition = CertificateRecognition("OneKE.CertificateRecognition")
@@ -159,5 +129,5 @@ class OneKE:
     Person = Person("OneKE.Person")
     PublishMovies = PublishMovies("OneKE.PublishMovies")
     PublishMusicAlbum = PublishMusicAlbum("OneKE.PublishMusicAlbum")
-    
+
     pass
