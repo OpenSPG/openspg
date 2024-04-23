@@ -21,7 +21,6 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>reasoner-thinker</artifactId>
-  <version>0.0.1-KGENGINE-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
