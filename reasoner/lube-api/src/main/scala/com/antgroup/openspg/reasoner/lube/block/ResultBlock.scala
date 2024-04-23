@@ -16,7 +16,11 @@ package com.antgroup.openspg.reasoner.lube.block
 import com.antgroup.openspg.reasoner.common.types.KgType
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.common.graph._
-import com.antgroup.openspg.reasoner.lube.common.pattern.{Element, PatternElement, PredicateElement}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{
+  Element,
+  PatternElement,
+  PredicateElement
+}
 
 /**
  * every operator block tree of root is result block
@@ -77,7 +81,8 @@ sealed trait DDLOp
  * @param propertyType\
  * @param isDefine
  */
-case class AddProperty(s: Element, propertyName: String, propertyType: KgType, isDefine: Boolean) extends DDLOp
+case class AddProperty(s: Element, propertyName: String, propertyType: KgType, isDefine: Boolean)
+    extends DDLOp
 
 /**
  * add vertex in graph state.
