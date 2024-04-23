@@ -350,14 +350,14 @@ class OneKE_KGPrompt(OneKEPrompt):
                     [
                         v.name_zh
                         for k, v in spg_type.properties.items()
-                        if k not in ["id", "name", "description", "stdId"]
+                        if k not in self.ignored_properties
                     ]
                 )
                 attributes.extend(
                     [
                         v.name_zh
                         for k, v in spg_type.relations.items()
-                        if v.name_zh not in attributes and k not in ["isA"]
+                        if v.name_zh not in attributes and k not in self.ignored_relations
                     ]
                 )
             else:
@@ -366,14 +366,14 @@ class OneKE_KGPrompt(OneKEPrompt):
                     {
                         v.name_zh: v.desc or ""
                         for k, v in spg_type.properties.items()
-                        if k not in ["id", "name", "description", "stdId"]
+                        if k not in self.ignored_properties
                     }
                 )
                 attributes.update(
                     {
                         v.name_zh: v.desc or ""
                         for k, v in spg_type.relations.items()
-                        if v.name_zh not in attributes and k not in ["isA"]
+                        if v.name_zh not in attributes and k not in self.ignored_relations
                     }
                 )
             entity_type = spg_type.name_zh
@@ -466,14 +466,14 @@ class OneKE_EEPrompt(OneKEPrompt):
                     [
                         v.name_zh
                         for k, v in spg_type.properties.items()
-                        if k not in ["id", "name", "description"]
+                        if k not in self.ignored_properties
                     ]
                 )
                 arguments.extend(
                     [
                         v.name_zh
                         for k, v in spg_type.relations.items()
-                        if v.name_zh not in arguments
+                        if v.name_zh not in arguments and k not in self.ignored_relations
                     ]
                 )
             else:
@@ -482,14 +482,14 @@ class OneKE_EEPrompt(OneKEPrompt):
                     {
                         v.name_zh: v.desc or ""
                         for k, v in spg_type.properties.items()
-                        if k not in ["id", "name", "description"]
+                        if k not in self.ignored_properties
                     }
                 )
                 arguments.update(
                     {
                         v.name_zh: v.desc or ""
                         for k, v in spg_type.relations.items()
-                        if v.name_zh not in arguments
+                        if v.name_zh not in arguments and k not in self.ignored_relations
                     }
                 )
             event_type = spg_type.name_zh

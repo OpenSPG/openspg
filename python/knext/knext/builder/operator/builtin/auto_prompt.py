@@ -26,6 +26,8 @@ import uuid
 
 class AutoPrompt(PromptOp, ABC):
     spg_types: List[BaseSpgType]
+    ignored_properties: List[str] = ["id", "name", "description", "stdId"]
+    ignored_relations: List[str] = ["isA"]
 
     def __init__(self, spg_type_names: List[SPGTypeName]):
         super().__init__()
@@ -191,13 +193,13 @@ input:${input}
             self.property_names = [
                 n
                 for n in self.property_info_en[self.spg_type_name].keys()
-                if n not in ["id", "name", "description", "stdId"]
+                if n not in self.ignored_properties
             ]
         if not self.relation_names:
             self.relation_names = [
                 n
                 for n in self.relation_info_en[self.spg_type_name].keys()
-                if n not in self.property_names and n not in ["isA"]
+                if n not in self.property_names and n not in self.ignored_relations
             ]
         for _prop in self.property_names:
             s_name_zh, s_desc = self.spg_type_schema_info_en.get(self.spg_type_name)
@@ -356,13 +358,13 @@ class EEPrompt(AutoPrompt):
             self.property_names = [
                 n
                 for n in self.property_info_en[self.spg_type_name].keys()
-                if n not in ["id", "name", "description"]
+                if n not in self.ignored_properties
             ]
         if not self.relation_names:
             self.relation_names = [
                 n
                 for n in self.relation_info_en[self.spg_type_name].keys()
-                if n not in self.property_names and n not in ["isA"]
+                if n not in self.property_names and n not in self.ignored_relations
             ]
         for _prop in self.property_names:
             p_name_zh, p_desc, o_type = self.property_info_en[self.spg_type_name].get(
