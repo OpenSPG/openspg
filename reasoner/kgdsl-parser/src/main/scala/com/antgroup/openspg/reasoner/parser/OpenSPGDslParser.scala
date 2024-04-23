@@ -248,15 +248,22 @@ class OpenSPGDslParser extends ParserInterface {
     if (basicTypeSet.contains(o.typeNames.head)) {
       Tuple3(
         DDLBlock(
-          Set.apply(AddProperty(s, p.relTypes.head, parseBasicTypeFromStr(o.typeNames.head)), true),
+          Set.apply(
+            AddProperty(
+              s,
+              p.relTypes.head,
+              parseBasicTypeFromStr(o.typeNames.head),
+              isDefine = true)),
           List.empty),
         s,
         predicateElement)
     } else {
       val predicateElement =
         PredicateElement(p.relTypes.head, p.alias, s, o, Map.empty, Direction.OUT)
-      Tuple3(DDLBlock(Set.apply(AddPredicate(predicateElement), true),
-        List.empty), s, predicateElement)
+      Tuple3(
+        DDLBlock(Set.apply(AddPredicate(predicateElement, isDefine = true)), List.empty),
+        s,
+        predicateElement)
     }
   }
 
@@ -282,11 +289,12 @@ class OpenSPGDslParser extends ParserInterface {
       case _: OrderAndLimit => true
       case _: GraphAggregatorExpr => true
       case _: OpChainExpr => true
-      case _ => if (!ruleRefRelate.contains(rule)) {
-        false
-      } else {
-        true
-      }
+      case _ =>
+        if (!ruleRefRelate.contains(rule)) {
+          false
+        } else {
+          true
+        }
     }
   }
 
@@ -490,11 +498,7 @@ class OpenSPGDslParser extends ParserInterface {
       preBlock: Block,
       kg: IRGraph): Block = {
     val isFilter2ProjectStep = isFilter2ProjectBlock(rule, ruleRefRelate)
-    genBlockOp(
-      rule,
-      preBlock,
-      isFilter2ProjectStep,
-      kg)
+    genBlockOp(rule, preBlock, isFilter2ProjectStep, kg)
   }
 
   def parseRule(ctx: The_ruleContext, matchBlock: MatchBlock): Block = {
@@ -516,20 +520,25 @@ class OpenSPGDslParser extends ParserInterface {
   def findAllPathAlias(patterns: Map[String, GraphPath]): Map[String, IRPath] = {
     patterns.values
       .flatMap(path =>
-        path.graphPattern.edges.flatMap(pair => pair._2.map {
-          case connection: VariablePatternConnection =>
-            val start = IRNode(connection.source, Set.empty)
-            val end = IRNode(connection.target, Set.empty)
-            val irEdge = IREdge(connection.alias, Set.empty)
-            connection.alias -> IRPath(connection.alias, List.apply(start, irEdge, end))
-          case _ => null
-        }.filter(_ != null).toMap))
+        path.graphPattern.edges.flatMap(pair =>
+          pair._2
+            .map {
+              case connection: VariablePatternConnection =>
+                val start = IRNode(connection.source, Set.empty)
+                val end = IRNode(connection.target, Set.empty)
+                val irEdge = IREdge(connection.alias, Set.empty)
+                connection.alias -> IRPath(connection.alias, List.apply(start, irEdge, end))
+              case _ => null
+            }
+            .filter(_ != null)
+            .toMap))
       .toMap
   }
 
-  def addIntoRefFieldsMap(fieldName: String,
-                          fields: Set[String],
-                          refFieldsMap: Map[String, Set[String]]): Map[String, Set[String]] = {
+  def addIntoRefFieldsMap(
+      fieldName: String,
+      fields: Set[String],
+      refFieldsMap: Map[String, Set[String]]): Map[String, Set[String]] = {
     var attrs = fields
     if (refFieldsMap.contains(fieldName)) {
       attrs = attrs ++ refFieldsMap(fieldName)
@@ -604,23 +613,25 @@ class OpenSPGDslParser extends ParserInterface {
     } else {
       val ddlBlockSet = ctx.create_action_body().asScala.map(x => parseCreateActionBody(x)).toSet
       val matchEleInfo = matchBlock.patterns.map(x => x._2.graphPattern.nodes).flatten
-      val allEleInfo = ddlBlockSet.map {
-        case AddVertex(s, _) => s.alias -> s
-        case _ => null
-      }.filter(_ != null).toMap ++ matchEleInfo
+      val allEleInfo = ddlBlockSet
+        .map {
+          case AddVertex(s, _) => s.alias -> s
+          case _ => null
+        }
+        .filter(_ != null)
+        .toMap ++ matchEleInfo
       ddlBlockSet.map {
         case c: AddVertex => c
         case c: AddProperty => c
-        case c: AddPredicate => AddPredicate(
-          PredicateElement(
-            c.predicate.label,
-            c.predicate.alias,
-            allEleInfo(c.predicate.source.alias),
-            allEleInfo(c.predicate.target.alias),
-            c.predicate.fields,
-            c.predicate.direction
-          )
-        )
+        case c: AddPredicate =>
+          AddPredicate(
+            PredicateElement(
+              c.predicate.label,
+              c.predicate.alias,
+              allEleInfo(c.predicate.source.alias),
+              allEleInfo(c.predicate.target.alias),
+              c.predicate.fields,
+              c.predicate.direction))
       }.toSet
 
     }

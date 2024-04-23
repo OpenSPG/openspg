@@ -416,12 +416,12 @@ abstract class KGReasonerSession[T <: RDG[T]: TypeTag](
         case DDLBlock(ddlOps, _) =>
           val ddlOp = ddlOps.head
           ddlOp match {
-            case AddProperty(s, propertyName, propertyType) =>
+            case AddProperty(s, propertyName, propertyType, _) =>
               val graph = catalog.getGraph(block.graph.graphName)
               for (label <- s.typeNames) {
                 graph.addProperty(label, propertyName, propertyType, false)
               }
-            case AddPredicate(predicate) =>
+            case AddPredicate(predicate, _) =>
               val graph = catalog.getGraph(block.graph.graphName)
               predicate match {
                 case PredicateElement(label, _, src: Element, dst: Element, fields, direction) =>
