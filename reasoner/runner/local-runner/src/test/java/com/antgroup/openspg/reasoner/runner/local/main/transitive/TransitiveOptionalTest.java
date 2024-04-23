@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.reasoner.runner.local.main.transitive;
 
+import com.antgroup.openspg.reasoner.catalog.impl.KGCatalog;
+import com.antgroup.openspg.reasoner.catalog.impl.KgSchemaConnectionInfo;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
@@ -1292,111 +1294,564 @@ public class TransitiveOptionalTest {
     Assert.assertEquals(1, rst.getRows().size());
   }
 
+//  @Test
+//  public void testCreateInstance1() {
+//    String dsl = "Define (s:AMLz50.Custid)-[p:strNumInWhiteBlack]->(o:Boolean) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)<-[pp:hasCust]-(str:AMLz50.STR)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        close_num = group(s).countIf(str.status == 'CLOSE', str)\n" +
+//            "        strNum = group(s).countIf(str.conclusion == 'NOISSUE' AND str.status == 'CLOSE', str)\n" +
+//            "        R1: close_num == strNum\n" +
+//            "        o = true\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "Define (s:AMLz50.Custid)-[p:isInWhiteBlack]->(o:Boolean) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)<-[:hasCust]-(str:AMLz50.STR)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        \n" +
+//            "        R0 = rule_value(s.strNumInWhiteBlack == true, true, false)\n" +
+//            "\n" +
+//            "        R1: str.matchrule == '0202'\n" +
+//            "        R2: str.isreport == '1' \n" +
+//            "\n" +
+//            "        o = (R1 and R2) or R0\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "//1.汇集者定义\n" +
+//            "Define (s:AMLz50.Custid)-[p:isAggregator]->(o:Boolean) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)<-[e:complained]-(u1:AMLz50.Custid)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R0(\"排白条件\"): s.isInWhiteBlack == null or s.isInWhiteBlack == false\n" +
+//            "        R1(\"90天流出金额大于100万\"): s.trdAmtIn90d > 100000000\n" +
+//            "        R2(\"90天交易金额小于<=2亿\"): s.trdAmt90d/1000000.0 <=200000\n" +
+//            "        R3(\"90天转入客户数大于1000\"): s.trdCntCustIn90d > 1000\n" +
+//            "        R4(\"被投诉色情诈骗\"): e.createMemo rlike \"(色情)|(约炮)|(裸聊)|(上门服务)|(诱惑)|(黄色)|(涩情)|(涉黄)|(隐私部位)|(挑逗)|(看片)\"\n" +
+//            "      complainNum = group(s).count(e)\n" +
+//            "        R5(\"被投诉大于20条\"): complainNum >=20\n" +
+//            "        R6(\"转入方主要男性占比高\"): s.custcntpty90CustNum90dInGenderMale*1.0/(s.custcntpty90CustNum90dInGenderMale+\ts.custcntpty90CustNum90dInGenderFemale) >=0.6\n" +
+//            "        R7(\"转入方男性数量>=500\"): s.custcntpty90CustNum90dInGenderMale >= 500\n" +
+//            "\n" +
+//            "        o = true\n" +
+//            "    }\n" +
+//            "    Action {\n" +
+//            "        gang = createNodeInstance(\n" +
+//            "            type=AMLz50.Gang,\n" +
+//            "            value={\n" +
+//            "                id=concat(s.id, \"_gang\")\n" +
+//            "            }\n" +
+//            "        )\n" +
+//            "        createEdgeInstance(\n" +
+//            "            src=gang,\n" +
+//            "          dst=s,\n" +
+//            "          type=has,\n" +
+//            "          value={\n" +
+//            "          }\n" +
+//            "        )\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "//6 团伙成员同设备方\n" +
+//            "Define (s:AMLz50.Gang)-[p:hasSameMedia]->(o:Boolean) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)-[:has]->(c1:AMLz50.Custid)\n" +
+//            "        (c1)-[:amlSameMediaEdge]->(c2:AMLz50.Custid)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R0: c1.isAggregator\n" +
+//            "        R1(\"c2的90天交易金额大于100万\"): c2.trdAmt90d >= 100000000\n" +
+//            "        R2(\"最多取10个\"): group(c1).top(c2.trdAmt90d, 10)\n" +
+//            "        o = true\n" +
+//            "    }\n" +
+//            "    Action{\n" +
+//            "        createEdgeInstance(\n" +
+//            "            src=s,\n" +
+//            "          dst=c2,\n" +
+//            "          type=has,\n" +
+//            "          value={\n" +
+//            "          }\n" +
+//            "        )\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "//7 团伙成员转出方\n" +
+//            "Define (s:AMLz50.Gang)-[p:hasTransferOut]->(o:Boolean) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)-[:has]->(c1:AMLz50.Custid)\n" +
+//            "        (c1)-[e:aml90dTradeEdge]->(c2:AMLz50.Custid)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R1(\"转出交易金额>5w\"): e.payamt90d >= 5000000\n" +
+//            "        R2(\"c2的90天交易金额大于100万\"): c2.trdAmt90d >= 100000000\n" +
+//            "        R3(\"最多取10个\"): group(c1).top(e.payamt90d, 10)\n" +
+//            "        o = true\n" +
+//            "    }\n" +
+//            "    Action{\n" +
+//            "        createEdgeInstance(\n" +
+//            "            src=s,\n" +
+//            "          dst=c2,\n" +
+//            "          type=has,\n" +
+//            "          value={\n" +
+//            "          }\n" +
+//            "        )\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "//7 团伙公司成员的法人/股东\n" +
+//            "Define (s:AMLz50.Gang)-[p:hasCompanyRole]->(o:Boolean) {\n" +
+//            "    GraphStructure {\n" +
+//            "        c1 [AMLz50.Custid]\n" +
+//            "\t\tc2 [AMLz50.Custid]\n" +
+//            "        s -> c1 [has]\n" +
+//            "        c1 -> c2[ubo, legalperson]\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R1(\"转出交易金额>5w\"): e.payamt90d >= 5000000\n" +
+//            "        R2(\"c2的90天交易金额大于100万\"): c2.trdAmt90d >= 100000000\n" +
+//            "        R3(\"最多取10个\"): group(c1).top(e.payamt90d, 10)\n" +
+//            "        o =true\n" +
+//            "    }\n" +
+//            "    Action{\n" +
+//            "        createEdgeInstance(\n" +
+//            "            src=s,\n" +
+//            "          dst=c2,\n" +
+//            "          type=has,\n" +
+//            "          value={\n" +
+//            "          }\n" +
+//            "        )\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "//2.流转方定义\n" +
+//            "//2-1：定义团伙成员间交易\n" +
+//            "Define (s:AMLz50.Gang)-[p:tradeInGang]->(o:Int) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)-[:has]->(c1:AMLz50.Custid),\n" +
+//            "        (s)-[:has]->(c2:AMLz50.Custid),\n" +
+//            "        (c1)-[e:aml90dTradeEdge]->(c2)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R1: e.payamt90d >= 1000000.0\n" +
+//            "        o = group(s).sum(e.payamt90d)\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "//2-2：团伙内成员资金流入\n" +
+//            "Define (s:AMLz50.Custid)-[p:tradeInInGang]->(o:Int) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)<-[:has]-(g:AMLz50.Gang),\n" +
+//            "        (c2:AMLz50.Custid)<-[:has]-(g)\n" +
+//            "        (s)<-[e:aml90dTradeEdge]-(c2)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        o = group(s).sum(e.payamt90d)\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "\n" +
+//            "//2-3：团伙内统计流转方\n" +
+//            "Define (s:AMLz50.Custid)-[p:isTraderInGang]->(o:Boolean) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)<-[:has]-(g:AMLz50.Gang)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R1(\"总交易金额大于50万\"): s.trdAmt90d > 50000000\n" +
+//            "        tradeInInGang = rule_value(s.tradeInInGang == null, 0, s.tradeInInGang)\n" +
+//            "        R2(\"团伙内流入大于20万\"): tradeInInGang > 20000000\n" +
+//            "        R3(\"近90天交易金额小于1亿元\"): s.trdAmt90d*1.0/1000000.0 <=10000\n" +
+//            "\t    R6(\"流入客户小于1000\"):  s.trdCntCustIn90d <= 1000\n" +
+//            "\t\tR7(\"流出客户小于1000\"):  s.trdCntCustOut90d <= 1000\n" +
+//            "        o = true\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "//3.返款方\n" +
+//            "Define (s:AMLz50.Custid)-[p:refundCashBack]->(o:Boolean) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)<-[:has]-(g:AMLz50.Gang)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R1(\"90天交易总金额大于100万\"): s.trdAmt90d > 50000000\n" +
+//            "        R2(\"90天转出客户数大于500\"): s.trdCntCustOut90d > 500\n" +
+//            "        R3(\"转出方主要为女性\"): s.custcntpty90CustNum90dOutGenderFemale*1.0/(s.custcntpty90CustNum90dOutGenderFemale+s.custcntpty90CustNum90dOutGenderMale) >=0.6\n" +
+//            "        R4(\"转出方女性大于200人\"):s.custcntpty90CustNum90dOutGenderFemale >=200\n" +
+//            "        o = true\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "// 4.抽离者定义\n" +
+//            "Define (s:AMLz50.Custid)-[p:extraCust]->(o:AMLz50.Custid) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)-[e:aml90dTradeEdge]->?(o)\n" +
+//            "        (s)-[e2:tradeFund]->(u1:AMLz50.Custid)-[e3:aml90dTradeEdge]->?(o)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R0(\"不为白名单用户\"): o.isInWhiteBlack == null or o.isInWhiteBlack == false\n" +
+//            "        R1(\"s是流转着\"): s.isAggregator != null and s.isAggregator == true\n" +
+//            "        R2(\"转账必须造1万以上\"): (exists(e) and e.payamt90d > 1000000) or (exists(e3) and e3.payamt90d > 1000000)\n" +
+//            "        R3(\"提现金额大于20万\"): o.trdAmtWithdrawOut90d > 20000000\n" +
+//            "        R4(\"银行卡提现比例大于20%\"): o.trdAmtOutToBankcardPercent90d > 0.3\n" +
+//            "        R5(\"o的流入客户数量小于500\"): o.trdCntCustIn90d <500\n" +
+//            "        R6(\"o的流出客户数小于500\"): o.trdCntCustOut90d<500\n" +
+//            "        p.__from_id__ = s.id\n" +
+//            "        p.__to_id__ = o.id\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "//4.1.抽离者数量\n" +
+//            "Define (s:AMLz50.Custid)-[p:extraNum]->(o:Int) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)-[:extraCust]->(funder:AMLz50.Custid)\n" +
+//            "    }Rule {\n" +
+//            "        num = group(s).count(funder)\n" +
+//            "        o = num\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "// 5.法人股东定义\n" +
+//            "//5.1定义法人代表\n" +
+//            "Define (s:AMLz50.Gang)-[p:legalpersonRole]->(o:Int) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)-[:has]->(c1:AMLz50.Custid),\n" +
+//            "        (s)-[:has]->(c2:AMLz50.Custid),\n" +
+//            "        (c1)-[e:legalperson]->(c2)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R1(\"存在角色\"): \te.roleText != null\n" +
+//            "        o = true\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "//5.2定义股东\n" +
+//            "Define (s:AMLz50.Gang)-[p:uboRole]->(o:Int) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)-[:has]->(c1:AMLz50.Custid),\n" +
+//            "        (s)-[:has]->(c2:AMLz50.Custid),\n" +
+//            "        (c1)-[e:ubo]->(c2)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R1(\"股权大于0\"): \te.weight >0\n" +
+//            "        o = true\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "//5.3定义高管\n" +
+//            "Define (s:AMLz50.Gang)-[p:executiveRole]->(o:Int) {\n" +
+//            "    GraphStructure {\n" +
+//            "        (s)-[:has]->(c1:AMLz50.Custid),\n" +
+//            "        (s)-[:has]->(c2:AMLz50.Custid),\n" +
+//            "        (c1)-[e:executive]->(c2)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R1(\"存在角色\"): \te.roleText != null\n" +
+//            "        o = true\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "Define (s:AMLz50.Custid)-[p:companyRole]->(o:Boolean) {\n" +
+//            "    GraphStructure {\n" +
+//            "         (s)<-[:has]-(g:AMLz50.Gang)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R1(\"有法人角色\") = rule_value(g.legalpersonRole == true , true, false) \n" +
+//            "        R2(\"有股东角色\") = rule_value(g.uboRole == true , true, false)\n" +
+//            "        R3(\"有高管角色\") = rule_value(g.executiveRole == true , true, false)\n" +
+//            "        o= R1 or R2 or R3\n" +
+//            "    }\n" +
+//            "}\n" +
+//            "\n" +
+//            "Define (s:AMLz50.Gang)-[p:gangSize]->(o:Int) {\n" +
+//            "    GraphStructure {\n" +
+//            "         (s)-[:has]->(c:AMLz50.Custid)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R0: s.hasSameMedia || s.hasTransferOut || s.hasCompanyRole\n" +
+//            "        o = group(s).count(c.id)\n" +
+//            "    }\n" +
+//            "} \n" +
+//            "\n" +
+//            "Define (s:AMLz50.Gang)-[p:gangTradeAmt]->(o:Int) {\n" +
+//            "    GraphStructure {\n" +
+//            "         (s)-[:has]->(c:AMLz50.Custid)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R0: s.gangSize > 0\n" +
+//            "        o = group(s).sum(c.trdAmt90d)\n" +
+//            "    }\n" +
+//            "} \n" +
+//            "\n" +
+//            "\n" +
+//            "Define (s:AMLz50.Gang)-[p:isValid]->(o:Boolean) {\n" +
+//            "    GraphStructure {\n" +
+//            "         (s)-[:has]->(c:AMLz50.Custid)\n" +
+//            "    }\n" +
+//            "    Rule {\n" +
+//            "        R1 = rule_value(s.gangSize > 3 , true, false) \n" +
+//            "        R2 = rule_value(s.gangTradeAmt > 2000000000 , true, false)\n" +
+//            "        R3 = rule_value(s.gangTradeAmt*1.0/1000000.0 <=100000 , true, false)\n" +
+//            "        o= R1 and R2 and R3\n" +
+//            "    }\n" +
+//            "} \n" +
+//            "\n" +
+//            "// // 2088741282888930\n" +
+//            "// // 查找使用了相同主演的两个导演\n" +
+//            "// GraphStructure {\n" +
+//            "//   A [AMLz50.Custid, __start__='true']\n" +
+//            "//   B [AMLz50.Gang]\n" +
+//            "//   B->A [has]\n" +
+//            "// }\n" +
+//            "// Rule {\n" +
+//            "// }\n" +
+//            "// Action {\n" +
+//            "//   get(A.id,A.test, B) \n" +
+//            "// }\n" +
+//            "\n" +
+//            "GraphStructure {\n" +
+//            "    G [AMLz50.Gang]\n" +
+//            "    A [AMLz50.Custid, __start__='true']\n" +
+//            "    G -> A [has]\n" +
+//            "}\n" +
+//            "\n" +
+//            "Rule {\n" +
+//            "    R0: G.isValid\n" +
+//            "\n" +
+//            "    Custids = group(G).concat_agg(A.id)\n" +
+//            "    RegAddrs = group(G).concat_agg(A.regAddr)\n" +
+//            "    PermanentAddrs = group(G).concat_agg(A.permanentAddr)\n" +
+//            "\n" +
+//            "    aggregatorCustids = group(G).ConcatAggIf(A.isAggregator, A.id)\n" +
+//            "    aggregatorRegAddrs = group(G).ConcatAggIf(A.isAggregator, A.regAddr)\n" +
+//            "    aggregatorPermanentAddrs = group(G).ConcatAggIf(A.isAggregator, A.permanentAddr)\n" +
+//            "\n" +
+//            "    traderCustids = group(G).ConcatAggIf(A.isTraderInGang, A.id)\n" +
+//            "    traderRegAddrs = group(G).ConcatAggIf(A.isTraderInGang, A.regAddrs)\n" +
+//            "    traderPermanentAddrs = group(G).ConcatAggIf(A.isTraderInGang, A.permanentAddrs)\n" +
+//            "\n" +
+//            "    refundCustids = group(G).ConcatAggIf(A.refundCashBack, A.id)\n" +
+//            "    refundRegAddrs = group(G).ConcatAggIf(A.refundCashBack, A.regAddrs)\n" +
+//            "    refundPermanentAddrs = group(G).ConcatAggIf(A.refundCashBack, A.permanentAddrs)\n" +
+//            "\n" +
+//            "    // extraCustids = group(G).ConcatAggIf(A.extraNum != null, A.id)\n" +
+//            "    // extraRegAddrs = group(G).ConcatAggIf(A.extraNum != null, A.regAddrs)\n" +
+//            "    // extraPermanentAddrs = group(G).ConcatAggIf(A.extraNum != null, A.permanentAddrs)\n" +
+//            "\n" +
+//            "    companyRoleCustids = group(G).ConcatAggIf(A.companyRole, A.id)\n" +
+//            "    companyRoleRegAddrs = group(G).ConcatAggIf(A.companyRole, A.regAddr)\n" +
+//            "    companyRolePermanentAddrs = group(G).ConcatAggIf(A.companyRole, A.permanentAddr)  \n" +
+//            "}\n" +
+//            "\n" +
+//            "Action {\n" +
+//            "    get(G.id as gid, \n" +
+//            "        Custids, RegAddrs, PermanentAddrs,\n" +
+//            "        aggregatorCustids, aggregatorRegAddrs, aggregatorPermanentAddrs, \n" +
+//            "        traderCustids, traderRegAddrs, traderPermanentAddrs, \n" +
+//            "        refundCustids, refundRegAddrs, refundPermanentAddrs,\n" +
+//            "        companyRoleCustids, companyRoleRegAddrs, companyRolePermanentAddrs\n" +
+//            "    )\n" +
+//            "}\n" +
+//            "    \n";
+//
+//    System.out.println(dsl);
+//    LocalReasonerTask task = new LocalReasonerTask();
+//    task.setDsl(dsl);
+//
+////    // add mock catalog
+////    Map<String, Set<String>> schema = new HashMap<>();
+////    schema.put(
+////        "Custid",
+////        Convert2ScalaUtil.toScalaImmutableSet(
+////            Sets.newHashSet(
+////                "trdAmtIn90d",
+////                "trdAmt90d",
+////                "cid",
+////                "trdCntCustIn90d",
+////                "custcntpty90CustNum90dInGenderFemale",
+////                "custcntpty90CustNum90dInGenderMale",
+////                "name")));
+////    schema.put(
+////        "STR",
+////        Convert2ScalaUtil.toScalaImmutableSet(
+////            Sets.newHashSet("conclusion", "name", "status", "matchrule", "isreport")));
+////
+////    schema.put("Gang", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("cid", "name")));
+////    schema.put("Gang_has_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+////    //    schema.put("Gang_include_Custid",
+////    // Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+////
+////    schema.put(
+////        "Custid_complained_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+////    schema.put(
+////        "Custid_trade_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+////    schema.put(
+////        "Custid_sameMedia_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+////    schema.put(
+////        "Custid_companyRole_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+////    schema.put(
+////        "STR_hasCust_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("createMemo")));
+////
+////    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
+//    Catalog catalog = new KGCatalog(635000152L, new KgSchemaConnectionInfo("https://kgengine.alipay.com", "3450e1e9Dd360C08"));
+//    catalog.init();
+//    task.setCatalog(catalog);
+//    task.setGraphLoadClass(
+//        "com.antgroup.openspg.reasoner.runner.local.main.transitive.TransitiveOptionalTest$GangGraphLoader");
+//
+//    // enable subquery
+//    Map<String, Object> params = new HashMap<>();
+//    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, false);
+//    params.put(Constants.SPG_REASONER_MULTI_VERSION_ENABLE, "true");
+//    task.setParams(params);
+//
+//    LocalReasonerRunner runner = new LocalReasonerRunner();
+//    LocalReasonerResult result = runner.run(task);
+//    Assert.assertEquals(1, result.getRows().size());
+//  }
+//
+//  public static class GangGraphLoader extends AbstractLocalGraphLoader {
+//    @Override
+//    public List<IVertex<String, IProperty>> genVertexList() {
+//      return Lists.newArrayList(
+//          constructionVertex("A1", "Custid", "name", "A1", "cid", "a1"),
+//          constructionVertex("A2", "Custid", "name", "A2", "cid", "a2"),
+//          constructionVertex("A3", "Custid", "name", "A3", "cid", "a3"),
+//          constructionVertex("A4", "Custid", "name", "A4", "cid", "a4"),
+//          constructionVertex("A5", "Custid", "name", "A5", "cid", "a5"));
+//
+//      //          constructionVertex("B1", "Gang", "name", "B2", "cid", "b1"));
+//    }
+//
+//    @Override
+//    public List<IEdge<String, IProperty>> genEdgeList() {
+//      return Lists.newArrayList(
+//          //          constructionEdge("B1", "has", "A1", "info", "b1_a1"),
+//          //          constructionEdge("B1", "has", "A2", "info", "b1_a2"),
+//          constructionEdge("A1", "complained", "A2", "info", "a1ca2"),
+//          constructionEdge("A2", "sameMedia", "A3", "info", "a2smda3"),
+//          constructionEdge("A3", "companyRole", "A4", "info", "a3trd4"),
+//          constructionEdge("A4", "trade", "A5", "info", "a3cmp5"));
+//    }
+//  }
+
   @Test
-  public void testCreateInstance() {
+  public void testCreateInstance2() {
     String dsl =
-        //        "Define (s:Custid)-[p:strNum]->(o:Int) {\n"
-        //            + "    GraphStructure {\n"
-        //            + "        (s)<-[pp:hasCust]-(str:STR)\n"
-        //            + "    }\n"
-        //            + "    Rule {\n"
-        //            + "        o = group(s).countIf(str.status == 'CLOSE', str)\n"
-        //            + "    }\n"
-        //            + "}\n"
-        //            + "\n"
-        //            + "Define (s:Custid)-[p:isInWhiteBlack]->(o:Boolean) {\n"
-        //            + "    GraphStructure {\n"
-        //            + "        (s)<-[:hasCust]-(str:STR)\n"
-        //            + "    }\n"
-        //            + "    Rule {\n"
-        //            + "        R1: str.matchrule == '0202'\n"
-        //            + "        R2: str.isreport == '1' \n"
-        //            + "\n"
-        //            + "        o = (R1 and R2)\n"
-        //            + "    }\n"
-        //            + "}\n"
-        //            + "\n"
-        " "
-            + "Define (s:Custid)-[p:isAggregator]->(o:Boolean) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)<-[e:complained]-(u1:Custid)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            + "        o = true\n"
-            + "    }\n"
-            + "    Action {\n"
-            + "        gang = createNodeInstance(\n"
-            + "            type=Gang,\n"
-            + "            value={\n"
-            + "                id=concat(s.id, \"_gang\")\n"
-            + "            }\n"
-            + "        )\n"
-            + "        createEdgeInstance(\n"
-            + "            src=gang,\n"
-            + "          dst=s,\n"
-            + "          type=has,\n"
-            + "          value={\n"
-            + "          }\n"
-            + "        )\n"
-            + "    }\n"
-            + "}\n"
-            + "Define (s:Gang)-[p:hasSameMedia]->(o:Boolean) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)-[:has]->(c1:Custid)\n"
-            + "        (c1)-[:sameMedia]->(c2:Custid)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            + "        R1: c1.isAggregator \n"
-            + "        o = true \n"
-            + "    }\n"
-            + "    Action {\n"
-            + "        createEdgeInstance(\n"
-            + "            src=s,\n"
-            + "          dst=c2,\n"
-            + "          type=has,\n"
-            + "          value={\n"
-            + "          }\n"
-            + "        )\n"
-            + "    }\n"
-            + "}\n"
-            + "Define (s:Gang)-[p:hasTrader]->(o:Boolean) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)-[:has]->(c1:Custid)\n"
-            + "        (c1)-[:trade]->(c2:Custid)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            //            + "        R1: c.isSameMedia \n"
-            //            + "        R2: s.hasSameMedia \n"
-            + "        o = true \n"
-            + "    }\n"
-            + "    Action {\n"
-            + "        createEdgeInstance(\n"
-            + "            src=s,\n"
-            + "          dst=c2,\n"
-            + "          type=has,\n"
-            + "          value={\n"
-            + "          }\n"
-            + "        )\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "GraphStructure {"
-            + "  A [Custid, __start__ = 'true']\n"
-            + "  B [Gang]\n"
-            //            + "  C [Custid]\n"
-            + "  B->A [has] as e1\n"
-            //            + "  B->C [include] as e2\n"
-            + "}\n"
-            + "Rule {\n"
-            //            + "  R0: B.hasSameMedia || B.hasTrader\n"
+            "\n"
+                    + "Define (s:Custid)-[p:isAggregator]->(o:Boolean) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)<-[e:complained]-(u1:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "        o = true\n"
+                    + "    }\n"
+                    + "    Action {\n"
+                    + "        gang = createNodeInstance(\n"
+                    + "            type=Gang,\n"
+                    + "            value={\n"
+                    + "                id=concat(s.id, \"_gang\")\n"
+                    + "            }\n"
+                    + "        )\n"
+                    + "        createEdgeInstance(\n"
+                    + "            src=gang,\n"
+                    + "          dst=s,\n"
+                    + "          type=has,\n"
+                    + "          value={\n"
+                    + "          }\n"
+                    + "        )\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "Define (s:Gang)-[p:hasSameMedia]->(o:Boolean) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)-[:has]-(c1:Custid)-[:sameMedia]->(c2:Custid)\n"
+//                    + "        (c1)-[:sameMedia]->(c2:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "        R1: c1.isAggregator \n"
+                    + "        o = true \n"
+                    + "    }\n"
+                    + "    Action {\n"
+                    + "        createEdgeInstance(\n"
+                    + "            src=s,\n"
+                    + "          dst=c2,\n"
+                    + "          type=has,\n"
+                    + "          value={\n"
+                    + "          }\n"
+                    + "        )\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "Define (s:Gang)-[p:hasTrader]->(o:Boolean) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)-[:has]-(c1:Custid)-[:trade]->(c2:Custid)\n"
+//                    + "        (c1)-[:trade]->(c2:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "        o = true \n"
+                    + "    }\n"
+                    + "    Action {\n"
+                    + "        createEdgeInstance(\n"
+                    + "            src=s,\n"
+                    + "          dst=c2,\n"
+                    + "          type=has,\n"
+                    + "          value={\n"
+                    + "          }\n"
+                    + "        )\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "\n"
+                    + "Define (s:Gang)-[p:hasCompanyRole]->(o:Boolean) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)-[:has]-(c1:Custid)-[:companyRole]->(c2:Custid)\n"
+//                    + "        (c1)-[:companyRole]->(c2:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "        o = true \n"
+                    + "    }\n"
+                    + "    Action {\n"
+                    + "        createEdgeInstance(\n"
+                    + "            src=s,\n"
+                    + "          dst=c2,\n"
+                    + "          type=has,\n"
+                    + "          value={\n"
+                    + "          }\n"
+                    + "        )\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "\n"
+                    + "Define (s:Gang)-[p:custidNum]->(o:Boolean) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)-[:has]->(c:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "        R1 =  rule_value(s.hasSameMedia == true, true, false) \n"
+                    + "        R2 =  rule_value(s.hasCompanyRole == true, true, false) \n"
+                    + "        R3 =  rule_value(s.hasTrader== true, true, false) \n"
+                    + "        o = R1 or R2 or R3 \n"
+                    + "    }\n"
+                    + "}\n"
+                    + "\n"
+                    + "GraphStructure {"
+                    + "  A [Custid, __start__ = 'true']\n"
+                    + "  B [Gang]\n"
+                    //            + "  C [Custid]\n"
+                    + "  B->A [has] as e1\n"
+                    //            + "  B->C [include] as e2\n"
+                    + "}\n"
+                    + "Rule {\n"
+                    + "  R1: B.custidNum == true\n"
+                    + "  gangIds = group(B).concat_agg(A.id) \n"
+                    + "  gangNames = group(B).concat_agg(A.name) \n"
+                    + "}\n"
+                    + "Action {\n"
+//                    + "  get(B.id, A.id,  B.hasSameMedia, B.hasTrader, B.hasCompanyRole, e1.__property_json__) \n"
+                    + "  get(B.id, B.custidNum, gangIds, gangNames, A.id) \n"
 
-            + "  R1: B.hasSameMedia || B.hasTrader\n"
-            //            + "  R2: B.hasSameMedia || B.hasTrader\n"
-
-            + "}\n"
-            + "Action {\n"
-            + "  get(B.id, A.id, e1.__property_json__) \n"
-            + "}";
+                    + "}";
 
     System.out.println(dsl);
     LocalReasonerTask task = new LocalReasonerTask();
@@ -1405,20 +1860,20 @@ public class TransitiveOptionalTest {
     // add mock catalog
     Map<String, Set<String>> schema = new HashMap<>();
     schema.put(
-        "Custid",
-        Convert2ScalaUtil.toScalaImmutableSet(
-            Sets.newHashSet(
-                "trdAmtIn90d",
-                "trdAmt90d",
-                "cid",
-                "trdCntCustIn90d",
-                "custcntpty90CustNum90dInGenderFemale",
-                "custcntpty90CustNum90dInGenderMale",
-                "name")));
+            "Custid",
+            Convert2ScalaUtil.toScalaImmutableSet(
+                    Sets.newHashSet(
+                            "trdAmtIn90d",
+                            "trdAmt90d",
+                            "cid",
+                            "trdCntCustIn90d",
+                            "custcntpty90CustNum90dInGenderFemale",
+                            "custcntpty90CustNum90dInGenderMale",
+                            "name")));
     schema.put(
-        "STR",
-        Convert2ScalaUtil.toScalaImmutableSet(
-            Sets.newHashSet("conclusion", "name", "status", "matchrule", "isreport")));
+            "STR",
+            Convert2ScalaUtil.toScalaImmutableSet(
+                    Sets.newHashSet("conclusion", "name", "status", "matchrule", "isreport")));
 
     schema.put("Gang", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("cid", "name")));
     schema.put("Gang_has_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
@@ -1426,23 +1881,25 @@ public class TransitiveOptionalTest {
     // Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
 
     schema.put(
-        "Custid_complained_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+            "Custid_complained_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
-        "Custid_trade_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+            "Custid_trade_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
-        "Custid_sameMedia_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+            "Custid_sameMedia_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
-        "STR_hasCust_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("createMemo")));
+            "Custid_companyRole_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+            "STR_hasCust_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("createMemo")));
 
     Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
     catalog.init();
     task.setCatalog(catalog);
     task.setGraphLoadClass(
-        "com.antgroup.openspg.reasoner.runner.local.main.transitive.TransitiveOptionalTest$GangGraphLoader");
+            "com.antgroup.openspg.reasoner.runner.local.main.transitive.TransitiveOptionalTest$GangGraphLoader");
 
     // enable subquery
     Map<String, Object> params = new HashMap<>();
-    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, false);
+    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
     params.put(Constants.SPG_REASONER_MULTI_VERSION_ENABLE, "true");
     task.setParams(params);
 
@@ -1455,10 +1912,11 @@ public class TransitiveOptionalTest {
     @Override
     public List<IVertex<String, IProperty>> genVertexList() {
       return Lists.newArrayList(
-          constructionVertex("A1", "Custid", "name", "A1", "cid", "a1"),
-          constructionVertex("A2", "Custid", "name", "A2", "cid", "a2"),
-          constructionVertex("A3", "Custid", "name", "A3", "cid", "a3"),
-          constructionVertex("A4", "Custid", "name", "A4", "cid", "a4"));
+              constructionVertex("A1", "Custid", "name", "nA1", "cid", "a1"),
+              constructionVertex("A2", "Custid", "name", "nA2", "cid", "a2"),
+              constructionVertex("A3", "Custid", "name", "nA3", "cid", "a3"),
+              constructionVertex("A4", "Custid", "name", "nA4", "cid", "a4"),
+              constructionVertex("A5", "Custid", "name", "nA5", "cid", "a5"));
 
       //          constructionVertex("B1", "Gang", "name", "B2", "cid", "b1"));
     }
@@ -1466,11 +1924,12 @@ public class TransitiveOptionalTest {
     @Override
     public List<IEdge<String, IProperty>> genEdgeList() {
       return Lists.newArrayList(
-          //          constructionEdge("B1", "has", "A1", "info", "b1_a1"),
-          //          constructionEdge("B1", "has", "A2", "info", "b1_a2"),
-          constructionEdge("A1", "complained", "A2", "info", "a1ca2"),
-          constructionEdge("A3", "trade", "A4", "info", "a2trd3"),
-          constructionEdge("A2", "sameMedia", "A3", "info", "a3smda4"));
+              //          constructionEdge("B1", "has", "A1", "info", "b1_a1"),
+              //          constructionEdge("B1", "has", "A2", "info", "b1_a2"),
+              constructionEdge("A1", "complained", "A2", "info", "a1ca2"),
+              constructionEdge("A2", "sameMedia", "A3", "info", "a2smda3"),
+              constructionEdge("A3", "companyRole", "A4", "info", "a3trd4"),
+              constructionEdge("A3", "trade", "A5", "info", "a3cmp5"));
     }
   }
 }
