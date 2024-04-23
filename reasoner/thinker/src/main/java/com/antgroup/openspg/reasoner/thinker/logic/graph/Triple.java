@@ -12,7 +12,7 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
-public class Triple implements Element {
+public class Triple extends Element {
   private Element subject;
   private Element predicate;
   private Element object;
@@ -23,6 +23,25 @@ public class Triple implements Element {
     this.subject = subject;
     this.predicate = predicate;
     this.object = object;
+  }
+
+  @Override
+  public boolean matches(Element other) {
+    if (other instanceof Triple) {
+      return subject.matches(((Triple) other).subject)
+          && predicate.matches(((Triple) other).predicate)
+          && object.matches(((Triple) other).object);
+    } else {
+      return false;
+    }
+  }
+
+  public static Triple create(Element s, Element p, Element o) {
+    return new Triple(nullToAny(s), nullToAny(p), nullToAny(o));
+  }
+
+  private static Element nullToAny(Element n) {
+    return n == null ? Any.ANY : n;
   }
 
   /**

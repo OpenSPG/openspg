@@ -1,10 +1,16 @@
 package com.antgroup.openspg.reasoner.thinker.logic.rule;
 
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import java.util.Objects;
 
 public class EntityPattern<K> implements ClauseEntry {
   private Entity<K> entity;
+
+  @Override
+  public Element toElement() {
+    return entity;
+  }
 
   public EntityPattern() {}
 

@@ -28,13 +28,19 @@ public class TreeLogger implements Serializable {
   }
 
   public TreeLogger log(Object msg) {
-    if (this.currentNodeMsg == null) this.currentNodeMsg = new StringBuilder();
-    if (msg != null) this.currentNodeMsg.append(msg);
+    if (this.currentNodeMsg == null) {
+      this.currentNodeMsg = new StringBuilder();
+    }
+    if (msg != null) {
+      this.currentNodeMsg.append(msg);
+    }
     return this;
   }
 
   public TreeLogger addChild(String name) {
-    if (this.children == null) this.children = new ArrayList<TreeLogger>();
+    if (this.children == null) {
+      this.children = new ArrayList<>();
+    }
     TreeLogger ret = new TreeLogger(name);
     this.children.add(ret);
     return ret;
@@ -43,7 +49,7 @@ public class TreeLogger implements Serializable {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    genLog(sb, this, 0, false, new HashSet<Integer>());
+    genLog(sb, this, 0, false, new HashSet<>());
     return sb.toString();
   }
 
@@ -64,16 +70,24 @@ public class TreeLogger implements Serializable {
           sb.append(IDENT);
         }
     }
-    if (level != 0)
-      if (hasNextSibling) sb.append(CON);
-      else sb.append(END_CON);
+    if (level != 0) {
+      if (hasNextSibling) {
+        sb.append(CON);
+      } else {
+        sb.append(END_CON);
+      }
+    }
 
     sb.append(cur.currentNodeName);
-    if (cur.currentNodeMsg != null) sb.append(": ").append(cur.currentNodeMsg);
+    if (cur.currentNodeMsg != null) {
+      sb.append(": ").append(cur.currentNodeMsg);
+    }
     sb.append('\n');
 
-    Set<Integer> childrenVerts = new HashSet<Integer>(vertIdentIdxes);
-    if (hasNextSibling) childrenVerts.add(level * 2 - 1);
+    Set<Integer> childrenVerts = new HashSet<>(vertIdentIdxes);
+    if (hasNextSibling) {
+      childrenVerts.add(level * 2 - 1);
+    }
     if (cur.children != null && !cur.children.isEmpty()) {
       for (int i = 0; i < cur.children.size(); i++) {
         TreeLogger c = cur.children.get(i);
