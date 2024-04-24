@@ -25,6 +25,9 @@ public class VertexMeta {
   @JSONField(name = "name")
   private String name;
 
+  @JSONField(name = "nameZh")
+  private String nameZh;
+
   @JSONField(name = "attributeTypeDetailList")
   private List<PropertyMeta> attributeTypeDetailList;
 

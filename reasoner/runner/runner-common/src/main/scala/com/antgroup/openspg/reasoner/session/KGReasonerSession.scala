@@ -152,7 +152,24 @@ abstract class KGReasonerSession[T <: RDG[T]: TypeTag](
    * @return
    */
   def plan(query: String, params: Map[String, Object]): List[PhysicalOperator[T]] = {
-    optimizedLogicalPlan = plan2OptimizedLogicalPlan(query, params)
+    val start = System.currentTimeMillis()
+    val blocks = plan2UnresolvedLogicalPlan(query, params)
+    if (ParameterUtils.isEnableSPGPlanPrettyPrint(params)) {
+      for (block: Block <- blocks) {
+        logger.info(block.pretty)
+      }
+    }
+    logger.info(
+      "benchmark main plan plan2UnresolvedLogicalPlan cost = "
+        + (System.currentTimeMillis() - start))
+    planBlock(blocks, params)
+  }
+
+  /**
+   * Generate the optimization physical plan from Blocks.
+   */
+  def planBlock(blocks: List[Block], params: Map[String, Object]): List[PhysicalOperator[T]] = {
+    optimizedLogicalPlan = plan2OptimizedLogicalPlan(blocks, params)
     planLogicalPlan2PhysicalPlan(optimizedLogicalPlan, params)
   }
 
@@ -166,20 +183,9 @@ abstract class KGReasonerSession[T <: RDG[T]: TypeTag](
    * @return
    */
   def plan2OptimizedLogicalPlan(
-      query: String,
+      blocks: List[Block],
       params: Map[String, Object]): List[LogicalOperator] = {
-    var start = System.currentTimeMillis()
-    val blocks = plan2UnresolvedLogicalPlan(query, params)
-    if (ParameterUtils.isEnableSPGPlanPrettyPrint(params)) {
-      for (block: Block <- blocks) {
-        logger.info(block.pretty)
-      }
-    }
-
-    logger.info(
-      "benchmark main plan plan2UnresolvedLogicalPlan cost = "
-        + (System.currentTimeMillis() - start))
-    start = System.currentTimeMillis()
+    val start = System.currentTimeMillis()
     val optimizedLogicalPlan = plan2LogicalPlan(blocks, params)
     logger.info(
       "benchmark main plan plan2LogicalPlan cost = "

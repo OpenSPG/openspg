@@ -22,6 +22,7 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.Edge
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.GraphLPGRecordStruct;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
@@ -175,11 +176,21 @@ public class CloudExtGraphState extends MemGraphState {
           new Edge<>(
               srcVertexId,
               dstVertexId,
-              new EdgeProperty(edgeRecord.toPropertyMapWithId()),
-              0L,
+              toReasonerEdgeProperty(edgeRecord),
+              edgeRecord.getVersion(),
               direction,
               edgeRecord.getEdgeType().toString()));
     }
     return results;
+  }
+
+  private EdgeProperty toReasonerEdgeProperty(EdgeRecord edgeRecord) {
+    Map<String, Object> otherProperties = edgeRecord.toPropertyMap();
+    otherProperties.put(Constants.EDGE_FROM_ID_KEY, edgeRecord.getSrcId());
+    otherProperties.put(Constants.EDGE_TO_ID_KEY, edgeRecord.getDstId());
+    otherProperties.put(
+        Constants.EDGE_FROM_ID_TYPE_KEY, edgeRecord.getEdgeType().getStartVertexType());
+    otherProperties.put(Constants.EDGE_TO_ID_TYPE_KEY, edgeRecord.getEdgeType().getEndVertexType());
+    return new EdgeProperty(otherProperties);
   }
 }

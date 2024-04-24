@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VertexProperty implements IProperty {
-  private final Map<String, Object> props;
+  protected final Map<String, Object> props;
 
   public VertexProperty() {
     this.props = new HashMap<>();
