@@ -12,4 +12,11 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
-public class Any implements Element {}
+public class Any extends Element {
+  public static final Element ANY = new Any();
+
+  @Override
+  public boolean matches(Element other) {
+    return other != null;
+  }
+}

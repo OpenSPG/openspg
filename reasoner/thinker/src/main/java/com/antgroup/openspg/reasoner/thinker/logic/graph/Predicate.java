@@ -3,7 +3,7 @@ package com.antgroup.openspg.reasoner.thinker.logic.graph;
 import lombok.Data;
 
 @Data
-public class Predicate implements Element {
+public class Predicate extends Element {
   private String name;
 
   public Predicate() {}

@@ -16,7 +16,7 @@ import java.util.Objects;
 import lombok.Data;
 
 @Data
-public class Node implements Element {
+public class Node extends Element {
   private String type;
 
   private Node() {}

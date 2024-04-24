@@ -16,7 +16,7 @@ import java.util.Objects;
 import lombok.Data;
 
 @Data
-public class Entity<K> implements Element {
+public class Entity<K> extends Element {
   private K id;
   private String type;
 

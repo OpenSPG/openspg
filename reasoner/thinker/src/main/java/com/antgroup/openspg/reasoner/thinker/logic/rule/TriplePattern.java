@@ -1,5 +1,6 @@
 package com.antgroup.openspg.reasoner.thinker.logic.rule;
 
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 
 public class TriplePattern implements ClauseEntry {
@@ -9,6 +10,11 @@ public class TriplePattern implements ClauseEntry {
 
   public TriplePattern(Triple triple) {
     this.triple = triple;
+  }
+
+  @Override
+  public Element toElement() {
+    return triple;
   }
 
   /**

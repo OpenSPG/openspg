@@ -3,7 +3,7 @@ package com.antgroup.openspg.reasoner.thinker.logic.graph;
 import lombok.Data;
 
 @Data
-public class Value implements Element {
+public class Value extends Element {
   private String name;
   private Object val;
 
