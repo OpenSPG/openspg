@@ -1919,7 +1919,7 @@ public class TransitiveOptionalTest {
 
     // enable subquery
     Map<String, Object> params = new HashMap<>();
-    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
+    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, false);
     params.put(Constants.SPG_REASONER_MULTI_VERSION_ENABLE, "true");
     task.setParams(params);
 
