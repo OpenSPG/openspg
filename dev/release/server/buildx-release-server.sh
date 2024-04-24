@@ -10,6 +10,6 @@
 # or implied.
 
 docker buildx build -f Dockerfile --platform linux/arm64/v8,linux/amd64 --push \
-  -t openspg/openspg-server:0.0.3-beta1 \
+  -t openspg/openspg-server:0.0.3-beta2 \
   -t openspg/openspg-server:latest \
   .
