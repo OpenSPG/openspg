@@ -12,9 +12,8 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
-import lombok.Data;
-
 import java.util.Objects;
+import lombok.Data;
 
 @Data
 public class Entity<K> implements Element {
