@@ -4,20 +4,9 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.thinker.logic.graph.{Entity, Predicate}
-import com.antgroup.openspg.reasoner.thinker.logic.rule.{
-  ClauseEntry,
-  EntityPattern,
-  Node,
-  Rule,
-  TriplePattern
-}
-import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{
-  And,
-  Condition,
-  Not,
-  Or,
-  QlExpressCondition
-}
+import com.antgroup.openspg.reasoner.thinker.logic.rule._
+import com.antgroup.openspg.reasoner.thinker.logic.rule.exact._
+import com.antgroup.openspg.reasoner.thinker.util.ThinkerConditionUtil
 import org.scalatest.funspec.AnyFunSpec
 
 class SimplifyThinkerParserTest extends AnyFunSpec {
@@ -154,5 +143,22 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     assert(rule.getRoot.isInstanceOf[And])
     assert(rule.getRoot.asInstanceOf[And].getChildren.size() == 2)
     assert(rule.getDesc.equals("\"本品与其他解热、镇痛、抗炎药物同用时可增加胃肠道不良反应，并可能导致溃疡。\""))
+  }
+
+  it("test parse concept from condition") {
+    val condition: String = "get_value(\"高血压分层/`靶器官损害`\")"
+    val conceptList = ThinkerConditionUtil.parseAllConceptInCondition(condition)
+    assert(conceptList.size == 1)
+    assert(conceptList.head.equals(new Entity[String]("`靶器官损害`", "高血压分层")))
+
+    val condition2 = "hits(get_value(\"高血压分层/`心血管危险因素`\")) >= 3"
+    val conceptList2 = ThinkerConditionUtil.parseAllConceptInCondition(condition2)
+    assert(conceptList2.size == 1)
+    assert(conceptList2.head.equals(new Entity[String]("`心血管危险因素`", "高血压分层")))
+
+    val condition3 =
+      "hits(get_value(\"高血压分层/`心血管危险因素`\"), get_value(\"高血压分层/`2心血管危险因素`\"), get_value(\"高血压分层/`心血管危险因素`\")) >= 10"
+    val conceptList3 = ThinkerConditionUtil.parseAllConceptInCondition(condition3)
+    assert(conceptList3.size == 2)
   }
 }
