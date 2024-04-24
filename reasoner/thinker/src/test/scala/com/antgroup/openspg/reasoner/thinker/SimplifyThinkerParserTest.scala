@@ -3,7 +3,7 @@ package com.antgroup.openspg.reasoner.thinker
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{Element, Entity}
+import com.antgroup.openspg.reasoner.thinker.logic.graph.{Entity, Predicate}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.{
   ClauseEntry,
   EntityPattern,
@@ -58,7 +58,7 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
       parser.getConditionToElementMap()
     assert(
       conditionToElementMap(new QlExpressCondition("get_value(\"高血压分层/`临床并发症`\")")).head
-        .equals(new EntityPattern[Void](new Entity(null, "高血压分层/`临床并发症`"))))
+        .equals(new EntityPattern[String](new Entity("`临床并发症`", "高血压分层"))))
   }
 
   def getAllConditionInNode(node: Node): List[Condition] = {
@@ -146,8 +146,10 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     val object_ = pattern.getObject
     assert(subject.isInstanceOf[Entity[_]])
     assert(subject.asInstanceOf[Entity[_]].getType.equals("Med.drug"))
-    assert(predicate.asInstanceOf[Entity[_]].getType.equals("基本用药方案"))
-    assert(object_.asInstanceOf[Entity[_]].getType.equals("药品/`ACEI+噻嗪类利尿剂`"))
+    assert(predicate.asInstanceOf[Predicate].getName.equals("基本用药方案"))
+    assert(
+      object_.asInstanceOf[Entity[String]].getType.equals("药品")
+        && object_.asInstanceOf[Entity[String]].getId.equals("`ACEI+噻嗪类利尿剂`"))
     assert(rule.getBody.size() == 2)
     assert(rule.getRoot.isInstanceOf[And])
     assert(rule.getRoot.asInstanceOf[And].getChildren.size() == 2)

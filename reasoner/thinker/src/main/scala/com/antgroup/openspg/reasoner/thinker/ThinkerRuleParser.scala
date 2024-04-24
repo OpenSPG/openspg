@@ -72,7 +72,9 @@ class ThinkerRuleParser extends RuleExprParser {
     val newBody: ListBuffer[ClauseEntry] = new ListBuffer[ClauseEntry]()
     val resultNode: Node = ctx.getChild(0) match {
       case c: Concept_nameContext =>
-        newBody += new EntityPattern[Void](new Entity(null, c.getText))
+        val conceptEntity =
+          new Entity(c.concept_instance_id().getText, c.meta_concept_type().getText)
+        newBody += new EntityPattern[String](conceptEntity)
         new QlExpressCondition(
           expr2StringTransformer
             .transform(super.parseLogicTest(ctx))
@@ -125,7 +127,9 @@ class ThinkerRuleParser extends RuleExprParser {
       ctx: Project_primaryContext,
       body: ListBuffer[ClauseEntry]): Unit = {
     ctx.getChild(0) match {
-      case c: Concept_nameContext => body += new EntityPattern[Void](new Entity(null, c.getText))
+      case c: Concept_nameContext =>
+        body += new EntityPattern[String](
+          new Entity(c.concept_instance_id().getText, c.meta_concept_type().getText))
       case c: Value_expression_primaryContext =>
         thinkerParseValueExpressionPrimary(c, body)
       case c: Numeric_value_functionContext =>
@@ -149,7 +153,24 @@ class ThinkerRuleParser extends RuleExprParser {
       body: ListBuffer[ClauseEntry]): Unit = {
     ctx.non_parenthesized_value_expression_primary().getChild(0) match {
       case c: Function_exprContext => thinkerParseFunctionExpr(c, body)
+      case c: Binding_variableContext =>
+        thinkParseBindingVariable(c, body, ctx.property_name().asScala.toList)
       case _ =>
+    }
+  }
+
+  def thinkParseBindingVariable(
+      ctx: Binding_variableContext,
+      body: ListBuffer[ClauseEntry],
+      propertyNameList: List[Property_nameContext]): Unit = {
+    if (propertyNameList != null && propertyNameList.nonEmpty) {
+      /*
+       * 可能是多级属性如 A.index.blood
+      val subject = new logic.graph.Node(ctx.binding_variable_name().getText)
+      val predicate = new Predicate(propertyNameList.head.getText)
+      val o = new graph.Any()
+      body += new logic.graph.Triple(subject, predicate, o)
+       */
     }
   }
 

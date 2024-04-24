@@ -5,8 +5,8 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 import com.antgroup.openspg.reasoner.KGDSLParser._
-import com.antgroup.openspg.reasoner.parser.{LexerInit, OpenSPGDslParser}
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{Element, Entity, Triple}
+import com.antgroup.openspg.reasoner.parser.LexerInit
+import com.antgroup.openspg.reasoner.thinker.logic.graph.{Entity, Predicate, Triple}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.{
   ClauseEntry,
   EntityPattern,
@@ -66,15 +66,13 @@ class SimplifyThinkerParser {
 
   def parseDefineRuleOnConcept(ctx: Define_rule_on_conceptContext): Rule = {
     val rule = new Rule()
+    val concept_nameContext =
+      ctx.define_rule_on_concept_structure().concept_declaration().concept_name()
     rule.setHead(
-      new EntityPattern[Void](
+      new EntityPattern[String](
         new Entity(
-          null,
-          ctx
-            .define_rule_on_concept_structure()
-            .concept_declaration()
-            .concept_name()
-            .getText)))
+          concept_nameContext.concept_instance_id().getText,
+          concept_nameContext.meta_concept_type().getText)))
     if (null != ctx.description()) {
       rule.setDesc(ctx.description().unbroken_character_string_literal().getText)
     }
@@ -136,14 +134,13 @@ class SimplifyThinkerParser {
       .define_rule_on_relation_to_concept_structure()
       .concept_declaration()
       .concept_name()
-      .getText
 
     rule.setHead(
       new TriplePattern(
         new Triple(
           new Entity[Void](null, subject),
-          new Entity[Void](null, predicate),
-          new Entity[Void](null, o))))
+          new Predicate(predicate),
+          new Entity[String](o.concept_instance_id().getText, o.meta_concept_type().getText))))
     if (ctx.description() != null) {
       rule.setDesc(ctx.description().unbroken_character_string_literal().getText)
     }
