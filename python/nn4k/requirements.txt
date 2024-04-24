@@ -1,3 +1,2 @@
 openai
 json5
-peft>=0.5.0

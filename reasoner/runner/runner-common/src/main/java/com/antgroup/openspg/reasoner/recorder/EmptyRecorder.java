@@ -13,6 +13,13 @@
 
 package com.antgroup.openspg.reasoner.recorder;
 
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
+import com.antgroup.openspg.reasoner.recorder.action.DebugInfoWithStartId;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class EmptyRecorder implements IExecutionRecorder {
   @Override
   public String toReadableString() {
@@ -29,5 +36,25 @@ public class EmptyRecorder implements IExecutionRecorder {
   public void stageResult(String stage, long result) {}
 
   @Override
+  public Map<IVertexId, DebugInfoWithStartId> getCurStageDebugInfo() {
+    return new HashMap<>();
+  }
+
+  @Override
   public void stageResultWithDesc(String stage, long result, String finishDescribe) {}
+
+  @Override
+  public void stageResultWithDetail(
+      String stage,
+      long result,
+      Map<String, List<IVertexId>> runtimeDetail,
+      List<Rule> relateRules) {}
+
+  @Override
+  public void stageResultWithDescAndDetail(
+      String stage,
+      long result,
+      String finishDescribe,
+      Map<String, List<IVertexId>> runtimeDetail,
+      List<Rule> relateRules) {}
 }
