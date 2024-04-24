@@ -18,6 +18,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.MirrorVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexBizId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
@@ -83,6 +84,7 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
             isCarryTraversalGraph);
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
+    result.setDisableDropOp(getDisableDropOp());
     return result;
   }
 
@@ -114,6 +116,7 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
             false);
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
+    result.setDisableDropOp(getDisableDropOp());
     return result;
   }
 
@@ -144,7 +147,7 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
     }
     for (String type : JavaConversions.asJavaCollection(types)) {
       for (String idStr : idStrList) {
-        startIdSet.add(IVertexId.from(idStr, type));
+        startIdSet.add(new VertexBizId(idStr, type));
       }
     }
     if (startIdSet.isEmpty()) {
@@ -160,9 +163,10 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
             getTaskId(),
             // subquery can not carry all graph
             getExecutionRecorder(),
-            false);
+            isCarryTraversalGraph);
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
+    result.setDisableDropOp(getDisableDropOp());
     return result;
   }
 
@@ -258,6 +262,14 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
       return null;
     }
     return Long.parseLong(String.valueOf(maxPathLimitObj));
+  }
+
+  private boolean getDisableDropOp() {
+    Object disableDropOpObj = null;
+    if (null != task && null != this.task.getParams()) {
+      disableDropOpObj = this.task.getParams().get(ConfigKey.REASONER_DISABLE_DROP_OP);
+    }
+    return "true".equals(String.valueOf(disableDropOpObj));
   }
 
   private IExecutionRecorder getExecutionRecorder() {
