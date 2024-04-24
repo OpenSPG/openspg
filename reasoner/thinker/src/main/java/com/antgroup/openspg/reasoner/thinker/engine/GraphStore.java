@@ -6,11 +6,10 @@ import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
-import com.antgroup.openspg.reasoner.thinker.TripleStore;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
 import java.util.*;
 
-public class GraphStore<K> implements TripleStore {
+public class GraphStore<K> {
   private GraphState graphState;
 
   public GraphStore(GraphState<K> graphState) {

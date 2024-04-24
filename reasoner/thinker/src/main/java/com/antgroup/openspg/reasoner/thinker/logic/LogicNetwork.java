@@ -30,18 +30,22 @@ public class LogicNetwork {
   }
 
   public Collection<Rule> getForwardRules(Element e) {
-    if (forwardRules.containsKey(e)) {
-      return forwardRules.get(e).values();
-    } else {
-      return new ArrayList<>();
+    Set<Rule> rules = new HashSet<>();
+    for (Map.Entry<Element, Map<Element, Rule>> entry : forwardRules.entrySet()) {
+      if (entry.getKey().matches(e)) {
+        rules.addAll(entry.getValue().values());
+      }
     }
+    return rules;
   }
 
   public Collection<Rule> getBackwardRules(Element e) {
-    if (backwardRules.containsKey(e)) {
-      return backwardRules.get(e).values();
-    } else {
-      return new ArrayList<>();
+    Set<Rule> rules = new HashSet<>();
+    for (Map.Entry<Element, Map<List<Element>, Rule>> entry : backwardRules.entrySet()) {
+      if (entry.getKey().matches(e)) {
+        rules.addAll(entry.getValue().values());
+      }
     }
+    return rules;
   }
 }
