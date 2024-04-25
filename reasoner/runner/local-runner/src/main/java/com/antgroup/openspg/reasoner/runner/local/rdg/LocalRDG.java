@@ -84,6 +84,7 @@ import com.antgroup.openspg.reasoner.recorder.EmptyRecorder;
 import com.antgroup.openspg.reasoner.recorder.IExecutionRecorder;
 import com.antgroup.openspg.reasoner.recorder.action.DebugInfoWithStartId;
 import com.antgroup.openspg.reasoner.recorder.action.SampleAction;
+import com.antgroup.openspg.reasoner.runner.local.callable.CallableWrapper;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
@@ -99,14 +100,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -156,6 +157,9 @@ public class LocalRDG extends RDG<LocalRDG> {
 
   /** disable drop op */
   protected boolean disableDropOp = false;
+
+  /** callable wrapper */
+  protected CallableWrapper callableWrapper = null;
 
   private java.util.Set<IVertexId> getStartId(java.util.List<KgGraph<IVertexId>> kgGraphList) {
     java.util.Set<IVertexId> startIdSet = new HashSet<>();
@@ -245,35 +249,36 @@ public class LocalRDG extends RDG<LocalRDG> {
 
     long count = 0;
     java.util.List<KgGraph<IVertexId>> newKgGraphList = new ArrayList<>();
-    java.util.List<CompletableFuture<KgGraph<IVertexId>>> futureList = new ArrayList<>();
+    java.util.List<Future<KgGraph<IVertexId>>> futureList = new ArrayList<>();
     patternMatcher.resetInitTime();
     for (KgGraph<IVertexId> kgGraphId : this.kgGraphList) {
       IVertexId id = kgGraphId.getVertex(this.startVertexAlias).get(0).getId();
-      CompletableFuture<KgGraph<IVertexId>> future =
-          CompletableFuture.supplyAsync(
-              new Supplier<KgGraph<IVertexId>>() {
-                @Override
-                public KgGraph<IVertexId> get() {
-                  return patternMatcher.patternMatch(
-                      id,
-                      null,
-                      null,
-                      pattern,
-                      rootVertexRuleList,
-                      dstVertexRuleMap,
-                      edgeRuleMap,
-                      new HashMap<>(),
-                      pattern.root().rule(),
-                      edgeTypeRuleMap,
-                      maxPathLimit,
-                      true,
-                      60 * 1000);
-                }
-              },
-              threadPoolExecutor);
-      futureList.add(future);
+      Callable<KgGraph<IVertexId>> patternScanCallable =
+          new Callable<KgGraph<IVertexId>>() {
+            @Override
+            public KgGraph<IVertexId> call() throws Exception {
+              return patternMatcher.patternMatch(
+                  id,
+                  null,
+                  null,
+                  pattern,
+                  rootVertexRuleList,
+                  dstVertexRuleMap,
+                  edgeRuleMap,
+                  new HashMap<>(),
+                  pattern.root().rule(),
+                  edgeTypeRuleMap,
+                  maxPathLimit,
+                  true,
+                  60 * 1000);
+            }
+          };
+      if (null != callableWrapper) {
+        patternScanCallable = callableWrapper.wrap(patternScanCallable);
+      }
+      futureList.add(threadPoolExecutor.submit(patternScanCallable));
     }
-    for (CompletableFuture<KgGraph<IVertexId>> future : futureList) {
+    for (Future<KgGraph<IVertexId>> future : futureList) {
       KgGraph<IVertexId> kgGraph;
       try {
         kgGraph = future.get(this.executorTimeoutMs, TimeUnit.MILLISECONDS);
@@ -333,20 +338,21 @@ public class LocalRDG extends RDG<LocalRDG> {
     LinkEdgeImpl linkEdge =
         new LinkEdgeImpl(
             this.taskId, this.kgGraphSchema, staticParameters, pattern, udtfMeta, null, graphState);
-    java.util.List<CompletableFuture<java.util.List<KgGraph<IVertexId>>>> futureList =
-        new ArrayList<>();
+    java.util.List<Future<java.util.List<KgGraph<IVertexId>>>> futureList = new ArrayList<>();
     for (KgGraph<IVertexId> kgGraph : this.kgGraphList) {
-      CompletableFuture<java.util.List<KgGraph<IVertexId>>> future =
-          CompletableFuture.supplyAsync(
-              new Supplier<java.util.List<KgGraph<IVertexId>>>() {
-                @Override
-                public java.util.List<KgGraph<IVertexId>> get() {
-                  return linkEdge.link(kgGraph);
-                }
-              });
-      futureList.add(future);
+      Callable<java.util.List<KgGraph<IVertexId>>> linkExpandCallable =
+          new Callable<java.util.List<KgGraph<IVertexId>>>() {
+            @Override
+            public java.util.List<KgGraph<IVertexId>> call() throws Exception {
+              return linkEdge.link(kgGraph);
+            }
+          };
+      if (null != callableWrapper) {
+        linkExpandCallable = callableWrapper.wrap(linkExpandCallable);
+      }
+      futureList.add(threadPoolExecutor.submit(linkExpandCallable));
     }
-    for (CompletableFuture<java.util.List<KgGraph<IVertexId>>> future : futureList) {
+    for (Future<java.util.List<KgGraph<IVertexId>>> future : futureList) {
       java.util.List<KgGraph<IVertexId>> splitedKgGraphList;
       try {
         splitedKgGraphList = future.get(this.executorTimeoutMs, TimeUnit.MILLISECONDS);
@@ -388,7 +394,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     return this;
   }
 
-  private CompletableFuture<java.util.List<KgGraph<IVertexId>>> processKgGraphWithSameRoot(
+  private Future<java.util.List<KgGraph<IVertexId>>> processKgGraphWithSameRoot(
       IVertexId rootId,
       java.util.List<KgGraph<IVertexId>> sameRootKgGraphList,
       java.util.Set<String> intersectionAliasSet,
@@ -401,10 +407,10 @@ public class LocalRDG extends RDG<LocalRDG> {
       ThreadPoolExecutor threadPoolExecutor) {
 
     PartialGraphPattern beforeKgGraphSchema = this.kgGraphSchema;
-    return CompletableFuture.supplyAsync(
-        new Supplier<java.util.List<KgGraph<IVertexId>>>() {
+    Callable<java.util.List<KgGraph<IVertexId>>> expandIntoCallable =
+        new Callable<java.util.List<KgGraph<IVertexId>>>() {
           @Override
-          public java.util.List<KgGraph<IVertexId>> get() {
+          public java.util.List<KgGraph<IVertexId>> call() throws Exception {
             if (null == rootId) {
               return null;
             }
@@ -474,8 +480,11 @@ public class LocalRDG extends RDG<LocalRDG> {
             }
             return result;
           }
-        },
-        threadPoolExecutor);
+        };
+    if (null != callableWrapper) {
+      expandIntoCallable = callableWrapper.wrap(expandIntoCallable);
+    }
+    return threadPoolExecutor.submit(expandIntoCallable);
   }
 
   @Override
@@ -511,8 +520,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     java.util.Set<String> intersectionAliasSet =
         RunnerUtil.getIntersectionAliasSet(this.kgGraphSchema, matchPattern);
 
-    java.util.List<CompletableFuture<java.util.List<KgGraph<IVertexId>>>> futureList =
-        new ArrayList<>();
+    java.util.List<Future<java.util.List<KgGraph<IVertexId>>>> futureList = new ArrayList<>();
 
     java.util.List<KgGraph<IVertexId>> sameRootKgGraphList = new ArrayList<>();
     IVertexId lastVertexId = null;
@@ -556,7 +564,7 @@ public class LocalRDG extends RDG<LocalRDG> {
 
     long count = 0;
     java.util.List<KgGraph<IVertexId>> newKgGraphList = new ArrayList<>();
-    for (CompletableFuture<java.util.List<KgGraph<IVertexId>>> future : futureList) {
+    for (Future<java.util.List<KgGraph<IVertexId>>> future : futureList) {
       java.util.List<KgGraph<IVertexId>> resultKgGraph;
       try {
         resultKgGraph = future.get(this.executorTimeoutMs, TimeUnit.MILLISECONDS);
@@ -1406,5 +1414,9 @@ public class LocalRDG extends RDG<LocalRDG> {
 
   public void setDisableDropOp(boolean disableDropOp) {
     this.disableDropOp = disableDropOp;
+  }
+
+  public void setCallableWrapper(CallableWrapper callableWrapper) {
+    this.callableWrapper = callableWrapper;
   }
 }

@@ -28,6 +28,7 @@ import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressT
 import com.antgroup.openspg.reasoner.recorder.EmptyRecorder;
 import com.antgroup.openspg.reasoner.recorder.IExecutionRecorder;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
+import com.antgroup.openspg.reasoner.runner.local.callable.CallableWrapper;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.reasoner.runner.local.rdg.LocalRDG;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
@@ -85,6 +86,7 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
     result.setDisableDropOp(getDisableDropOp());
+    result.setCallableWrapper(getCallableWrapper());
     return result;
   }
 
@@ -117,6 +119,7 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
     result.setDisableDropOp(getDisableDropOp());
+    result.setCallableWrapper(getCallableWrapper());
     return result;
   }
 
@@ -167,6 +170,7 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
     result.setDisableDropOp(getDisableDropOp());
+    result.setCallableWrapper(getCallableWrapper());
     return result;
   }
 
@@ -270,6 +274,17 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
       disableDropOpObj = this.task.getParams().get(ConfigKey.REASONER_DISABLE_DROP_OP);
     }
     return "true".equals(String.valueOf(disableDropOpObj));
+  }
+
+  private CallableWrapper getCallableWrapper() {
+    CallableWrapper callableWrapper = null;
+    if (null != task && null != this.task.getParams()) {
+      Object obj = this.task.getParams().get(ConfigKey.REASONER_CALLABLE_WRAPPER);
+      if (obj instanceof CallableWrapper) {
+        callableWrapper = (CallableWrapper) obj;
+      }
+    }
+    return callableWrapper;
   }
 
   private IExecutionRecorder getExecutionRecorder() {
