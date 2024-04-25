@@ -1,5 +1,6 @@
 package com.antgroup.openspg.reasoner.thinker;
 
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
@@ -35,7 +36,7 @@ public class DefaultThinkerTests {
         new Edge(
             IVertexId.from("a1", "A"),
             IVertexId.from("b", "B"),
-            new VertexVersionProperty(),
+            new VertexVersionProperty(Constants.EDGE_FROM_ID_TYPE_KEY, "A", Constants.EDGE_TO_ID_TYPE_KEY, "B"),
             0L,
             Direction.OUT,
             "ab");
@@ -43,7 +44,7 @@ public class DefaultThinkerTests {
         new Edge(
             IVertexId.from("a2", "A"),
             IVertexId.from("b", "B"),
-            new VertexVersionProperty(),
+                new VertexVersionProperty(Constants.EDGE_FROM_ID_TYPE_KEY, "A", Constants.EDGE_TO_ID_TYPE_KEY, "B"),
             0L,
             Direction.OUT,
             "ab");
@@ -51,7 +52,7 @@ public class DefaultThinkerTests {
         new Edge(
             IVertexId.from("b", "B"),
             IVertexId.from("c", "C"),
-            new VertexVersionProperty(),
+                new VertexVersionProperty(Constants.EDGE_FROM_ID_TYPE_KEY, "B", Constants.EDGE_TO_ID_TYPE_KEY, "C"),
             0L,
             Direction.OUT,
             "bc");
@@ -73,7 +74,7 @@ public class DefaultThinkerTests {
 
   @Test
   public void testFindForward() {
-    Thinker thinker = new DefaultThinker(buildGraphState());
+    Thinker thinker = new DefaultThinker(buildGraphState(), null);
     List<Element> triples =
         thinker.find(new Entity<>(IVertexId.from("a1", "A"), "A"), new Any(), new Any()).getData();
     Assert.assertTrue(triples.size() == 1);
@@ -81,7 +82,7 @@ public class DefaultThinkerTests {
 
   @Test
   public void testBackForward() {
-    Thinker thinker = new DefaultThinker(buildGraphState());
+    Thinker thinker = new DefaultThinker(buildGraphState(), null);
     List<Element> triples =
         thinker.find(new Any(), new Any(), new Entity<>(IVertexId.from("b", "B"), "B")).getData();
     Assert.assertTrue(triples.size() == 2);

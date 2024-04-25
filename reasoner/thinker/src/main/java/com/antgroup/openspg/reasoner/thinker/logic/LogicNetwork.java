@@ -48,4 +48,8 @@ public class LogicNetwork {
     }
     return rules;
   }
+
+  public Boolean isRelated(Element e) {
+    return !(getForwardRules(e).isEmpty() && getBackwardRules(e).isEmpty());
+  }
 }

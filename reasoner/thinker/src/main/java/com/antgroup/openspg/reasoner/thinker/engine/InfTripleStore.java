@@ -1,17 +1,17 @@
 package com.antgroup.openspg.reasoner.thinker.engine;
 
-import com.antgroup.openspg.reasoner.thinker.TripleStore;
 import com.antgroup.openspg.reasoner.thinker.logic.LogicNetwork;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
+import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class InfTripleStore implements TripleStore {
+public class InfTripleStore {
   private LogicNetwork logicNetwork;
   private MemTripleStore tripleStore;
 
@@ -20,11 +20,9 @@ public class InfTripleStore implements TripleStore {
     this.tripleStore = tripleStore;
   }
 
-  @Override
   public void init(Map<String, String> param) {}
 
-  @Override
-  public List<Triple> find(Element s, Element p, Element o) {
+  public List<Triple> find(Element s, Element p, Element o, TreeLogger logger) {
     Collection<Rule> rules = logicNetwork.getForwardRules(s);
     if (rules.isEmpty()) {
       return new LinkedList<>();
@@ -32,7 +30,6 @@ public class InfTripleStore implements TripleStore {
     return null;
   }
 
-  @Override
   public void addEntity(Entity entity) {
     this.tripleStore.addEntity(entity);
   }
@@ -41,7 +38,6 @@ public class InfTripleStore implements TripleStore {
     this.tripleStore.addTriple(triple);
   }
 
-  @Override
   public void clear() {
     this.tripleStore.clear();
   }
