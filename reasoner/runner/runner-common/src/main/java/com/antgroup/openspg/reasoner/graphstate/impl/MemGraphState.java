@@ -88,7 +88,7 @@ public class MemGraphState implements GraphState<IVertexId>, IConceptTree {
       IVertexId id, Map<String, Object> property, MergeTypeEnum mergeType, Long version) {
     IVersionProperty iProperty = (IVersionProperty) vertexMap.get(id);
     if (iProperty == null) {
-      log.info("MemGraphState get vertex is null " + id.getInternalId() + " " + id.getType());
+      log.debug("MemGraphState get vertex is null " + id.getInternalId() + " " + id.getType());
       return;
     }
     for (String key : property.keySet()) {
@@ -109,7 +109,7 @@ public class MemGraphState implements GraphState<IVertexId>, IConceptTree {
   public IVertex<IVertexId, IProperty> getVertex(IVertexId id, Long version) {
     IVersionProperty iProperty = (IVersionProperty) vertexMap.get(id);
     if (iProperty == null) {
-      log.info("MemGraphState get vertex is null " + id.getInternalId() + " " + id.getType());
+      log.debug("MemGraphState get vertex is null " + id.getInternalId() + " " + id.getType());
       return null;
     }
     IVersionProperty resultValue = PropertyUtil.buildVertexProperty(id, null);

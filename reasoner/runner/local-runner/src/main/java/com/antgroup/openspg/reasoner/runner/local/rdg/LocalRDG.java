@@ -360,7 +360,7 @@ public class LocalRDG extends RDG<LocalRDG> {
         log.warn("linkedExpandTimeout,funcName=" + pattern.edge().funcName(), e);
         continue;
       } catch (Exception e) {
-        throw new RuntimeException("patternScan error " + e.getMessage(), e);
+        throw new RuntimeException("linkedExpand error " + e.getMessage(), e);
       }
       if (CollectionUtils.isNotEmpty(splitedKgGraphList)) {
         KgGraph<IVertexId> result = new KgGraphImpl();
