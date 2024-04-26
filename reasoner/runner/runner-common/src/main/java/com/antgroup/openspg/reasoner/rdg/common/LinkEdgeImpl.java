@@ -22,6 +22,7 @@ import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexBizId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
@@ -148,7 +149,7 @@ public class LinkEdgeImpl implements Serializable {
                 "Linked edge target vertex type must contains at least one type");
           }
           for (String targetVertexType : targetVertexTypes) {
-            IVertexId targetId = new VertexId(targetIdStr, targetVertexType);
+            IVertexId targetId = new VertexBizId(targetIdStr, targetVertexType);
             Map<String, Object> propertyMap = new HashMap<>();
             VertexProperty vertexProperty = new VertexProperty(propertyMap);
             vertexProperty.put(Constants.NODE_ID_KEY, targetIdStr);
