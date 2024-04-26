@@ -458,3 +458,4 @@ hs_err_pid*
 !/server/lib/spgreasoner-local-0.0.1.jar
 /logs/
 **/spotless-index-file
+**/pom.xml.versionsBackup
