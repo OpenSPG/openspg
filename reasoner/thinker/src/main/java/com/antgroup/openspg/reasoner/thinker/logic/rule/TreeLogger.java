@@ -23,10 +23,6 @@ public class TreeLogger implements Serializable {
     this.currentNodeName = currentNodeName;
   }
 
-  public void setCurrentNodeName(String currentNodeName) {
-    this.currentNodeName = currentNodeName;
-  }
-
   public TreeLogger log(Object msg) {
     if (this.currentNodeMsg == null) {
       this.currentNodeMsg = new StringBuilder();
@@ -94,5 +90,59 @@ public class TreeLogger implements Serializable {
         genLog(sb, c, level + 1, i != cur.children.size() - 1, childrenVerts);
       }
     }
+  }
+
+  /**
+   * Setter method for property <tt>currentNodeName</tt>.
+   *
+   * @param currentNodeName value to be assigned to property currentNodeName
+   */
+  public void setCurrentNodeName(String currentNodeName) {
+    this.currentNodeName = currentNodeName;
+  }
+
+  /**
+   * Getter method for property <tt>currentNodeName</tt>.
+   *
+   * @return property value of currentNodeName
+   */
+  public String getCurrentNodeName() {
+    return currentNodeName;
+  }
+
+  /**
+   * Getter method for property <tt>currentNodeMsg</tt>.
+   *
+   * @return property value of currentNodeMsg
+   */
+  public StringBuilder getCurrentNodeMsg() {
+    return currentNodeMsg;
+  }
+
+  /**
+   * Setter method for property <tt>currentNodeMsg</tt>.
+   *
+   * @param currentNodeMsg value to be assigned to property currentNodeMsg
+   */
+  public void setCurrentNodeMsg(StringBuilder currentNodeMsg) {
+    this.currentNodeMsg = currentNodeMsg;
+  }
+
+  /**
+   * Getter method for property <tt>children</tt>.
+   *
+   * @return property value of children
+   */
+  public List<TreeLogger> getChildren() {
+    return children;
+  }
+
+  /**
+   * Setter method for property <tt>children</tt>.
+   *
+   * @param children value to be assigned to property children
+   */
+  public void setChildren(List<TreeLogger> children) {
+    this.children = children;
   }
 }
