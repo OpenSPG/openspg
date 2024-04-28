@@ -6,16 +6,14 @@ import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Predicate;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Value;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
+import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class GraphStore<K> {
-  private GraphState graphState;
+public class GraphStore<K> implements Graph<K> {
+  private GraphState<K> graphState;
 
   public GraphStore(GraphState<K> graphState) {
     this.graphState = graphState;
@@ -25,7 +23,20 @@ public class GraphStore<K> {
     this.graphState.init(param);
   }
 
-  public List<Triple> getTriple(Entity s, Direction direction) {
+  @Override
+  public List<Element> find(Triple pattern, TreeLogger treeLogger, Map<String, Object> context) {
+    List<Triple> data;
+    if (pattern.getSubject() instanceof Entity) {
+      data = getTriple((Entity) pattern.getSubject(), Direction.OUT);
+    } else if (pattern.getObject() instanceof Entity) {
+      data = getTriple((Entity) pattern.getObject(), Direction.IN);
+    } else {
+      throw new RuntimeException("Cannot support " + pattern);
+    }
+    return matchInGraph(pattern, data);
+  }
+
+  protected List<Triple> getTriple(Entity<K> s, Direction direction) {
     List<Triple> triples = new LinkedList<>();
     if (direction == Direction.OUT) {
       IVertex<K, IProperty> vertex = this.graphState.getVertex(s.getId(), null);
@@ -57,5 +68,15 @@ public class GraphStore<K> {
           new Entity(
               edge.getSourceId(), (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)));
     }
+  }
+
+  private List<Element> matchInGraph(Triple pattern, List<Triple> data) {
+    List<Element> rst = new LinkedList<>();
+    for (Triple tri : data) {
+      if (pattern.matches(tri)) {
+        rst.add(tri);
+      }
+    }
+    return rst;
   }
 }

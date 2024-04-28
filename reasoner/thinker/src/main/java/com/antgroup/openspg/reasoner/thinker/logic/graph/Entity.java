@@ -79,4 +79,11 @@ public class Entity<K> extends Element {
   public int hashCode() {
     return Objects.hash(id, type);
   }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(type).append("/`").append(id).append("`");
+    return sb.toString();
+  }
 }

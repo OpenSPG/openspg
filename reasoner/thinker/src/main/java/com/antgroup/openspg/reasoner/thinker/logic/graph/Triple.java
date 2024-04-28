@@ -41,7 +41,7 @@ public class Triple extends Element {
   }
 
   private static Element nullToAny(Element n) {
-    return n == null ? Any.ANY : n;
+    return n == null ? ANY : n;
   }
 
   /**

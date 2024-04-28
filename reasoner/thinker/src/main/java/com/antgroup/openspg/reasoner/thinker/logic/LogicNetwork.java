@@ -1,6 +1,7 @@
 package com.antgroup.openspg.reasoner.thinker.logic;
 
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.ClauseEntry;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import java.util.*;
@@ -9,15 +10,20 @@ import lombok.Data;
 
 @Data
 public class LogicNetwork {
+  private Map<String, Rule> ruleMap;
   private Map<Element, Map<Element, Rule>> forwardRules;
   private Map<Element, Map<List<Element>, Rule>> backwardRules;
 
   public LogicNetwork() {
     this.forwardRules = new HashMap<>();
     this.backwardRules = new HashMap<>();
+    this.ruleMap = new HashMap<>();
   }
 
   public void addRule(Rule rule) {
+    if (!ruleMap.containsKey(rule.getName())) {
+      ruleMap.put(rule.getName(), rule);
+    }
     for (ClauseEntry body : rule.getBody()) {
       Map<Element, Rule> rules =
           forwardRules.computeIfAbsent(body.toElement(), (key) -> new HashMap<>());
@@ -39,17 +45,13 @@ public class LogicNetwork {
     return rules;
   }
 
-  public Collection<Rule> getBackwardRules(Element e) {
+  public Collection<Rule> getBackwardRules(Triple triple) {
     Set<Rule> rules = new HashSet<>();
     for (Map.Entry<Element, Map<List<Element>, Rule>> entry : backwardRules.entrySet()) {
-      if (entry.getKey().matches(e)) {
+      if (entry.getKey().matches(triple)) {
         rules.addAll(entry.getValue().values());
       }
     }
     return rules;
-  }
-
-  public Boolean isRelated(Element e) {
-    return !(getForwardRules(e).isEmpty() && getBackwardRules(e).isEmpty());
   }
 }

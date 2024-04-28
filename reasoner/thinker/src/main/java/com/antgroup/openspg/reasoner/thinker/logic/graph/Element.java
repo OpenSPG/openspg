@@ -16,6 +16,8 @@ package com.antgroup.openspg.reasoner.thinker.logic.graph;
 import java.io.Serializable;
 
 public abstract class Element implements Serializable {
+  public static final Element ANY = new Any();
+
   public boolean matches(Element other) {
     return equals(other);
   }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Rule implements Serializable {
+  private String name;
   private List<ClauseEntry> body;
   private ClauseEntry head;
   private Node root;
@@ -79,5 +80,13 @@ public class Rule implements Serializable {
    */
   public void setDesc(String desc) {
     this.desc = desc;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 }

@@ -12,9 +12,11 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.rule.exact;
 
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Node;
+import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleNodeVisitor;
-import com.antgroup.openspg.reasoner.warehouse.common.VertexSubGraph;
+import java.util.List;
 import java.util.Map;
 import lombok.Data;
 
@@ -28,7 +30,15 @@ public class Not implements Node {
 
   @Override
   public <R> R accept(
-      VertexSubGraph vertexGraph, Map<String, Object> context, RuleNodeVisitor<R> visitor) {
-    return visitor.visit(this, vertexGraph, context);
+      List<Element> spoList,
+      Map<String, Object> context,
+      RuleNodeVisitor<R> visitor,
+      TreeLogger logger) {
+    return visitor.visit(this, spoList, context, logger);
+  }
+
+  @Override
+  public String toString() {
+    return "NOT";
   }
 }
