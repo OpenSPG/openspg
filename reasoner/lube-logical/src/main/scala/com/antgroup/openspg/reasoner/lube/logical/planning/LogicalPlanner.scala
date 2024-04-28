@@ -27,7 +27,7 @@ import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 import com.antgroup.openspg.reasoner.lube.logical._
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.validate.Dag
-import com.antgroup.openspg.reasoner.lube.utils.{ExprUtils, RuleUtils}
+import com.antgroup.openspg.reasoner.lube.utils.{BlockUtils, ExprUtils, RuleUtils}
 
 /**
  * Logical planner for KGReasoner, generate an optimal logical plan for KGDSL or GQL.
@@ -55,11 +55,11 @@ object LogicalPlanner {
    */
   def plan(input: Block)(implicit context: LogicalPlannerContext): List[LogicalOperator] = {
     val source = resolve(input)
-    val groups = getStarts(input)
+    val groups = BlockUtils.getStarts(input)
     val planWithoutResult = if (groups.isEmpty) {
-      planBlock(input.dependencies.head, None, source)
+      planBlock(input.dependencies.head, input, None, source)
     } else {
-      planBlock(input.dependencies.head, None, source)(
+      planBlock(input.dependencies.head, input, None, source)(
         context.addParam(Constants.START_ALIAS, groups.head))
     }
     val plan = input match {
@@ -76,7 +76,8 @@ object LogicalPlanner {
                 PathVar(name, elements.map(e => planWithoutResult.solved.getVar(e.name)))
               case _ => throw UnsupportedOperationException(s"unsupported ${x}")
             }),
-          t.asList)
+          t.asList,
+          t.distinct)
       case d: DDLBlock =>
         val newDDLs = new mutable.HashSet[DDLOp]()
         for (ddl <- d.ddlOp) {
@@ -195,14 +196,17 @@ object LogicalPlanner {
     }
   }
 
-  private def planBlock(input: Block, plan: Option[LogicalOperator], solvedModel: SolvedModel)(
-      implicit context: LogicalPlannerContext): LogicalOperator = {
+  private def planBlock(
+      input: Block,
+      root: Block,
+      plan: Option[LogicalOperator],
+      solvedModel: SolvedModel)(implicit context: LogicalPlannerContext): LogicalOperator = {
     if (input.dependencies.isEmpty) {
       planLeaf(input, solvedModel)
     } else {
       // plan one of the block dependencies
-      val dependency = planBlock(input.dependencies.head, plan, solvedModel)
-      planNonLeaf(input, solvedModel, dependency)
+      val dependency = planBlock(input.dependencies.head, root, plan, solvedModel)
+      planNonLeaf(input, root, solvedModel, dependency)
     }
   }
 
@@ -217,8 +221,11 @@ object LogicalPlanner {
     }
   }
 
-  private def planNonLeaf(block: Block, solvedModel: SolvedModel, plan: LogicalOperator)(implicit
-      context: LogicalPlannerContext): LogicalOperator = {
+  private def planNonLeaf(
+      block: Block,
+      root: Block,
+      solvedModel: SolvedModel,
+      plan: LogicalOperator)(implicit context: LogicalPlannerContext): LogicalOperator = {
     block match {
       case MatchBlock(_, matches) =>
         // TODO: plan the first one in current
@@ -226,7 +233,7 @@ object LogicalPlanner {
       case FilterBlock(_, rule) =>
         planFilter(rule, plan)
       case ProjectBlock(_, projects) =>
-        planProject(projects, plan)
+        planProject(projects, root, plan)
       case AggregationBlock(_, aggregations, group) =>
         planAggregate(aggregations, group, plan)
       case OrderAndSliceBlock(_, orderBy, limit, group) =>
@@ -366,9 +373,9 @@ object LogicalPlanner {
    * @param context
    * @return
    */
-  private def planProject(projects: ProjectFields, dependency: LogicalOperator)(implicit
-      context: LogicalPlannerContext): LogicalOperator = {
-    val projectPlanner = new ProjectPlanner(projects)
+  private def planProject(projects: ProjectFields, root: Block, dependency: LogicalOperator)(
+      implicit context: LogicalPlannerContext): LogicalOperator = {
+    val projectPlanner = new ProjectPlanner(projects, root)
     projectPlanner.plan(dependency)
   }
 
@@ -391,10 +398,22 @@ object LogicalPlanner {
         val starts = new mutable.HashSet[String]()
         for (ddl <- ddlOp) {
           ddl match {
-            case AddProperty(s, _, _) => starts.add(s.alias)
+            case AddProperty(s, _, _) =>
+              if (starts.isEmpty) {
+                starts.add(s.alias)
+              } else {
+                val common = starts.intersect(Set.apply(s.alias))
+                starts.clear()
+                starts.++=(common)
+              }
             case AddPredicate(p) =>
-              starts.add(p.source.alias)
-              starts.add(p.target.alias)
+              if (starts.isEmpty) {
+                starts.++=(Set.apply(p.source.alias, p.target.alias))
+              } else {
+                val common = starts.intersect(Set.apply(p.source.alias, p.target.alias))
+                starts.clear()
+                starts.++=(common)
+              }
             case _ =>
           }
         }

@@ -17,6 +17,10 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 
 public class Constants {
+
+  public static final String CONTEXT_TYPE = "__type__";
+  public static final String CONTEXT_ALIAS = "__alias__";
+
   public static final String CONTEXT_LABEL = "__label__";
   /** edge from id key */
   public static final String EDGE_FROM_ID_KEY = "__from_id__";

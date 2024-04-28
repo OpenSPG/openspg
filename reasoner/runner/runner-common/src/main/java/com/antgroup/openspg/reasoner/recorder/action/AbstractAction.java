@@ -10,19 +10,21 @@
  * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
  * or implied.
  */
+package com.antgroup.openspg.reasoner.recorder.action;
 
-package com.antgroup.reasoner.session
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import java.util.Map;
 
-import com.antgroup.openspg.reasoner.lube.logical.Var
-import com.antgroup.openspg.reasoner.lube.physical.rdg.Row
+/**
+ * @author peilong.zpl
+ * @version $Id: AbstractAction.java, v 0.1 2024-04-08 15:31 peilong.zpl Exp $$
+ */
+public abstract class AbstractAction {
+  protected final long time;
 
-class EmptyRow(orderedFields: List[Var], rdg: EmptyRDG)
-    extends Row[EmptyRDG](orderedFields, rdg) {
+  protected AbstractAction(long time) {
+    this.time = time;
+  }
 
-  /**
-   * Print the result, usually used for debug.
-   *
-   * @param rows number of rows to print
-   */
-  override def show(rows: Int): Unit = {}
+  public abstract Map<IVertexId, DebugInfoWithStartId> getRuleRuntimeInfo();
 }

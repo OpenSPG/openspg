@@ -78,7 +78,7 @@ class NNExecutor(ABC):
         raise NotImplementedError()
 
     @abstractmethod
-    def load_model(self, args=None, mode=None, **kwargs):
+    def load_model(self, args=None, mode=None, model_to_cuda=True, **kwargs):
         """
         Implement model loading logic in derived executor classes.
 

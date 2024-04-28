@@ -21,7 +21,7 @@ import com.antgroup.openspg.reasoner.lube.logical.Var
 import com.antgroup.openspg.reasoner.lube.physical.rdg.RDG
 
 final case class Cache[T <: RDG[T]: TypeTag](in: PhysicalOperator[T])
-    extends PhysicalOperator[T] {
+    extends StackingPhysicalOperator[T] {
 
   /**
    * The output of the current operator
@@ -48,5 +48,9 @@ final case class Cache[T <: RDG[T]: TypeTag](in: PhysicalOperator[T])
 
   override def toString: String = {
     s"Cache(RdgId=${cacheName})"
+  }
+
+  override def withNewChildren(newChildren: Array[PhysicalOperator[T]]): PhysicalOperator[T] = {
+    this.copy(in = newChildren.head)
   }
 }

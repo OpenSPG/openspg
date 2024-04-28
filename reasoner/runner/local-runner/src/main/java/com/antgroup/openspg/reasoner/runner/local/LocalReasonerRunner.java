@@ -20,16 +20,18 @@ import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
+import com.antgroup.openspg.reasoner.lube.physical.operators.PhysicalLeafOperator;
 import com.antgroup.openspg.reasoner.lube.physical.operators.PhysicalOperator;
 import com.antgroup.openspg.reasoner.lube.physical.operators.Select;
-import com.antgroup.openspg.reasoner.lube.physical.operators.Start;
 import com.antgroup.openspg.reasoner.lube.physical.util.PhysicalOperatorUtil;
 import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser;
+import com.antgroup.openspg.reasoner.recorder.DefaultRecorder;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
 import com.antgroup.openspg.reasoner.runner.local.impl.LocalPropertyGraph;
 import com.antgroup.openspg.reasoner.runner.local.impl.LocalReasonerSession;
 import com.antgroup.openspg.reasoner.runner.local.impl.LocalRunnerThreadPool;
 import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphLoader;
+import com.antgroup.openspg.reasoner.runner.local.loader.MockLocalGraphLoader;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.reasoner.runner.local.rdg.LocalRDG;
@@ -114,7 +116,7 @@ public class LocalReasonerRunner {
       boolean isLastDsl = (i + 1 == dslDagList.size());
 
       if (isLastDsl) {
-        Start<LocalRDG> start =
+        PhysicalLeafOperator<LocalRDG> start =
             PhysicalOperatorUtil.getStartOp(
                 dslDagList.get(i),
                 com.antgroup.openspg.reasoner.runner.local.rdg.TypeTags.rdgTypeTag());
@@ -157,17 +159,28 @@ public class LocalReasonerRunner {
         localPropertyGraph.setStartIdTuple2List(null);
       }
 
+      String isGraphOutput =
+          String.valueOf(
+              task.getParams().computeIfAbsent(ConfigKey.KG_REASONER_OUTPUT_GRAPH, k -> "false"));
+      if ("true".equals(isGraphOutput)) {
+        localPropertyGraph.setCarryTraversalGraph(true);
+      }
+
+      // judge is need add same mock graph
+      if (task.getParams().containsKey(ConfigKey.KG_REASONER_MOCK_GRAPH_DATA)) {
+        String demoGraph = task.getParams().get(ConfigKey.KG_REASONER_MOCK_GRAPH_DATA).toString();
+        MockLocalGraphLoader mockLocalGraphLoader = new MockLocalGraphLoader(demoGraph);
+        mockLocalGraphLoader.setGraphState(localPropertyGraph.getGraphState());
+        mockLocalGraphLoader.load();
+      }
+
+      if (task.getParams().containsKey(ConfigKey.KG_REASONER_DEBUG_TRACE_ENABLE)) {
+        task.setExecutionRecorder(new DefaultRecorder());
+      }
+
       if (physicalOpRoot instanceof Select) {
-        String isGraphOutput =
-            String.valueOf(
-                task.getParams().computeIfAbsent(ConfigKey.KG_REASONER_OUTPUT_GRAPH, k -> "false"));
-        if ("true".equals(isGraphOutput)) {
-          LocalRDG rdg = ((Select<LocalRDG>) physicalOpRoot).in().rdg();
-          result = rdg.getRDGGraph();
-        } else {
-          LocalRow row = (LocalRow) ((Select<LocalRDG>) physicalOpRoot).row();
-          result = row.getResult();
-        }
+        LocalRow row = (LocalRow) ((Select<LocalRDG>) physicalOpRoot).row();
+        result = row.getResult();
       } else {
         LocalRDG rdg = physicalOpRoot.rdg();
         result = rdg.getResult();

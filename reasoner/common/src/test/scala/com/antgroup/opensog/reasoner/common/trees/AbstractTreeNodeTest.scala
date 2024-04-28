@@ -13,6 +13,7 @@
 
 package com.antgroup.opensog.reasoner.common.trees
 
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
 import com.antgroup.openspg.reasoner.common.trees.{AbstractTreeNode, BottomUpWithContext, TopDownWithContext}
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.{convertToAnyShouldWrapper, equal}
@@ -48,6 +49,11 @@ class AbstractTreeNodeTest extends AnyFunSpec {
 
 case class Number(v: Int) extends CalcExpr {
   def eval: Int = v
+
+  override def withNewChildren(newChildren: Array[CalcExpr]): CalcExpr =
+    throw UnsupportedOperationException("unsupported")
+
+  override def children: Array[CalcExpr] = Array.empty
 }
 
 abstract class CalcExpr extends AbstractTreeNode[CalcExpr] {
@@ -56,5 +62,9 @@ abstract class CalcExpr extends AbstractTreeNode[CalcExpr] {
 
 case class Add(left: CalcExpr, right: CalcExpr) extends CalcExpr {
   def eval: Int = left.eval + right.eval
-}
 
+  override def children: Array[CalcExpr] = Array.apply(left, right)
+  override def withNewChildren(newChildren: Array[CalcExpr]): CalcExpr = {
+    Add(newChildren.apply(0), newChildren.apply(1))
+  }
+}

@@ -109,6 +109,8 @@ public class ConfigKey {
   /** mock graph data */
   public static final String KG_REASONER_MOCK_GRAPH_DATA = "kg.reasoner.mock.graph.data";
 
+  /** enable debug info data */
+  public static final String KG_REASONER_DEBUG_TRACE_ENABLE = "kg.reasoner.debug.trace.enable";
   /** expect batch num */
   public static final String KG_REASONER_EXPECT_BATCH_NUM = "kg.reasoner.expect.batch.num";
 
@@ -160,4 +162,10 @@ public class ConfigKey {
 
   /** the devId of akg task */
   public static final String DEV_ID = "devId";
+
+  /** disable drop */
+  public static final String REASONER_DISABLE_DROP_OP = "kg.reasoner.disable.drop.op";
+
+  /** set callable wrapper */
+  public static final String REASONER_CALLABLE_WRAPPER = "kg.reasoner.callable.wrapper";
 }

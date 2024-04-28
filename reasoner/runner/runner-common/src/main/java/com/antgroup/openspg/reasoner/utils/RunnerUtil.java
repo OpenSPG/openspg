@@ -15,11 +15,13 @@ package com.antgroup.openspg.reasoner.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
+import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.OptionalEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.PathEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
@@ -28,6 +30,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.MirrorVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
 import com.antgroup.openspg.reasoner.common.utils.CombinationIterator;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
@@ -88,7 +91,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.fs.shell.Count;
 import scala.Tuple2;
 import scala.collection.JavaConversions;
 
@@ -312,6 +317,97 @@ public class RunnerUtil {
     return context;
   }
 
+  /**
+   * KgGraph 2 PathInfo in flat format
+   *
+   * @param kgGraph
+   * @return
+   */
+  public static String getPathInfo(KgGraph<IVertexId> kgGraph) {
+    List<Map<String, Object>> context = new ArrayList<>();
+    if (null == kgGraph) {
+      return JSON.toJSONString(
+          context,
+          SerializerFeature.PrettyFormat,
+          SerializerFeature.DisableCircularReferenceDetect,
+          SerializerFeature.SortField);
+    }
+    for (String alias : kgGraph.getVertexAlias()) {
+      List<IVertex<IVertexId, IProperty>> vertexList = kgGraph.getVertex(alias);
+      if (CollectionUtils.isEmpty(vertexList)) {
+        continue;
+      }
+      Map<String, Object> vc = vertexContext(vertexList.get(0));
+      vc.put(Constants.CONTEXT_TYPE, "vertex");
+      vc.put(Constants.CONTEXT_ALIAS, alias);
+      context.add(vc);
+    }
+
+    for (String alias : kgGraph.getEdgeAlias()) {
+      List<IEdge<IVertexId, IProperty>> edgeList = kgGraph.getEdge(alias);
+      if (CollectionUtils.isEmpty(edgeList)) {
+        continue;
+      }
+      IEdge<IVertexId, IProperty> edge = edgeList.get(0);
+      if (null == edge) {
+        continue;
+      }
+      if (edge instanceof PathEdge) {
+        flattenPathEdgeContext(
+            (PathEdge<IVertexId, IProperty, IProperty>) edge, null, kgGraph, context);
+      } else {
+        Map<String, Object> eMap = getEdgePropertyMap(edge, null, kgGraph, alias);
+        context.add(eMap);
+      }
+    }
+    return JSON.toJSONString(
+        context,
+        SerializerFeature.PrettyFormat,
+        SerializerFeature.DisableCircularReferenceDetect,
+        SerializerFeature.SortField);
+  }
+
+  public static void flattenPathEdgeContext(
+      PathEdge<IVertexId, IProperty, IProperty> edge,
+      String edgeType,
+      KgGraph<IVertexId> kgGraph,
+      List<Map<String, Object>> context) {
+    List<Vertex<IVertexId, IProperty>> vertexList = edge.getVertexList();
+    if (CollectionUtils.isNotEmpty(vertexList)) {
+      for (Vertex<IVertexId, IProperty> v : vertexList) {
+        Map<String, Object> vc = vertexContext(v);
+        vc.put(Constants.CONTEXT_TYPE, "vertex");
+        context.add(vc);
+      }
+    }
+    List<Edge<IVertexId, IProperty>> edgeList = edge.getEdgeList();
+    if (CollectionUtils.isNotEmpty(edgeList)) {
+      for (Edge<IVertexId, IProperty> e : edgeList) {
+        context.add(getEdgePropertyMap(e, edgeType, kgGraph, null));
+      }
+    }
+  }
+
+  public static Map<String, Object> getEdgePropertyMap(
+      IEdge<IVertexId, IProperty> edge, String edgeType, KgGraph<IVertexId> kgGraph, String alias) {
+    Map<String, Object> edgeProperty = new HashMap<>();
+    if (edge instanceof OptionalEdge) {
+      edgeProperty.put(Constants.CONTEXT_LABEL, edgeType);
+      IProperty property = edge.getValue();
+      if (null != property) {
+        for (String key : property.getKeySet()) {
+          edgeProperty.put(key, property.get(key));
+        }
+      }
+      edgeProperty.put(Constants.OPTIONAL_EDGE_FLAG, true);
+    } else {
+      edgeProperty.putAll(edgeContext(edge, edgeType, kgGraph));
+    }
+    edgeProperty.put(Constants.CONTEXT_ALIAS, alias);
+    edgeProperty.put(Constants.CONTEXT_TYPE, "edge");
+    return edgeProperty;
+  }
+
   /** get vertex context in alias */
   public static Map<String, Object> vertexContext(
       IVertex<IVertexId, IProperty> vertex, String alias) {
@@ -331,7 +427,7 @@ public class RunnerUtil {
     IProperty property = vertex.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        vertexProperty.put(key, property.get(key));
+        vertexProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     vertexProperty.put(Constants.CONTEXT_LABEL, getVertexType(vertex));
@@ -383,7 +479,7 @@ public class RunnerUtil {
     IProperty property = edge.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        edgeProperty.put(key, property.get(key));
+        edgeProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     edgeProperty.put(Constants.CONTEXT_LABEL, edgeType);
@@ -408,7 +504,7 @@ public class RunnerUtil {
     IProperty property = edge.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        edgeProperty.put(key, property.get(key));
+        edgeProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     edgeProperty.put(Constants.REPEAT_EDGE_FLAG, true);
@@ -446,7 +542,7 @@ public class RunnerUtil {
     IProperty property = optionalEdge.getValue();
     if (null != property) {
       for (String key : property.getKeySet()) {
-        edgeProperty.put(key, property.get(key));
+        edgeProperty.put(RuleRunner.convertPropertyName(key), property.get(key));
       }
     }
     edgeProperty.put(Constants.OPTIONAL_EDGE_FLAG, true);
@@ -471,6 +567,31 @@ public class RunnerUtil {
           Constants.VERTEX_INTERNAL_ID_KEY, edgeContext.get(Constants.EDGE_FROM_INTERNAL_ID_KEY));
     }
     return vertexProperty;
+  }
+
+  /** recover context keys */
+  public static Map<String, Object> recoverContextKeys(Map<String, Object> context) {
+    Map<String, Object> conflictKey = new HashMap<>();
+    Iterator<Map.Entry<String, Object>> it = context.entrySet().iterator();
+    while (it.hasNext()) {
+      Map.Entry<String, Object> entry = it.next();
+      if (!RuleRunner.isConflictPropertyName(entry.getKey())) {
+        continue;
+      }
+      it.remove();
+      conflictKey.put(RuleRunner.recoverPropertyName(entry.getKey()), entry.getValue());
+    }
+    if (MapUtils.isNotEmpty(conflictKey)) {
+      context.putAll(conflictKey);
+    }
+    return context;
+  }
+
+  public static Object recoverContextKeys(Object context) {
+    if (!(context instanceof Map)) {
+      return context;
+    }
+    return recoverContextKeys((Map<String, Object>) context);
   }
 
   public static final String FLATTEN_SEPARATOR = ".";
@@ -822,21 +943,30 @@ public class RunnerUtil {
   /** readable pattern */
   public static String getReadablePattern(Pattern pattern) {
     StringBuilder sb = new StringBuilder();
+    List<String> rules = new ArrayList<>();
     sb.append("root=").append(pattern.root().alias());
+    if (null != pattern.root().rule()) {
+      List<String> rootRule = WareHouseUtils.getRuleList(pattern.root().rule());
+      rules.addAll(rootRule);
+    }
     Set<Connection> connectionSet = RunnerUtil.getConnectionSet(pattern);
-    if (connectionSet.isEmpty()) {
-      return sb.toString();
-    }
-    sb.append(",edge=");
-    boolean first = true;
-    for (Connection connection : connectionSet) {
-      if (!first) {
-        sb.append(",");
-      } else {
-        first = false;
+    if (!connectionSet.isEmpty()) {
+      sb.append(",edge=");
+      boolean first = true;
+      for (Connection connection : connectionSet) {
+        if (!first) {
+          sb.append(",");
+        } else {
+          first = false;
+        }
+        sb.append(connection.alias());
       }
-      sb.append(connection.alias());
     }
+    if (rules.size() > 0) {
+      sb.append(",rule=");
+      sb.append(StringUtils.join(rules, ","));
+    }
+
     return sb.toString();
   }
 
@@ -1243,8 +1373,10 @@ public class RunnerUtil {
 
   public static void updateUdafDataFromProperty(
       LazyUdaf udaf, IProperty property, String propertyName) {
-    if (property.isKeyExist(propertyName)) {
+    if (property != null && property.isKeyExist(propertyName)) {
       udaf.update(property.get(propertyName));
+    } else if (udaf.getName().equalsIgnoreCase(Count.NAME)) {
+      udaf.update(null);
     }
   }
 }

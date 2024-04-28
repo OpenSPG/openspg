@@ -18,6 +18,7 @@ import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.property.impl.EdgeProperty;
+import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
@@ -104,8 +105,10 @@ public class LinkEdgeImpl implements Serializable {
         paramList.add(parameter);
       }
 
+      String sourceAlias = linkedEdgePattern.src().alias();
+      Set<String> targetTypeSet = JavaConversions.setAsJavaSet(linkedEdgePattern.dst().typeNames());
       BaseUdtf tableFunction = udtfMeta.createTableFunction();
-      tableFunction.initialize(graphState);
+      tableFunction.initialize(graphState, context, sourceAlias, targetTypeSet);
       tableFunction.process(paramList);
       List<List<Object>> udtfResult = tableFunction.getCollector();
       List<LinkedUdtfResult> linkedUdtfResultList =
@@ -123,7 +126,6 @@ public class LinkEdgeImpl implements Serializable {
       if (CollectionUtils.isEmpty(linkedUdtfResultList)) {
         continue;
       }
-      String sourceAlias = linkedEdgePattern.src().alias();
       List<IVertex<IVertexId, IProperty>> sourceList = path.getVertex(sourceAlias);
       if (null == sourceList || sourceList.size() != 1) {
         throw new RuntimeException("There is more than one start vertex in kgGraph path");
@@ -137,8 +139,8 @@ public class LinkEdgeImpl implements Serializable {
       for (LinkedUdtfResult linkedUdtfResult : linkedUdtfResultList) {
         for (String targetIdStr : linkedUdtfResult.getTargetVertexIdList()) {
           // add target vertex
-          String targetAlias = pc.target();
           PatternElement targetVertexMeta = linkedEdgePattern.dst();
+          String targetAlias = targetVertexMeta.alias();
           List<String> targetVertexTypes =
               new ArrayList<>(JavaConversions.setAsJavaSet(targetVertexMeta.typeNames()));
           if (targetVertexTypes.size() == 0) {
@@ -147,13 +149,17 @@ public class LinkEdgeImpl implements Serializable {
           }
           for (String targetVertexType : targetVertexTypes) {
             IVertexId targetId = new VertexId(targetIdStr, targetVertexType);
+            Map<String, Object> propertyMap = new HashMap<>();
+            VertexProperty vertexProperty = new VertexProperty(propertyMap);
+            vertexProperty.put(Constants.NODE_ID_KEY, targetIdStr);
+            vertexProperty.put(Constants.CONTEXT_LABEL, targetVertexType);
             if (partitioner != null && !partitioner.canPartition(targetId)) {
               continue;
             }
             // need add property with id
             Set<IVertex<IVertexId, IProperty>> newVertexSet =
                 newAliasVertexMap.computeIfAbsent(targetAlias, k -> new HashSet<>());
-            newVertexSet.add(new Vertex<>(targetId));
+            newVertexSet.add(new Vertex<>(targetId, vertexProperty));
 
             Map<String, Object> props = new HashMap<>(linkedUdtfResult.getEdgePropertyMap());
             props.put(Constants.EDGE_TO_ID_KEY, targetIdStr);

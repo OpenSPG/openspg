@@ -18,17 +18,23 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.MirrorVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.NoneVertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexBizId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
+import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
 import com.antgroup.openspg.reasoner.lube.logical.RepeatPathVar;
 import com.antgroup.openspg.reasoner.lube.physical.PropertyGraph;
+import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer;
 import com.antgroup.openspg.reasoner.recorder.EmptyRecorder;
 import com.antgroup.openspg.reasoner.recorder.IExecutionRecorder;
 import com.antgroup.openspg.reasoner.runner.ConfigKey;
+import com.antgroup.openspg.reasoner.runner.local.callable.CallableWrapper;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.antgroup.openspg.reasoner.runner.local.rdg.LocalRDG;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -57,6 +63,9 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
   /** default path limit */
   private long defaultPathLimit = 3000;
 
+  /** carry traversal graph data */
+  private boolean isCarryTraversalGraph = false;
+
   /** local property graph */
   public LocalPropertyGraph(GraphState<IVertexId> graphState) {
     this.graphState = graphState;
@@ -72,9 +81,12 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
             executorTimeoutMs,
             alias,
             getTaskId(),
-            getExecutionRecorder());
+            getExecutionRecorder(),
+            isCarryTraversalGraph);
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
+    result.setDisableDropOp(getDisableDropOp());
+    result.setCallableWrapper(getCallableWrapper());
     return result;
   }
 
@@ -101,9 +113,64 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
             executorTimeoutMs,
             alias,
             getTaskId(),
-            getExecutionRecorder());
+            // subquery can not carry all graph
+            getExecutionRecorder(),
+            false);
     result.setMaxPathLimit(getMaxPathLimit());
     result.setStrictMaxPathLimit(getStrictMaxPathLimit());
+    result.setDisableDropOp(getDisableDropOp());
+    result.setCallableWrapper(getCallableWrapper());
+    return result;
+  }
+
+  @Override
+  public LocalRDG createRDG(String alias, Expr id, Set<String> types) {
+    java.util.Set<IVertexId> startIdSet = new HashSet<>();
+    Expr2QlexpressTransformer transformer =
+        new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
+    List<String> exprQlList =
+        Lists.newArrayList(JavaConversions.seqAsJavaList(transformer.transform(id)));
+    List<String> idStrList = new ArrayList<>();
+    Object idObj = RuleRunner.getInstance().executeExpression(new HashMap<>(), exprQlList, "");
+    if (idObj instanceof String) {
+      idStrList.add(String.valueOf(idObj));
+    } else if (idObj instanceof List) {
+      List idOList = (List) idObj;
+      for (Object ido : idOList) {
+        idStrList.add(String.valueOf(ido));
+      }
+    } else if (idObj instanceof String[]) {
+      String[] idArray = (String[]) idObj;
+      idStrList.addAll(Lists.newArrayList(idArray));
+    } else if (idObj instanceof Object[]) {
+      Object[] idArray = (Object[]) idObj;
+      for (Object idO : idArray) {
+        idStrList.add(String.valueOf(idO));
+      }
+    }
+    for (String type : JavaConversions.asJavaCollection(types)) {
+      for (String idStr : idStrList) {
+        startIdSet.add(new VertexBizId(idStr, type));
+      }
+    }
+    if (startIdSet.isEmpty()) {
+      throw new RuntimeException("can not extract start id list");
+    }
+    LocalRDG result =
+        new LocalRDG(
+            graphState,
+            Lists.newArrayList(startIdSet),
+            threadPoolExecutor,
+            executorTimeoutMs,
+            alias,
+            getTaskId(),
+            // subquery can not carry all graph
+            getExecutionRecorder(),
+            isCarryTraversalGraph);
+    result.setMaxPathLimit(getMaxPathLimit());
+    result.setStrictMaxPathLimit(getStrictMaxPathLimit());
+    result.setDisableDropOp(getDisableDropOp());
+    result.setCallableWrapper(getCallableWrapper());
     return result;
   }
 
@@ -168,6 +235,15 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
     this.executorTimeoutMs = executorTimeoutMs;
   }
 
+  /**
+   * Setter method for property <tt>isCarryTraversalGraph</tt>.
+   *
+   * @param carryTraversalGraph value to be assigned to property isCarryTraversalGraph
+   */
+  public void setCarryTraversalGraph(boolean carryTraversalGraph) {
+    isCarryTraversalGraph = carryTraversalGraph;
+  }
+
   /** max path limit */
   private Long getMaxPathLimit() {
     Object maxPathLimitObj = null;
@@ -190,6 +266,25 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
       return null;
     }
     return Long.parseLong(String.valueOf(maxPathLimitObj));
+  }
+
+  private boolean getDisableDropOp() {
+    Object disableDropOpObj = null;
+    if (null != task && null != this.task.getParams()) {
+      disableDropOpObj = this.task.getParams().get(ConfigKey.REASONER_DISABLE_DROP_OP);
+    }
+    return "true".equals(String.valueOf(disableDropOpObj));
+  }
+
+  private CallableWrapper getCallableWrapper() {
+    CallableWrapper callableWrapper = null;
+    if (null != task && null != this.task.getParams()) {
+      Object obj = this.task.getParams().get(ConfigKey.REASONER_CALLABLE_WRAPPER);
+      if (obj instanceof CallableWrapper) {
+        callableWrapper = (CallableWrapper) obj;
+      }
+    }
+    return callableWrapper;
   }
 
   private IExecutionRecorder getExecutionRecorder() {

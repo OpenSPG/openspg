@@ -14,7 +14,11 @@
 package com.antgroup.openspg.reasoner.parser
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.exception.{KGDSLGrammarException, KGDSLInvalidTokenException, KGDSLOneTaskException}
+import com.antgroup.openspg.reasoner.common.exception.{
+  KGDSLGrammarException,
+  KGDSLInvalidTokenException,
+  KGDSLOneTaskException
+}
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.graph._
@@ -383,8 +387,8 @@ class OpenSPGDslParserTest extends AnyFunSpec {
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[ProjectBlock] should equal(true)
-    block.asInstanceOf[DDLBlock].ddlOp.size should equal(2)
-    block.asInstanceOf[DDLBlock].ddlOp.head.isInstanceOf[AddVertex] should equal(true)
+    block.asInstanceOf[DDLBlock].ddlOp.size should equal(3)
+    block.asInstanceOf[DDLBlock].ddlOp.head.isInstanceOf[AddProperty] should equal(true)
   }
 
   it("addNodeException") {
@@ -500,8 +504,8 @@ class OpenSPGDslParserTest extends AnyFunSpec {
     val block = parser.parse(dsl)
     print(block.pretty)
     block.dependencies.head.isInstanceOf[MatchBlock] should equal(true)
-    block.asInstanceOf[DDLBlock].ddlOp.size should equal(1)
-    block.asInstanceOf[DDLBlock].ddlOp.head.isInstanceOf[AddVertex] should equal(true)
+    block.asInstanceOf[DDLBlock].ddlOp.size should equal(2)
+    block.asInstanceOf[DDLBlock].ddlOp.head.isInstanceOf[AddPredicate] should equal(true)
 
   }
 
@@ -803,7 +807,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
 
     val blocks = parser.parse(dsl)
     print(blocks.pretty)
-    val blockRst = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(A,id))), asList=List(A.id))
+    val blockRst = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(A,id))), asList=List(A.id), distinct=false)
                      |    └─MatchBlock(patterns=Map(unresolved_default_path -> GraphPath(unresolved_default_path,GraphPattern(D,Map(A -> (A:test), D -> (D:test)),Map(D -> Set((D)->[D_C_2:abc]-(C)))),Map(D -> Set(), A -> Set(id), D_C_2 -> Set())),false)))
                      |        └─SourceBlock(graph=KG(Map(D -> IRNode(D,Set()), A -> IRNode(A,Set(id))),Map(D_C_2 -> IREdge(D_C_2,Set()))))""".stripMargin
     blocks.pretty should equal(blockRst)
@@ -848,7 +852,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
 
     val blocks = parser.parseMultipleStatement(dsl, null)
     print(blocks.head.pretty)
-    val blockRst = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(A,id))), asList=List(A.id))
+    val blockRst = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(A,id))), asList=List(A.id), distinct=false)
                      |    └─MatchBlock(patterns=Map(unresolved_default_path -> GraphPath(unresolved_default_path,GraphPattern(null,Map(A -> (A:test), D -> (D:test)),Map(D -> Set((D)->[D_C_2:abc]-(C)))),Map(D -> Set(), A -> Set(id), D_C_2 -> Set())),false)))
                      |        └─SourceBlock(graph=KG(Map(D -> IRNode(D,Set()), A -> IRNode(A,Set(id))),Map(D_C_2 -> IREdge(D_C_2,Set()))))""".stripMargin
     blocks.head.pretty should equal(blockRst)
@@ -871,7 +875,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
 
     val blocks = parser.parseMultipleStatement(dsl, Map.apply(Constants.START_ALIAS -> "D"))
     print(blocks.head.pretty)
-    val blockRst = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(A,id))), asList=List(A.id))
+    val blockRst = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(A,id))), asList=List(A.id), distinct=false)
                      |    └─MatchBlock(patterns=Map(unresolved_default_path -> GraphPath(unresolved_default_path,GraphPattern(D,Map(A -> (A:test), D -> (D:test)),Map(D -> Set((D)->[D_C_2:abc]-(C)))),Map(D -> Set(), A -> Set(id), D_C_2 -> Set())),false)))
                      |        └─SourceBlock(graph=KG(Map(D -> IRNode(D,Set()), A -> IRNode(A,Set(id))),Map(D_C_2 -> IREdge(D_C_2,Set()))))""".stripMargin
     blocks.head.pretty should equal(blockRst)
@@ -1077,16 +1081,18 @@ class OpenSPGDslParserTest extends AnyFunSpec {
 
     val block = parser.parse(dsl)
     print(block.pretty)
-    val text = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(s,id), IRVariable(o))), asList=List(s.id, b))
+    val text = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(s,id), IRVariable(o))), asList=List(s.id, b), distinct=false)
                  *    └─ProjectBlock(projects=ProjectFields(Map(IRVariable(o) -> ProjectRule(IRVariable(o),FunctionExpr(name=rule_value)))))
-                 *        └─FilterBlock(rules=LogicRule(R6,长得高,BinaryOpExpr(name=BOr)))
-                 *            └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R5) -> LogicRule(R5,颜值高,BinaryOpExpr(name=BGreaterThan)))))
-                 *                └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R4) -> LogicRule(R4,女性,BinaryOpExpr(name=BEqual)))))
-                 *                    └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R3) -> LogicRule(R3,男性,BinaryOpExpr(name=BEqual)))))
-                 *                        └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R2) -> LogicRule(R2,有车,BinaryOpExpr(name=BEqual)))))
-                 *                            └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R1) -> LogicRule(R1,有房,BinaryOpExpr(name=BEqual)))))
-                 *                                └─MatchBlock(patterns=Map(unresolved_default_path -> GraphPath(unresolved_default_path,GraphPattern(null,Map(s -> (s:User)),Map(),Map(s -> Set(beautiful, haveCar, haveHouse, height, id, gender))),false)))
-                 *                                    └─SourceBlock(graph=KG(Map(s -> IRNode(s,Set(beautiful, haveCar, haveHouse, height, id, gender))),Map()))"""
+                 *        └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R8) -> LogicRule(R8,白富美,BinaryOpExpr(name=BAnd)))))
+                 *            └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R7) -> LogicRule(R7,高富帅,BinaryOpExpr(name=BAnd)))))
+                 *                └─FilterBlock(rules=LogicRule(R6,长得高,BinaryOpExpr(name=BOr)))
+                 *                    └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R5) -> LogicRule(R5,颜值高,BinaryOpExpr(name=BGreaterThan)))))
+                 *                        └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R4) -> LogicRule(R4,女性,BinaryOpExpr(name=BEqual)))))
+                 *                            └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R3) -> LogicRule(R3,男性,BinaryOpExpr(name=BEqual)))))
+                 *                                └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R2) -> LogicRule(R2,有车,BinaryOpExpr(name=BEqual)))))
+                 *                                    └─ProjectBlock(projects=ProjectFields(Map(IRVariable(R1) -> LogicRule(R1,有房,BinaryOpExpr(name=BEqual)))))
+                 *                                        └─MatchBlock(patterns=Map(unresolved_default_path -> GraphPath(unresolved_default_path,GraphPattern(null,Map(s -> (s:User)),Map(),Map(s -> Set(beautiful, haveCar, haveHouse, height, id, gender))),false)))
+                 *                                            └─SourceBlock(graph=KG(Map(s -> IRNode(s,Set(beautiful, haveCar, haveHouse, height, id, gender))),Map()))"""
       .stripMargin('*')
     block.pretty should equal(text)
   }
@@ -1102,7 +1108,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
 
     val block = parser.parse(dsl)
     print(block.pretty)
-    val text = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(B,name), IRProperty(C,name))), asList=List(B.name, C.name))
+    val text = """└─TableResultBlock(selectList=OrderedFields(List(IRProperty(B,name), IRProperty(C,name))), asList=List(B.name, C.name), distinct=false)
                  *    └─FilterBlock(rules=LogicRule(R2,导演编剧同性别,BinaryOpExpr(name=BEqual)))
                  *        └─FilterBlock(rules=LogicRule(R1,80后导演,BinaryOpExpr(name=BGreaterThan)))
                  *            └─MatchBlock(patterns=Map(unresolved_default_path -> GraphPath(unresolved_default_path,GraphPattern(null,Map(B -> (B:FilmDirector), C -> (C:FilmWriter), A -> (A:Film)),Map(B -> Set((B)<->[E3:workmates]-(C))), A -> Set((A)<->[E2:writerOfFilm]-(C)), (A)<->[E1:directFilm]-(B)))),Map(E3 -> Set(), A -> Set(), E2 -> Set(), E1 -> Set(), B -> Set(birthDate, gender, name), C -> Set(gender, name))),false)))

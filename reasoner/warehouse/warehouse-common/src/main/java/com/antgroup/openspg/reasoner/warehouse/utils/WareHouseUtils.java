@@ -22,6 +22,7 @@ import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
 import com.antgroup.openspg.reasoner.lube.utils.RuleUtils;
 import com.antgroup.openspg.reasoner.lube.utils.transformer.ExprTransformer;
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer;
+import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +36,40 @@ import scala.collection.immutable.Set;
 
 public class WareHouseUtils {
 
-  private static final ExprTransformer<String> EXPR_TRANSFORMER = new Expr2QlexpressTransformer();
+  private static final ExprTransformer<String> EXPR_TRANSFORMER =
+      new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
+
+  /**
+   * get pattern rule express
+   *
+   * @param pattern
+   * @return
+   */
+  public static List<Rule> getPatternRuleList(Pattern pattern) {
+    List<Rule> patternRuleList = new ArrayList<>();
+    if (null != pattern.root().rule()) {
+      patternRuleList.add(pattern.root().rule());
+    }
+    String rootAlias = pattern.root().alias();
+    Option<Set<Connection>> connectionSet = pattern.topology().get(rootAlias);
+    if (connectionSet.isEmpty()) {
+      return patternRuleList;
+    }
+    for (Connection connection : JavaConversions.setAsJavaSet(connectionSet.get())) {
+      if (null != connection.rule()) {
+        patternRuleList.add(connection.rule());
+      }
+      String dstAlias = connection.target();
+      if (rootAlias.equals(dstAlias)) {
+        dstAlias = connection.source();
+      }
+      PatternElement patternElement = pattern.getNode(dstAlias);
+      if (null != patternElement.rule()) {
+        patternRuleList.add(patternElement.rule());
+      }
+    }
+    return patternRuleList;
+  }
 
   /**
    * get vertex rule string

@@ -31,7 +31,7 @@ class NotInvoker:
 
 
 class StubExecutor(NNExecutor):
-    def load_model(self, args=None, mode=None, **kwargs):
+    def load_model(self, args=None, mode=None, model_to_cuda=True, **kwargs):
         self.load_model_called = True
 
     def warmup_inference(self, args=None, **kwargs):

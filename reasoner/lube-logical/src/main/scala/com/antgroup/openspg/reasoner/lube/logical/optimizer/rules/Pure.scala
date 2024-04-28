@@ -35,7 +35,7 @@ object Pure extends SimpleRule {
     case ddl @ DDL(in, _) =>
       val projects = ddl.refFields.map((_, Directly)).toMap
       ddl.withNewChildren(Array.apply(Project(in, projects, in.solved)))
-    case select @ Select(in, _, _) =>
+    case select @ Select(in, _, _, _) =>
       val projects = select.refFields.map((_, Directly)).toMap
       select.withNewChildren(Array.apply(Project(in, projects, in.solved)))
     case project @ Project(in, _, _) =>

@@ -24,12 +24,7 @@ import com.antgroup.openspg.reasoner.lube.block.{AddPredicate, AddProperty, AddV
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.common.graph.{IRField, IRNode, IRProperty, IRVariable}
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  Connection,
-  NodePattern,
-  Pattern,
-  VariablePatternConnection
-}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{Connection, NodePattern, Pattern, VariablePatternConnection}
 import com.antgroup.openspg.reasoner.lube.logical.{NodeVar, PropertyVar, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, Rule, Up}
@@ -48,7 +43,7 @@ object NodeIdToEdgeProperty extends Rule {
       } else {
         val toEdge = targetConnection(expandInto)
         if (toEdge != null) {
-          expandInto -> (map + (expandInto.pattern.root.alias -> toEdge))
+          expandInto.in -> (map + (expandInto.pattern.root.alias -> toEdge))
         } else {
           expandInto -> map
         }
@@ -251,7 +246,12 @@ object NodeIdToEdgeProperty extends Rule {
     if (!expandInto.pattern.isInstanceOf[NodePattern]) {
       false
     } else {
-      val fieldNames = expandInto.refFields.head.asInstanceOf[NodeVar].fields.map(_.name)
+      val fieldNames = expandInto.fields
+        .filter(_.name.equals(expandInto.pattern.root.alias))
+        .head
+        .asInstanceOf[NodeVar]
+        .fields
+        .map(_.name)
       val normalNames = fieldNames.filter(!NODE_DEFAULT_PROPS.contains(_))
       if (normalNames.isEmpty) {
         true

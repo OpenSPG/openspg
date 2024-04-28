@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EdgeProperty implements IProperty {
-  private final Map<String, Object> props;
+  protected final Map<String, Object> props;
 
   /**
    * new edge property with property data

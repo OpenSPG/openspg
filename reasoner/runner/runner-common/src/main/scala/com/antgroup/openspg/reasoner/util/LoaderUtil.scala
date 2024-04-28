@@ -445,6 +445,12 @@ object LoaderUtil {
         } else {
           merge(solvedModel, list.head)
         }
+      case (StartFromVertex(_, _, _, _, solvedModel), list) =>
+        if (list == null || list.isEmpty) {
+          solvedModel
+        } else {
+          merge(solvedModel, list.head)
+        }
       case (LinkedExpand(_, edgePattern), list) =>
         if (edgePattern.edge.funcName.equals(Constants.CONCEPT_EDGE_EXPAND_FUNC_NAME)) {
           merge(getConceptEdgeExpandSolvedModel(logicalPlan.graph, edgePattern), list.head)
