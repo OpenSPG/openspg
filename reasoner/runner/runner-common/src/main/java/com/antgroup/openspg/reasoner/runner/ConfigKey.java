@@ -165,4 +165,7 @@ public class ConfigKey {
 
   /** disable drop */
   public static final String REASONER_DISABLE_DROP_OP = "kg.reasoner.disable.drop.op";
+
+  /** set callable wrapper */
+  public static final String REASONER_CALLABLE_WRAPPER = "kg.reasoner.callable.wrapper";
 }
