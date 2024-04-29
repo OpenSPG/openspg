@@ -206,7 +206,7 @@ class OpenSPGDslParser extends ParserInterface {
                 predicate.source,
                 predicate.target,
                 attrFields.toMap,
-                predicate.direction))) ++ ddlInfo._2,
+                predicate.direction), isDefine = true)) ++ ddlInfo._2,
           List.apply(depBlk))
       case _ => DDLBlock(Set.apply(ddlBlockOp) ++ ddlInfo._2, List.apply(ruleBlock))
     }

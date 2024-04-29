@@ -1038,9 +1038,7 @@ public class LocalRDG extends RDG<LocalRDG> {
       shuffleAndGroup(alias, isLast);
 
     } else {
-      if (isLast) {
         this.kgGraphList = doMerge(this.kgGraphList, this.kgGraphSchema);
-      }
     }
 
     for (KgGraph<IVertexId> kgGraph : this.kgGraphList) {
