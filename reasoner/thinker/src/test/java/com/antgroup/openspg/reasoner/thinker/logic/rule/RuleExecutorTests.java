@@ -30,7 +30,7 @@ public class RuleExecutorTests {
     Boolean ret =
         rule.getRoot()
             .accept(
-                Arrays.asList(new Entity<>("临床并发症", "高血压分层")), session, new RuleExecutor(), logger);
+                Arrays.asList(new Entity("临床并发症", "高血压分层")), session, new RuleExecutor(), logger);
     Assert.assertTrue(ret);
   }
 
@@ -42,7 +42,7 @@ public class RuleExecutorTests {
     Map<String, Object> session = new HashMap<>();
     session.put("伸缩压", 141);
     session.put("症状", "有并发症的糖尿病");
-    session.put(new Entity<>("临床并发症", "高血压分层").toString(), true);
+    session.put(new Entity("临床并发症", "高血压分层").toString(), true);
     Boolean ret = rule.getRoot().accept(Arrays.asList(), session, new RuleExecutor(), logger);
     Assert.assertTrue(ret);
   }

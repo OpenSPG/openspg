@@ -10,8 +10,8 @@ import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity
 object ThinkerConditionUtil {
   val ruleExprParser = new RuleExprParser()
 
-  def parseAllConceptInCondition(condition: String): Set[Entity[String]] = {
-    val conceptList: mutable.ListBuffer[Entity[String]] = new mutable.ListBuffer()
+  def parseAllConceptInCondition(condition: String): Set[Entity] = {
+    val conceptList: mutable.ListBuffer[Entity] = new mutable.ListBuffer()
     val trans: PartialFunction[Expr, Expr] = {
       case f @ FunctionExpr(name, args) =>
         if (name.equals("get_value") && args.length == 1 && args.head.isInstanceOf[VString]) {
@@ -19,7 +19,7 @@ object ThinkerConditionUtil {
           val splits = conceptName.split("/", 2)
           val metaConcept = splits(0)
           val conceptInstance = splits(1)
-          conceptList += new Entity[String](conceptInstance, metaConcept)
+          conceptList += new Entity(conceptInstance, metaConcept)
         }
         f
       case x => x

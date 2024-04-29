@@ -4,8 +4,8 @@ import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import java.util.Objects;
 
-public class EntityPattern<K> implements ClauseEntry {
-  private Entity<K> entity;
+public class EntityPattern implements ClauseEntry {
+  private Entity entity;
 
   @Override
   public Element toElement() {
@@ -14,7 +14,7 @@ public class EntityPattern<K> implements ClauseEntry {
 
   public EntityPattern() {}
 
-  public EntityPattern(Entity<K> entity) {
+  public EntityPattern(Entity entity) {
     this.entity = entity;
   }
 
@@ -23,7 +23,7 @@ public class EntityPattern<K> implements ClauseEntry {
    *
    * @return property value of entity
    */
-  public Entity<K> getEntity() {
+  public Entity getEntity() {
     return entity;
   }
 
@@ -32,7 +32,7 @@ public class EntityPattern<K> implements ClauseEntry {
    *
    * @param entity value to be assigned to property entity
    */
-  public void setEntity(Entity<K> entity) {
+  public void setEntity(Entity entity) {
     this.entity = entity;
   }
 
@@ -44,7 +44,7 @@ public class EntityPattern<K> implements ClauseEntry {
     if (!(o instanceof EntityPattern)) {
       return false;
     }
-    EntityPattern<?> that = (EntityPattern<?>) o;
+    EntityPattern that = (EntityPattern) o;
     return Objects.equals(entity, that.entity);
   }
 

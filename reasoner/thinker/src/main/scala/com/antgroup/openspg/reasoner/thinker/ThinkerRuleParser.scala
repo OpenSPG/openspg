@@ -74,7 +74,7 @@ class ThinkerRuleParser extends RuleExprParser {
       case c: Concept_nameContext =>
         val conceptEntity =
           new Entity(c.concept_instance_id().getText, c.meta_concept_type().getText)
-        newBody += new EntityPattern[String](conceptEntity)
+        newBody += new EntityPattern(conceptEntity)
         new QlExpressCondition(
           expr2StringTransformer
             .transform(super.parseLogicTest(ctx))
@@ -128,7 +128,7 @@ class ThinkerRuleParser extends RuleExprParser {
       body: ListBuffer[ClauseEntry]): Unit = {
     ctx.getChild(0) match {
       case c: Concept_nameContext =>
-        body += new EntityPattern[String](
+        body += new EntityPattern(
           new Entity(c.concept_instance_id().getText, c.meta_concept_type().getText))
       case c: Value_expression_primaryContext =>
         thinkerParseValueExpressionPrimary(c, body)

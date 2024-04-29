@@ -1,5 +1,6 @@
 package com.antgroup.openspg.reasoner.thinker.engine;
 
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.thinker.Thinker;
 import com.antgroup.openspg.reasoner.thinker.catalog.LogicCatalog;
@@ -8,12 +9,12 @@ import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import java.util.*;
 
-public class DefaultThinker<K> implements Thinker<K> {
-  private GraphStore<K> graphStore;
+public class DefaultThinker implements Thinker {
+  private GraphStore graphStore;
   private InfGraph infGraph;
 
-  public DefaultThinker(GraphState<K> graphState, LogicCatalog logicCatalog) {
-    this.graphStore = new GraphStore<>(graphState);
+  public DefaultThinker(GraphState<IVertexId> graphState, LogicCatalog logicCatalog) {
+    this.graphStore = new GraphStore(graphState);
     this.infGraph = new InfGraph(logicCatalog.getLogicNetwork(), graphStore);
   }
 

@@ -8,18 +8,19 @@ import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.ClauseEntry;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
+import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleExecutor;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
-public class InfGraph<K> implements Graph<K> {
+public class InfGraph implements Graph {
   private LogicNetwork logicNetwork;
-  private TripleStore<K> tripleStore;
-  private GraphStore<K> graphStore;
+  private TripleStore tripleStore;
+  private GraphStore graphStore;
 
-  public InfGraph(LogicNetwork logicNetwork, GraphStore<K> graphStore) {
+  public InfGraph(LogicNetwork logicNetwork, GraphStore graphStore) {
     this.logicNetwork = logicNetwork;
-    this.tripleStore = new MemTripleStore<K>();
+    this.tripleStore = new MemTripleStore();
     this.graphStore = graphStore;
   }
 
@@ -39,11 +40,12 @@ public class InfGraph<K> implements Graph<K> {
     if (context != null) {
       for (Object val : context.values()) {
         if (val instanceof Entity) {
-          addEntity((Entity<K>) val);
+          addEntity((Entity) val);
         }
       }
     }
 
+    List<Element> rst = new LinkedList<>();
     for (Rule rule : logicNetwork.getBackwardRules(pattern)) {
       List<Triple> body =
           rule.getBody().stream()
@@ -51,8 +53,21 @@ public class InfGraph<K> implements Graph<K> {
               .map(e -> toTripleMatch(e))
               .collect(Collectors.toList());
       List<Element> data = prepareElements(body, treeLogger);
+      if (CollectionUtils.isEmpty(data)) {
+        continue;
+      }
+      Boolean ret =
+          rule.getRoot()
+              .accept(
+                  data,
+                  context,
+                  new RuleExecutor(),
+                  treeLogger.addChild(rule.getRoot().toString()));
+      if (ret) {
+        rst.add(rule.getHead().toElement());
+      }
     }
-    return null;
+    return rst;
   }
 
   private List<Element> prepareElements(List<Triple> body, TreeLogger treeLogger) {
@@ -84,7 +99,7 @@ public class InfGraph<K> implements Graph<K> {
     }
   }
 
-  public void addEntity(Entity<K> entity) {
+  public void addEntity(Entity entity) {
     this.tripleStore.addEntity(entity);
   }
 

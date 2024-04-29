@@ -7,8 +7,8 @@ import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Value;
 import java.util.*;
 
-public class MemTripleStore<K> implements TripleStore<K> {
-  private Map<String, Entity<K>> entities;
+public class MemTripleStore implements TripleStore {
+  private Map<String, Entity> entities;
   private Map<Element, List<Triple>> sToTriple;
   private Map<Element, List<Triple>> oToTriple;
 
@@ -31,7 +31,7 @@ public class MemTripleStore<K> implements TripleStore<K> {
     } else if (tripleMatch.getSubject().equals(Element.ANY)
         && tripleMatch.getPredicate().equals(Element.ANY)
         && (tripleMatch.getObject() instanceof Entity)) {
-      Entity<K> entity = entities.getOrDefault(getKey((Entity<K>) tripleMatch.getObject()), null);
+      Entity entity = entities.getOrDefault(getKey((Entity) tripleMatch.getObject()), null);
       if (entity != null) {
         elements.add(entity);
       }
@@ -41,12 +41,12 @@ public class MemTripleStore<K> implements TripleStore<K> {
     return elements;
   }
 
-  private String getKey(Entity<K> entity) {
-    return entity.getId().toString() + entity.getType();
+  private String getKey(Entity entity) {
+    return entity.getId() + entity.getType();
   }
 
   @Override
-  public void addEntity(Entity<K> entity) {
+  public void addEntity(Entity entity) {
     String key = getKey(entity);
     entities.put(key, entity);
   }

@@ -16,13 +16,13 @@ import java.util.Objects;
 import lombok.Data;
 
 @Data
-public class Entity<K> extends Element {
-  private K id;
+public class Entity extends Element {
+  private String id;
   private String type;
 
   public Entity() {}
 
-  public Entity(K id, String type) {
+  public Entity(String id, String type) {
     this.id = id;
     this.type = type;
   }
@@ -32,7 +32,7 @@ public class Entity<K> extends Element {
    *
    * @return property value of id
    */
-  public K getId() {
+  public String getId() {
     return id;
   }
 
@@ -41,7 +41,7 @@ public class Entity<K> extends Element {
    *
    * @param id value to be assigned to property id
    */
-  public void setId(K id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -71,7 +71,7 @@ public class Entity<K> extends Element {
     if (!(o instanceof Entity)) {
       return false;
     }
-    Entity<?> entity = (Entity<?>) o;
+    Entity entity = (Entity) o;
     return Objects.equals(id, entity.id) && Objects.equals(type, entity.type);
   }
 

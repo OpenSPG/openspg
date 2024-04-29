@@ -6,12 +6,12 @@ import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import java.util.Collection;
 import java.util.Map;
 
-public interface TripleStore<K> {
+public interface TripleStore {
   void init(Map<String, String> param);
 
   Collection<Element> find(final Triple tripleMatch);
 
-  void addEntity(Entity<K> entity);
+  void addEntity(Entity entity);
 
   void addTriple(Triple triple);
 

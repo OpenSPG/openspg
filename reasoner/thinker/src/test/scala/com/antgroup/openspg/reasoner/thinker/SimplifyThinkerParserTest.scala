@@ -25,7 +25,7 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     val ruleList: List[Rule] = parser.parseSimplifyDsl(thinkerDsl)
     assert(ruleList.size == 1)
     val rule: Rule = ruleList.head
-    assert(rule.getHead.isInstanceOf[EntityPattern[_]])
+    assert(rule.getHead.isInstanceOf[EntityPattern])
     val body = rule.getBody.asScala
     assert(body.size == 1)
     // body
@@ -47,7 +47,7 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
       parser.getConditionToElementMap()
     assert(
       conditionToElementMap(new QlExpressCondition("get_value(\"高血压分层/`临床并发症`\")")).head
-        .equals(new EntityPattern[String](new Entity("`临床并发症`", "高血压分层"))))
+        .equals(new EntityPattern(new Entity("`临床并发症`", "高血压分层"))))
   }
 
   def getAllConditionInNode(node: Node): List[Condition] = {
@@ -74,7 +74,7 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
   def calculateClauseCount(body: List[ClauseEntry]): ClauseCount = {
     val clauseCount = new ClauseCount()
     body.foreach {
-      case _: EntityPattern[_] => clauseCount.entityPattern += 1
+      case _: EntityPattern => clauseCount.entityPattern += 1
       case _: TriplePattern => clauseCount.triplePattern += 1
       case _ =>
     }
@@ -133,12 +133,12 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     val subject = pattern.getSubject
     val predicate = pattern.getPredicate
     val object_ = pattern.getObject
-    assert(subject.isInstanceOf[Entity[_]])
-    assert(subject.asInstanceOf[Entity[_]].getType.equals("Med.drug"))
+    assert(subject.isInstanceOf[Entity])
+    assert(subject.asInstanceOf[Entity].getType.equals("Med.drug"))
     assert(predicate.asInstanceOf[Predicate].getName.equals("基本用药方案"))
     assert(
-      object_.asInstanceOf[Entity[String]].getType.equals("药品")
-        && object_.asInstanceOf[Entity[String]].getId.equals("`ACEI+噻嗪类利尿剂`"))
+      object_.asInstanceOf[Entity].getType.equals("药品")
+        && object_.asInstanceOf[Entity].getId.equals("`ACEI+噻嗪类利尿剂`"))
     assert(rule.getBody.size() == 2)
     assert(rule.getRoot.isInstanceOf[And])
     assert(rule.getRoot.asInstanceOf[And].getChildren.size() == 2)
@@ -149,12 +149,12 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     val condition: String = "get_value(\"高血压分层/`靶器官损害`\")"
     val conceptList = ThinkerConditionUtil.parseAllConceptInCondition(condition)
     assert(conceptList.size == 1)
-    assert(conceptList.head.equals(new Entity[String]("`靶器官损害`", "高血压分层")))
+    assert(conceptList.head.equals(new Entity("`靶器官损害`", "高血压分层")))
 
     val condition2 = "hits(get_value(\"高血压分层/`心血管危险因素`\")) >= 3"
     val conceptList2 = ThinkerConditionUtil.parseAllConceptInCondition(condition2)
     assert(conceptList2.size == 1)
-    assert(conceptList2.head.equals(new Entity[String]("`心血管危险因素`", "高血压分层")))
+    assert(conceptList2.head.equals(new Entity("`心血管危险因素`", "高血压分层")))
 
     val condition3 =
       "hits(get_value(\"高血压分层/`心血管危险因素`\"), get_value(\"高血压分层/`2心血管危险因素`\"), get_value(\"高血压分层/`心血管危险因素`\")) >= 10"

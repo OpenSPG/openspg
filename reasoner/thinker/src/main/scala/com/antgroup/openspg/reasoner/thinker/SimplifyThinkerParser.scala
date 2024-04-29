@@ -69,7 +69,7 @@ class SimplifyThinkerParser {
     val concept_nameContext =
       ctx.define_rule_on_concept_structure().concept_declaration().concept_name()
     rule.setHead(
-      new EntityPattern[String](
+      new EntityPattern(
         new Entity(
           concept_nameContext.concept_instance_id().getText,
           concept_nameContext.meta_concept_type().getText)))
@@ -138,9 +138,9 @@ class SimplifyThinkerParser {
     rule.setHead(
       new TriplePattern(
         new Triple(
-          new Entity[Void](null, subject),
+          new Entity(null, subject),
           new Predicate(predicate),
-          new Entity[String](o.concept_instance_id().getText, o.meta_concept_type().getText))))
+          new Entity(o.concept_instance_id().getText, o.meta_concept_type().getText))))
     if (ctx.description() != null) {
       rule.setDesc(ctx.description().unbroken_character_string_literal().getText)
     }
