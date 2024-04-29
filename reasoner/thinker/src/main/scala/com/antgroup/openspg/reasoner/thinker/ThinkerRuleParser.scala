@@ -73,7 +73,9 @@ class ThinkerRuleParser extends RuleExprParser {
     val resultNode: Node = ctx.getChild(0) match {
       case c: Concept_nameContext =>
         val conceptEntity =
-          new Entity(c.concept_instance_id().getText, c.meta_concept_type().getText)
+          new Entity(
+            removeGraveAccentInConceptId(c.concept_instance_id()),
+            c.meta_concept_type().getText)
         newBody += new EntityPattern(conceptEntity)
         new QlExpressCondition(
           expr2StringTransformer
@@ -129,7 +131,9 @@ class ThinkerRuleParser extends RuleExprParser {
     ctx.getChild(0) match {
       case c: Concept_nameContext =>
         body += new EntityPattern(
-          new Entity(c.concept_instance_id().getText, c.meta_concept_type().getText))
+          new Entity(
+            removeGraveAccentInConceptId(c.concept_instance_id()),
+            c.meta_concept_type().getText))
       case c: Value_expression_primaryContext =>
         thinkerParseValueExpressionPrimary(c, body)
       case c: Numeric_value_functionContext =>
@@ -203,6 +207,10 @@ class ThinkerRuleParser extends RuleExprParser {
 
   def thinkerParseUnaryExpr(ctx: Unary_exprContext, body: ListBuffer[ClauseEntry]): Node = {
     this.thinkerParseValueExpression(ctx.value_expression(), body)
+  }
+
+  def removeGraveAccentInConceptId(concept_instance_idCtx: Concept_instance_idContext): String = {
+    concept_instance_idCtx.getText.stripPrefix("`").stripSuffix("`")
   }
 
 }

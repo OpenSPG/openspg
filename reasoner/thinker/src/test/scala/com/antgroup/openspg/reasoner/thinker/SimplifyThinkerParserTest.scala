@@ -46,8 +46,8 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     val conditionToElementMap: Map[Condition, Set[ClauseEntry]] =
       parser.getConditionToElementMap()
     assert(
-      conditionToElementMap(new QlExpressCondition("get_value(\"高血压分层/`临床并发症`\")")).head
-        .equals(new EntityPattern(new Entity("`临床并发症`", "高血压分层"))))
+      conditionToElementMap(new QlExpressCondition("get_value(\"高血压分层/临床并发症\")")).head
+        .equals(new EntityPattern(new Entity("临床并发症", "高血压分层"))))
   }
 
   def getAllConditionInNode(node: Node): List[Condition] = {
@@ -104,9 +104,8 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     assert(firstLineChildrenList.size == 3)
     assert(
       firstLineChildrenList.head.equals(
-        new QlExpressCondition("hits(get_value(\"高血压分层/`心血管危险因素`\")) >= 3")))
-    assert(
-      firstLineChildrenList(1).equals(new QlExpressCondition("get_value(\"高血压分层/`靶器官损害`\")")))
+        new QlExpressCondition("hits(get_value(\"高血压分层/心血管危险因素\")) >= 3")))
+    assert(firstLineChildrenList(1).equals(new QlExpressCondition("get_value(\"高血压分层/靶器官损害\")")))
     assert(firstLineChildrenList(2).equals(new QlExpressCondition("\"无并发症的糖尿病\" in 症状")))
 
     // second line
@@ -138,7 +137,7 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     assert(predicate.asInstanceOf[Predicate].getName.equals("基本用药方案"))
     assert(
       object_.asInstanceOf[Entity].getType.equals("药品")
-        && object_.asInstanceOf[Entity].getId.equals("`ACEI+噻嗪类利尿剂`"))
+        && object_.asInstanceOf[Entity].getId.equals("ACEI+噻嗪类利尿剂"))
     assert(rule.getBody.size() == 2)
     assert(rule.getRoot.isInstanceOf[And])
     assert(rule.getRoot.asInstanceOf[And].getChildren.size() == 2)
@@ -146,18 +145,18 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
   }
 
   it("test parse concept from condition") {
-    val condition: String = "get_value(\"高血压分层/`靶器官损害`\")"
+    val condition: String = "get_value(\"高血压分层/靶器官损害\")"
     val conceptList = ThinkerConditionUtil.parseAllConceptInCondition(condition)
     assert(conceptList.size == 1)
-    assert(conceptList.head.equals(new Entity("`靶器官损害`", "高血压分层")))
+    assert(conceptList.head.equals(new Entity("靶器官损害", "高血压分层")))
 
-    val condition2 = "hits(get_value(\"高血压分层/`心血管危险因素`\")) >= 3"
+    val condition2 = "hits(get_value(\"高血压分层/心血管危险因素\")) >= 3"
     val conceptList2 = ThinkerConditionUtil.parseAllConceptInCondition(condition2)
     assert(conceptList2.size == 1)
-    assert(conceptList2.head.equals(new Entity("`心血管危险因素`", "高血压分层")))
+    assert(conceptList2.head.equals(new Entity("心血管危险因素", "高血压分层")))
 
     val condition3 =
-      "hits(get_value(\"高血压分层/`心血管危险因素`\"), get_value(\"高血压分层/`2心血管危险因素`\"), get_value(\"高血压分层/`心血管危险因素`\")) >= 10"
+      "hits(get_value(\"高血压分层/心血管危险因素\"), get_value(\"高血压分层/2心血管危险因素\"), get_value(\"高血压分层/心血管危险因素\")) >= 10"
     val conceptList3 = ThinkerConditionUtil.parseAllConceptInCondition(condition3)
     assert(conceptList3.size == 2)
   }

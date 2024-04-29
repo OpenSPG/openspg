@@ -251,7 +251,7 @@ class RuleExprParser extends Serializable {
   def parseProjectPrimary(ctx: Project_primaryContext): Expr = {
     ctx.getChild(0) match {
       case c: Concept_nameContext =>
-        ConceptExpr(c.getText)
+        ConceptExpr(refactorConceptName(c))
       case c: Value_expression_primaryContext =>
         parseValueExpressionPrimary(c)
       case c: Numeric_value_functionContext =>
@@ -469,9 +469,17 @@ class RuleExprParser extends Serializable {
     (ctx.identifier().getText, parseExpressionSet(ctx.expression_set()))
   }
 
+  def refactorConceptName(concept: Concept_nameContext): String = {
+    val metaConceptName = concept.meta_concept_type().getText
+    val conceptInstanceIdName =
+      concept.concept_instance_id().getText.stripPrefix("`").stripSuffix("`")
+    metaConceptName + "/" + conceptInstanceIdName
+  }
+
   def parseLogicTest(ctx: Logic_testContext): Expr = {
     val bExpr: Expr = ctx.getChild(0) match {
-      case concept: Concept_nameContext => ConceptExpr(concept.getText)
+      case concept: Concept_nameContext =>
+        ConceptExpr(refactorConceptName(concept))
       case expr: ExprContext => parseExpr(expr)
     }
     Option(ctx.getChild(1)) match {
