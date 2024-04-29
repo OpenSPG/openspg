@@ -1035,7 +1035,6 @@ public class LocalRDG extends RDG<LocalRDG> {
     // check now schema is root by vertex alias
     if (!alias.equals(this.kgGraphSchema.rootAlias())) {
       // need shuffle KgGraph
-      //      shuffleAndGroup(alias, true);
       shuffleAndGroup(alias, isLast);
 
     } else {
