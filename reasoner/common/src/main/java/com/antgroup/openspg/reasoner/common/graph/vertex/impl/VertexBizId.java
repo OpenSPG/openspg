@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.common.graph.vertex.impl;
 
+import com.antgroup.openspg.reasoner.common.graph.type.MapType2IdFactory;
 import lombok.Getter;
 
 @Getter
