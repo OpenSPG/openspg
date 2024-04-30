@@ -1048,7 +1048,7 @@ public class LocalRDG extends RDG<LocalRDG> {
 
         edge.getValue()
             .put(
-                "__process__",
+                "process",
                 getProcessInfo(startId, (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY)));
       }
 
@@ -1056,7 +1056,7 @@ public class LocalRDG extends RDG<LocalRDG> {
         DebugInfoWithStartId startId = debugInfoMap.get(edge.getTargetId());
         edge.getValue()
             .put(
-                "__process__",
+                "process",
                 getProcessInfo(startId, (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY)));
       }
       // add to result list
@@ -1308,23 +1308,40 @@ public class LocalRDG extends RDG<LocalRDG> {
     return this.kgGraphSchema;
   }
 
+  private java.util.List<java.util.Map<String, Object>> generateStartNodeDebugInfo() {
+    java.util.Map<IVertexId, DebugInfoWithStartId> debugInfoMap =
+            this.executionRecorder.getCurStageDebugInfo();
+    java.util.List<java.util.Map<String, Object>> debugStartNodeINfos = new ArrayList<>();
+    for (IVertexId id : debugInfoMap.keySet()) {
+      DebugInfoWithStartId debugInfoWithStartId = debugInfoMap.get(id);
+      IVertex<IVertexId, IProperty> vertex = graphState.getVertex(debugInfoWithStartId.getVertexId(), null);
+      if (vertex == null) {
+        continue;
+      }
+      debugStartNodeINfos.add(getProcessInfo(debugInfoWithStartId, vertex.getValue().get(Constants.NODE_ID_KEY).toString()));
+    }
+    return debugStartNodeINfos;
+  }
   /** get ddl result */
   public LocalReasonerResult getResult() {
+    java.util.List<java.util.Map<String, Object>> debugStartNodeINfos = generateStartNodeDebugInfo();
     return new LocalReasonerResult(
         Lists.newArrayList(resultVertexSet),
         Lists.newArrayList(resultEdgeSet),
         true,
-        this.executionRecorder.toReadableString());
+        this.executionRecorder.toReadableString(), debugStartNodeINfos);
   }
 
   /** add graph to traversal graph */
   private LocalReasonerResult getRDGGraph() {
     if (!isCarryTraversalGraph) {
+      java.util.List<java.util.Map<String, Object>> debugStartNodeINfos = generateStartNodeDebugInfo();
+
       return new LocalReasonerResult(
           Lists.newArrayList(),
           Lists.newArrayList(),
           false,
-          this.executionRecorder.toReadableString());
+          this.executionRecorder.toReadableString(), debugStartNodeINfos);
     }
     LocalReasonerResult localReasonerResult = getResult();
     this.kgGraphList.forEach(

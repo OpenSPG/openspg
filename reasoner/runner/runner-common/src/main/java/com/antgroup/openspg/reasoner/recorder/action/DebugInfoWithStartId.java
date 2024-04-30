@@ -36,16 +36,25 @@ public class DebugInfoWithStartId {
 
   public Map<String, Object> toJsonObj() {
     Map<String, Object> result = new HashMap<>();
-    Map<String, Object> hitRuleInfo = new HashMap<>();
+    List<Map<String, Object>> hitRuleInfos = new ArrayList<>();
+
     for (Rule r : hitRules) {
-      hitRuleInfo.put(r.getName(), StringUtils.join(WareHouseUtils.getRuleList(r), ","));
+      Map<String, Object> hitRuleInfoDetail = new HashMap<>();
+      hitRuleInfoDetail.put("ruleName", r.getName());
+      hitRuleInfoDetail.put("ruleValue", StringUtils.join(WareHouseUtils.getRuleList(r), ","));
+      hitRuleInfoDetail.put("hitValue", "");
+      hitRuleInfos.add(hitRuleInfoDetail);
     }
-    result.put("hit_rule", hitRuleInfo);
-    Map<String, Object> failedRuleInfo = new HashMap<>();
+    result.put("hit_rule", hitRuleInfos);
+    List<Map<String, Object>> failedRuleInfos = new ArrayList<>();
     for (Rule r : failedRules) {
-      failedRuleInfo.put(r.getName(), StringUtils.join(WareHouseUtils.getRuleList(r), ","));
+      Map<String, Object> failedRuleInfoDetail = new HashMap<>();
+      failedRuleInfoDetail.put("ruleName", r.getName());
+      failedRuleInfoDetail.put("ruleValue", StringUtils.join(WareHouseUtils.getRuleList(r), ","));
+      failedRuleInfoDetail.put("hitValue", "");
+      failedRuleInfos.add(failedRuleInfoDetail);
     }
-    result.put("failed_rule", failedRuleInfo);
+    result.put("failed_rule", failedRuleInfos);
     return result;
   }
 
