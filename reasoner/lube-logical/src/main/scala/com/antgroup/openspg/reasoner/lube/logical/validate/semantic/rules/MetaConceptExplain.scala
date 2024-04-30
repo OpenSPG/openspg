@@ -32,12 +32,9 @@ object MetaConceptExplain extends Explain {
               if (metaConceptMap.contains(n._1)) {
                 n.copy(
                   n._1,
-//                  PatternElement(n._1, metaConceptMap.getOrElse(n._1, n._2.typeNames), n._2.rule))
-                  PatternElement(n._1, metaConceptMap(n._1), n._2.rule))
-              } else {
-                n.copy()
-              })
-//            val newPath = p._2.copy(graphPattern = pattern.copy(nodes = newNodes))
+                  PatternElement(n._1, metaConceptMap(n._1), n._2.rule))}
+              else n
+            )
             (p._1, p._2.copy(graphPattern = pattern.copy(nodes = newNodes)))
           }
         }
@@ -52,7 +49,6 @@ object MetaConceptExplain extends Explain {
       metaConceptMap: mutable.Map[String, Set[String]]): Unit = {
     val Rules = graph.ruleDefines.keys
     metaConceptEdge.foreach(c => {
-//      val targetTypes = pattern.nodes(c.target).typeNames
       val targetAlias = pattern.nodes(c.target).alias
       for (s <- pattern.nodes(c.source).typeNames) {
         for (t <- pattern.nodes(c.target).typeNames) {
@@ -62,10 +58,10 @@ object MetaConceptExplain extends Explain {
           if (!metaConceptMap.contains(targetAlias)) {
             metaConceptMap(targetAlias) = Set.empty
           }
-          val subConcepts = metaConceptMap(targetAlias).++(matchedRules.map(r =>
+          val metaConcepts = metaConceptMap(targetAlias).++(matchedRules.map(r =>
             r.split("_belongTo_").last))
 //          metaConceptMap(targetAlias) = metaConceptMap(targetAlias).++(expandConcept.toSet)
-          metaConceptMap.updated(targetAlias, subConcepts)
+          metaConceptMap.put(targetAlias, metaConcepts)
         }
       }
     })
