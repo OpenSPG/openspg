@@ -1016,7 +1016,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
       .predicate
       .label equals ("belongTo")
     val text =
-      """└─DDLBlock(ddlOp=Set(AddPredicate(PredicateElement(belongTo,p,(s:User,BinaryOpExpr(name=BEqual)),EntityElement(cardUser,accountQueryCrowd,o),Map(__to_id_type__->VString(value=accountQueryCrowd/cardUser),__to_id__->VString(value=cardUser),__from_id__->UnaryOpExpr(name=GetField(id)),__from_id_type__->VString(value=User)),OUT))))
+      """└─DDLBlock(ddlOp=Set(AddPredicate(PredicateElement(belongTo,p,(s:User,BinaryOpExpr(name=BEqual)),EntityElement(cardUser,accountQueryCrowd,o),Map(__to_id_type__->VString(value=accountQueryCrowd/cardUser),__to_id__->VString(value=cardUser),__from_id__->UnaryOpExpr(name=GetField(id)),__from_id_type__->VString(value=User)),OUT),true)))
         *    └─FilterBlock(rules=LogicRule(R5,智信确权,BinaryOpExpr(name=BEqual)))
         *        └─FilterBlock(rules=LogicRule(R4,绑定数目,BinaryOpExpr(name=BGreaterThan)))
         *            └─AggregationBlock(aggregations=Aggregations(Map(IRVariable(BindNum) -> AggOpExpr(name=Sum))), group=List(IRNode(s,Set(zhixin))))
@@ -1048,7 +1048,7 @@ class OpenSPGDslParserTest extends AnyFunSpec {
 
     val block = parser.parse(dsl)
     print(block.pretty)
-    val text = """└─DDLBlock(ddlOp=Set(AddProperty((s:CustFundKG.Account),aggTransAmountNumByDay,KTBoolean)))
+    val text = """└─DDLBlock(ddlOp=Set(AddProperty((s:CustFundKG.Account),aggTransAmountNumByDay,KTBoolean,true)))
                  |    └─ProjectBlock(projects=ProjectFields(Map(IRProperty(s,aggTransAmountNumByDay) -> ProjectRule(IRProperty(s,aggTransAmountNumByDay),Ref(refName=o)))))
                  |        └─AggregationBlock(aggregations=Aggregations(Map(IRVariable(o) -> AggOpExpr(name=AggUdf(groupByAttrDoCount,List(VString(value=tranDate), VLong(value=50)))))), group=List(IRNode(s,Set())))
                  |            └─FilterBlock(rules=LogicRule(R1,当月交易,BinaryOpExpr(name=BNotSmallerThan)))

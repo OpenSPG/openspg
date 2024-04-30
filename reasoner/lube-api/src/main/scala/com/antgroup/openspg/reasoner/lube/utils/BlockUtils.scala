@@ -37,18 +37,18 @@ object BlockUtils {
       case DDLBlock(ddlOps, _) =>
         ddlOps.foreach(op => {
           op match {
-            case AddPredicate(predicate, _) =>
-//              if (isDefine) {
-              defines.add(
-                new SPO(
-                  predicate.source.typeNames.head,
-                  predicate.label,
-                  predicate.target.typeNames.head).toString)
-//              }
-            case AddProperty(s, propertyName, _, _) =>
-//              if (isDefine) {
-              defines.add(s.typeNames.head + "." + propertyName)
-//              }
+            case AddPredicate(predicate, isDefine) =>
+              if (isDefine) {
+                defines.add(
+                  new SPO(
+                    predicate.source.typeNames.head,
+                    predicate.label,
+                    predicate.target.typeNames.head).toString)
+              }
+            case AddProperty(s, propertyName, _, isDefine) =>
+              if (isDefine) {
+                defines.add(s.typeNames.head + "." + propertyName)
+              }
             case _ =>
           }
         })
