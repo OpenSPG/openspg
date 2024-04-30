@@ -11,7 +11,6 @@ import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.Explain
 import scala.collection.mutable
 
-
 object MetaConceptExplain extends Explain {
 
   override def explain(implicit context: LogicalPlannerContext): PartialFunction[Block, Block] = {
@@ -25,47 +24,48 @@ object MetaConceptExplain extends Explain {
             pattern.edges.values.filter(edge => edge.exists(_.relTypes.contains("belongTo")))
           if (metaConceptEdges.isEmpty) {
             p
-          }
-          else {
-            val catalog = context.catalog
-            val kg = catalog.getKnowledgeGraph();
+          } else {
+            val kg = context.catalog.getKnowledgeGraph();
             val metaConceptMap: mutable.HashMap[String, Set[String]] = mutable.HashMap.empty
-            metaConceptEdges.foreach(ce => parseMetaConcept(kg, ce, pattern, metaConceptMap))
+            metaConceptEdges.foreach(e => parseMetaConcept(kg, e, pattern, metaConceptMap))
             val newNodes = pattern.nodes.map(n =>
               if (metaConceptMap.contains(n._1)) {
                 n.copy(
                   n._1,
-                  PatternElement(n._1, metaConceptMap.getOrElse(n._1, n._2.typeNames), n._2.rule))
+//                  PatternElement(n._1, metaConceptMap.getOrElse(n._1, n._2.typeNames), n._2.rule))
+                  PatternElement(n._1, metaConceptMap(n._1), n._2.rule))
               } else {
-                n
-              }
-            )
-            val newPath = p._2.copy(graphPattern = pattern.copy(nodes = newNodes))
-            (p._1, newPath)
+                n.copy()
+              })
+//            val newPath = p._2.copy(graphPattern = pattern.copy(nodes = newNodes))
+            (p._1, p._2.copy(graphPattern = pattern.copy(nodes = newNodes)))
           }
         }
         MatchBlock(dependencies, newPatterns)
       }
   }
+
   private def parseMetaConcept(
       graph: SemanticPropertyGraph,
       metaConceptEdge: Set[Connection],
       pattern: GraphPattern,
-      metaConceptMap: mutable.HashMap[String, Set[String]]): Unit = {
+      metaConceptMap: mutable.Map[String, Set[String]]): Unit = {
     val Rules = graph.ruleDefines.keys
     metaConceptEdge.foreach(c => {
-      val sourceTypes = pattern.nodes(c.source).typeNames
-      val targetTypes = pattern.nodes(c.target).typeNames
+//      val targetTypes = pattern.nodes(c.target).typeNames
       val targetAlias = pattern.nodes(c.target).alias
-      for (s <- sourceTypes) {
-        for (t <- targetTypes) {
+      for (s <- pattern.nodes(c.source).typeNames) {
+        for (t <- pattern.nodes(c.target).typeNames) {
           val spo = s + "_belongTo_" + t
           val matchedRules = Rules.filter(r => r.split('/').head.equals(spo))
-          val expandConcept = matchedRules.map(r => r.split("_belongTo_").last)
+//          val subConcepts = matchedRules.map(r => r.split("_belongTo_").last)
           if (!metaConceptMap.contains(targetAlias)) {
             metaConceptMap(targetAlias) = Set.empty
           }
-          metaConceptMap(targetAlias) = metaConceptMap(targetAlias).++(expandConcept.toSet)
+          val subConcepts = metaConceptMap(targetAlias).++(matchedRules.map(r =>
+            r.split("_belongTo_").last))
+//          metaConceptMap(targetAlias) = metaConceptMap(targetAlias).++(expandConcept.toSet)
+          metaConceptMap.updated(targetAlias, subConcepts)
         }
       }
     })
