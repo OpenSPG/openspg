@@ -99,13 +99,6 @@ object Validator extends Logging {
               }
             }
           )
-//          if (types.head.split("_").length == 3) {
-//            // TODO linked edge
-//            val edge = graph.getEdge(types.head)
-//            if (!edge.resolved) {
-//              defined.add(types.head)
-//            }
-//          }
         case _ =>
       }
     }
