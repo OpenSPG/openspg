@@ -54,13 +54,11 @@ object MetaConceptExplain extends Explain {
         for (t <- pattern.nodes(c.target).typeNames) {
           val spo = s + "_belongTo_" + t
           val matchedRules = Rules.filter(r => r.split('/').head.equals(spo))
-//          val subConcepts = matchedRules.map(r => r.split("_belongTo_").last)
           if (!metaConceptMap.contains(targetAlias)) {
             metaConceptMap(targetAlias) = Set.empty
           }
           val metaConcepts = metaConceptMap(targetAlias).++(matchedRules.map(r =>
             r.split("_belongTo_").last))
-//          metaConceptMap(targetAlias) = metaConceptMap(targetAlias).++(expandConcept.toSet)
           metaConceptMap.put(targetAlias, metaConcepts)
         }
       }
