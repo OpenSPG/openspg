@@ -34,7 +34,8 @@ object MetaConceptExplain extends Explain {
         val newPatterns = patterns.map { p =>
           val pattern = p._2.graphPattern
           val metaConceptEdges =
-            pattern.edges.values.filter(edge => edge.exists(_.relTypes.contains("belongTo")))
+            pattern.edges.values.filter(edge =>
+              edge.exists(_.relTypes.contains("belongTo")) && !edge.exists(_.target.contains('/')))
           if (metaConceptEdges.isEmpty) {
             p
           } else {
@@ -60,22 +61,25 @@ object MetaConceptExplain extends Explain {
       metaConceptEdge: Set[Connection],
       pattern: GraphPattern,
       metaConceptMap: mutable.Map[String, Set[String]]): Unit = {
-    val Rules = graph.ruleDefines.keys
-    metaConceptEdge.foreach(c => {
-      val targetAlias = pattern.nodes(c.target).alias
-      for (s <- pattern.nodes(c.source).typeNames) {
-        for (t <- pattern.nodes(c.target).typeNames) {
-          val spo = s + "_belongTo_" + t
-          val matchedRules = Rules.filter(r => r.split('/').head.equals(spo))
-          if (!metaConceptMap.contains(targetAlias)) {
-            metaConceptMap(targetAlias) = Set.empty
+    val rules = graph.ruleDefines.keys
+    if (rules.nonEmpty) {
+      metaConceptEdge.foreach(c => {
+        val targetAlias = pattern.nodes(c.target).alias
+        for (s <- pattern.nodes(c.source).typeNames) {
+          for (t <- pattern.nodes(c.target).typeNames) {
+            val spo = s + "_belongTo_" + t
+            val matchedRules = rules.filter(r => r.split('/').head.equals(spo))
+            if (!metaConceptMap.contains(targetAlias)) {
+              metaConceptMap(targetAlias) = Set.empty
+            }
+            val metaConcepts = metaConceptMap(targetAlias).++(matchedRules.map(r =>
+              r.split("_belongTo_").last))
+            metaConceptMap.put(targetAlias, metaConcepts)
           }
-          val metaConcepts = metaConceptMap(targetAlias).++(matchedRules.map(r =>
-            r.split("_belongTo_").last))
-          metaConceptMap.put(targetAlias, metaConcepts)
         }
-      }
-    })
+      })
+    }
+
   }
 
 }
