@@ -7,8 +7,9 @@ import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
+import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
-import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class GraphStore implements Graph {
   }
 
   @Override
-  public List<Element> find(Triple pattern, TreeLogger treeLogger, Map<String, Object> context) {
+  public List<Result> find(Triple pattern, Map<String, Object> context) {
     List<Triple> data;
     if (pattern.getSubject() instanceof Entity) {
       data = getTriple((Entity) pattern.getSubject(), Direction.OUT);
@@ -35,6 +36,11 @@ public class GraphStore implements Graph {
       throw new RuntimeException("Cannot support " + pattern);
     }
     return matchInGraph(pattern, data);
+  }
+
+  @Override
+  public List<Result> find(Element s, Map<String, Object> context) {
+    return Collections.emptyList();
   }
 
   protected List<Triple> getTriple(Entity s, Direction direction) {
@@ -77,11 +83,11 @@ public class GraphStore implements Graph {
     }
   }
 
-  private List<Element> matchInGraph(Triple pattern, List<Triple> data) {
-    List<Element> rst = new LinkedList<>();
+  private List<Result> matchInGraph(Triple pattern, List<Triple> data) {
+    List<Result> rst = new LinkedList<>();
     for (Triple tri : data) {
       if (pattern.matches(tri)) {
-        rst.add(tri);
+        rst.add(new Result(tri, null));
       }
     }
     return rst;

@@ -83,7 +83,7 @@ public class Entity extends Element {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append(type).append("/`").append(id).append("`");
+    sb.append(type).append("/").append(id);
     return sb.toString();
   }
 }

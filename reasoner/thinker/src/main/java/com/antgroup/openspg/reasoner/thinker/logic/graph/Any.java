@@ -12,11 +12,28 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
-public class Any extends Element {
-  public static final Element ANY = new Any();
+import lombok.Data;
 
+@Data
+public class Any extends Element {
   @Override
   public boolean matches(Element other) {
     return other != null;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    } else if (obj instanceof Any) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    return HASH_ANY;
   }
 }

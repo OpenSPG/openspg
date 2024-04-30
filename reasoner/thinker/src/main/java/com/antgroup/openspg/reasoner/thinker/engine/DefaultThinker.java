@@ -24,17 +24,21 @@ public class DefaultThinker implements Thinker {
   }
 
   @Override
-  public Result find(Element s, Element p, Element o) {
+  public List<Result> find(Element s, Element p, Element o) {
     return find(s, p, o, new HashMap<>());
   }
 
   @Override
-  public Result find(Element s, Element p, Element o, Map<String, Object> context) {
+  public List<Result> find(Element s, Element p, Element o, Map<String, Object> context) {
     this.infGraph.clear();
     Triple pattern = Triple.create(s, p, o);
-    Result result = new Result();
-    List<Element> data = this.infGraph.find(pattern, result.getTraceLog(), context);
-    result.setData(data);
+    List<Result> result = this.infGraph.find(pattern, context);
     return result;
+  }
+
+  @Override
+  public List<Result> find(Element s, Map<String, Object> context) {
+    this.infGraph.clear();
+    return this.infGraph.find(s, context);
   }
 }

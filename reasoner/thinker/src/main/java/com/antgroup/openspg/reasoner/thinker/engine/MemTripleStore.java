@@ -22,19 +22,34 @@ public class MemTripleStore implements TripleStore {
   public void init(Map<String, String> param) {}
 
   @Override
-  public Collection<Element> find(Triple tripleMatch) {
+  public Collection<Element> find(Element pattern) {
+    List<Element> elements = new LinkedList<>();
+    if (pattern instanceof Entity) {
+      Collection<Element> collection = findEntity((Entity) pattern);
+      if (collection != null) {
+        elements.addAll(collection);
+      }
+    } else if (pattern instanceof Triple) {
+      elements.addAll(findTriple((Triple) pattern));
+    }
+    return elements;
+  }
+
+  private Collection<Element> findEntity(Entity pattern) {
+    Entity entity = entities.getOrDefault(getKey(pattern), null);
+    if (entity != null) {
+      return Arrays.asList(entity);
+    } else {
+      return null;
+    }
+  }
+
+  private Collection<Element> findTriple(Triple tripleMatch) {
     List<Element> elements = new LinkedList<>();
     if (tripleMatch.getSubject() instanceof Entity) {
       elements.addAll(sToTriple.getOrDefault(tripleMatch.getSubject(), new LinkedList<>()));
     } else if (tripleMatch.getObject() instanceof Entity) {
       elements.addAll(oToTriple.getOrDefault(tripleMatch.getObject(), new LinkedList<>()));
-    } else if (tripleMatch.getSubject().equals(Element.ANY)
-        && tripleMatch.getPredicate().equals(Element.ANY)
-        && (tripleMatch.getObject() instanceof Entity)) {
-      Entity entity = entities.getOrDefault(getKey((Entity) tripleMatch.getObject()), null);
-      if (entity != null) {
-        elements.add(entity);
-      }
     } else {
       throw new RuntimeException("Cannot support " + tripleMatch);
     }

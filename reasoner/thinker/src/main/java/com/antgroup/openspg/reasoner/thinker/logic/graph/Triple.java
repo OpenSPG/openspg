@@ -12,6 +12,9 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
+import lombok.Data;
+
+@Data
 public class Triple extends Element {
   private Element subject;
   private Element predicate;

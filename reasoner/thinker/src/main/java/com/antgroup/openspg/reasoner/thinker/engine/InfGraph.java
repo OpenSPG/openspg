@@ -2,6 +2,7 @@ package com.antgroup.openspg.reasoner.thinker.engine;
 
 import com.antgroup.openspg.reasoner.thinker.TripleStore;
 import com.antgroup.openspg.reasoner.thinker.logic.LogicNetwork;
+import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
@@ -30,13 +31,23 @@ public class InfGraph implements Graph {
   }
 
   @Override
-  public List<Element> find(Triple pattern, TreeLogger treeLogger, Map<String, Object> context) {
+  public List<Result> find(Triple pattern, Map<String, Object> context) {
+    prepareContext(context);
     // Step1: find pattern in graph
-    List<Element> dataInGraph = graphStore.find(pattern, treeLogger, context);
+    List<Result> dataInGraph = graphStore.find(pattern, context);
     if (CollectionUtils.isNotEmpty(dataInGraph)) {
       return dataInGraph;
     }
+    return inference(pattern, context);
+  }
 
+  @Override
+  public List<Result> find(Element s, Map<String, Object> context) {
+    prepareContext(context);
+    return inference(s, context);
+  }
+
+  private void prepareContext(Map<String, Object> context) {
     if (context != null) {
       for (Object val : context.values()) {
         if (val instanceof Entity) {
@@ -44,36 +55,36 @@ public class InfGraph implements Graph {
         }
       }
     }
+  }
 
-    List<Element> rst = new LinkedList<>();
+  private List<Result> inference(Element pattern, Map<String, Object> context) {
+    List<Result> rst = new LinkedList<>();
     for (Rule rule : logicNetwork.getBackwardRules(pattern)) {
-      List<Triple> body =
-          rule.getBody().stream()
-              .map(ClauseEntry::toElement)
-              .map(e -> toTripleMatch(e))
-              .collect(Collectors.toList());
-      List<Element> data = prepareElements(body, treeLogger);
+      List<Element> body =
+          rule.getBody().stream().map(ClauseEntry::toElement).collect(Collectors.toList());
+      List<Result> data = prepareElements(body);
       if (CollectionUtils.isEmpty(data)) {
         continue;
       }
+      TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
       Boolean ret =
           rule.getRoot()
               .accept(
-                  data,
+                  data.stream().map(Result::getData).collect(Collectors.toList()),
                   context,
                   new RuleExecutor(),
-                  treeLogger.addChild(rule.getRoot().toString()));
+                  traceLogger);
       if (ret) {
-        rst.add(rule.getHead().toElement());
+        rst.add(new Result(rule.getHead().toElement(), traceLogger));
       }
     }
     return rst;
   }
 
-  private List<Element> prepareElements(List<Triple> body, TreeLogger treeLogger) {
-    List<Element> elements = new ArrayList<>();
-    for (Triple pattern : body) {
-      Collection<Element> spo = prepareElement(pattern, treeLogger);
+  private List<Result> prepareElements(List<Element> body) {
+    List<Result> elements = new ArrayList<>();
+    for (Element pattern : body) {
+      Collection<Result> spo = prepareElement(pattern);
       if (spo == null || spo.isEmpty()) {
         return null;
       } else {
@@ -83,20 +94,15 @@ public class InfGraph implements Graph {
     return elements;
   }
 
-  private Collection<Element> prepareElement(Triple pattern, TreeLogger logger) {
+  private Collection<Result> prepareElement(Element pattern) {
+    Collection<Result> result;
     Collection<Element> spo = this.tripleStore.find(pattern);
     if (spo == null || spo.isEmpty()) {
-      spo = find(pattern, logger, null);
-    }
-    return spo;
-  }
-
-  private Triple toTripleMatch(Element element) {
-    if (element instanceof Entity) {
-      return Triple.create(null, null, element);
+      result = find(pattern, null);
     } else {
-      return (Triple) element;
+      result = spo.stream().map(e -> new Result(e, null)).collect(Collectors.toList());
     }
+    return result;
   }
 
   public void addEntity(Entity entity) {

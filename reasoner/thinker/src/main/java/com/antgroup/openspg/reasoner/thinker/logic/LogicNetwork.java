@@ -1,7 +1,6 @@
 package com.antgroup.openspg.reasoner.thinker.logic;
 
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.ClauseEntry;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import java.util.*;
@@ -45,10 +44,10 @@ public class LogicNetwork {
     return rules;
   }
 
-  public Collection<Rule> getBackwardRules(Triple triple) {
+  public Collection<Rule> getBackwardRules(Element triple) {
     Set<Rule> rules = new HashSet<>();
     for (Map.Entry<Element, Map<List<Element>, Rule>> entry : backwardRules.entrySet()) {
-      if (entry.getKey().matches(triple)) {
+      if (triple.matches(entry.getKey())) {
         rules.addAll(entry.getValue().values());
       }
     }

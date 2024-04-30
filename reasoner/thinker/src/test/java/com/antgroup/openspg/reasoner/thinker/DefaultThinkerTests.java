@@ -11,12 +11,11 @@ import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.thinker.catalog.MockLogicCatalog;
 import com.antgroup.openspg.reasoner.thinker.engine.DefaultThinker;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
+import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -102,7 +101,7 @@ public class DefaultThinkerTests {
     MockLogicCatalog mockLogicCatalog = new MockLogicCatalog();
     mockLogicCatalog.init();
     Thinker thinker = new DefaultThinker(buildGraphState(), mockLogicCatalog);
-    List<Element> triples = thinker.find(new Entity("a1", "A"), null, null).getData();
+    List<Result> triples = thinker.find(new Entity("a1", "A"), null, null);
     Assert.assertTrue(triples.size() == 1);
   }
 
@@ -111,12 +110,12 @@ public class DefaultThinkerTests {
     MockLogicCatalog mockLogicCatalog = new MockLogicCatalog();
     mockLogicCatalog.init();
     Thinker thinker = new DefaultThinker(buildGraphState(), mockLogicCatalog);
-    List<Element> triples = thinker.find(null, null, new Entity("b", "B")).getData();
+    List<Result> triples = thinker.find(null, null, new Entity("b", "B"));
     Assert.assertTrue(triples.size() == 2);
   }
 
   private Rule getR1() {
-    String rule = "Define (D/`d`) {\n" + "  R1:A/`a` and B/`b`\n" + "}";
+    String rule = "Define (D/`d`) {\n" + "  R1:A/`a1` and A/`a2`\n" + "}";
     SimplifyThinkerParser parser = new SimplifyThinkerParser();
     return parser.parseSimplifyDsl(rule, null).head();
   }
@@ -126,7 +125,12 @@ public class DefaultThinkerTests {
     MockLogicCatalog logicCatalog = new MockLogicCatalog(Arrays.asList(getR1()));
     logicCatalog.init();
     Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
-    List<Element> triples = thinker.find(null, null, new Entity("d", "D")).getData();
+    Entity a1 = new Entity("a1", "A");
+    Entity a2 = new Entity("a2", "A");
+    Map<String, Object> context = new HashMap<>();
+    context.put(a1.toString(), a1);
+    context.put(a2.toString(), a2);
+    List<Result> triples = thinker.find(new Node("D"), context);
     Assert.assertTrue(triples.size() == 1);
   }
 }

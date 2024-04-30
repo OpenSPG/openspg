@@ -9,7 +9,7 @@ import java.util.Map;
 public interface TripleStore {
   void init(Map<String, String> param);
 
-  Collection<Element> find(final Triple tripleMatch);
+  Collection<Element> find(final Element pattern);
 
   void addEntity(Entity entity);
 
