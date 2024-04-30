@@ -37,14 +37,18 @@ object BlockUtils {
       case DDLBlock(ddlOps, _) =>
         ddlOps.foreach(op => {
           op match {
-            case AddPredicate(predicate) =>
-              defines.add(
-                new SPO(
-                  predicate.source.typeNames.head,
-                  predicate.label,
-                  predicate.target.typeNames.head).toString)
-            case AddProperty(s, propertyName, _) =>
-              defines.add(s.typeNames.head + "." + propertyName)
+            case AddPredicate(predicate, isDefine) =>
+              if (isDefine) {
+                defines.add(
+                  new SPO(
+                    predicate.source.typeNames.head,
+                    predicate.label,
+                    predicate.target.typeNames.head).toString)
+              }
+            case AddProperty(s, propertyName, _, isDefine) =>
+              if (isDefine) {
+                defines.add(s.typeNames.head + "." + propertyName)
+              }
             case _ =>
           }
         })
@@ -56,6 +60,7 @@ object BlockUtils {
       defines.toSet
     }
   }
+
 
   def getStarts(block: Block): Set[String] = {
     val start = block.transform[Set[String]] {
@@ -76,8 +81,8 @@ object BlockUtils {
         val starts = new mutable.HashSet[String]()
         for (ddl <- ddlOp) {
           ddl match {
-            case AddProperty(s, _, _) => starts.add(s.alias)
-            case AddPredicate(p) =>
+            case AddProperty(s, _, _, _) => starts.add(s.alias)
+            case AddPredicate(p, _) =>
               starts.add(p.source.alias)
               starts.add(p.target.alias)
             case _ =>

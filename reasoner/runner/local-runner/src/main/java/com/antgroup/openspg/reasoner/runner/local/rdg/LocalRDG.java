@@ -1002,12 +1002,15 @@ public class LocalRDG extends RDG<LocalRDG> {
     this.kgGraphList = newKgGraphList;
 
     java.util.List<DDLOp> ddlOpList = Lists.newArrayList(JavaConversions.asJavaCollection(ddlOps));
-    for (DDLOp ddlOp : ddlOpList) {
+    for (int i = 0; i < ddlOpList.size(); ++i) {
+      DDLOp ddlOp = ddlOpList.get(i);
+      boolean isLast = (i == (ddlOpList.size() - 1));
       if (ddlOp instanceof AddProperty) {
         AddProperty addProperty = (AddProperty) ddlOp;
         addProperty(
             addProperty.s().alias(),
-            new Field(addProperty.propertyName(), addProperty.propertyType(), true));
+            new Field(addProperty.propertyName(), addProperty.propertyType(), true),
+            isLast);
       } else if (ddlOp instanceof AddPredicate) {
         AddPredicate addPredicate = (AddPredicate) ddlOp;
         addRelation(addPredicate);
@@ -1020,7 +1023,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     return this;
   }
 
-  private void addProperty(String alias, Field property) {
+  private void addProperty(String alias, Field property, Boolean isLast) {
     java.util.Map<String, GraphItemType> alias2TypeMap =
         new HashMap<>(JavaConversions.mapAsJavaMap(KgGraphSchema.alias2Type(this.kgGraphSchema)));
     GraphItemType type = alias2TypeMap.get(alias);
@@ -1032,7 +1035,8 @@ public class LocalRDG extends RDG<LocalRDG> {
     // check now schema is root by vertex alias
     if (!alias.equals(this.kgGraphSchema.rootAlias())) {
       // need shuffle KgGraph
-      shuffleAndGroup(alias, true);
+      shuffleAndGroup(alias, isLast);
+
     } else {
       this.kgGraphList = doMerge(this.kgGraphList, this.kgGraphSchema);
     }
@@ -1123,7 +1127,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     long count = 0;
     for (KgGraph<IVertexId> kgGraph : this.kgGraphList) {
       IVertex<IVertexId, IProperty> willAddedVertex = impl.extractVertex(kgGraph);
-
+      this.graphState.addVertex(willAddedVertex);
       // add to result list
       this.resultVertexSet.add(willAddedVertex);
       count++;

@@ -85,6 +85,8 @@ public class LazyUdaf {
       this.baseUdaf = this.udafMeta.createAggregateFunction();
       if (null != this.udfInitParams) {
         this.baseUdaf.initialize(this.udfInitParams);
+      } else {
+        this.baseUdaf.initialize();
       }
     }
   }

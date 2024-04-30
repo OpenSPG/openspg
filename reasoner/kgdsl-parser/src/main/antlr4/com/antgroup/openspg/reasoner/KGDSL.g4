@@ -285,6 +285,7 @@ list_common_agg_if_name :
     SUMIF|
     AVGIF|
     COUNTIF|
+    CONCATAGGIF|
     MINIF|
     MAXIF;
 
@@ -370,6 +371,7 @@ graph_common_agg_if_name :
     SUMIF|
     AVGIF|
     COUNTIF|
+    CONCATAGGIF|
     MINIF|
     MAXIF;
 
@@ -503,6 +505,7 @@ MAX : ('M' | 'm')('A' | 'a')('X' | 'x') ;
 SUMIF : ('S' | 's')('U' | 'u')('M' | 'm')('I' | 'i')('F' | 'f') ;
 AVGIF : ('A' | 'a')('V' | 'v')('G' | 'g')('I' | 'i')('F' | 'f') ;
 COUNTIF : ('C' | 'c')('O' | 'o')('U' | 'u')('N' | 'n')('T' | 't')('I' | 'i')('F' | 'f') ;
+CONCATAGGIF : ('C' | 'c')('O' | 'o')('N' | 'n')('C' | 'c')('A' | 'a')('T' | 't')('A' | 'a')('G' | 'g')('G' | 'g')('I' | 'i')('F' | 'f') ;
 MINIF : ('M' | 'm')('I' | 'i')('N' | 'n')('I' | 'i')('F' | 'f') ;
 MAXIF : ('M' | 'm')('A' | 'a')('X' | 'x')('I' | 'i')('F' | 'f') ;
 IN  : ('I' | 'i')('N' | 'n') ;
