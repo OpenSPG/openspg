@@ -60,7 +60,7 @@ object ConvertToMetaConcept extends SimpleRule {
     } else {
       val metaConcepts = types.map(_.split("/").head)
       if (metaConcepts.size > 1) {
-        throw InvalidGraphException("Entities types must belong to the same meta concept")
+        throw InvalidGraphException("Entities must belong to the same meta concept")
       }
       val Ids = types.map(_.split(metaConcepts.head + "/").last)
       val rule =
@@ -69,9 +69,9 @@ object ConvertToMetaConcept extends SimpleRule {
           "belongToConcept",
           BinaryOpExpr(BIn, Ref(patternElement.alias + ".id"), VList(Ids.toList, KTString)))
       patternElement.copy(typeNames = metaConcepts, rule = rule)
-
     }
   }
+
   override def direction: Direction = Up
 
   override def maxIterations: Int = 1
