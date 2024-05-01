@@ -17,7 +17,7 @@
   <parent>
     <groupId>com.antgroup.openspg.server</groupId>
     <artifactId>server-parent</artifactId>
-    <version>20240425-2-SNAPSHOT</version>
+    <version>20240501-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
