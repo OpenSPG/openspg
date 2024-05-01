@@ -14,7 +14,7 @@
 package com.antgroup.openspg.reasoner.udf.rule.op;
 
 /** div op without exception return null when exception */
-public class OperatorMultiDiv extends com.ql.util.express.instruction.op.OperatorMultiplyDivide {
+public class OperatorMultiDiv extends com.ql.util.express.instruction.op.OperatorMultiDiv {
   public OperatorMultiDiv(String name) {
     super(name);
   }

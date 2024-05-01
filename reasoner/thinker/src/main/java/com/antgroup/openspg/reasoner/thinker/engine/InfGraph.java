@@ -85,9 +85,7 @@ public class InfGraph implements Graph {
     List<Result> elements = new ArrayList<>();
     for (Element pattern : body) {
       Collection<Result> spo = prepareElement(pattern);
-      if (spo == null || spo.isEmpty()) {
-        return null;
-      } else {
+      if (spo != null && !spo.isEmpty()) {
         elements.addAll(spo);
       }
     }
