@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import scala.Tuple2;
 
 public class VertexVersionProperty implements IVersionProperty {
-  private final Map<String, TreeMap<Long, Object>> props;
+  protected final Map<String, TreeMap<Long, Object>> props;
 
   /** default constructor */
   public VertexVersionProperty() {

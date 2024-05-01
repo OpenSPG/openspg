@@ -777,6 +777,7 @@ class RuleExprParser extends Serializable {
       case "AVGIF" => Avg
       case "MINIF" => Min
       case "MAXIF" => Max
+      case "CONCATAGGIF" => ConcatAgg
     }
     AggIfOpExpr(AggOpExpr(opAggNameExpr, opEleExpr), filterExpr)
   }
@@ -823,6 +824,7 @@ class RuleExprParser extends Serializable {
       case "AVGIF" => Avg
       case "MINIF" => Min
       case "MAXIF" => Max
+      case "CONCATAGGIF" => ConcatAgg
     }
     AggIfOpExpr(AggOpExpr(opExpr, expr), filterExpr)
   }

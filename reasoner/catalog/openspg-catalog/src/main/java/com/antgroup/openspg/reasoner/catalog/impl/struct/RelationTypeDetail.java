@@ -25,6 +25,9 @@ public class RelationTypeDetail {
   @JSONField(name = "name")
   private String name;
 
+  @JSONField(name = "nameZh")
+  private String nameZh;
+
   @JSONField(name = "startEntityTypeDetail")
   private VertexMeta startEntityType;
 

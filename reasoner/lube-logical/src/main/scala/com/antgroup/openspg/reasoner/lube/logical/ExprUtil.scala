@@ -146,6 +146,7 @@ object ExprUtil {
             getTargetType(args, referVars, udfRepo)
           case StrJoin(_) => KTString
           case Count => KTLong
+          case ConcatAgg => KTString
           case AggUdf(name, _) =>
             val types = getTargetType(args.head, referVars, udfRepo)
             val udf = udfRepo.getUdafMeta(name, types)

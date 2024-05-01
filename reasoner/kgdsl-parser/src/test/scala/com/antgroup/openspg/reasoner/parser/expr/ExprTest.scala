@@ -538,6 +538,35 @@ class ExprTest extends AnyFunSpec {
     expr.pretty should equal(expectResult)
   }
 
+  it("group(A,B).ConcatAggIf(A.id != null, B.id)") {
+    val exprParser = new RuleExprParser()
+    val expr = exprParser.parse("group(A,B).ConcatAggIf(A.id != null, B.id)")
+    print(expr.pretty)
+
+    val expectResult = OpChainExpr(
+      GraphAggregatorExpr(
+        "unresolved_default_path",
+        List.apply(Ref("A"), Ref("B")),
+        null
+      ),
+      OpChainExpr(
+        AggIfOpExpr(
+          AggOpExpr(
+            ConcatAgg,
+            UnaryOpExpr(
+              GetField("id"), Ref("B")
+            )
+          ),
+          BinaryOpExpr(BNotEqual,
+            UnaryOpExpr(GetField("id"), Ref("A")),
+            VNull)
+        ),
+        null
+      )
+    ).pretty
+    expr.pretty should equal(expectResult)
+  }
+
   it ("e.nodes()") {
     val exprParser = new RuleExprParser()
     val expr = exprParser.parse("e.nodes()")
