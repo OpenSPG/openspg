@@ -171,6 +171,12 @@ public class LocalRDG extends RDG<LocalRDG> {
       for (IVertex<IVertexId, IProperty> startId : startVertexList) {
         startIdSet.add(startId.getId());
       }
+      startVertexList =
+              kgGraph.getVertex(this.startVertexAlias);
+      for (IVertex<IVertexId, IProperty> startId : startVertexList) {
+        startIdSet.add(startId.getId());
+      }
+
     }
     return startIdSet;
   }
