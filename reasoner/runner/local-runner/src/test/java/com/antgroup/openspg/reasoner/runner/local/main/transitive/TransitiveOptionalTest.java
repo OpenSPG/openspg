@@ -1295,37 +1295,14 @@ public class TransitiveOptionalTest {
   @Test
   public void testCreateInstance() {
     String dsl =
-        "Define (s:Custid)-[p:strNum]->(o:Int) {\n"
+        "\n"
+            + "Define (s:Custid)-[p:init]->(o:Boolean) {\n"
             + "    GraphStructure {\n"
-            + "        (s)<-[pp:hasCust]-(str:STR)\n"
+            + "        (s)\n"
             + "    }\n"
             + "    Rule {\n"
-            + "        o = group(s).countIf(str.status == 'CLOSE', str)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "Define (s:Custid)-[p:isInWhiteBlack]->(o:Boolean) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)<-[:hasCust]-(str:STR)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            + "        R1: str.matchrule == '0202'\n"
-            + "        R2: str.isreport == '1' \n"
-            + "\n"
-            + "        o = (R1 and R2)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "Define (s:Custid)-[p:isAggregator]->(o:Boolean) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)<-[e:complained]-(u1:Custid)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            + "      R0: s.isInWhiteBlack == null or s.isInWhiteBlack == false\n"
-            + "      complainNum = group(s).count(e)\n"
-            + "        R5(\"被投诉大于20条\"): complainNum >=20\n"
-            + "\n"
-            + "        o = true\n"
+            + "       R1: s.isAggregator \n"
+            + "       o = true \n"
             + "    }\n"
             + "    Action {\n"
             + "        gang = createNodeInstance(\n"
@@ -1343,15 +1320,148 @@ public class TransitiveOptionalTest {
             + "        )\n"
             + "    }\n"
             + "}\n"
+            + "Define (s:Custid)-[p:isAggregator]->(o:Boolean) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)<-[e:complained]-(u1:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        o = true\n"
+            + "    }\n"
+            + "Define (s:Gang)-[p:expandSameMedia]->(o:Boolean) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[e1:has]-(c1:Custid)-[e2:sameMedia]->(c2:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        R1: c1.isAggregator \n"
+            + "        o = true \n"
+            + "    }\n"
+            + "    Action {\n"
+            + "        createEdgeInstance(\n"
+            + "            src=s,\n"
+            + "          dst=c2,\n"
+            + "          type=has,\n"
+            + "          value={\n"
+            + "            __from_id__ = s.id\n"
+            + "            __to_id__ = c2.id\n"
+            + "          }\n"
+            + "        )\n"
+            + "    }\n"
+            + "}\n"
+            + "Define (s:Gang)-[p:expandTrader]->(o:Boolean) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[:has]-(c1:Custid)-[:trade]->(c2:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        R1: s.expandSameMedia\n"
+            + "        o = true \n"
+            + "    }\n"
+            + "    Action {\n"
+            + "        createEdgeInstance(\n"
+            + "            src=s,\n"
+            + "          dst=c2,\n"
+            + "          type=has,\n"
+            + "          value={\n"
+            + "            __from_id__ = s.id\n"
+            + "            __to_id__ = c2.id\n"
+            + "          }\n"
+            + "        )\n"
+            + "    }\n"
+            + "}\n"
+            + "\n"
+            + "Define (s:Gang)-[p:expandCompanyRole]->(o:Boolean) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[:has]-(c1:Custid)-[:companyRole]->(c2:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        R1: s.expandTrader\n"
+            + "        o = true \n"
+            + "    }\n"
+            + "    Action {\n"
+            + "        createEdgeInstance(\n"
+            + "            src=s,\n"
+            + "          dst=c2,\n"
+            + "          type=has,\n"
+            + "          value={\n"
+            + "            __from_id__ = s.id\n"
+            + "            __to_id__ = c2.id\n"
+            + "          }\n"
+            + "        )\n"
+            + "    }\n"
+            + "}\n"
+            + "\n"
+            + "Define (s:Gang)-[p:finishExpand]->(o:Boolean) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[e:has]->(c:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        R0:  s.expandCompanyRole || s.id!=null\n"
+            + "        o = true\n"
+            + "    }\n"
+            + "}\n"
+            + "Define (s:Gang)-[p:size]->(o:Int) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[e:has]->(c:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        R0:  s.finishExpand\n"
+            + "        o = group(s).count_distinct(c.cid)\n"
+            + "    }\n"
+            + "}\n"
+            + "Define (s:Gang)-[p:amount]->(o:Int) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[e:has]->(c:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        R0:  s.finishExpand\n"
+            + "        o = group(s).sum(c.trdAmt90d)\n"
+            + "    }\n"
+            + "}\n"
+            + "Define (s:Gang)-[p:valid]->(o:Boolean) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[e:has]->(c:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        R1 = rule_value(s.finishExpand, true, false)\n"
+            + "        R2 = rule_value(s.size >= 2, true, false)\n"
+            + "        R3 = rule_value(s.amount >= 20, true, false)\n"
+            + "        o = R1 and R2 and R3\n"
+            + "    }\n"
+            + "}\n"
+            + "Define (s:Gang)-[p:trdIds]->(o:String) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[:has]->(c:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        R0 = rule_value(s.finishExpand, true, false) \n"
+            + "        R1 = rule_value(c.trdAmt90d > 15, true, false)\n"
+            + "        R2: R0 and R1"
+            + "        o = group(s).concat_agg(c.cid)\n"
+            + "    }\n"
+            + "}\n"
+            + "\n"
+            + "Define (s:Gang)-[p:gangIds]->(o:String) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[:has]->(c:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        R0: s.finishExpand\n"
+            + "        o = group(s).concat_agg(c.cid)\n"
+            + "    }\n"
+            + "}\n"
+            + "\n"
             + "GraphStructure {"
-            + "  A [Custid, __start__='true']\n"
+            + "  A [Custid, __start__ = 'true']\n"
             + "  B [Gang]\n"
-            + "  B->A [has]\n"
+            + "  C [Custid]\n"
+            + "  B->A [has] as e1\n"
+            + "  B->C [has] as e2\n"
             + "}\n"
             + "Rule {\n"
+            + "  R0: A.init\n"
+            + "  R1: B.valid\n"
             + "}\n"
             + "Action {\n"
-            + "  get(A.id, A.isAggregator, B.id) \n"
+            + "  get(B.id, B.gangIds, B.trdIds, B.size, B.amount) \n"
             + "}";
 
     System.out.println(dsl);
@@ -1366,6 +1476,7 @@ public class TransitiveOptionalTest {
             Sets.newHashSet(
                 "trdAmtIn90d",
                 "trdAmt90d",
+                "cid",
                 "trdCntCustIn90d",
                 "custcntpty90CustNum90dInGenderFemale",
                 "custcntpty90CustNum90dInGenderMale",
@@ -1378,8 +1489,14 @@ public class TransitiveOptionalTest {
     schema.put("Gang", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("cid", "name")));
     schema.put("Gang_has_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
-        "Custid_complained_Custid",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("createMemo")));
+        "Custid_complained_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+        "Custid_trade_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+        "Custid_sameMedia_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+        "Custid_companyRole_Custid",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
     schema.put(
         "STR_hasCust_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("createMemo")));
 
@@ -1398,23 +1515,36 @@ public class TransitiveOptionalTest {
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     Assert.assertEquals(2, result.getRows().size());
+    Assert.assertEquals("6", result.getRows().get(0)[3]);
+    Assert.assertEquals("100", result.getRows().get(0)[4]);
   }
 
   public static class GangGraphLoader extends AbstractLocalGraphLoader {
     @Override
     public List<IVertex<String, IProperty>> genVertexList() {
       return Lists.newArrayList(
-          constructionVertex("A1", "Custid", "name", "A1", "cid", "a1"),
-          constructionVertex("A2", "Custid", "name", "A2", "cid", "a2"),
-          constructionVertex("B1", "Gang", "name", "B2", "cid", "b1"));
+          constructionVertex("A1", "Custid", "name", "nA1", "cid", "a1", "trdAmt90d", 20),
+          constructionVertex("A2", "Custid", "name", "nA2", "cid", "a2", "trdAmt90d", 20),
+          constructionVertex("A3", "Custid", "name", "nA3", "cid", "a3", "trdAmt90d", 20),
+          constructionVertex("A4", "Custid", "name", "nA4", "cid", "a4", "trdAmt90d", 20),
+          constructionVertex("A5", "Custid", "name", "nA5", "cid", "a5", "trdAmt90d", 20),
+          constructionVertex("A6", "Custid", "name", "nA6", "cid", "a6", "trdAmt90d", 10),
+          constructionVertex("A7", "Custid", "name", "nA7", "cid", "a7", "trdAmt90d", 10),
+          constructionVertex("A8", "Custid", "name", "nA8", "cid", "a8", "trdAmt90d", 10),
+          constructionVertex("A9", "Custid", "name", "nA9", "cid", "a9", "trdAmt90d", 10));
     }
 
     @Override
     public List<IEdge<String, IProperty>> genEdgeList() {
       return Lists.newArrayList(
-          constructionEdge("B1", "has", "A1", "info", "b1_a1"),
-          constructionEdge("B1", "has", "A2", "info", "b1_a2"),
-          constructionEdge("A1", "complained", "A2", "info", "a1ca2"));
+          constructionEdge("A1", "complained", "A2", "info", "a1ca2"),
+          constructionEdge("A2", "sameMedia", "A3", "info", "a2smda3"),
+          constructionEdge("A2", "sameMedia", "A4", "info", "a2smda4"),
+          constructionEdge("A3", "trade", "A5", "info", "a3trda5"),
+          constructionEdge("A3", "trade", "A6", "info", "a3trda6"),
+          constructionEdge("A6", "companyRole", "A7", "info", "a6cmpa7"),
+          constructionEdge("A1", "complained", "A8", "info", "a1ca8"),
+          constructionEdge("A8", "sameMedia", "A9", "info", "a8smda9"));
     }
   }
 }

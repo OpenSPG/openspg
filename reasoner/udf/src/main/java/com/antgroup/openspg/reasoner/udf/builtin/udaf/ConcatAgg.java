@@ -19,7 +19,7 @@ import com.antgroup.openspg.reasoner.common.types.KgType;
 import com.antgroup.openspg.reasoner.udf.model.BaseUdaf;
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
 
-@UdfDefine(name = "concat_agg", compatibleName = "concat_agg")
+@UdfDefine(name = "concat_agg", compatibleName = "ConcatAgg")
 public class ConcatAgg implements BaseUdaf {
   private StringBuilder stringBuilder;
   private static final String SPLITTER = ",";

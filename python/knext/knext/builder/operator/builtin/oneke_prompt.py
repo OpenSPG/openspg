@@ -18,6 +18,7 @@ from collections import defaultdict
 from knext.schema.model.schema_helper import SPGTypeName
 from knext.builder.operator.spg_record import SPGRecord
 from knext.builder.operator.builtin.auto_prompt import AutoPrompt
+import uuid
 
 
 class OneKEPrompt(AutoPrompt):
@@ -27,9 +28,10 @@ class OneKEPrompt(AutoPrompt):
     def __init__(self, **kwargs):
         types_list = kwargs.get("types_list", [])
         language = kwargs.get("language", "zh")
-        with_description = kwargs.get("language", False)
+        with_description = kwargs.get("with_description", False)
         split_num = kwargs.get("split_num", 4)
         super().__init__(types_list)
+        self.language = language
         if language == "zh":
             self.template = self.template_zh
         else:
@@ -104,10 +106,10 @@ class OneKE_NERPrompt(OneKEPrompt):
         try:
             ent_obj = json.loads(response)
         except json.decoder.JSONDecodeError:
-            print("DeepKE_NERPrompt response JSONDecodeError error.")
+            print("OneKE_NERPrompt response JSONDecodeError error.")
             return []
         if type(ent_obj) != dict:
-            print("DeepKE_NERPrompt response type error.")
+            print("OneKE_NERPrompt response type error.")
             return []
 
         spg_records = []
@@ -116,10 +118,11 @@ class OneKE_NERPrompt(OneKEPrompt):
                 print(f"Unrecognized entity_type: {type_zh}")
                 continue
             type_en, _ = self.spg_type_schema_info_zh[type_zh]
-            spg_record = SPGRecord(type_en)
             for value in values:
+                spg_record = SPGRecord(type_en)
                 spg_record.upsert_properties({"id": value, "name": value})
-            spg_records.append(spg_record)
+                spg_records.append(spg_record)
+        return spg_records
 
     def _render(self):
         entity_list = []
@@ -156,10 +159,10 @@ class OneKE_SPOPrompt(OneKEPrompt):
         try:
             re_obj = json.loads(response)
         except json.decoder.JSONDecodeError:
-            print("DeepKE_REPrompt response JSONDecodeError error.")
+            print("OneKE_REPrompt response JSONDecodeError error.")
             return []
         if type(re_obj) != dict:
-            print("DeepKE_REPrompt response type error.")
+            print("OneKE_REPrompt response type error.")
             return []
 
         relation_dcir = defaultdict(list)
@@ -174,7 +177,7 @@ class OneKE_SPOPrompt(OneKEPrompt):
                         or "subject" not in value
                         or "object" not in value
                     ):
-                        print("DeepKE_REPrompt response type error.")
+                        print("OneKE_REPrompt response type error.")
                         continue
                     s_zh, o_zh = value.get("subject", ""), value.get("object", "")
                     relation_dcir[relation_zh].append((s_zh, o_zh))
@@ -294,10 +297,10 @@ class OneKE_KGPrompt(OneKEPrompt):
         try:
             re_obj = json.loads(response)
         except json.decoder.JSONDecodeError:
-            print("DeepKE_KGPrompt response JSONDecodeError error.")
+            print("OneKE_KGPrompt response JSONDecodeError error.")
             return []
         if type(re_obj) != dict:
-            print("DeepKE_KGPrompt response type error.")
+            print("OneKE_KGPrompt response type error.")
             return []
 
         spg_records = []
@@ -341,21 +344,40 @@ class OneKE_KGPrompt(OneKEPrompt):
     def _render(self):
         spo_list = []
         for spg_type in self.spg_types:
-            attributes = []
-            attributes.extend(
-                [
-                    v.name_zh
-                    for k, v in spg_type.properties.items()
-                    if k not in ["id", "description", "stdId"]
-                ]
-            )
-            attributes.extend(
-                [
-                    v.name_zh
-                    for k, v in spg_type.relations.items()
-                    if v not in attributes and k not in ["isA"]
-                ]
-            )
+            if not self.with_description:
+                attributes = []
+                attributes.extend(
+                    [
+                        v.name_zh
+                        for k, v in spg_type.properties.items()
+                        if k not in self.ignored_properties
+                    ]
+                )
+                attributes.extend(
+                    [
+                        v.name_zh
+                        for k, v in spg_type.relations.items()
+                        if v.name_zh not in attributes
+                        and k not in self.ignored_relations
+                    ]
+                )
+            else:
+                attributes = {}
+                attributes.update(
+                    {
+                        v.name_zh: v.desc or ""
+                        for k, v in spg_type.properties.items()
+                        if k not in self.ignored_properties
+                    }
+                )
+                attributes.update(
+                    {
+                        v.name_zh: v.desc or ""
+                        for k, v in spg_type.relations.items()
+                        if v.name_zh not in attributes
+                        and k not in self.ignored_relations
+                    }
+                )
             entity_type = spg_type.name_zh
             spo_list.append({"entity_type": entity_type, "attributes": attributes})
 
@@ -386,10 +408,10 @@ class OneKE_EEPrompt(OneKEPrompt):
         try:
             ee_obj = json.loads(response)
         except json.decoder.JSONDecodeError:
-            print("DeepKE_EEPrompt response JSONDecodeError error.")
+            print("OneKE_EEPrompt response JSONDecodeError error.")
             return []
         if type(ee_obj) != dict:
-            print("DeepKE_EEPrompt response type error.")
+            print("OneKE_EEPrompt response type error.")
             return []
 
         spg_records = []
@@ -400,7 +422,12 @@ class OneKE_EEPrompt(OneKEPrompt):
             type_en, _ = self.spg_type_schema_info_zh[type_zh]
             if type_values and isinstance(type_values, list):
                 for type_value in type_values:
-                    spg_record = SPGRecord(type_en).upsert_property("name", type_zh)
+                    uuid_4 = uuid.uuid4()
+                    spg_record = (
+                        SPGRecord(type_en)
+                        .upsert_property("id", str(uuid_4))
+                        .upsert_property("name", type_zh)
+                    )
                     arguments = type_value.get("arguments")
                     if arguments and isinstance(arguments, dict):
                         for attr_zh, attr_value in arguments.items():
@@ -435,21 +462,40 @@ class OneKE_EEPrompt(OneKEPrompt):
     def _render(self):
         event_list = []
         for spg_type in self.spg_types:
-            arguments = []
-            arguments.extend(
-                [
-                    v.name_zh
-                    for k, v in spg_type.properties.items()
-                    if k not in ["id", "name", "description"]
-                ]
-            )
-            arguments.extend(
-                [
-                    v.name_zh
-                    for k, v in spg_type.relations.items()
-                    if v.name_zh not in arguments
-                ]
-            )
+            if not self.with_description:
+                arguments = []
+                arguments.extend(
+                    [
+                        v.name_zh
+                        for k, v in spg_type.properties.items()
+                        if k not in self.ignored_properties
+                    ]
+                )
+                arguments.extend(
+                    [
+                        v.name_zh
+                        for k, v in spg_type.relations.items()
+                        if v.name_zh not in arguments
+                        and k not in self.ignored_relations
+                    ]
+                )
+            else:
+                arguments = {}
+                arguments.update(
+                    {
+                        v.name_zh: v.desc or ""
+                        for k, v in spg_type.properties.items()
+                        if k not in self.ignored_properties
+                    }
+                )
+                arguments.update(
+                    {
+                        v.name_zh: v.desc or ""
+                        for k, v in spg_type.relations.items()
+                        if v.name_zh not in arguments
+                        and k not in self.ignored_relations
+                    }
+                )
             event_type = spg_type.name_zh
             event_list.append(
                 {"event_type": event_type, "trigger": True, "arguments": arguments}
