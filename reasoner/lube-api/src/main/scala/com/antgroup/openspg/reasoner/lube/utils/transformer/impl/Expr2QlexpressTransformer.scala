@@ -124,10 +124,10 @@ class Expr2QlexpressTransformer(
             val initValueStr = transform(initValue).head
             val lambdaFuncRst = lambdaFuncParse(curVariableSet, reduceFunc)
             if (lambdaFuncRst._2 == null) {
-              "repeat_reduce(__slot__, %s, \"%s\", \"%s\", \"%s\")"
+              "repeat_reduce(__slot__, %s, '%s', '%s', '%s')"
                 .format(initValueStr, res, ele, lambdaFuncRst._1)
             } else {
-              "repeat_reduce(__slot__, %s, \"%s\", \"%s\", \"%s\", %s)"
+              "repeat_reduce(__slot__, %s, '%s', '%s', '%s', %s)"
                 .format(initValueStr, res, ele, lambdaFuncRst._1, lambdaFuncRst._2)
 
             }

@@ -113,6 +113,8 @@ case object Sum extends AggregatorOpSet {}
 case object Avg extends AggregatorOpSet {}
 case object Count extends AggregatorOpSet {}
 
+case object ConcatAgg extends AggregatorOpSet {}
+
 case object First extends AggregatorOpSet
 
 final case class AggUdf(name: String, funcArgs: List[Expr]) extends AggregatorOpSet {}

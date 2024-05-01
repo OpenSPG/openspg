@@ -247,7 +247,7 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
       case DDLBlock(ddlOps, _) =>
         ddlOps.foreach(op => {
           op match {
-            case AddPredicate(predicate) =>
+            case AddPredicate(predicate, _) =>
               if (direction == Direction.OUT && predicate.direction == Direction.OUT) {
                 rootAlias = predicate.source.alias
               } else if (direction == Direction.IN && predicate.direction == Direction.OUT) {
@@ -257,7 +257,7 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
               } else if (direction != null) {
                 rootAlias == predicate.source.alias
               }
-            case AddProperty(s, _, _) =>
+            case AddProperty(s, _, _, _) =>
               rootAlias = s.alias
             case _ =>
           }

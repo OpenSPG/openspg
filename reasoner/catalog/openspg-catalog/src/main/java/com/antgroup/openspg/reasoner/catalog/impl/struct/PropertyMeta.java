@@ -24,6 +24,9 @@ public class PropertyMeta {
   @JSONField(name = "name")
   private String name;
 
+  @JSONField(name = "nameZh")
+  private String nameZh;
+
   @JSONField(name = "attrRangeDetail")
   private PropertyRangeDetail propRange;
 

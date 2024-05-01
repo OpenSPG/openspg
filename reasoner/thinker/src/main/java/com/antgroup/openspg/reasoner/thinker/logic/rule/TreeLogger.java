@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lombok.Data;
 
+@Data
 public class TreeLogger implements Serializable {
 
   private static final long serialVersionUID = 8786588317154681976L;
@@ -17,6 +19,7 @@ public class TreeLogger implements Serializable {
 
   private String currentNodeName;
   private StringBuilder currentNodeMsg;
+  private Boolean currentNodeRst;
   private List<TreeLogger> children;
 
   public TreeLogger(String currentNodeName) {
@@ -29,6 +32,8 @@ public class TreeLogger implements Serializable {
     }
     if (msg != null) {
       this.currentNodeMsg.append(msg);
+    } else {
+      this.currentNodeMsg.append("null");
     }
     return this;
   }

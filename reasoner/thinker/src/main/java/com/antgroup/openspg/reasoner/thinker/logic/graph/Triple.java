@@ -12,6 +12,9 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
+import lombok.Data;
+
+@Data
 public class Triple extends Element {
   private Element subject;
   private Element predicate;
@@ -41,7 +44,7 @@ public class Triple extends Element {
   }
 
   private static Element nullToAny(Element n) {
-    return n == null ? Any.ANY : n;
+    return n == null ? ANY : n;
   }
 
   /**

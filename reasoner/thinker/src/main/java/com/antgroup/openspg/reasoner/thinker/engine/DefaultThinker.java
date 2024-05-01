@@ -1,36 +1,44 @@
 package com.antgroup.openspg.reasoner.thinker.engine;
 
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.thinker.Thinker;
+import com.antgroup.openspg.reasoner.thinker.catalog.LogicCatalog;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
+import java.util.*;
 
-public class DefaultThinker<K> implements Thinker<K> {
-  private GraphStore<K> graphStore;
+public class DefaultThinker implements Thinker {
+  private GraphStore graphStore;
+  private InfGraph infGraph;
 
-  public DefaultThinker(GraphState<K> graphState) {
-    this.graphStore = new GraphStore<>(graphState);
+  public DefaultThinker(GraphState<IVertexId> graphState, LogicCatalog logicCatalog) {
+    this.graphStore = new GraphStore(graphState);
+    this.infGraph = new InfGraph(logicCatalog.getLogicNetwork(), graphStore);
   }
 
   @Override
   public void init(Map<String, String> params) {
-    this.graphStore.init(params);
+    this.infGraph.init(params);
   }
 
   @Override
-  public Result find(Element s, Element p, Element o) {
-    Result result = new Result();
-    List<Element> data = new LinkedList<>();
-    data.addAll(this.graphStore.find(s, p, o));
-    result.setData(data);
+  public List<Result> find(Element s, Element p, Element o) {
+    return find(s, p, o, new HashMap<>());
+  }
+
+  @Override
+  public List<Result> find(Element s, Element p, Element o, Map<String, Object> context) {
+    this.infGraph.clear();
+    Triple pattern = Triple.create(s, p, o);
+    List<Result> result = this.infGraph.find(pattern, context);
     return result;
   }
 
   @Override
-  public Result find(Element s, Element p, Element o, Map<String, Object> context) {
-    return null;
+  public List<Result> find(Element s, Map<String, Object> context) {
+    this.infGraph.clear();
+    return this.infGraph.find(s, context);
   }
 }

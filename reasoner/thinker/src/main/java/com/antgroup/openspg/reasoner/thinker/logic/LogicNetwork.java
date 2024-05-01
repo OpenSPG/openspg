@@ -9,15 +9,20 @@ import lombok.Data;
 
 @Data
 public class LogicNetwork {
+  private Map<String, Rule> ruleMap;
   private Map<Element, Map<Element, Rule>> forwardRules;
   private Map<Element, Map<List<Element>, Rule>> backwardRules;
 
   public LogicNetwork() {
     this.forwardRules = new HashMap<>();
     this.backwardRules = new HashMap<>();
+    this.ruleMap = new HashMap<>();
   }
 
   public void addRule(Rule rule) {
+    if (!ruleMap.containsKey(rule.getName())) {
+      ruleMap.put(rule.getName(), rule);
+    }
     for (ClauseEntry body : rule.getBody()) {
       Map<Element, Rule> rules =
           forwardRules.computeIfAbsent(body.toElement(), (key) -> new HashMap<>());
@@ -39,10 +44,10 @@ public class LogicNetwork {
     return rules;
   }
 
-  public Collection<Rule> getBackwardRules(Element e) {
+  public Collection<Rule> getBackwardRules(Element triple) {
     Set<Rule> rules = new HashSet<>();
     for (Map.Entry<Element, Map<List<Element>, Rule>> entry : backwardRules.entrySet()) {
-      if (entry.getKey().matches(e)) {
+      if (triple.matches(entry.getKey())) {
         rules.addAll(entry.getValue().values());
       }
     }

@@ -41,4 +41,14 @@ public class Node extends Element {
   public int hashCode() {
     return Objects.hash(type);
   }
+
+  public boolean matches(Element other) {
+    if (other == null) {
+      return false;
+    }
+    if (other instanceof Entity) {
+      return Objects.equals(type, ((Entity) other).getType());
+    }
+    return equals(other);
+  }
 }

@@ -68,6 +68,9 @@ public class GraphLoaderConfig implements Serializable {
   /** kgstate schema url */
   protected String schemaUrl = null;
 
+  /** kgstate schema retry times */
+  protected int schemaRetryTimes = 3;
+
   /** enable binary property or not */
   protected Boolean binary = false;
 
@@ -316,6 +319,14 @@ public class GraphLoaderConfig implements Serializable {
    */
   public void setBinary(Boolean binary) {
     this.binary = binary;
+  }
+
+  public int getSchemaRetryTimes() {
+    return schemaRetryTimes;
+  }
+
+  public void setSchemaRetryTimes(int schemaRetryTimes) {
+    this.schemaRetryTimes = schemaRetryTimes;
   }
 
   /** verify config */

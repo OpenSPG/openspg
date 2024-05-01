@@ -12,4 +12,8 @@ public abstract class LogicCatalog extends Catalog {
   }
 
   public abstract LogicNetwork loadLogicNetwork();
+
+  public LogicNetwork getLogicNetwork() {
+    return logicNetwork;
+  }
 }

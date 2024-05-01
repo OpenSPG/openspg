@@ -5,14 +5,19 @@ import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
+import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-public class GraphStore<K> {
-  private GraphState graphState;
+public class GraphStore implements Graph {
+  private GraphState<IVertexId> graphState;
 
-  public GraphStore(GraphState<K> graphState) {
+  public GraphStore(GraphState<IVertexId> graphState) {
     this.graphState = graphState;
   }
 
@@ -20,77 +25,71 @@ public class GraphStore<K> {
     this.graphState.init(param);
   }
 
-  public List<Triple> find(Element s, Element p, Element o) {
-    if (s instanceof Entity) {
-      return match((Entity<K>) s, p, o, Direction.OUT);
-    } else if (o instanceof Entity) {
-      return match((Entity<K>) o, p, s, Direction.IN);
+  @Override
+  public List<Result> find(Triple pattern, Map<String, Object> context) {
+    List<Triple> data;
+    if (pattern.getSubject() instanceof Entity) {
+      data = getTriple((Entity) pattern.getSubject(), Direction.OUT);
+    } else if (pattern.getObject() instanceof Entity) {
+      data = getTriple((Entity) pattern.getObject(), Direction.IN);
     } else {
-      throw new RuntimeException("Cannot support " + s);
+      throw new RuntimeException("Cannot support " + pattern);
     }
+    return matchInGraph(pattern, data);
   }
 
-  private List<Triple> match(Entity<K> s, Element p, Element o, Direction direction) {
-    IVertex<K, IProperty> vertex = this.graphState.getVertex(s.getId(), null);
-    List<IEdge<K, IProperty>> edges;
-    if (p instanceof Any) {
-      edges = this.graphState.getEdges(s.getId(), null, null, null, direction);
-    } else if (p instanceof Predicate) {
-      Set<String> types = new HashSet<>();
-      types.add(((Predicate) p).getName());
-      edges = this.graphState.getEdges(s.getId(), null, null, types, direction);
-    } else {
-      throw new RuntimeException("Cannot support " + p);
-    }
-
-    return match(s, p, o, vertex, edges);
+  @Override
+  public List<Result> find(Element s, Map<String, Object> context) {
+    return Collections.emptyList();
   }
 
-  private List<Triple> match(
-      Entity s,
-      Element p,
-      Element o,
-      IVertex<K, IProperty> vertex,
-      List<IEdge<K, IProperty>> edges) {
+  protected List<Triple> getTriple(Entity s, Direction direction) {
     List<Triple> triples = new LinkedList<>();
-    for (String key : vertex.getValue().getKeySet()) {
-      if (p instanceof Any || ((Predicate) p).getName().equalsIgnoreCase(key)) {
+    if (direction == Direction.OUT) {
+      IVertex<IVertexId, IProperty> vertex =
+          this.graphState.getVertex(IVertexId.from(s.getId(), s.getType()), null);
+      for (String key : vertex.getValue().getKeySet()) {
         triples.add(new Triple(s, new Predicate(key), new Value(key, vertex.getValue().get(key))));
       }
     }
-    for (IEdge<K, IProperty> edge : edges) {
-      if (p instanceof Any || ((Predicate) p).getName().equalsIgnoreCase(edge.getType())) {
-        if (o instanceof Entity) {
-          if (edge.getTargetId().equals(((Entity<?>) o).getId())) {
-            triples.add(edgeToTriple(edge));
-          }
-        } else if (o instanceof Node) {
-          if (edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY).equals(((Node) o).getType())) {
-            triples.add(edgeToTriple(edge));
-          }
-        } else if (o instanceof Any) {
-          triples.add(edgeToTriple(edge));
-        }
-      }
+    List<IEdge<IVertexId, IProperty>> edges =
+        this.graphState.getEdges(
+            IVertexId.from(s.getId(), s.getType()), null, null, null, direction);
+    for (IEdge<IVertexId, IProperty> edge : edges) {
+      triples.add(edgeToTriple(edge));
     }
     return triples;
   }
 
-  private Triple edgeToTriple(IEdge<K, IProperty> edge) {
+  private Triple edgeToTriple(IEdge<IVertexId, IProperty> edge) {
     if (edge.getDirection() == Direction.OUT) {
       return new Triple(
           new Entity(
-              edge.getSourceId(), (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)),
+              (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY),
+              (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)),
           new Predicate(edge.getType()),
           new Entity(
-              edge.getTargetId(), (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)));
+              (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY),
+              (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)));
     } else {
       return new Triple(
           new Entity(
-              edge.getTargetId(), (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)),
+              (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY),
+              (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)),
           new Predicate(edge.getType()),
           new Entity(
-              edge.getSourceId(), (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)));
+              (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY),
+              (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)));
     }
+  }
+
+  private List<Result> matchInGraph(Triple pattern, List<Triple> data) {
+    List<Result> rst = new LinkedList<>();
+    for (Triple tri : data) {
+      if (pattern.matches(tri)) {
+        rst.add(new Result(tri, null));
+      }
+    }
+    return rst;
   }
 }

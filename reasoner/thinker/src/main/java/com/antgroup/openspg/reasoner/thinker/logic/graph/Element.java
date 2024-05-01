@@ -16,6 +16,10 @@ package com.antgroup.openspg.reasoner.thinker.logic.graph;
 import java.io.Serializable;
 
 public abstract class Element implements Serializable {
+  public static final Element ANY = new Any();
+
+  protected static final int HASH_ANY = 28;
+
   public boolean matches(Element other) {
     return equals(other);
   }

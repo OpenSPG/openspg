@@ -11,18 +11,10 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.thinker.logic.rule;
+package com.antgroup.openspg.reasoner.runner.local.callable;
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
-import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleNodeVisitor;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.Callable;
 
-public interface Node extends Serializable {
-  <R> R accept(
-      List<Element> spoList,
-      Map<String, Object> context,
-      RuleNodeVisitor<R> visitor,
-      TreeLogger logger);
+public interface CallableWrapper {
+  <T> Callable<T> wrap(Callable<T> wrappedCallable);
 }
