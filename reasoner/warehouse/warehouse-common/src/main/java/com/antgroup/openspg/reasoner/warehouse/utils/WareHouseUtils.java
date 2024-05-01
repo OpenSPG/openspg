@@ -72,6 +72,15 @@ public class WareHouseUtils {
   }
 
   /**
+   * get start vertex alias name
+   * @param pattern
+   * @return
+   */
+  public static String getPatternScanRootAlias(Pattern pattern) {
+    return pattern.root().alias();
+  }
+
+  /**
    * get vertex rule string
    *
    * @param pattern

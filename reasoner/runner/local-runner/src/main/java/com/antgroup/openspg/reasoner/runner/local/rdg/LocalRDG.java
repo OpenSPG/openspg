@@ -124,6 +124,8 @@ public class LocalRDG extends RDG<LocalRDG> {
 
   private final String startVertexAlias;
 
+  private String curRdgStartVertexAlias;
+
   /** kg graph and it's schema */
   private java.util.List<KgGraph<IVertexId>> kgGraphList = new ArrayList<>();
 
@@ -165,7 +167,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     java.util.Set<IVertexId> startIdSet = new HashSet<>();
     for (KgGraph<IVertexId> kgGraph : kgGraphList) {
       java.util.List<IVertex<IVertexId, IProperty>> startVertexList =
-          kgGraph.getVertex(this.startVertexAlias);
+          kgGraph.getVertex(this.curRdgStartVertexAlias);
       for (IVertex<IVertexId, IProperty> startId : startVertexList) {
         startIdSet.add(startId.getId());
       }
@@ -230,6 +232,7 @@ public class LocalRDG extends RDG<LocalRDG> {
   @Override
   public LocalRDG patternScan(Pattern pattern) {
     long startTime = System.currentTimeMillis();
+    this.curRdgStartVertexAlias = WareHouseUtils.getPatternScanRootAlias(pattern);
     java.util.List<String> rootVertexRuleList = WareHouseUtils.getVertexRuleList(pattern);
     java.util.Map<String, java.util.List<String>> dstVertexRuleMap =
         WareHouseUtils.getDstVertexRuleList(pattern);
