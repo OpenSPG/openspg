@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.collections4.CollectionUtils;
 
 public class LocalReasonerResult {
@@ -103,12 +102,11 @@ public class LocalReasonerResult {
     this.debugWithStartNodeInfos = debugWithStartNodeInfos;
   }
 
-
   public void setDebugWithStartNodeInfos(List<Map<String, Object>> debugWithStartNodeInfos) {
     this.debugWithStartNodeInfos = debugWithStartNodeInfos;
   }
 
-  public List<Map<String,Object>> getDebugWithStartNodeInfos() {
+  public List<Map<String, Object>> getDebugWithStartNodeInfos() {
     return debugWithStartNodeInfos;
   }
 
