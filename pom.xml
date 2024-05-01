@@ -299,7 +299,7 @@
       <dependency>
         <groupId>com.alibaba</groupId>
         <artifactId>QLExpress</artifactId>
-        <version>3.3.2</version>
+        <version>3.2.4</version>
       </dependency>
       <dependency>
         <groupId>commons-cli</groupId>
