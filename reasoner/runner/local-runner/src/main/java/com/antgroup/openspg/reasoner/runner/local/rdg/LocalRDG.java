@@ -1024,8 +1024,10 @@ public class LocalRDG extends RDG<LocalRDG> {
             + property.toString());
   }
 
-  private java.util.Map<String, Object> getProcessInfo(DebugInfoWithStartId startId, String bizId) {
+  private java.util.Map<String, Object> getProcessInfo(DebugInfoWithStartId startId, String bizId, String targetLabel, String targetId) {
     java.util.Map<String, Object> processInfo = startId.toJsonObj();
+    processInfo.put("target_label", targetLabel.split("/")[0]);
+    processInfo.put("target_id", targetId);
     java.util.Map<String, Object> startIdInfo = new HashMap<>();
     startIdInfo.put("bizId", bizId);
     startIdInfo.put("label", startId.getVertexId().getType());
@@ -1049,7 +1051,7 @@ public class LocalRDG extends RDG<LocalRDG> {
         edge.getValue()
             .put(
                 "process",
-                getProcessInfo(startId, (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY)));
+                getProcessInfo(startId, (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY), (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY), (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY)));
       }
 
       if (debugInfoMap.containsKey(edge.getTargetId())) {
@@ -1057,7 +1059,7 @@ public class LocalRDG extends RDG<LocalRDG> {
         edge.getValue()
             .put(
                 "process",
-                getProcessInfo(startId, (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY)));
+                getProcessInfo(startId, (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY), (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY), (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY)));
       }
       // add to result list
       this.resultEdgeSet.add(edge);
@@ -1318,7 +1320,7 @@ public class LocalRDG extends RDG<LocalRDG> {
       if (vertex == null) {
         continue;
       }
-      debugStartNodeINfos.add(getProcessInfo(debugInfoWithStartId, vertex.getValue().get(Constants.NODE_ID_KEY).toString()));
+      debugStartNodeINfos.add(getProcessInfo(debugInfoWithStartId, vertex.getValue().get(Constants.NODE_ID_KEY).toString(), ""));
     }
     return debugStartNodeINfos;
   }
