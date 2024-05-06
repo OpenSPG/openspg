@@ -46,7 +46,7 @@ public class KgReasonerAddEdgeWithPropertyTest {
             + "    }\n"
             + "}\n"
             + "\n"
-            + "Define (s:User)-[p:belongTo]->(o:CrowdType/RepeatTradeUser) {\n"
+            + "Define (s:User)-[p:belongTo]->(o:CrowdType/`RepeatTradeUser`) {\n"
             + "    GraphStructure {\n"
             + "        (s:User)-[t:tradeInfo]->(u:User)\n"
             + "    } Rule {\n"
