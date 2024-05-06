@@ -22,7 +22,13 @@ import com.antgroup.openspg.reasoner.lube.Logging
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticRule, TemplateSemanticRule}
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern
-import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, RepeatPathVar, SolvedModel, Var}
+import com.antgroup.openspg.reasoner.lube.logical.{
+  EdgeVar,
+  NodeVar,
+  RepeatPathVar,
+  SolvedModel,
+  Var
+}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.planning.SubQueryPlanner.nodeName
 import com.antgroup.openspg.reasoner.lube.logical.validate.Dag
@@ -34,8 +40,10 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
   private lazy val graph = context.catalog.getGraph(Catalog.defaultGraphName)
 
   def plan: Dag[LogicalOperator] = {
-    if (!"true".equals(context.params
-        .getOrElse(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, "false").toString)) {
+    if (!"true".equals(
+        context.params
+          .getOrElse(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, "false")
+          .toString)) {
       dag.map(LogicalPlanner.plan(_).head)
     } else {
       val logicalDag = new Dag[LogicalOperator]()
@@ -83,8 +91,8 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
         logger.info(finaBlock.pretty)
       }
       logicalOperator = LogicalPlanner.plan(finaBlock).head
-      logicalOperator = logicalOperator.rewrite {
-        case start: Start => Driving(start.graph, startAlias, start.solved)
+      logicalOperator = logicalOperator.rewrite { case start: Start =>
+        Driving(start.graph, startAlias, start.solved)
       }
     }
     if (ParameterUtils.isEnableSPGPlanPrettyPrint(context.params)) {
@@ -145,17 +153,11 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
                   .topology(pattern.root.alias)
                   .filter(_.alias.equals(name))
                   .filter(conn => {
-                    if (conn.direction == Direction.OUT) {
-                      conn.relTypes.contains(spo.getP) && pattern
-                        .getNode(conn.target)
-                        .typeNames
-                        .contains(getMetaType(spo.getO))
-                    } else {
-                      conn.relTypes.contains(spo.getP) && pattern
-                        .getNode(conn.source)
-                        .typeNames
-                        .contains(getMetaType(spo.getO))
-                    }
+                    val types =
+                      if (conn.direction == Direction.OUT) pattern.getNode(conn.target).typeNames
+                      else pattern.getNode(conn.source).typeNames
+                    conn.relTypes.contains(spo.getP) && (types.contains(
+                      getMetaType(spo.getO)) || types.contains(spo.getO))
                   })
                   .head
                   .direction
@@ -204,17 +206,12 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
     }
   }
 
-  private def rewriteBlock(
-      block: Block,
-      startType: String,
-      direction: Direction): Block = {
+  private def rewriteBlock(block: Block, startType: String, direction: Direction): Block = {
     val rewriteBlock = rewriteBlockDirection(block, direction)
     val alias = getRootAlias(rewriteBlock, startType, direction)
     rewriteBlock.rewriteTopDown { case matchBlock: MatchBlock =>
       val patterns = matchBlock.patterns.map(tuple =>
-        (
-          tuple._1,
-          tuple._2.copy(graphPattern = tuple._2.graphPattern.copy(rootAlias = alias))))
+        (tuple._1, tuple._2.copy(graphPattern = tuple._2.graphPattern.copy(rootAlias = alias))))
       matchBlock.copy(patterns = patterns)
     }
   }

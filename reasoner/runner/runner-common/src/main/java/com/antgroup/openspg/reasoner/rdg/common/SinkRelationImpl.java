@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.rdg.common;
 
+import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
@@ -65,17 +66,17 @@ public class SinkRelationImpl {
       this.graphState.addEdges(
           vertexId, Lists.newArrayList(inEdgeList), Lists.newArrayList(outEdgeList));
       sinkCount = sinkCount + inEdgeList.size() + outEdgeList.size();
-      //      if (Utils.randomLog()) {
-      log.info(
-          "SinkRelation,v="
-              + vertexId
-              + ",inEdge="
-              + inEdgeList.size()
-              + ",outEdge="
-              + outEdgeList
-              + ",sinkCount="
-              + sinkCount);
-      //      }
+      if (Utils.randomLog()) {
+        log.info(
+            "SinkRelation,v="
+                + vertexId
+                + ",inEdge="
+                + inEdgeList.size()
+                + ",outEdge="
+                + outEdgeList
+                + ",sinkCount="
+                + sinkCount);
+      }
     }
     return sinkCount;
   }
