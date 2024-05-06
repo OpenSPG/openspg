@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONPath;
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
@@ -38,8 +39,19 @@ public class JsonStringGet {
           return result;
         }
       }
-    } catch (Exception e) {
-      return "";
+    } catch (Exception e1) {
+      try{
+        JSONArray jsonArray = JSON.parseArray(plainJson);
+        for (Object item : jsonArray) {
+          JSONObject jsonObject = (JSONObject) item;
+          Object result = JSONPath.eval(jsonObject, jsonPath);
+          if (result != null) {
+            return result;
+          }
+        }
+      } catch (Exception e2) {
+        return "";
+      }
     }
     return "";
   }
