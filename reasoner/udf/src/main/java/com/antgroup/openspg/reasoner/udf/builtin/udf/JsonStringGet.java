@@ -40,7 +40,7 @@ public class JsonStringGet {
         }
       }
     } catch (Exception e1) {
-      try{
+      try {
         JSONArray jsonArray = JSON.parseArray(plainJson);
         for (Object item : jsonArray) {
           JSONObject jsonObject = (JSONObject) item;
