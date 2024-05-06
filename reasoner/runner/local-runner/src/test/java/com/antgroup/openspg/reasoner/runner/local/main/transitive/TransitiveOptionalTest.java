@@ -1295,6 +1295,193 @@ public class TransitiveOptionalTest {
   @Test
   public void testCreateInstance() {
     String dsl =
+            "\n"
+                    + "Define (s:Custid)-[p:isAggregator]->(o:Boolean) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)<-[e:complained]-(u1:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "        o = true\n"
+                    + "    }\n"
+                    + "    Action {\n"
+                    + "        gang = createNodeInstance(\n"
+                    + "            type=Gang,\n"
+                    + "            value={\n"
+                    + "                id=concat(s.id, \"_gang\")\n"
+                    + "            }\n"
+                    + "        )\n"
+                    + "        createEdgeInstance(\n"
+                    + "            src=gang,\n"
+                    + "          dst=s,\n"
+                    + "          type=has,\n"
+                    + "          value={\n"
+                    + "          }\n"
+                    + "        )\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "Define (s:Gang)-[p:expandSameMedia]->(o:Boolean) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)-[e1:has]-(c1:Custid)-[e2:sameMedia]->(c2:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "       R1: c1.isAggregator \n"
+                    + "       o = true \n"
+                    + "    }\n"
+                    + "    Action {\n"
+                    + "        createEdgeInstance(\n"
+                    + "            src=s,\n"
+                    + "          dst=c2,\n"
+                    + "          type=has,\n"
+                    + "          value={\n"
+                    + "            __from_id__ = s.id\n"
+                    + "            __to_id__ = c2.id\n"
+                    + "          }\n"
+                    + "        )\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "Define (s:Gang)-[p:expandTrade]->(o:Boolean) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)-[e1:has]-(c1:Custid)-[e2:trade]->(c2:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "       R1: s.expandSameMedia \n"
+                    + "       o = true \n"
+                    + "    }\n"
+                    + "    Action {\n"
+                    + "        createEdgeInstance(\n"
+                    + "            src=s,\n"
+                    + "          dst=c2,\n"
+                    + "          type=has,\n"
+                    + "          value={\n"
+                    + "            __from_id__ = s.id\n"
+                    + "            __to_id__ = c2.id\n"
+                    + "          }\n"
+                    + "        )\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "\n"
+                    + "Define (s:Gang)-[p:expandCompanyRole]->(o:Boolean) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)-[e1:has]-(c1:Custid)-[e2:companyRole]->(c2:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "       R1: s.expandTrade \n"
+                    + "       o = true \n"
+                    + "    }\n"
+                    + "    Action {\n"
+                    + "        createEdgeInstance(\n"
+                    + "            src=s,\n"
+                    + "          dst=c2,\n"
+                    + "          type=has,\n"
+                    + "          value={\n"
+                    + "            __from_id__ = s.id\n"
+                    + "            __to_id__ = c2.id\n"
+                    + "          }\n"
+                    + "        )\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "\n"
+                    + "Define (s:Gang)-[p:size]->(o:Int) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)-[e:has]->(c:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "        R0: s.expandCompanyRole\n"
+                    + "        o = group(s).count_distinct(c.cid)\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "Define (s:Gang)-[p:amount]->(o:Int) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)-[e:has]->(c:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "        R0: s.expandCompanyRole\n"
+                    + "        o = group(s).sum(c.trdAmt90d)\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "Define (s:Gang)-[p:valid]->(o:Boolean) {\n"
+                    + "    GraphStructure {\n"
+                    + "        (s)-[e:has]->(c:Custid)\n"
+                    + "    }\n"
+                    + "    Rule {\n"
+                    + "        R0: s.expandCompanyRole \n"
+                    + "        R1 = rule_value(s.size >= 2, true, false)\n"
+                    + "        R2 = rule_value(s.amount >= 20, true, false)\n"
+                    + "        o = R1 and R2\n"
+                    + "    }\n"
+                    + "}\n"
+                    + "GraphStructure {"
+                    + "  A [Custid]\n"
+                    + "  B [Gang, __start__ = 'true']\n"
+                    + "  B->A [has] as e1\n"
+                    + "}\n"
+                    + "Rule {\n"
+                    + "  R0: B.valid \n"
+                    + "  gangIds = group(B).concat_agg(A.cid) \n"
+                    + "  trdIds = group(B).ConcatAggIf(A.trdAmt90d > 15, A.cid) \n"
+                    + "}\n"
+                    + "Action {\n"
+                    + "  get(B.id, gangIds, trdIds) \n"
+                    + "}";
+
+    System.out.println(dsl);
+    LocalReasonerTask task = new LocalReasonerTask();
+    task.setDsl(dsl);
+
+    // add mock catalog
+    Map<String, Set<String>> schema = new HashMap<>();
+    schema.put(
+            "Custid",
+            Convert2ScalaUtil.toScalaImmutableSet(
+                    Sets.newHashSet(
+                            "trdAmtIn90d",
+                            "trdAmt90d",
+                            "cid",
+                            "trdCntCustIn90d",
+                            "custcntpty90CustNum90dInGenderFemale",
+                            "custcntpty90CustNum90dInGenderMale",
+                            "name")));
+    schema.put(
+            "STR",
+            Convert2ScalaUtil.toScalaImmutableSet(
+                    Sets.newHashSet("conclusion", "name", "status", "matchrule", "isreport")));
+
+    schema.put("Gang", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("cid", "name")));
+    schema.put("Gang_has_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+            "Custid_complained_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+            "Custid_trade_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+            "Custid_sameMedia_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+            "Custid_companyRole_Custid",
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("info")));
+    schema.put(
+            "STR_hasCust_Custid", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("createMemo")));
+
+    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
+    catalog.init();
+    task.setCatalog(catalog);
+    task.setGraphLoadClass(
+            "com.antgroup.openspg.reasoner.runner.local.main.transitive.TransitiveOptionalTest$GangGraphLoader");
+
+    // enable subquery
+    Map<String, Object> params = new HashMap<>();
+    params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, false);
+    params.put(Constants.SPG_REASONER_MULTI_VERSION_ENABLE, "true");
+    task.setParams(params);
+
+    LocalReasonerRunner runner = new LocalReasonerRunner();
+    LocalReasonerResult result = runner.run(task);
+    Assert.assertEquals(1, result.getRows().size());
+    Assert.assertEquals(6, result.getRows().get(0)[1].toString().split(",").length);
+    Assert.assertEquals(4, result.getRows().get(0)[2].toString().split(",").length);
+  }
+
+  @Test
+  public void testCreateInstanceSubQuery() {
+    String dsl =
         "\n"
             + "Define (s:Custid)-[p:init]->(o:Boolean) {\n"
             + "    GraphStructure {\n"
