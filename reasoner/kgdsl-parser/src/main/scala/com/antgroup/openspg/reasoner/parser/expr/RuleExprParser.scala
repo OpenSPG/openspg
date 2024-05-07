@@ -26,7 +26,6 @@ import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, ProjectRule, R
 import com.antgroup.openspg.reasoner.parser.LexerInit
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory
 
-
 /**
  * This is the ANTLR parsing class for expressions
  */
@@ -251,6 +250,8 @@ class RuleExprParser extends Serializable {
 
   def parseProjectPrimary(ctx: Project_primaryContext): Expr = {
     ctx.getChild(0) match {
+      case c: Concept_nameContext =>
+        ConceptExpr(refactorConceptName(c))
       case c: Value_expression_primaryContext =>
         parseValueExpressionPrimary(c)
       case c: Numeric_value_functionContext =>
@@ -468,8 +469,19 @@ class RuleExprParser extends Serializable {
     (ctx.identifier().getText, parseExpressionSet(ctx.expression_set()))
   }
 
+  def refactorConceptName(concept: Concept_nameContext): String = {
+    val metaConceptName = concept.meta_concept_type().getText
+    val conceptInstanceIdName =
+      concept.concept_instance_id().getText.stripPrefix("`").stripSuffix("`")
+    metaConceptName + "/" + conceptInstanceIdName
+  }
+
   def parseLogicTest(ctx: Logic_testContext): Expr = {
-    val bExpr: Expr = parseExpr(ctx.expr())
+    val bExpr: Expr = ctx.getChild(0) match {
+      case concept: Concept_nameContext =>
+        ConceptExpr(refactorConceptName(concept))
+      case expr: ExprContext => parseExpr(expr)
+    }
     Option(ctx.getChild(1)) match {
       case Some(x) =>
         val tExpr: Expr = str2bool(ctx.truth_value().getText)
@@ -665,8 +677,10 @@ class RuleExprParser extends Serializable {
   }
 
   def parseGraphAliasElementList(ctx: Graph_alias_element_listContext): List[Expr] = {
-    val aliasSet = ctx.graph_alias_with_property()
-      .asScala.map(k => parseRefExpr(k.graph_alias(), k.property_name()))
+    val aliasSet = ctx
+      .graph_alias_with_property()
+      .asScala
+      .map(k => parseRefExpr(k.graph_alias(), k.property_name()))
     aliasSet.toList
   }
 
@@ -874,9 +888,7 @@ class RuleExprParser extends Serializable {
   def parseProjectRuleExpression(ctx: Project_rule_expressionContext): Rule = {
     val expr = parseExpressionSet(ctx.expression_set())
     if (ctx.property_name() != null) {
-      ProjectRule(
-        IRProperty(ctx.identifier().getText, ctx.property_name().getText),
-        expr)
+      ProjectRule(IRProperty(ctx.identifier().getText, ctx.property_name().getText), expr)
     } else {
       ProjectRule(IRVariable(ctx.identifier().getText), expr)
     }

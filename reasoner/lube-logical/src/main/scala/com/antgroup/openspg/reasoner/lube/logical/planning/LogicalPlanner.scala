@@ -16,7 +16,11 @@ package com.antgroup.openspg.reasoner.lube.logical.planning
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.exception.{NotImplementedException, SchemaException, UnsupportedOperationException}
+import com.antgroup.openspg.reasoner.common.exception.{
+  NotImplementedException,
+  SchemaException,
+  UnsupportedOperationException
+}
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
