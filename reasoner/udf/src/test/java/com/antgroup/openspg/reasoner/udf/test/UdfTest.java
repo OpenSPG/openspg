@@ -105,7 +105,7 @@ public class UdfTest {
   }
 
   @Test
-  public void testJsonArrayGet4() {
+  public void testJsonGet4() {
     UdfMng mng = UdfMngFactory.getUdfMng();
     String params = "[{'案由': '打架斗殴', '日期': '20240101'}, {'案由': '制造毒品', '日期': '20240202'}]";
     IUdfMeta udfMeta =
