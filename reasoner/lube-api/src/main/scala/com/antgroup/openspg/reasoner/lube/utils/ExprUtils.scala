@@ -43,43 +43,52 @@ object ExprUtils {
     }).transform(expr)
   }
 
-  def getRepeatPathInputFieldInRule(expr: Expr,
-                                    repeatPathMap: Map[String, IRPath]): List[IRField] = {
+  def getRepeatPathInputFieldInRule(
+      expr: Expr,
+      repeatPathMap: Map[String, IRPath]): List[IRField] = {
     expr match {
       case OpChainExpr(ListOpExpr(listOp, _), OpChainExpr(PathOpExpr(name, ref), _)) =>
         val irPath = repeatPathMap(ref.refName)
         val props = listOp match {
           case constraint: Constraint =>
-            getAllInputFieldInRule(constraint.reduceFunc, Set.empty, Set.empty).filter(
-              ir => ir.name.equals(constraint.cur) && ir.name.equals(constraint.pre))
-              .flatMap(t => t match {
-                case IRNode(_, fields) => fields.toList
-                case IREdge(_, fields) => fields.toList
-                case _ => List.empty
-              })
+            getAllInputFieldInRule(constraint.reduceFunc, Set.empty, Set.empty)
+              .filter(ir => ir.name.equals(constraint.cur) && ir.name.equals(constraint.pre))
+              .flatMap(t =>
+                t match {
+                  case IRNode(_, fields) => fields.toList
+                  case IREdge(_, fields) => fields.toList
+                  case _ => List.empty
+                })
 
           case compute: Reduce =>
-            getAllInputFieldInRule(compute.reduceFunc, Set.empty, Set.empty).filter(
-              ir => ir.name.equals(compute.ele)
-            ).flatMap(t => t match {
-              case IRNode(_, fields) => fields.toList
-              case IREdge(_, fields) => fields.toList
-              case _ => List.empty
-            })
+            getAllInputFieldInRule(compute.reduceFunc, Set.empty, Set.empty)
+              .filter(ir => ir.name.equals(compute.ele))
+              .flatMap(t =>
+                t match {
+                  case IRNode(_, fields) => fields.toList
+                  case IREdge(_, fields) => fields.toList
+                  case _ => List.empty
+                })
 
           case _ => List.empty
         }
         name match {
           case GetNodesExpr =>
-            irPath.elements.filter(ele => ele.isInstanceOf[IRNode]).map {
-              case IRNode(irName, fields) => IRNode(irName, fields ++ props)
-              case _ => null
-            }.filter(_ != null)
+            irPath.elements
+              .filter(ele => ele.isInstanceOf[IRNode])
+              .map {
+                case IRNode(irName, fields) => IRNode(irName, fields ++ props)
+                case _ => null
+              }
+              .filter(_ != null)
           case GetEdgesExpr =>
-            irPath.elements.filter(ele => ele.isInstanceOf[IREdge]).map {
-              case IREdge(irName, fields) => IREdge(irName, fields ++ props)
-              case _ => null
-            }.filter(_ != null)
+            irPath.elements
+              .filter(ele => ele.isInstanceOf[IREdge])
+              .map {
+                case IREdge(irName, fields) => IREdge(irName, fields ++ props)
+                case _ => null
+              }
+              .filter(_ != null)
         }
       case _ => List.empty
     }
@@ -114,12 +123,15 @@ object ExprUtils {
         case ListOpExpr(name, _) =>
           name match {
             case constraint: Constraint =>
-              getAllInputFieldInRule(constraint.reduceFunc, nodesAlias, edgeAlias).filter(
-                  ir => !ir.name.equals(constraint.cur) && !ir.name.equals(constraint.pre))
+              getAllInputFieldInRule(constraint.reduceFunc, nodesAlias, edgeAlias).filter(ir =>
+                !ir.name.equals(constraint.cur) && !ir.name.equals(constraint.pre))
             case compute: Reduce =>
-              getAllInputFieldInRule(compute.reduceFunc, nodesAlias, edgeAlias).filter(
-                  ir => !ir.name.equals(compute.ele) && !ir.name.equals(compute.res)
-                ) ++ getAllInputFieldInRule(compute.initValue, nodesAlias, edgeAlias)
+              getAllInputFieldInRule(compute.reduceFunc, nodesAlias, edgeAlias).filter(ir =>
+                !ir.name.equals(compute.ele) && !ir.name.equals(
+                  compute.res)) ++ getAllInputFieldInRule(
+                compute.initValue,
+                nodesAlias,
+                edgeAlias)
             case _ => List.empty
           }
         case AggOpExpr(name, _) =>
@@ -247,12 +259,14 @@ object ExprUtils {
       graphEleIRField = graphEleIRField ++ edgesMap.map(x => IREdge(x._1, x._2))
     }
 
-    variable.map(x =>
-      if (nodesMap.contains(x.name) || edgesMap.contains(x.name)) {
-        null
-      } else {
-        x
-      }
-    ).filter(_ != null) ++ graphEleIRField
+    variable
+      .map(x =>
+        if (nodesMap.contains(x.name) || edgesMap.contains(x.name)) {
+          null
+        } else {
+          x
+        })
+      .filter(_ != null) ++ graphEleIRField
   }
+
 }
