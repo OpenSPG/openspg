@@ -73,6 +73,7 @@ public class WareHouseUtils {
 
   /**
    * get start vertex alias name
+   *
    * @param pattern
    * @return
    */
