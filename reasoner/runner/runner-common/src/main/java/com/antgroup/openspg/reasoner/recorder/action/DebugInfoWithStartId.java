@@ -45,7 +45,7 @@ public class DebugInfoWithStartId {
       hitRuleInfoDetail.put("hitValue", "");
       hitRuleInfos.add(hitRuleInfoDetail);
     }
-    result.put("hit_rule", hitRuleInfos);
+    result.put("hitRule", hitRuleInfos);
     List<Map<String, Object>> failedRuleInfos = new ArrayList<>();
     for (Rule r : failedRules) {
       Map<String, Object> failedRuleInfoDetail = new HashMap<>();
@@ -54,7 +54,7 @@ public class DebugInfoWithStartId {
       failedRuleInfoDetail.put("hitValue", "");
       failedRuleInfos.add(failedRuleInfoDetail);
     }
-    result.put("failed_rule", failedRuleInfos);
+    result.put("failedRule", failedRuleInfos);
     return result;
   }
 

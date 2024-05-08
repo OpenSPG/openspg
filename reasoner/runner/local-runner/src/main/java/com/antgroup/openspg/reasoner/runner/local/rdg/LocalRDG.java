@@ -1079,13 +1079,13 @@ public class LocalRDG extends RDG<LocalRDG> {
   private java.util.Map<String, Object> getProcessInfo(
       DebugInfoWithStartId startId, String bizId, String targetLabel, String targetId) {
     java.util.Map<String, Object> processInfo = startId.toJsonObj();
-    processInfo.put("target_label", targetLabel.split("/")[0]);
-    processInfo.put("target_id", targetId);
+    processInfo.put("targetLabel", targetLabel.split("/")[0]);
+    processInfo.put("targetId", targetId);
     java.util.Map<String, Object> startIdInfo = new HashMap<>();
     startIdInfo.put("bizId", bizId);
     startIdInfo.put("label", startId.getVertexId().getType());
     startIdInfo.put("id", startId.getVertexId());
-    processInfo.put("start_node", startIdInfo);
+    processInfo.put("startNode", startIdInfo);
     return processInfo;
   }
 
