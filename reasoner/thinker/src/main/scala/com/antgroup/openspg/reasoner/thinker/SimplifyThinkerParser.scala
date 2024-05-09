@@ -19,14 +19,8 @@ import scala.collection.mutable.ListBuffer
 
 import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.parser.LexerInit
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{Entity, Predicate, Triple}
-import com.antgroup.openspg.reasoner.thinker.logic.rule.{
-  ClauseEntry,
-  EntityPattern,
-  Node,
-  Rule,
-  TriplePattern
-}
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple
+import com.antgroup.openspg.reasoner.thinker.logic.rule._
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{Condition, Or}
 
 class SimplifyThinkerParser {
@@ -81,10 +75,7 @@ class SimplifyThinkerParser {
     val rule = new Rule()
     val concept_nameContext =
       ctx.define_rule_on_concept_structure().concept_declaration().concept_name()
-    rule.setHead(
-      new EntityPattern(new Entity(
-        thinkerRuleParser.removeGraveAccentInConceptId(concept_nameContext.concept_instance_id()),
-        concept_nameContext.meta_concept_type().getText)))
+    rule.setHead(new EntityPattern(thinkerRuleParser.constructConceptEntity(concept_nameContext)))
     if (null != ctx.description()) {
       rule.setDesc(ctx.description().unbroken_character_string_literal().getText)
     }
@@ -132,33 +123,12 @@ class SimplifyThinkerParser {
 
   def parseDefineRuleOnRelationToConcept(ctx: Define_rule_on_relation_to_conceptContext): Rule = {
     val rule = new Rule()
-    val subject = ctx
-      .define_rule_on_relation_to_concept_structure()
-      .variable_declaration()
-      .entity_type()
-      .getText
-    val predicate = ctx
-      .define_rule_on_relation_to_concept_structure()
-      .rule_name_declaration()
-      .identifier()
-      .getText
-    val o = ctx
-      .define_rule_on_relation_to_concept_structure()
-      .concept_declaration()
-      .concept_name()
-
-    rule.setHead(
-      new TriplePattern(
-        new Triple(
-          new Entity(null, subject),
-          new Predicate(predicate),
-          new Entity(
-            thinkerRuleParser.removeGraveAccentInConceptId(o.concept_instance_id()),
-            o.meta_concept_type().getText))))
+    val spoRule = ctx.define_rule_on_relation_to_concept_structure().spo_rule()
+    val (subject, predicate, object_) = thinkerRuleParser.parseSpoRule(spoRule, true)
+    rule.setHead(new TriplePattern(new Triple(subject, predicate, object_)))
     if (ctx.description() != null) {
       rule.setDesc(ctx.description().unbroken_character_string_literal().getText)
     }
-
     val ruleAndAction: Rule_and_action_bodyContext =
       ctx.define_rule_on_relation_to_concept_structure().rule_and_action_body()
     parseRuleAndAction(ruleAndAction, rule)

@@ -18,11 +18,17 @@ import lombok.Data;
 @Data
 public class Node extends Element {
   private String type;
+  private String alias;
 
   private Node() {}
 
   public Node(String type) {
     this.type = type;
+  }
+
+  public Node(String type, String alias) {
+    this.type = type;
+    this.alias = alias;
   }
 
   @Override
@@ -34,7 +40,7 @@ public class Node extends Element {
       return false;
     }
     Node node = (Node) o;
-    return Objects.equals(type, node.type);
+    return Objects.equals(type, node.type) && Objects.equals(alias, node.alias);
   }
 
   @Override
@@ -50,5 +56,41 @@ public class Node extends Element {
       return Objects.equals(type, ((Entity) other).getType());
     }
     return equals(other);
+  }
+
+  /**
+   * Getter method for property <tt>type</tt>.
+   *
+   * @return property value of type
+   */
+  public String getType() {
+    return type;
+  }
+
+  /**
+   * Setter method for property <tt>type</tt>.
+   *
+   * @param type value to be assigned to property type
+   */
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  /**
+   * Getter method for property <tt>alias</tt>.
+   *
+   * @return property value of alias
+   */
+  public String getAlias() {
+    return alias;
+  }
+
+  /**
+   * Setter method for property <tt>alias</tt>.
+   *
+   * @param alias value to be assigned to property alias
+   */
+  public void setAlias(String alias) {
+    this.alias = alias;
   }
 }
