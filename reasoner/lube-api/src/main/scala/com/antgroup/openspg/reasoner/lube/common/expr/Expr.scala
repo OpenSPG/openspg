@@ -395,3 +395,11 @@ final case class Parameter(paramName: String) extends TypeValidatedExpr {
 
   override def children: Array[Expr] = Array.empty
 }
+
+final case class ConceptExpr(conceptName: String) extends TypeValidatedExpr {
+
+  override def withNewChildren(newChildren: Array[Expr]): Expr =
+    throw UnsupportedOperationException("unsupported")
+
+  override def children: Array[Expr] = Array.empty
+}

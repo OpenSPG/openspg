@@ -41,8 +41,10 @@ abstract class Catalog() extends Serializable {
       registerSchema("KG", graph)
     }
     val connections = getConnections()
-    for (connection <- connections) {
-      registerConnection(connection._2, connection._1)
+    if (connections != null) {
+      for (connection <- connections) {
+        registerConnection(connection._2, connection._1)
+      }
     }
   }
 
