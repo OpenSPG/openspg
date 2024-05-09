@@ -14,9 +14,9 @@
 package com.antgroup.openspg.server.api.http.server.openapi;
 
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
 import com.antgroup.openspg.server.api.http.server.BaseController;
@@ -81,7 +81,7 @@ public class ConceptController extends BaseController {
   @RequestMapping(value = "/defineLogicalCausation", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<Object> defineLogicalCausation(
-      @RequestBody DefineLogicalCausationRequest request) {
+      @RequestBody DefineTripleSemanticRequest request) {
     return HttpBizTemplate.execute(
         new HttpBizCallback<Boolean>() {
           @Override
@@ -129,7 +129,7 @@ public class ConceptController extends BaseController {
   @RequestMapping(value = "/removeLogicalCausation", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<Object> removeLogicalCausation(
-      @RequestBody RemoveLogicalCausationRequest request) {
+      @RequestBody RemoveTripleSemanticRequest request) {
     return HttpBizTemplate.execute(
         new HttpBizCallback<Boolean>() {
           @Override

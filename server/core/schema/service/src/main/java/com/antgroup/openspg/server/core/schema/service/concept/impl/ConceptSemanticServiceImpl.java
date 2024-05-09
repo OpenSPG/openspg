@@ -16,7 +16,7 @@ package com.antgroup.openspg.server.core.schema.service.concept.impl;
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
@@ -25,7 +25,8 @@ import com.antgroup.openspg.server.core.schema.service.concept.ConceptSemanticSe
 import com.antgroup.openspg.server.core.schema.service.concept.convertor.ConceptSemanticConvertor;
 import com.antgroup.openspg.server.core.schema.service.predicate.repository.PropertyRepository;
 import com.antgroup.openspg.server.core.schema.service.semantic.LogicalRuleService;
-import com.antgroup.openspg.server.core.schema.service.semantic.model.LogicalCausationQuery;
+import com.antgroup.openspg.server.core.schema.service.semantic.model.TripleSemanticQuery;
+import com.antgroup.openspg.server.core.schema.service.semantic.model.ReasoningConclusionQuery;
 import com.antgroup.openspg.server.core.schema.service.semantic.model.SimpleSemantic;
 import com.antgroup.openspg.server.core.schema.service.semantic.repository.SemanticRepository;
 import com.google.common.collect.Lists;
@@ -57,8 +58,8 @@ public class ConceptSemanticServiceImpl implements ConceptSemanticService {
       return new ArrayList<>();
     }
 
-    LogicalCausationQuery query =
-        new LogicalCausationQuery()
+    TripleSemanticQuery query =
+        new TripleSemanticQuery()
             .setPredicateName(SystemPredicateEnum.BELONG_TO.getName())
             .setSubjectName(taxonomicRelationId.toString())
             .setObjectTypeNames(Lists.newArrayList(conceptTypeIdentifier.toString()))
@@ -137,7 +138,7 @@ public class ConceptSemanticServiceImpl implements ConceptSemanticService {
   }
 
   @Override
-  public List<LogicalCausationSemantic> queryLogicalCausationSemantic(LogicalCausationQuery query) {
+  public List<TripleSemantic> queryTripleSemantic(TripleSemanticQuery query) {
     List<SimpleSemantic> exist = semanticRepository.queryConceptSemanticByCond(query);
     if (CollectionUtils.isEmpty(exist)) {
       return Collections.emptyList();
@@ -153,7 +154,7 @@ public class ConceptSemanticServiceImpl implements ConceptSemanticService {
   }
 
   @Override
-  public int deleteLogicalCausationSemantic(LogicalCausationSemantic conceptSemantic) {
+  public int deleteTripleSemantic(TripleSemantic conceptSemantic) {
     List<SimpleSemantic> exist = this.queryExistSemantic(conceptSemantic);
     if (CollectionUtils.isEmpty(exist)) {
       return 0;
@@ -170,7 +171,7 @@ public class ConceptSemanticServiceImpl implements ConceptSemanticService {
   }
 
   @Override
-  public int upsertLogicalCausationSemantic(LogicalCausationSemantic conceptSemantic) {
+  public int upsertTripleSemantic(TripleSemantic conceptSemantic) {
     List<SimpleSemantic> exist = this.queryExistSemantic(conceptSemantic);
     if (CollectionUtils.isNotEmpty(exist)) {
       RuleCode ruleCode = exist.get(0).getRuleCode();
@@ -202,16 +203,17 @@ public class ConceptSemanticServiceImpl implements ConceptSemanticService {
     logicalRuleService.deleteByRuleId(ruleCodes);
   }
 
-  private List<SimpleSemantic> queryExistSemantic(LogicalCausationSemantic conceptSemantic) {
-    LogicalCausationQuery query =
-        new LogicalCausationQuery()
+  private List<SimpleSemantic> queryExistSemantic(TripleSemantic conceptSemantic) {
+    TripleSemanticQuery query =
+        new TripleSemanticQuery()
             .setSubjectTypeNames(
                 Lists.newArrayList(conceptSemantic.getSubjectTypeIdentifier().toString()))
             .setSubjectName(conceptSemantic.getSubjectIdentifier().getId())
             .setPredicateName(conceptSemantic.getPredicateIdentifier().getName())
             .setObjectTypeNames(
                 Lists.newArrayList(conceptSemantic.getObjectTypeIdentifier().toString()))
-            .setObjectName(conceptSemantic.getObjectIdentifier().getId());
+            .setObjectName(conceptSemantic.getObjectIdentifier().getId())
+            .setSpgOntologyEnum(conceptSemantic.getSemanticType());
     return semanticRepository.queryConceptSemanticByCond(query);
   }
 }

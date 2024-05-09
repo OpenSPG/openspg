@@ -15,7 +15,7 @@ package com.antgroup.openspg.server.core.schema.service.concept.convertor;
 
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
@@ -67,9 +67,9 @@ public class ConceptSemanticConvertor {
         semantic.getLogicalRule() == null ? null : semantic.getLogicalRule().getCode());
   }
 
-  public static SimpleSemantic convert(LogicalCausationSemantic semantic) {
+  public static SimpleSemantic convert(TripleSemantic semantic) {
     return new SimpleSemantic(
-        SPGOntologyEnum.CONCEPT,
+        semantic.getOntologyType() == null ? SPGOntologyEnum.CONCEPT : semantic.getOntologyType(),
         semantic.getSubjectIdentifier().getId(),
         semantic.getObjectIdentifier().getId(),
         semantic.getPredicateIdentifier(),
@@ -78,13 +78,13 @@ public class ConceptSemanticConvertor {
         semantic.getLogicalRule() == null ? null : semantic.getLogicalRule().getCode());
   }
 
-  public static List<LogicalCausationSemantic> convertSemanticList(
+  public static List<TripleSemantic> convertSemanticList(
       List<SimpleSemantic> simpleSemanticList, List<LogicalRule> logicalRuleList) {
     if (CollectionUtils.isEmpty(simpleSemanticList)) {
       return Collections.emptyList();
     }
 
-    List<LogicalCausationSemantic> semantics = new ArrayList<>();
+    List<TripleSemantic> semantics = new ArrayList<>();
     Map<RuleCode, LogicalRule> logicalRuleMap =
         logicalRuleList.stream()
             .collect(Collectors.toMap(LogicalRule::getCode, Function.identity(), (o1, o2) -> o1));
@@ -95,9 +95,9 @@ public class ConceptSemanticConvertor {
     return semantics;
   }
 
-  public static LogicalCausationSemantic convertSemantic(
+  public static TripleSemantic convertSemantic(
       SimpleSemantic simpleSemantic, LogicalRule logicalRule) {
-    return new LogicalCausationSemantic(
+    return new TripleSemantic(
         simpleSemantic.getSubjectTypeIdentifier(),
         new ConceptIdentifier(simpleSemantic.getSubjectId()),
         simpleSemantic.getPredicateIdentifier(),

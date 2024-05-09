@@ -16,8 +16,9 @@ package com.antgroup.openspg.server.core.schema.service.concept;
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
-import com.antgroup.openspg.server.core.schema.service.semantic.model.LogicalCausationQuery;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
+import com.antgroup.openspg.server.core.schema.service.semantic.model.TripleSemanticQuery;
+
 import java.util.List;
 
 /**
@@ -55,26 +56,26 @@ public interface ConceptSemanticService {
   int upsertDynamicTaxonomySemantic(DynamicTaxonomySemantic dynamicTaxonomySemantic);
 
   /**
-   * Query logical causation between concepts by condition.
+   * Query triple between concepts by condition.
    *
    * @param query query condition
    * @return list of concept semantic
    */
-  List<LogicalCausationSemantic> queryLogicalCausationSemantic(LogicalCausationQuery query);
+  List<TripleSemantic> queryTripleSemantic(TripleSemanticQuery query);
 
   /**
-   * delete logical causation semantic.
+   * delete triple semantic.
    *
-   * @param logicalCausationSemantic concept semantic model
+   * @param tripleSemantic concept semantic model
    * @return record count
    */
-  int deleteLogicalCausationSemantic(LogicalCausationSemantic logicalCausationSemantic);
+  int deleteTripleSemantic(TripleSemantic tripleSemantic);
 
   /**
-   * Add logical causation semantic.
+   * Add triple semantic.
    *
-   * @param logicalCausationSemantic concept semantic model
+   * @param tripleSemantic concept semantic model
    * @return record count is created
    */
-  int upsertLogicalCausationSemantic(LogicalCausationSemantic logicalCausationSemantic);
+  int upsertTripleSemantic(TripleSemantic tripleSemantic);
 }

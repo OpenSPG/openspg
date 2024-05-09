@@ -14,9 +14,9 @@
 package com.antgroup.openspg.server.api.http.client.forest.client;
 
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
 import com.antgroup.openspg.server.api.http.client.util.HttpClientConstants;
@@ -42,11 +42,11 @@ public interface ConceptForestClient {
   ForestResponse<Boolean> defineDynamicTaxonomy(@JSONBody DefineDynamicTaxonomyRequest request);
 
   @Post(value = "/public/v1/concept/defineLogicalCausation")
-  ForestResponse<Boolean> defineLogicalCausation(@JSONBody DefineLogicalCausationRequest request);
+  ForestResponse<Boolean> defineLogicalCausation(@JSONBody DefineTripleSemanticRequest request);
 
   @Post(value = "/public/v1/concept/removeDynamicTaxonomy")
   ForestResponse<Boolean> removeDynamicTaxonomy(@JSONBody RemoveDynamicTaxonomyRequest request);
 
   @Post(value = "/public/v1/concept/removeLogicalCausation")
-  ForestResponse<Boolean> removeLogicalCausation(@JSONBody RemoveLogicalCausationRequest request);
+  ForestResponse<Boolean> removeLogicalCausation(@JSONBody RemoveTripleSemanticRequest request);
 }

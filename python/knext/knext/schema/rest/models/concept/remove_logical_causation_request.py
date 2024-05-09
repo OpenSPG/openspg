@@ -49,6 +49,7 @@ class RemoveLogicalCausationRequest(object):
         "predicate_name": "str",
         "object_concept_type_name": "str",
         "object_concept_name": "str",
+        "semanticType": "str",
     }
 
     attribute_map = {
@@ -57,6 +58,7 @@ class RemoveLogicalCausationRequest(object):
         "predicate_name": "predicateName",
         "object_concept_type_name": "objectConceptTypeName",
         "object_concept_name": "objectConceptName",
+        "semantic_type": "semanticType",
     }
 
     def __init__(
@@ -66,6 +68,7 @@ class RemoveLogicalCausationRequest(object):
         predicate_name=None,
         object_concept_type_name=None,
         object_concept_name=None,
+        semantic_type=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """RemoveLogicalCausationRequest - a model defined in OpenAPI"""  # noqa: E501
@@ -78,6 +81,7 @@ class RemoveLogicalCausationRequest(object):
         self._predicate_name = None
         self._object_concept_type_name = None
         self._object_concept_name = None
+        self._semantic_type = None
         self.discriminator = None
 
         if subject_concept_type_name is not None:
@@ -90,6 +94,8 @@ class RemoveLogicalCausationRequest(object):
             self.object_concept_type_name = object_concept_type_name
         if object_concept_name is not None:
             self.object_concept_name = object_concept_name
+        if semantic_type is not None:
+            self.semantic_type = semantic_type
 
     @property
     def subject_concept_type_name(self):
@@ -195,6 +201,14 @@ class RemoveLogicalCausationRequest(object):
         """
 
         self._object_concept_name = object_concept_name
+
+    @property
+    def semantic_type(self):
+        return self._semantic_type
+
+    @semantic_type.setter
+    def semantic_type(self, semantic_type):
+        self._semantic_type = semantic_type
 
     def to_dict(self):
         """Returns the model properties as a dict"""

@@ -50,6 +50,7 @@ class DefineLogicalCausationRequest(object):
         "object_concept_type_name": "str",
         "object_concept_name": "str",
         "dsl": "str",
+        "semanticType": "str",
     }
 
     attribute_map = {
@@ -59,6 +60,7 @@ class DefineLogicalCausationRequest(object):
         "object_concept_type_name": "objectConceptTypeName",
         "object_concept_name": "objectConceptName",
         "dsl": "dsl",
+        "semantic_type": "semanticType",
     }
 
     def __init__(
@@ -69,6 +71,7 @@ class DefineLogicalCausationRequest(object):
         object_concept_type_name=None,
         object_concept_name=None,
         dsl=None,
+        semantic_type=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """DefineLogicalCausationRequest - a model defined in OpenAPI"""  # noqa: E501
@@ -82,6 +85,7 @@ class DefineLogicalCausationRequest(object):
         self._object_concept_type_name = None
         self._object_concept_name = None
         self._dsl = None
+        self._semantic_type = None
         self.discriminator = None
 
         if subject_concept_type_name is not None:
@@ -96,6 +100,8 @@ class DefineLogicalCausationRequest(object):
             self.object_concept_name = object_concept_name
         if dsl is not None:
             self.dsl = dsl
+        if semantic_type is not None:
+            self.semantic_type = semantic_type
 
     @property
     def subject_concept_type_name(self):
@@ -222,6 +228,14 @@ class DefineLogicalCausationRequest(object):
         """
 
         self._dsl = dsl
+
+    @property
+    def semantic_type(self):
+        return self._semantic_type
+
+    @semantic_type.setter
+    def semantic_type(self, semantic_type):
+        self._semantic_type = semantic_type
 
     def to_dict(self):
         """Returns the model properties as a dict"""

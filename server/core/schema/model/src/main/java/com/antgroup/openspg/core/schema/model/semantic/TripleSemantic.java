@@ -18,7 +18,7 @@ import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 
 /** Inductive predicate defined between concepts, usually the name of the predicate is "leadTo". */
-public class LogicalCausationSemantic extends BaseConceptSemantic {
+public class TripleSemantic extends BaseConceptSemantic {
 
   private static final long serialVersionUID = -1943418046354258381L;
 
@@ -40,7 +40,10 @@ public class LogicalCausationSemantic extends BaseConceptSemantic {
   /** The details of the logic rule */
   private final LogicalRule logicalRule;
 
-  public LogicalCausationSemantic(
+  /** The semantic type of the triple. */
+  private final SPGOntologyEnum semanticType;
+
+  public TripleSemantic(
       SPGTypeIdentifier subjectTypeIdentifier,
       ConceptIdentifier subjectIdentifier,
       PredicateIdentifier predicateIdentifier,
@@ -53,6 +56,24 @@ public class LogicalCausationSemantic extends BaseConceptSemantic {
     this.objectTypeIdentifier = objectTypeIdentifier;
     this.objectIdentifier = objectIdentifier;
     this.logicalRule = logicalRule;
+    this.semanticType = null;
+  }
+
+  public TripleSemantic(
+      SPGTypeIdentifier subjectTypeIdentifier,
+      ConceptIdentifier subjectIdentifier,
+      PredicateIdentifier predicateIdentifier,
+      SPGTypeIdentifier objectTypeIdentifier,
+      ConceptIdentifier objectIdentifier,
+      LogicalRule logicalRule,
+      SPGOntologyEnum semanticType) {
+    this.subjectTypeIdentifier = subjectTypeIdentifier;
+    this.subjectIdentifier = subjectIdentifier;
+    this.predicateIdentifier = predicateIdentifier;
+    this.objectTypeIdentifier = objectTypeIdentifier;
+    this.objectIdentifier = objectIdentifier;
+    this.logicalRule = logicalRule;
+    this.semanticType = semanticType;
   }
 
   public SPGTypeIdentifier getSubjectTypeIdentifier() {
@@ -77,5 +98,9 @@ public class LogicalCausationSemantic extends BaseConceptSemantic {
 
   public ConceptIdentifier getObjectIdentifier() {
     return objectIdentifier;
+  }
+
+  public SPGOntologyEnum getSemanticType() {
+    return semanticType;
   }
 }

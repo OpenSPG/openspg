@@ -9,7 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
+import os
 import re
 
 from knext.schema import rest
@@ -28,6 +28,8 @@ class SPGConceptRuleMarkLang:
     rule_text = ""
     src_concept = ()
     dst_concept = ()
+    predicate = None
+    is_reasoning = False
 
     def __init__(self, filename):
         self.current_line_num = 0
@@ -50,6 +52,48 @@ class SPGConceptRuleMarkLang:
             )
 
             self.namespace = namespace_match.group(1)
+            return
+
+        reasoning_concept_match = re.match(
+            r"^\(`([a-zA-Z0-9\.]+)`/`([^`]+)`\):$",
+            expression,
+        )
+        if reasoning_concept_match:
+            assert self.namespace is not None, self.error_msg(
+                "please define namespace first"
+            )
+
+            self.dst_concept = (reasoning_concept_match.group(1), reasoning_concept_match.group(2))
+            self.is_reasoning = True
+            return
+
+        reasoning_po_match = re.match(
+            r"^\[([^\]]+)\]->\(`([a-zA-Z0-9\.]+)`/`([^`]+)`\):$",
+            expression,
+        )
+        if reasoning_po_match:
+            assert self.namespace is not None, self.error_msg(
+                "please define namespace first"
+            )
+
+            self.predicate = reasoning_po_match.group(1)
+            self.dst_concept = (reasoning_po_match.group(2), reasoning_po_match.group(3))
+            self.is_reasoning = True
+            return
+
+        reasoning_spo_match = re.match(
+            r"^\(`([a-zA-Z0-9\.]+)`/`([^`]+)`\)-\[([^\]]+)\]->\(`([a-zA-Z0-9\.]+)`/`([^`]+)`\):$",
+            expression,
+        )
+        if reasoning_spo_match:
+            assert self.namespace is not None, self.error_msg(
+                "please define namespace first"
+            )
+
+            self.src_concept = (reasoning_spo_match.group(1), reasoning_spo_match.group(2))
+            self.predicate = reasoning_spo_match.group(3)
+            self.dst_concept = (reasoning_spo_match.group(4), reasoning_spo_match.group(5))
+            self.is_reasoning = True
             return
 
         type_match = re.match(
@@ -99,7 +143,13 @@ class SPGConceptRuleMarkLang:
         if not match:
             subject_type = None
             subject_name = None
-            if self.dst_concept[0] is not None:
+            if self.is_reasoning:
+                predicate_name = self.predicate
+                subject_type = self.src_concept[0] if len(self.src_concept) > 0 else None
+                subject_name = self.src_concept[1] if len(self.src_concept) > 0 else None
+                object_type = self.dst_concept[0] if len(self.dst_concept) > 0 else None
+                object_name = self.dst_concept[1] if len(self.dst_concept) > 0 else None
+            elif self.dst_concept[0] is not None:
                 predicate_name = "leadTo"
                 subject_type = f"{self.namespace}.{self.src_concept[0]}"
                 subject_name = self.src_concept[1]
@@ -124,7 +174,24 @@ class SPGConceptRuleMarkLang:
                             subject_type = spg_type.name
                             break
 
-            if subject_name is None:
+            if self.is_reasoning:
+                if subject_type is None and self.predicate is None:
+                    head = (
+                            f"Define (o:`{object_type}`/`{object_name}`)"
+                            + " {\n"
+                    )
+                elif subject_type is None and self.predicate is not None:
+                    head = (
+                            f"Define [p:{predicate_name}]->(o:`{object_type}`/`{object_name}`)"
+                            + " {\n"
+                    )
+                else:
+                    head = (
+                            f"Define (s:`{object_type}`/`{object_name}`)-[p:{predicate_name}]->"
+                            f"(o:`{object_type}`/`{object_name}`)"
+                            + " {\n"
+                    )
+            elif subject_name is None:
                 head = (
                     f"Define (s:{subject_type})-[p:{predicate_name}]->(o:`{object_type}`/`{object_name}`)"
                     + " {\n"
@@ -191,13 +258,32 @@ class SPGConceptRuleMarkLang:
         self.src_concept = ()
         self.dst_concept = ()
         self.rule_text = ""
+        self.predicate = None
+        self.is_reasoning = False
 
     def submit_rule(self):
         """
         submit the rule definition, make them available for inference
         """
 
-        if self.dst_concept[0] is None:
+        if self.is_reasoning:
+            # reasoning rule
+            self.concept_client.concept_define_logical_causation_post(
+                define_logical_causation_request=rest.DefineLogicalCausationRequest(
+                    subject_concept_type_name="Thing" if len(
+                        self.src_concept) == 0 else f"{self.namespace}.{self.src_concept[0]}",
+                    subject_concept_name="1" if len(self.src_concept) == 0 else self.src_concept[1],
+                    predicate_name="_conclude" if self.predicate is None else self.predicate,
+                    object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
+                    object_concept_name=self.dst_concept[1],
+                    dsl=self.rule_text,
+                )
+            )
+            print(
+                f"Defined reasoning rule for `{self.dst_concept[0]}`/`{self.dst_concept[1]}`"
+            )
+
+        elif self.dst_concept[0] is None:
             # belongTo rule
             self.concept_client.concept_define_dynamic_taxonomy_post(
                 define_dynamic_taxonomy_request=rest.DefineDynamicTaxonomyRequest(
@@ -279,3 +365,8 @@ class SPGConceptRuleMarkLang:
         # if rule is the last line of file, then submit it
         if len(self.rule_text) > 0:
             self.submit_rule()
+
+
+if __name__ == '__main__':
+    os.environ["KNEXT_PROJECT_ID"] = "1"
+    s = SPGConceptRuleMarkLang("/Users/matthew/Downloads/concept.rule")

@@ -14,9 +14,9 @@
 package com.antgroup.openspg.server.biz.schema;
 
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 
 /** Provide method to manage concept */
@@ -41,14 +41,14 @@ public interface ConceptManager {
    *
    * @param request request
    */
-  void defineLogicalCausation(DefineLogicalCausationRequest request);
+  void defineLogicalCausation(DefineTripleSemanticRequest request);
 
   /**
    * remove logical causation.
    *
    * @param request
    */
-  void removeLogicalCausation(RemoveLogicalCausationRequest request);
+  void removeLogicalCausation(RemoveTripleSemanticRequest request);
 
   /**
    * Get concept detail by concept type.

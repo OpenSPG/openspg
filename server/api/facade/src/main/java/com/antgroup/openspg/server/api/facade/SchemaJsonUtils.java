@@ -30,7 +30,7 @@ import com.antgroup.openspg.core.schema.model.identifier.SPGTripleIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.BaseConceptSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.BasicType.DoubleBasicType;
 import com.antgroup.openspg.core.schema.model.type.BasicType.LongBasicType;
@@ -95,7 +95,7 @@ public class SchemaJsonUtils {
             .registerTypeAdapterFactory(
                 RuntimeTypeAdapterFactory.of(BaseConceptSemantic.class, DEFAULT_TYPE_FIELD_NAME)
                     .registerSubtype(DynamicTaxonomySemantic.class)
-                    .registerSubtype(LogicalCausationSemantic.class)
+                    .registerSubtype(TripleSemantic.class)
                     .recognizeSubtypes())
             // BaseReasonerReceipt
             .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)

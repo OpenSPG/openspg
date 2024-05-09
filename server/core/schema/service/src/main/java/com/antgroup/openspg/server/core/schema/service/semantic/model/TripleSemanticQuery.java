@@ -14,6 +14,8 @@
 package com.antgroup.openspg.server.core.schema.service.semantic.model;
 
 import java.util.List;
+
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -22,7 +24,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class LogicalCausationQuery {
+public class TripleSemanticQuery {
 
   /** The list of subject type name */
   private List<String> subjectTypeNames;
@@ -38,4 +40,9 @@ public class LogicalCausationQuery {
 
   /** The predicate name. */
   private String predicateName;
+
+  /**
+   * The type of spg ontology
+   */
+  private SPGOntologyEnum spgOntologyEnum;
 }

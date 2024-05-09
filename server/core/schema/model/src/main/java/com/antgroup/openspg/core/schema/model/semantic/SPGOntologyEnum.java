@@ -29,7 +29,12 @@ public enum SPGOntologyEnum {
   SUB_PROPERTY,
 
   /** Concept instance. */
-  CONCEPT;
+  CONCEPT,
+
+  /**
+   * Reasoning concept instance.
+   */
+  REASONING_CONCEPT;
 
   public static SPGOntologyEnum toEnum(String val) {
     for (SPGOntologyEnum resourceTypeEnum : SPGOntologyEnum.values()) {

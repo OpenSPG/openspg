@@ -14,9 +14,9 @@
 package com.antgroup.openspg.server.api.facade.client;
 
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.api.facade.ApiResponse;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
@@ -53,7 +53,7 @@ public interface ConceptFacade {
    * @param request The Request to save concept relation
    * @return true or false
    */
-  ApiResponse<Boolean> defineLogicalCausation(DefineLogicalCausationRequest request);
+  ApiResponse<Boolean> defineLogicalCausation(DefineTripleSemanticRequest request);
 
   /**
    * Remove dynamic taxonomy rule of concept.
@@ -69,5 +69,5 @@ public interface ConceptFacade {
    * @param request The request to delete concept relation
    * @return true or false
    */
-  ApiResponse<Boolean> removeLogicalCausation(RemoveLogicalCausationRequest request);
+  ApiResponse<Boolean> removeLogicalCausation(RemoveTripleSemanticRequest request);
 }

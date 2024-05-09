@@ -14,9 +14,9 @@
 package com.antgroup.openspg.server.api.http.client;
 
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.api.facade.ApiResponse;
 import com.antgroup.openspg.server.api.facade.client.ConceptFacade;
@@ -37,7 +37,7 @@ public class HttpConceptFacade implements ConceptFacade {
   }
 
   @Override
-  public ApiResponse<Boolean> defineLogicalCausation(DefineLogicalCausationRequest request) {
+  public ApiResponse<Boolean> defineLogicalCausation(DefineTripleSemanticRequest request) {
     return ForestUtils.call(ConceptForestClient.class, c -> c.defineLogicalCausation(request));
   }
 
@@ -47,7 +47,7 @@ public class HttpConceptFacade implements ConceptFacade {
   }
 
   @Override
-  public ApiResponse<Boolean> removeLogicalCausation(RemoveLogicalCausationRequest request) {
+  public ApiResponse<Boolean> removeLogicalCausation(RemoveTripleSemanticRequest request) {
     return ForestUtils.call(ConceptForestClient.class, c -> c.removeLogicalCausation(request));
   }
 }

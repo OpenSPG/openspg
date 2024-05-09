@@ -20,20 +20,21 @@ import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.BaseConceptSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.RuleStatusEnum;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.Concept;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.biz.common.util.AssertUtils;
 import com.antgroup.openspg.server.biz.schema.ConceptManager;
 import com.antgroup.openspg.server.common.model.UserInfo;
 import com.antgroup.openspg.server.core.schema.service.concept.ConceptSemanticService;
-import com.antgroup.openspg.server.core.schema.service.semantic.model.LogicalCausationQuery;
+import com.antgroup.openspg.server.core.schema.service.semantic.model.TripleSemanticQuery;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,7 +93,7 @@ public class ConceptManagerImpl implements ConceptManager {
   @Override
   public ConceptList getConceptDetail(String conceptTypeName, String conceptName) {
     // get logical causation semantic between concepts
-    List<LogicalCausationSemantic> conceptRelationSemantics =
+    List<TripleSemantic> conceptRelationSemantics =
         this.getLogicalCausation(conceptTypeName, conceptName);
 
     // get dynamic taxonomy semantic of concept
@@ -121,7 +122,7 @@ public class ConceptManagerImpl implements ConceptManager {
   }
 
   @Override
-  public void defineLogicalCausation(DefineLogicalCausationRequest request) {
+  public void defineLogicalCausation(DefineTripleSemanticRequest request) {
     AssertUtils.assertParamObjectIsNotNull("dsl", request.getDsl());
     LogicalRule logicalRule =
         new LogicalRule(
@@ -132,19 +133,20 @@ public class ConceptManagerImpl implements ConceptManager {
             RuleStatusEnum.PROD,
             request.getDsl(),
             new UserInfo(SchemaConstants.DEFAULT_USER_ID, null));
-    LogicalCausationSemantic conceptSemantic =
-        new LogicalCausationSemantic(
+    TripleSemantic conceptSemantic =
+        new TripleSemantic(
             SPGTypeIdentifier.parse(request.getSubjectConceptTypeName()),
             new ConceptIdentifier(request.getSubjectConceptName()),
             new PredicateIdentifier(request.getPredicateName()),
             SPGTypeIdentifier.parse(request.getObjectConceptTypeName()),
             new ConceptIdentifier(request.getObjectConceptName()),
-            logicalRule);
-    conceptService.upsertLogicalCausationSemantic(conceptSemantic);
+            logicalRule,
+            StringUtils.isNotBlank(request.getSemanticType()) ? SPGOntologyEnum.valueOf(request.getSemanticType()) : null);
+    conceptService.upsertTripleSemantic(conceptSemantic);
   }
 
   @Override
-  public void removeLogicalCausation(RemoveLogicalCausationRequest request) {
+  public void removeLogicalCausation(RemoveTripleSemanticRequest request) {
     SPGTypeIdentifier subjectType =
         request.getSubjectConceptTypeName() == null
             ? null
@@ -163,18 +165,19 @@ public class ConceptManagerImpl implements ConceptManager {
             ? null
             : new ConceptIdentifier(request.getObjectConceptName());
 
-    LogicalCausationSemantic conceptSemantic =
-        new LogicalCausationSemantic(
-            subjectType, subjectName, predicateIdentifier, objectType, objectName, null);
-    conceptService.deleteLogicalCausationSemantic(conceptSemantic);
+    TripleSemantic conceptSemantic =
+        new TripleSemantic(
+            subjectType, subjectName, predicateIdentifier, objectType, objectName, null,
+            StringUtils.isNotBlank(request.getSemanticType()) ? SPGOntologyEnum.valueOf(request.getSemanticType()) : null);
+    conceptService.deleteTripleSemantic(conceptSemantic);
   }
 
-  private List<LogicalCausationSemantic> getLogicalCausation(
+  private List<TripleSemantic> getLogicalCausation(
       String subjectConceptTypeName, String subjectConceptName) {
-    LogicalCausationQuery query = new LogicalCausationQuery();
+    TripleSemanticQuery query = new TripleSemanticQuery();
     query.setSubjectTypeNames(Lists.newArrayList(subjectConceptTypeName));
     query.setSubjectName(subjectConceptName);
-    return conceptService.queryLogicalCausationSemantic(query);
+    return conceptService.queryTripleSemantic(query);
   }
 
   private List<DynamicTaxonomySemantic> getDynamicTaxonomy(
