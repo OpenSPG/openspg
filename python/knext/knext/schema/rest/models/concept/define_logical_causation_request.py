@@ -50,7 +50,7 @@ class DefineLogicalCausationRequest(object):
         "object_concept_type_name": "str",
         "object_concept_name": "str",
         "dsl": "str",
-        "semanticType": "str",
+        "semantic_type": "str",
     }
 
     attribute_map = {
