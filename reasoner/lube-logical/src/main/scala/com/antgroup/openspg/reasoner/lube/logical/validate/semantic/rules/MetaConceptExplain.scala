@@ -14,9 +14,10 @@
 package com.antgroup.openspg.reasoner.lube.logical.validate.semantic.rules
 
 import com.antgroup.openspg.reasoner.lube.block.{Block, MatchBlock}
-import com.antgroup.openspg.reasoner.lube.catalog.{SemanticPropertyGraph, SemanticRule}
+import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph
 import com.antgroup.openspg.reasoner.lube.common.pattern.{
   Connection,
+  EntityElement,
   GraphPattern,
   PatternElement
 }
@@ -33,9 +34,9 @@ object MetaConceptExplain extends Explain {
       } else {
         val newPatterns = patterns.map { p =>
           val pattern = p._2.graphPattern
-          val metaConceptEdges =
-            pattern.edges.values.filter(edge =>
-              edge.exists(_.relTypes.contains("belongTo")) && !edge.exists(_.target.contains('/')))
+          val metaConceptEdges = pattern.edges.values.filter(edge =>
+            edge.exists(_.relTypes.contains("belongTo")) && !edge.exists(e =>
+              pattern.nodes(e.target).isInstanceOf[EntityElement]))
           if (metaConceptEdges.isEmpty) {
             p
           } else {
@@ -44,11 +45,8 @@ object MetaConceptExplain extends Explain {
             metaConceptEdges.foreach(e => parseMetaConcept(kg, e, pattern, metaConceptMap))
             val newNodes = pattern.nodes.map(n =>
               if (metaConceptMap.contains(n._1)) {
-                n.copy(
-                  n._1,
-                  PatternElement(n._1, metaConceptMap(n._1), n._2.rule))}
-              else n
-            )
+                n.copy(n._1, PatternElement(n._1, metaConceptMap(n._1), n._2.rule))
+              } else n)
             (p._1, p._2.copy(graphPattern = pattern.copy(nodes = newNodes)))
           }
         }
@@ -72,8 +70,8 @@ object MetaConceptExplain extends Explain {
             if (!metaConceptMap.contains(targetAlias)) {
               metaConceptMap(targetAlias) = Set.empty
             }
-            val metaConcepts = metaConceptMap(targetAlias).++(matchedRules.map(r =>
-              r.split("_belongTo_").last))
+            val metaConcepts =
+              metaConceptMap(targetAlias).++(matchedRules.map(r => r.split("_belongTo_").last))
             metaConceptMap.put(targetAlias, metaConcepts)
           }
         }

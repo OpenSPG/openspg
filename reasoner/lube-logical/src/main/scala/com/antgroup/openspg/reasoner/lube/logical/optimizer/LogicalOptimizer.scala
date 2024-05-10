@@ -51,7 +51,6 @@ object LogicalOptimizer {
           root = TopDownWithContext(rule.ruleWithContext).transform(root, Map.empty)._1
         }
       }
-      val tmp = 0
     }
     root
   }
