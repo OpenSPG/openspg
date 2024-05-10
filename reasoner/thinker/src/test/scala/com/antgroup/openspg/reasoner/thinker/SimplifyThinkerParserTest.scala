@@ -17,6 +17,7 @@ import scala.collection.JavaConverters._
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.thinker.logic.graph.{Entity, Predicate}
+import com.antgroup.openspg.reasoner.thinker.logic.graph
 import com.antgroup.openspg.reasoner.thinker.logic.rule._
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact._
 import com.antgroup.openspg.reasoner.thinker.util.ThinkerConditionUtil
@@ -205,8 +206,43 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     val (entityCount, tripleCount) = countClauseCount(rule.getBody.asScala.toList)
     assert(entityCount == 2)
     assert(tripleCount == 4)
+    val expectTriplePatternSet = Set.apply(
+      new TriplePattern(
+        new graph.Triple(
+          new graph.Node("InsDisease", "a"),
+          new Predicate("disclaimClause", "p"),
+          new graph.Node("InsDiseaseDisclaim", "b"))),
+      new TriplePattern(
+        new graph.Triple(
+          new graph.Node("InsDiseaseDisclaim", "b"),
+          new Predicate("clauseVersion", "anonymous_2"),
+          new graph.Node("InsClause", "c"))),
+      new TriplePattern(
+        new graph.Triple(
+          new Predicate("disclaimClause", "p"),
+          new Predicate("disclaimType"),
+          new graph.Any())),
+      new TriplePattern(
+        new graph.Triple(
+          new graph.Node("InsClause", "c"),
+          new Predicate("insClauseVersion", "anonymous_4"),
+          new graph.Node("InsComProd", "d"))))
+    assert(rule.getBody.containsAll(expectTriplePatternSet.asJava))
     assert(rule.getRoot.isInstanceOf[Or])
     assert(rule.getRoot.asInstanceOf[Or].getChildren.size() == 4)
+    rule.getRoot
+      .asInstanceOf[Or]
+      .getChildren
+      .asScala
+      .foreach(child => {
+        if (child.isInstanceOf[QlExpressCondition]) {
+          assert(
+            child
+              .asInstanceOf[QlExpressCondition]
+              .getQlExpress
+              .equals("hits(get_spo(a, p, b),get_spo(c, anonymous_8, d)) > 2"))
+        }
+      })
   }
 
   def countClauseCount(body: List[ClauseEntry]): (Int, Int) = {
