@@ -9,7 +9,6 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-import os
 import re
 
 from knext.schema import rest
@@ -296,7 +295,7 @@ class SPGConceptRuleMarkLang:
                     f"Defined reasoning rule for `{self.dst_concept[0]}`/`{self.dst_concept[1]}`"
                 )
             else:
-                self.concept_client.schema_remove_logical_causation_get(
+                self.concept_client.concept_remove_logical_causation_post(
                     remove_logical_causation_request=rest.RemoveLogicalCausationRequest(
                         subject_concept_type_name="Thing" if len(
                             self.src_concept) == 0 else f"{self.namespace}.{self.src_concept[0]}",
@@ -324,7 +323,7 @@ class SPGConceptRuleMarkLang:
                     f"Defined belongTo rule for `{self.src_concept[0]}`/`{self.src_concept[1]}`"
                 )
             else:
-                self.concept_client.concept_remove_dynamic_taxonomy_get(
+                self.concept_client.concept_remove_dynamic_taxonomy_post(
                     remove_dynamic_taxonomy_request=rest.RemoveDynamicTaxonomyRequest(
                         object_concept_type_name=f"{self.namespace}.{self.src_concept[0]}",
                         object_concept_name=self.src_concept[1]
@@ -352,7 +351,7 @@ class SPGConceptRuleMarkLang:
                     f"`{self.src_concept[0]}`/`{self.src_concept[1]}` -> `{self.dst_concept[0]}`/`{self.dst_concept[1]}`"
                 )
             else:
-                self.concept_client.schema_remove_logical_causation_get(
+                self.concept_client.concept_remove_logical_causation_post(
                     remove_logical_causation_request=rest.RemoveLogicalCausationRequest(
                         subject_concept_type_name=f"{self.namespace}.{self.src_concept[0]}",
                         subject_concept_name=self.src_concept[1],
@@ -423,8 +422,3 @@ class SPGConceptRuleMarkLang:
         # if rule is the last line of file, then submit it
         if len(self.rule_text) > 0:
             self.submit_rule()
-
-
-if __name__ == '__main__':
-    os.environ["KNEXT_PROJECT_ID"] = "1"
-    s = SPGConceptRuleMarkLang("/Users/matthew/Downloads/concept.rule")

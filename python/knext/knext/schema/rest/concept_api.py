@@ -288,12 +288,12 @@ class ConceptApi(object):
             collection_formats=collection_formats,
         )
 
-    def concept_remove_dynamic_taxonomy_get(self, **kwargs):  # noqa: E501
+    def concept_remove_dynamic_taxonomy_post(self, **kwargs):  # noqa: E501
         """remove_dynamic_taxonomy  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.concept_remove_dynamic_taxonomy_get(async_req=True)
+        >>> thread = api.concept_remove_dynamic_taxonomy_post(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -310,18 +310,18 @@ class ConceptApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.concept_remove_dynamic_taxonomy_get_with_http_info(
+        return self.concept_remove_dynamic_taxonomy_post_with_http_info(
             **kwargs
         )  # noqa: E501
 
-    def concept_remove_dynamic_taxonomy_get_with_http_info(
+    def concept_remove_dynamic_taxonomy_post_with_http_info(
         self, **kwargs
     ):  # noqa: E501
         """remove_dynamic_taxonomy  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.concept_remove_dynamic_taxonomy_get_with_http_info(async_req=True)
+        >>> thread = api.concept_remove_dynamic_taxonomy_post_with_http_info(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -410,12 +410,12 @@ class ConceptApi(object):
             collection_formats=collection_formats,
         )
 
-    def schema_remove_logical_causation_get(self, **kwargs):  # noqa: E501
+    def concept_remove_logical_causation_post(self, **kwargs):  # noqa: E501
         """remove_logical_causation  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.schema_remove_logical_causation_get(async_req=True)
+        >>> thread = api.concept_remove_logical_causation_post(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
@@ -432,18 +432,18 @@ class ConceptApi(object):
                  returns the request thread.
         """
         kwargs["_return_http_data_only"] = True
-        return self.schema_remove_logical_causation_get_with_http_info(
+        return self.concept_remove_logical_causation_post_with_http_info(
             **kwargs
         )  # noqa: E501
 
-    def schema_remove_logical_causation_get_with_http_info(
+    def concept_remove_logical_causation_post_with_http_info(
         self, **kwargs
     ):  # noqa: E501
         """remove_logical_causation  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.schema_remove_logical_causation_get_with_http_info(async_req=True)
+        >>> thread = api.concept_remove_logical_causation_post_with_http_info(async_req=True)
         >>> result = thread.get()
 
         :param async_req bool: execute request asynchronously
