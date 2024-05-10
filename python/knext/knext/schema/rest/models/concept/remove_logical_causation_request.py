@@ -49,7 +49,7 @@ class RemoveLogicalCausationRequest(object):
         "predicate_name": "str",
         "object_concept_type_name": "str",
         "object_concept_name": "str",
-        "semanticType": "str",
+        "semantic_type": "str",
     }
 
     attribute_map = {

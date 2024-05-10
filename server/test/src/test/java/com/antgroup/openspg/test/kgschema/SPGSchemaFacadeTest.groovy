@@ -26,9 +26,9 @@ import com.antgroup.openspg.core.schema.model.alter.SchemaDraft
 import com.antgroup.openspg.core.schema.model.predicate.Property
 import com.antgroup.openspg.core.schema.model.predicate.Relation
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest
-import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest
+import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest
-import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest
+import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType
 import com.antgroup.openspg.core.schema.model.type.ConceptList
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema
@@ -116,7 +116,7 @@ class SPGSchemaFacadeTest extends Specification {
                         "{GraphStructure{} Rule{ R1: s.age >= 50}}")
         conceptFacade.defineDynamicTaxonomy(defineDynamicTaxonomyRequest2)
 
-        DefineLogicalCausationRequest defineLogicalCausationRequest = new DefineLogicalCausationRequest(
+        DefineTripleSemanticRequest defineLogicalCausationRequest = new DefineTripleSemanticRequest(
                 subjectConceptTypeName: MockSpgTypeNameEnum.DEFAULT_TAXOMOMY_OF_PERSON.getName(),
                 subjectConceptName: "中产阶级",
                 objectConceptTypeName: MockSpgTypeNameEnum.DEFAULT_TAXOMOMY_OF_PERSON.getName(),
@@ -139,7 +139,7 @@ class SPGSchemaFacadeTest extends Specification {
                 objectConceptTypeName: MockSpgTypeNameEnum.DEFAULT_TAXOMOMY_OF_PERSON.getName())
         conceptFacade.removeDynamicTaxonomy(removeDynamicTaxonomyRequest)
 
-        RemoveLogicalCausationRequest removeLogicalCausationRequest = new RemoveLogicalCausationRequest(
+        RemoveTripleSemanticRequest removeLogicalCausationRequest = new RemoveTripleSemanticRequest(
                 subjectConceptTypeName: MockSpgTypeNameEnum.DEFAULT_TAXOMOMY_OF_PERSON.getName(),
                 subjectConceptName: "中产阶级",
                 objectConceptTypeName: MockSpgTypeNameEnum.DEFAULT_TAXOMOMY_OF_PERSON.getName(),

@@ -392,7 +392,7 @@ class ConceptApi(object):
 
         return self.api_client.call_api(
             "/concept/removeDynamicTaxonomy",
-            "GET",
+            "POST",
             path_params,
             query_params,
             header_params,
@@ -513,8 +513,8 @@ class ConceptApi(object):
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            "/schema/removeLogicalCausation",
-            "GET",
+            "/concept/removeLogicalCausation",
+            "POST",
             path_params,
             query_params,
             header_params,

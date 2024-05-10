@@ -17,6 +17,16 @@ from knext.schema.client import SchemaClient
 from knext.schema.model.base import SpgTypeEnum
 
 
+def is_blank(text):
+    if not text:
+        return True
+    if len(text) == 0:
+        return True
+    if text.isspace():
+        return True
+    return False
+
+
 class SPGConceptRuleMarkLang:
     """
     SPG Concept Rule Mark Language Parser
@@ -125,7 +135,7 @@ class SPGConceptRuleMarkLang:
             if len(strip_rule) > 2:
                 if strip_rule.endswith("]]"):
                     self.rule_quote_open = False
-                    self.rule_text = strip_rule[2 : len(strip_rule) - 2].lstrip()
+                    self.rule_text = strip_rule[2: len(strip_rule) - 2].lstrip()
                 else:
                     self.rule_text = strip_rule[2].lstrip()
             else:
@@ -204,6 +214,8 @@ class SPGConceptRuleMarkLang:
                 )
             rule = head + rule
             rule += "\n}"
+        elif self.is_reasoning:
+            raise Exception(self.error_msg("Wrong format for reasoning rule"))
 
         # complete the namespace of concept type
         pattern = re.compile(r"\(([\w\s]*?:)`([\w\s\.]+)`/`([^`]+)`\)", re.IGNORECASE)
@@ -268,50 +280,92 @@ class SPGConceptRuleMarkLang:
 
         if self.is_reasoning:
             # reasoning rule
-            self.concept_client.concept_define_logical_causation_post(
-                define_logical_causation_request=rest.DefineLogicalCausationRequest(
-                    subject_concept_type_name="Thing" if len(
-                        self.src_concept) == 0 else f"{self.namespace}.{self.src_concept[0]}",
-                    subject_concept_name="1" if len(self.src_concept) == 0 else self.src_concept[1],
-                    predicate_name="_conclude" if self.predicate is None else self.predicate,
-                    object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
-                    object_concept_name=self.dst_concept[1],
-                    dsl=self.rule_text,
+            if not is_blank(self.rule_text):
+                self.concept_client.concept_define_logical_causation_post(
+                    define_logical_causation_request=rest.DefineLogicalCausationRequest(
+                        subject_concept_type_name="Thing" if len(
+                            self.src_concept) == 0 else f"{self.namespace}.{self.src_concept[0]}",
+                        subject_concept_name="1" if len(self.src_concept) == 0 else self.src_concept[1],
+                        predicate_name="_conclude" if self.predicate is None else self.predicate,
+                        object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
+                        object_concept_name=self.dst_concept[1],
+                        dsl=self.rule_text,
+                    )
                 )
-            )
-            print(
-                f"Defined reasoning rule for `{self.dst_concept[0]}`/`{self.dst_concept[1]}`"
-            )
+                print(
+                    f"Defined reasoning rule for `{self.dst_concept[0]}`/`{self.dst_concept[1]}`"
+                )
+            else:
+                self.concept_client.schema_remove_logical_causation_get(
+                    remove_logical_causation_request=rest.RemoveLogicalCausationRequest(
+                        subject_concept_type_name="Thing" if len(
+                            self.src_concept) == 0 else f"{self.namespace}.{self.src_concept[0]}",
+                        subject_concept_name="1" if len(self.src_concept) == 0 else self.src_concept[1],
+                        predicate_name="_conclude" if self.predicate is None else self.predicate,
+                        object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
+                        object_concept_name=self.dst_concept[1],
+                    )
+                )
+                print(
+                    f"Removed reasoning rule for `{self.dst_concept[0]}`/`{self.dst_concept[1]}`"
+                )
 
         elif self.dst_concept[0] is None:
             # belongTo rule
-            self.concept_client.concept_define_dynamic_taxonomy_post(
-                define_dynamic_taxonomy_request=rest.DefineDynamicTaxonomyRequest(
-                    concept_type_name=f"{self.namespace}.{self.src_concept[0]}",
-                    concept_name=self.src_concept[1],
-                    dsl=self.rule_text,
+            if not is_blank(self.rule_text):
+                self.concept_client.concept_define_dynamic_taxonomy_post(
+                    define_dynamic_taxonomy_request=rest.DefineDynamicTaxonomyRequest(
+                        concept_type_name=f"{self.namespace}.{self.src_concept[0]}",
+                        concept_name=self.src_concept[1],
+                        dsl=self.rule_text,
+                    )
                 )
-            )
-            print(
-                f"Defined belongTo rule for `{self.src_concept[0]}`/`{self.src_concept[1]}`"
-            )
+                print(
+                    f"Defined belongTo rule for `{self.src_concept[0]}`/`{self.src_concept[1]}`"
+                )
+            else:
+                self.concept_client.concept_remove_dynamic_taxonomy_get(
+                    remove_dynamic_taxonomy_request=rest.RemoveDynamicTaxonomyRequest(
+                        object_concept_type_name=f"{self.namespace}.{self.src_concept[0]}",
+                        object_concept_name=self.src_concept[1]
+                    )
+                )
+                print(
+                    f"Removed belongTo rule for `{self.src_concept[0]}`/`{self.src_concept[1]}`"
+                )
 
         else:
             # leadTo rule
-            self.concept_client.concept_define_logical_causation_post(
-                define_logical_causation_request=rest.DefineLogicalCausationRequest(
-                    subject_concept_type_name=f"{self.namespace}.{self.src_concept[0]}",
-                    subject_concept_name=self.src_concept[1],
-                    predicate_name="leadTo",
-                    object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
-                    object_concept_name=self.dst_concept[1],
-                    dsl=self.rule_text,
+            if not is_blank(self.rule_text):
+                self.concept_client.concept_define_logical_causation_post(
+                    define_logical_causation_request=rest.DefineLogicalCausationRequest(
+                        subject_concept_type_name=f"{self.namespace}.{self.src_concept[0]}",
+                        subject_concept_name=self.src_concept[1],
+                        predicate_name="leadTo",
+                        object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
+                        object_concept_name=self.dst_concept[1],
+                        dsl=self.rule_text,
+                    )
                 )
-            )
-            print(
-                f"Defined leadTo rule for "
-                f"`{self.src_concept[0]}`/`{self.src_concept[1]}` -> `{self.dst_concept[0]}`/`{self.dst_concept[1]}`"
-            )
+                print(
+                    f"Defined leadTo rule for "
+                    f"`{self.src_concept[0]}`/`{self.src_concept[1]}` -> `{self.dst_concept[0]}`/`{self.dst_concept[1]}`"
+                )
+            else:
+                self.concept_client.schema_remove_logical_causation_get(
+                    remove_logical_causation_request=rest.RemoveLogicalCausationRequest(
+                        subject_concept_type_name=f"{self.namespace}.{self.src_concept[0]}",
+                        subject_concept_name=self.src_concept[1],
+                        predicate_name="leadTo",
+                        object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
+                        object_concept_name=self.dst_concept[1]
+                    )
+                )
+                print(
+                    f"Removed leadTo rule for "
+                    f"`{self.src_concept[0]}`/`{self.src_concept[1]}` -> `{self.dst_concept[0]}`/`{self.dst_concept[1]}`"
+                )
+
         self.clear_session()
 
     def load_script(self, filename):
@@ -337,7 +391,8 @@ class SPGConceptRuleMarkLang:
                     self.rule_quote_open = False
                     if len(right_strip_line) > 2:
                         self.rule_text += right_strip_line[: len(right_strip_line) - 2]
-                    self.rule_text = self.complete_rule(self.rule_text)
+                    if not is_blank(self.rule_text):
+                        self.rule_text = self.complete_rule(self.rule_text)
                     self.submit_rule()
 
                 else:
@@ -349,7 +404,10 @@ class SPGConceptRuleMarkLang:
             indent_count = len(line) - len(line.lstrip())
             if indent_count == 0:
                 # the line without indent is namespace definition or a concept definition
-                self.clear_session()
+                if len(self.src_concept) > 1 and is_blank(self.rule_text):
+                    self.submit_rule()
+                else:
+                    self.clear_session()
                 self.parse_concept(strip_line)
 
             elif indent_count > last_indent_level:
