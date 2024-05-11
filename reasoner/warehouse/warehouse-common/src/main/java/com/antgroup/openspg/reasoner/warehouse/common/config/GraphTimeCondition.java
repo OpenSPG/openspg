@@ -25,7 +25,7 @@ public class GraphTimeCondition implements Serializable {
   private long intervalMs = 0;
 
   public GraphTimeCondition(String configStr) {
-    Map<String, String> map = Splitter.on(",").withKeyValueSeparator(":").split(configStr);
+    Map<String, String> map = Splitter.on(";").withKeyValueSeparator("=").split(configStr);
     for (String key : map.keySet()) {
       String value = map.get(key);
       if ("startMs".equals(key)) {
