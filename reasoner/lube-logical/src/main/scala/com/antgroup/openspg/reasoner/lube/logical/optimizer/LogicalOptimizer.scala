@@ -25,6 +25,7 @@ object LogicalOptimizer {
 
   var LOGICAL_OPT_RULES: Seq[Rule] =
     Seq(
+      ConvertToMetaConcept,
       PatternJoinPure,
       IdEqualPushDown,
       GroupNode,
@@ -36,7 +37,8 @@ object LogicalOptimizer {
       AggregatePushDown,
       Pure,
       ProjectMerge,
-      SolvedModelPure)
+      SolvedModelPure
+      )
 
   def optimize(input: LogicalOperator, optRuleList: Seq[Rule])(implicit
       context: LogicalPlannerContext): LogicalOperator = {

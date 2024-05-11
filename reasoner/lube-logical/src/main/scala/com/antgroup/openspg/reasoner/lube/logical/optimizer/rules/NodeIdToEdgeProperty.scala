@@ -170,7 +170,7 @@ object NodeIdToEdgeProperty extends Rule {
         case AddVertex(s, props) =>
           val newProps = props.map(p => (p._1, exprRewrite(p._2, nodes, edges, map)))
           newOps.add(AddVertex(s, newProps))
-        case AddPredicate(predicate) =>
+        case AddPredicate(predicate, _) =>
           val newProps = predicate.fields.map(p => (p._1, exprRewrite(p._2, nodes, edges, map)))
           newOps.add(AddPredicate(predicate.copy(fields = newProps)))
       }

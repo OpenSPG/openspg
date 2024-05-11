@@ -84,19 +84,21 @@ object Validator extends Logging {
           val props = fields.filter(!_.resolved)
           val types = solved.getTypes(name)
           props.foreach(p => defined.add(types.head + "." + p.name))
+          val s = props.size
         case EdgeVar(name, _) =>
           val types = solved.getTypes(name)
           if (types == null || types.isEmpty) {
             throw
               SchemaException(s"Cannot find $name types in ${solved.alias2Types}, pls check schema")
           }
-          if (types.head.split("_").length == 3) {
-            // TODO linked edge
-            val edge = graph.getEdge(types.head)
-            if (!edge.resolved) {
-              defined.add(types.head)
+          types.foreach( t =>
+            if (t.split("_").length == 3) {
+              val edge = graph.getEdge(types.head)
+              if (!edge.resolved) {
+                defined.add(t)
+              }
             }
-          }
+          )
         case _ =>
       }
     }

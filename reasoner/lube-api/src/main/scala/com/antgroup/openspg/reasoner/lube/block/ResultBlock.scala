@@ -16,7 +16,11 @@ package com.antgroup.openspg.reasoner.lube.block
 import com.antgroup.openspg.reasoner.common.types.KgType
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
 import com.antgroup.openspg.reasoner.lube.common.graph._
-import com.antgroup.openspg.reasoner.lube.common.pattern.{Element, PatternElement, PredicateElement}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{
+  Element,
+  PatternElement,
+  PredicateElement
+}
 
 /**
  * every operator block tree of root is result block
@@ -74,9 +78,15 @@ sealed trait DDLOp
  * like "(A:label)-[p:property_name]->(V:String)",will convert to add property operator
  * @param s
  * @param propertyName
- * @param propertyType
+ * @param propertyType\
+ * @param isDefine
  */
-case class AddProperty(s: Element, propertyName: String, propertyType: KgType) extends DDLOp
+case class AddProperty(
+    s: Element,
+    propertyName: String,
+    propertyType: KgType,
+    isDefine: Boolean = false)
+    extends DDLOp
 
 /**
  * add vertex in graph state.
@@ -89,8 +99,9 @@ case class AddVertex(s: PatternElement, props: Map[String, Expr]) extends DDLOp
 /**
  * like "(A:label)-[p:belongTo]->(B:Concept)",will convert to add predicate operator
  * @param predicate
+ * @param isDefine
  */
-case class AddPredicate(predicate: PredicateElement) extends DDLOp
+case class AddPredicate(predicate: PredicateElement, isDefine: Boolean = false) extends DDLOp
 
 /**
  * output is add a property or add a predicate instance
