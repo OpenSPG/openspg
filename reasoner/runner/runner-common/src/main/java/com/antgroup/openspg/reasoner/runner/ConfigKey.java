@@ -153,6 +153,9 @@ public class ConfigKey {
   /** kgstate version condition */
   public static final String KG_STATE_VERSION = "kg.state.version";
 
+  /** kgstate version condition */
+  public static final String KG_STATE_TIME_RANGE = "kg.state.time.range";
+
   /** disable edge spot duplicate remove */
   public static final String KG_REASONER_DISABLE_EDGE_SPOT_DUPLICATE_REMOVE =
       "kg.reasoner.disable.edge.spot.duplicate.remove";

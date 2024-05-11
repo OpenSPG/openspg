@@ -67,9 +67,15 @@ class PropertyGraphCatalog(val propertyGraphSchema: Map[String, Set[String]]) ex
     new PropertyGraphSchema(nodes, edges)
   }
 
-  override def getConnections(): Map[AbstractConnection, Set[String]] = Map.empty
+  var connectionsMap: Map[AbstractConnection, Set[String]] = Map.empty
 
-  override def getConnection(typeName: String): Set[AbstractConnection] = Set.empty
+  def setConnections(connectionsMap: Map[AbstractConnection, Set[String]]): Unit = {
+    this.connectionsMap = connectionsMap
+  }
+
+  override def getConnections(): Map[AbstractConnection, Set[String]] = {
+    this.connectionsMap
+  }
 
   /**
    * get default node properties

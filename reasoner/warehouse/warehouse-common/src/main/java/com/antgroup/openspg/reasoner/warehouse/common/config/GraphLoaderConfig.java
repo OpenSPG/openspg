@@ -57,6 +57,9 @@ public class GraphLoaderConfig implements Serializable {
   /** graph version config */
   private GraphVersionConfig graphVersionConfig;
 
+  /** graph time condition */
+  private GraphTimeCondition graphTimeCondition;
+
   public StartVertexConfig getStartVertexConfig() {
     return startVertexConfig;
   }
@@ -327,6 +330,14 @@ public class GraphLoaderConfig implements Serializable {
 
   public void setSchemaRetryTimes(int schemaRetryTimes) {
     this.schemaRetryTimes = schemaRetryTimes;
+  }
+
+  public GraphTimeCondition getGraphTimeCondition() {
+    return graphTimeCondition;
+  }
+
+  public void setGraphTimeCondition(GraphTimeCondition graphTimeCondition) {
+    this.graphTimeCondition = graphTimeCondition;
   }
 
   /** verify config */
