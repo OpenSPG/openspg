@@ -172,8 +172,8 @@ class ThinkerRuleParser extends RuleExprParser {
 
   def constructConceptEntity(ctx: Concept_nameContext): Entity = {
     new Entity(
-      removeGraveAccentInConceptId(ctx.concept_instance_id()),
-      ctx.meta_concept_type().getText)
+      removeGraveAccentInConceptId(ctx.concept_instance_id().getText),
+      removeGraveAccentInConceptId(ctx.meta_concept_type().getText))
   }
 
   def thinkerParseExpr(ctx: ExprContext, body: ListBuffer[ClauseEntry]): Node = {
@@ -309,8 +309,8 @@ class ThinkerRuleParser extends RuleExprParser {
     this.thinkerParseValueExpression(ctx.value_expression(), body)
   }
 
-  def removeGraveAccentInConceptId(concept_instance_idCtx: Concept_instance_idContext): String = {
-    concept_instance_idCtx.getText.stripPrefix("`").stripSuffix("`")
+  def removeGraveAccentInConceptId(conceptStr: String): String = {
+    conceptStr.stripPrefix("`").stripSuffix("`")
   }
 
   def parseSpoRule(ctx: Spo_ruleContext, isHead: Boolean = false): (Element, Element, Element) = {
