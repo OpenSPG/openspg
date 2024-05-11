@@ -122,6 +122,14 @@ public class ConceptManagerImpl implements ConceptManager {
   }
 
   @Override
+  public List<TripleSemantic> getReasoningConceptsDetail(List<String> conceptTypeNames) {
+    TripleSemanticQuery query = new TripleSemanticQuery();
+    query.setObjectTypeNames(conceptTypeNames);
+    query.setSpgOntologyEnum(SPGOntologyEnum.REASONING_CONCEPT);
+    return conceptService.queryTripleSemantic(query);
+  }
+
+  @Override
   public void defineLogicalCausation(DefineTripleSemanticRequest request) {
     AssertUtils.assertParamObjectIsNotNull("dsl", request.getDsl());
     LogicalRule logicalRule =
@@ -142,6 +150,9 @@ public class ConceptManagerImpl implements ConceptManager {
             new ConceptIdentifier(request.getObjectConceptName()),
             logicalRule,
             StringUtils.isNotBlank(request.getSemanticType()) ? SPGOntologyEnum.valueOf(request.getSemanticType()) : null);
+    if (conceptSemantic.getOntologyType() != conceptSemantic.getSemanticType()) {
+      conceptSemantic.setOntologyType(conceptSemantic.getSemanticType());
+    }
     conceptService.upsertTripleSemantic(conceptSemantic);
   }
 

@@ -13,6 +13,9 @@
 
 package com.antgroup.openspg.server.biz.schema;
 
+import java.util.List;
+
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
@@ -58,4 +61,11 @@ public interface ConceptManager {
    * @return list of concept
    */
   ConceptList getConceptDetail(String conceptTypeName, String conceptName);
+
+  /**
+   * Get reasoning concepts detail.
+   * @param conceptTypeNames unique names of concept types
+   * @return list of triple semantic
+   */
+  List<TripleSemantic> getReasoningConceptsDetail(List<String> conceptTypeNames);
 }

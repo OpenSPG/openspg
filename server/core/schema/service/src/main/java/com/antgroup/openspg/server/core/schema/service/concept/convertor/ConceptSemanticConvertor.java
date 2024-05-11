@@ -69,7 +69,7 @@ public class ConceptSemanticConvertor {
 
   public static SimpleSemantic convert(TripleSemantic semantic) {
     return new SimpleSemantic(
-        semantic.getOntologyType() == null ? SPGOntologyEnum.CONCEPT : semantic.getOntologyType(),
+        semantic.getSemanticType() == null ? SPGOntologyEnum.CONCEPT : semantic.getOntologyType(),
         semantic.getSubjectIdentifier().getId(),
         semantic.getObjectIdentifier().getId(),
         semantic.getPredicateIdentifier(),

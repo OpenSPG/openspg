@@ -39,6 +39,7 @@ class SPGConceptRuleMarkLang:
     dst_concept = ()
     predicate = None
     is_reasoning = False
+    is_priority = False
 
     def __init__(self, filename):
         self.current_line_num = 0
@@ -63,8 +64,22 @@ class SPGConceptRuleMarkLang:
             self.namespace = namespace_match.group(1)
             return
 
+        reasoning_concept_priority_match = re.match(
+            r"^Priority\s*\(`?([a-zA-Z0-9\.]+)`?\):$",
+            expression,
+        )
+        if reasoning_concept_priority_match:
+            assert self.namespace is not None, self.error_msg(
+                "please define namespace first"
+            )
+
+            self.dst_concept = (reasoning_concept_priority_match.group(1), "_root")
+            self.is_reasoning = True
+            self.is_priority = True
+            return
+
         reasoning_concept_match = re.match(
-            r"^\(`([a-zA-Z0-9\.]+)`/`([^`]+)`\):$",
+            r"^\(`?([a-zA-Z0-9\.]+)`?/`([^`]+)`\):$",
             expression,
         )
         if reasoning_concept_match:
@@ -77,7 +92,7 @@ class SPGConceptRuleMarkLang:
             return
 
         reasoning_po_match = re.match(
-            r"^\[([^\]]+)\]->\(`([a-zA-Z0-9\.]+)`/`([^`]+)`\):$",
+            r"^\[([^\]]+)\]->\(`?([a-zA-Z0-9\.]+)`?/`([^`]+)`\):$",
             expression,
         )
         if reasoning_po_match:
@@ -91,7 +106,7 @@ class SPGConceptRuleMarkLang:
             return
 
         reasoning_spo_match = re.match(
-            r"^\(`([a-zA-Z0-9\.]+)`/`([^`]+)`\)-\[([^\]]+)\]->\(`([a-zA-Z0-9\.]+)`/`([^`]+)`\):$",
+            r"^\(`?([a-zA-Z0-9\.]+)`?/`([^`]+)`\)-\[([^\]]+)\]->\(`([a-zA-Z0-9\.]+)`/`([^`]+)`\):$",
             expression,
         )
         if reasoning_spo_match:
@@ -106,7 +121,7 @@ class SPGConceptRuleMarkLang:
             return
 
         type_match = re.match(
-            r"^`([a-zA-Z0-9\.]+)`/`([^`]+)`:(\s*?([a-zA-Z0-9\.]+)/`([^`]+)`)?$",
+            r"^`?([a-zA-Z0-9\.]+)`?/`([^`]+)`:(\s*?([a-zA-Z0-9\.]+)/`([^`]+)`)?$",
             expression,
         )
         if type_match:
@@ -184,20 +199,25 @@ class SPGConceptRuleMarkLang:
                             break
 
             if self.is_reasoning:
-                if subject_type is None and self.predicate is None:
+                if subject_type is None and self.predicate is None and not self.is_priority:
                     head = (
-                            f"Define (o:`{object_type}`/`{object_name}`)"
+                            f"Define ({object_type}/`{object_name}`)"
                             + " {\n"
                     )
                 elif subject_type is None and self.predicate is not None:
                     head = (
-                            f"Define [p:{predicate_name}]->(o:`{object_type}`/`{object_name}`)"
+                            f"Define ()-[:{predicate_name}]->(:{object_type}/`{object_name}`)"
+                            + " {\n"
+                    )
+                elif self.is_priority:
+                    head = (
+                            f"DefinePriority ({object_type})"
                             + " {\n"
                     )
                 else:
                     head = (
-                            f"Define (s:`{object_type}`/`{object_name}`)-[p:{predicate_name}]->"
-                            f"(o:`{object_type}`/`{object_name}`)"
+                            f"Define (:{object_type}/`{object_name}`)-[:{predicate_name}]->"
+                            f"(:{object_type}/`{object_name}`)"
                             + " {\n"
                     )
             elif subject_name is None:
@@ -271,6 +291,7 @@ class SPGConceptRuleMarkLang:
         self.rule_text = ""
         self.predicate = None
         self.is_reasoning = False
+        self.is_priority = False
 
     def submit_rule(self):
         """
@@ -288,6 +309,7 @@ class SPGConceptRuleMarkLang:
                         predicate_name="_conclude" if self.predicate is None else self.predicate,
                         object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
                         object_concept_name=self.dst_concept[1],
+                        semantic_type="REASONING_CONCEPT",
                         dsl=self.rule_text,
                     )
                 )
@@ -303,6 +325,7 @@ class SPGConceptRuleMarkLang:
                         predicate_name="_conclude" if self.predicate is None else self.predicate,
                         object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
                         object_concept_name=self.dst_concept[1],
+                        semantic_type="REASONING_CONCEPT"
                     )
                 )
                 print(
