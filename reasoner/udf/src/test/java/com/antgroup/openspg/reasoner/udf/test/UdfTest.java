@@ -75,6 +75,46 @@ public class UdfTest {
   }
 
   @Test
+  public void testJsonGet1() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    String params = "[{'v':'123'}]";
+    IUdfMeta udfMeta =
+        mng.getUdfMeta("json_get", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
+    Object rst = udfMeta.invoke(params, "$.v");
+    Assert.assertEquals(rst, "123");
+  }
+
+  @Test
+  public void testJsonGet2() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    String params = "[{'v':'123'}, {'k':'456'}]";
+    IUdfMeta udfMeta =
+        mng.getUdfMeta("json_get", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
+    Object rst = udfMeta.invoke(params, "$.k");
+    Assert.assertEquals(rst, "456");
+  }
+
+  @Test
+  public void testJsonGet3() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    String params = "[{'v': {'v1': '111', 'v2': '222'}}, {'k': {'k1': '333', 'k2': '444'}}]";
+    IUdfMeta udfMeta =
+        mng.getUdfMeta("json_get", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
+    Object rst = udfMeta.invoke(params, "$.k.k2");
+    Assert.assertEquals(rst, "444");
+  }
+
+  @Test
+  public void testJsonGet4() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    String params = "[{'案由': '打架斗殴', '日期': '20240101'}, {'案由': '制造毒品', '日期': '20240202'}]";
+    IUdfMeta udfMeta =
+        mng.getUdfMeta("json_get", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
+    Object rst = udfMeta.invoke(params, "$[案由 rlike '(.*)毒品(.*)'].案由");
+    Assert.assertEquals(rst, "制造毒品");
+  }
+
+  @Test
   public void testRdfProperty() {
     UdfMng mng = UdfMngFactory.getUdfMng();
     String params =

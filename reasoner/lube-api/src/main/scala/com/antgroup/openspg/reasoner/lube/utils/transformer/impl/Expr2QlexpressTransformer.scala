@@ -22,14 +22,12 @@ import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 import com.antgroup.openspg.reasoner.lube.utils.transformer.ExprTransformer
 
-
 class Expr2QlexpressTransformer(
-                                 fieldNameTransFunc: JavaFunctionCaller[String, String]
-                                 = new JavaFunctionCaller[String, String] {
-                                   override def apply(t: String): String = t
-                                 }
-                               )
-  extends ExprTransformer[String] {
+    fieldNameTransFunc: JavaFunctionCaller[String, String] =
+      new JavaFunctionCaller[String, String] {
+        override def apply(t: String): String = t
+      })
+    extends ExprTransformer[String] {
 
   val binaryOpSetTrans: PartialFunction[BinaryOpSet, String] = {
     case BAdd => " + "
@@ -64,24 +62,28 @@ class Expr2QlexpressTransformer(
   def lambdaFuncParse(curVariableSet: Set[String], lambdaFunc: Expr): (String, String) = {
     val qlExpress = transform(lambdaFunc).head
     val fields = ExprUtils.getAllInputFieldInRule(lambdaFunc, Set.empty, Set.empty)
-    val params = fields.map(f => {
-      if (curVariableSet.contains(f.name)) {
-        null
-      } else {
-        f match {
-          case IRNode(name, fields) => fields.map(attr => name + "." + attr).toList
-          case _ => List.apply(f.name)
+    val params = fields
+      .map(f => {
+        if (curVariableSet.contains(f.name)) {
+          null
+        } else {
+          f match {
+            case IRNode(name, fields) => fields.map(attr => name + "." + attr).toList
+            case _ => List.apply(f.name)
+          }
         }
-      }
-    }).filter(_ != null).flatten
+      })
+      .filter(_ != null)
+      .flatten
     if (params.nonEmpty) {
-      (qlExpress, "context_capturer([" + params.map(v => "\"" + v +"\"").mkString(",") +
-        "],[" + params.mkString(",") + "])")
+      (
+        qlExpress,
+        "context_capturer([" + params.map(v => "\"" + v + "\"").mkString(",") +
+          "],[" + params.mkString(",") + "])")
     } else {
       (qlExpress, null)
     }
   }
-
 
   def trans(e: Expr, params: List[String]): String = {
     val opTrans: PartialFunction[Expr, String] = {
@@ -89,7 +91,7 @@ class Expr2QlexpressTransformer(
         val opStr = binaryOpSetTrans(name)
         name match {
           case BIn | BLike | BRLike | BAssign | BEqual | BNotEqual | BGreaterThan |
-               BNotGreaterThan | BSmallerThan | BNotSmallerThan =>
+              BNotGreaterThan | BSmallerThan | BNotSmallerThan =>
             params.head + opStr + params(1)
           case _ =>
             val leftStr = l match {
@@ -122,10 +124,10 @@ class Expr2QlexpressTransformer(
             val initValueStr = transform(initValue).head
             val lambdaFuncRst = lambdaFuncParse(curVariableSet, reduceFunc)
             if (lambdaFuncRst._2 == null) {
-              "repeat_reduce(__slot__, %s, \"%s\", \"%s\", \"%s\")"
+              "repeat_reduce(__slot__, %s, '%s', '%s', '%s')"
                 .format(initValueStr, res, ele, lambdaFuncRst._1)
             } else {
-              "repeat_reduce(__slot__, %s, \"%s\", \"%s\", \"%s\", %s)"
+              "repeat_reduce(__slot__, %s, '%s', '%s', '%s', %s)"
                 .format(initValueStr, res, ele, lambdaFuncRst._1, lambdaFuncRst._2)
 
             }
@@ -169,6 +171,10 @@ class Expr2QlexpressTransformer(
         "[" + l + "]"
       case Parameter(paramName) =>
         paramName
+      case ConceptExpr(conceptName) =>
+        "get_value(\"" + conceptName + "\")"
+      case TripleExpr(subject, predicate, objectValue) =>
+        "get_spo(%s, %s, %s)".format(subject, predicate, objectValue)
     }
     opTrans(e)
   }

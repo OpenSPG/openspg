@@ -113,6 +113,8 @@ case object Sum extends AggregatorOpSet {}
 case object Avg extends AggregatorOpSet {}
 case object Count extends AggregatorOpSet {}
 
+case object ConcatAgg extends AggregatorOpSet {}
+
 case object First extends AggregatorOpSet
 
 final case class AggUdf(name: String, funcArgs: List[Expr]) extends AggregatorOpSet {}
@@ -387,6 +389,23 @@ final case class Ref(refName: String) extends TypeValidatedExpr {
  * @param paramName
  */
 final case class Parameter(paramName: String) extends TypeValidatedExpr {
+
+  override def withNewChildren(newChildren: Array[Expr]): Expr =
+    throw UnsupportedOperationException("unsupported")
+
+  override def children: Array[Expr] = Array.empty
+}
+
+final case class ConceptExpr(conceptName: String) extends TypeValidatedExpr {
+
+  override def withNewChildren(newChildren: Array[Expr]): Expr =
+    throw UnsupportedOperationException("unsupported")
+
+  override def children: Array[Expr] = Array.empty
+}
+
+final case class TripleExpr(sAlias: String, pAlias: String, oAlias: String)
+    extends TypeValidatedExpr {
 
   override def withNewChildren(newChildren: Array[Expr]): Expr =
     throw UnsupportedOperationException("unsupported")

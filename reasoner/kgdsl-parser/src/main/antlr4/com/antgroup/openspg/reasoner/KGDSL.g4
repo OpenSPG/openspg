@@ -190,9 +190,9 @@ one_edge_pattern: node_pattern (edge_pattern  node_pattern)+ ;
 edge_pattern : (full_edge_pattern|abbreviated_edge_pattern) graph_pattern_quantifier?;
 
 full_edge_pattern : full_edge_pointing_right|full_edge_pointing_left|full_edge_any_direction ;
-full_edge_pointing_right : minus_left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? bracket_right_arrow ;
-full_edge_pointing_left : left_arrow_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket_minus ;
-full_edge_any_direction : minus_left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket_minus;
+full_edge_pointing_right : minus_sign left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket right_arrow ;
+full_edge_pointing_left : left_arrow_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket minus_sign ;
+full_edge_any_direction : minus_sign left_bracket element_pattern_declaration_and_filler (edge_pattern_pernodelimit_clause)? right_bracket minus_sign;
 
 edge_pattern_pernodelimit_clause : per_node_limit oC_IntegerLiteral ;
 per_node_limit : PER_NODE_LIMIT ;
@@ -212,8 +212,9 @@ label_name : entity_type | concept_name;
 entity_type : identifier | prefix_name;
 prefix_name : identifier period identifier ;
 concept_name : meta_concept_type solidus concept_instance_id ;
-meta_concept_type : identifier ;
-concept_instance_id : identifier ;
+meta_concept_type : identifier | prefix_name;
+// `sub1-sub2`
+concept_instance_id : EscapedSymbolicName;
 
 linked_edge : function_expr;
 
@@ -285,6 +286,7 @@ list_common_agg_if_name :
     SUMIF|
     AVGIF|
     COUNTIF|
+    CONCATAGGIF|
     MINIF|
     MAXIF;
 
@@ -370,6 +372,7 @@ graph_common_agg_if_name :
     SUMIF|
     AVGIF|
     COUNTIF|
+    CONCATAGGIF|
     MINIF|
     MAXIF;
 
@@ -503,6 +506,7 @@ MAX : ('M' | 'm')('A' | 'a')('X' | 'x') ;
 SUMIF : ('S' | 's')('U' | 'u')('M' | 'm')('I' | 'i')('F' | 'f') ;
 AVGIF : ('A' | 'a')('V' | 'v')('G' | 'g')('I' | 'i')('F' | 'f') ;
 COUNTIF : ('C' | 'c')('O' | 'o')('U' | 'u')('N' | 'n')('T' | 't')('I' | 'i')('F' | 'f') ;
+CONCATAGGIF : ('C' | 'c')('O' | 'o')('N' | 'n')('C' | 'c')('A' | 'a')('T' | 't')('A' | 'a')('G' | 'g')('G' | 'g')('I' | 'i')('F' | 'f') ;
 MINIF : ('M' | 'm')('I' | 'i')('N' | 'n')('I' | 'i')('F' | 'f') ;
 MAXIF : ('M' | 'm')('A' | 'a')('X' | 'x')('I' | 'i')('F' | 'f') ;
 IN  : ('I' | 'i')('N' | 'n') ;
@@ -537,6 +541,8 @@ REPEAT : 'repeat' ;
 WHERE : ('W' | 'w')('H' | 'h')('E' | 'e')('R' | 'r')('E' | 'e') ;
 MATCH : ('M' | 'm')('A' | 'a')('T' | 't')('C' | 'c')('H' | 'h') ;
 RETURN : ('R' | 'r')('E' | 'e')('T' | 't')('U' | 'u')('R' | 'r')('N' | 'n') ;
+DEFINE_PRIORITY : 'DefinePriority' ;
+DESCRIPTION : 'Description';
 // rule 表达式
 or : OR_Latter|OR_Symb;
 not : NOT_Latter | NOT_Symb;
@@ -610,7 +616,7 @@ binary_lambda_args : identifier comma identifier ;
 logic_value_expression : logic_term (or logic_term)* ;
 logic_term : logic_factor (AND logic_factor)* ;
 logic_factor : (not)? logic_test ;
-logic_test : expr ( (IS ( NOT_Latter )?|equals_operator|not_equals_operator) truth_value )? ;
+logic_test : (spo_rule | concept_name | expr) ( (IS ( NOT_Latter )?|equals_operator|not_equals_operator) truth_value )? ;
 truth_value : TRUE|FALSE|NULL ;
 
 
@@ -625,7 +631,7 @@ assignment_expression : identifier assignment_operator expression_set;
 project_value_expression : term (plus_sign term| minus_sign term) * ;
 term : factor (asterisk factor| solidus factor| percent factor)* ;
 factor : ( sign )? project_primary ;
-project_primary : value_expression_primary|numeric_value_function ;
+project_primary : concept_name | value_expression_primary|numeric_value_function ;
 
 //数值计算函数
 numeric_value_function :
@@ -653,7 +659,7 @@ return_item_alias : (AS|'as') identifier ;
 dsl_special_character : space|ampersand|asterisk|colon|colon_equals|comma|dollar_sign|double_quote|double_colon|equals_operator|exclamation_mark|grave_accent|greater_than_operator|left_brace|left_bracket|left_paren|less_than_operator|minus_sign|period|plus_sign|question_mark|quote|reverse_solidus|right_brace|right_bracket|right_paren|semicolon|solidus|underscore|vertical_bar|percent|circumflex ;
 // other_language_character : 'TODO_OTHER_LANGUAGE_CHARACTER' ;
 grave_accent : '`' ;
-bracket_right_arrow : ']->' ;
+//bracket_right_arrow : ']->' ;
 concatenation_operator : '||' ;
 multiset_alternation_operator : '|+|' ;
 like_operator : LIKE ;
@@ -666,8 +672,8 @@ not_equals_operator : '<>'|'!=' ;
 right_arrow : '->' ;
 both_arrow : '<->' ;
 left_arrow_bracket : '<-[' ;
-minus_left_bracket : '-[' ;
-right_bracket_minus : ']-' ;
+//minus_left_bracket : '-[' ;
+//right_bracket_minus : ']-' ;
 bracketed_comment_introducer : '/*' ;
 bracketed_comment_terminator : '*/' ;
 escaped_grave_accent : '``' ;
@@ -949,3 +955,74 @@ fragment VT : [\u000B] ;
 fragment US : [\u001F] ;
 
 fragment ID_Start : [\p{ID_Start}] ;
+
+// ################################################ Simplify DSL ################################################
+
+thinker_script: (
+		define_rule_on_concept
+		| define_rule_on_relation_to_concept
+		| define_proiority_rule_on_concept
+)*;
+
+/*
+Define (患者状态/`缺少血肌酐数据`) {
+	!血肌酐
+}
+*/
+define_rule_on_concept : define_rule_on_concept_structure description?;
+
+/*
+Define (Med.drug)-[基本用药方案]->(药品/`ACEI+噻嗪类利尿剂`) {
+  疾病/`高血压` and 药品/`多药方案`
+}
+*/
+define_rule_on_relation_to_concept : define_rule_on_relation_to_concept_structure (description)?;
+
+/*
+DefinePriority(危险水平分层) {
+  超高危=100
+  高危=80
+  中危=50
+  低危=10
+}
+*/
+define_proiority_rule_on_concept : define_priority_rule_on_concept_structure description?;
+
+define_rule_on_concept_structure:
+    the_define_structure_symbol concept_declaration rule_and_action_body;
+
+concept_declaration: left_paren concept_name right_paren;
+
+define_rule_on_relation_to_concept_structure:
+    the_define_structure_symbol spo_rule rule_and_action_body;
+
+spo_rule: node_pattern minus_sign rule_name_declaration right_arrow node_pattern;
+
+rule_name_declaration : left_bracket element_pattern_declaration_and_filler right_bracket ;
+
+the_define_priority_symbol : DEFINE_PRIORITY;
+
+define_priority_rule_on_concept_structure:
+    the_define_priority_symbol priority_declaration assiginment_structure;
+
+priority_declaration: variable_declaration;
+
+variable_declaration: left_paren entity_type right_paren;
+
+the_description_symbol : DESCRIPTION;
+
+description: the_description_symbol colon unbroken_character_string_literal;
+
+rule_and_action_body: left_brace rule_body_content (action_body_structure)? right_brace;
+
+rule_body_content : (identifier explain? colon logical_statement)*;
+
+logical_statement : value_expression;
+
+action_body_structure : create_action_symbol assiginment_structure;
+
+assiginment_structure : left_brace muliti_assignment_statement right_brace;
+
+muliti_assignment_statement : assignment_statement*;
+
+assignment_statement : identifier assignment_operator logical_statement;

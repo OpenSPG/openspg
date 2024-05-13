@@ -37,4 +37,15 @@ public class RepeatReduce {
     }
     return preValue;
   }
+
+  @UdfDefine(name = "repeat_reduce")
+  public Object reduce(
+      List<Object> itemList,
+      Object defaultValue,
+      Character preName,
+      Character curName,
+      String express) {
+    return reduce(
+        itemList, defaultValue, String.valueOf(preName), String.valueOf(curName), express);
+  }
 }

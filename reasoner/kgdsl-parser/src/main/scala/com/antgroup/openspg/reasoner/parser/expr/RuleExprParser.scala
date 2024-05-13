@@ -26,7 +26,6 @@ import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, ProjectRule, R
 import com.antgroup.openspg.reasoner.parser.LexerInit
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory
 
-
 /**
  * This is the ANTLR parsing class for expressions
  */
@@ -665,8 +664,10 @@ class RuleExprParser extends Serializable {
   }
 
   def parseGraphAliasElementList(ctx: Graph_alias_element_listContext): List[Expr] = {
-    val aliasSet = ctx.graph_alias_with_property()
-      .asScala.map(k => parseRefExpr(k.graph_alias(), k.property_name()))
+    val aliasSet = ctx
+      .graph_alias_with_property()
+      .asScala
+      .map(k => parseRefExpr(k.graph_alias(), k.property_name()))
     aliasSet.toList
   }
 
@@ -763,6 +764,7 @@ class RuleExprParser extends Serializable {
       case "AVGIF" => Avg
       case "MINIF" => Min
       case "MAXIF" => Max
+      case "CONCATAGGIF" => ConcatAgg
     }
     AggIfOpExpr(AggOpExpr(opAggNameExpr, opEleExpr), filterExpr)
   }
@@ -809,6 +811,7 @@ class RuleExprParser extends Serializable {
       case "AVGIF" => Avg
       case "MINIF" => Min
       case "MAXIF" => Max
+      case "CONCATAGGIF" => ConcatAgg
     }
     AggIfOpExpr(AggOpExpr(opExpr, expr), filterExpr)
   }
@@ -872,9 +875,7 @@ class RuleExprParser extends Serializable {
   def parseProjectRuleExpression(ctx: Project_rule_expressionContext): Rule = {
     val expr = parseExpressionSet(ctx.expression_set())
     if (ctx.property_name() != null) {
-      ProjectRule(
-        IRProperty(ctx.identifier().getText, ctx.property_name().getText),
-        expr)
+      ProjectRule(IRProperty(ctx.identifier().getText, ctx.property_name().getText), expr)
     } else {
       ProjectRule(IRVariable(ctx.identifier().getText), expr)
     }

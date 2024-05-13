@@ -16,7 +16,11 @@ package com.antgroup.openspg.reasoner.lube.logical.planning
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.constants.Constants
-import com.antgroup.openspg.reasoner.common.exception.{NotImplementedException, SchemaException, UnsupportedOperationException}
+import com.antgroup.openspg.reasoner.common.exception.{
+  NotImplementedException,
+  SchemaException,
+  UnsupportedOperationException
+}
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
@@ -82,8 +86,8 @@ object LogicalPlanner {
         val newDDLs = new mutable.HashSet[DDLOp]()
         for (ddl <- d.ddlOp) {
           ddl match {
-            case ddlOp @ AddProperty(_, _, _) => newDDLs.add(ddlOp)
-            case ddlOp @ AddPredicate(predicate) =>
+            case ddlOp @ AddProperty(_, _, _, _) => newDDLs.add(ddlOp)
+            case ddlOp @ AddPredicate(predicate, _) =>
               val map = predicate.fields.map(tuple => {
                 tuple._2 match {
                   case expr: VConstant => tuple
@@ -398,7 +402,7 @@ object LogicalPlanner {
         val starts = new mutable.HashSet[String]()
         for (ddl <- ddlOp) {
           ddl match {
-            case AddProperty(s, _, _) =>
+            case AddProperty(s, _, _, _) =>
               if (starts.isEmpty) {
                 starts.add(s.alias)
               } else {
@@ -406,7 +410,7 @@ object LogicalPlanner {
                 starts.clear()
                 starts.++=(common)
               }
-            case AddPredicate(p) =>
+            case AddPredicate(p, _) =>
               if (starts.isEmpty) {
                 starts.++=(Set.apply(p.source.alias, p.target.alias))
               } else {
