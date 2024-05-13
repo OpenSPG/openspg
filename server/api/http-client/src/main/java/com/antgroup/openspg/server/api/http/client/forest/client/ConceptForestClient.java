@@ -13,12 +13,16 @@
 
 package com.antgroup.openspg.server.api.http.client.forest.client;
 
+import java.util.List;
+
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SPGTypeRequest;
 import com.antgroup.openspg.server.api.http.client.util.HttpClientConstants;
 import com.dtflys.forest.annotation.Address;
 import com.dtflys.forest.annotation.BodyType;
@@ -37,6 +41,9 @@ public interface ConceptForestClient {
 
   @Get(value = "/public/v1/concept/queryConcept")
   ForestResponse<ConceptList> queryConcept(@Query ConceptRequest request);
+
+  @Get(value = "/public/v1/concept/getReasoningConcept")
+  ForestResponse<List<TripleSemantic>> getReasoningConcept(@Query SPGTypeRequest request);
 
   @Post(value = "/public/v1/concept/defineDynamicTaxonomy")
   ForestResponse<Boolean> defineDynamicTaxonomy(@JSONBody DefineDynamicTaxonomyRequest request);

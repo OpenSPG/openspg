@@ -13,6 +13,9 @@
 
 package com.antgroup.openspg.server.api.facade.client;
 
+import java.util.List;
+
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
@@ -20,6 +23,7 @@ import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSeman
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.api.facade.ApiResponse;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SPGTypeRequest;
 
 /**
  * The interface to query concepts that defined under a concept type, also provides method to define
@@ -37,6 +41,13 @@ public interface ConceptFacade {
    * @return The list of concepts
    */
   ApiResponse<ConceptList> queryConcept(ConceptRequest request);
+
+  /**
+   * Query reasoning concepts detail by the concept types, the interface returned triple semantic object for rule detail.
+   * @param request
+   * @return
+   */
+  ApiResponse<List<TripleSemantic>> getReasoningConceptsDetail(SPGTypeRequest request);
 
   /**
    * Define dynamic taxonomy rule between an entity and a concept, Currently the taxonomic predicate

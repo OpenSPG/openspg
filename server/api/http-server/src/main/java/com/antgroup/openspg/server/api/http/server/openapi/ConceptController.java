@@ -13,12 +13,16 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
+import java.util.List;
+
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SPGTypeRequest;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
@@ -56,6 +60,24 @@ public class ConceptController extends BaseController {
           }
         });
   }
+
+    @RequestMapping(value = "/getReasoningConcept", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<Object> getReasoningConcept(SPGTypeRequest request) {
+        return HttpBizTemplate.execute(
+            new HttpBizCallback<List<TripleSemantic>>() {
+                @Override
+                public void check() {
+                    AssertUtils.assertParamObjectIsNotNull("request", request);
+                    AssertUtils.assertParamObjectIsNotNull("conceptTypeName", request.getNameList());
+                }
+
+                @Override
+                public List<TripleSemantic> action() {
+                    return conceptManager.getReasoningConceptsDetail(request.getNameList());
+                }
+            });
+    }
 
   @RequestMapping(value = "/defineDynamicTaxonomy", method = RequestMethod.POST)
   @ResponseBody

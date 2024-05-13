@@ -13,7 +13,11 @@
 
 package com.antgroup.openspg.server.api.facade.dto.schema.request;
 
+import java.util.List;
+
 import com.antgroup.openspg.server.common.model.base.BaseRequest;
+import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
 
 /** Query schema type. */
 public class SPGTypeRequest extends BaseRequest {
@@ -23,8 +27,17 @@ public class SPGTypeRequest extends BaseRequest {
   /** The unique name of entity to query. */
   private String name;
 
+  private List<String> lstName;
+
   public String getName() {
     return name;
+  }
+
+  public List<String> getNameList() {
+    if (CollectionUtils.isEmpty(lstName)) {
+      lstName = Lists.newArrayList(name);
+    }
+    return lstName;
   }
 
   public SPGTypeRequest setName(String name) {
@@ -36,6 +49,10 @@ public class SPGTypeRequest extends BaseRequest {
 
   public SPGTypeRequest(String name) {
     this.name = name;
+  }
+
+  public SPGTypeRequest(List<String> lst) {
+    this.lstName = lst;
   }
 
   @Override
