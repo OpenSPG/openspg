@@ -30,7 +30,6 @@ import com.antgroup.openspg.reasoner.lube.common.pattern.PatternElement;
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
-import com.antgroup.openspg.reasoner.warehouse.utils.DebugVertexIdSet;
 import com.google.common.collect.Sets;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -92,6 +91,7 @@ public class PatternMatcher implements Serializable {
     }
     IVertex<IVertexId, IProperty> vertex = graphState.getVertex(id, endVersion, vertexRule);
     if (null == vertex) {
+      log.warn("PatternMatcher patternMatch not found in graph state id=" + id.toString());
       return null;
     }
 
@@ -101,6 +101,13 @@ public class PatternMatcher implements Serializable {
     // check root types
     PatternElement patternElement = pattern.root();
     if (!patternElement.typeNames().contains(RunnerUtil.getVertexType(vertex))) {
+      log.warn(
+          "PatternMatcher patternMatch typeNames not contains id="
+              + id.toString()
+              + " type: "
+              + RunnerUtil.getVertexType(vertex)
+              + " types:"
+              + patternElement.typeNames());
       return null;
     }
 
@@ -108,13 +115,13 @@ public class PatternMatcher implements Serializable {
     Map<String, Object> vertexContext = RunnerUtil.vertexContext(vertex, pattern.root().alias());
     if (!rootVertexRuleList.isEmpty()
         && !RuleRunner.getInstance().check(vertexContext, rootVertexRuleList, this.taskId)) {
-      if (DebugVertexIdSet.DEBUG_VERTEX_ID_SET.contains(vertex.getId())) {
-        log.info(
-            "PatternMatch check vertex rule false, vertexContext="
-                + JSON.toJSONString(vertexContext)
-                + "rules = "
-                + JSON.toJSONString(rootVertexRuleList));
-      }
+      //      if (DebugVertexIdSet.DEBUG_VERTEX_ID_SET.contains(vertex.getId())) {
+      log.info(
+          "PatternMatch check vertex rule false, vertexContext="
+              + JSON.toJSONString(vertexContext)
+              + "rules = "
+              + JSON.toJSONString(rootVertexRuleList));
+      //      }
       return null;
     }
 
@@ -144,6 +151,7 @@ public class PatternMatcher implements Serializable {
         }
       }
     }
+    log.info("PatternMatch before directionArrayListMap:" + JSON.toJSONString(edgeTypeDirectionMap) + " patternConnections:" + patternConnections);
 
     // query edges from graph state
     for (String edgeType : edgeTypeDirectionMap.keySet()) {
@@ -162,6 +170,9 @@ public class PatternMatcher implements Serializable {
         edgeList.addAll(edges);
       }
     }
+
+    log.info("PatternMatch after directionArrayListMap:" + JSON.toJSONString(edgeTypeDirectionMap));
+
 
     // do edge match
     for (Connection patternConnection : patternConnections) {
@@ -209,21 +220,21 @@ public class PatternMatcher implements Serializable {
               vertexContext, willMatchEdgeList, patternConnection, pattern, edgeRuleMap, limit);
       if (CollectionUtils.isEmpty(validEdges)) {
         // one edge pattern connection no match
-        if (DebugVertexIdSet.DEBUG_VERTEX_ID_SET.contains(vertex.getId())) {
-          log.info(
-              "PatternMatch edge not match, vertexContext="
-                  + JSON.toJSONString(vertexContext)
-                  + ", willMatchEdgeList="
-                  + JSON.toJSONString(willMatchEdgeList)
-                  + ", patternConnection="
-                  + patternConnections
-                  + ", pattern="
-                  + pattern
-                  + ", edgeRuleMap="
-                  + JSON.toJSONString(edgeRuleMap)
-                  + ", limit="
-                  + limit);
-        }
+        //        if (DebugVertexIdSet.DEBUG_VERTEX_ID_SET.contains(vertex.getId())) {
+        log.info(
+            "PatternMatch edge not match, vertexContext="
+                + JSON.toJSONString(vertexContext)
+                + ", willMatchEdgeList="
+                + JSON.toJSONString(willMatchEdgeList)
+                + ", patternConnection="
+                + patternConnections
+                + ", pattern="
+                + pattern
+                + ", edgeRuleMap="
+                + JSON.toJSONString(edgeRuleMap)
+                + ", limit="
+                + limit);
+        //        }
         return null;
       }
       adjEdges.put(edgeAlias, validEdges);

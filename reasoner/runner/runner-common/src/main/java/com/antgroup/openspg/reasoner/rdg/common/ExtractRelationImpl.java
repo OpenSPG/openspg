@@ -101,7 +101,7 @@ public class ExtractRelationImpl implements Serializable {
           break;
         }
       }
-      if (!this.propertyRuleMap.containsKey(Constants.EDGE_TO_ID_KEY)) {
+      if (!this.propertyRuleMap.containsKey(Constants.EDGE_TO_ID_KEY) && edgeAlias != null) {
         this.propertyRuleMap.put(
             Constants.EDGE_TO_ID_KEY,
             Lists.newArrayList(

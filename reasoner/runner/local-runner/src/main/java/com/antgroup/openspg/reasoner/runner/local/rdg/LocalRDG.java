@@ -14,7 +14,6 @@
 package com.antgroup.openspg.reasoner.runner.local.rdg;
 
 import com.alibaba.fastjson.JSON;
-
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
