@@ -616,7 +616,7 @@ binary_lambda_args : identifier comma identifier ;
 logic_value_expression : logic_term (or logic_term)* ;
 logic_term : logic_factor (AND logic_factor)* ;
 logic_factor : (not)? logic_test ;
-logic_test : (concept_name |expr) ( (IS ( NOT_Latter )?|equals_operator|not_equals_operator) truth_value )? ;
+logic_test : (spo_rule | concept_name | expr) ( (IS ( NOT_Latter )?|equals_operator|not_equals_operator) truth_value )? ;
 truth_value : TRUE|FALSE|NULL ;
 
 
@@ -994,9 +994,11 @@ define_rule_on_concept_structure:
 concept_declaration: left_paren concept_name right_paren;
 
 define_rule_on_relation_to_concept_structure:
-    the_define_structure_symbol variable_declaration minus_sign rule_name_declaration right_arrow concept_declaration rule_and_action_body;
+    the_define_structure_symbol spo_rule rule_and_action_body;
 
-rule_name_declaration : left_bracket identifier right_bracket ;
+spo_rule: node_pattern minus_sign rule_name_declaration right_arrow node_pattern;
+
+rule_name_declaration : left_bracket element_pattern_declaration_and_filler right_bracket ;
 
 the_define_priority_symbol : DEFINE_PRIORITY;
 

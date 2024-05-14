@@ -13,15 +13,75 @@
 
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
+import java.util.Objects;
 import lombok.Data;
 
 @Data
 public class Predicate extends Element {
   private String name;
+  private String alias;
 
   public Predicate() {}
 
   public Predicate(String name) {
     this.name = name;
+  }
+
+  public Predicate(String name, String alias) {
+    this.name = name;
+    this.alias = alias;
+  }
+
+  /**
+   * Getter method for property <tt>name</tt>.
+   *
+   * @return property value of name
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Setter method for property <tt>name</tt>.
+   *
+   * @param name value to be assigned to property name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+   * Getter method for property <tt>alias</tt>.
+   *
+   * @return property value of alias
+   */
+  public String getAlias() {
+    return alias;
+  }
+
+  /**
+   * Setter method for property <tt>alias</tt>.
+   *
+   * @param alias value to be assigned to property alias
+   */
+  public void setAlias(String alias) {
+    this.alias = alias;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Predicate)) {
+      return false;
+    }
+    Predicate predicate = (Predicate) o;
+    return Objects.equals(name, predicate.name) && Objects.equals(alias, predicate.alias);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, alias);
   }
 }

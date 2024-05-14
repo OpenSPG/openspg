@@ -12,6 +12,7 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
+import java.util.Objects;
 import lombok.Data;
 
 @Data
@@ -99,5 +100,24 @@ public class Triple extends Element {
    */
   public void setObject(Element object) {
     this.object = object;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof Triple)) {
+      return false;
+    }
+    Triple triple = (Triple) o;
+    return Objects.equals(subject, triple.subject)
+        && Objects.equals(predicate, triple.predicate)
+        && Objects.equals(object, triple.object);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(subject, predicate, object);
   }
 }

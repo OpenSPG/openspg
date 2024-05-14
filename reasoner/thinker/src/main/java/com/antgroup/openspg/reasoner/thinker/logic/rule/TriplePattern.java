@@ -15,6 +15,7 @@ package com.antgroup.openspg.reasoner.thinker.logic.rule;
 
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
+import java.util.Objects;
 
 public class TriplePattern implements ClauseEntry {
   private Triple triple;
@@ -46,5 +47,22 @@ public class TriplePattern implements ClauseEntry {
    */
   public void setTriple(Triple triple) {
     this.triple = triple;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof TriplePattern)) {
+      return false;
+    }
+    TriplePattern that = (TriplePattern) o;
+    return Objects.equals(triple, that.triple);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(triple);
   }
 }

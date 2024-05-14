@@ -172,8 +172,9 @@ class Expr2QlexpressTransformer(
       case Parameter(paramName) =>
         paramName
       case ConceptExpr(conceptName) =>
-        // TODO treat as udf
         "get_value(\"" + conceptName + "\")"
+      case TripleExpr(subject, predicate, objectValue) =>
+        "get_spo(%s, %s, %s)".format(subject, predicate, objectValue)
     }
     opTrans(e)
   }

@@ -17,11 +17,11 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.trees.BottomUp
 import com.antgroup.openspg.reasoner.lube.common.expr.{Expr, FunctionExpr, VString}
-import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
+import com.antgroup.openspg.reasoner.thinker.ThinkerRuleParser
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity
 
 object ThinkerConditionUtil {
-  val ruleExprParser = new RuleExprParser()
+  val ruleExprParser = new ThinkerRuleParser()
 
   def parseAllConceptInCondition(condition: String): Set[Entity] = {
     val conceptList: mutable.ListBuffer[Entity] = new mutable.ListBuffer()

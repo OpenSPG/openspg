@@ -19,12 +19,19 @@ import lombok.Data;
 public class Entity extends Element {
   private String id;
   private String type;
+  private String alias;
 
   public Entity() {}
 
   public Entity(String id, String type) {
     this.id = id;
     this.type = type;
+  }
+
+  public Entity(String id, String type, String alias) {
+    this.id = id;
+    this.type = type;
+    this.alias = alias;
   }
 
   /**
@@ -63,6 +70,24 @@ public class Entity extends Element {
     this.type = type;
   }
 
+  /**
+   * Getter method for property <tt>alias</tt>.
+   *
+   * @return property value of alias
+   */
+  public String getAlias() {
+    return alias;
+  }
+
+  /**
+   * Setter method for property <tt>alias</tt>.
+   *
+   * @param alias value to be assigned to property alias
+   */
+  public void setAlias(String alias) {
+    this.alias = alias;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -72,12 +97,14 @@ public class Entity extends Element {
       return false;
     }
     Entity entity = (Entity) o;
-    return Objects.equals(id, entity.id) && Objects.equals(type, entity.type);
+    return Objects.equals(id, entity.id)
+        && Objects.equals(type, entity.type)
+        && Objects.equals(alias, entity.alias);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type);
+    return Objects.hash(id, type, alias);
   }
 
   @Override
