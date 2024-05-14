@@ -1344,7 +1344,7 @@ public class TransitiveOptionalTest {
             + "        (s)-[e1:has]-(c1:Custid)-[e2:trade]->(c2:Custid)\n"
             + "    }\n"
             + "    Rule {\n"
-            + "       R1: s.expandSameMedia \n"
+            + "       R1: s.expandSameMedia || s.id!=null\n"
             + "       o = true \n"
             + "    }\n"
             + "    Action {\n"
@@ -1365,7 +1365,7 @@ public class TransitiveOptionalTest {
             + "        (s)-[e1:has]-(c1:Custid)-[e2:companyRole]->(c2:Custid)\n"
             + "    }\n"
             + "    Rule {\n"
-            + "       R1: s.expandTrade \n"
+            + "       R1: s.expandTrade || s.id!=null\n"
             + "       o = true \n"
             + "    }\n"
             + "    Action {\n"
@@ -1381,12 +1381,21 @@ public class TransitiveOptionalTest {
             + "    }\n"
             + "}\n"
             + "\n"
+            + "Define (s:Gang)-[p:finishExpand]->(o:Boolean) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)-[e:has]->(c:Custid)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        R0: s.expandSameMedia || s.expandTrade || s.expandCompanyRole || s.id!=null\n"
+            + "        o = true\n"
+            + "    }\n"
+            + "}\n"
             + "Define (s:Gang)-[p:size]->(o:Int) {\n"
             + "    GraphStructure {\n"
             + "        (s)-[e:has]->(c:Custid)\n"
             + "    }\n"
             + "    Rule {\n"
-            + "        R0: s.expandCompanyRole\n"
+            + "        R0: s.finishExpand\n"
             + "        o = group(s).count_distinct(c.cid)\n"
             + "    }\n"
             + "}\n"
@@ -1395,7 +1404,7 @@ public class TransitiveOptionalTest {
             + "        (s)-[e:has]->(c:Custid)\n"
             + "    }\n"
             + "    Rule {\n"
-            + "        R0: s.expandCompanyRole\n"
+            + "        R0: s.finishExpand\n"
             + "        o = group(s).sum(c.trdAmt90d)\n"
             + "    }\n"
             + "}\n"
@@ -1404,9 +1413,9 @@ public class TransitiveOptionalTest {
             + "        (s)-[e:has]->(c:Custid)\n"
             + "    }\n"
             + "    Rule {\n"
-            + "        R0: s.expandCompanyRole \n"
-            + "        R1 = rule_value(s.size >= 2, true, false)\n"
-            + "        R2 = rule_value(s.amount >= 20, true, false)\n"
+            + "        R0: s.finishExpand \n"
+            + "        R1 = rule_value(s.size >= 3, true, false)\n"
+            + "        R2 = rule_value(s.amount >= 30, true, false)\n"
             + "        o = R1 and R2\n"
             + "    }\n"
             + "}\n"
@@ -1421,7 +1430,7 @@ public class TransitiveOptionalTest {
             + "  trdIds = group(B).ConcatAggIf(A.trdAmt90d > 15, A.cid) \n"
             + "}\n"
             + "Action {\n"
-            + "  get(B.id, gangIds, trdIds) \n"
+            + "  get(B.id, B.size, B.amount, gangIds, trdIds) \n"
             + "}";
 
     System.out.println(dsl);
@@ -1475,8 +1484,8 @@ public class TransitiveOptionalTest {
     LocalReasonerRunner runner = new LocalReasonerRunner();
     LocalReasonerResult result = runner.run(task);
     Assert.assertEquals(1, result.getRows().size());
-    Assert.assertEquals(6, result.getRows().get(0)[1].toString().split(",").length);
-    Assert.assertEquals(4, result.getRows().get(0)[2].toString().split(",").length);
+    Assert.assertEquals(6, result.getRows().get(0)[3].toString().split(",").length);
+    Assert.assertEquals(4, result.getRows().get(0)[4].toString().split(",").length);
   }
 
   @Test
