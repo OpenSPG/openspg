@@ -14,6 +14,8 @@
 package com.antgroup.openspg.reasoner.runner.local.rdg;
 
 import com.alibaba.fastjson.JSON;
+
+import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.exception.NotImplementedException;
@@ -1077,8 +1079,10 @@ public class LocalRDG extends RDG<LocalRDG> {
   private java.util.Map<String, Object> getProcessInfo(
       DebugInfoWithStartId startId, String bizId, String targetLabel, String targetId) {
     java.util.Map<String, Object> processInfo = startId.toJsonObj();
-    processInfo.put("targetLabel", targetLabel.split("/")[0]);
-    processInfo.put("targetId", targetId);
+    if (StringUtils.isNotBlank(targetLabel)) {
+      processInfo.put("targetLabel", targetLabel.split("/")[0]);
+      processInfo.put("targetId", targetId);
+    }
     java.util.Map<String, Object> startIdInfo = new HashMap<>();
     startIdInfo.put("bizId", bizId);
     startIdInfo.put("label", startId.getVertexId().getType());
