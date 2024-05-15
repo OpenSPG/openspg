@@ -41,11 +41,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.collection.JavaConversions;
 
 public class ExtractRelationImpl implements Serializable {
 
   private static final long serialVersionUID = 3442064493302533370L;
+  private static final Logger log = LoggerFactory.getLogger(ExtractRelationImpl.class);
   private final AddPredicate addPredicate;
 
   private final String predicate;
@@ -155,6 +158,13 @@ public class ExtractRelationImpl implements Serializable {
     for (String propertyName : this.propertyRuleMap.keySet()) {
       List<String> ruleList = this.propertyRuleMap.get(propertyName);
       Object value = RuleRunner.getInstance().executeExpression(context, ruleList, this.taskId);
+      log.info(
+          "getEdgeProperty,propertyName="
+              + propertyName
+              + "ruleList="
+              + ruleList
+              + "value="
+              + value);
       edgeProps.put(propertyName, value);
     }
     return new EdgeProperty(edgeProps);
