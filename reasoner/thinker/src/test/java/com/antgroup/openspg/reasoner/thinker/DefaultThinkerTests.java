@@ -27,6 +27,7 @@ import com.antgroup.openspg.reasoner.thinker.engine.DefaultThinker;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Predicate;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import java.util.*;
 import org.junit.Assert;
@@ -133,8 +134,17 @@ public class DefaultThinkerTests {
     return parser.parseSimplifyDsl(rule, null).head();
   }
 
+  private Rule getR2() {
+    String rule = "Define (a:A)-[:ac]->(c:C) {\n" +
+            " R1: (a)-[: ab]->(b: B) AND (b)-[:bc]->(c:C) \n" +
+            "}\n" +
+            "Description: \"(a, ab, b), (b, bc, c) -> (a, ac, c)\"";
+    SimplifyThinkerParser parser = new SimplifyThinkerParser();
+    return parser.parseSimplifyDsl(rule, null).head();
+  }
+
   @Test
-  public void testFindWithRule() {
+  public void testFindWithRule1() {
     MockLogicCatalog logicCatalog = new MockLogicCatalog(Arrays.asList(getR1()));
     logicCatalog.init();
     Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
@@ -144,6 +154,15 @@ public class DefaultThinkerTests {
     context.put(a1.toString(), a1);
     context.put(a2.toString(), a2);
     List<Result> triples = thinker.find(new Node("D"), context);
+    Assert.assertTrue(triples.size() == 1);
+  }
+
+  @Test
+  public void testFindWithRule2() {
+    MockLogicCatalog logicCatalog = new MockLogicCatalog(Arrays.asList(getR2()));
+    logicCatalog.init();
+    Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
+    List<Result> triples = thinker.find(new Entity("a1", "A"), new Predicate("ac"), new Node("C"));
     Assert.assertTrue(triples.size() == 1);
   }
 }

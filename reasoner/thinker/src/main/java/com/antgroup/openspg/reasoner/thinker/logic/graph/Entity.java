@@ -13,6 +13,7 @@
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
 import java.util.Objects;
+
 import lombok.Data;
 
 @Data
@@ -102,13 +103,40 @@ public class Entity extends Element {
         && Objects.equals(alias, entity.alias);
   }
 
+  public boolean matches(Element other) {
+    if (other == null) {
+      return false;
+    }
+    if (other instanceof Node) {
+      return Objects.equals(type, ((Node) other).getType());
+    }
+    if (other instanceof Entity) {
+      return Objects.equals(type, ((Entity) other).getType());
+    }
+    return equals(other);
+  }
+
+  @Override
+  public String alias() {
+    return this.alias;
+  }
+
   @Override
   public int hashCode() {
     return Objects.hash(id, type, alias);
   }
 
   @Override
-  public String toString() {
+  public Element bind(Element pattern) {
+    if (pattern instanceof Entity || pattern instanceof Node) {
+      return new Entity(this.id, this.type, pattern.alias());
+    } else {
+      return this;
+    }
+  }
+
+  @Override
+  public String shortString() {
     StringBuilder sb = new StringBuilder();
     sb.append(type).append("/").append(id);
     return sb.toString();

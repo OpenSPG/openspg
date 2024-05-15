@@ -32,7 +32,7 @@ public class QlExpressCondition extends Condition {
     Map<String, Object> ruleCtx = new HashMap<>();
     ruleCtx.putAll(context);
     for (Element element : spoList) {
-      ruleCtx.put(element.toString(), true);
+      ruleCtx.put(element.shortString(), true);
     }
     Object rst = RuleRunner.getInstance().executeExpression(ruleCtx, Arrays.asList(qlExpress), "");
     return (Boolean) rst;

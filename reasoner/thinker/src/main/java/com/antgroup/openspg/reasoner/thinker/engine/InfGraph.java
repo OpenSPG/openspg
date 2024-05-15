@@ -18,14 +18,17 @@ import com.antgroup.openspg.reasoner.thinker.logic.LogicNetwork;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.ClauseEntry;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleExecutor;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class InfGraph implements Graph {
   private LogicNetwork logicNetwork;
@@ -45,17 +48,22 @@ public class InfGraph implements Graph {
 
   @Override
   public List<Result> find(Triple pattern, Map<String, Object> context) {
+    List<Result> result = new LinkedList<>();
     prepareContext(context);
     // Step1: find pattern in graph
     List<Result> dataInGraph = graphStore.find(pattern, context);
     if (CollectionUtils.isNotEmpty(dataInGraph)) {
-      return dataInGraph;
+      for (Result tri : dataInGraph) {
+        addTriple((Triple) tri.getData());
+        result.add(tri);
+      }
     }
-    return inference(pattern, context);
+    result.addAll(inference(pattern, context));
+    return result;
   }
 
   @Override
-  public List<Result> find(Element s, Map<String, Object> context) {
+  public List<Result> find(Node s, Map<String, Object> context) {
     prepareContext(context);
     return inference(s, context);
   }
@@ -75,43 +83,171 @@ public class InfGraph implements Graph {
     for (Rule rule : logicNetwork.getBackwardRules(pattern)) {
       List<Element> body =
           rule.getBody().stream().map(ClauseEntry::toElement).collect(Collectors.toList());
-      List<Result> data = prepareElements(body);
+      List<List<Result>> data = prepareElements(body, rule.getHead().toElement(), pattern, context);
       if (CollectionUtils.isEmpty(data)) {
         continue;
       }
-      TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
-      Boolean ret =
-          rule.getRoot()
-              .accept(
-                  data.stream().map(Result::getData).collect(Collectors.toList()),
-                  context,
-                  new RuleExecutor(),
-                  traceLogger);
-      if (ret) {
-        rst.add(new Result(rule.getHead().toElement(), traceLogger));
+      for (List<Result> d : data) {
+        TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
+        Boolean ret =
+            rule.getRoot()
+                .accept(
+                    d.stream().map(Result::getData).collect(Collectors.toList()),
+                    context,
+                    new RuleExecutor(),
+                    traceLogger);
+        if (ret) {
+          Element ele = rule.getHead().toElement();
+          rst.add(new Result(ele, traceLogger));
+          if (ele instanceof Triple) {
+            addTriple((Triple) ele);
+          } else {
+            addEntity((Entity) ele);
+          }
+        }
       }
     }
     return rst;
   }
 
-  private List<Result> prepareElements(List<Element> body) {
-    List<Result> elements = new ArrayList<>();
-    for (Element pattern : body) {
-      Collection<Result> spo = prepareElement(pattern);
-      if (spo != null && !spo.isEmpty()) {
-        elements.addAll(spo);
+  private List<List<Result>> prepareElements(
+      List<Element> body, Element head, Element pattern, Map<String, Object> context) {
+    List<List<Result>> elements = new ArrayList<>();
+    Set<Element> choose = new HashSet<>();
+    Queue<Element> starts = new LinkedBlockingDeque<>();
+    Element start = getStart(pattern, head);
+    starts.add(start);
+    while (choose.size() < body.size()) {
+      Element s = starts.poll();
+      for (Element e : body) {
+        if (choose.contains(e)) {
+          continue;
+        }
+        choose.add(e);
+        if (e instanceof Entity) {
+          if (CollectionUtils.isEmpty(elements)) {
+            elements.add(new LinkedList<>(prepareElement(e, context)));
+          } else {
+            for (List<Result> evidence : elements) {
+              evidence.addAll(prepareElement(e, context));
+            }
+          }
+        } else {
+          starts.add(((Triple) e).getObject());
+          if (CollectionUtils.isEmpty(elements)) {
+            Triple triple = buildTriple(null, (Entity) s, (Triple) e);
+            elements.addAll(prepareElement(null, triple, context));
+          } else {
+            for (List<Result> evidence : elements) {
+              Triple triple = buildTriple(evidence, (Entity) s, (Triple) e);
+              if (triple != null) {
+                elements.addAll(prepareElement(evidence, triple, context));
+              }
+            }
+          }
+        }
       }
     }
     return elements;
   }
 
-  private Collection<Result> prepareElement(Element pattern) {
+  private Triple buildTriple(List<Result> evidence, Entity s, Triple triple) {
+    Entity entity = null;
+    if (CollectionUtils.isEmpty(evidence)) {
+      entity = s;
+    } else {
+      for (Result r : evidence) {
+        Element e = r.getData();
+        if (e instanceof Entity && ((Entity) e).getAlias() == s.getAlias()) {
+          entity = (Entity) r.getData();
+        } else if (e instanceof Triple
+                && ((Entity) ((Triple) e).getSubject()).getAlias() == s.getAlias()) {
+          entity = (Entity) ((Triple) e).getSubject();
+        } else if (e instanceof Triple
+                && ((Entity) ((Triple) e).getObject()).getAlias() == s.getAlias()) {
+          entity = (Entity) ((Triple) e).getObject();
+        }
+      }
+    }
+
+    if (entity == null) {
+      return null;
+    }
+    if (triple.getSubject().matches(s)) {
+      return new Triple(entity, triple.getPredicate(), triple.getObject());
+    } else if (triple.getObject().matches(s)) {
+      return new Triple(triple.getSubject(), triple.getPredicate(), entity);
+    } else {
+      return null;
+    }
+  }
+
+  private Element getStart(Element element, Element pattern) {
+    if (element instanceof Entity || element instanceof Node) {
+      return element.bind(pattern);
+    } else if (((Triple) element).getSubject() instanceof Entity) {
+      Element subject = ((Triple) pattern).getSubject();
+      return ((Triple) element).getSubject().bind(subject);
+    } else {
+      Element object = ((Triple) pattern).getObject();
+      return ((Triple) element).getObject().bind(object);
+    }
+  }
+
+  private List<List<Result>> prepareElement(
+      List<Result> evidences, Triple pattern, Map<String, Object> context) {
+    if (CollectionUtils.isEmpty(evidences)) {
+      return Arrays.asList(new LinkedList<>(prepareElement(pattern, context)));
+    }
+    List<List<Result>> rst = new LinkedList<>();
+    Collection<Result> curRst = prepareElement(pattern, context);
+    for (Result r : curRst) {
+      List<Result> merged = new LinkedList<>(evidences);
+      merged.add(r);
+      if (reserve(merged)) {
+        rst.add(merged);
+      }
+    }
+    return rst;
+  }
+
+  private Boolean reserve(List<Result> evidence) {
+    Map<String, String> aliasToId = new HashMap<>();
+    for (Result r : evidence) {
+      Element e = r.getData();
+      if (e instanceof Entity) {
+        if (!StringUtils.equals(
+            ((Entity) e).getId(), aliasToId.getOrDefault(((Entity) e).getAlias(), null))) {
+          return false;
+        }
+      } else {
+        Entity s = (Entity) ((Triple) e).getSubject();
+        Entity o = (Entity) ((Triple) e).getObject();
+        if (!StringUtils.equals(s.getId(), aliasToId.getOrDefault(s.getId(), null))) {
+          return false;
+        }
+        if (!StringUtils.equals(o.getId(), aliasToId.getOrDefault(o.getId(), null))) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  private Collection<Result> prepareElement(Element pattern, Map<String, Object> context) {
     Collection<Result> result;
     Collection<Element> spo = this.tripleStore.find(pattern);
     if (spo == null || spo.isEmpty()) {
-      result = find(pattern, null);
+      if (pattern instanceof Node) {
+        result = find((Node) pattern, context);
+      } else {
+        result = find((Triple) pattern, context);
+      }
     } else {
       result = spo.stream().map(e -> new Result(e, null)).collect(Collectors.toList());
+    }
+    for (Result r : result) {
+      r.setData(r.getData().bind(pattern));
     }
     return result;
   }

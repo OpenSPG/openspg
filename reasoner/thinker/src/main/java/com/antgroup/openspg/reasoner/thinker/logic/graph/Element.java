@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException;
 import java.io.Serializable;
 
 public abstract class Element implements Serializable {
@@ -22,5 +23,17 @@ public abstract class Element implements Serializable {
 
   public boolean matches(Element other) {
     return equals(other);
+  }
+
+  public Element bind(Element pattern) {
+    return this;
+  }
+
+  public String alias() {
+    throw new UnsupportedOperationException(this.getClass().getSimpleName() + " cannot support", null);
+  }
+
+  public String shortString() {
+    return toString();
   }
 }

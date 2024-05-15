@@ -60,7 +60,7 @@ public class LogicNetwork {
   public Collection<Rule> getBackwardRules(Element triple) {
     Set<Rule> rules = new HashSet<>();
     for (Map.Entry<Element, Map<List<Element>, Rule>> entry : backwardRules.entrySet()) {
-      if (triple.matches(entry.getKey())) {
+      if (entry.getKey().matches(triple)) {
         rules.addAll(entry.getValue().values());
       }
     }

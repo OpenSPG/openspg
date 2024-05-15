@@ -52,7 +52,7 @@ public class GraphStore implements Graph {
   }
 
   @Override
-  public List<Result> find(Element s, Map<String, Object> context) {
+  public List<Result> find(Node s, Map<String, Object> context) {
     return Collections.emptyList();
   }
 

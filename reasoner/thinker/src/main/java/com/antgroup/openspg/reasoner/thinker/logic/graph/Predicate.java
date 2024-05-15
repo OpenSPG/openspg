@@ -14,6 +14,8 @@
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
 import java.util.Objects;
+
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException;
 import lombok.Data;
 
 @Data
@@ -83,5 +85,29 @@ public class Predicate extends Element {
   @Override
   public int hashCode() {
     return Objects.hash(name, alias);
+  }
+
+  public boolean matches(Element other) {
+    if (other == null) {
+      return false;
+    }
+    if (other instanceof Predicate) {
+      return Objects.equals(name, ((Predicate) other).getName());
+    }
+    return equals(other);
+  }
+
+  public String alias() {
+    return alias;
+  }
+
+  @Override
+  public Element bind(Element pattern) {
+    if (pattern instanceof Predicate) {
+      return new Predicate(name, pattern.alias());
+    } else {
+      throw new UnsupportedOperationException("Triple cannot bind " + pattern.toString(),
+              null);
+    }
   }
 }
