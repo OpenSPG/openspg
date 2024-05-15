@@ -225,7 +225,7 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
       new TriplePattern(
         new graph.Triple(
           new graph.Node("InsClause", "c"),
-          new Predicate("insClauseVersion", "anonymous_4"),
+          new Predicate("insClauseVersion", "anonymous_3"),
           new graph.Node("InsComProd", "d"))))
     assert(rule.getBody.containsAll(expectTriplePatternSet.asJava))
     assert(rule.getRoot.isInstanceOf[Or])
@@ -240,7 +240,7 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
             child
               .asInstanceOf[QlExpressCondition]
               .getQlExpress
-              .equals("hits(get_spo(a, p, b),get_spo(c, anonymous_8, d)) > 2"))
+              .equals("hits(get_spo(a, p, b),get_spo(c, anonymous_3, d)) > 2"))
         }
       })
   }

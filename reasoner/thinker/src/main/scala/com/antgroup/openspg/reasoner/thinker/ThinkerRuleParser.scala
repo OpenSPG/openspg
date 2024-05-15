@@ -51,6 +51,7 @@ class ThinkerRuleParser extends RuleExprParser {
   val expr2StringTransformer = new Expr2QlexpressTransformer()
   var defaultAliasNum = 0
   val aliasToElementMap = new mutable.HashMap[String, Element]()
+  val spoRuleToSpoSetMap = new mutable.HashMap[String, (Element, Element, Element)]()
 
   val conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[ClauseEntry]] =
     new mutable.HashMap()
@@ -314,10 +315,16 @@ class ThinkerRuleParser extends RuleExprParser {
   }
 
   def parseSpoRule(ctx: Spo_ruleContext, isHead: Boolean = false): (Element, Element, Element) = {
+    val spoRuleText = ctx.getText
+    if (spoRuleToSpoSetMap.contains(spoRuleText)) {
+      return spoRuleToSpoSetMap(spoRuleText)
+    }
     val sNode: Element = parseNode(ctx, 0, isHead)
     val pPredicate: Element = parsePredicate(ctx)
     val oNode: Element = parseNode(ctx, 1)
-    (sNode, pPredicate, oNode)
+    val tmpResult = (sNode, pPredicate, oNode)
+    spoRuleToSpoSetMap += (spoRuleText -> tmpResult)
+    tmpResult
   }
 
   def parseNode(ctx: Spo_ruleContext, index: Int, isHead: Boolean = false): Element = {
