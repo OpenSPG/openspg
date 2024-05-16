@@ -123,8 +123,8 @@ public class InfGraph implements Graph {
         if (choose.contains(e)) {
           continue;
         }
-        choose.add(e);
         if (e instanceof Entity) {
+          choose.add(e);
           if (CollectionUtils.isEmpty(elements)) {
             elements.add(new LinkedList<>(prepareElement(e, context)));
           } else {
@@ -133,17 +133,28 @@ public class InfGraph implements Graph {
             }
           }
         } else {
-          starts.add(((Triple) e).getObject());
+          Triple t = (Triple) e;
+          if (t.getSubject().alias().equals(s.alias())) {
+            starts.add(t.getObject());
+          } else if (t.getObject().alias().equals(s.alias())) {
+            starts.add(t.getSubject());
+          } else {
+            continue;
+          }
+          choose.add(e);
           if (CollectionUtils.isEmpty(elements)) {
-            Triple triple = buildTriple(null, (Entity) s, (Triple) e);
+            Triple triple = buildTriple(null, s, t);
             elements.addAll(prepareElement(null, triple, context));
           } else {
+            List<List<Result>> tmpElements = new LinkedList<>();
             for (List<Result> evidence : elements) {
-              Triple triple = buildTriple(evidence, (Entity) s, (Triple) e);
+              Triple triple = buildTriple(evidence, s, t);
               if (triple != null) {
-                elements.addAll(prepareElement(evidence, triple, context));
+                tmpElements.addAll(prepareElement(evidence, triple, context));
               }
             }
+            elements.clear();
+            elements = tmpElements;
           }
         }
       }
@@ -151,20 +162,20 @@ public class InfGraph implements Graph {
     return elements;
   }
 
-  private Triple buildTriple(List<Result> evidence, Entity s, Triple triple) {
+  private Triple buildTriple(List<Result> evidence, Element s, Triple triple) {
     Entity entity = null;
     if (CollectionUtils.isEmpty(evidence)) {
-      entity = s;
+      entity = (Entity) s;
     } else {
       for (Result r : evidence) {
         Element e = r.getData();
-        if (e instanceof Entity && ((Entity) e).getAlias() == s.getAlias()) {
+        if (e instanceof Entity && e.alias() == s.alias()) {
           entity = (Entity) r.getData();
         } else if (e instanceof Triple
-                && ((Entity) ((Triple) e).getSubject()).getAlias() == s.getAlias()) {
+                && ((Triple) e).getSubject().alias() == s.alias()) {
           entity = (Entity) ((Triple) e).getSubject();
         } else if (e instanceof Triple
-                && ((Entity) ((Triple) e).getObject()).getAlias() == s.getAlias()) {
+                && ((Triple) e).getObject().alias() == s.alias()) {
           entity = (Entity) ((Triple) e).getObject();
         }
       }
@@ -216,17 +227,25 @@ public class InfGraph implements Graph {
     for (Result r : evidence) {
       Element e = r.getData();
       if (e instanceof Entity) {
-        if (!StringUtils.equals(
-            ((Entity) e).getId(), aliasToId.getOrDefault(((Entity) e).getAlias(), null))) {
+        if (!aliasToId.containsKey(e.alias())) {
+          aliasToId.put(e.alias(), ((Entity) e).getId());
+        }
+        if (!StringUtils.equals(((Entity) e).getId(), aliasToId.get(e.alias()))) {
           return false;
         }
       } else {
         Entity s = (Entity) ((Triple) e).getSubject();
         Entity o = (Entity) ((Triple) e).getObject();
-        if (!StringUtils.equals(s.getId(), aliasToId.getOrDefault(s.getId(), null))) {
+        if (!aliasToId.containsKey(s.alias())) {
+          aliasToId.put(s.alias(), s.getId());
+        }
+        if (!aliasToId.containsKey(o.alias())) {
+          aliasToId.put(o.alias(), o.getId());
+        }
+        if (!StringUtils.equals(s.getId(), aliasToId.get(s.alias()))) {
           return false;
         }
-        if (!StringUtils.equals(o.getId(), aliasToId.getOrDefault(o.getId(), null))) {
+        if (!StringUtils.equals(o.getId(), aliasToId.get(o.alias()))) {
           return false;
         }
       }

@@ -19,11 +19,7 @@ import com.antgroup.openspg.reasoner.udf.UdfMng;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
 import com.antgroup.openspg.reasoner.udf.model.RuntimeUdfMeta;
 import com.antgroup.openspg.reasoner.udf.model.UdfOperatorTypeEnum;
-import com.antgroup.openspg.reasoner.udf.rule.op.OperatorEqualsLessMore;
-import com.antgroup.openspg.reasoner.udf.rule.op.OperatorGetValue;
-import com.antgroup.openspg.reasoner.udf.rule.op.OperatorIn;
-import com.antgroup.openspg.reasoner.udf.rule.op.OperatorLike;
-import com.antgroup.openspg.reasoner.udf.rule.op.OperatorMultiDiv;
+import com.antgroup.openspg.reasoner.udf.rule.op.*;
 import com.antgroup.openspg.reasoner.udf.rule.udf.UdfWrapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -181,6 +177,7 @@ public class RuleRunner {
     registerUdf();
     overrideOperator();
     EXPRESS_RUNNER.addFunction("get_value", new OperatorGetValue());
+    EXPRESS_RUNNER.addFunction("get_spo", new OperatorGetSPO());
   }
 
   /** register all udfs */

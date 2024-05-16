@@ -162,7 +162,9 @@ public class DefaultThinkerTests {
     MockLogicCatalog logicCatalog = new MockLogicCatalog(Arrays.asList(getR2()));
     logicCatalog.init();
     Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
-    List<Result> triples = thinker.find(new Entity("a1", "A"), new Predicate("ac"), new Node("C"));
-    Assert.assertTrue(triples.size() == 1);
+    //List<Result> triples = thinker.find(new Entity("a1", "A"), new Predicate("ac"), new Node("C"));
+    //ssert.assertTrue(triples.size() == 1);
+    List<Result> triples = thinker.find(new Node("A"), new Predicate("ac"), new Entity("c", "C"));
+    Assert.assertTrue(triples.size() == 2);
   }
 }
