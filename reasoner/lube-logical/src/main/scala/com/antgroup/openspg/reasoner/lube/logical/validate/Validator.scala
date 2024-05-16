@@ -57,16 +57,13 @@ object Validator extends Logging {
       val ruleName = queue.dequeue()
       val dsl = graph.getRule(ruleName)
       logger.info(s"validate dslName=$ruleName, dsl=$dsl")
-      try {
-        val subBlock = SemanticExplainer.explain(parser.parse(generateDsl(dsl)))
-        val nodeName = BlockUtils.getDefine(subBlock).head
-        dag.addNode(nodeName, subBlock)
-        val dependencies = needResolved(resolve(subBlock), graph)
-        dependencies.foreach(queue.enqueue(_))
-        dependencies.foreach(dag.addEdge(nodeName, _))
-      } catch {
-        case e: Exception => logger.warn(e.getMessage)
-      }
+      val subBlock = SemanticExplainer.explain(parser.parse(generateDsl(dsl)))
+      val nodeName = BlockUtils.getDefine(subBlock).head
+      dag.addNode(nodeName, subBlock)
+      val dependencies = needResolved(resolve(subBlock), graph)
+      dependencies.foreach(queue.enqueue(_))
+      dependencies.foreach(dag.addEdge(nodeName, _))
+
     }
     dag.order()
     dag
