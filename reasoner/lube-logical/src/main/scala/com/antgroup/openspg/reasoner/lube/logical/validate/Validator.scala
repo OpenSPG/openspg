@@ -63,7 +63,6 @@ object Validator extends Logging {
       val dependencies = needResolved(resolve(subBlock), graph)
       dependencies.foreach(queue.enqueue(_))
       dependencies.foreach(dag.addEdge(nodeName, _))
-
     }
     dag.order()
     dag
