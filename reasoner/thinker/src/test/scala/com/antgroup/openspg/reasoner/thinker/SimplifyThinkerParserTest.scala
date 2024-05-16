@@ -16,7 +16,7 @@ package com.antgroup.openspg.reasoner.thinker
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{Entity, Predicate}
+import com.antgroup.openspg.reasoner.thinker.logic.graph.{Entity, Predicate, Value}
 import com.antgroup.openspg.reasoner.thinker.logic.graph
 import com.antgroup.openspg.reasoner.thinker.logic.rule._
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact._
@@ -258,4 +258,28 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     (entityCount, tripleCount)
   }
 
+  it("define_rule_on_relation_to_concept3") {
+    val thinkerDsl =
+      """
+        |Define(a:InsDisease)-[:abnormalRule]->(o:String) {
+        |    R1: (a)-[p: disclaimClause]->(b: InsDiseaseDisclaim) AND (b)-[:interpretation]->(o)
+        |}
+        |""".stripMargin
+    val rule: Rule = parser.parseSimplifyDsl(thinkerDsl).head
+    val head = rule.getHead.asInstanceOf[TriplePattern].getTriple
+    assert(head.getObject.isInstanceOf[Value])
+    val conditionList = rule.getRoot.asInstanceOf[And].getChildren
+    assert(conditionList.size == 2)
+    val expectedConditionList = List("get_spo(a,p,b)", "get_spo(b,anonymous_2,o)")
+    conditionList.containsAll(expectedConditionList.asJava)
+    assert(rule.getBody.size() == 2)
+    rule.getBody.asScala.foreach(clause => {
+      val triple = clause.asInstanceOf[TriplePattern].getTriple
+      if (triple.getSubject.alias().equals("b")) {
+        assert(triple.getPredicate.alias().equals("anonymous_2"))
+        assert(triple.getObject.alias().equals("o"))
+      }
+    })
+
+  }
 }

@@ -18,10 +18,58 @@ import lombok.Data;
 @Data
 public class Value extends Element {
   private Object val;
+  private String alias;
 
   public Value() {}
 
   public Value(Object val) {
+    this.val = val;
+  }
+
+  public Value(Object val, String alias) {
+    this.val = val;
+    this.alias = alias;
+  }
+
+  @Override
+  public String alias() {
+    return getAlias();
+  }
+
+
+  /**
+   * Getter method for property <tt>alias</tt>.
+   *
+   * @return property value of alias
+   */
+  public String getAlias() {
+    return alias;
+  }
+
+  /**
+   * Setter method for property <tt>alias</tt>.
+   *
+   * @param alias value to be assigned to property alias
+   */
+  public void setAlias(String alias) {
+    this.alias = alias;
+  }
+
+  /**
+   * Getter method for property <tt>val</tt>.
+   *
+   * @return property value of val
+   */
+  public Object getVal() {
+    return val;
+  }
+
+  /**
+   * Setter method for property <tt>val</tt>.
+   *
+   * @param val value to be assigned to property val
+   */
+  public void setVal(Object val) {
     this.val = val;
   }
 }

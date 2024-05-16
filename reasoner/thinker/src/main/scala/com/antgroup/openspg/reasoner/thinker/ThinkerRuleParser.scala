@@ -30,7 +30,7 @@ import com.antgroup.openspg.reasoner.lube.common.expr.{
 }
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{Element, Entity, Predicate}
+import com.antgroup.openspg.reasoner.thinker.logic.graph.{Element, Entity, Predicate, Value}
 import com.antgroup.openspg.reasoner.thinker.logic.graph
 import com.antgroup.openspg.reasoner.thinker.logic.rule.{
   ClauseEntry,
@@ -52,6 +52,9 @@ class ThinkerRuleParser extends RuleExprParser {
   var defaultAliasNum = 0
   val aliasToElementMap = new mutable.HashMap[String, Element]()
   val spoRuleToSpoSetMap = new mutable.HashMap[String, (Element, Element, Element)]()
+
+  val valueTypeSet: Set[String] =
+    Set.apply("STRING", "LONG", "INT", "INTEGER", "DOUBLE", "FLOAT", "BOOLEAN")
 
   val conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[ClauseEntry]] =
     new mutable.HashMap()
@@ -130,6 +133,7 @@ class ThinkerRuleParser extends RuleExprParser {
       case e: Entity => e.getAlias
       case p: Predicate => p.getAlias
       case n: logic.graph.Node => n.getAlias
+      case v: Value => v.getAlias
       case _ => throw new IllegalArgumentException("%s element has no alias".format(element))
     }
   }
@@ -346,6 +350,8 @@ class ThinkerRuleParser extends RuleExprParser {
         val conceptEntity = constructConceptEntity(conceptContext)
         conceptEntity.setAlias(sAlias)
         sNode = conceptEntity
+      } else if (valueTypeSet.contains(sType.toUpperCase())) {
+        sNode = new Value(null, sAlias)
       }
     }
     aliasToElementMap += (sAlias -> sNode)
