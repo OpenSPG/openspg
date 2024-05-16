@@ -22,36 +22,36 @@ import lombok.Data;
 
 @Data
 public class LogicNetwork {
-  private Map<String, Rule> ruleMap;
-  private Map<Element, Map<Element, Rule>> forwardRules;
-  private Map<Element, Map<List<Element>, Rule>> backwardRules;
+  private Map<Element, Map<Element, List<Rule>>> forwardRules;
+  private Map<Element, Map<List<Element>, List<Rule>>> backwardRules;
 
   public LogicNetwork() {
     this.forwardRules = new HashMap<>();
     this.backwardRules = new HashMap<>();
-    this.ruleMap = new HashMap<>();
   }
 
   public void addRule(Rule rule) {
-    if (!ruleMap.containsKey(rule.getName())) {
-      ruleMap.put(rule.getName(), rule);
-    }
     for (ClauseEntry body : rule.getBody()) {
-      Map<Element, Rule> rules =
+      Map<Element, List<Rule>> rules =
           forwardRules.computeIfAbsent(body.toElement(), (key) -> new HashMap<>());
-      rules.put(rule.getHead().toElement(), rule);
+      List<Rule> rList =
+          rules.computeIfAbsent(rule.getHead().toElement(), (k) -> new LinkedList<>());
+      rList.add(rule);
     }
-    Map<List<Element>, Rule> rules =
+    Map<List<Element>, List<Rule>> rules =
         backwardRules.computeIfAbsent(rule.getHead().toElement(), (key) -> new HashMap<>());
-    rules.put(
-        rule.getBody().stream().map(ClauseEntry::toElement).collect(Collectors.toList()), rule);
+    List<Rule> rList =
+        rules.computeIfAbsent(
+            rule.getBody().stream().map(ClauseEntry::toElement).collect(Collectors.toList()),
+            (k) -> new LinkedList<>());
+    rList.add(rule);
   }
 
   public Collection<Rule> getForwardRules(Element e) {
     Set<Rule> rules = new HashSet<>();
-    for (Map.Entry<Element, Map<Element, Rule>> entry : forwardRules.entrySet()) {
+    for (Map.Entry<Element, Map<Element, List<Rule>>> entry : forwardRules.entrySet()) {
       if (entry.getKey().matches(e)) {
-        rules.addAll(entry.getValue().values());
+        entry.getValue().values().stream().forEach(list -> rules.addAll(list));
       }
     }
     return rules;
@@ -59,9 +59,9 @@ public class LogicNetwork {
 
   public Collection<Rule> getBackwardRules(Element triple) {
     Set<Rule> rules = new HashSet<>();
-    for (Map.Entry<Element, Map<List<Element>, Rule>> entry : backwardRules.entrySet()) {
+    for (Map.Entry<Element, Map<List<Element>, List<Rule>>> entry : backwardRules.entrySet()) {
       if (entry.getKey().matches(triple)) {
-        rules.addAll(entry.getValue().values());
+        entry.getValue().values().stream().forEach(list -> rules.addAll(list));
       }
     }
     return rules;

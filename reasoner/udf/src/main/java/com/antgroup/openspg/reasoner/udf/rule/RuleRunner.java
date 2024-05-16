@@ -26,15 +26,15 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
+import com.ql.util.express.InstructionSet;
 import com.ql.util.express.Operator;
 import com.ql.util.express.exception.QLCompileException;
+import com.ql.util.express.instruction.detail.Instruction;
+import com.ql.util.express.instruction.detail.InstructionConstData;
+import com.ql.util.express.instruction.detail.InstructionLoadAttr;
+import com.ql.util.express.instruction.detail.InstructionOperator;
 import com.ql.util.express.parse.KeyWordDefine4Java;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,6 +149,59 @@ public class RuleRunner {
       }
     }
     return null;
+  }
+
+  public Map<String, Set<String>> getParamNames(String rule) throws Exception {
+    InstructionSet instructionSet = EXPRESS_RUNNER.getInstructionSetFromLocalCache(rule);
+    Map<String, Set<String>> result = new TreeMap<>();
+    for (int i = 0; i < instructionSet.getInstructionLength(); i++) {
+      Instruction instruction = instructionSet.getInstruction(i);
+      if (instruction instanceof InstructionLoadAttr) {
+        if ("null".equals(((InstructionLoadAttr) instruction).getAttrName())) {
+          continue;
+        }
+        String aliasName = ((InstructionLoadAttr) instruction).getAttrName();
+        Set<String> varSet = result.computeIfAbsent(aliasName, (k) -> new HashSet<>());
+        // LoadAttr之后就是具体的属性名
+        Instruction next = instructionSet.getInstruction(i + 1);
+        if (next instanceof InstructionOperator) {
+          String opName = ((InstructionOperator) next).getOperator().getName();
+          if ("FieldCall".equalsIgnoreCase(opName)) {
+            String varName = ((InstructionOperator) next).getOperator().toString().split(":")[1];
+            varSet.add(varName);
+          }
+        }
+      }
+    }
+
+    for (int i = 0; i < instructionSet.getInstructionLength(); i++) {
+      Instruction instruction = instructionSet.getInstruction(i);
+      if (instruction instanceof InstructionOperator) {
+        String opName = ((InstructionOperator) instruction).getOperator().getName();
+        if (opName != null) {
+          if (opName.equalsIgnoreCase("def") || opName.equalsIgnoreCase("exportDef")) {
+            if (i >= 1) {
+              String varLocalName =
+                  (String)
+                      ((InstructionConstData) instructionSet.getInstruction(i - 1))
+                          .getOperateData()
+                          .getObject(null);
+              result.remove(varLocalName);
+            }
+          } else if (opName.equalsIgnoreCase("alias") || opName.equalsIgnoreCase("exportAlias")) {
+            if (i >= 2) {
+              String varLocalName =
+                  (String)
+                      ((InstructionConstData) instructionSet.getInstruction(i - 2))
+                          .getOperateData()
+                          .getObject(null);
+              result.remove(varLocalName);
+            }
+          }
+        }
+      }
+    }
+    return result;
   }
 
   private RuleRunner() {}

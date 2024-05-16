@@ -60,9 +60,17 @@ public class MemTripleStore implements TripleStore {
   private Collection<Element> findTriple(Triple tripleMatch) {
     List<Element> elements = new LinkedList<>();
     if (tripleMatch.getSubject() instanceof Entity) {
-      elements.addAll(sToTriple.getOrDefault(tripleMatch.getSubject(), new LinkedList<>()));
+      for (Triple tri : sToTriple.getOrDefault(tripleMatch.getSubject(), new LinkedList<>())) {
+        if (tripleMatch.matches(tri)) {
+          elements.add(tri);
+        }
+      }
     } else if (tripleMatch.getObject() instanceof Entity) {
-      elements.addAll(oToTriple.getOrDefault(tripleMatch.getObject(), new LinkedList<>()));
+      for (Triple tri : oToTriple.getOrDefault(tripleMatch.getSubject(), new LinkedList<>())) {
+        if (tripleMatch.matches(tri)) {
+          elements.add(tri);
+        }
+      }
     } else {
       throw new RuntimeException("Cannot support " + tripleMatch);
     }

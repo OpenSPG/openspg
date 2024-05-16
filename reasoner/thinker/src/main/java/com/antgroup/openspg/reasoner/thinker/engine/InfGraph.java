@@ -89,16 +89,12 @@ public class InfGraph implements Graph {
       }
       for (List<Result> d : data) {
         TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
-        Boolean ret =
-            rule.getRoot()
-                .accept(
-                    d.stream().map(Result::getData).collect(Collectors.toList()),
-                    context,
-                    new RuleExecutor(),
-                    traceLogger);
+        List<Element> dList = d.stream().map(Result::getData).collect(Collectors.toList());
+        Boolean ret = rule.getRoot().accept(dList, context, new RuleExecutor(), traceLogger);
+        traceLogger.setCurrentNodeMsg(rule.getDesc());
         if (ret) {
           Element ele = rule.getHead().toElement();
-          rst.add(new Result(ele, traceLogger));
+          rst.add(new Result(bindResult(dList, ele), traceLogger));
           if (ele instanceof Triple) {
             addTriple((Triple) ele);
           } else {
@@ -110,6 +106,24 @@ public class InfGraph implements Graph {
     return rst;
   }
 
+  private Element bindResult(List<Element> data, Element pattern) {
+    Map<String, Element> map = new HashMap<>();
+    for (Element e : data) {
+      if (e instanceof Entity || e instanceof Node) {
+        map.put(e.alias(), e);
+      } else if (e instanceof Triple) {
+        map.put(((Triple) e).getSubject().alias(), ((Triple) e).getSubject());
+        map.put(((Triple) e).getObject().alias(), ((Triple) e).getObject());
+      }
+    }
+    if (pattern instanceof Entity || pattern instanceof Node) {
+      return map.get(pattern.alias());
+    }
+    Triple t = (Triple) pattern;
+    return new Triple(
+        map.get(t.getSubject().alias()), t.getPredicate(), map.get(t.getObject().alias()));
+  }
+
   private List<List<Result>> prepareElements(
       List<Element> body, Element head, Element pattern, Map<String, Object> context) {
     List<List<Result>> elements = new ArrayList<>();
@@ -119,6 +133,9 @@ public class InfGraph implements Graph {
     starts.add(start);
     while (choose.size() < body.size()) {
       Element s = starts.poll();
+      if (!(s instanceof Entity)) {
+        continue;
+      }
       for (Element e : body) {
         if (choose.contains(e)) {
           continue;

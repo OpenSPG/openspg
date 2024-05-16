@@ -33,9 +33,24 @@ public class Value extends Element {
 
   @Override
   public String alias() {
-    return getAlias();
+    return this.alias;
   }
 
+  public boolean matches(Element other) {
+    if (other != null && other instanceof Value) {
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public Element bind(Element pattern) {
+    if (pattern instanceof Value) {
+      return new Value(val, pattern.alias());
+    } else {
+      return this;
+    }
+  }
 
   /**
    * Getter method for property <tt>alias</tt>.
