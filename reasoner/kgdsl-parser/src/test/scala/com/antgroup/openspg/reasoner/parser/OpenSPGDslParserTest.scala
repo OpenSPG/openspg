@@ -184,6 +184,16 @@ class OpenSPGDslParserTest extends AnyFunSpec {
     }
   }
 
+  it("test exception2") {
+    val dsl = """test""".stripMargin
+    try {
+      parser.parse(dsl)
+    } catch {
+      case ex: KGDSLOneTaskException =>
+        ex.getMessage.contains("num is 0") should equal(true)
+    }
+  }
+
   it("opChainTest") {
     val chain = OpChainExpr(Filter(BinaryOpExpr(BNotEqual, Ref("a"), Ref("b"))), null)
 
