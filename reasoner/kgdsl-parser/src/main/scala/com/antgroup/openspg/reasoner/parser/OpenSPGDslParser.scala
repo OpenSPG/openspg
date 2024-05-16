@@ -85,7 +85,7 @@ class OpenSPGDslParser extends ParserInterface {
    */
   override def parse(text: String): Block = {
     val blocks = parseMultipleStatement(text)
-    if (blocks.size > 1) {
+    if (blocks.size != 1) {
       throw KGDSLOneTaskException("dsl = " + text + "blocks num is " + blocks.size)
     }
     blocks.head

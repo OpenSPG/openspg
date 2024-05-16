@@ -67,6 +67,14 @@ object LoaderUtil {
 
   private def findAllTypesAllowIsolateVertex(logicalPlan: LogicalOperator): Set[String] = {
     logicalPlan.transform[Set[String]] {
+      case (PatternScan(_, pattern), typeSets) =>
+        // 如果PatternScan只匹配单个起点，也需要加载孤点
+        val connectionSet = pattern.topology.get(pattern.root.alias)
+        if (connectionSet.isEmpty || connectionSet.get.isEmpty) {
+          typeSets.flatten.toSet ++ pattern.root.typeNames
+        } else {
+          typeSets.flatten.toSet
+        }
       case (LinkedExpand(_, linkedEdgePattern), typeSets) =>
         typeSets.flatten.toSet ++ linkedEdgePattern.src.typeNames
       case (_, typeSets) => typeSets.flatten.toSet
