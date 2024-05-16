@@ -62,7 +62,7 @@ public class GraphStore implements Graph {
       IVertex<IVertexId, IProperty> vertex =
           this.graphState.getVertex(IVertexId.from(s.getId(), s.getType()), null);
       for (String key : vertex.getValue().getKeySet()) {
-        triples.add(new Triple(s, new Predicate(key), new Value(key, vertex.getValue().get(key))));
+        triples.add(new Triple(s, new Predicate(key), new Value(vertex.getValue().get(key))));
       }
     }
     List<IEdge<IVertexId, IProperty>> edges =

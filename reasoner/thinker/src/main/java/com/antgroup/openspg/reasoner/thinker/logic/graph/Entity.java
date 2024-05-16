@@ -13,7 +13,6 @@
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
 import java.util.Objects;
-
 import lombok.Data;
 
 @Data

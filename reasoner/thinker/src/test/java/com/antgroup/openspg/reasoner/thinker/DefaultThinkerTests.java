@@ -135,10 +135,11 @@ public class DefaultThinkerTests {
   }
 
   private Rule getR2() {
-    String rule = "Define (a:A)-[:ac]->(c:C) {\n" +
-            " R1: (a)-[: ab]->(b: B) AND (b)-[:bc]->(c:C) \n" +
-            "}\n" +
-            "Description: \"(a, ab, b), (b, bc, c) -> (a, ac, c)\"";
+    String rule =
+        "Define (a:A)-[:ac]->(c:C) {\n"
+            + " R1: (a)-[: ab]->(b: B) AND (b)-[:bc]->(c:C) \n"
+            + "}\n"
+            + "Description: \"(a, ab, b), (b, bc, c) -> (a, ac, c)\"";
     SimplifyThinkerParser parser = new SimplifyThinkerParser();
     return parser.parseSimplifyDsl(rule, null).head();
   }

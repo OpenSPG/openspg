@@ -30,7 +30,8 @@ public abstract class Element implements Serializable {
   }
 
   public String alias() {
-    throw new UnsupportedOperationException(this.getClass().getSimpleName() + " cannot support", null);
+    throw new UnsupportedOperationException(
+        this.getClass().getSimpleName() + " cannot support", null);
   }
 
   public String shortString() {

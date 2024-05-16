@@ -12,11 +12,7 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
-import java.util.Map;
 import java.util.Objects;
-
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.Data;
 
 @Data

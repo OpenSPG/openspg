@@ -171,11 +171,9 @@ public class InfGraph implements Graph {
         Element e = r.getData();
         if (e instanceof Entity && e.alias() == s.alias()) {
           entity = (Entity) r.getData();
-        } else if (e instanceof Triple
-                && ((Triple) e).getSubject().alias() == s.alias()) {
+        } else if (e instanceof Triple && ((Triple) e).getSubject().alias() == s.alias()) {
           entity = (Entity) ((Triple) e).getSubject();
-        } else if (e instanceof Triple
-                && ((Triple) e).getObject().alias() == s.alias()) {
+        } else if (e instanceof Triple && ((Triple) e).getObject().alias() == s.alias()) {
           entity = (Entity) ((Triple) e).getObject();
         }
       }
