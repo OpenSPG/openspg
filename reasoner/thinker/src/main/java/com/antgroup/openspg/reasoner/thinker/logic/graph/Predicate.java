@@ -101,6 +101,11 @@ public class Predicate extends Element {
   }
 
   @Override
+  public Element cleanAlias() {
+    return new Predicate(this.name);
+  }
+
+  @Override
   public Element bind(Element pattern) {
     if (pattern instanceof Predicate) {
       return new Predicate(name, pattern.alias());

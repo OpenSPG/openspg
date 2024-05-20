@@ -75,6 +75,11 @@ public class Node extends Element {
     return this.alias;
   }
 
+  @Override
+  public Element cleanAlias() {
+    return new Node(this.type);
+  }
+
   /**
    * Getter method for property <tt>type</tt>.
    *

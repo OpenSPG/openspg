@@ -34,11 +34,13 @@ public class InfGraph implements Graph {
   private LogicNetwork logicNetwork;
   private TripleStore tripleStore;
   private GraphStore graphStore;
+  private Set<Triple> recorder;
 
   public InfGraph(LogicNetwork logicNetwork, GraphStore graphStore) {
     this.logicNetwork = logicNetwork;
     this.tripleStore = new MemTripleStore();
     this.graphStore = graphStore;
+    this.recorder = new HashSet<>();
   }
 
   @Override
@@ -58,6 +60,7 @@ public class InfGraph implements Graph {
         result.add(tri);
       }
     }
+    recorder.add((Triple) pattern.cleanAlias());
     result.addAll(inference(pattern, context));
     return result;
   }
@@ -133,8 +136,11 @@ public class InfGraph implements Graph {
     starts.add(start);
     while (choose.size() < body.size()) {
       Element s = starts.poll();
-      if (!(s instanceof Entity)) {
-        continue;
+      if (s == null) {
+        break;
+      }
+      if (s instanceof Node && elements.isEmpty()) {
+        break;
       }
       for (Element e : body) {
         if (choose.contains(e)) {
@@ -161,13 +167,19 @@ public class InfGraph implements Graph {
           choose.add(e);
           if (CollectionUtils.isEmpty(elements)) {
             Triple triple = buildTriple(null, s, t);
-            elements.addAll(prepareElement(null, triple, context));
+            List<List<Result>> singeRst = prepareElement(null, triple, context);
+            if (CollectionUtils.isNotEmpty(singeRst)) {
+              elements.addAll(singeRst);
+            }
           } else {
             List<List<Result>> tmpElements = new LinkedList<>();
             for (List<Result> evidence : elements) {
               Triple triple = buildTriple(evidence, s, t);
               if (triple != null) {
-                tmpElements.addAll(prepareElement(evidence, triple, context));
+                List<List<Result>> singeRst = prepareElement(evidence, triple, context);
+                if (CollectionUtils.isNotEmpty(singeRst)) {
+                  tmpElements.addAll(singeRst);
+                }
               }
             }
             elements.clear();
@@ -199,9 +211,9 @@ public class InfGraph implements Graph {
     if (entity == null) {
       return null;
     }
-    if (triple.getSubject().matches(s)) {
+    if (triple.getSubject().alias() == s.alias()) {
       return new Triple(entity, triple.getPredicate(), triple.getObject());
-    } else if (triple.getObject().matches(s)) {
+    } else if (triple.getObject().alias() == s.alias()) {
       return new Triple(triple.getSubject(), triple.getPredicate(), entity);
     } else {
       return null;
@@ -222,10 +234,14 @@ public class InfGraph implements Graph {
 
   private List<List<Result>> prepareElement(
       List<Result> evidences, Triple pattern, Map<String, Object> context) {
-    if (CollectionUtils.isEmpty(evidences)) {
-      return Arrays.asList(new LinkedList<>(prepareElement(pattern, context)));
-    }
     List<List<Result>> rst = new LinkedList<>();
+    if (CollectionUtils.isEmpty(evidences)) {
+      Collection<Result> curRst = prepareElement(pattern, context);
+      for (Result r : curRst) {
+        rst.add(new LinkedList<>(Arrays.asList(r)));
+      }
+      return rst;
+    }
     Collection<Result> curRst = prepareElement(pattern, context);
     for (Result r : curRst) {
       List<Result> merged = new LinkedList<>(evidences);
@@ -269,12 +285,12 @@ public class InfGraph implements Graph {
   }
 
   private Collection<Result> prepareElement(Element pattern, Map<String, Object> context) {
-    Collection<Result> result;
+    Collection<Result> result = new LinkedList<>();
     Collection<Element> spo = this.tripleStore.find(pattern);
     if (spo == null || spo.isEmpty()) {
       if (pattern instanceof Node) {
         result = find((Node) pattern, context);
-      } else {
+      } else if (!recorder.contains(pattern.cleanAlias())){
         result = find((Triple) pattern, context);
       }
     } else {
@@ -296,5 +312,6 @@ public class InfGraph implements Graph {
 
   public void clear() {
     this.tripleStore.clear();
+    this.recorder.clear();
   }
 }

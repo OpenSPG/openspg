@@ -53,6 +53,11 @@ public class Triple extends Element {
     }
   }
 
+  @Override
+  public Element cleanAlias() {
+    return new Triple(subject.cleanAlias(), predicate.cleanAlias(), object.cleanAlias());
+  }
+
   public static Triple create(Element s, Element p, Element o) {
     return new Triple(nullToAny(s), nullToAny(p), nullToAny(o));
   }

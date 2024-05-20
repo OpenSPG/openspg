@@ -34,6 +34,10 @@ public abstract class Element implements Serializable {
         this.getClass().getSimpleName() + " cannot support", null);
   }
 
+  public Element cleanAlias() {
+    return this;
+  }
+
   public String shortString() {
     return toString();
   }

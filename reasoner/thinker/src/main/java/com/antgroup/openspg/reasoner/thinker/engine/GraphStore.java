@@ -61,6 +61,9 @@ public class GraphStore implements Graph {
     if (direction == Direction.OUT) {
       IVertex<IVertexId, IProperty> vertex =
           this.graphState.getVertex(IVertexId.from(s.getId(), s.getType()), null);
+      if (vertex == null) {
+        return triples;
+      }
       for (String key : vertex.getValue().getKeySet()) {
         triples.add(new Triple(s, new Predicate(key), new Value(vertex.getValue().get(key))));
       }

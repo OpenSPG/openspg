@@ -58,21 +58,22 @@ public class MemTripleStore implements TripleStore {
   }
 
   private Collection<Element> findTriple(Triple tripleMatch) {
+    Triple t = (Triple) tripleMatch.cleanAlias();
     List<Element> elements = new LinkedList<>();
-    if (tripleMatch.getSubject() instanceof Entity) {
-      for (Triple tri : sToTriple.getOrDefault(tripleMatch.getSubject(), new LinkedList<>())) {
-        if (tripleMatch.matches(tri)) {
+    if (t.getSubject() instanceof Entity) {
+      for (Triple tri : sToTriple.getOrDefault(t.getSubject(), new LinkedList<>())) {
+        if (t.matches(tri)) {
           elements.add(tri);
         }
       }
-    } else if (tripleMatch.getObject() instanceof Entity) {
-      for (Triple tri : oToTriple.getOrDefault(tripleMatch.getSubject(), new LinkedList<>())) {
-        if (tripleMatch.matches(tri)) {
+    } else if (t.getObject() instanceof Entity) {
+      for (Triple tri : oToTriple.getOrDefault(t.getObject(), new LinkedList<>())) {
+        if (t.matches(tri)) {
           elements.add(tri);
         }
       }
     } else {
-      throw new RuntimeException("Cannot support " + tripleMatch);
+      throw new RuntimeException("Cannot support " + t);
     }
     return elements;
   }
@@ -84,18 +85,19 @@ public class MemTripleStore implements TripleStore {
   @Override
   public void addEntity(Entity entity) {
     String key = getKey(entity);
-    entities.put(key, entity);
+    entities.put(key, (Entity) entity.cleanAlias());
   }
 
   @Override
   public void addTriple(Triple triple) {
+    Triple t = (Triple) triple.cleanAlias();
     List<Triple> sTriples =
-        sToTriple.computeIfAbsent(triple.getSubject(), (k) -> new LinkedList<>());
-    sTriples.add(triple);
-    if (!(triple.getObject() instanceof Value)) {
+        sToTriple.computeIfAbsent(t.getSubject().cleanAlias(), (k) -> new LinkedList<>());
+    sTriples.add(t);
+    if (!(t.getObject() instanceof Value)) {
       List<Triple> oTriples =
-          oToTriple.computeIfAbsent(triple.getSubject(), (k) -> new LinkedList<>());
-      oTriples.add(triple);
+          oToTriple.computeIfAbsent(t.getObject(), (k) -> new LinkedList<>());
+      oTriples.add(t);
     }
   }
 

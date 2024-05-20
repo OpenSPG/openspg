@@ -121,6 +121,11 @@ public class Entity extends Element {
   }
 
   @Override
+  public Element cleanAlias() {
+    return new Entity(this.id, this.type);
+  }
+
+  @Override
   public int hashCode() {
     return Objects.hash(id, type, alias);
   }

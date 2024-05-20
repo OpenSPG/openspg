@@ -60,7 +60,9 @@ public class QlExpressCondition extends Condition {
   @Override
   public Boolean execute(List<Element> spoList, Map<String, Object> context, TreeLogger logger) {
     Map<String, Object> ruleCtx = new HashMap<>();
-    ruleCtx.putAll(context);
+    if (context != null) {
+      ruleCtx.putAll(context);
+    }
     for (Element element : spoList) {
       ruleCtx.put(element.shortString(), true);
     }

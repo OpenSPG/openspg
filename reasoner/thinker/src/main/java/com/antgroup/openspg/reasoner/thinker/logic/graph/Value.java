@@ -36,6 +36,11 @@ public class Value extends Element {
     return this.alias;
   }
 
+  @Override
+  public Element cleanAlias() {
+    return new Value(val);
+  }
+
   public boolean matches(Element other) {
     if (other != null && other instanceof Value) {
       return true;
