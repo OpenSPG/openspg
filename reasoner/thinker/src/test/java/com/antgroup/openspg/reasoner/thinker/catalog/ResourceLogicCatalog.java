@@ -13,23 +13,20 @@
 
 package com.antgroup.openspg.reasoner.thinker.catalog;
 
-
 import com.antgroup.openspg.reasoner.lube.catalog.AbstractConnection;
 import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph;
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field;
 import com.antgroup.openspg.reasoner.thinker.SimplifyThinkerParser;
 import com.antgroup.openspg.reasoner.thinker.logic.LogicNetwork;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
-
-import scala.collection.JavaConversions;
-import scala.collection.immutable.Map;
-import scala.collection.immutable.Set;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import scala.collection.JavaConversions;
+import scala.collection.immutable.Map;
+import scala.collection.immutable.Set;
 
 public class ResourceLogicCatalog extends LogicCatalog {
   private SimplifyThinkerParser parser;

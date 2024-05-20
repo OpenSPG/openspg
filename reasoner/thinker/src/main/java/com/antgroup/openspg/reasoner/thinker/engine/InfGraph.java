@@ -290,7 +290,7 @@ public class InfGraph implements Graph {
     if (spo == null || spo.isEmpty()) {
       if (pattern instanceof Node) {
         result = find((Node) pattern, context);
-      } else if (!recorder.contains(pattern.cleanAlias())){
+      } else if (!recorder.contains(pattern.cleanAlias())) {
         result = find((Triple) pattern, context);
       }
     } else {

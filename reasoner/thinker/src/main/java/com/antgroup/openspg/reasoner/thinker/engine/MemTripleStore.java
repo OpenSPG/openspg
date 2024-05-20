@@ -95,8 +95,7 @@ public class MemTripleStore implements TripleStore {
         sToTriple.computeIfAbsent(t.getSubject().cleanAlias(), (k) -> new LinkedList<>());
     sTriples.add(t);
     if (!(t.getObject() instanceof Value)) {
-      List<Triple> oTriples =
-          oToTriple.computeIfAbsent(t.getObject(), (k) -> new LinkedList<>());
+      List<Triple> oTriples = oToTriple.computeIfAbsent(t.getObject(), (k) -> new LinkedList<>());
       oTriples.add(t);
     }
   }
