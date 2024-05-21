@@ -60,7 +60,7 @@ public class MemTripleStore implements TripleStore {
   private Collection<Element> findTriple(Triple tripleMatch) {
     Triple t = (Triple) tripleMatch.cleanAlias();
     List<Element> elements = new LinkedList<>();
-    if (t.getSubject() instanceof Entity) {
+    if (t.getSubject() instanceof Entity || t.getSubject() instanceof Triple) {
       for (Triple tri : sToTriple.getOrDefault(t.getSubject(), new LinkedList<>())) {
         if (t.matches(tri)) {
           elements.add(tri);

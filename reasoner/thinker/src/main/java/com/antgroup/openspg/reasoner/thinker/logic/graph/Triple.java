@@ -53,6 +53,10 @@ public class Triple extends Element {
     }
   }
 
+  public String alias() {
+    return predicate.alias();
+  }
+
   @Override
   public Element cleanAlias() {
     return new Triple(subject.cleanAlias(), predicate.cleanAlias(), object.cleanAlias());

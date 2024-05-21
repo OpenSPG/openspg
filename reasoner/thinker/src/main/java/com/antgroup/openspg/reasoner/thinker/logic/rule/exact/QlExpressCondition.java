@@ -13,7 +13,8 @@
 
 package com.antgroup.openspg.reasoner.thinker.logic.rule.exact;
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
+import com.antgroup.openspg.reasoner.thinker.logic.rule.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.google.common.cache.CacheBuilder;
@@ -64,7 +65,17 @@ public class QlExpressCondition extends Condition {
       ruleCtx.putAll(context);
     }
     for (Element element : spoList) {
-      ruleCtx.put(element.shortString(), true);
+      if (element instanceof Entity || element instanceof Node) {
+        ruleCtx.put(element.shortString(), true);
+      } else {
+        Triple triple = (Triple) element;
+        if (triple.getObject() instanceof Entity) {
+          ruleCtx.put(element.shortString(), true);
+        } else {
+          Map<String, Object> props = (Map<String, Object>) ruleCtx.computeIfAbsent(triple.getSubject().alias(), (k) -> new HashMap<String, Object>());
+          props.put(((Predicate)((Triple) element).getPredicate()).getName(), ((Value) triple.getObject()).getVal());
+        }
+      }
     }
     try {
       boolean absent = absent(ruleCtx);

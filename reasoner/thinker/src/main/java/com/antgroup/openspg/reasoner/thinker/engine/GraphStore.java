@@ -45,6 +45,8 @@ public class GraphStore implements Graph {
       data = getTriple((Entity) pattern.getSubject(), Direction.OUT);
     } else if (pattern.getObject() instanceof Entity) {
       data = getTriple((Entity) pattern.getObject(), Direction.IN);
+    } else if (pattern.getSubject() instanceof Triple ) {
+      data = getTriple((Triple) pattern.getSubject(), (Predicate) pattern.getPredicate());
     } else {
       throw new RuntimeException("Cannot support " + pattern);
     }
@@ -73,6 +75,22 @@ public class GraphStore implements Graph {
             IVertexId.from(s.getId(), s.getType()), null, null, null, direction);
     for (IEdge<IVertexId, IProperty> edge : edges) {
       triples.add(edgeToTriple(edge));
+    }
+    return triples;
+  }
+
+  protected List<Triple> getTriple(Triple triple, Predicate predicate) {
+    List<Triple> triples = new LinkedList<>();
+    Entity s = (Entity) triple.getSubject();
+    Predicate p = (Predicate) triple.getPredicate();
+    Entity o = (Entity) triple.getObject();
+    List<IEdge<IVertexId, IProperty>> edges =
+            this.graphState.getEdges(
+                    IVertexId.from(s.getId(), s.getType()), null, null, null, Direction.OUT);
+    for (IEdge<IVertexId, IProperty> edge : edges) {
+      if (edge.getTargetId().equals(IVertexId.from(o.getId(), o.getType())) && edge.getType().equals(p.getName())) {
+        triples.add(new Triple(triple, predicate, new Value(edge.getValue().get(predicate.getName()))));
+      }
     }
     return triples;
   }
