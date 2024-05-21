@@ -38,6 +38,10 @@ public class InsuranceTests {
     Vertex<IVertexId, IProperty> v3 = GraphUtil.makeVertex("肺炎性假瘤", "InsDisease");
     Vertex<IVertexId, IProperty> v4 = GraphUtil.makeVertex("肺病", "InsDisease");
     Vertex<IVertexId, IProperty> v5 = GraphUtil.makeVertex("肺癌", "InsDisease");
+    Vertex<IVertexId, IProperty> v6 = GraphUtil.makeVertex("既往症", "InsDiseaseDisclaim");
+    Vertex<IVertexId, IProperty> v7 = GraphUtil.makeVertex("好医保0免赔", "InsClause");
+    Vertex<IVertexId, IProperty> v8 = GraphUtil.makeVertex("好医保0免赔", "InsComProd");
+
 
     Edge e1 = GraphUtil.makeEdge(v1, v2, "child");
     Edge e2 = GraphUtil.makeEdge(v2, v3, "child");
@@ -49,8 +53,13 @@ public class InsuranceTests {
     Edge e7 = GraphUtil.makeEdge(v5, v5, "evolve");
     Edge e8 = GraphUtil.makeEdge(v3, v2, "evolve");
 
+    Edge e9 = GraphUtil.makeEdge(v2, v6, "disclaimClause", "disclaimType", "既往");
+    Edge e10 = GraphUtil.makeEdge(v6, v7, "clauseVersion");
+    Edge e11 = GraphUtil.makeEdge(v7, v8, "insClauseVersion");
+
+
     List<IVertex<IVertexId, IProperty>> vertexList = Arrays.asList(v1, v2, v3, v4, v5);
-    List<IEdge<IVertexId, IProperty>> edgeList = Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8);
+    List<IEdge<IVertexId, IProperty>> edgeList = Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11);
     return GraphUtil.buildMemState(vertexList, edgeList);
   }
 
@@ -97,5 +106,20 @@ public class InsuranceTests {
             new Node("InsDisease"),
             new HashMap<>());
     Assert.assertTrue(triples.size() == 2);
+  }
+
+  @Test
+  public void disclaim() {
+    ResourceLogicCatalog logicCatalog = new ResourceLogicCatalog("/InsuranceRules.txt");
+    logicCatalog.init();
+    Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
+
+    List<Result> triples =
+            thinker.find(
+                    new Entity("肺部肿物或结节", "InsDisease"),
+                    new Predicate("disclaim"),
+                    new Entity("好医保0免赔", "InsComProd"),
+                    new HashMap<>());
+    Assert.assertTrue(triples.size() == 1);
   }
 }
