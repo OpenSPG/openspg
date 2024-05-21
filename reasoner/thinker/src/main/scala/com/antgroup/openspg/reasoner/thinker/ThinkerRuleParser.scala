@@ -278,7 +278,7 @@ class ThinkerRuleParser extends RuleExprParser {
       val propertyName: String = propertyNameList.head.getText
       val subject = aliasToElementMap(alias)
       val predicate = new Predicate(propertyName)
-      val o = new graph.Any()
+      val o = new Value(null, "anonymous_" + getDefaultAliasNum)
       body += new TriplePattern(new logic.graph.Triple(subject, predicate, o))
     }
   }
