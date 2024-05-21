@@ -23,8 +23,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
 import java.util.List;
-import scala.collection.JavaConversions;
+
+import org.apache.commons.lang3.StringUtils;
 import scala.collection.immutable.Map;
 import scala.collection.immutable.Set;
 
@@ -42,18 +44,27 @@ public class ResourceLogicCatalog extends LogicCatalog {
     InputStream inputStream = this.getClass().getResourceAsStream(path);
     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
     StringBuilder sb = new StringBuilder();
+    List<String> rules = new LinkedList<>();
     try {
       String line = null;
       while ((line = reader.readLine()) != null) {
-        sb.append(line).append("\n");
+        if (StringUtils.isNotBlank(line)) {
+          sb.append(line).append("\n");
+        } else {
+          rules.add(sb.toString());
+          sb = new StringBuilder();
+        }
       }
     } catch (IOException ex) {
       throw new RuntimeException(ex);
     }
-    List<Rule> rules = JavaConversions.seqAsJavaList(parser.parseSimplifyDsl(sb.toString(), null));
+    if (StringUtils.isNotBlank(sb)) {
+      rules.add(sb.toString());
+    }
     LogicNetwork logicNetwork = new LogicNetwork();
-    for (Rule r : rules) {
-      logicNetwork.addRule(r);
+    for (String r : rules) {
+      Rule rule = parser.parseSimplifyDsl(r, null).head();
+      logicNetwork.addRule(rule);
     }
     return logicNetwork;
   }

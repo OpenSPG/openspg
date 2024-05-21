@@ -58,7 +58,7 @@ public class InsuranceTests {
     Edge e11 = GraphUtil.makeEdge(v7, v8, "insClauseVersion");
 
 
-    List<IVertex<IVertexId, IProperty>> vertexList = Arrays.asList(v1, v2, v3, v4, v5);
+    List<IVertex<IVertexId, IProperty>> vertexList = Arrays.asList(v1, v2, v3, v4, v5, v6, v7, v8);
     List<IEdge<IVertexId, IProperty>> edgeList = Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11);
     return GraphUtil.buildMemState(vertexList, edgeList);
   }
