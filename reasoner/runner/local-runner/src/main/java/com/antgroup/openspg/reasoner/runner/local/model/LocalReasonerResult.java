@@ -20,6 +20,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 
 public class LocalReasonerResult {
@@ -29,6 +30,8 @@ public class LocalReasonerResult {
   private final String errMsg;
 
   private final String debugTraceInfo;
+
+  private List<Map<String, Object>> debugWithStartNodeInfos;
 
   // select result
   private final List<String> columns;
@@ -68,7 +71,8 @@ public class LocalReasonerResult {
       List<IVertex<IVertexId, IProperty>> vertexList,
       List<IEdge<IVertexId, IProperty>> edgeList,
       boolean graphResult,
-      String debugTraceInfo) {
+      String debugTraceInfo,
+      List<Map<String, Object>> debugWithStartNodeInfos) {
     this.columns = null;
     this.rows = null;
     this.graphResult = graphResult;
@@ -76,6 +80,7 @@ public class LocalReasonerResult {
     this.edgeList = edgeList;
     this.errMsg = "";
     this.debugTraceInfo = debugTraceInfo;
+    this.debugWithStartNodeInfos = debugWithStartNodeInfos;
   }
 
   /** output graph and row */
@@ -85,7 +90,8 @@ public class LocalReasonerResult {
       List<IVertex<IVertexId, IProperty>> vertexList,
       List<IEdge<IVertexId, IProperty>> edgeList,
       boolean graphResult,
-      String debugTraceInfo) {
+      String debugTraceInfo,
+      List<Map<String, Object>> debugWithStartNodeInfos) {
     this.columns = columns;
     this.rows = rows;
     this.graphResult = graphResult;
@@ -93,6 +99,15 @@ public class LocalReasonerResult {
     this.edgeList = edgeList;
     this.errMsg = "";
     this.debugTraceInfo = debugTraceInfo;
+    this.debugWithStartNodeInfos = debugWithStartNodeInfos;
+  }
+
+  public void setDebugWithStartNodeInfos(List<Map<String, Object>> debugWithStartNodeInfos) {
+    this.debugWithStartNodeInfos = debugWithStartNodeInfos;
+  }
+
+  public List<Map<String, Object>> getDebugWithStartNodeInfos() {
+    return debugWithStartNodeInfos;
   }
 
   /**
