@@ -174,9 +174,7 @@ public class LocalReasonerRunner {
         mockLocalGraphLoader.load();
       }
 
-      if (task.getParams().containsKey(ConfigKey.KG_REASONER_DEBUG_TRACE_ENABLE)) {
-        task.setExecutionRecorder(new DefaultRecorder());
-      }
+      task.setExecutionRecorder(new DefaultRecorder());
 
       if (physicalOpRoot instanceof Select) {
         LocalRow row = (LocalRow) ((Select<LocalRDG>) physicalOpRoot).row();

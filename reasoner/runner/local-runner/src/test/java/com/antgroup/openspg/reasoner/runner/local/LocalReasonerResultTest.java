@@ -45,7 +45,7 @@ public class LocalReasonerResultTest {
                 Direction.OUT));
     boolean ddlResult = true;
     LocalReasonerResult localReasonerResult =
-        new LocalReasonerResult(vertexList, edgeList, ddlResult, "");
+        new LocalReasonerResult(vertexList, edgeList, ddlResult, "", Lists.newArrayList());
     Assert.assertTrue(localReasonerResult.isGraphResult());
 
     System.out.println(localReasonerResult);
