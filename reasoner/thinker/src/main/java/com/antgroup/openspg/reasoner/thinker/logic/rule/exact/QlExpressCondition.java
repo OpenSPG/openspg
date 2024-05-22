@@ -65,13 +65,10 @@ public class QlExpressCondition extends Condition {
       ruleCtx.putAll(context);
     }
     for (Element element : spoList) {
-      if (element instanceof Entity || element instanceof Node) {
-        ruleCtx.put(element.shortString(), true);
-      } else {
+      ruleCtx.put(element.shortString(), true);
+      if (element instanceof Triple) {
         Triple triple = (Triple) element;
-        if (triple.getObject() instanceof Entity) {
-          ruleCtx.put(element.shortString(), true);
-        } else {
+        if (triple.getObject() instanceof Value) {
           Map<String, Object> props = (Map<String, Object>) ruleCtx.computeIfAbsent(triple.getSubject().alias(), (k) -> new HashMap<String, Object>());
           props.put(((Predicate)((Triple) element).getPredicate()).getName(), ((Value) triple.getObject()).getVal());
         }
@@ -84,11 +81,7 @@ public class QlExpressCondition extends Condition {
       }
       Object rst =
           RuleRunner.getInstance().executeExpression(ruleCtx, Arrays.asList(qlExpress), "");
-      if (rst == null) {
-        return false;
-      } else {
-        return (Boolean) rst;
-      }
+      return (Boolean) rst;
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
