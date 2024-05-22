@@ -19,9 +19,13 @@ import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Data
 public class LogicNetwork {
+  private static final Logger logger = LoggerFactory.getLogger(LogicNetwork.class);
+
   private Map<Element, Map<Element, List<Rule>>> forwardRules;
   private Map<Element, Map<List<Element>, List<Rule>>> backwardRules;
 
@@ -64,6 +68,7 @@ public class LogicNetwork {
         entry.getValue().values().stream().forEach(list -> rules.addAll(list));
       }
     }
+    logger.info("LogicNetwork getBackwardRules, pattern={}, rules={}", triple, rules.size());
     return rules;
   }
 }

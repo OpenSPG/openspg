@@ -13,15 +13,11 @@
 
 package com.antgroup.openspg.reasoner.thinker;
 
-import com.antgroup.openspg.reasoner.common.constants.Constants;
-import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
-import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexVersionProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
-import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.thinker.catalog.MockLogicCatalog;
 import com.antgroup.openspg.reasoner.thinker.engine.DefaultThinker;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
@@ -35,79 +31,16 @@ import org.junit.Test;
 
 public class DefaultThinkerTests {
   private GraphState<IVertexId> buildGraphState() {
-    GraphState<IVertexId> graphState = new MemGraphState();
+    Vertex<IVertexId, IProperty> a1 = GraphUtil.makeVertex("a1", "A");
+    Vertex<IVertexId, IProperty> a2 = GraphUtil.makeVertex("a2", "A");
+    Vertex<IVertexId, IProperty> b = GraphUtil.makeVertex("b", "B");
+    Vertex<IVertexId, IProperty> c = GraphUtil.makeVertex("c", "C");
 
-    Vertex<IVertexId, IProperty> vertex1 =
-        new Vertex<>(IVertexId.from("a1", "A"), new VertexVersionProperty());
-    Vertex<IVertexId, IProperty> vertex2 =
-        new Vertex<>(IVertexId.from("a2", "A"), new VertexVersionProperty());
-    Vertex<IVertexId, IProperty> vertex3 =
-        new Vertex<>(IVertexId.from("b", "B"), new VertexVersionProperty());
-    Vertex<IVertexId, IProperty> vertex4 =
-        new Vertex<>(IVertexId.from("c", "C"), new VertexVersionProperty("k1", "abcd"));
+    Edge a1b = GraphUtil.makeEdge(a1, b, "ab");
+    Edge a2b = GraphUtil.makeEdge(a2, b, "ab");
+    Edge bc = GraphUtil.makeEdge(b, c, "bc");
 
-    Edge a1b =
-        new Edge(
-            IVertexId.from("a1", "A"),
-            IVertexId.from("b", "B"),
-            new VertexVersionProperty(
-                Constants.EDGE_FROM_ID_TYPE_KEY,
-                "A",
-                Constants.EDGE_TO_ID_TYPE_KEY,
-                "B",
-                Constants.EDGE_FROM_ID_KEY,
-                "a1",
-                Constants.EDGE_TO_ID_KEY,
-                "b"),
-            0L,
-            Direction.OUT,
-            "ab");
-    Edge a2b =
-        new Edge(
-            IVertexId.from("a2", "A"),
-            IVertexId.from("b", "B"),
-            new VertexVersionProperty(
-                Constants.EDGE_FROM_ID_TYPE_KEY,
-                "A",
-                Constants.EDGE_TO_ID_TYPE_KEY,
-                "B",
-                Constants.EDGE_FROM_ID_KEY,
-                "a1",
-                Constants.EDGE_TO_ID_KEY,
-                "b"),
-            0L,
-            Direction.OUT,
-            "ab");
-    Edge bc =
-        new Edge(
-            IVertexId.from("b", "B"),
-            IVertexId.from("c", "C"),
-            new VertexVersionProperty(
-                Constants.EDGE_FROM_ID_TYPE_KEY,
-                "B",
-                Constants.EDGE_TO_ID_TYPE_KEY,
-                "C",
-                Constants.EDGE_FROM_ID_KEY,
-                "b",
-                Constants.EDGE_TO_ID_KEY,
-                "c"),
-            0L,
-            Direction.OUT,
-            "bc");
-
-    graphState.addVertex(vertex1);
-    graphState.addEdges(vertex1.getId(), new LinkedList<>(), Arrays.asList(a1b));
-    graphState.addVertex(vertex2);
-    graphState.addEdges(vertex2.getId(), new LinkedList<>(), Arrays.asList(a2b));
-
-    graphState.addVertex(vertex3);
-    graphState.addEdges(
-        vertex3.getId(), Arrays.asList(a1b.reverse(), a2b.reverse()), Arrays.asList(bc));
-
-    graphState.addVertex(vertex4);
-    graphState.addEdges(vertex4.getId(), Arrays.asList(bc.reverse()), new LinkedList<>());
-
-    return graphState;
+    return GraphUtil.buildMemState(Arrays.asList(a1, a2, b, c), Arrays.asList(a1b, a2b, bc));
   }
 
   @Test
@@ -116,7 +49,7 @@ public class DefaultThinkerTests {
     mockLogicCatalog.init();
     Thinker thinker = new DefaultThinker(buildGraphState(), mockLogicCatalog);
     List<Result> triples = thinker.find(new Entity("a1", "A"), null, null);
-    Assert.assertTrue(triples.size() == 1);
+    Assert.assertTrue(triples.size() == 2);
   }
 
   @Test

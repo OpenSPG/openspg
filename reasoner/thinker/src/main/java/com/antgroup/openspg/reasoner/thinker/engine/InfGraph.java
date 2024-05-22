@@ -28,8 +28,12 @@ import com.antgroup.openspg.reasoner.thinker.logic.rule.ClauseEntry;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InfGraph implements Graph {
+    private static final Logger logger = LoggerFactory.getLogger(InfGraph.class);
+
     private LogicNetwork logicNetwork;
     private TripleStore  tripleStore;
     private GraphStore   graphStore;
@@ -49,10 +53,12 @@ public class InfGraph implements Graph {
 
     @Override
     public List<Result> find(Triple pattern, Map<String, Object> context) {
+        logger.info("InfGraph find pattern={}, context={}", pattern, context);
         List<Result> result = new LinkedList<>();
         prepareContext(context);
         // Step1: find pattern in graph
         List<Result> dataInGraph = graphStore.find(pattern, context);
+        logger.info("GraphStore find pattern={}, result={}", pattern, dataInGraph);
         if (CollectionUtils.isNotEmpty(dataInGraph)) {
             for (Result tri : dataInGraph) {
                 addTriple((Triple) tri.getData());
@@ -60,7 +66,9 @@ public class InfGraph implements Graph {
             }
         }
         recorder.add((Triple) pattern.cleanAlias());
-        result.addAll(inference(pattern, context));
+        List<Result> infResult = inference(pattern, context);
+        logger.info("InfGraph infer pattern={}, result={}", pattern, infResult);
+        result.addAll(infResult);
         return result;
     }
 
