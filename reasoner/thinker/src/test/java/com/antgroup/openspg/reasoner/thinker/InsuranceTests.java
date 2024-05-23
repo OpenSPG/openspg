@@ -42,7 +42,6 @@ public class InsuranceTests {
     Vertex<IVertexId, IProperty> v7 = GraphUtil.makeVertex("好医保0免赔", "InsClause");
     Vertex<IVertexId, IProperty> v8 = GraphUtil.makeVertex("好医保0免赔", "InsComProd");
 
-
     Edge e1 = GraphUtil.makeEdge(v1, v2, "child");
     Edge e2 = GraphUtil.makeEdge(v2, v3, "child");
     Edge e3 = GraphUtil.makeEdge(v4, v3, "child");
@@ -57,9 +56,9 @@ public class InsuranceTests {
     Edge e10 = GraphUtil.makeEdge(v6, v7, "clauseVersion");
     Edge e11 = GraphUtil.makeEdge(v7, v8, "insClauseVersion");
 
-
     List<IVertex<IVertexId, IProperty>> vertexList = Arrays.asList(v1, v2, v3, v4, v5, v6, v7, v8);
-    List<IEdge<IVertexId, IProperty>> edgeList = Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11);
+    List<IEdge<IVertexId, IProperty>> edgeList =
+        Arrays.asList(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11);
     return GraphUtil.buildMemState(vertexList, edgeList);
   }
 
@@ -115,11 +114,11 @@ public class InsuranceTests {
     Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
 
     List<Result> triples =
-            thinker.find(
-                    new Entity("肺部肿物或结节", "InsDisease"),
-                    new Predicate("disclaim"),
-                    new Entity("好医保0免赔", "InsComProd"),
-                    new HashMap<>());
+        thinker.find(
+            new Entity("肺部肿物或结节", "InsDisease"),
+            new Predicate("disclaim"),
+            new Entity("好医保0免赔", "InsComProd"),
+            new HashMap<>());
     Assert.assertTrue(triples.size() == 1);
   }
 }

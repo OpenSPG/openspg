@@ -110,7 +110,8 @@ public class Entity extends Element {
       return Objects.equals(type, ((Node) other).getType());
     }
     if (other instanceof Entity) {
-      return Objects.equals(type, ((Entity) other).getType()) && Objects.equals(id, ((Entity) other).getId());
+      return Objects.equals(type, ((Entity) other).getType())
+          && Objects.equals(id, ((Entity) other).getId());
     }
     return equals(other);
   }

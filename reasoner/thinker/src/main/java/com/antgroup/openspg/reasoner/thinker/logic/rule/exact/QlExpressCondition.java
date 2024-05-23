@@ -14,9 +14,8 @@
 package com.antgroup.openspg.reasoner.thinker.logic.rule.exact;
 
 import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
-import com.antgroup.openspg.reasoner.thinker.logic.rule.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
-import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
+import com.antgroup.openspg.reasoner.thinker.qlexpress.QlExpressRunner;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -47,7 +46,7 @@ public class QlExpressCondition extends Condition {
                       @Override
                       public Map<String, Set<String>> load(String rule) throws Exception {
                         try {
-                          return RuleRunner.getInstance().getParamNames(rule);
+                          return ((QlExpressRunner) QlExpressRunner.getInstance()).getParamNames(rule);
                         } catch (Exception ex) {
                           throw new RuntimeException(ex);
                         }
@@ -69,8 +68,13 @@ public class QlExpressCondition extends Condition {
       if (element instanceof Triple) {
         Triple triple = (Triple) element;
         if (triple.getObject() instanceof Value) {
-          Map<String, Object> props = (Map<String, Object>) ruleCtx.computeIfAbsent(triple.getSubject().alias(), (k) -> new HashMap<String, Object>());
-          props.put(((Predicate)((Triple) element).getPredicate()).getName(), ((Value) triple.getObject()).getVal());
+          Map<String, Object> props =
+              (Map<String, Object>)
+                  ruleCtx.computeIfAbsent(
+                      triple.getSubject().alias(), (k) -> new HashMap<String, Object>());
+          props.put(
+              ((Predicate) ((Triple) element).getPredicate()).getName(),
+              ((Value) triple.getObject()).getVal());
         }
       }
     }
@@ -80,7 +84,7 @@ public class QlExpressCondition extends Condition {
         return null;
       }
       Object rst =
-          RuleRunner.getInstance().executeExpression(ruleCtx, Arrays.asList(qlExpress), "");
+              QlExpressRunner.getInstance().executeExpression(ruleCtx, Arrays.asList(qlExpress), "");
       return (Boolean) rst;
     } catch (Exception e) {
       throw new RuntimeException(e);
