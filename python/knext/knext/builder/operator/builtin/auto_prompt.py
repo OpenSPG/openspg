@@ -12,16 +12,15 @@
 
 import json
 import re
+import uuid
 from abc import ABC
 from typing import List, Dict, Tuple
 
-
+from knext.builder.operator.op import PromptOp
+from knext.builder.operator.spg_record import SPGRecord
 from knext.schema.client import SchemaClient
 from knext.schema.model.base import BaseSpgType
 from knext.schema.model.schema_helper import SPGTypeName, PropertyName, RelationName
-from knext.builder.operator.op import PromptOp
-from knext.builder.operator.spg_record import SPGRecord
-import uuid
 
 
 class AutoPrompt(PromptOp, ABC):
@@ -119,6 +118,12 @@ input:${input}
 
         self._init_render_variables()
         self._render()
+        self.params = {
+            "spg_type_name": spg_type_name,
+            "property_names": property_names,
+            "relation_names": relation_names,
+            "with_description": with_description,
+        }
 
     def build_prompt(self, variables: Dict[str, str]) -> str:
         return self.template.replace("${input}", variables.get("input"))
@@ -292,6 +297,12 @@ class EEPrompt(AutoPrompt):
 
         self._init_render_variables()
         self._render()
+        self.params = {
+            "event_type_name": event_type_name,
+            "property_names": property_names,
+            "relation_names": relation_names,
+            "with_description": with_description,
+        }
 
     def build_prompt(self, variables: Dict[str, str]) -> str:
         return self.template.replace("${input}", variables.get("input"))
