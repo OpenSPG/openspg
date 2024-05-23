@@ -14,19 +14,18 @@
 package com.antgroup.openspg.reasoner.thinker.qlexpress.op;
 
 import com.antgroup.openspg.reasoner.udf.rule.op.OperatorEqualsLessMore;
+import java.math.BigDecimal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.math.BigDecimal;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-
 /**
  * Custom comparison operator logic:
  *
- * 1. When comparing strings with numerical types, convert the string to a number.
- * 2. Support evaluation of expressions of the type ">150" > 150.
+ * <p>1. When comparing strings with numerical types, convert the string to a number. 2. Support
+ * evaluation of expressions of the type ">150" > 150.
  */
 public class RichOperatorEqualsLessMore extends OperatorEqualsLessMore {
   private static final String reg = "[<>]?\\s*\\d+(\\.\\d+)?";
@@ -89,24 +88,24 @@ public class RichOperatorEqualsLessMore extends OperatorEqualsLessMore {
   private Pair<Number, Number> buildRange(String opName, Number op) {
     if (">=".equals(opName) || ">".equals(opName)) {
       return new ImmutablePair<>(op, Long.MAX_VALUE);
-    } else if ("<=".equals(opName) || "<".equals(opName)){
+    } else if ("<=".equals(opName) || "<".equals(opName)) {
       return new ImmutablePair<>(Long.MIN_VALUE, op);
     } else {
       return null;
     }
   }
 
-
   private Boolean executeInner(Pair<Number, Number> left, Pair<Number, Number> right) {
-    if (OperatorEqualsLessMore.executeInner(">", left.getLeft(), right.getRight()) || OperatorEqualsLessMore.executeInner("<", left.getRight(), right.getLeft())) {
+    if (OperatorEqualsLessMore.executeInner(">", left.getLeft(), right.getRight())
+        || OperatorEqualsLessMore.executeInner("<", left.getRight(), right.getLeft())) {
       return false;
-    } else if (OperatorEqualsLessMore.executeInner("<=", left.getLeft(), right.getLeft()) && OperatorEqualsLessMore.executeInner(">=", left.getRight(), right.getRight())) {
+    } else if (OperatorEqualsLessMore.executeInner("<=", left.getLeft(), right.getLeft())
+        && OperatorEqualsLessMore.executeInner(">=", left.getRight(), right.getRight())) {
       return true;
     } else {
       return null;
     }
   }
-
 
   private String getValue(String content) {
     Matcher matcher = pattern.matcher(content);
@@ -116,7 +115,6 @@ public class RichOperatorEqualsLessMore extends OperatorEqualsLessMore {
       return null;
     }
   }
-
 
   private Number toNumber(String op, Class<?> numberClass) {
     int type = getSeq(numberClass);
@@ -143,5 +141,4 @@ public class RichOperatorEqualsLessMore extends OperatorEqualsLessMore {
     }
     return null;
   }
-
 }

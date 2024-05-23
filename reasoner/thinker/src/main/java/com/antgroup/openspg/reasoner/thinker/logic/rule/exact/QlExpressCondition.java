@@ -46,7 +46,8 @@ public class QlExpressCondition extends Condition {
                       @Override
                       public Map<String, Set<String>> load(String rule) throws Exception {
                         try {
-                          return ((QlExpressRunner) QlExpressRunner.getInstance()).getParamNames(rule);
+                          return ((QlExpressRunner) QlExpressRunner.getInstance())
+                              .getParamNames(rule);
                         } catch (Exception ex) {
                           throw new RuntimeException(ex);
                         }
@@ -84,7 +85,7 @@ public class QlExpressCondition extends Condition {
         return null;
       }
       Object rst =
-              QlExpressRunner.getInstance().executeExpression(ruleCtx, Arrays.asList(qlExpress), "");
+          QlExpressRunner.getInstance().executeExpression(ruleCtx, Arrays.asList(qlExpress), "");
       return (Boolean) rst;
     } catch (Exception e) {
       throw new RuntimeException(e);

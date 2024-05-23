@@ -30,8 +30,7 @@ import scala.Tuple2;
 
 public class QlExpressRunner extends RuleRunner {
 
-  private QlExpressRunner() {
-  }
+  private QlExpressRunner() {}
 
   public static RuleRunner getInstance() {
     if (null != instance) {
