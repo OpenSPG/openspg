@@ -86,7 +86,11 @@ public class QlExpressCondition extends Condition {
       }
       Object rst =
           QlExpressRunner.getInstance().executeExpression(ruleCtx, Arrays.asList(qlExpress), "");
-      return (Boolean) rst;
+      if (rst == null) {
+        return false;
+      } else {
+        return (Boolean) rst;
+      }
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

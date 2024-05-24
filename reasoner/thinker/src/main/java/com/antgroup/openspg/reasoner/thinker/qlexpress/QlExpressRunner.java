@@ -29,10 +29,11 @@ import java.util.TreeMap;
 import scala.Tuple2;
 
 public class QlExpressRunner extends RuleRunner {
+  private static volatile QlExpressRunner instance = null;
 
   private QlExpressRunner() {}
 
-  public static RuleRunner getInstance() {
+  public static QlExpressRunner getInstance() {
     if (null != instance) {
       return instance;
     }

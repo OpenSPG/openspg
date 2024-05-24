@@ -24,6 +24,8 @@ import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleExecutor;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -93,20 +95,36 @@ public class InfGraph implements Graph {
           rule.getBody().stream().map(ClauseEntry::toElement).collect(Collectors.toList());
       List<List<Result>> data = prepareElements(body, rule.getHead().toElement(), pattern, context);
       if (CollectionUtils.isEmpty(data)) {
-        continue;
-      }
-      for (List<Result> d : data) {
         TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
-        List<Element> dList = d.stream().map(Result::getData).collect(Collectors.toList());
-        Boolean ret = rule.getRoot().accept(dList, context, new RuleExecutor(), traceLogger);
+        Boolean ret = rule.getRoot().accept(new LinkedList<>(), context, new RuleExecutor(), traceLogger);
         traceLogger.setCurrentNodeMsg(rule.getDesc());
         if (ret) {
           Element ele = rule.getHead().toElement();
-          rst.add(new Result(bindResult(dList, ele), traceLogger));
+          rst.add(new Result(ele, traceLogger));
           if (ele instanceof Triple) {
             addTriple((Triple) ele);
           } else {
             addEntity((Entity) ele);
+          }
+        }
+      } else {
+        for (List<Result> d : data) {
+          TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
+          List<Element> dList = d.stream().map(Result::getData).collect(Collectors.toList());
+          Boolean ret = rule.getRoot().accept(dList, context, new RuleExecutor(), traceLogger);
+          List<String> msg = d.stream().map(Result::getTraceLog).filter(l -> l != null).map(TreeLogger::getCurrentNodeMsg)
+                  .filter(m -> StringUtils.isNotBlank(m)).collect(Collectors.toList());
+          List<String> msgs = new LinkedList<>(msg);
+          msgs.add(traceLogger.getCurrentNodeMsg());
+          traceLogger.setCurrentNodeMsg(StringUtils.join(msgs, ";"));
+          if (ret) {
+            Element ele = rule.getHead().toElement();
+            rst.add(new Result(bindResult(dList, ele), traceLogger));
+            if (ele instanceof Triple) {
+              addTriple((Triple) ele);
+            } else {
+              addEntity((Entity) ele);
+            }
           }
         }
       }
@@ -288,19 +306,25 @@ public class InfGraph implements Graph {
           return false;
         }
       } else if (!(((Triple) e).getSubject() instanceof Triple)) {
-        Entity s = (Entity) ((Triple) e).getSubject();
-        Entity o = (Entity) ((Triple) e).getObject();
-        if (!aliasToId.containsKey(s.alias())) {
-          aliasToId.put(s.alias(), s.getId());
+        if (((Triple) e).getSubject() instanceof Entity) {
+          Entity s = (Entity) ((Triple) e).getSubject();
+          if (!aliasToId.containsKey(s.alias())) {
+            aliasToId.put(s.alias(), s.getId());
+          }
+          if (!StringUtils.equals(s.getId(), aliasToId.get(s.alias()))) {
+            return false;
+          }
         }
-        if (!aliasToId.containsKey(o.alias())) {
-          aliasToId.put(o.alias(), o.getId());
-        }
-        if (!StringUtils.equals(s.getId(), aliasToId.get(s.alias()))) {
-          return false;
-        }
-        if (!StringUtils.equals(o.getId(), aliasToId.get(o.alias()))) {
-          return false;
+        if (((Triple) e).getObject() instanceof Entity) {
+          Entity o = (Entity) ((Triple) e).getObject();
+
+          if (!aliasToId.containsKey(o.alias())) {
+            aliasToId.put(o.alias(), o.getId());
+          }
+
+          if (!StringUtils.equals(o.getId(), aliasToId.get(o.alias()))) {
+            return false;
+          }
         }
       }
     }

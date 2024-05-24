@@ -148,7 +148,7 @@ public class RuleRunner {
 
   protected RuleRunner() {}
 
-  protected static volatile RuleRunner instance = null;
+  private static volatile RuleRunner instance = null;
 
   public static RuleRunner getInstance() {
     if (null != instance) {
