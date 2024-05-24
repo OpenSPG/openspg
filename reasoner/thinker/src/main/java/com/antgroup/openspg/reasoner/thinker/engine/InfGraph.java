@@ -115,7 +115,9 @@ public class InfGraph implements Graph {
           List<String> msg = d.stream().map(Result::getTraceLog).filter(l -> l != null).map(TreeLogger::getCurrentNodeMsg)
                   .filter(m -> StringUtils.isNotBlank(m)).collect(Collectors.toList());
           List<String> msgs = new LinkedList<>(msg);
-          msgs.add(traceLogger.getCurrentNodeMsg());
+          if (StringUtils.isNotBlank(rule.getDesc())) {
+            msgs.add(rule.getDesc());
+          }
           traceLogger.setCurrentNodeMsg(StringUtils.join(msgs, ";"));
           if (ret) {
             Element ele = rule.getHead().toElement();
