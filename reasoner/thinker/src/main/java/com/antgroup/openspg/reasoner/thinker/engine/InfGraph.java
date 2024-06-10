@@ -78,6 +78,11 @@ public class InfGraph implements Graph {
     return inference(s, context);
   }
 
+  public List<Result> find(Entity s, Map<String, Object> context) {
+    prepareContext(context);
+    return inference(s, context);
+  }
+
   private void prepareContext(Map<String, Object> context) {
     if (context != null) {
       for (Object val : context.values()) {
@@ -144,12 +149,16 @@ public class InfGraph implements Graph {
         map.put(((Triple) e).getObject().alias(), ((Triple) e).getObject());
       }
     }
-    if (pattern instanceof Entity || pattern instanceof Node) {
+    if (pattern instanceof Entity) {
+      return pattern;
+    } else if (pattern instanceof Node) {
       return map.get(pattern.alias());
     }
     Triple t = (Triple) pattern;
     return new Triple(
-        map.get(t.getSubject().alias()), t.getPredicate(), map.get(t.getObject().alias()));
+        map.getOrDefault(t.getSubject().alias(), ((Triple) pattern).getSubject()),
+            t.getPredicate(),
+            map.getOrDefault(t.getObject().alias(), ((Triple) pattern).getObject()));
   }
 
   private List<List<Result>> prepareElements(
@@ -339,7 +348,9 @@ public class InfGraph implements Graph {
     if (spo == null || spo.isEmpty()) {
       if (pattern instanceof Node) {
         result = find((Node) pattern, context);
-      } else if (!recorder.contains(pattern.cleanAlias())) {
+      } else if (pattern instanceof Entity) {
+        result = find((Entity) pattern, context);
+      }else if (!recorder.contains(pattern.cleanAlias())) {
         result = find((Triple) pattern, context);
       }
     } else {

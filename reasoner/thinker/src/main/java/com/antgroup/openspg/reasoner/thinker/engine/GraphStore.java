@@ -22,10 +22,8 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 public class GraphStore implements Graph {
   private GraphState<IVertexId> graphState;
@@ -48,7 +46,7 @@ public class GraphStore implements Graph {
     } else if (pattern.getSubject() instanceof Triple) {
       data = getTriple((Triple) pattern.getSubject(), (Predicate) pattern.getPredicate());
     } else {
-      throw new RuntimeException("Cannot support " + pattern);
+      return new ArrayList<>();
     }
     return matchInGraph(pattern, data);
   }

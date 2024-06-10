@@ -52,6 +52,9 @@ public class Node extends Element {
     if (other == null) {
       return false;
     }
+    if (other instanceof Any) {
+      return true;
+    }
     if (other instanceof Node) {
       return Objects.equals(type, ((Node) other).getType());
     }
