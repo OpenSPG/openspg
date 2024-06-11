@@ -52,6 +52,7 @@ public class PatternMatcher implements Serializable {
   private final String taskId;
   private final GraphState<IVertexId> graphState;
   private long initTime;
+  private boolean debugEnable = false;
 
   public PatternMatcher(String taskId, GraphState<IVertexId> graphState) {
     this.taskId = taskId;
@@ -61,6 +62,15 @@ public class PatternMatcher implements Serializable {
 
   public void resetInitTime() {
     this.initTime = System.currentTimeMillis();
+  }
+
+  /**
+   * set enable flag
+   *
+   * @param debugEnable
+   */
+  public void setDebugEnable(boolean debugEnable) {
+    this.debugEnable = debugEnable;
   }
 
   /**
@@ -92,6 +102,9 @@ public class PatternMatcher implements Serializable {
     }
     IVertex<IVertexId, IProperty> vertex = graphState.getVertex(id, endVersion, vertexRule);
     if (null == vertex) {
+      if (this.debugEnable) {
+        log.warn("PatternMatcher patternMatch get id=" + id.toString() + " is null");
+      }
       return null;
     }
 
@@ -101,6 +114,15 @@ public class PatternMatcher implements Serializable {
     // check root types
     PatternElement patternElement = pattern.root();
     if (!patternElement.getMetaTypeNames().contains(RunnerUtil.getVertexType(vertex))) {
+      if (this.debugEnable) {
+        log.warn(
+            "PatternMatcher patternMatch meta type match failed id="
+                + id.toString()
+                + " need="
+                + patternElement.getMetaTypeNames()
+                + ", value is="
+                + RunnerUtil.getVertexType(vertex));
+      }
       return null;
     }
 
@@ -108,7 +130,7 @@ public class PatternMatcher implements Serializable {
     Map<String, Object> vertexContext = RunnerUtil.vertexContext(vertex, pattern.root().alias());
     if (!rootVertexRuleList.isEmpty()
         && !RuleRunner.getInstance().check(vertexContext, rootVertexRuleList, this.taskId)) {
-      if (DebugVertexIdSet.DEBUG_VERTEX_ID_SET.contains(vertex.getId())) {
+      if (DebugVertexIdSet.DEBUG_VERTEX_ID_SET.contains(vertex.getId()) || this.debugEnable) {
         log.info(
             "PatternMatch check vertex rule false, vertexContext="
                 + JSON.toJSONString(vertexContext)
@@ -159,6 +181,18 @@ public class PatternMatcher implements Serializable {
                 Sets.newHashSet(edgeType),
                 direction,
                 edgeTypeRuleMap);
+        if (this.debugEnable) {
+          log.warn(
+              "PatternMatcher patternMatch get edge id="
+                  + id.toString()
+                  + " edgeType="
+                  + edgeType
+                  + ", direction="
+                  + direction
+                  + " edgeTypeRuleMap="
+                  + JSON.toJSONString(edgeTypeRuleMap)
+                  + " edges="+JSON.toJSONString(edges));
+        }
         edgeList.addAll(edges);
       }
     }
@@ -187,6 +221,15 @@ public class PatternMatcher implements Serializable {
                 return !validVertexIdSet.contains(edge.getTargetId());
               }
             });
+        if (this.debugEnable) {
+          log.warn(
+              "PatternMatcher patternMatch validVertexIdSet id="
+                  + id.toString()
+                  + " willMatchEdgeList="
+                  + JSON.toJSONString(willMatchEdgeList)
+                  + " validVertexIdSet="
+                  + JSON.toJSONString(validVertexIdSet));
+        }
       }
 
       // check dst vertex rule list
@@ -202,6 +245,15 @@ public class PatternMatcher implements Serializable {
                 return !RuleRunner.getInstance().check(context, dstVertexRuleList, taskId);
               }
             });
+        if (this.debugEnable) {
+          log.warn(
+              "PatternMatcher patternMatch dstVertexRuleList id="
+                  + id.toString()
+                  + " willMatchEdgeList="
+                  + JSON.toJSONString(willMatchEdgeList)
+                  + " dstVertexRuleList="
+                  + JSON.toJSONString(dstVertexRuleList));
+        }
       }
 
       List<IEdge<IVertexId, IProperty>> validEdges =
@@ -209,7 +261,7 @@ public class PatternMatcher implements Serializable {
               vertexContext, willMatchEdgeList, patternConnection, pattern, edgeRuleMap, limit);
       if (CollectionUtils.isEmpty(validEdges)) {
         // one edge pattern connection no match
-        if (DebugVertexIdSet.DEBUG_VERTEX_ID_SET.contains(vertex.getId())) {
+        if (DebugVertexIdSet.DEBUG_VERTEX_ID_SET.contains(vertex.getId()) || this.debugEnable) {
           log.info(
               "PatternMatch edge not match, vertexContext="
                   + JSON.toJSONString(vertexContext)

@@ -27,6 +27,7 @@ import com.antgroup.openspg.reasoner.common.graph.type.GraphItemType;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
+import com.antgroup.openspg.reasoner.common.utils.LabelTypeUtils;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.model.MergeTypeEnum;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
@@ -268,6 +269,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     this.startVertexAlias = startVertexAlias;
     this.taskId = taskId;
     this.patternMatcher = new PatternMatcher(this.taskId, graphState);
+    this.patternMatcher.setDebugEnable(true);
     this.isCarryTraversalGraph = carryTraversalGraph;
 
     if (null == executionRecorder) {
@@ -1136,7 +1138,7 @@ public class LocalRDG extends RDG<LocalRDG> {
       DebugInfoWithStartId startId, String bizId, String targetLabel, String targetId) {
     java.util.Map<String, Object> processInfo = startId.toJsonObj();
     if (StringUtils.isNotBlank(targetLabel)) {
-      processInfo.put("targetLabel", targetLabel.split("/")[0]);
+      processInfo.put("targetLabel", LabelTypeUtils.getMetaType(targetLabel));
       processInfo.put("targetId", targetId);
     }
     java.util.Map<String, Object> startIdInfo = new HashMap<>();

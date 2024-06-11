@@ -64,28 +64,32 @@ class SemanticPropertyGraph(
     }
   }
 
-  def getNode(nodeLabel: String): Node = {
-    graphSchema.nodes(nodeLabel)
-  }
-
-  def getEdge(spoStr: String): Edge = {
+  def getEdgeWithMetaType(spoStr: String): SPO = {
     var spo = new SPO(spoStr)
     if (!graphSchema.edges.contains(spo)) {
       spo = new SPO(LabelTypeUtils.getMetaType(spo.getS),
         spo.getP, LabelTypeUtils.getMetaType(spo.getO))
     }
+    spo
+  }
+
+  def getNode(nodeLabel: String): Node = {
+    val nodeLabelOnlyMetaType = LabelTypeUtils.getMetaType(nodeLabel)
+    graphSchema.nodes(nodeLabelOnlyMetaType)
+  }
+
+  def getEdge(spoStr: String): Edge = {
+    val spo = getEdgeWithMetaType(spoStr)
     graphSchema.edges(spo)
   }
 
   def containsNode(nodeLabel: String): Boolean = {
-    graphSchema.nodes.contains(nodeLabel)
+    val nodeLabelOnlyMetaType = LabelTypeUtils.getMetaType(nodeLabel)
+    graphSchema.nodes.contains(nodeLabelOnlyMetaType)
   }
 
   def containsEdge(spoStr: String): Boolean = {
-    var spo = new SPO(spoStr)
-    if (spo.getP.equals("belongTo") && !graphSchema.edges.contains(spo)) {
-      spo = new SPO(spo.getS, spo.getP, spo.getO.split("/")(0))
-    }
+    val spo = getEdgeWithMetaType(spoStr)
     graphSchema.edges.contains(spo)
   }
 
