@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.lube.logical.planning
 
 import scala.collection.mutable
+
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
 import com.antgroup.openspg.reasoner.common.utils.{LabelTypeUtils, ParameterUtils}
