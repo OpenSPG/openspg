@@ -191,7 +191,8 @@ public class PatternMatcher implements Serializable {
                   + direction
                   + " edgeTypeRuleMap="
                   + JSON.toJSONString(edgeTypeRuleMap)
-                  + " edges="+JSON.toJSONString(edges));
+                  + " edges="
+                  + JSON.toJSONString(edges));
         }
         edgeList.addAll(edges);
       }
