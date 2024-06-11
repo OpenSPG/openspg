@@ -100,7 +100,7 @@ public class PatternMatcher implements Serializable {
 
     // check root types
     PatternElement patternElement = pattern.root();
-    if (!patternElement.typeNames().contains(RunnerUtil.getVertexType(vertex))) {
+    if (!patternElement.getMetaTypeNames().contains(RunnerUtil.getVertexType(vertex))) {
       return null;
     }
 
@@ -282,7 +282,7 @@ public class PatternMatcher implements Serializable {
     // edge target type match
     if (!pattern
         .getNode(patternConnection.target())
-        .typeNames()
+        .getMetaTypeNames()
         .contains(RunnerUtil.getEdgeTargetType(edge))) {
       return false;
     }
@@ -290,7 +290,7 @@ public class PatternMatcher implements Serializable {
     // edge source type match
     if (!pattern
         .getNode(patternConnection.source())
-        .typeNames()
+        .getMetaTypeNames()
         .contains(RunnerUtil.getEdgeSourceType(edge))) {
       return false;
     }

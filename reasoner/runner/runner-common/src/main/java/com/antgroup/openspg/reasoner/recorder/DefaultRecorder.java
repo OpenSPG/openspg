@@ -70,10 +70,7 @@ public class DefaultRecorder implements IExecutionRecorder {
 
   @Override
   public void stageResultWithDetail(
-      String stage,
-      long result,
-      Map<String, List<IVertexId>> runtimeDetail,
-      List<Rule> relateRules) {
+      String stage, long result, Map<String, Object> runtimeDetail, List<Rule> relateRules) {
     SubAction nowAction = actionStack.peek();
     nowAction.getSubActionList().add(new SampleAction(stage, result, runtimeDetail, relateRules));
   }
@@ -83,7 +80,7 @@ public class DefaultRecorder implements IExecutionRecorder {
       String stage,
       long result,
       String finishDescribe,
-      Map<String, List<IVertexId>> runtimeDetail,
+      Map<String, Object> runtimeDetail,
       List<Rule> relateRules) {
     SubAction nowAction = actionStack.peek();
     nowAction

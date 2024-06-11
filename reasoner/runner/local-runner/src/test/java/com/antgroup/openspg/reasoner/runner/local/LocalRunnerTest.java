@@ -15,8 +15,10 @@ package com.antgroup.openspg.reasoner.runner.local;
 
 import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
+import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.utils.PropertyUtil;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
+import com.antgroup.openspg.reasoner.lube.catalog.GeneralSemanticRule;
 import com.antgroup.openspg.reasoner.lube.catalog.impl.PropertyGraphCatalog;
 import com.antgroup.openspg.reasoner.progress.ProgressReport;
 import com.antgroup.openspg.reasoner.recorder.DefaultRecorder;
@@ -37,6 +39,285 @@ import org.junit.Test;
 import scala.Tuple2;
 
 public class LocalRunnerTest {
+  @Test
+  public void testCreateConceptInstance() {
+    String rule =
+        "Define (s:XIQIAN.User)-[p:belongTo]->(o:`XIQIAN.UserBehavior`/`交易风险`) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        r1(\"存在凌晨交易\") = s.nightTrader == 1\n"
+            + "        r2(\"凌晨交易频繁\") = s.nightTrader == 2\n"
+            + "        r3(\"凌晨交易多\") = s.nightTrader == 3\n"
+            + "        s_r1 = rule_value(r1, \"存在凌晨交易\", \"\")\n"
+            + "        s_r2 = rule_value(r2, \"凌晨交易频繁\", s_r1)\n"
+            + "        s_r3 = rule_value(r3, \"凌晨交易多\", s_r2)\n"
+            + "        R: s_r3 != \"\"\n"
+            + "    }\n"
+            + "    Action {\n"
+            + "        sub_concept = createNodeInstance(\n"
+            + "            type=XIQIAN.UserBehavior,\n"
+            + "            value={\n"
+            + "                id=concat(\"交易风险-\", s_r3)\n"
+            + "            }\n"
+            + "        )\n"
+            + "        createEdgeInstance(\n"
+            + "            src=s,\n"
+            + "            dst=sub_concept,\n"
+            + "            type=belongTo,\n"
+            + "            value={\n"
+            + "                __to_id_type__='XIQIAN.UserBehavior'\n"
+            + "                __from_id_type__='XIQIAN.User'\n"
+            + "            }\n"
+            + "        )\n"
+            + "    }\n"
+            + "}";
+    String rule1 =
+        "Define (s:XIQIAN.User)-[p:belongTo]->(o:`XIQIAN.UserBehavior`/`资金来源`) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        r1(\"存在凌晨交易\") = s.nightTrader == 1\n"
+            + "        r2(\"凌晨交易频繁\") = s.nightTrader == 2\n"
+            + "        r3(\"凌晨交易多\") = s.nightTrader == 3\n"
+            + "        s_r1 = rule_value(r1, \"存在资金交易\", \"\")\n"
+            + "        s_r2 = rule_value(r2, \"资金交易频繁\", s_r1)\n"
+            + "        s_r3 = rule_value(r3, \"资金交易多\", s_r2)\n"
+            + "        R: s_r3 != \"\"\n"
+            + "    }\n"
+            + "    Action {\n"
+            + "        sub_concept = createNodeInstance(\n"
+            + "            type=XIQIAN.UserBehavior,\n"
+            + "            value={\n"
+            + "                id=concat(\"资金来源-\", s_r3)\n"
+            + "            }\n"
+            + "        )\n"
+            + "        createEdgeInstance(\n"
+            + "            src=s,\n"
+            + "            dst=sub_concept,\n"
+            + "            type=belongTo,\n"
+            + "            value={\n"
+            + "                __to_id_type__='XIQIAN.UserBehavior'\n"
+            + "                __from_id_type__='XIQIAN.User'\n"
+            + "            }\n"
+            + "        )\n"
+            + "    }\n"
+            + "}";
+    String dsl =
+        "match (s:XIQIAN.User)-[p:belongTo]->(o:XIQIAN.UserBehavior)-[p2:newedge]->(o2:XIQIAN.TaxOfUserBehavior) return s.id,p,o.id, o2.id"
+            + "";
+    //    String dsl = rule;
+    LocalReasonerTask task = new LocalReasonerTask();
+    task.setDsl(dsl);
+    task.setGraphLoadClass(
+        "com.antgroup.openspg.reasoner.runner.local.loader.TestFanxiqianGraphLoader");
+    task.getParams().put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true);
+    task.getParams().put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
+    task.getParams().put(ConfigKey.KG_REASONER_OUTPUT_GRAPH, true);
+    task.setStartIdList(Lists.newArrayList(new Tuple2<>("张三", "XIQIAN.User")));
+    task.setExecutionRecorder(new DefaultRecorder());
+    task.setExecutorTimeoutMs(99999999999999999L);
+
+    // add mock catalog
+    Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
+    schema.put(
+        "XIQIAN.User",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name", "nightTrader")));
+    schema.put(
+        "XIQIAN.UserBehavior",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
+    schema.put(
+        "XIQIAN.TaxOfUserBehavior",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
+
+    schema.put(
+        "XIQIAN.User_belongTo_XIQIAN.UserBehavior",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+
+    schema.put(
+        "XIQIAN.UserBehavior_newedge_XIQIAN.TaxOfUserBehavior",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+
+    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
+    catalog.init();
+    catalog
+        .getGraph("KG")
+        .registerRule(
+            "XIQIAN.User_belongTo_XIQIAN.UserBehavior/交易风险", new GeneralSemanticRule(rule));
+    catalog
+        .getGraph("KG")
+        .addEdge(
+            "XIQIAN.User",
+            "belongTo",
+            "XIQIAN.UserBehavior/交易风险",
+            Direction.OUT,
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()),
+            false);
+    catalog
+        .getGraph("KG")
+        .registerRule(
+            "XIQIAN.User_belongTo_XIQIAN.UserBehavior/资金来源", new GeneralSemanticRule(rule1));
+    catalog
+        .getGraph("KG")
+        .addEdge(
+            "XIQIAN.User",
+            "belongTo",
+            "XIQIAN.UserBehavior/资金来源",
+            Direction.OUT,
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()),
+            false);
+    task.setCatalog(catalog);
+
+    LocalReasonerRunner runner = new LocalReasonerRunner();
+    LocalReasonerResult result = runner.run(task);
+    System.out.println(result);
+    System.out.println(task.getExecutionRecorder().toReadableString());
+    Assert.assertEquals(result.getRows().size(), 2);
+    Assert.assertEquals(result.getRows().get(0)[0], "张三");
+    clear();
+  }
+
+  @Test
+  public void testCreateConceptInstance2() {
+    String rule =
+        "Define (s:XIQIAN.User)-[p:belongTo]->(o:`XIQIAN.UserBehavior`/`交易风险`) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        r1(\"存在凌晨交易\") = s.nightTrader == 1\n"
+            + "        r2(\"凌晨交易频繁\") = s.nightTrader == 2\n"
+            + "        r3(\"凌晨交易多\") = s.nightTrader == 3\n"
+            + "        s_r1 = rule_value(r1, \"存在凌晨交易\", \"\")\n"
+            + "        s_r2 = rule_value(r2, \"凌晨交易频繁\", s_r1)\n"
+            + "        s_r3 = rule_value(r3, \"凌晨交易多\", s_r2)\n"
+            + "        R: s_r3 != \"\"\n"
+            + "    }\n"
+            + "    Action {\n"
+            + "        sub_concept = createNodeInstance(\n"
+            + "            type=XIQIAN.UserBehavior,\n"
+            + "            value={\n"
+            + "                id=concat(\"交易风险-\", s_r3)\n"
+            + "            }\n"
+            + "        )\n"
+            + "        createEdgeInstance(\n"
+            + "            src=s,\n"
+            + "            dst=sub_concept,\n"
+            + "            type=belongTo,\n"
+            + "            value={\n"
+            + "                __to_id_type__='XIQIAN.UserBehavior'\n"
+            + "                __from_id_type__='XIQIAN.User'\n"
+            + "            }\n"
+            + "        )\n"
+            + "    }\n"
+            + "}";
+    String rule1 =
+        "Define (s:XIQIAN.User)-[p:belongTo]->(o:`XIQIAN.UserBehavior`/`资金来源`) {\n"
+            + "    GraphStructure {\n"
+            + "        (s)\n"
+            + "    }\n"
+            + "    Rule {\n"
+            + "        r1(\"存在凌晨交易\") = s.nightTrader == 1\n"
+            + "        r2(\"凌晨交易频繁\") = s.nightTrader == 2\n"
+            + "        r3(\"凌晨交易多\") = s.nightTrader == 3\n"
+            + "        s_r1 = rule_value(r1, \"存在资金交易\", \"\")\n"
+            + "        s_r2 = rule_value(r2, \"资金交易频繁\", s_r1)\n"
+            + "        s_r3 = rule_value(r3, \"资金交易多\", s_r2)\n"
+            + "        R: s_r3 != \"\"\n"
+            + "    }\n"
+            + "    Action {\n"
+            + "        sub_concept = createNodeInstance(\n"
+            + "            type=XIQIAN.UserBehavior,\n"
+            + "            value={\n"
+            + "                id=concat(\"资金来源-\", s_r3)\n"
+            + "            }\n"
+            + "        )\n"
+            + "        createEdgeInstance(\n"
+            + "            src=s,\n"
+            + "            dst=sub_concept,\n"
+            + "            type=belongTo,\n"
+            + "            value={\n"
+            + "                __to_id_type__='XIQIAN.UserBehavior'\n"
+            + "                __from_id_type__='XIQIAN.User'\n"
+            + "            }\n"
+            + "        )\n"
+            + "    }\n"
+            + "}";
+    String dsl =
+        "match (s:XIQIAN.User)-[p:belongTo]->(o:`XIQIAN.UserBehavior`/`交易风险`)-[p2:newedge]->(o2:XIQIAN.TaxOfUserBehavior) return s.id,p,o.id, o2.id"
+            + "";
+    //    String dsl = rule;
+    LocalReasonerTask task = new LocalReasonerTask();
+    task.setDsl(dsl);
+    task.setGraphLoadClass(
+        "com.antgroup.openspg.reasoner.runner.local.loader.TestFanxiqianGraphLoader");
+    task.getParams().put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true);
+    task.getParams().put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
+    task.getParams().put(ConfigKey.KG_REASONER_OUTPUT_GRAPH, true);
+    task.setStartIdList(Lists.newArrayList(new Tuple2<>("张三", "XIQIAN.User")));
+    task.setExecutionRecorder(new DefaultRecorder());
+    task.setExecutorTimeoutMs(99999999999999999L);
+
+    // add mock catalog
+    Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
+    schema.put(
+        "XIQIAN.User",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name", "nightTrader")));
+    schema.put(
+        "XIQIAN.UserBehavior",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
+    schema.put(
+        "XIQIAN.TaxOfUserBehavior",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
+
+    schema.put(
+        "XIQIAN.User_belongTo_XIQIAN.UserBehavior",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+
+    schema.put(
+        "XIQIAN.UserBehavior_newedge_XIQIAN.TaxOfUserBehavior",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+
+    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
+    catalog.init();
+    catalog
+        .getGraph("KG")
+        .registerRule(
+            "XIQIAN.User_belongTo_XIQIAN.UserBehavior/交易风险", new GeneralSemanticRule(rule));
+    catalog
+        .getGraph("KG")
+        .addEdge(
+            "XIQIAN.User",
+            "belongTo",
+            "XIQIAN.UserBehavior/交易风险",
+            Direction.OUT,
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()),
+            false);
+    catalog
+        .getGraph("KG")
+        .registerRule(
+            "XIQIAN.User_belongTo_XIQIAN.UserBehavior/资金来源", new GeneralSemanticRule(rule1));
+    catalog
+        .getGraph("KG")
+        .addEdge(
+            "XIQIAN.User",
+            "belongTo",
+            "XIQIAN.UserBehavior/资金来源",
+            Direction.OUT,
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()),
+            false);
+    task.setCatalog(catalog);
+
+    LocalReasonerRunner runner = new LocalReasonerRunner();
+    LocalReasonerResult result = runner.run(task);
+    System.out.println(result);
+    System.out.println(task.getExecutionRecorder().toReadableString());
+    Assert.assertEquals(result.getRows().size(), 1);
+    Assert.assertEquals(result.getRows().get(0)[0], "张三");
+    clear();
+  }
 
   @Test
   public void doTestFilter() {

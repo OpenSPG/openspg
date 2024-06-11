@@ -14,13 +14,8 @@
 package com.antgroup.openspg.reasoner.lube.logical.validate.semantic.rules
 
 import com.antgroup.openspg.reasoner.lube.block.{Block, MatchBlock}
-import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  Connection,
-  EntityElement,
-  GraphPattern,
-  PatternElement
-}
+import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{Connection, EntityElement, GraphPattern, PatternElement}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
 import com.antgroup.openspg.reasoner.lube.logical.validate.semantic.Explain
 import scala.collection.mutable
@@ -40,7 +35,7 @@ object MetaConceptExplain extends Explain {
           if (metaConceptEdges.isEmpty) {
             p
           } else {
-            val kg = context.catalog.getKnowledgeGraph();
+            val kg = context.catalog.getGraph(Catalog.defaultGraphName)
             val metaConceptMap: mutable.HashMap[String, Set[String]] = mutable.HashMap.empty
             metaConceptEdges.foreach(e => parseMetaConcept(kg, e, pattern, metaConceptMap))
             val newNodes = pattern.nodes.map(n =>

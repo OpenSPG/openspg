@@ -180,11 +180,61 @@ public class LocalRDG extends RDG<LocalRDG> {
     return startIdSet;
   }
 
-  private java.util.Map<String, java.util.List<IVertexId>> generateRuntimeLog(
+  private java.util.Map<IVertexId, String> getStartIdWithHitRuleValue(
+      java.util.List<KgGraph<IVertexId>> kgGraphList, java.util.List<Rule> rules) {
+    java.util.Map<IVertexId, String> startIdSet = new java.util.HashMap();
+    java.util.List<Tuple2<String, java.util.List<String>>> fields = new ArrayList<>();
+    for (Rule rule : rules) {
+      fields.addAll(WareHouseUtils.getRuleUsedAliasEle(rule));
+    }
+    for (KgGraph<IVertexId> kgGraph : kgGraphList) {
+      java.util.Map<String, Object> context =
+          RunnerUtil.kgGraph2Context(RunnerUtil.getKgGraphInitContext(this.kgGraphSchema), kgGraph);
+      StringBuilder sb = new StringBuilder("");
+      for (Tuple2<String, java.util.List<String>> field : fields) {
+        Object value = context.get(field._1);
+        if (!(value instanceof java.util.Map)) {
+          continue;
+        }
+        java.util.Map<String, Object> values =
+            (java.util.Map<String, Object>) context.get(field._1);
+        for (String prop : field._2) {
+          if (!values.containsKey(prop)) {
+            continue;
+          }
+          sb.append(field._1).append(".").append(prop).append("=").append(values.get(prop));
+        }
+      }
+      System.out.println(sb.toString());
+      java.util.List<IVertex<IVertexId, IProperty>> startVertexList =
+          kgGraph.getVertex(this.curRdgStartVertexAlias);
+      for (IVertex<IVertexId, IProperty> startId : startVertexList) {
+        startIdSet.put(startId.getId(), sb.toString());
+      }
+      startVertexList = kgGraph.getVertex(this.startVertexAlias);
+      for (IVertex<IVertexId, IProperty> startId : startVertexList) {
+        startIdSet.put(startId.getId(), sb.toString());
+      }
+    }
+    return startIdSet;
+  }
+
+  private java.util.Map<String, Object> generateRuntimeLog(
       java.util.Set<IVertexId> failedStartId, java.util.Set<IVertexId> successStartId) {
-    java.util.Map<String, java.util.List<IVertexId>> runtimeLogMap = new HashMap<>();
+    java.util.Map<String, Object> runtimeLogMap = new HashMap<>();
     runtimeLogMap.put(SampleAction.FAILED_START_ID_KEY, Lists.newArrayList(failedStartId));
     runtimeLogMap.put(SampleAction.PASS_START_ID_KEY, Lists.newArrayList(successStartId));
+    return runtimeLogMap;
+  }
+
+  private java.util.Map<String, Object> generateRuntimeLog(
+      java.util.Set<IVertexId> failedStartId,
+      java.util.Set<IVertexId> successStartId,
+      java.util.Map<IVertexId, String> ruleRuntimeValue) {
+    java.util.Map<String, Object> runtimeLogMap = new HashMap<>();
+    runtimeLogMap.put(SampleAction.FAILED_START_ID_KEY, Lists.newArrayList(failedStartId));
+    runtimeLogMap.put(SampleAction.PASS_START_ID_KEY, Lists.newArrayList(successStartId));
+    runtimeLogMap.put(SampleAction.RULE_RUNTIME_VALUE, ruleRuntimeValue);
     return runtimeLogMap;
   }
 
@@ -314,6 +364,8 @@ public class LocalRDG extends RDG<LocalRDG> {
 
     this.kgGraphList = newKgGraphList;
     this.kgGraphSchema = KgGraphSchema.convert2KgGraphSchema(pattern);
+    java.util.Map<IVertexId, String> debugInfoWithRule =
+        getStartIdWithHitRuleValue(this.kgGraphList, patternRuleLists);
 
     log.info(
         "LocalRDG patternScan,root="
@@ -327,7 +379,7 @@ public class LocalRDG extends RDG<LocalRDG> {
         "patternScan(" + RunnerUtil.getReadablePattern(pattern) + ")",
         this.kgGraphList.size(),
         "SubPattern",
-        generateRuntimeLog(failedStartIdSet, afterStartId),
+        generateRuntimeLog(failedStartIdSet, afterStartId, debugInfoWithRule),
         patternRuleLists);
     return this;
   }
@@ -594,6 +646,9 @@ public class LocalRDG extends RDG<LocalRDG> {
     java.util.Set<IVertexId> failedStartIdSet = getRemoveHashSet(originStartId, afterStartId);
     this.kgGraphSchema = afterKgGraphSchema;
     this.kgGraphList = newKgGraphList;
+    java.util.Map<IVertexId, String> debugInfoWithRule =
+        getStartIdWithHitRuleValue(this.kgGraphList, patternRuleLists);
+
     log.info(
         "LocalRDG ExpandInto,patternRoot="
             + pattern.root()
@@ -604,7 +659,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     this.executionRecorder.stageResultWithDetail(
         "expandInto(" + RunnerUtil.getReadablePattern(pattern) + ")",
         this.kgGraphList.size(),
-        generateRuntimeLog(failedStartIdSet, afterStartId),
+        generateRuntimeLog(failedStartIdSet, afterStartId, debugInfoWithRule),
         patternRuleLists);
     return this;
   }
@@ -676,6 +731,8 @@ public class LocalRDG extends RDG<LocalRDG> {
       count += resultList.size();
       newKgGraphList.addAll(resultList);
     }
+    java.util.Map<IVertexId, String> debugInfoWithRule =
+        getStartIdWithHitRuleValue(this.kgGraphList, Lists.newArrayList(rule));
     java.util.Set<IVertexId> originStartId = getStartId(this.kgGraphList);
     java.util.Set<IVertexId> afterStartId = getStartId(newKgGraphList);
     java.util.Set<IVertexId> failedStartIdSet = getRemoveHashSet(originStartId, afterStartId);
@@ -684,7 +741,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     this.executionRecorder.stageResultWithDetail(
         "filter(" + rule.getName() + "," + exprStringSet + ")",
         this.kgGraphList.size(),
-        generateRuntimeLog(failedStartIdSet, afterStartId),
+        generateRuntimeLog(failedStartIdSet, afterStartId, debugInfoWithRule),
         Lists.newArrayList(rule));
     return this;
   }
@@ -1148,9 +1205,22 @@ public class LocalRDG extends RDG<LocalRDG> {
     long count = 0;
     for (KgGraph<IVertexId> kgGraph : this.kgGraphList) {
       IVertex<IVertexId, IProperty> willAddedVertex = impl.extractVertex(kgGraph);
-      this.graphState.addVertex(willAddedVertex);
+      IVertex<IVertexId, IProperty> storedVertex =
+          this.graphState.getVertex(willAddedVertex.getId(), null);
+      if (storedVertex != null) {
+        java.util.Map<String, Object> property = new HashMap<>();
+        for (String key : willAddedVertex.getValue().getKeySet()) {
+          property.put(key, willAddedVertex.getValue().get(key));
+        }
+        this.graphState.mergeVertexProperty(
+            storedVertex.getId(), property, MergeTypeEnum.REPLACE, 0L);
+      } else {
+        this.graphState.addVertex(willAddedVertex);
+      }
+      storedVertex = this.graphState.getVertex(willAddedVertex.getId(), null);
+
       // add to result list
-      this.resultVertexSet.add(willAddedVertex);
+      this.resultVertexSet.add(storedVertex);
       count++;
     }
 

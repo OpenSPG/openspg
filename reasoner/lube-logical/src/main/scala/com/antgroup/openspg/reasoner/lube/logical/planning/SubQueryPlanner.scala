@@ -14,21 +14,14 @@
 package com.antgroup.openspg.reasoner.lube.logical.planning
 
 import scala.collection.mutable
-
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
-import com.antgroup.openspg.reasoner.common.utils.ParameterUtils
+import com.antgroup.openspg.reasoner.common.utils.{LabelTypeUtils, ParameterUtils}
 import com.antgroup.openspg.reasoner.lube.Logging
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticRule, TemplateSemanticRule}
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern
-import com.antgroup.openspg.reasoner.lube.logical.{
-  EdgeVar,
-  NodeVar,
-  RepeatPathVar,
-  SolvedModel,
-  Var
-}
+import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, RepeatPathVar, SolvedModel, Var}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.planning.SubQueryPlanner.nodeName
 import com.antgroup.openspg.reasoner.lube.logical.validate.Dag
@@ -157,7 +150,7 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
                       if (conn.direction == Direction.OUT) pattern.getNode(conn.target).typeNames
                       else pattern.getNode(conn.source).typeNames
                     conn.relTypes.contains(spo.getP) && (types.contains(
-                      getMetaType(spo.getO)) || types.contains(spo.getO))
+                      LabelTypeUtils.getMetaType(spo.getO)) || types.contains(spo.getO))
                   })
                   .head
                   .direction
@@ -179,12 +172,12 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
                       conn.relTypes.contains(spo.getP) && pattern
                         .getNode(conn.target)
                         .typeNames
-                        .contains(getMetaType(spo.getO))
+                        .contains(LabelTypeUtils.getMetaType(spo.getO))
                     } else {
                       conn.relTypes.contains(spo.getP) && pattern
                         .getNode(conn.source)
                         .typeNames
-                        .contains(getMetaType(spo.getO))
+                        .contains(LabelTypeUtils.getMetaType(spo.getO))
                     }
                   })
                   .head
@@ -196,14 +189,6 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
       }
     }
     defined.toSet
-  }
-
-  private def getMetaType(sType: String) = {
-    if (sType.contains("/")) {
-      sType.split("/")(0)
-    } else {
-      sType
-    }
   }
 
   private def rewriteBlock(block: Block, startType: String, direction: Direction): Block = {

@@ -80,7 +80,9 @@ object ConvertToMetaConcept extends SimpleRule {
         LogicRule(
           "metaConceptRule",
           "belongToConcept",
-          BinaryOpExpr(BIn, Ref(patternElement.alias + ".id"), VList(Ids.toList, KTString)))
+          FunctionExpr("contains_any",
+            List.apply(UnaryOpExpr(GetField("id"),
+              Ref(patternElement.alias)), VList(Ids.toList, KTString))))
       patternElement.copy(typeNames = metaConcepts, rule = rule)
     }
   }

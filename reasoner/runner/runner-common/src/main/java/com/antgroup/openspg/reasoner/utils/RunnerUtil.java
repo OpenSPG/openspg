@@ -635,6 +635,9 @@ public class RunnerUtil {
   /** get connection set from pattern */
   public static Set<Connection> getConnectionSet(Pattern schema) {
     Set<Connection> connectionSet = new HashSet<>();
+    if (schema.topology() == null || schema.topology().isEmpty()) {
+      return connectionSet;
+    }
     for (String pe : JavaConversions.mapAsJavaMap(schema.topology()).keySet()) {
       Set<Connection> partConnectionSet =
           JavaConversions.setAsJavaSet(schema.topology().get(pe).get());
