@@ -17,7 +17,7 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.NotDefineException
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
-import com.antgroup.openspg.reasoner.common.types.{KTString, KgType}
+import com.antgroup.openspg.reasoner.common.types.{KgType, KTString}
 import com.antgroup.openspg.reasoner.common.utils.LabelTypeUtils
 import com.antgroup.openspg.reasoner.lube.catalog.struct.{Edge, Field, Node, NodeType}
 

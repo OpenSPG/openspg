@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.reasoner.lube.common.pattern
 
-import com.antgroup.openspg.reasoner.common.types.KTString
-
 import scala.language.implicitConversions
+
+import com.antgroup.openspg.reasoner.common.types.KTString
 import com.antgroup.openspg.reasoner.common.utils.LabelTypeUtils
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, Rule}
