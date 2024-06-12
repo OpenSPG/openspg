@@ -22,10 +22,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GraphStore implements Graph {
   private GraphState<IVertexId> graphState;
@@ -45,14 +42,16 @@ public class GraphStore implements Graph {
       data = getTriple((Entity) pattern.getSubject(), Direction.OUT);
     } else if (pattern.getObject() instanceof Entity) {
       data = getTriple((Entity) pattern.getObject(), Direction.IN);
+    } else if (pattern.getSubject() instanceof Triple) {
+      data = getTriple((Triple) pattern.getSubject(), (Predicate) pattern.getPredicate());
     } else {
-      throw new RuntimeException("Cannot support " + pattern);
+      return new ArrayList<>();
     }
     return matchInGraph(pattern, data);
   }
 
   @Override
-  public List<Result> find(Element s, Map<String, Object> context) {
+  public List<Result> find(Node s, Map<String, Object> context) {
     return Collections.emptyList();
   }
 
@@ -61,8 +60,11 @@ public class GraphStore implements Graph {
     if (direction == Direction.OUT) {
       IVertex<IVertexId, IProperty> vertex =
           this.graphState.getVertex(IVertexId.from(s.getId(), s.getType()), null);
+      if (vertex == null) {
+        return triples;
+      }
       for (String key : vertex.getValue().getKeySet()) {
-        triples.add(new Triple(s, new Predicate(key), new Value(key, vertex.getValue().get(key))));
+        triples.add(new Triple(s, new Predicate(key), new Value(vertex.getValue().get(key))));
       }
     }
     List<IEdge<IVertexId, IProperty>> edges =
@@ -70,6 +72,24 @@ public class GraphStore implements Graph {
             IVertexId.from(s.getId(), s.getType()), null, null, null, direction);
     for (IEdge<IVertexId, IProperty> edge : edges) {
       triples.add(edgeToTriple(edge));
+    }
+    return triples;
+  }
+
+  protected List<Triple> getTriple(Triple triple, Predicate predicate) {
+    List<Triple> triples = new LinkedList<>();
+    Entity s = (Entity) triple.getSubject();
+    Predicate p = (Predicate) triple.getPredicate();
+    Entity o = (Entity) triple.getObject();
+    List<IEdge<IVertexId, IProperty>> edges =
+        this.graphState.getEdges(
+            IVertexId.from(s.getId(), s.getType()), null, null, null, Direction.OUT);
+    for (IEdge<IVertexId, IProperty> edge : edges) {
+      if (edge.getTargetId().equals(IVertexId.from(o.getId(), o.getType()))
+          && edge.getType().equals(p.getName())) {
+        triples.add(
+            new Triple(triple, predicate, new Value(edge.getValue().get(predicate.getName()))));
+      }
     }
     return triples;
   }

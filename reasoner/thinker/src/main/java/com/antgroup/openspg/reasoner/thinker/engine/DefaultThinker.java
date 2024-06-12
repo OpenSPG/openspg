@@ -19,6 +19,7 @@ import com.antgroup.openspg.reasoner.thinker.Thinker;
 import com.antgroup.openspg.reasoner.thinker.catalog.LogicCatalog;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import java.util.*;
 
@@ -50,7 +51,7 @@ public class DefaultThinker implements Thinker {
   }
 
   @Override
-  public List<Result> find(Element s, Map<String, Object> context) {
+  public List<Result> find(Node s, Map<String, Object> context) {
     this.infGraph.clear();
     return this.infGraph.find(s, context);
   }

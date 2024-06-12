@@ -11,20 +11,17 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.thinker;
+package com.antgroup.openspg.reasoner.thinker.logic;
 
-import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
 import java.util.List;
-import java.util.Map;
+import lombok.Data;
 
-public interface Thinker {
-  void init(Map<String, String> params);
+@Data
+public class Evidence {
+  private List<Element> evidence;
 
-  List<Result> find(Element s, Element p, Element o);
-
-  List<Result> find(Element s, Element p, Element o, Map<String, Object> context);
-
-  List<Result> find(Node target, Map<String, Object> context);
+  public Evidence(List<Element> evidence) {
+    this.evidence = evidence;
+  }
 }
