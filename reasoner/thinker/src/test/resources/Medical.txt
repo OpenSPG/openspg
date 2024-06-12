@@ -1,0 +1,27 @@
+Define (a:Med.Examination/`尿酸`)-[:abnormalValue]->(c: Med.ExaminationResult/`偏低`) {
+  R1: contains(population, '男性') AND (value<150 || value in ["低", "阴性"])
+}
+Description: "对于男性,尿酸的正常范围是[150-416]umol/L"
+
+Define (a:Med.Examination/`尿酸`)-[:abnormalValue]->(c: Med.ExaminationResult/`偏高`) {
+  R1: contains(population, '男性') AND (value>416 || value in ["高", "阳性"])
+}
+Description: "对于男性,尿酸的正常范围是[150-416]umol/L"
+
+Define (a:Med.Examination/`尿酸`)-[:abnormalValue]->(c: Med.ExaminationResult/`偏低`) {
+  R1: contains(population, '女性') AND (value<89 || value in ["低", "阴性"])
+}
+Description: "对于女性,尿酸的正常范围是[89-357]umol/L"
+
+Define (a:Med.Examination/`尿酸`)-[:abnormalValue]->(c: Med.ExaminationResult/`偏高`) {
+  R1: contains(population, '女性') AND (value>357 || value in ["高", "阳性"])
+}
+Description: "对于女性,尿酸的正常范围是[89-357]umol/L"
+
+Define (a:Med.Examination)-[:abnormalRule]->(c: string) {
+ R1: (a)-[:abnormalValue]->(b: Med.ExaminationResult/`偏高`) AND (a)-[: highExplain]->(c)
+}
+
+Define (a:Med.Examination)-[:abnormalRule]->(c: string) {
+ R1: (a)-[:abnormalValue]->(b: Med.ExaminationResult/`偏低`) AND (a)-[: lowExplain]->(c)
+}
