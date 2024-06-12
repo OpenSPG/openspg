@@ -24,8 +24,6 @@ import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleExecutor;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
-
-import com.google.common.collect.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -101,7 +99,8 @@ public class InfGraph implements Graph {
       List<List<Result>> data = prepareElements(body, rule.getHead().toElement(), pattern, context);
       if (CollectionUtils.isEmpty(data)) {
         TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
-        Boolean ret = rule.getRoot().accept(new LinkedList<>(), context, new RuleExecutor(), traceLogger);
+        Boolean ret =
+            rule.getRoot().accept(new LinkedList<>(), context, new RuleExecutor(), traceLogger);
         traceLogger.setCurrentNodeMsg(rule.getDesc());
         if (ret) {
           Element ele = rule.getHead().toElement();
@@ -117,8 +116,13 @@ public class InfGraph implements Graph {
           TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
           List<Element> dList = d.stream().map(Result::getData).collect(Collectors.toList());
           Boolean ret = rule.getRoot().accept(dList, context, new RuleExecutor(), traceLogger);
-          List<String> msg = d.stream().map(Result::getTraceLog).filter(l -> l != null).map(TreeLogger::getCurrentNodeMsg)
-                  .filter(m -> StringUtils.isNotBlank(m)).collect(Collectors.toList());
+          List<String> msg =
+              d.stream()
+                  .map(Result::getTraceLog)
+                  .filter(l -> l != null)
+                  .map(TreeLogger::getCurrentNodeMsg)
+                  .filter(m -> StringUtils.isNotBlank(m))
+                  .collect(Collectors.toList());
           List<String> msgs = new LinkedList<>(msg);
           if (StringUtils.isNotBlank(rule.getDesc())) {
             msgs.add(rule.getDesc());
@@ -157,8 +161,8 @@ public class InfGraph implements Graph {
     Triple t = (Triple) pattern;
     return new Triple(
         map.getOrDefault(t.getSubject().alias(), ((Triple) pattern).getSubject()),
-            t.getPredicate(),
-            map.getOrDefault(t.getObject().alias(), ((Triple) pattern).getObject()));
+        t.getPredicate(),
+        map.getOrDefault(t.getObject().alias(), ((Triple) pattern).getObject()));
   }
 
   private List<List<Result>> prepareElements(
@@ -350,7 +354,7 @@ public class InfGraph implements Graph {
         result = find((Node) pattern, context);
       } else if (pattern instanceof Entity) {
         result = find((Entity) pattern, context);
-      }else if (!recorder.contains(pattern.cleanAlias())) {
+      } else if (!recorder.contains(pattern.cleanAlias())) {
         result = find((Triple) pattern, context);
       }
     } else {

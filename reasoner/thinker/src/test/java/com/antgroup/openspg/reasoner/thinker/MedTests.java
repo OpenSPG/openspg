@@ -80,11 +80,11 @@ public class MedTests {
     Map<String, Object> context = new HashMap<>();
     context.put("value", "阳性");
     List<Result> triples =
-            thinker.find(
-                    new Entity("尿酸", "Med.Examination"),
-                    new Predicate("abnormalRule"),
-                    new Value(),
-                    context);
+        thinker.find(
+            new Entity("尿酸", "Med.Examination"),
+            new Predicate("abnormalRule"),
+            new Value(),
+            context);
     Assert.assertTrue(triples.size() == 2);
   }
 }

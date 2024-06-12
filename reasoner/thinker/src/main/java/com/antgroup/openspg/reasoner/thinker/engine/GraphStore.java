@@ -22,7 +22,6 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
-
 import java.util.*;
 
 public class GraphStore implements Graph {
