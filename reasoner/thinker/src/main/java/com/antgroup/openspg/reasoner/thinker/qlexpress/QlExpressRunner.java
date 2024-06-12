@@ -38,9 +38,11 @@ public class QlExpressRunner extends RuleRunner {
       return instance;
     }
     synchronized (QlExpressRunner.class) {
-      QlExpressRunner runner = new QlExpressRunner();
-      runner.init();
-      instance = runner;
+      if (instance == null) {
+        QlExpressRunner runner = new QlExpressRunner();
+        runner.init();
+        instance = runner;
+      }
     }
     return instance;
   }
