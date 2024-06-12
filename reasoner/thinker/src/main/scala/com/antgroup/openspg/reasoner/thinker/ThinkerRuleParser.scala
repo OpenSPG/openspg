@@ -30,7 +30,7 @@ import com.antgroup.openspg.reasoner.lube.common.expr.{
 }
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{Element, Entity, Predicate}
+import com.antgroup.openspg.reasoner.thinker.logic.graph.{Element, Entity, Predicate, Value}
 import com.antgroup.openspg.reasoner.thinker.logic.graph
 import com.antgroup.openspg.reasoner.thinker.logic.rule.{
   ClauseEntry,
@@ -51,6 +51,10 @@ class ThinkerRuleParser extends RuleExprParser {
   val expr2StringTransformer = new Expr2QlexpressTransformer()
   var defaultAliasNum = 0
   val aliasToElementMap = new mutable.HashMap[String, Element]()
+  val spoRuleToSpoSetMap = new mutable.HashMap[String, (Element, Element, Element)]()
+
+  val valueTypeSet: Set[String] =
+    Set.apply("STRING", "LONG", "INT", "INTEGER", "DOUBLE", "FLOAT", "BOOLEAN")
 
   val conditionToElementMap: mutable.HashMap[Condition, mutable.HashSet[ClauseEntry]] =
     new mutable.HashMap()
@@ -129,6 +133,7 @@ class ThinkerRuleParser extends RuleExprParser {
       case e: Entity => e.getAlias
       case p: Predicate => p.getAlias
       case n: logic.graph.Node => n.getAlias
+      case v: Value => v.getAlias
       case _ => throw new IllegalArgumentException("%s element has no alias".format(element))
     }
   }
@@ -273,7 +278,7 @@ class ThinkerRuleParser extends RuleExprParser {
       val propertyName: String = propertyNameList.head.getText
       val subject = aliasToElementMap(alias)
       val predicate = new Predicate(propertyName)
-      val o = new graph.Any()
+      val o = new Value(null, "anonymous_" + getDefaultAliasNum)
       body += new TriplePattern(new logic.graph.Triple(subject, predicate, o))
     }
   }
@@ -314,10 +319,16 @@ class ThinkerRuleParser extends RuleExprParser {
   }
 
   def parseSpoRule(ctx: Spo_ruleContext, isHead: Boolean = false): (Element, Element, Element) = {
+    val spoRuleText = ctx.getText
+    if (spoRuleToSpoSetMap.contains(spoRuleText)) {
+      return spoRuleToSpoSetMap(spoRuleText)
+    }
     val sNode: Element = parseNode(ctx, 0, isHead)
     val pPredicate: Element = parsePredicate(ctx)
     val oNode: Element = parseNode(ctx, 1)
-    (sNode, pPredicate, oNode)
+    val tmpResult = (sNode, pPredicate, oNode)
+    spoRuleToSpoSetMap += (spoRuleText -> tmpResult)
+    tmpResult
   }
 
   def parseNode(ctx: Spo_ruleContext, index: Int, isHead: Boolean = false): Element = {
@@ -339,6 +350,8 @@ class ThinkerRuleParser extends RuleExprParser {
         val conceptEntity = constructConceptEntity(conceptContext)
         conceptEntity.setAlias(sAlias)
         sNode = conceptEntity
+      } else if (valueTypeSet.contains(sType.toUpperCase())) {
+        sNode = new Value(null, sAlias)
       }
     }
     aliasToElementMap += (sAlias -> sNode)

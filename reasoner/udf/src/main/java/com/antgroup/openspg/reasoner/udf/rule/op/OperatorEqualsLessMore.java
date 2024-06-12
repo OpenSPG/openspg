@@ -98,13 +98,13 @@ public class OperatorEqualsLessMore extends Operator {
     return compareResult;
   }
 
-  private static final int NUMBER_TYPE_BYTE = 1;
-  private static final int NUMBER_TYPE_SHORT = 2;
-  private static final int NUMBER_TYPE_INT = 3;
-  private static final int NUMBER_TYPE_LONG = 4;
-  private static final int NUMBER_TYPE_FLOAT = 5;
-  private static final int NUMBER_TYPE_DOUBLE = 6;
-  private static final int NUMBER_TYPE_DECIMAL = 7;
+  protected static final int NUMBER_TYPE_BYTE = 1;
+  protected static final int NUMBER_TYPE_SHORT = 2;
+  protected static final int NUMBER_TYPE_INT = 3;
+  protected static final int NUMBER_TYPE_LONG = 4;
+  protected static final int NUMBER_TYPE_FLOAT = 5;
+  protected static final int NUMBER_TYPE_DOUBLE = 6;
+  protected static final int NUMBER_TYPE_DECIMAL = 7;
 
   public static int getSeq(Class<?> aClass) {
     if (aClass == Byte.class || aClass == byte.class) {
