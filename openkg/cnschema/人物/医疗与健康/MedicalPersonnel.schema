@@ -1,0 +1,24 @@
+namespace Openkg
+
+MedicalField(医疗领域): ConceptType
+	hypernymPredicate: isA
+
+Organization(机构): EntityType
+
+Person(人物): EntityType
+
+MedicalPersonnel(医疗人员): EntityType
+  desc: 包括医生、护士、药剂师、医技人员等
+  properties:
+    bloodGroup(血型): Text
+    professionalTitle(职称): Text
+    certificateNumber(执业证书号码): Text
+    educationalBackground(教育背景): Text
+    seniority(从业年限): Text
+    affiliatedHospital(所属医院): Organization
+    serviceDepartment(服务科室): Text
+    patients(病人): Person
+         constraint: MultiValue
+    immediateSuperior(上级领导): Person
+         constraint: MultiValue
+    IND#belongTo(属于): MedicalField

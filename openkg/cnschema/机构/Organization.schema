@@ -1,0 +1,37 @@
+namespace Openkg
+
+Person(人): EntityType
+
+Place(地点): EntityType
+
+Organization(机构): EntityType
+    desc: 描述各类组织、公司、团体或企事业单位等实体
+    properties:
+        address(地址信息): Place
+            desc: 包含详细地理位置信息的地址
+            properties:
+                streetAddress(街道地址): Text
+                postalCode(邮政编码): Text
+                locality(城市名): Text
+                region(省名): Text
+                country(国家名): Text
+        foundingDate(成立日期): STD.Date
+            desc: 机构创立的具体日期
+        website(官方网站): Text
+            desc: 该机构官方网站的URL链接
+        contactInfo(联系方式): Text
+            properties:
+                telephone(联系电话): Text
+                    desc: 机构的联系电话号码
+                faxNumber(传真号码): Text
+                    desc: (可选)机构的传真号码
+                email(电子邮件): Text
+                    desc: 机构的官方电子邮件地址
+        industry(所属行业): Text
+            desc: 表示机构所在的行业领域
+        affiliatedOrganizations(关联机构): Organization
+            desc: 上级机构、下级机构或合作伙伴等关联组织
+        founder(创始人): Person
+            desc: 创立该机构的个人
+        subsidiaries(子公司): Organization
+            desc: 该机构下属的所有子公司或分支机构

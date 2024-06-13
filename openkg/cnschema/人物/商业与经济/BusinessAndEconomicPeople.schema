@@ -1,0 +1,21 @@
+namespace Openkg
+
+BusinessAndEconomicField(商业与经济领域): ConceptType
+	hypernymPredicate: isA
+
+Organization(机构): EntityType
+
+Product(物品): EntityType
+
+BusinessAndEconomicPeople(商经界人士): EntityType
+  desc: 包括企业家、投资人、经济学家、金融专家、管理顾问等
+  properties:
+    businessVentures(商业投资项目): Text
+    	constraint: MultiValue
+    economicTheories(经济理论或贡献): Text
+    affiliatedCompanies(所属公司或机构): Organization
+    investmentPortfolio(投资组合): Text
+    consultingServices(咨询服务): Text
+    publications(出版物): Product
+    	constraint: MultiValue
+    IND#belongTo(所属领域): BusinessAndEconomicField
