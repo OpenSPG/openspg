@@ -19,11 +19,7 @@ import com.antgroup.openspg.reasoner.udf.UdfMng;
 import com.antgroup.openspg.reasoner.udf.UdfMngFactory;
 import com.antgroup.openspg.reasoner.udf.model.RuntimeUdfMeta;
 import com.antgroup.openspg.reasoner.udf.model.UdfOperatorTypeEnum;
-import com.antgroup.openspg.reasoner.udf.rule.op.OperatorEqualsLessMore;
-import com.antgroup.openspg.reasoner.udf.rule.op.OperatorGetValue;
-import com.antgroup.openspg.reasoner.udf.rule.op.OperatorIn;
-import com.antgroup.openspg.reasoner.udf.rule.op.OperatorLike;
-import com.antgroup.openspg.reasoner.udf.rule.op.OperatorMultiDiv;
+import com.antgroup.openspg.reasoner.udf.rule.op.*;
 import com.antgroup.openspg.reasoner.udf.rule.udf.UdfWrapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -33,12 +29,7 @@ import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.Operator;
 import com.ql.util.express.exception.QLCompileException;
 import com.ql.util.express.parse.KeyWordDefine4Java;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +41,7 @@ public class RuleRunner {
   private static final Cache<String, Map<String, Object>> contextCache =
       CacheBuilder.newBuilder().maximumSize(100).expireAfterWrite(24, TimeUnit.HOURS).build();
 
-  private final ExpressRunner EXPRESS_RUNNER = new ExpressRunner();
+  protected final ExpressRunner EXPRESS_RUNNER = new ExpressRunner();
 
   private static final Set<String> keywordSet = new HashSet<>();
 
@@ -155,7 +146,7 @@ public class RuleRunner {
     return null;
   }
 
-  private RuleRunner() {}
+  protected RuleRunner() {}
 
   private static volatile RuleRunner instance = null;
 
@@ -173,7 +164,7 @@ public class RuleRunner {
     return instance;
   }
 
-  private void init() {
+  protected void init() {
     // disable print error
     // InstructionSet.printInstructionError = false;
     // use short circuit
@@ -181,6 +172,7 @@ public class RuleRunner {
     registerUdf();
     overrideOperator();
     EXPRESS_RUNNER.addFunction("get_value", new OperatorGetValue());
+    EXPRESS_RUNNER.addFunction("get_spo", new OperatorGetSPO());
   }
 
   /** register all udfs */
@@ -207,7 +199,7 @@ public class RuleRunner {
     }
   }
 
-  private void overrideOperator() {
+  protected void overrideOperator() {
     Lists.newArrayList(
             new Tuple2<String, Operator>("<", new OperatorEqualsLessMore("<")),
             new Tuple2<String, Operator>(">", new OperatorEqualsLessMore(">")),

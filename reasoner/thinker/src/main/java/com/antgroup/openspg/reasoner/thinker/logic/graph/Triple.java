@@ -12,6 +12,7 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
+import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException;
 import java.util.Objects;
 import lombok.Data;
 
@@ -38,6 +39,27 @@ public class Triple extends Element {
     } else {
       return false;
     }
+  }
+
+  @Override
+  public Element bind(Element pattern) {
+    if (pattern instanceof Triple) {
+      return new Triple(
+          subject.bind(((Triple) pattern).getSubject()),
+          predicate.bind(((Triple) pattern).getPredicate()),
+          object.bind(((Triple) pattern).getObject()));
+    } else {
+      throw new UnsupportedOperationException("Triple cannot bind " + pattern.toString(), null);
+    }
+  }
+
+  public String alias() {
+    return predicate.alias();
+  }
+
+  @Override
+  public Element cleanAlias() {
+    return new Triple(subject.cleanAlias(), predicate.cleanAlias(), object.cleanAlias());
   }
 
   public static Triple create(Element s, Element p, Element o) {
@@ -119,5 +141,16 @@ public class Triple extends Element {
   @Override
   public int hashCode() {
     return Objects.hash(subject, predicate, object);
+  }
+
+  @Override
+  public String shortString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(subject.alias())
+        .append("_")
+        .append(predicate.alias())
+        .append("_")
+        .append(object.alias());
+    return sb.toString();
   }
 }

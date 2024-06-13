@@ -31,7 +31,7 @@ public class RuleExecutor implements RuleNodeVisitor<Boolean> {
     Boolean ret = null;
     for (Node child : node.getChildren()) {
       Boolean c = child.accept(spoList, context, this, logger.addChild(child.toString()));
-      c = c == null ? false : c;
+      c = c == null ? true : c;
       if (ret == null) {
         ret = c;
       } else {
@@ -49,7 +49,7 @@ public class RuleExecutor implements RuleNodeVisitor<Boolean> {
     Boolean ret = null;
     for (Node child : node.getChildren()) {
       Boolean c = child.accept(spoList, context, this, logger.addChild(child.toString()));
-      c = c == null ? false : c;
+      c = c == null ? true : c;
       if (ret == null) {
         ret = c;
       } else {
@@ -67,7 +67,7 @@ public class RuleExecutor implements RuleNodeVisitor<Boolean> {
     Boolean ret = null;
     Node child = node.getChild();
     Boolean r = child.accept(spoList, context, this, logger);
-    r = r == null ? false : r;
+    r = r == null ? true : r;
     ret = !r;
     logger.log(ret);
     logger.setCurrentNodeRst(ret);
@@ -78,9 +78,8 @@ public class RuleExecutor implements RuleNodeVisitor<Boolean> {
   public Boolean visit(
       Condition node, List<Element> spoList, Map<String, Object> context, TreeLogger logger) {
     Boolean ret = node.execute(spoList, context, logger);
-    ret = ret == null ? false : ret;
     logger.log(ret);
     logger.setCurrentNodeRst(ret);
-    return ret;
+    return ret == null ? true : ret;
   }
 }
