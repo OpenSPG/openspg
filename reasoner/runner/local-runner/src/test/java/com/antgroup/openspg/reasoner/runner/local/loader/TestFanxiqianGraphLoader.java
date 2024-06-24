@@ -24,35 +24,20 @@ public class TestFanxiqianGraphLoader extends AbstractLocalGraphLoader {
   @Override
   public List<IVertex<String, IProperty>> genVertexList() {
     return Lists.newArrayList(
-        constructionVertex("张三", "XIQIAN.User", "id", "张三", "name", "高级健康保险", "nightTrader", "3"),
+        constructionVertex("张三", "Test.User", "id", "张三", "name", "高级健康保险", "nightTrader", "3"),
         constructionVertex(
-            "交易风险-凌晨交易多",
-            "XIQIAN.UserBehavior",
-            "id",
-            "交易风险-凌晨交易多",
-            "name",
-            "频繁交易",
-            "nightTrader",
-            "3"),
+            "白领-医生", "Test.UserFeature", "id", "白领-医生", "name", "医生", "nightTrader", "3"),
         constructionVertex(
-            "资金来源-资金交易多",
-            "XIQIAN.UserBehavior",
-            "id",
-            "资金来源-资金交易多",
-            "name",
-            "频繁交易",
-            "nightTrader",
-            "3"),
+            "学生-就读中学", "Test.UserFeature", "id", "学生-就读中学", "name", "就读中学", "nightTrader", "3"),
         constructionVertex(
-            "资金来源", "XIQIAN.TaxOfUserBehavior", "id", "资金来源", "name", "资金来源", "nightTrader", "3"),
+            "职业", "Test.TaxOfUserFeature", "id", "职业", "name", "职业", "nightTrader", "3"),
         constructionVertex(
-            "交易行为", "XIQIAN.TaxOfUserBehavior", "id", "交易行为", "name", "频繁交易", "nightTrader", "3"));
+            "学习阶段", "Test.TaxOfUserFeature", "id", "学习阶段", "name", "学习阶段", "nightTrader", "3"));
   }
 
   @Override
   public List<IEdge<String, IProperty>> genEdgeList() {
     return Lists.newArrayList(
-        constructionEdge("交易风险-凌晨交易多", "newedge", "交易行为"),
-        constructionEdge("资金来源-资金交易多", "newedge", "资金来源"));
+        constructionEdge("白领-医生", "newedge", "职业"), constructionEdge("学生-就读中学", "newedge", "学习阶段"));
   }
 }

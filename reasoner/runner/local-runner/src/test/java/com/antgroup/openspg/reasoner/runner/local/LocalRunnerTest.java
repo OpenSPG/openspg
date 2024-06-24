@@ -42,24 +42,24 @@ public class LocalRunnerTest {
   @Test
   public void testCreateConceptInstance() {
     String rule =
-        "Define (s:XIQIAN.User)-[p:belongTo]->(o:`XIQIAN.UserBehavior`/`交易风险`) {\n"
+        "Define (s:Test.User)-[p:belongTo]->(o:`Test.UserFeature`/`白领`) {\n"
             + "    GraphStructure {\n"
             + "        (s)\n"
             + "    }\n"
             + "    Rule {\n"
-            + "        r1(\"存在凌晨交易\") = s.nightTrader == 1\n"
-            + "        r2(\"凌晨交易频繁\") = s.nightTrader == 2\n"
-            + "        r3(\"凌晨交易多\") = s.nightTrader == 3\n"
-            + "        s_r1 = rule_value(r1, \"存在凌晨交易\", \"\")\n"
-            + "        s_r2 = rule_value(r2, \"凌晨交易频繁\", s_r1)\n"
-            + "        s_r3 = rule_value(r3, \"凌晨交易多\", s_r2)\n"
+            + "        r1(\"属于教师\") = s.nightTrader == 1\n"
+            + "        r2(\"属于程序员\") = s.nightTrader == 2\n"
+            + "        r3(\"属于医生\") = s.nightTrader == 3\n"
+            + "        s_r1 = rule_value(r1, \"教师\", \"\")\n"
+            + "        s_r2 = rule_value(r2, \"程序员\", s_r1)\n"
+            + "        s_r3 = rule_value(r3, \"医生\", s_r2)\n"
             + "        R: s_r3 != \"\"\n"
             + "    }\n"
             + "    Action {\n"
             + "        sub_concept = createNodeInstance(\n"
-            + "            type=XIQIAN.UserBehavior,\n"
+            + "            type=Test.UserFeature,\n"
             + "            value={\n"
-            + "                id=concat(\"交易风险-\", s_r3)\n"
+            + "                id=concat(\"白领-\", s_r3)\n"
             + "            }\n"
             + "        )\n"
             + "        createEdgeInstance(\n"
@@ -67,31 +67,31 @@ public class LocalRunnerTest {
             + "            dst=sub_concept,\n"
             + "            type=belongTo,\n"
             + "            value={\n"
-            + "                __to_id_type__='XIQIAN.UserBehavior'\n"
-            + "                __from_id_type__='XIQIAN.User'\n"
+            + "                __to_id_type__='Test.UserFeature'\n"
+            + "                __from_id_type__='Test.User'\n"
             + "            }\n"
             + "        )\n"
             + "    }\n"
             + "}";
     String rule1 =
-        "Define (s:XIQIAN.User)-[p:belongTo]->(o:`XIQIAN.UserBehavior`/`资金来源`) {\n"
+        "Define (s:Test.User)-[p:belongTo]->(o:`Test.UserFeature`/`学生`) {\n"
             + "    GraphStructure {\n"
             + "        (s)\n"
             + "    }\n"
             + "    Rule {\n"
-            + "        r1(\"存在凌晨交易\") = s.nightTrader == 1\n"
-            + "        r2(\"凌晨交易频繁\") = s.nightTrader == 2\n"
-            + "        r3(\"凌晨交易多\") = s.nightTrader == 3\n"
-            + "        s_r1 = rule_value(r1, \"存在资金交易\", \"\")\n"
-            + "        s_r2 = rule_value(r2, \"资金交易频繁\", s_r1)\n"
-            + "        s_r3 = rule_value(r3, \"资金交易多\", s_r2)\n"
+            + "        r1(\"就读幼儿园\") = s.nightTrader == 1\n"
+            + "        r2(\"就读小学\") = s.nightTrader == 2\n"
+            + "        r3(\"就读中学\") = s.nightTrader == 3\n"
+            + "        s_r1 = rule_value(r1, \"就读幼儿园\", \"\")\n"
+            + "        s_r2 = rule_value(r2, \"就读小学\", s_r1)\n"
+            + "        s_r3 = rule_value(r3, \"就读中学\", s_r2)\n"
             + "        R: s_r3 != \"\"\n"
             + "    }\n"
             + "    Action {\n"
             + "        sub_concept = createNodeInstance(\n"
-            + "            type=XIQIAN.UserBehavior,\n"
+            + "            type=Test.UserFeature,\n"
             + "            value={\n"
-            + "                id=concat(\"资金来源-\", s_r3)\n"
+            + "                id=concat(\"学生-\", s_r3)\n"
             + "            }\n"
             + "        )\n"
             + "        createEdgeInstance(\n"
@@ -99,14 +99,14 @@ public class LocalRunnerTest {
             + "            dst=sub_concept,\n"
             + "            type=belongTo,\n"
             + "            value={\n"
-            + "                __to_id_type__='XIQIAN.UserBehavior'\n"
-            + "                __from_id_type__='XIQIAN.User'\n"
+            + "                __to_id_type__='Test.UserFeature'\n"
+            + "                __from_id_type__='Test.User'\n"
             + "            }\n"
             + "        )\n"
             + "    }\n"
             + "}";
     String dsl =
-        "match (s:XIQIAN.User)-[p:belongTo]->(o:XIQIAN.UserBehavior)-[p2:newedge]->(o2:XIQIAN.TaxOfUserBehavior) return s.id,p,o.id, o2.id"
+        "match (s:Test.User)-[p:belongTo]->(o:Test.UserFeature)-[p2:newedge]->(o2:Test.TaxOfUserFeature) return s.id,p,o.id, o2.id"
             + "";
     //    String dsl = rule;
     LocalReasonerTask task = new LocalReasonerTask();
@@ -116,55 +116,52 @@ public class LocalRunnerTest {
     task.getParams().put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true);
     task.getParams().put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
     task.getParams().put(ConfigKey.KG_REASONER_OUTPUT_GRAPH, true);
-    task.setStartIdList(Lists.newArrayList(new Tuple2<>("张三", "XIQIAN.User")));
+    task.setStartIdList(Lists.newArrayList(new Tuple2<>("张三", "Test.User")));
     task.setExecutionRecorder(new DefaultRecorder());
     task.setExecutorTimeoutMs(99999999999999999L);
 
     // add mock catalog
     Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
     schema.put(
-        "XIQIAN.User",
+        "Test.User",
         Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name", "nightTrader")));
     schema.put(
-        "XIQIAN.UserBehavior",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
+        "Test.UserFeature", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
     schema.put(
-        "XIQIAN.TaxOfUserBehavior",
+        "Test.TaxOfUserFeature",
         Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
 
     schema.put(
-        "XIQIAN.User_belongTo_XIQIAN.UserBehavior",
+        "Test.User_belongTo_Test.UserFeature",
         Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
 
     schema.put(
-        "XIQIAN.UserBehavior_newedge_XIQIAN.TaxOfUserBehavior",
+        "Test.UserFeature_newedge_Test.TaxOfUserFeature",
         Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
 
     Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
     catalog.init();
     catalog
         .getGraph("KG")
-        .registerRule(
-            "XIQIAN.User_belongTo_XIQIAN.UserBehavior/交易风险", new GeneralSemanticRule(rule));
+        .registerRule("Test.User_belongTo_Test.UserFeature/白领", new GeneralSemanticRule(rule));
     catalog
         .getGraph("KG")
         .addEdge(
-            "XIQIAN.User",
+            "Test.User",
             "belongTo",
-            "XIQIAN.UserBehavior/交易风险",
+            "Test.UserFeature/白领",
             Direction.OUT,
             Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()),
             false);
     catalog
         .getGraph("KG")
-        .registerRule(
-            "XIQIAN.User_belongTo_XIQIAN.UserBehavior/资金来源", new GeneralSemanticRule(rule1));
+        .registerRule("Test.User_belongTo_Test.UserFeature/学生", new GeneralSemanticRule(rule1));
     catalog
         .getGraph("KG")
         .addEdge(
-            "XIQIAN.User",
+            "Test.User",
             "belongTo",
-            "XIQIAN.UserBehavior/资金来源",
+            "Test.UserFeature/学生",
             Direction.OUT,
             Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()),
             false);
@@ -175,146 +172,6 @@ public class LocalRunnerTest {
     System.out.println(result);
     System.out.println(task.getExecutionRecorder().toReadableString());
     Assert.assertEquals(result.getRows().size(), 2);
-    Assert.assertEquals(result.getRows().get(0)[0], "张三");
-    clear();
-  }
-
-  @Test
-  public void testCreateConceptInstance2() {
-    String rule =
-        "Define (s:XIQIAN.User)-[p:belongTo]->(o:`XIQIAN.UserBehavior`/`交易风险`) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            + "        r1(\"存在凌晨交易\") = s.nightTrader == 1\n"
-            + "        r2(\"凌晨交易频繁\") = s.nightTrader == 2\n"
-            + "        r3(\"凌晨交易多\") = s.nightTrader == 3\n"
-            + "        s_r1 = rule_value(r1, \"存在凌晨交易\", \"\")\n"
-            + "        s_r2 = rule_value(r2, \"凌晨交易频繁\", s_r1)\n"
-            + "        s_r3 = rule_value(r3, \"凌晨交易多\", s_r2)\n"
-            + "        R: s_r3 != \"\"\n"
-            + "    }\n"
-            + "    Action {\n"
-            + "        sub_concept = createNodeInstance(\n"
-            + "            type=XIQIAN.UserBehavior,\n"
-            + "            value={\n"
-            + "                id=concat(\"交易风险-\", s_r3)\n"
-            + "            }\n"
-            + "        )\n"
-            + "        createEdgeInstance(\n"
-            + "            src=s,\n"
-            + "            dst=sub_concept,\n"
-            + "            type=belongTo,\n"
-            + "            value={\n"
-            + "                __to_id_type__='XIQIAN.UserBehavior'\n"
-            + "                __from_id_type__='XIQIAN.User'\n"
-            + "            }\n"
-            + "        )\n"
-            + "    }\n"
-            + "}";
-    String rule1 =
-        "Define (s:XIQIAN.User)-[p:belongTo]->(o:`XIQIAN.UserBehavior`/`资金来源`) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            + "        r1(\"存在凌晨交易\") = s.nightTrader == 1\n"
-            + "        r2(\"凌晨交易频繁\") = s.nightTrader == 2\n"
-            + "        r3(\"凌晨交易多\") = s.nightTrader == 3\n"
-            + "        s_r1 = rule_value(r1, \"存在资金交易\", \"\")\n"
-            + "        s_r2 = rule_value(r2, \"资金交易频繁\", s_r1)\n"
-            + "        s_r3 = rule_value(r3, \"资金交易多\", s_r2)\n"
-            + "        R: s_r3 != \"\"\n"
-            + "    }\n"
-            + "    Action {\n"
-            + "        sub_concept = createNodeInstance(\n"
-            + "            type=XIQIAN.UserBehavior,\n"
-            + "            value={\n"
-            + "                id=concat(\"资金来源-\", s_r3)\n"
-            + "            }\n"
-            + "        )\n"
-            + "        createEdgeInstance(\n"
-            + "            src=s,\n"
-            + "            dst=sub_concept,\n"
-            + "            type=belongTo,\n"
-            + "            value={\n"
-            + "                __to_id_type__='XIQIAN.UserBehavior'\n"
-            + "                __from_id_type__='XIQIAN.User'\n"
-            + "            }\n"
-            + "        )\n"
-            + "    }\n"
-            + "}";
-    String dsl =
-        "match (s:XIQIAN.User)-[p:belongTo]->(o:`XIQIAN.UserBehavior`/`交易风险`)-[p2:newedge]->(o2:XIQIAN.TaxOfUserBehavior) return s.id,p,o.id, o2.id"
-            + "";
-    //    String dsl = rule;
-    LocalReasonerTask task = new LocalReasonerTask();
-    task.setDsl(dsl);
-    task.setGraphLoadClass(
-        "com.antgroup.openspg.reasoner.runner.local.loader.TestFanxiqianGraphLoader");
-    task.getParams().put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true);
-    task.getParams().put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
-    task.getParams().put(ConfigKey.KG_REASONER_OUTPUT_GRAPH, true);
-    task.setStartIdList(Lists.newArrayList(new Tuple2<>("张三", "XIQIAN.User")));
-    task.setExecutionRecorder(new DefaultRecorder());
-    task.setExecutorTimeoutMs(99999999999999999L);
-
-    // add mock catalog
-    Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
-    schema.put(
-        "XIQIAN.User",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name", "nightTrader")));
-    schema.put(
-        "XIQIAN.UserBehavior",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
-    schema.put(
-        "XIQIAN.TaxOfUserBehavior",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
-
-    schema.put(
-        "XIQIAN.User_belongTo_XIQIAN.UserBehavior",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
-
-    schema.put(
-        "XIQIAN.UserBehavior_newedge_XIQIAN.TaxOfUserBehavior",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
-
-    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
-    catalog.init();
-    catalog
-        .getGraph("KG")
-        .registerRule(
-            "XIQIAN.User_belongTo_XIQIAN.UserBehavior/交易风险", new GeneralSemanticRule(rule));
-    catalog
-        .getGraph("KG")
-        .addEdge(
-            "XIQIAN.User",
-            "belongTo",
-            "XIQIAN.UserBehavior/交易风险",
-            Direction.OUT,
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()),
-            false);
-    catalog
-        .getGraph("KG")
-        .registerRule(
-            "XIQIAN.User_belongTo_XIQIAN.UserBehavior/资金来源", new GeneralSemanticRule(rule1));
-    catalog
-        .getGraph("KG")
-        .addEdge(
-            "XIQIAN.User",
-            "belongTo",
-            "XIQIAN.UserBehavior/资金来源",
-            Direction.OUT,
-            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()),
-            false);
-    task.setCatalog(catalog);
-
-    LocalReasonerRunner runner = new LocalReasonerRunner();
-    LocalReasonerResult result = runner.run(task);
-    System.out.println(result);
-    System.out.println(task.getExecutionRecorder().toReadableString());
-    Assert.assertEquals(result.getRows().size(), 1);
     Assert.assertEquals(result.getRows().get(0)[0], "张三");
     clear();
   }
@@ -752,111 +609,6 @@ public class LocalRunnerTest {
   }
 
   @Test
-  public void testComplexMultiDefineDsl() {
-    String dsl =
-        "// 当月交易量\n"
-            + "Define (s:CustFundKG.Account)-[p:cur_month_num]->(o:Int) {\n"
-            + "    GraphStructure {\n"
-            + "        (u:CustFundKG.Account)-[t:accountFundContact]-(s)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "      \tR1(\"当月交易量\"): date_diff(from_unix_time(now(), 'yyyyMMdd'),t.transDate) <= 20\n"
-            + "        o = group(s).count(u.id)\n"
-            + "    }\n"
-            + "}\n"
-            + "// 次月交易量\n"
-            + "Define (s:CustFundKG.Account)-[p:last_month_num]->(o:Int) {\n"
-            + "    GraphStructure {\n"
-            + "        (u:CustFundKG.Account)-[t:accountFundContact]-(s)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "      \tdate_delta = date_diff(from_unix_time(now(), 'yyyyMMdd'),t.transDate)\n"
-            + "      \tR1(\"次月交易量\"): date_delta > 20 && date_delta <=40\n"
-            + "        o = group(s).count(u.id)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "// 次次月交易量\n"
-            + "Define (s:CustFundKG.Account)-[p:last_last_month_num]->(o:Int) {\n"
-            + "    GraphStructure {\n"
-            + "        (u:CustFundKG.Account)-[t:accountFundContact]-(s)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "      \tdate_delta = date_diff(from_unix_time(now(), 'yyyyMMdd'),t.transDate)\n"
-            + "      \tR1(\"次月交易量\"): date_delta > 40 && date_delta <=60\n"
-            + "        o = group(s).count(u.id)\n"
-            + "    }\n"
-            + "}\n"
-            + "// 倍数\n"
-            + "Define (s:CustFundKG.Account)-[p:last_trans_multiple]->(o:Float) {\n"
-            + "\t\tGraphStructure {\n"
-            + "        (s)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "      \tmultiple = s.last_month_num*1.0 / s.last_last_month_num\n"
-            + "        o = multiple\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "// 倍数\n"
-            + "Define (s:CustFundKG.Account)-[p:cur_trans_multiple]->(o:Float) {\n"
-            + "\t\tGraphStructure {\n"
-            + "        (s)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "      \tmultiple = s.cur_month_num*1.0 / s.last_month_num\n"
-            + "        o = multiple\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "Define (s:CustFundKG.Account)-[p:is_trans_raise_more_after_down]->(o:Boolean) {\n"
-            + "\t\tGraphStructure {\n"
-            + "        (s)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "      \tR1(\"T月交易量级超过T-1月交易量级3倍\"): s.last_trans_multiple >=3\n"
-            + "      \tR2(\"T+1月交易量级小于T月交易量级的1/2\"): s.cur_trans_multiple <0.5\n"
-            + "      \to = rule_value(R1 && R2, true, false)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "GraphStructure {\n"
-            + "        (s:CustFundKG.Account)\n"
-            + "}\n"
-            + "Rule {\n"
-            + "}\n"
-            + "Action {\n"
-            + "\tget(s.id, s.is_trans_raise_more_after_down, s.cur_trans_multiple, s.last_trans_multiple, s"
-            + ".last_last_month_num, s.last_month_num, s.cur_month_num)\n"
-            + "}\n";
-    LocalReasonerTask task = new LocalReasonerTask();
-    task.setDsl(dsl);
-    task.setGraphLoadClass(
-        "com.antgroup.openspg.reasoner.runner.local.loader.TestMultiVersionGraphLoader");
-
-    // add mock catalog
-    Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
-    schema.put("CustFundKG.Account", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
-    schema.put(
-        "CustFundKG.Account_accountFundContact_CustFundKG.Account",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("sumAmt", "transDate")));
-
-    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
-    catalog.init();
-    task.getParams().put(ConfigKey.KG_REASONER_CATALOG, SimpleObjSerde.ser(catalog));
-
-    task.setStartIdList(Lists.newArrayList(new Tuple2<>("1", "CustFundKG.Account")));
-
-    LocalReasonerRunner runner = new LocalReasonerRunner();
-    LocalReasonerResult result = runner.run(task);
-    System.out.println("##########################");
-    System.out.println(result);
-    System.out.println("##########################");
-
-    clear();
-  }
-
-  @Test
   public void testEdgePropertyDefineDsl2() {
     String dsl =
         "Define (s:InsProduct.Product)-[p:liabilityLight]->(o:Boolean) {\n"
@@ -927,27 +679,29 @@ public class LocalRunnerTest {
   @Test
   public void testEdgePropertyDefineDsl() {
     String dsl =
-        "//1 先定义每两个用户间进行聚合交易\n"
+        "//1 先定义每两个用户间进行聚合交易总值\n"
             + "Define (s:CustFundKG.Account)-[p:tranTargetUser]->(o:CustFundKG.Account) {\n"
             + "    GraphStructure {\n"
-            + "        (o)<-[t:accountFundContact]-(s)\n"
+            + "        (o)-[t:accountFundContact]-(s)\n"
             + "    }\n"
             + "\tRule {\n"
             + "      tran_count = group(s,o).count(t.sumAmt)\n"
+            + "      tran_amt = group(s,o).sum(t.sumAmt)\n"
             + "      p.tran_count = tran_count\n"
+            + "      p.tran_amt = tran_amt\n"
             + "    }\n"
             + "}\n"
             + "\n"
             + "\n"
             + "\n"
-            + "Define (s:CustFundKG.Account)-[p:is_repeat_tran_user]->(o:Int) {\n"
+            + "//在定义经常交易的用户流水总和\n"
+            + "Define (s:CustFundKG.Account)-[p:total_trans_amt]->(o:Int) {\n"
             + "    GraphStructure {\n"
             + "         (s)-[t:tranTargetUser]->(u:CustFundKG.Account)\n"
             + "    }\n"
             + "\tRule {\n"
-            + "        user_num(\"交易笔数大于3的重复用户个数\") = group(s).countIf(t.tran_count>=3, u.id)\n"
-            + "        R1(\"超过10个\"): user_num > 10\n"
-            + "        o = rule_value(R1, true, false)\n"
+            + "        R(\"交易笔数大于1才保留\") : t.tran_count>=1\n"
+            + "        o = group(s).sum(t.tran_amt)\n"
             + "    }\n"
             + "}\n"
             + "\n"
@@ -958,7 +712,7 @@ public class LocalRunnerTest {
             + "Rule {\n"
             + "}\n"
             + "Action{\n"
-            + "\tget(s.id, s.is_repeat_tran_user)\n"
+            + "\tget(s.id, s.total_trans_amt)\n"
             + "}";
     LocalReasonerTask task = new LocalReasonerTask();
     task.setDsl(dsl);
@@ -984,181 +738,19 @@ public class LocalRunnerTest {
     System.out.println(result);
     System.out.println("##########################");
 
-    clear();
-  }
-
-  @Test
-  public void testComplexMultiTimeUDFDefineDsl() {
-    String dsl =
-        "//1 先定义流入资金总数\n"
-            + "Define (s:CustFundKG.Account)-[p:total_in_trans_num]->(o:Int) {\n"
-            + "    GraphStructure {\n"
-            + "        (u:CustFundKG.Account)-[t:accountFundContact]->(s)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "        o = group(s).count(t.sumAmt)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "//2 定义整百流入笔数\n"
-            + "Define (s:CustFundKG.Account)-[p:multiples_hundred_in_trans_num]->(o:Int) {\n"
-            + "    GraphStructure {\n"
-            + "        (u:CustFundKG.Account)-[t:accountFundContact]->(s)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "    \tR1(\"必须是整百交易\"): t.sumAmt % 100 == 0\n"
-            + "        o = group(s).count(t.sumAmt)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "// 判断是否汇聚赌博\n"
-            + "Define (s:CustFundKG.Account)-[p:is_pooling_gambling_funds]->(o:Float) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)\n"
-            + "    }\n"
-            + "\tRule {\n"
-            + "        R0(\"存在流入和整百资金\"): s.multiples_hundred_in_trans_num != null && s.total_in_trans_num != null\n"
-            + "    \tR1(\"流入整百金额笔数大于2比\"): s.multiples_hundred_in_trans_num > 2\n"
-            + "        R2(\"整百交易占比大于2%\"): s.multiples_hundred_in_trans_num /cast_type(s.total_in_trans_num,'double') > 0.02\n"
-            + "        o = rule_value(R2, true, false)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "//获取结果\n"
-            + "GraphStructure {\n"
-            + "\ts [CustFundKG.Account]\n"
-            + "}\n"
-            + "Rule {\n"
-            + "}\n"
-            + "Action{\n"
-            + "\tget(s.id, s.is_pooling_gambling_funds, s.multiples_hundred_in_trans_num, s.total_in_trans_num)\n"
-            + "}";
-
-    LocalReasonerTask task = new LocalReasonerTask();
-    task.setDsl(dsl);
-    task.setGraphLoadClass(
-        "com.antgroup.openspg.reasoner.runner.local.loader.TestMultiVersionGraphLoader");
-
-    // add mock catalog
-    Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
-    schema.put("CustFundKG.Account", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
-    schema.put(
-        "CustFundKG.Account_accountFundContact_CustFundKG.Account",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("sumAmt")));
-
-    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
-    catalog.init();
-    task.getParams().put(ConfigKey.KG_REASONER_CATALOG, SimpleObjSerde.ser(catalog));
-
-    task.setStartIdList(Lists.newArrayList(new Tuple2<>("1", "CustFundKG.Account")));
-
-    LocalReasonerRunner runner = new LocalReasonerRunner();
-    LocalReasonerResult result = runner.run(task);
-    System.out.println("##########################");
-    System.out.println(result);
-    System.out.println("##########################");
-
-    clear();
-  }
-
-  @Test
-  public void doTestComplexDefineDsl() {
-    String dsl =
-        "// 1\n"
-            + "Define (s:DomainFamily)-[p:blackRelateRate]->(o:Pkg) {\n"
-            + "    GraphStructure {\n"
-            + "        (o)-[:use]->(d:Domain)-[:belong]->(s)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            + "        R1: o.is_black == true\n"
-            // + "        domain_num = group(s,o).count(d)\n"
-            // + "        p.same_domain_num = domain_num\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "// 2\n"
-            + "Define (s:DomainFamily)-[p:total_domain_num]->(o:Int) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)<-[:belong]-(d:Domain)\n"
-            + "    }\n"
-            + "    Rule {\n"
-            + "        o = group(s).count(d.id)\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "// 3\n"
-            + "Define (s:Pkg)-[p:target]->(o:User) {\n"
-            + "    GraphStructure {\n"
-            + "        (s)<-[p1:blackRelateRate]-(df:DomainFamily),\n"
-            + "        (df)<-[:belong]-(d:Domain),\n"
-            + "        (o)-[:visit]->(d)\n"
-            + "    } Rule {\n"
-            + "        visit_time = group(o, df).count(d.id)\n"
-            + "        R1(\"必须大于1次\"): visit_time >= 1\n"
-            + "        R2(\"必须占比大于50%\"): 1.0 * visit_time / df.total_domain_num > 0.2\n"
-            + "    }\n"
-            + "}\n"
-            + "\n"
-            + "// 4\n"
-            + "GraphStructure {\n"
-            + "    (s:Pkg)-[p:target]->(o:User)\n"
-            + "}\n"
-            + "Rule {\n"
-            + "\n"
-            + "}\n"
-            + "Action {\n"
-            + "    get(s.id,o.id)\n"
-            + "}";
-
-    LocalReasonerTask task = new LocalReasonerTask();
-    task.setDsl(dsl);
-    task.setGraphLoadClass(
-        "com.antgroup.openspg.reasoner.runner.local.loader.TestDefineGraphLoader");
-
-    // add mock catalog
-    Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
-    schema.put(
-        "DomainFamily",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "total_domain_num")));
-    schema.put("Pkg", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "is_black")));
-    schema.put("Domain", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
-    schema.put("User", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
-    schema.put("Pkg_use_Domain", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
-    schema.put(
-        "Domain_belong_DomainFamily", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
-    schema.put("User_visit_Domain", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
-
-    // define
-    schema.put(
-        "DomainFamily_blackRelateRate_Pkg",
-        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
-    schema.put("Pkg_target_User", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
-    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
-    catalog.init();
-    task.getParams().put(ConfigKey.KG_REASONER_CATALOG, SimpleObjSerde.ser(catalog));
-
-    task.setStartIdList(Lists.newArrayList(new Tuple2<>("black_app_1", "Pkg")));
-    task.setExecutionRecorder(new DefaultRecorder());
-
-    LocalReasonerRunner runner = new LocalReasonerRunner();
-    LocalReasonerResult result = runner.run(task);
-    System.out.println("##########################");
-    System.out.println(result);
-    System.out.println("##########################");
-    System.out.println(task.getExecutionRecorder().toReadableString());
     clear();
   }
 
   @Test
   public void doTestWithStart() {
     String dsl =
-        "// 查找使用了相同主演的两个导演\n"
+        "// ip在高危地区\n"
             + "GraphStructure {\n"
             + "  (a:ABM.User)-[hasIp:acc2ip]->(ip:ABM.IP)\n"
             + "}\n"
             + "Rule {\n"
             + "  \tR1(\"必选180天以内\"): hasIp.ipUse180dCnt >=2\n"
-            + "    R2(\"必须是高危地区\"): ip.country in ['菲律宾','柬埔寨','老挝','日本','香港','台湾','泰国','澳门','越南','马来西亚','印度尼西亚']\n"
+            + "    R2(\"必须是高危地区\"): ip.country in ['地址1','地址2','地址3']\n"
             + "    result = rule_value(R2, true, false)\n"
             + "}\n"
             + "Action {\n"
