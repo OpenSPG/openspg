@@ -203,7 +203,9 @@ public class PatternMatcher implements Serializable {
               }
             });
       }
-
+      if (patternConnection.limit() != null && patternConnection.limit() > 0) {
+        limit = new Long(patternConnection.limit());
+      }
       List<IEdge<IVertexId, IProperty>> validEdges =
           matchEdges(
               vertexContext, willMatchEdgeList, patternConnection, pattern, edgeRuleMap, limit);
