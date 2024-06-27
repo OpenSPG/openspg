@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.thinker;
 
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexVersionProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
@@ -86,5 +87,22 @@ public class MedTests {
             new Value(),
             context);
     Assert.assertTrue(triples.size() == 2);
+  }
+
+  @Test
+  public void testStrict() {
+    ResourceLogicCatalog logicCatalog = new ResourceLogicCatalog("/Medical.txt");
+    logicCatalog.init();
+    Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
+    Map<String, Object> context = new HashMap<>();
+    context.put("value", "阳性");
+    context.put(Constants.SPG_REASONER_THINKER_STRICT, true);
+    List<Result> triples =
+        thinker.find(
+            new Entity("尿酸", "Med.Examination"),
+            new Predicate("abnormalRule"),
+            new Value(),
+            context);
+    Assert.assertTrue(triples.size() == 0);
   }
 }
