@@ -273,4 +273,15 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     assert(entityList.size() == 3)
   }
 
+  it("test remove first rule_prefix") {
+    val thinkerDsl =
+      """
+        |Define(a:InsDisease)-[:disclaim]->(d:InsComProd) {
+        |    疾病/`高血压` and 疾病/`低血压`
+        |}
+        |""".stripMargin
+    val ruleList: List[Rule] = parser.parseSimplifyDsl(thinkerDsl)
+    assert(ruleList.size == 1)
+  }
+
 }

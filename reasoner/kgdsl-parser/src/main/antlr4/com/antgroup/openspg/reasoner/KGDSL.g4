@@ -1016,7 +1016,8 @@ description: the_description_symbol colon unbroken_character_string_literal;
 
 rule_and_action_body: left_brace rule_body_content (action_body_structure)? right_brace;
 
-rule_body_content : (identifier explain? colon logical_statement)*;
+rule_prefix: identifier explain? colon;
+rule_body_content : rule_prefix? logical_statement (rule_prefix logical_statement)*;
 
 logical_statement : value_expression;
 

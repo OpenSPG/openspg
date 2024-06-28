@@ -16,13 +16,13 @@ package com.antgroup.openspg.reasoner.thinker
 import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
+import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
 import com.antgroup.openspg.reasoner.thinker.logic.graph
 import com.antgroup.openspg.reasoner.thinker.logic.graph.{CombinationEntity, Element, Entity, Predicate}
-import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{Not, _}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.{ClauseEntry, EntityPattern, Node, TriplePattern}
-import org.apache.commons.lang3.StringUtils
-
+import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{Not, _}
 import java.util.Locale
+import org.apache.commons.lang3.StringUtils
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
