@@ -34,6 +34,9 @@ public class SubAction extends AbstractAction {
   public Map<IVertexId, DebugInfoWithStartId> getRuleRuntimeInfo() {
     Map<IVertexId, DebugInfoWithStartId> vertexIdMap = new HashMap<>();
     for (AbstractAction action : subActionList) {
+      if (!(action instanceof SampleAction)) {
+        continue;
+      }
       Map<IVertexId, DebugInfoWithStartId> startIds = action.getRuleRuntimeInfo();
       for (IVertexId d : startIds.keySet()) {
         if (vertexIdMap.containsKey(d)) {

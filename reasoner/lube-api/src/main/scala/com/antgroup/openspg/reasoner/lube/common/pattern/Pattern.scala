@@ -16,6 +16,7 @@ package com.antgroup.openspg.reasoner.lube.common.pattern
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
+import com.antgroup.openspg.reasoner.common.utils.LabelTypeUtils
 import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph
 
 sealed trait Pattern {
@@ -162,9 +163,7 @@ case class GraphPattern(
       if (label.equals(compareLabel)) {
         return label
       }
-      if (nodeLabel.contains("/")) {
-        compareLabel = nodeLabel.split("/")(0)
-      }
+      compareLabel = LabelTypeUtils.getMetaType(nodeLabel)
       if (label.equals(compareLabel)) {
         return nodeLabel
       }

@@ -14,7 +14,9 @@
 package com.antgroup.openspg.reasoner.warehouse.utils;
 
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr;
+import com.antgroup.openspg.reasoner.lube.common.graph.IREdge;
 import com.antgroup.openspg.reasoner.lube.common.graph.IRField;
+import com.antgroup.openspg.reasoner.lube.common.graph.IRNode;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Connection;
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern;
 import com.antgroup.openspg.reasoner.lube.common.pattern.PatternElement;
@@ -179,6 +181,29 @@ public class WareHouseUtils {
   /** transform rule to qlexpress */
   public static List<String> getRuleList(Rule rule) {
     return Lists.newArrayList(JavaConversions.asJavaIterable(EXPR_TRANSFORMER.transform(rule)));
+  }
+
+  /** get all ir filed * */
+  public static List<Tuple2<String, List<String>>> getRuleUsedAliasEle(Rule rule) {
+    List<IRField> irFieldList =
+        JavaConversions.seqAsJavaList(RuleUtils.getAllInputFieldInRule(rule, null, null));
+    List<Tuple2<String, List<String>>> allFiledList = new ArrayList<>();
+    for (IRField irField : irFieldList) {
+      if (irField instanceof IRNode) {
+        allFiledList.add(
+            new Tuple2<String, List<String>>(
+                irField.name(),
+                Lists.newArrayList(
+                    JavaConversions.seqAsJavaList(((IRNode) irField).fields().toSeq()))));
+      } else if (irField instanceof IREdge) {
+        allFiledList.add(
+            new Tuple2<String, List<String>>(
+                irField.name(),
+                Lists.newArrayList(
+                    JavaConversions.seqAsJavaList(((IREdge) irField).fields().toSeq()))));
+      }
+    }
+    return allFiledList;
   }
 
   /** transform rule to qlexpress */

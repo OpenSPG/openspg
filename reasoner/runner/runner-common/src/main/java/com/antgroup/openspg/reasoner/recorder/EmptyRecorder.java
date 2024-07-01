@@ -45,16 +45,13 @@ public class EmptyRecorder implements IExecutionRecorder {
 
   @Override
   public void stageResultWithDetail(
-      String stage,
-      long result,
-      Map<String, List<IVertexId>> runtimeDetail,
-      List<Rule> relateRules) {}
+      String stage, long result, Map<String, Object> runtimeDetail, List<Rule> relateRules) {}
 
   @Override
   public void stageResultWithDescAndDetail(
       String stage,
       long result,
       String finishDescribe,
-      Map<String, List<IVertexId>> runtimeDetail,
+      Map<String, Object> runtimeDetail,
       List<Rule> relateRules) {}
 }
