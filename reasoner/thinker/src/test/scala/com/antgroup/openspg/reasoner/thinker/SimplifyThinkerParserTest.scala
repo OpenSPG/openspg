@@ -16,7 +16,13 @@ package com.antgroup.openspg.reasoner.thinker
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{Entity, Predicate, Value}
+import com.antgroup.openspg.reasoner.thinker.logic.graph.{
+  CombinationEntity,
+  Entity,
+  Predicate,
+  Triple,
+  Value
+}
 import com.antgroup.openspg.reasoner.thinker.logic.graph
 import com.antgroup.openspg.reasoner.thinker.logic.rule._
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact._
@@ -256,6 +262,32 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
       }
     }
     (entityCount, tripleCount)
+  }
+
+  it("test combination concept") {
+    val thinkerDsl =
+      """
+        |Define (:Med.drug)-[:联合用药方案]->(:药品/`噻嗪类利尿剂`+药品/`脂脉康胶囊`+药品/`藏青果颗粒`) {
+        |  R1: 疾病/`高血压` and 药品/`多药方案`
+        |}
+        |""".stripMargin
+    val rule: Rule = parser.parseSimplifyDsl(thinkerDsl).head
+    assert(rule.getHead.isInstanceOf[TriplePattern])
+    val triple: Triple = rule.getHead.asInstanceOf[TriplePattern].getTriple
+    assert(triple.getObject.isInstanceOf[CombinationEntity])
+    val entityList = triple.getObject.asInstanceOf[CombinationEntity].getEntityList
+    assert(entityList.size() == 3)
+  }
+
+  it("test remove first rule_prefix") {
+    val thinkerDsl =
+      """
+        |Define(a:InsDisease)-[:disclaim]->(d:InsComProd) {
+        |    疾病/`高血压` and 疾病/`低血压`
+        |}
+        |""".stripMargin
+    val ruleList: List[Rule] = parser.parseSimplifyDsl(thinkerDsl)
+    assert(ruleList.size == 1)
   }
 
   it("define_rule_on_relation_to_concept3") {
