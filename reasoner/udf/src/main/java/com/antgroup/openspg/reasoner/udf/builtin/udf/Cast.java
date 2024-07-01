@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
+import java.math.BigDecimal;
 
 public class Cast {
   @UdfDefine(name = "cast_type", compatibleName = "Cast")
@@ -25,7 +26,7 @@ public class Cast {
     if ("long".equalsIgnoreCase(castType)
         || "bigint".equalsIgnoreCase(castType)
         || "int".equalsIgnoreCase(castType)) {
-      return Long.valueOf(opdata1);
+      return Long.valueOf(new BigDecimal(opdata1).longValueExact());
     } else if ("double".equalsIgnoreCase(castType) || "float".equalsIgnoreCase(castType)) {
       return Double.valueOf(opdata1);
     } else {
