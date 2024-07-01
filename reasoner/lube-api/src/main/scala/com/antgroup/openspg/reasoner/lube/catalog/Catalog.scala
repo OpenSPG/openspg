@@ -16,6 +16,7 @@ package com.antgroup.openspg.reasoner.lube.catalog
 import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.exception.{ConnectionNotFoundException, GraphAlreadyExistsException, GraphNotFoundException}
+import com.antgroup.openspg.reasoner.common.utils.LabelTypeUtils
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.graph.IRGraph
 import com.antgroup.openspg.reasoner.udf.{UdfMng, UdfMngFactory}
@@ -80,7 +81,7 @@ abstract class Catalog() extends Serializable {
    * @return
    */
   def getConnection(typeName: String): Set[AbstractConnection] = {
-    val finalType = typeName.split("/")(0)
+    val finalType = LabelTypeUtils.getMetaType(typeName)
     if (!connections.contains(finalType)) {
       throw ConnectionNotFoundException(s"$finalType not found.", null)
     }

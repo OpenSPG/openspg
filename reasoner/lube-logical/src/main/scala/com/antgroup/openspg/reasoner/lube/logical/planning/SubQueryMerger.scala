@@ -17,6 +17,7 @@ import scala.collection.mutable
 
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
 import com.antgroup.openspg.reasoner.common.trees.TopDown
+import com.antgroup.openspg.reasoner.common.utils.LabelTypeUtils
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern
 import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, RepeatPathVar, SolvedModel, Var}
@@ -90,7 +91,7 @@ class SubQueryMerger(val dag: Dag[LogicalOperator])(implicit context: LogicalPla
                       if (conn.direction == Direction.OUT) pattern.getNode(conn.target).typeNames
                       else pattern.getNode(conn.source).typeNames
                     conn.relTypes.contains(spo.getP) && (types.contains(
-                      getMetaType(spo.getO)) || types.contains(spo.getO))
+                      LabelTypeUtils.getMetaType(spo.getO)) || types.contains(spo.getO))
                   })
                   .head
                   .direction
@@ -112,12 +113,12 @@ class SubQueryMerger(val dag: Dag[LogicalOperator])(implicit context: LogicalPla
                       conn.relTypes.contains(spo.getP) && pattern
                         .getNode(conn.target)
                         .typeNames
-                        .contains(getMetaType(spo.getO))
+                        .contains(LabelTypeUtils.getMetaType(spo.getO))
                     } else {
                       conn.relTypes.contains(spo.getP) && pattern
                         .getNode(conn.source)
                         .typeNames
-                        .contains(getMetaType(spo.getO))
+                        .contains(LabelTypeUtils.getMetaType(spo.getO))
                     }
                   })
                   .head
@@ -129,14 +130,6 @@ class SubQueryMerger(val dag: Dag[LogicalOperator])(implicit context: LogicalPla
       }
     }
     defined.toSet
-  }
-
-  private def getMetaType(sType: String) = {
-    if (sType.contains("/")) {
-      sType.split("/")(0)
-    } else {
-      sType
-    }
   }
 
 }
