@@ -208,7 +208,8 @@ element_variable_declaration : element_variable ;
 element_variable : identifier ;
 label_expression_lookup: vertical_bar label_name;
 label_expression : label_name label_expression_lookup* ;
-label_name : entity_type | concept_name;
+combination_concept : concept_name plus_sign concept_name (plus_sign concept_name)*;
+label_name : entity_type | concept_name | combination_concept;
 entity_type : identifier | prefix_name;
 prefix_name : identifier period identifier ;
 concept_name : meta_concept_type solidus concept_instance_id ;
@@ -1015,7 +1016,8 @@ description: the_description_symbol colon unbroken_character_string_literal;
 
 rule_and_action_body: left_brace rule_body_content (action_body_structure)? right_brace;
 
-rule_body_content : (identifier explain? colon logical_statement)*;
+rule_prefix: identifier explain? colon;
+rule_body_content : rule_prefix? logical_statement (rule_prefix logical_statement)*;
 
 logical_statement : value_expression;
 
