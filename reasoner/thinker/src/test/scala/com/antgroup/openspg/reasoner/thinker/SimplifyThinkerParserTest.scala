@@ -14,12 +14,16 @@
 package com.antgroup.openspg.reasoner.thinker
 
 import com.antgroup.openspg.reasoner.thinker.logic.graph
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{CombinationEntity, Entity, Predicate, Triple}
+import com.antgroup.openspg.reasoner.thinker.logic.graph.{
+  CombinationEntity,
+  Entity,
+  Predicate,
+  Triple
+}
 import com.antgroup.openspg.reasoner.thinker.logic.rule._
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact._
 import com.antgroup.openspg.reasoner.thinker.util.ThinkerConditionUtil
 import org.scalatest.funspec.AnyFunSpec
-
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 

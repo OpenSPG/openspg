@@ -14,7 +14,6 @@
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
 import com.alibaba.fastjson.JSON;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -22,8 +21,7 @@ public class CombinationEntity extends Element {
   private List<Entity> entityList;
   private String alias;
 
-  public CombinationEntity() {
-  }
+  public CombinationEntity() {}
 
   public CombinationEntity(List<Entity> entityList) {
     this.entityList = entityList;
@@ -72,8 +70,12 @@ public class CombinationEntity extends Element {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) {return true;}
-    if (!(o instanceof CombinationEntity)) {return false;}
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof CombinationEntity)) {
+      return false;
+    }
     CombinationEntity that = (CombinationEntity) o;
     return Objects.equals(entityList, that.entityList);
   }
