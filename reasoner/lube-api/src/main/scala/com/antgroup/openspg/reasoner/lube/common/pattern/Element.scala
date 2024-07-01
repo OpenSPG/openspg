@@ -15,6 +15,8 @@ package com.antgroup.openspg.reasoner.lube.common.pattern
 
 import scala.language.implicitConversions
 
+import com.antgroup.openspg.reasoner.common.types.KTString
+import com.antgroup.openspg.reasoner.common.utils.LabelTypeUtils
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.rule.{LogicRule, Rule}
 
@@ -37,6 +39,11 @@ trait Element extends Serializable {
  */
 case class PatternElement(alias: String, typeNames: Set[String], var rule: Rule) extends Element {
 
+  def getMetaTypeNames: Set[String] = {
+    typeNames.map(x => {
+      LabelTypeUtils.getMetaType(x)
+    })
+  }
   override def toString: String = {
     val stringBuilder = StringBuilder.newBuilder
     stringBuilder.append("(").append(alias).append(":")
@@ -71,7 +78,9 @@ object ElementOps {
   implicit def toPattenElement(element: Element): PatternElement = {
     element match {
       case EntityElement(id, label, alias) =>
-        val rule = BinaryOpExpr(BEqual, UnaryOpExpr(GetField("id"), Ref(alias)), VString(id))
+        val rule = FunctionExpr("contains_any",
+          List.apply(UnaryOpExpr(GetField("id"),
+            Ref(alias)), VList(List.apply(id), KTString)))
         PatternElement(alias, Set.apply(label), LogicRule(s"R_$alias", "", rule))
       case patternElement: PatternElement => patternElement
     }

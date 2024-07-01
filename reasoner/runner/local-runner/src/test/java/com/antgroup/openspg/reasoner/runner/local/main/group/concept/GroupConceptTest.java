@@ -58,7 +58,7 @@ public class GroupConceptTest {
                 constructionVertex("le2_2", "LoginEvent", "eventTime", "1640970059"),
                 constructionVertex("le2_3", "LoginEvent", "eventTime", "1700353023"),
                 constructionVertex("参加活动", "ActivityInfo"),
-                constructionVertex("参加活动/五福", "ActivityInfo"),
+                constructionVertex("参加活动/活动1", "ActivityInfo"),
                 constructionVertex("参加活动/红包", "ActivityInfo"),
                 constructionVertex("登录来源渠道", "LoginSource"),
                 constructionVertex("主动登端", "LoginSource"),
@@ -73,21 +73,21 @@ public class GroupConceptTest {
           public List<IEdge<String, IProperty>> genEdgeList() {
             return Lists.newArrayList(
                 // hypernym
-                constructionEdge("参加活动/五福", "isA", "参加活动"),
+                constructionEdge("参加活动/活动1", "isA", "参加活动"),
                 constructionEdge("参加活动/红包", "isA", "参加活动"),
                 constructionEdge("主动登端", "isA", "登录来源渠道"),
                 constructionEdge("渠道拉动登端", "isA", "登录来源渠道"),
                 constructionEdge("主动登端-账户余额查询", "isA", "主动登端"),
                 constructionEdge("e1_1", "subject", "u1"),
-                constructionEdge("e1_1", "activityName", "参加活动/五福"),
+                constructionEdge("e1_1", "activityName", "参加活动/活动1"),
                 constructionEdge("e1_2", "subject", "u1"),
-                constructionEdge("e1_2", "activityName", "参加活动/五福"),
+                constructionEdge("e1_2", "activityName", "参加活动/活动1"),
                 constructionEdge("e1_3", "subject", "u1"),
                 constructionEdge("e1_3", "activityName", "参加活动/红包"),
                 constructionEdge("e2_1", "subject", "u2"),
-                constructionEdge("e2_1", "activityName", "参加活动/五福"),
+                constructionEdge("e2_1", "activityName", "参加活动/活动1"),
                 constructionEdge("e2_2", "subject", "u2"),
-                constructionEdge("e2_2", "activityName", "参加活动/五福"),
+                constructionEdge("e2_2", "activityName", "参加活动/活动1"),
                 constructionEdge("le1_1", "subject", "u1"),
                 constructionEdge("le1_1", "sourceClassification", "主动登端-账户余额查询"),
                 constructionEdge("le1_2", "subject", "u1"),
@@ -117,7 +117,7 @@ public class GroupConceptTest {
     LocalRunnerTestFactory.runTest(
         "Define (s:User) -[p:belongTo]-> (o:ActivityInfo) {\n"
             + "  GraphStructure {\n"
-            + "    (s) <-[:subject]- (e:InterviewEvent) -[:concept_edge_expand(e, 'activityName', ['参加活动/五福'], \n"
+            + "    (s) <-[:subject]- (e:InterviewEvent) -[:concept_edge_expand(e, 'activityName', ['参加活动/活动1'], \n"
             + "'ActivityInfo')]-> (o)\n"
             + "  }\n"
             + "Rule {\n"
@@ -174,7 +174,7 @@ public class GroupConceptTest {
               }
               rstMap.put(key.toString(), String.valueOf(strings[5]));
             }
-            Assert.assertEquals("2", rstMap.get(",参加活动/五福,null,null,null,20220101"));
+            Assert.assertEquals("2", rstMap.get(",参加活动/活动1,null,null,null,20220101"));
           }
         },
         this.params);

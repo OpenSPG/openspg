@@ -13,7 +13,6 @@
 package com.antgroup.openspg.reasoner.recorder.action;
 
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
-import com.antgroup.openspg.reasoner.lube.common.rule.Rule;
 import com.antgroup.openspg.reasoner.warehouse.utils.WareHouseUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,8 +26,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class DebugInfoWithStartId {
   private IVertexId vertexId;
-  private List<Rule> hitRules = new ArrayList<>();
-  private List<Rule> failedRules = new ArrayList<>();
+  private List<DebugInfoWithRule> hitRules = new ArrayList<>();
+  private List<DebugInfoWithRule> failedRules = new ArrayList<>();
 
   public IVertexId getVertexId() {
     return vertexId;
@@ -38,20 +37,22 @@ public class DebugInfoWithStartId {
     Map<String, Object> result = new HashMap<>();
     List<Map<String, Object>> hitRuleInfos = new ArrayList<>();
 
-    for (Rule r : hitRules) {
+    for (DebugInfoWithRule r : hitRules) {
       Map<String, Object> hitRuleInfoDetail = new HashMap<>();
-      hitRuleInfoDetail.put("ruleName", r.getName());
-      hitRuleInfoDetail.put("ruleValue", StringUtils.join(WareHouseUtils.getRuleList(r), ","));
-      hitRuleInfoDetail.put("hitValue", "");
+      hitRuleInfoDetail.put("ruleName", r.getRule().getName());
+      hitRuleInfoDetail.put(
+          "ruleValue", StringUtils.join(WareHouseUtils.getRuleList(r.getRule()), ","));
+      hitRuleInfoDetail.put("hitValue", r.getRuntimeValue());
       hitRuleInfos.add(hitRuleInfoDetail);
     }
     result.put("hitRule", hitRuleInfos);
     List<Map<String, Object>> failedRuleInfos = new ArrayList<>();
-    for (Rule r : failedRules) {
+    for (DebugInfoWithRule r : failedRules) {
       Map<String, Object> failedRuleInfoDetail = new HashMap<>();
-      failedRuleInfoDetail.put("ruleName", r.getName());
-      failedRuleInfoDetail.put("ruleValue", StringUtils.join(WareHouseUtils.getRuleList(r), ","));
-      failedRuleInfoDetail.put("hitValue", "");
+      failedRuleInfoDetail.put("ruleName", r.getRule().getName());
+      failedRuleInfoDetail.put(
+          "ruleValue", StringUtils.join(WareHouseUtils.getRuleList(r.getRule()), ","));
+      failedRuleInfoDetail.put("hitValue", r.getRuntimeValue());
       failedRuleInfos.add(failedRuleInfoDetail);
     }
     result.put("failedRule", failedRuleInfos);
@@ -70,19 +71,19 @@ public class DebugInfoWithStartId {
     this.vertexId = vertexId;
   }
 
-  public List<Rule> getHitRules() {
+  public List<DebugInfoWithRule> getHitRules() {
     return hitRules;
   }
 
-  public void setHitRules(List<Rule> hitRules) {
+  public void setHitRules(List<DebugInfoWithRule> hitRules) {
     this.hitRules = hitRules;
   }
 
-  public List<Rule> getFailedRules() {
+  public List<DebugInfoWithRule> getFailedRules() {
     return failedRules;
   }
 
-  public void setFailedRules(List<Rule> failedRules) {
+  public void setFailedRules(List<DebugInfoWithRule> failedRules) {
     this.failedRules = failedRules;
   }
 }
