@@ -183,6 +183,10 @@ public class UdfTest {
     Assert.assertEquals(rst, 60L);
     rst = udfMeta.invoke("60.1", "float");
     Assert.assertEquals(rst, 60.1);
+    rst = udfMeta.invoke("3.3e7", "long");
+    Assert.assertEquals(rst, 33000000L);
+    rst = udfMeta.invoke("1.234E2", "double");
+    Assert.assertEquals(rst, 123.4);
     try {
       udfMeta.invoke("abc", "float");
       Assert.assertTrue(false);
