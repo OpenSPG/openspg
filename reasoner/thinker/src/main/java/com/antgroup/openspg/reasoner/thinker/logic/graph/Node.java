@@ -52,10 +52,35 @@ public class Node extends Element {
     if (other == null) {
       return false;
     }
+    if (other instanceof Any) {
+      return true;
+    }
+    if (other instanceof Node) {
+      return Objects.equals(type, ((Node) other).getType());
+    }
     if (other instanceof Entity) {
       return Objects.equals(type, ((Entity) other).getType());
     }
     return equals(other);
+  }
+
+  @Override
+  public Element bind(Element pattern) {
+    if (pattern instanceof Entity) {
+      return new Entity(((Entity) pattern).getId(), this.type, ((Entity) pattern).getAlias());
+    } else {
+      return this;
+    }
+  }
+
+  @Override
+  public String alias() {
+    return this.alias;
+  }
+
+  @Override
+  public Element cleanAlias() {
+    return new Node(this.type);
   }
 
   /**

@@ -13,19 +13,21 @@
 
 package com.antgroup.openspg.reasoner.thinker
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph
+import scala.collection.JavaConverters._
+import scala.collection.mutable
+
 import com.antgroup.openspg.reasoner.thinker.logic.graph.{
   CombinationEntity,
   Entity,
   Predicate,
-  Triple
+  Triple,
+  Value
 }
+import com.antgroup.openspg.reasoner.thinker.logic.graph
 import com.antgroup.openspg.reasoner.thinker.logic.rule._
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact._
 import com.antgroup.openspg.reasoner.thinker.util.ThinkerConditionUtil
 import org.scalatest.funspec.AnyFunSpec
-import scala.collection.JavaConverters._
-import scala.collection.mutable
 
 class SimplifyThinkerParserTest extends AnyFunSpec {
   val parser: SimplifyThinkerParser = new SimplifyThinkerParser()
@@ -225,7 +227,7 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
         new graph.Triple(
           new Predicate("disclaimClause", "p"),
           new Predicate("disclaimType"),
-          new graph.Any())),
+          new Value(null, "anonymous_3"))),
       new TriplePattern(
         new graph.Triple(
           new graph.Node("InsClause", "c"),
@@ -244,7 +246,7 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
             child
               .asInstanceOf[QlExpressCondition]
               .getQlExpress
-              .equals("hits(get_spo(a, p, b),get_spo(c, anonymous_8, d)) > 2"))
+              .equals("hits(get_spo(a, p, b),get_spo(c, anonymous_4, d)) > 2"))
         }
       })
   }
@@ -288,4 +290,28 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     assert(ruleList.size == 1)
   }
 
+  it("define_rule_on_relation_to_concept3") {
+    val thinkerDsl =
+      """
+        |Define(a:InsDisease)-[:abnormalRule]->(o:String) {
+        |    R1: (a)-[p: disclaimClause]->(b: InsDiseaseDisclaim) AND (b)-[:interpretation]->(o)
+        |}
+        |""".stripMargin
+    val rule: Rule = parser.parseSimplifyDsl(thinkerDsl).head
+    val head = rule.getHead.asInstanceOf[TriplePattern].getTriple
+    assert(head.getObject.isInstanceOf[Value])
+    val conditionList = rule.getRoot.asInstanceOf[And].getChildren
+    assert(conditionList.size == 2)
+    val expectedConditionList = List("get_spo(a,p,b)", "get_spo(b,anonymous_2,o)")
+    conditionList.containsAll(expectedConditionList.asJava)
+    assert(rule.getBody.size() == 2)
+    rule.getBody.asScala.foreach(clause => {
+      val triple = clause.asInstanceOf[TriplePattern].getTriple
+      if (triple.getSubject.alias().equals("b")) {
+        assert(triple.getPredicate.alias().equals("anonymous_2"))
+        assert(triple.getObject.alias().equals("o"))
+      }
+    })
+
+  }
 }

@@ -31,7 +31,7 @@ public class TreeLogger implements Serializable {
   private static final String V_IDENT = "\u2502 ";
 
   private String currentNodeName;
-  private StringBuilder currentNodeMsg;
+  private String currentNodeMsg;
   private Boolean currentNodeRst;
   private List<TreeLogger> children;
 
@@ -40,13 +40,8 @@ public class TreeLogger implements Serializable {
   }
 
   public TreeLogger log(Object msg) {
-    if (this.currentNodeMsg == null) {
-      this.currentNodeMsg = new StringBuilder();
-    }
     if (msg != null) {
-      this.currentNodeMsg.append(msg);
-    } else {
-      this.currentNodeMsg.append("null");
+      this.currentNodeMsg = msg.toString();
     }
     return this;
   }
@@ -133,7 +128,7 @@ public class TreeLogger implements Serializable {
    *
    * @return property value of currentNodeMsg
    */
-  public StringBuilder getCurrentNodeMsg() {
+  public String getCurrentNodeMsg() {
     return currentNodeMsg;
   }
 
@@ -142,7 +137,7 @@ public class TreeLogger implements Serializable {
    *
    * @param currentNodeMsg value to be assigned to property currentNodeMsg
    */
-  public void setCurrentNodeMsg(StringBuilder currentNodeMsg) {
+  public void setCurrentNodeMsg(String currentNodeMsg) {
     this.currentNodeMsg = currentNodeMsg;
   }
 
