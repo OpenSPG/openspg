@@ -14,15 +14,30 @@
 package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONPath;
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import com.alibaba.fastjson.JSONValidator;
+
 
 public class JsonStringGet {
+
+  /**
+   * @param jsonString
+   * @return
+   */
+  private static Object parseJson(String jsonString) {
+    JSONValidator validator = JSONValidator.from(jsonString);
+    JSONValidator.Type type = validator.getType();
+    if (type == JSONValidator.Type.Object) {
+      return JSON.parseObject(jsonString);
+    } else if (type == JSONValidator.Type.Array) {
+      return JSON.parseArray(jsonString);
+    }
+    return null;
+  }
 
   /**
    * @param plainJson
@@ -30,30 +45,24 @@ public class JsonStringGet {
    * @return
    */
   @UdfDefine(name = "json_get", compatibleName = "UDF_JsonGet")
-  public Object jsonStrGet(String plainJson, String jsonPath) {
+  public  Object jsonStrGet(String plainJson, String jsonPath) {
     try {
-      JSONObject jsonObject = JSON.parseObject(plainJson);
+      // 可能存在传入的plainJson为null的情况
+      if (plainJson == null ){
+        return "";
+      }
+      Object jsonObject = parseJson(plainJson);
       if (jsonObject != null) {
         Object result = JSONPath.eval(jsonObject, jsonPath);
         if (result != null) {
           return result;
         }
       }
-    } catch (Exception e1) {
-      try {
-        JSONArray jsonArray = JSON.parseArray(plainJson);
-        for (Object item : jsonArray) {
-          JSONObject jsonObject = (JSONObject) item;
-          Object result = JSONPath.eval(jsonObject, jsonPath);
-          if (result != null) {
-            return result;
-          }
-        }
-      } catch (Exception e2) {
-        return "";
-      }
+    } catch (Exception e) {
+      return "";
     }
     return "";
+
   }
 
   @UdfDefine(name = "get_rdf_property")
