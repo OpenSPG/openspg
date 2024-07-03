@@ -13,39 +13,30 @@
 
 package com.antgroup.openspg.reasoner.thinker
 
-import java.util.Locale
-
-import scala.collection.JavaConverters._
-import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
-
 import com.antgroup.openspg.reasoner.KGDSLParser._
-import com.antgroup.openspg.reasoner.lube.common.expr.{
-  BEqual,
-  BinaryOpExpr,
-  BNotEqual,
-  ConceptExpr,
-  Expr,
-  TripleExpr
-}
+import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{Element, Entity, Predicate, Value}
 import com.antgroup.openspg.reasoner.thinker.logic.graph
+import com.antgroup.openspg.reasoner.thinker.logic.graph.{
+  CombinationEntity,
+  Element,
+  Entity,
+  Predicate,
+  Value
+}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.{
   ClauseEntry,
   EntityPattern,
   Node,
   TriplePattern
 }
-import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{
-  And,
-  Condition,
-  Not,
-  Or,
-  QlExpressCondition
-}
+import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{Not, _}
+import java.util.Locale
 import org.apache.commons.lang3.StringUtils
+import scala.collection.JavaConverters._
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 class ThinkerRuleParser extends RuleExprParser {
   val expr2StringTransformer = new Expr2QlexpressTransformer()
@@ -352,6 +343,24 @@ class ThinkerRuleParser extends RuleExprParser {
         sNode = conceptEntity
       } else if (valueTypeSet.contains(sType.toUpperCase())) {
         sNode = new Value(null, sAlias)
+      }
+      val combinationConceptContext = elementPatternDeclaration
+        .element_lookup()
+        .label_expression()
+        .label_name()
+        .combination_concept()
+      if (combinationConceptContext != null) {
+        val conceptEntityList = new mutable.ListBuffer[Entity]()
+        combinationConceptContext
+          .concept_name()
+          .asScala
+          .foreach(concept => {
+            val conceptEntity = constructConceptEntity(concept)
+            conceptEntityList += conceptEntity
+          })
+        val combinationEntity = new CombinationEntity(conceptEntityList.asJava)
+        combinationEntity.setAlias(sAlias)
+        sNode = combinationEntity
       }
     }
     aliasToElementMap += (sAlias -> sNode)

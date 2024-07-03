@@ -13,30 +13,22 @@
 
 package com.antgroup.openspg.reasoner.util
 
+import scala.collection.JavaConverters._
+import scala.collection.mutable
+
 import com.antgroup.openspg.reasoner.common.constants.Constants
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
 import com.antgroup.openspg.reasoner.common.types.KTString
+import com.antgroup.openspg.reasoner.common.utils.LabelTypeUtils
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticPropertyGraph}
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.VString
-import com.antgroup.openspg.reasoner.lube.common.pattern.{
-  EdgePattern,
-  LinkedPatternConnection,
-  PartialGraphPattern,
-  Pattern,
-  PatternConnection
-}
+import com.antgroup.openspg.reasoner.lube.common.pattern.{EdgePattern, LinkedPatternConnection, PartialGraphPattern, Pattern, PatternConnection}
 import com.antgroup.openspg.reasoner.lube.common.rule.Rule
 import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, SolvedModel, Var}
 import com.antgroup.openspg.reasoner.lube.logical.PatternOps.PatternOps
 import com.antgroup.openspg.reasoner.lube.logical.operators._
-import com.antgroup.openspg.reasoner.warehouse.common.config.{
-  EdgeLoaderConfig,
-  GraphLoaderConfig,
-  VertexLoaderConfig
-}
-import scala.collection.JavaConverters._
-import scala.collection.mutable
+import com.antgroup.openspg.reasoner.warehouse.common.config.{EdgeLoaderConfig, GraphLoaderConfig, VertexLoaderConfig}
 
 object LoaderUtil {
 
@@ -89,7 +81,7 @@ object LoaderUtil {
       field match {
         case nodeVar: NodeVar =>
           for (typeName <- solvedModel.getTypes(nodeVar.name)) {
-            val node = logicalPlan.graph.getNode(typeName.split("/")(0))
+            val node = logicalPlan.graph.getNode(LabelTypeUtils.getMetaType(typeName))
             if (node.resolved) {
               allVertexSet.add(node.typeName)
             }
@@ -491,7 +483,7 @@ object LoaderUtil {
       field match {
         case nodeVar: NodeVar =>
           for (typeName <- solvedModel.getTypes(field.name)) {
-            val node = logicalPlan.graph.getNode(typeName.split("/")(0))
+            val node = logicalPlan.graph.getNode(LabelTypeUtils.getMetaType(typeName))
             if (node.resolved) {
               val vertexLoaderConfig = new VertexLoaderConfig()
               if (typesAllowIsolateVertex.contains(node.typeName)) {
@@ -520,7 +512,8 @@ object LoaderUtil {
             if (graph.containsEdge(typeName)) {
               val edge = logicalPlan.graph.getEdge(typeName)
               if (edge.resolved) {
-                val edgeTypeName = edge.startNode + "_" + edge.typeName + "_" + edge.endNode
+                val edgeTypeName = LabelTypeUtils.getMetaType(edge.startNode) +
+                  "_" + edge.typeName + "_" + LabelTypeUtils.getMetaType(edge.endNode)
                 val edgeLoaderConfig = new EdgeLoaderConfig()
                 edgeLoaderConfig.setEdgeType(edgeTypeName)
                 edgeLoaderConfig.setNeedProperties(

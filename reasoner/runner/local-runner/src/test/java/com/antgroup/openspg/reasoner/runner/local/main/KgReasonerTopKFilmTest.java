@@ -416,4 +416,45 @@ public class KgReasonerTopKFilmTest {
     Assert.assertEquals("f1", result.get(0)[1]);
     Assert.assertEquals("700", result.get(0)[2]);
   }
+
+  @Test
+  public void test13() {
+    FileMutex.runTestWithMutex(this::doTest13);
+  }
+
+  private void doTest13() {
+    String dsl =
+        "match (s:Film)-[f:starOfFilm  PER_NODE_LIMIT 1]->(star:FilmStar) where s.id = 'root' return s.id, star.id";
+    List<String[]> result = runTestResult(dsl);
+    Assert.assertEquals(1, result.size());
+    Assert.assertEquals(2, result.get(0).length);
+    Assert.assertEquals("root", result.get(0)[0]);
+    Assert.assertEquals("L1_1_star", result.get(0)[1]);
+  }
+
+  @Test
+  public void test14() {
+    FileMutex.runTestWithMutex(this::doTest14);
+  }
+
+  private void doTest14() {
+    String dsl =
+        "\n"
+            + "GraphStructure {\n"
+            + " s [Film, __start__='true']\n"
+            + " star [FilmStar]\n"
+            + " s->star [starOfFilm, PRE_NODE_LIMIT=1] as sf \n"
+            + "}\n"
+            + "Rule {\n"
+            + "R1: s.id=='root'\n"
+            + "}\n"
+            + "Action {\n"
+            + "    get(s.id, star.id)\n"
+            + "}";
+    List<String[]> result = runTestResult(dsl);
+    Assert.assertEquals(1, result.size());
+    Assert.assertEquals(2, result.get(0).length);
+    Assert.assertEquals("root", result.get(0)[0]);
+    Assert.assertEquals("L1_1_star", result.get(0)[1]);
+  }
 }

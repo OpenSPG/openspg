@@ -28,13 +28,14 @@ import java.util.Map;
 public class SampleAction extends AbstractAction {
   public static final String PASS_START_ID_KEY = "pass";
   public static final String FAILED_START_ID_KEY = "failed";
+  public static final String RULE_RUNTIME_VALUE = "rule_runtime_value";
   private final List<Rule> relateRules;
   private final String describe;
   private final Long num;
 
   private final String finishDescribe;
 
-  private final Map<String, List<IVertexId>> runtimeDetail;
+  private final Map<String, Object> runtimeDetail;
 
   public SampleAction(String describe, long num) {
     super(System.currentTimeMillis());
@@ -46,10 +47,7 @@ public class SampleAction extends AbstractAction {
   }
 
   public SampleAction(
-      String describe,
-      long num,
-      Map<String, List<IVertexId>> runtimeDetail,
-      List<Rule> relateRules) {
+      String describe, long num, Map<String, Object> runtimeDetail, List<Rule> relateRules) {
     super(System.currentTimeMillis());
     this.describe = describe;
     this.num = num;
@@ -62,7 +60,7 @@ public class SampleAction extends AbstractAction {
       String describe,
       long num,
       String finishDescribe,
-      Map<String, List<IVertexId>> runtimeDetail,
+      Map<String, Object> runtimeDetail,
       List<Rule> relateRules) {
     super(System.currentTimeMillis());
     this.describe = describe;
@@ -90,16 +88,31 @@ public class SampleAction extends AbstractAction {
     this.relateRules = null;
   }
 
+  private String getRuntimeValue(IVertexId iVertexId) {
+    Map<IVertexId, String> runtimeValueMap = getRuleRuntimeValue();
+    return runtimeValueMap.computeIfAbsent(iVertexId, k -> "");
+  }
+
+  private List<DebugInfoWithRule> generateDebugInfoRuleSet(IVertexId iVertexId) {
+    String value = getRuntimeValue(iVertexId);
+    List<DebugInfoWithRule> res = new ArrayList<>();
+    for (Rule rule : this.relateRules) {
+      res.add(new DebugInfoWithRule(rule, value));
+    }
+    return res;
+  }
+
   @Override
   public Map<IVertexId, DebugInfoWithStartId> getRuleRuntimeInfo() {
     Map<IVertexId, DebugInfoWithStartId> startIdMap = new HashMap<>();
     if (this.runtimeDetail == null) {
       return startIdMap;
     }
-    for (IVertexId passId : getRuntimeDetail().get(PASS_START_ID_KEY)) {
+
+    for (IVertexId passId : getPassStartID()) {
       DebugInfoWithStartId debugInfo = new DebugInfoWithStartId();
       debugInfo.setVertexId(passId);
-      debugInfo.getHitRules().addAll(this.relateRules);
+      debugInfo.getHitRules().addAll(generateDebugInfoRuleSet(passId));
       startIdMap.put(passId, debugInfo);
     }
     return startIdMap;
@@ -121,8 +134,23 @@ public class SampleAction extends AbstractAction {
     return finishDescribe;
   }
 
-  public Map<String, List<IVertexId>> getRuntimeDetail() {
+  public Map<String, Object> getRuntimeDetail() {
     return runtimeDetail;
+  }
+
+  public List<IVertexId> getPassStartID() {
+    return (List<IVertexId>)
+        this.runtimeDetail.computeIfAbsent(PASS_START_ID_KEY, k -> new ArrayList<>());
+  }
+
+  public List<IVertexId> getFailedStartID() {
+    return (List<IVertexId>)
+        this.runtimeDetail.computeIfAbsent(FAILED_START_ID_KEY, k -> new ArrayList<>());
+  }
+
+  public Map<IVertexId, String> getRuleRuntimeValue() {
+    return (Map<IVertexId, String>)
+        this.runtimeDetail.computeIfAbsent(RULE_RUNTIME_VALUE, k -> new HashMap<>());
   }
 
   @Override
@@ -133,15 +161,23 @@ public class SampleAction extends AbstractAction {
     StringBuilder failedIds = new StringBuilder();
     if (runtimeDetail != null) {
       passIds.append(", [pass]{");
-      for (IVertexId vertexId :
-          this.runtimeDetail.computeIfAbsent(PASS_START_ID_KEY, k -> new ArrayList<>())) {
-        passIds.append(" ").append(vertexId.toString());
+      for (IVertexId vertexId : getPassStartID()) {
+        passIds
+            .append(" ")
+            .append(vertexId.toString())
+            .append("(")
+            .append(getRuntimeValue(vertexId))
+            .append(")");
       }
       passIds.append("}");
       failedIds.append(", [failed]{");
-      for (IVertexId vertexId :
-          this.runtimeDetail.computeIfAbsent(FAILED_START_ID_KEY, k -> new ArrayList<>())) {
-        failedIds.append(" ").append(vertexId.toString());
+      for (IVertexId vertexId : getFailedStartID()) {
+        failedIds
+            .append(" ")
+            .append(vertexId.toString())
+            .append("(")
+            .append(getRuntimeValue(vertexId))
+            .append(")");
       }
       failedIds.append("}");
     }

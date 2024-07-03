@@ -13,15 +13,18 @@
 
 package com.antgroup.openspg.reasoner.lube.logical.optimizer.rules
 
+import scala.collection.mutable
+
 import com.antgroup.openspg.reasoner.common.exception.InvalidGraphException
 import com.antgroup.openspg.reasoner.common.types.KTString
-import com.antgroup.openspg.reasoner.lube.common.expr.{BinaryOpExpr, _}
+import com.antgroup.openspg.reasoner.common.utils.LabelTypeUtils
+import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.common.pattern.{NodePattern, PartialGraphPattern, PatternElement}
 import com.antgroup.openspg.reasoner.lube.common.rule.LogicRule
 import com.antgroup.openspg.reasoner.lube.logical.operators.{ExpandInto, LogicalOperator, PatternScan}
 import com.antgroup.openspg.reasoner.lube.logical.optimizer.{Direction, SimpleRule, Up}
 import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext
-import scala.collection.mutable
+
 
 object ConvertToMetaConcept extends SimpleRule {
 
@@ -71,7 +74,7 @@ object ConvertToMetaConcept extends SimpleRule {
     if (types.isEmpty) {
       patternElement
     } else {
-      val metaConcepts = types.map(_.split("/").head)
+      val metaConcepts = types.map(LabelTypeUtils.getMetaType(_))
       if (metaConcepts.size > 1) {
         throw InvalidGraphException("Entities must belong to the same meta concept")
       }
@@ -80,7 +83,9 @@ object ConvertToMetaConcept extends SimpleRule {
         LogicRule(
           "metaConceptRule",
           "belongToConcept",
-          BinaryOpExpr(BIn, Ref(patternElement.alias + ".id"), VList(Ids.toList, KTString)))
+          FunctionExpr("contains_any",
+            List.apply(UnaryOpExpr(GetField("id"),
+              Ref(patternElement.alias)), VList(Ids.toList, KTString))))
       patternElement.copy(typeNames = metaConcepts, rule = rule)
     }
   }

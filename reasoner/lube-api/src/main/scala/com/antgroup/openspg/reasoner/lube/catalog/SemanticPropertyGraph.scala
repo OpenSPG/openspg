@@ -18,6 +18,7 @@ import scala.collection.mutable
 import com.antgroup.openspg.reasoner.common.exception.NotDefineException
 import com.antgroup.openspg.reasoner.common.graph.edge.{Direction, SPO}
 import com.antgroup.openspg.reasoner.common.types.{KgType, KTString}
+import com.antgroup.openspg.reasoner.common.utils.LabelTypeUtils
 import com.antgroup.openspg.reasoner.lube.catalog.struct.{Edge, Field, Node, NodeType}
 
 /**
@@ -63,27 +64,32 @@ class SemanticPropertyGraph(
     }
   }
 
+  def getEdgeWithMetaType(spoStr: String): SPO = {
+    var spo = new SPO(spoStr)
+    if (!graphSchema.edges.contains(spo)) {
+      spo = new SPO(LabelTypeUtils.getMetaType(spo.getS),
+        spo.getP, LabelTypeUtils.getMetaType(spo.getO))
+    }
+    spo
+  }
+
   def getNode(nodeLabel: String): Node = {
-    graphSchema.nodes(nodeLabel)
+    val nodeLabelOnlyMetaType = LabelTypeUtils.getMetaType(nodeLabel)
+    graphSchema.nodes(nodeLabelOnlyMetaType)
   }
 
   def getEdge(spoStr: String): Edge = {
-    var spo = new SPO(spoStr)
-    if (spo.getP.equals("belongTo") && !graphSchema.edges.contains(spo)) {
-      spo = new SPO(spo.getS, spo.getP, spo.getO.split("/")(0))
-    }
+    val spo = getEdgeWithMetaType(spoStr)
     graphSchema.edges(spo)
   }
 
   def containsNode(nodeLabel: String): Boolean = {
-    graphSchema.nodes.contains(nodeLabel)
+    val nodeLabelOnlyMetaType = LabelTypeUtils.getMetaType(nodeLabel)
+    graphSchema.nodes.contains(nodeLabelOnlyMetaType)
   }
 
   def containsEdge(spoStr: String): Boolean = {
-    var spo = new SPO(spoStr)
-    if (spo.getP.equals("belongTo") && !graphSchema.edges.contains(spo)) {
-      spo = new SPO(spo.getS, spo.getP, spo.getO.split("/")(0))
-    }
+    val spo = getEdgeWithMetaType(spoStr)
     graphSchema.edges.contains(spo)
   }
 
