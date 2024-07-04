@@ -24,7 +24,7 @@
 
   <groupId>com.antgroup.openspg.cloudext</groupId>
   <artifactId>cloudext-parent</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>20240704_spgservice</version>
   <packaging>pom</packaging>
   <licenses>
     <license>
