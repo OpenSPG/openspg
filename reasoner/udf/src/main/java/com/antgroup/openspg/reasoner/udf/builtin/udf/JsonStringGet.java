@@ -46,7 +46,6 @@ public class JsonStringGet {
   @UdfDefine(name = "json_get", compatibleName = "UDF_JsonGet")
   public Object jsonStrGet(String plainJson, String jsonPath) {
     try {
-      // 可能存在传入的plainJson为null的情况
       if (plainJson == null) {
         return "";
       }
