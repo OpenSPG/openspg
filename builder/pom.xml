@@ -18,13 +18,13 @@
   <parent>
     <groupId>com.antgroup.openspg</groupId>
     <artifactId>openspg-parent</artifactId>
-    <version>20240704_spgservice</version>
+    <version>20240704_spgservice-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>com.antgroup.openspg.builder</groupId>
   <artifactId>builder-parent</artifactId>
-  <version>20240704_spgservice</version>
+  <version>20240704_spgservice-SNAPSHOT</version>
   <packaging>pom</packaging>
   <licenses>
     <license>
