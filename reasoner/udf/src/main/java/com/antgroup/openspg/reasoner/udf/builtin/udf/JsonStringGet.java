@@ -15,12 +15,11 @@ package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONPath;
+import com.alibaba.fastjson.JSONValidator;
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.alibaba.fastjson.JSONValidator;
-
 
 public class JsonStringGet {
 
@@ -45,10 +44,10 @@ public class JsonStringGet {
    * @return
    */
   @UdfDefine(name = "json_get", compatibleName = "UDF_JsonGet")
-  public  Object jsonStrGet(String plainJson, String jsonPath) {
+  public Object jsonStrGet(String plainJson, String jsonPath) {
     try {
       // 可能存在传入的plainJson为null的情况
-      if (plainJson == null ){
+      if (plainJson == null) {
         return "";
       }
       Object jsonObject = parseJson(plainJson);
@@ -62,7 +61,6 @@ public class JsonStringGet {
       return "";
     }
     return "";
-
   }
 
   @UdfDefine(name = "get_rdf_property")
