@@ -213,9 +213,11 @@ public class InfGraph implements Graph {
           choose.add(e);
           if (CollectionUtils.isEmpty(elements)) {
             Triple triple = buildTriple(null, s, t);
-            List<List<Result>> singeRst = prepareElement(null, triple, context);
-            if (CollectionUtils.isNotEmpty(singeRst)) {
-              elements.addAll(singeRst);
+            if (triple != null) {
+              List<List<Result>> singeRst = prepareElement(null, triple, context);
+              if (CollectionUtils.isNotEmpty(singeRst)) {
+                elements.addAll(singeRst);
+              }
             }
           } else {
             List<List<Result>> tmpElements = new LinkedList<>();
