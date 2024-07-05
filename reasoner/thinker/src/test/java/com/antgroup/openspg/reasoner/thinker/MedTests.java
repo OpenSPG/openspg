@@ -14,35 +14,30 @@
 package com.antgroup.openspg.reasoner.thinker;
 
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
-import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexVersionProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
-import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.thinker.catalog.ResourceLogicCatalog;
 import com.antgroup.openspg.reasoner.thinker.engine.DefaultThinker;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Predicate;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Value;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class MedTests {
   private GraphState<IVertexId> buildGraphState() {
-    GraphState<IVertexId> graphState = new MemGraphState();
-
     Vertex<IVertexId, IProperty> vertex1 =
-        new Vertex<>(
-            IVertexId.from("尿酸", "Med.Examination"),
-            new VertexVersionProperty(
-                "highExplain", "highExplain desc", "lowExplain", "lowExplain desc"));
-    graphState.addVertex(vertex1);
-
-    return graphState;
+        GraphUtil.makeVertex(
+            "尿酸",
+            "Med.Examination",
+            "highExplain",
+            "highExplain desc",
+            "lowExplain",
+            "lowExplain desc");
+    return GraphUtil.buildMemState(Arrays.asList(vertex1), new LinkedList<>());
   }
 
   @Test
