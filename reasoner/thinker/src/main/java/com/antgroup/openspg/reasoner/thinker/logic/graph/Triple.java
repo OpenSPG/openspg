@@ -53,6 +53,11 @@ public class Triple extends Element {
     }
   }
 
+  @Override
+  public boolean canInstantiated() {
+    return !(!subject.canInstantiated() && !predicate.canInstantiated() && !object.canInstantiated());
+  }
+
   public String alias() {
     return predicate.alias();
   }

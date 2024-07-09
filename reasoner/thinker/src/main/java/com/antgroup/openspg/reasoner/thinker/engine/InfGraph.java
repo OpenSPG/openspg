@@ -193,6 +193,22 @@ public class InfGraph implements Graph {
               evidence.addAll(prepareElement(e, context));
             }
           }
+        } else if (!e.canInstantiated()){
+          List<List<Result>> singeRst = prepareElement(null, (Triple) e, context);
+          if (CollectionUtils.isEmpty(elements)) {
+            elements.addAll(singeRst);
+          } else {
+            List<List<Result>> tmpElements = new LinkedList<>();
+            for (List<Result> ele : elements) {
+              for (List<Result> single : singeRst) {
+                List<Result> cp = new LinkedList<>(ele);
+                cp.addAll(single);
+                tmpElements.add(cp);
+              }
+            }
+            elements.clear();
+            elements = tmpElements;
+          }
         } else {
           Triple t = (Triple) e;
           if (t.getSubject().alias().equals(s.alias())) {
