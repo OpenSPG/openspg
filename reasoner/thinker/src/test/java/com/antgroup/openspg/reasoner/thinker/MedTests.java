@@ -109,14 +109,12 @@ public class MedTests {
     ResourceLogicCatalog logicCatalog = new ResourceLogicCatalog("/Medical.txt");
     logicCatalog.init();
     Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
-    String str = "{\"spg.reasoner.thinker.strict\":true,\"乙肝表面抗原\":\"225.000\",\"乙肝表面抗原_lower\":\"0\",\"乙肝表面抗原_upper\":\"0.5\",\"乙肝表面抗体\":\"0.1\",\"乙肝表面抗体_lower\":\"0\",\"乙肝表面抗体_upper\":\"10\",\"乙肝e抗原\":\"69.000\",\"乙肝e抗原_lower\":\"0\",\"乙肝e抗原_upper\":\"0.5\",\"乙肝e抗体\":\"0.00\",\"乙肝e抗体_lower\":\"0\",\"乙肝e抗体_upper\":\"0.2\",\"乙肝核心抗体\":\"4.050\",\"乙肝核心抗体_lower\":\"0\",\"乙肝核心抗体_upper\":\"0.9\"}";
-    Map<String, Object> context = JSONObject.parseObject(str, new TypeReference<Map<String, Object>>() {});
+    String str =
+        "{\"spg.reasoner.thinker.strict\":true,\"乙肝表面抗原\":\"225.000\",\"乙肝表面抗原_lower\":\"0\",\"乙肝表面抗原_upper\":\"0.5\",\"乙肝表面抗体\":\"0.1\",\"乙肝表面抗体_lower\":\"0\",\"乙肝表面抗体_upper\":\"10\",\"乙肝e抗原\":\"69.000\",\"乙肝e抗原_lower\":\"0\",\"乙肝e抗原_upper\":\"0.5\",\"乙肝e抗体\":\"0.00\",\"乙肝e抗体_lower\":\"0\",\"乙肝e抗体_upper\":\"0.2\",\"乙肝核心抗体\":\"4.050\",\"乙肝核心抗体_lower\":\"0\",\"乙肝核心抗体_upper\":\"0.9\"}";
+    Map<String, Object> context =
+        JSONObject.parseObject(str, new TypeReference<Map<String, Object>>() {});
     List<Result> triples =
-            thinker.find(
-                    null,
-                    new Predicate("确诊"),
-                    new Node("Medical.DiseaseTerm"),
-                    context);
+        thinker.find(null, new Predicate("确诊"), new Node("Medical.DiseaseTerm"), context);
     Assert.assertTrue(triples.size() == 1);
   }
 }

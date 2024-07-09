@@ -198,7 +198,7 @@ public class InfGraph implements Graph {
               evidence.addAll(prepareElement(e, context));
             }
           }
-        } else if (!e.canInstantiated()){
+        } else if (!e.canInstantiated()) {
           List<List<Result>> singeRst = prepareElement(null, (Triple) e, context);
           if (CollectionUtils.isEmpty(elements)) {
             elements.addAll(singeRst);
