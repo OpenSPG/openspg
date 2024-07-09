@@ -68,6 +68,9 @@ public class Node extends Element {
   public Element bind(Element pattern) {
     if (pattern instanceof Entity) {
       return new Entity(((Entity) pattern).getId(), this.type, ((Entity) pattern).getAlias());
+    } else if (pattern instanceof CombinationEntity){
+      Entity entity = ((CombinationEntity) pattern).getEntityList().get(0);
+      return new Entity(entity.getId(), entity.getType(), entity.getAlias());
     } else {
       return this;
     }
