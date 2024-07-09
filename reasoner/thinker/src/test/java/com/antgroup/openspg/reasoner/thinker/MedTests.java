@@ -13,10 +13,8 @@
 
 package com.antgroup.openspg.reasoner.thinker;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
