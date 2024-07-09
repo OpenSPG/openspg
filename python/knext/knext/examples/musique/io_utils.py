@@ -34,7 +34,7 @@ class MusiqueDataset(object):
                     answer = line['answer']
                     self.question_answer_dict[question] = answer
                 # question paragraphs
-                
+
                 idx_title_para_list = []
 
                 for paragraph in line['paragraphs']:
@@ -54,7 +54,7 @@ class MusiqueDataset(object):
 
     def get_data_line_by_question(self, question):
         return self.question_line_dict[question]
-        
+
     def convert_question_to_hash(self, question):
         import re
         import hashlib
@@ -62,9 +62,7 @@ class MusiqueDataset(object):
         name = name.strip()
         rep_name = re.sub(r'[^a-zA-Z0-9]', '_', name)
         md5_hash = hashlib.md5()
-        # 更新 hash 对象，传入字符串的二进制形式
         md5_hash.update(name.encode('utf-8'))
-        # 获取十六进制的 MD5 值
         md5_value = md5_hash.hexdigest()
         return f"{rep_name[:128]}.{md5_value}"
 
@@ -85,7 +83,6 @@ class MusiqueDataset(object):
 
     def get_data_file(self, version, tag):
         return os.path.join(self.data_dir, f'musique_{version}_v1.0_{tag}.jsonl')
-
 
 
 def generate_submission_file(output_file_path, musique_dataset, agent_results):

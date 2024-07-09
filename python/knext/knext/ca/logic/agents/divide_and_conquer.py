@@ -1,8 +1,9 @@
 import asyncio
 
 from knext.ca.common.base import Question, Agent
-from knext.ca.logic.modules.reasoner import AnswerQuestionWithContext
-from knext.ca.logic.modules.planner import DivideQuestion, IsAtomQuestion, RewriteQuestionBasedOnDeps
+from knext.ca.logic.modules.solver import SolveQuestionWithContext
+from knext.ca.logic.modules.planner import DivideQuestion, RewriteQuestionBasedOnDeps
+from knext.ca.logic.modules.reasoner import IsAtomQuestion
 
 
 class DivideAndConquerAgent(Agent):
@@ -14,14 +15,16 @@ class DivideAndConquerAgent(Agent):
             divide_question=None,
             rewrite_question=None,
             is_atom_question=None,
-            answer_parent_question=None,
-            answer_atom_question=None,
+            solve_parent_question=None,
+            solve_atom_question=None,
             use_default_prompt_template=False,
             prompt_template_dir=None,
+            use_en_log=True,
             **kwargs
     ):
         self.llm = llm
         self.max_depth = max_depth
+        self.use_en_log = use_en_log
 
         self.divide_question = divide_question if divide_question else DivideQuestion(
             self.llm, use_default_prompt_template, prompt_template_dir)
@@ -32,13 +35,13 @@ class DivideAndConquerAgent(Agent):
         self.is_atom_question = is_atom_question if is_atom_question else IsAtomQuestion(
             self.llm, use_default_prompt_template, prompt_template_dir)
 
-        self.answer_parent_question = answer_parent_question if answer_parent_question else AnswerQuestionWithContext(
+        self.solve_parent_question = solve_parent_question if solve_parent_question else SolveQuestionWithContext(
             self.llm, use_default_prompt_template, prompt_template_dir)
-        self.answer_atom_question = answer_atom_question if answer_atom_question else AnswerQuestionWithContext(
+        self.solve_atom_question = solve_atom_question if solve_atom_question else SolveQuestionWithContext(
             self.llm, use_default_prompt_template, prompt_template_dir)
         extra_info_fetch_tools = []
-        extra_info_fetch_tools.extend(self.answer_parent_question.get_extra_info_fetch_tools())
-        extra_info_fetch_tools.extend(self.answer_atom_question.get_extra_info_fetch_tools())
+        extra_info_fetch_tools.extend(self.solve_parent_question.get_extra_info_fetch_tools())
+        extra_info_fetch_tools.extend(self.solve_atom_question.get_extra_info_fetch_tools())
 
         super().__init__(extra_info_fetch_tools, intermediate_process_tools)
 
@@ -46,10 +49,16 @@ class DivideAndConquerAgent(Agent):
         if len(question.dependencies) > 0:
             await asyncio.create_task(self.is_question_deps_ready(question))
             rewrited_question = self.rewrite_question.forward(question)
-            info_dict = {
-                'status': f'重写问题',
-                'log_info': f'原问题: {question.question}. 重写后的问题: {rewrited_question}\n{str(question)}',
-            }
+            if self.use_en_log:
+                info_dict = {
+                    'status': f'Rewriting Question',
+                    'log_info': f'Original Question: {question.question}. Rewrited Question: {rewrited_question}\n{str(question)}',
+                }
+            else:
+                info_dict = {
+                    'status': f'重写问题',
+                    'log_info': f'原问题: {question.question}. 重写后的问题: {rewrited_question}\n{str(question)}',
+                }
             self.process_intermediate_info(info_dict)
             current_question = Question(
                 rewrited_question,
@@ -62,10 +71,16 @@ class DivideAndConquerAgent(Agent):
             return question
 
     async def solve_problem_impl(self, question: Question, **kwargs):
-        info_dict = {
-            'status': 'start solve_problem_impl',
-            'log_info': f'current question depth: {question.get_current_depth()}\n{str(question)}'
-        }
+        if self.use_en_log:
+            info_dict = {
+                'status': 'start solve_problem_impl',
+                'log_info': f'current question depth: {question.get_current_depth()}\n{str(question)}'
+            }
+        else:
+            info_dict = {
+                'status': '开始处理问题',
+                'log_info': f'当前问题深度: {question.get_current_depth()}\n{str(question)}'
+            }
         self.process_intermediate_info(info_dict)
 
         current_question = await self.rewrite_question_if_need(question)
@@ -110,11 +125,11 @@ class DivideAndConquerAgent(Agent):
                 context=children_answers_context
             )
 
-            answer = self.answer_parent_question.forward(parent_question)
+            answer = self.solve_parent_question.forward(parent_question)
             return answer
         else:
             atom_question = Question(
                 question=current_question.question,
             )
-            atom_answer = self.answer_atom_question.forward(atom_question)
+            atom_answer = self.solve_atom_question.forward(atom_question)
             return atom_answer

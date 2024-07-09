@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from knext.ca.logic.modules.extractor import ExtractTriplesFromTextModule
+from knext.ca.logic.modules.reasoner import ExtractTriplesFromTextModule
 from knext.ca.tools.retriver import RagInfoFetchTool
 from knext.ca.common.utils import logger
 
@@ -14,7 +14,7 @@ class TextInfoRetriver(RagInfoFetchTool):
         super().__init__(llm, embedding_fn)
         self.dataset = musique_dataset
         self.top_k = top_k
-        
+
     def prepare_for_question(self, question):
         # get list of paragraph
         all_paragraphs = []
@@ -26,11 +26,11 @@ class TextInfoRetriver(RagInfoFetchTool):
             para_text = f'{title}\n{text}'
             para_texts.append({'idx': idx, 'text': para_text})
             all_paragraphs.append(para_text)
-            
+
         entity_embeddings = self.get_embeddings(all_paragraphs)
         self.index = self.create_embedding_index(entity_embeddings)
         self.para_texts = para_texts
-        
+
         self.reset_question_supported_idx_dict(question)
 
     def fetch_info(self, query):
@@ -38,7 +38,7 @@ class TextInfoRetriver(RagInfoFetchTool):
         distances, indices = self.index.search(query_embedding, self.top_k)
         results = [(self.para_texts[i]['idx'], self.para_texts[i]['text']) for i in indices[0]]
         return results
-        
+
 
 class SPOInfoRetriver(RagInfoFetchTool):
     def __init__(self, musique_dataset, llm, embedding_fn):
@@ -67,11 +67,11 @@ class SPOInfoRetriver(RagInfoFetchTool):
 
     def prepare_for_question(self, question):
         question_dataframe = self.get_question_dataframe(question)
-        
-        # spos of question 
+
+        # spos of question
         self.entities_df = self.get_spo_entities(question_dataframe)
 
-        # entities to embedding 
+        # entities to embedding
         self.entity_embeddings = self.get_embeddings(self.entities_df['entity'].values.tolist())
 
         # embedding to faiss
@@ -86,7 +86,7 @@ class SPOInfoRetriver(RagInfoFetchTool):
         distances, indexs = self.embedding_index.search(entity_embedding, k=5)
         sp_or_op_df = self.entities_df.iloc[indexs[0]]
 
-        # fetch sp or po 
+        # fetch sp or po
         def _combine_non_nan_values(row):
             row_po_pairs = row['po_pairs']
             row_sp_pairs = row['sp_pairs']
@@ -126,7 +126,7 @@ class SPOInfoRetriverWithTripleExtractor(SPOInfoRetriver):
         self.para_title_triples_dict = {}
         self.intermediate_dir = intermediate_dir
         os.makedirs(self.intermediate_dir, exist_ok=True)
- 
+
     def extract_triple_impl(self, idx_title_para_dict):
         triple_list = []
         text = idx_title_para_dict['paragraph_text']
@@ -143,27 +143,28 @@ class SPOInfoRetriverWithTripleExtractor(SPOInfoRetriver):
             }
             triple_list.append(tmp_dict)
         return triple_list
- 
+
     def get_question_dataframe(self, question):
         # check file exists
         q_hash = self.dataset.convert_question_to_hash(question)
         triple_path = os.path.join(self.intermediate_dir, f'{q_hash}.json')
-        
-        # if not, extract it 
+
+        # if not, extract it
         if not os.path.exists(triple_path):
             triple_list = []
             para_list_dict = self.dataset.get_para_idx_list_by_question(question)
             with ThreadPoolExecutor() as executor:
-                futures = [executor.submit(self.extract_triple_impl, idx_title_para_dict) for idx_title_para_dict in para_list_dict]
-        
+                futures = [executor.submit(self.extract_triple_impl, idx_title_para_dict) for idx_title_para_dict in
+                           para_list_dict]
+
             for future in as_completed(futures):
                 triple_list.extend(future.result())
-                
+
             # if save_triples, save it
             if self.save_triples:
                 with open(triple_path, 'w') as f:
-                    json.dump(triple_list, f, ensure_ascii=False, indent=4)  
-        # else, load it
+                    json.dump(triple_list, f, ensure_ascii=False, indent=4)
+                    # else, load it
         else:
             with open(triple_path, 'r') as f:
                 triple_list = json.load(f)
