@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.thinker.engine;
 
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.thinker.TripleStore;
 import com.antgroup.openspg.reasoner.thinker.logic.LogicNetwork;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
@@ -93,6 +94,8 @@ public class InfGraph implements Graph {
 
   private List<Result> inference(Element pattern, Map<String, Object> context) {
     List<Result> rst = new LinkedList<>();
+    boolean strictMode =
+        (Boolean) context.getOrDefault(Constants.SPG_REASONER_THINKER_STRICT, false);
     for (Rule rule : logicNetwork.getBackwardRules(pattern)) {
       List<Element> body =
           rule.getBody().stream().map(ClauseEntry::toElement).collect(Collectors.toList());
@@ -100,7 +103,8 @@ public class InfGraph implements Graph {
       if (CollectionUtils.isEmpty(data)) {
         TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
         Boolean ret =
-            rule.getRoot().accept(new LinkedList<>(), context, new RuleExecutor(), traceLogger);
+            rule.getRoot()
+                .accept(new LinkedList<>(), context, new RuleExecutor(strictMode), traceLogger);
         traceLogger.setCurrentNodeMsg(rule.getDesc());
         if (ret) {
           Element ele = rule.getHead().toElement();
@@ -115,7 +119,8 @@ public class InfGraph implements Graph {
         for (List<Result> d : data) {
           TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
           List<Element> dList = d.stream().map(Result::getData).collect(Collectors.toList());
-          Boolean ret = rule.getRoot().accept(dList, context, new RuleExecutor(), traceLogger);
+          Boolean ret =
+              rule.getRoot().accept(dList, context, new RuleExecutor(strictMode), traceLogger);
           List<String> msg =
               d.stream()
                   .map(Result::getTraceLog)
