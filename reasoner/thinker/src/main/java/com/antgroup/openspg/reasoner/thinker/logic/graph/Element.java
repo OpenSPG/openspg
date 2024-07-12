@@ -29,6 +29,10 @@ public abstract class Element implements Serializable {
     return this;
   }
 
+  public boolean canInstantiated() {
+    return true;
+  }
+
   public String alias() {
     throw new UnsupportedOperationException(
         this.getClass().getSimpleName() + " cannot support", null);

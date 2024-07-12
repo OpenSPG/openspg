@@ -16,6 +16,7 @@ package com.antgroup.openspg.reasoner.thinker.engine;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
+import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
@@ -85,8 +86,9 @@ public class GraphStore implements Graph {
         this.graphState.getEdges(
             IVertexId.from(s.getId(), s.getType()), null, null, null, Direction.OUT);
     for (IEdge<IVertexId, IProperty> edge : edges) {
+      SPO spo = new SPO(edge.getType());
       if (edge.getTargetId().equals(IVertexId.from(o.getId(), o.getType()))
-          && edge.getType().equals(p.getName())) {
+          && spo.getP().equals(p.getName())) {
         triples.add(
             new Triple(triple, predicate, new Value(edge.getValue().get(predicate.getName()))));
       }
@@ -95,12 +97,13 @@ public class GraphStore implements Graph {
   }
 
   private Triple edgeToTriple(IEdge<IVertexId, IProperty> edge) {
+    SPO spo = new SPO(edge.getType());
     if (edge.getDirection() == Direction.OUT) {
       return new Triple(
           new Entity(
               (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY),
               (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)),
-          new Predicate(edge.getType()),
+          new Predicate(spo.getP()),
           new Entity(
               (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY),
               (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)));
@@ -109,7 +112,7 @@ public class GraphStore implements Graph {
           new Entity(
               (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY),
               (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)),
-          new Predicate(edge.getType()),
+          new Predicate(spo.getP()),
           new Entity(
               (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY),
               (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)));
