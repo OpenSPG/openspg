@@ -25,3 +25,19 @@ Define (a:Med.Examination)-[:abnormalRule]->(c: string) {
 Define (a:Med.Examination)-[:abnormalRule]->(c: string) {
  R1: (a)-[:abnormalValue]->(b: Med.ExaminationResult/`偏低`) AND (a)-[: lowExplain]->(c)
 }
+
+Define()-[: 确诊]->(: Medical.DiseaseTerm/`乙型肝炎大三阳`) {
+ r:    (: Medical.ExaminationTerm/`乙肝表面抗原`)-[: abnormalValue]->(: Medical.AbnormalExaminationIndicator/`阳性`) and (: Medical.ExaminationTerm/`乙肝e抗原`)-[: abnormalValue]->(: Medical.AbnormalExaminationIndicator/`阳性`) and (: Medical.ExaminationTerm/`乙肝核心抗体`)-[: abnormalValue]->(: Medical.AbnormalExaminationIndicator/`阳性`)
+}
+
+Define (a:Medical.ExaminationTerm/`乙肝表面抗原`)-[:abnormalValue]->(c: Medical.AbnormalExaminationIndicator/`阳性`) {
+  R1: (乙肝表面抗原>rule_value(乙肝表面抗原_upper != null, 乙肝表面抗原_upper, 1))
+}
+
+Define (a:Medical.ExaminationTerm/`乙肝e抗原`)-[:abnormalValue]->(c: Medical.AbnormalExaminationIndicator/`阳性`) {
+  R1: (乙肝e抗原>rule_value(乙肝e抗原_upper != null, 乙肝e抗原_upper, 2.1))
+}
+
+Define (a:Medical.ExaminationTerm/`乙肝核心抗体`)-[:abnormalValue]->(c: Medical.AbnormalExaminationIndicator/`阳性`) {
+  R1: (乙肝核心抗体>rule_value(乙肝核心抗体_upper != null, 乙肝核心抗体_upper, 2.1))
+}
