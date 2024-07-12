@@ -82,9 +82,9 @@ abstract class Catalog() extends Serializable {
    */
   def getConnection(typeName: String): Set[AbstractConnection] = {
     val finalType = LabelTypeUtils.getMetaType(typeName)
-    if (!connections.contains(finalType)) {
-      throw ConnectionNotFoundException(s"$finalType not found.", null)
-    }
+//    if (!connections.contains(finalType)) {
+//      throw ConnectionNotFoundException(s"$finalType not found.", null)
+//    }
     connections.getOrElse(finalType, mutable.Set.empty).toSet
   }
 
