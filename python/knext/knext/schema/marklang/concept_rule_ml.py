@@ -306,7 +306,7 @@ class SPGConceptRuleMarkLang:
                         subject_concept_type_name="Thing" if len(
                             self.src_concept) == 0 else f"{self.namespace}.{self.src_concept[0]}",
                         subject_concept_name="1" if len(self.src_concept) == 0 else self.src_concept[1],
-                        predicate_name="_conclude" if self.predicate is None else self.predicate,
+                        predicate_name="conclude" if self.predicate is None else self.predicate,
                         object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
                         object_concept_name=self.dst_concept[1],
                         semantic_type="REASONING_CONCEPT",
@@ -322,7 +322,7 @@ class SPGConceptRuleMarkLang:
                         subject_concept_type_name="Thing" if len(
                             self.src_concept) == 0 else f"{self.namespace}.{self.src_concept[0]}",
                         subject_concept_name="1" if len(self.src_concept) == 0 else self.src_concept[1],
-                        predicate_name="_conclude" if self.predicate is None else self.predicate,
+                        predicate_name="conclude" if self.predicate is None else self.predicate,
                         object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
                         object_concept_name=self.dst_concept[1],
                         semantic_type="REASONING_CONCEPT"
