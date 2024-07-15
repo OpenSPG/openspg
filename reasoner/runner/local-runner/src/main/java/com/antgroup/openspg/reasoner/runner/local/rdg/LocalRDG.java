@@ -1503,10 +1503,11 @@ public class LocalRDG extends RDG<LocalRDG> {
             for (IEdge<IVertexId, IProperty> edge : edges) {
               if (edge instanceof PathEdge) {
                 if (((PathEdge<?, ?, ?>) edge).getVertexList() != null) {
-                 vertexSet.addAll(((PathEdge<IVertexId, IProperty, IProperty>) edge).getVertexList());
+                  vertexSet.addAll(
+                      ((PathEdge<IVertexId, IProperty, IProperty>) edge).getVertexList());
                 }
                 if (((PathEdge<?, ?, ?>) edge).getEdgeList() != null) {
-                 edgeSet.addAll(((PathEdge<IVertexId, IProperty, IProperty>) edge).getEdgeList());
+                  edgeSet.addAll(((PathEdge<IVertexId, IProperty, IProperty>) edge).getEdgeList());
                 }
               }
               edgeSet.add(edge);
