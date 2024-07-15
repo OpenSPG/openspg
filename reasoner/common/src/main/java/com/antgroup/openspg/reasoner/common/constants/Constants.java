@@ -55,6 +55,9 @@ public class Constants {
   public static final String SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE =
       "spg.reasoner.plan.pretty.print.logger.enable";
 
+  /** enable strict mode in thinker during rule engine execution, default is false */
+  public static final String SPG_REASONER_THINKER_STRICT = "spg.reasoner.thinker.strict";
+
   /** start label config */
   public static final String START_LABEL = "start_label";
 
