@@ -1,4 +1,4 @@
-from knext.ca.client import register_llm_client
+from knext.ca.common.client import register_llm_client
 from openai import OpenAI
 
 

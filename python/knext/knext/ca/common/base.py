@@ -1,7 +1,7 @@
 import asyncio
 import os
 from string import Template
-from knext.ca.utils import logger
+from knext.ca.common.utils import logger
 
 
 class Question(object):

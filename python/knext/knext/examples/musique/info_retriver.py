@@ -5,11 +5,11 @@ import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from knext.ca.logic.modules.reasoner import ExtractTriplesFromTextModule
-from knext.ca.tools.retriver import RagInfoFetchTool
+from knext.ca.tools.retriver import RagInfoRetriver
 from knext.ca.common.utils import logger
 
 
-class TextInfoRetriver(RagInfoFetchTool):
+class TextInfoRetriver(RagInfoRetriver):
     def __init__(self, musique_dataset, llm, embedding_fn, top_k=3):
         super().__init__(llm, embedding_fn)
         self.dataset = musique_dataset
@@ -40,7 +40,7 @@ class TextInfoRetriver(RagInfoFetchTool):
         return results
 
 
-class SPOInfoRetriver(RagInfoFetchTool):
+class SPOInfoRetriver(RagInfoRetriver):
     def __init__(self, musique_dataset, llm, embedding_fn):
         super().__init__(llm, embedding_fn)
         self.dataset = musique_dataset

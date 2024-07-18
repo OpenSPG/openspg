@@ -13,7 +13,6 @@ class Reasoner(KagBaseModule):
         super().__init__(
             llm_module=llm_module,
             use_default_prompt_template=False,
-            is_prompt_template_cn=True,
             prompt_template_dir=prompt_template_dir,
             is_prompt_template_cn=is_prompt_template_cn
         )

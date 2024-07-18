@@ -25,7 +25,7 @@ class ExtraInfoRetriver(object):
         pass
 
 
-class RagRetriver(ExtraInfoRetriver):
+class RagInfoRetriver(ExtraInfoRetriver):
     """
     Subclass implementing a retrieval system with similarity search
 

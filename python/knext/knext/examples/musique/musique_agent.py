@@ -2,10 +2,10 @@ import os
 import json
 import asyncio
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from antcode.openspgapp.openspg.python.knext.knext.ca.common.base import Question, KagBaseModule, Agent
+from knext.ca.common.base import Question, KagBaseModule, Agent
 from knext.ca.logic.agents.divide_and_conquer import DivideAndConquerAgent
 from knext.ca.logic.modules.solver import Solver, SolveQuestionWithContext
-from antcode.openspgapp.openspg.python.knext.knext.ca.tools.info_processor import LoggerIntermediateProcessTool
+from knext.ca.tools.info_processor import LoggerIntermediateProcessTool
 from knext.ca.common.utils import logger
 
 

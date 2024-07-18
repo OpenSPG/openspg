@@ -3,10 +3,6 @@ import functools
 import json
 from pathlib import Path
 
-current_file_path = Path(__file__).resolve()
-knext_dir = str(current_file_path.parent.parent.parent)
-sys.path.append(knext_dir)
-
 import os
 import json
 import logging
@@ -218,7 +214,7 @@ def run_experiment_impl(create_agent_fn,
         logger.info(json.dumps(data_line, ensure_ascii=False, indent=4))
         logger.info(f'***** DEBUG MODEL DATA INSPECT  *****\n')
 
-    infer_runner = InferenceRunner(
+    infer_runner = ParallelInferenceRunner(
         parallel_num=parallel_num,
         continue_run=continue_run,
         workspace_dir=submit_dir,
