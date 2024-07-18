@@ -16,7 +16,6 @@ package com.antgroup.openspg.reasoner.udf.builtin.udf;
 import com.antgroup.openspg.reasoner.udf.builtin.CommonUtils;
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
-import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,7 @@ public class RepeatConstraint {
   @UdfDefine(name = "repeat_constraint")
   public boolean constraint(
       List<Object> itemList, String preName, String curName, String express, Object context) {
-    Map<String, Object> contextMap = getParentContext(context);
+    Map<String, Object> contextMap = CommonUtils.getParentContext(context);
     int processIndex = 1;
     if (StringUtils.isEmpty(preName) || !express.contains(preName)) {
       processIndex = 0;
@@ -50,28 +49,5 @@ public class RepeatConstraint {
   @UdfDefine(name = "repeat_constraint")
   public boolean constraint(List<Object> itemList, String preName, String curName, String express) {
     return constraint(itemList, preName, curName, express, null);
-  }
-
-  private Map<String, Object> getParentContext(Object context) {
-    Map<String, Object> result = new HashMap<>();
-    if (null == context) {
-      return result;
-    }
-    Map<String, Object> contextMap = (Map<String, Object>) context;
-    for (Map.Entry<String, Object> entry : contextMap.entrySet()) {
-      Map<String, Object> curMap = result;
-      List<String> nameList = Lists.newArrayList(Splitter.on(".").split(entry.getKey()));
-      for (int i = 0; i < nameList.size(); ++i) {
-        String name = nameList.get(i);
-        Map<String, Object> newMap = new HashMap<>();
-        if (i == nameList.size() - 1) {
-          curMap.put(name, entry.getValue());
-        } else {
-          curMap.putIfAbsent(name, newMap);
-        }
-        curMap = newMap;
-      }
-    }
-    return result;
   }
 }
