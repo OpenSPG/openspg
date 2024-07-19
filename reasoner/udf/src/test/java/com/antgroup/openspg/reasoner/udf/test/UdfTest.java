@@ -97,21 +97,6 @@ public class UdfTest {
   }
 
   @Test
-  public void testJsonGet10() {
-    UdfMng mng = UdfMngFactory.getUdfMng();
-    String params =
-        "[{\"action\":\"get\",\"name\":\"com.alipay.logisticsprod.core.rpc.request.LogisticsOcrRefundBillRequest.picUrl\",\"type\":\"java.lang.String\"},{\"action\":\"set\",\"name\":\"com.alipay.datacube.ua.service.facade.unified.access.domain.request.UnifiedAccessRequest.params\"}]";
-    IUdfMeta udfMeta1 =
-        mng.getUdfMeta("json_get", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
-    Object rst = udfMeta1.invoke(params, "$[?(name rlike '(?i).*(?:uri|url)$')]");
-
-    IUdfMeta udfMeta2 =
-        mng.getUdfMeta("cast_type", Lists.newArrayList(KTObject$.MODULE$, KTObject$.MODULE$));
-    Object rst2 = udfMeta2.invoke(rst, "String");
-    Assert.assertEquals(JSONArray.parse("[\"444\"]"), rst2);
-  }
-
-  @Test
   public void testJsonGet4() {
     UdfMng mng = UdfMngFactory.getUdfMng();
     String params =

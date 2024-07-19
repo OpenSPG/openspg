@@ -127,7 +127,6 @@ public class Utils {
       case "[Ljava.util.Date;":
         return new KTArray(KTDate$.MODULE$);
       default:
-        //        throw new RuntimeException("unsupported type " + typeName);
         return KTObject$.MODULE$;
     }
   }
