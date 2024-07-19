@@ -9,10 +9,10 @@ from knext.ca.common.utils import logger
 
 
 class Reasoner(KagBaseModule):
-    def __init__(self, llm_module, prompt_template_dir, is_prompt_template_cn):
+    def __init__(self, llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn):
         super().__init__(
             llm_module=llm_module,
-            use_default_prompt_template=False,
+            use_default_prompt_template=use_default_prompt_template,
             prompt_template_dir=prompt_template_dir,
             is_prompt_template_cn=is_prompt_template_cn
         )

@@ -97,8 +97,23 @@ class MusiqueSolveQuestionWithText(SolveQuestionWithContext):
 
 
 class HierarchicalSolveQuestion(Solver):
-    def __init__(self, llm_module, answer_with_spo, answer_with_text):
-        super().__init__(llm_module, is_computational=False)
+    def __init__(
+            self,
+            llm_module,
+            answer_with_spo,
+            answer_with_text,
+            use_default_prompt_template=True,
+            prompt_template_dir=None,
+            is_prompt_template_cn=True,
+            is_computational=False
+    ):
+        super().__init__(
+            llm_module,
+            use_default_prompt_template=use_default_prompt_template,
+            prompt_template_dir=prompt_template_dir,
+            is_prompt_template_cn=is_prompt_template_cn,
+            is_computational=is_computational
+        )
         self.answer_with_spo = answer_with_spo
         self.answer_with_text = answer_with_text
 

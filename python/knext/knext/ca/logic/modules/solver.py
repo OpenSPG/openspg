@@ -25,6 +25,7 @@ class SolveQuestionWithContext(Solver):
 
     def get_template_var_names(self):
         return ['question', 'context']
+
     def get_extra_info_fetch_tools(self):
         return []
 
