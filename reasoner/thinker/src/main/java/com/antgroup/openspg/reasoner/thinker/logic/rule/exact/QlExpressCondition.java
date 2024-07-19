@@ -98,7 +98,8 @@ public class QlExpressCondition extends Condition {
 
   private boolean absent(Map<String, Object> context) throws Exception {
     if (qlExpress.toLowerCase().contains("get_value")
-        || qlExpress.toLowerCase().contains("get_spo")) {
+        || qlExpress.toLowerCase().contains("get_spo")
+        || qlExpress.toLowerCase().contains("rule_value")) {
       return false;
     }
     Map<String, Set<String>> vars = varsCache.get(qlExpress);
