@@ -105,8 +105,9 @@ class ExtractTriplesFromTextModule(Reasoner):
 
     """
 
-    def __init__(self, llm_module, prompt_template_dir=None, is_prompt_template_cn=True):
-        super().__init__(llm_module, prompt_template_dir, is_prompt_template_cn)
+    def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
+                 is_prompt_template_cn=True):
+        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def get_module_name(self):
         return "ExtractTriplesFromTextModule"
@@ -130,8 +131,9 @@ class FetchSubject(Reasoner):
 
     """
 
-    def __init__(self, llm_module, prompt_template_dir=None, is_prompt_template_cn=True):
-        super().__init__(llm_module, prompt_template_dir, is_prompt_template_cn)
+    def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
+                 is_prompt_template_cn=True):
+        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def preprocess(self, question: Question):
         prompt = self.state_dict['prompt_template'].substitute(
@@ -153,8 +155,9 @@ class FetchPredicate(Reasoner):
 
     """
 
-    def __init__(self, llm_module, prompt_template_dir=None, is_prompt_template_cn=True):
-        super().__init__(llm_module, prompt_template_dir, is_prompt_template_cn)
+    def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
+                 is_prompt_template_cn=True):
+        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def preprocess(self, question: Question):
         prompt = self.state_dict['prompt_template'].substitute(
@@ -176,8 +179,9 @@ class FetchObject(Reasoner):
 
     """
 
-    def __init__(self, llm_module, prompt_template_dir=None, is_prompt_template_cn=True):
-        super().__init__(llm_module, prompt_template_dir, is_prompt_template_cn)
+    def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
+                 is_prompt_template_cn=True):
+        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def preprocess(self, question: Question):
         prompt = self.state_dict['prompt_template'].substitute(

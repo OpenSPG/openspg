@@ -129,7 +129,7 @@ def create_divide_and_conquer_agent_hierarchical_info_tool(musique_data, get_llm
 
     answer_parent_question = SolveQuestionWithContext(
         llm_module=llm,
-        use_default_prompt_template=False,
+        use_default_prompt_template=True,
         prompt_template_dir=prompt_template_dir
     )
 

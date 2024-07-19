@@ -143,7 +143,7 @@ class MusiqueDivideAndConquerAgent(DivideAndConquerAgent):
                  debug_mode,
                  max_depth=1,
                  ):
-        use_default_prompt_template = False
+        use_default_prompt_template = True
         intermediate_process_tools = []
         intermediate_process_tools.append(
             LoggerIntermediateProcessTool(debug_mode=debug_mode)
