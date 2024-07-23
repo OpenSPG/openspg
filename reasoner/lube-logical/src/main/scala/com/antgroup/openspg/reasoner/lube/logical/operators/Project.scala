@@ -19,7 +19,7 @@ import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationExcept
 import com.antgroup.openspg.reasoner.common.types.KTObject
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field
 import com.antgroup.openspg.reasoner.lube.common.expr.Expr
-import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode}
+import com.antgroup.openspg.reasoner.lube.common.graph.{IREdge, IRNode, IRVariable}
 import com.antgroup.openspg.reasoner.lube.logical._
 import com.antgroup.openspg.reasoner.lube.utils.ExprUtils
 
@@ -41,6 +41,9 @@ final case class Project(in: LogicalOperator, expr: Map[Var, Expr], solved: Solv
               case IREdge(name, fields) =>
                 val edge = EdgeVar(name, fields.map(new Field(_, KTObject, true)))
                 fieldsMap.put(name, edge.merge(fieldsMap.get(name)))
+              case IRVariable(name) =>
+                val v = Variable(new Field(name, KTObject, true))
+                fieldsMap.put(name, v)
               case _ => throw UnsupportedOperationException(s"unsupported $expr")
             }
           }
@@ -78,8 +81,8 @@ final case class Project(in: LogicalOperator, expr: Map[Var, Expr], solved: Solv
     fieldsMap.values.toList
   }
 
-
   override def withNewChildren(newChildren: Array[LogicalOperator]): LogicalOperator = {
     this.copy(in = newChildren.head)
   }
+
 }
