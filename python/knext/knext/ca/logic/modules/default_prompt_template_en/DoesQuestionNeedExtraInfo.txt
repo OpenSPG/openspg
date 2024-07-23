@@ -1,0 +1,12 @@
+Requirement: 
+1. Answer with either "Yes" or "No"
+Example 1:
+llm_input: Who is Jay Chou's wife?
+llm_output: Yes
+Example 2:
+llm_input: What is the intersection of lists [A, B, C] and [B, C, D]?
+llm_output: No
+
+Based on the above requirement and examples, is the following question one that requires external information to answer?
+llm_input: $question
+llm_output:

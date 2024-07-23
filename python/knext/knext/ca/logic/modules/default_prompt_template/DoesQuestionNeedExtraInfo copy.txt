@@ -1,0 +1,11 @@
+要求: 
+1. 用是或者否回答
+例子1:
+llm_input:周杰伦的老婆是谁
+llm_output:是
+例子2：
+llm_input:列表[A, B, C]和[B, C, D]的交集是什么
+llm_output:否
+根据以上要求和例子，以下问题是一个需要外部信息才能回答的问题吗?
+llm_input: $question
+llm_output:

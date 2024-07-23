@@ -1,0 +1,24 @@
+Requirements:
+1. When answering questions, rely on the information provided in the context below.
+2. Answer the questions as directly as possible, without including extraneous information.
+3. Do not include information that is only relevant to one aspect.
+4. In addition to the context, you can also rely on some common knowledge when answering questions.
+5. If the context does not provide relevant information, respond with "No relevant information found," without fabricating an answer.
+
+Example 1:
+llm_input: What is the relationship between Jin Yong and Xu Zhimo?
+context: 
+Everyone knows that Jin Yong and Xu Zhimo are cousins. Jin Yong's mother and Xu Zhimo's father are cousins, and Xu Zhimo is about 27 years older than Jin Yong, so Jin Yong has to call Xu Zhimo his cousin. Jin Yong's original name is Cha Liangyong, and both Jin Yong's and Xu Zhimo's families are wealthy families in Jiangsu and Zhejiang.
+llm_output: Cousins
+
+Example 2:
+llm_input: What is the surname of Xie Nan's father?
+context: 
+No information found related to Xie Nan's father
+llm_output: Xie
+
+
+Based on the above requirements and examples, answer the following question:
+llm_input: $question
+context: $context
+llm_output:
