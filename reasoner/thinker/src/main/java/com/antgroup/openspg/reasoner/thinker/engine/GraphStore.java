@@ -41,9 +41,19 @@ public class GraphStore implements Graph {
   public List<Result> find(Triple pattern, Map<String, Object> context) {
     List<Triple> data;
     if (pattern.getSubject() instanceof Entity) {
-      data = getTriple((Entity) pattern.getSubject(), pattern.getPredicate(), pattern.getObject(), Direction.OUT);
+      data =
+          getTriple(
+              (Entity) pattern.getSubject(),
+              pattern.getPredicate(),
+              pattern.getObject(),
+              Direction.OUT);
     } else if (pattern.getObject() instanceof Entity) {
-      data = getTriple((Entity) pattern.getObject(), pattern.getPredicate(), pattern.getSubject(), Direction.IN);
+      data =
+          getTriple(
+              (Entity) pattern.getObject(),
+              pattern.getPredicate(),
+              pattern.getSubject(),
+              Direction.IN);
     } else if (pattern.getSubject() instanceof Triple) {
       data = getTriple((Triple) pattern.getSubject(), (Predicate) pattern.getPredicate());
     } else {
@@ -92,7 +102,8 @@ public class GraphStore implements Graph {
   }
 
   private String toSPO(Entity s, Element predicate, Element o) {
-    if (!(predicate instanceof Predicate) || StringUtils.isBlank(((Predicate) predicate).getName())) {
+    if (!(predicate instanceof Predicate)
+        || StringUtils.isBlank(((Predicate) predicate).getName())) {
       return null;
     }
     SPO spo;
