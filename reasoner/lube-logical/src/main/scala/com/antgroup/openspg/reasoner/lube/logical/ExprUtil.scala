@@ -40,19 +40,31 @@ object ExprUtil {
    * @param rule
    * @return
    */
-  def getReferProperties(rule: Expr): List[Tuple2[String, String]] = {
+  def getReferProperties(rule: Expr): List[(String, String)] = {
+    def transformHelper(expr: Expr): List[(String, String)] =
+      expr.transform[List[(String, String)]] {
+      case (Ref(name), _) => List((null, name))
+      case (UnaryOpExpr(GetField(name), Ref(alias)), _) => List((alias, name))
+      case (BinaryOpExpr(_, Ref(left), Ref(right)), _) => List((null, left), (null, right))
+      case (_, tupleList) => tupleList.flatten
+    }
+
     if (rule == null) {
       List.empty
     } else {
-      rule.transform[List[Tuple2[String, String]]] {
-        case (Ref(name), _) => List.apply((null, name))
-        case (UnaryOpExpr(GetField(name), Ref(alis)), _) => List.apply((alis, name))
-        case (BinaryOpExpr(_, Ref(left), Ref(right)), _) =>
-          List.apply((null, left), (null, right))
+      rule.transform[List[(String, String)]] {
+        case (Ref(name), _) => List((null, name))
+        case (UnaryOpExpr(GetField(name), Ref(alias)), _) => List((alias, name))
+        case (BinaryOpExpr(_, Ref(left), Ref(right)), _) => List((null, left), (null, right))
+        case (ListOpExpr(name, _), tupleList) =>
+          name match {
+            case constraint: Constraint => transformHelper(constraint.reduceFunc)
+            case compute: Reduce => transformHelper(compute.reduceFunc)
+            case _ => tupleList.flatten
+          }
         case (_, tupleList) => tupleList.flatten
       }
     }
-
   }
 
   def needResolved(rule: Expr): Boolean = {
@@ -61,14 +73,25 @@ object ExprUtil {
 
   def transExpr(rule: Expr, replaceVar: Map[String, PropertyVar]): Expr = {
 
-    def rewriter: PartialFunction[Expr, Expr] = { case Ref(refName) =>
+    def rewriter: PartialFunction[Expr, Expr] = {
+      case Ref(refName) =>
       if (replaceVar.contains(refName)) {
         val propertyVar = replaceVar(refName)
         UnaryOpExpr(GetField(propertyVar.field.name), Ref(propertyVar.name))
       } else {
         Ref(refName)
       }
-
+      case ListOpExpr(name, opInput) =>
+        name match {
+          case constraint: Constraint =>
+            val reduceFunc = BottomUp(rewriter).transform(constraint.reduceFunc)
+            ListOpExpr(Constraint(constraint.pre, constraint.cur, reduceFunc), opInput)
+          case compute: Reduce =>
+            val reduceFunc = BottomUp(rewriter).transform(compute.reduceFunc)
+            val initValue = BottomUp(rewriter).transform(compute.initValue)
+            ListOpExpr(Reduce(compute.ele, compute.res, reduceFunc, initValue), opInput)
+          case _ => ListOpExpr(name, opInput)
+        }
     }
 
     BottomUp(rewriter).transform(rule)
