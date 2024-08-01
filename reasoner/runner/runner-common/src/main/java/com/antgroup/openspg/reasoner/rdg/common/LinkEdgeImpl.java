@@ -98,7 +98,7 @@ public class LinkEdgeImpl implements Serializable {
       return true;
     }
     for (String type : targetVertexTypes) {
-      if ("unknown".equals(type.toLowerCase(Locale.ROOT))) {
+      if ("RdfProperty".equals(type)) {
         continue;
       }
       if (StringUtils.isNotEmpty(type)) {
