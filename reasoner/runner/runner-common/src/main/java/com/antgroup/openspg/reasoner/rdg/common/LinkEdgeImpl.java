@@ -92,6 +92,21 @@ public class LinkEdgeImpl implements Serializable {
     this.initContext = RunnerUtil.getKgGraphInitContext(kgGraphSchema);
   }
 
+  private boolean isTargetVertexTypeEmpty(List<String> targetVertexTypes) {
+    if (null == targetVertexTypes || targetVertexTypes.isEmpty()) {
+      return true;
+    }
+    for (String type : targetVertexTypes) {
+      if ("RdfProperty".equals(type)) {
+        continue;
+      }
+      if (StringUtils.isNotEmpty(type)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public List<KgGraph<IVertexId>> link(KgGraph<IVertexId> kgGraph) {
     Iterator<KgGraph<IVertexId>> it = kgGraph.getPath(staticParameters, null);
     List<KgGraph<IVertexId>> mergeList = new ArrayList<>();
@@ -143,9 +158,12 @@ public class LinkEdgeImpl implements Serializable {
           String targetAlias = targetVertexMeta.alias();
           List<String> targetVertexTypes =
               new ArrayList<>(JavaConversions.setAsJavaSet(targetVertexMeta.typeNames()));
-          if (targetVertexTypes.size() == 0) {
-            throw new RuntimeException(
-                "Linked edge target vertex type must contains at least one type");
+          if (isTargetVertexTypeEmpty(targetVertexTypes)) {
+            targetVertexTypes = Lists.newArrayList(linkedUdtfResult.getVertexType());
+            if (isTargetVertexTypeEmpty(targetVertexTypes)) {
+              throw new RuntimeException(
+                  "Linked edge target vertex type must contains at least one type");
+            }
           }
           for (String targetVertexType : targetVertexTypes) {
             IVertexId targetId = new VertexId(targetIdStr, targetVertexType);
