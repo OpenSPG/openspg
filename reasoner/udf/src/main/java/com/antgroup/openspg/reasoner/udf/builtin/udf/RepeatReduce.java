@@ -25,17 +25,29 @@ public class RepeatReduce {
 
   @UdfDefine(name = "repeat_reduce")
   public Object reduce(
-      List<Object> itemList, Object defaultValue, String preName, String curName, String express) {
+      List<Object> itemList,
+      Object defaultValue,
+      String preName,
+      String curName,
+      String express,
+      Object context) {
     Object preValue = defaultValue;
+    Map<String, Object> contextMap = CommonUtils.getParentContext(context);
     for (int i = 0; i < itemList.size(); ++i) {
       Object cur = itemList.get(i);
-      Map<String, Object> context = new HashMap<>();
-      context.put(preName, preValue);
-      context.put(curName, CommonUtils.getRepeatItemContext(cur));
+      Map<String, Object> subContext = new HashMap<>(contextMap);
+      subContext.put(preName, preValue);
+      subContext.put(curName, CommonUtils.getRepeatItemContext(cur));
       preValue =
-          RuleRunner.getInstance().executeExpression(context, Lists.newArrayList(express), "");
+          RuleRunner.getInstance().executeExpression(subContext, Lists.newArrayList(express), "");
     }
     return preValue;
+  }
+
+  @UdfDefine(name = "repeat_reduce")
+  public Object reduce(
+      List<Object> itemList, Object defaultValue, String preName, String curName, String express) {
+    return reduce(itemList, defaultValue, preName, curName, express, null);
   }
 
   @UdfDefine(name = "repeat_reduce")
