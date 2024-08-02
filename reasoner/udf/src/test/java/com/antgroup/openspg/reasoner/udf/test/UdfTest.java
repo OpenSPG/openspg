@@ -66,7 +66,7 @@ public class UdfTest {
   }
 
   @Test
-  public void testJsonGet() {
+  public void testJsonGet1() {
     UdfMng mng = UdfMngFactory.getUdfMng();
     String params = "{\"v\":\"123\"}";
     IUdfMeta udfMeta =
