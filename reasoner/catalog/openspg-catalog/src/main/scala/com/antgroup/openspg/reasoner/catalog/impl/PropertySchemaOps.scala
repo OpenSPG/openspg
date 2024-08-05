@@ -19,25 +19,25 @@ import com.antgroup.openspg.core.schema.model.`type`._
 import com.antgroup.openspg.reasoner.catalog.impl.struct.PropertyMeta
 import com.antgroup.openspg.reasoner.common.exception.KGValueException
 import com.antgroup.openspg.reasoner.common.types._
+import com.antgroup.openspg.reasoner.common.types.KgType.toBasicKgType
 import com.antgroup.openspg.reasoner.lube.catalog.struct.NodeType
 
 object PropertySchemaOps {
 
   implicit def stringToKgType(propertySchema: PropertyMeta): KgType = {
     propertySchema.getCategory match {
-      case "BASIC" =>
-        toKgType(propertySchema.getPropRange.getAttrRangeTypeEnum)
+      case "BASIC" => propertySchema.getPropRange.getAttrRangeTypeEnum
       case "CONCEPT" =>
         KTConcept(propertySchema.getPropRange.getRangeEntityName)
       case "STANDARD" =>
         KTStd(
           propertySchema.getPropRange.getRangeEntityName,
-          toKgType(propertySchema.getPropRange.getAttrRangeTypeEnum),
+          propertySchema.getPropRange.getAttrRangeTypeEnum,
           propertySchema.isSpreadable)
       case "PROPERTY" =>
         KTStd(
           propertySchema.getPropRange.getRangeEntityName,
-          toKgType(propertySchema.getPropRange.getAttrRangeTypeEnum),
+          propertySchema.getPropRange.getAttrRangeTypeEnum,
           propertySchema.isSpreadable)
       case "ENTITY" =>
         KTAdvanced(propertySchema.getPropRange.getRangeEntityName)
@@ -52,34 +52,15 @@ object PropertySchemaOps {
       case conceptType: ConceptType =>
         KTConcept(conceptType.getName)
       case eventType: EventType =>
-        // todo
         KTAdvanced(eventType.getName)
       case standardType: StandardType =>
-        // todo basicType support
         KTStd(spgType.getName, null, standardType.getSpreadable)
-      case basicType: BasicType =>
-        toKgType(basicType.getBasicType.name())
+      case basicType: BasicType => basicType.getBasicType.name()
       case _ =>
         throw KGValueException(s"unsupported type: ${spgType}")
     }
   }
 
-  private def toKgType(basicType: String): BasicKgType = {
-    basicType.toUpperCase() match {
-      case "INTEGER" => KTLong
-      case "LONG" => KTLong
-      case "TEXT" => KTString
-      case "FLOAT" => KTDouble
-      case "DOUBLE" => KTDouble
-      case "BOOLEAN" => KTString
-      case "DATE" => KTString
-      case "TIME" => KTString
-      case "URL" => KTString
-      case "DATETIME" => KTString
-      case "TIMESTAMP" => KTString
-      case _ => throw KGValueException(s"unsupported type: $basicType")
-    }
-  }
 
   def toNodeType(spgType: SPGTypeEnum): NodeType.Value = {
     spgType match {
