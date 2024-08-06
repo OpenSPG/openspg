@@ -109,6 +109,15 @@ class SPGTypeMapping(Mapping):
 
     spg_type: BaseSpgType = None
 
+
+    def __init__(self, spg_type_name: str):
+        super().__init__()
+        self.spg_type_name = spg_type_name
+        if not self.schema_session:
+            self.schema_session = SchemaClient().create_session()
+        if not self.spg_type:
+            self.spg_type = self.schema_session.get(self.spg_type_name)
+
     def model_post_init(self, __context: Any) -> None:
         if not self.schema_session:
             self.schema_session = SchemaClient().create_session()

@@ -44,8 +44,13 @@ import com.antgroup.openspg.core.schema.model.type.StandardType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.ToNumberPolicy;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.regex.Pattern;
 
 public class SchemaJsonUtils {
 
@@ -100,8 +105,22 @@ public class SchemaJsonUtils {
             // BaseReasonerReceipt
             .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
             .setDateFormat(DATA_FORMAT)
+            .registerTypeAdapter(Pattern.class, new SchemaJsonUtils.PatternTypeAdapter())
             .create();
   }
+
+  public static class PatternTypeAdapter extends TypeAdapter<Pattern> {
+    @Override
+    public void write(JsonWriter out, Pattern pattern) throws IOException {
+      out.value(pattern.pattern());
+    }
+
+    @Override
+    public Pattern read(JsonReader in) throws IOException {
+      return Pattern.compile(in.nextString());
+    }
+  }
+
 
   /**
    * Serialize the given Java object into JSON string.

@@ -29,13 +29,13 @@ class Disease(BuilderJob):
     def build(self):
 
         source = CSVReader(
-            local_path="builder/job/data/Disease.csv",
+            local_path="data/Disease.csv",
             columns=["input"],
             start_row=1,
         )
 
         extract = LLMBasedExtractor(
-            llm=NNInvoker.from_config("builder/model/openai_infer.json"),
+            llm=NNInvoker.from_config("../../builder/model/openai_infer.json"),
             prompt_ops=[
                 REPrompt(
                     spg_type_name=Medicine.Disease,
@@ -63,3 +63,13 @@ class Disease(BuilderJob):
         sink = KGWriter()
 
         return source >> extract >> mappings >> sink
+
+if __name__ == '__main__':
+    a = Disease()
+    builder_chain = a.build()
+    params = {
+        param: getattr(a, param)
+        for param in a.__annotations__
+        if hasattr(a, param) and not param.startswith("_")
+    }
+    builder_chain.invoke(builder_chain, **params)
