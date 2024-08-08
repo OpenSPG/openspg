@@ -15,10 +15,10 @@ package com.antgroup.openspg.core.schema.model.semantic.request;
 
 import com.antgroup.openspg.server.common.model.base.BaseRequest;
 
-/** Request to define logical causation between concepts. */
-public class DefineLogicalCausationRequest extends BaseRequest {
+/** Request to remove logical causation between concepts. */
+public class RemoveTripleSemanticRequest extends BaseRequest {
 
-  private static final long serialVersionUID = 3663132552543144765L;
+  private static final long serialVersionUID = -3165344348700966342L;
 
   /** The unique name of subject concept type. */
   private String subjectConceptTypeName;
@@ -35,8 +35,8 @@ public class DefineLogicalCausationRequest extends BaseRequest {
   /** The concept name of object in spo triple */
   private String objectConceptName;
 
-  /** The dsl content of logic rule defined in spo. */
-  private String dsl;
+  /** The semantic type of the triple. */
+  private String semanticType;
 
   public String getSubjectConceptName() {
     return subjectConceptName;
@@ -62,14 +62,6 @@ public class DefineLogicalCausationRequest extends BaseRequest {
     this.objectConceptName = objectConceptName;
   }
 
-  public String getDsl() {
-    return dsl;
-  }
-
-  public void setDsl(String dsl) {
-    this.dsl = dsl;
-  }
-
   public String getSubjectConceptTypeName() {
     return subjectConceptTypeName;
   }
@@ -84,5 +76,13 @@ public class DefineLogicalCausationRequest extends BaseRequest {
 
   public void setObjectConceptTypeName(String objectConceptTypeName) {
     this.objectConceptTypeName = objectConceptTypeName;
+  }
+
+  public String getSemanticType() {
+    return semanticType;
+  }
+
+  public void setSemanticType(String semanticType) {
+    this.semanticType = semanticType;
   }
 }

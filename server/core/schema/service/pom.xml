@@ -29,6 +29,10 @@
       <artifactId>reasoner-local-runner</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-thinker</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>core-schema-model</artifactId>
     </dependency>

@@ -21,8 +21,8 @@ import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.builder.model.record.property.SPGPropertyValue;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.SystemPredicateEnum;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
@@ -37,7 +37,7 @@ import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 import scala.Tuple2;
 
-public class CausalConceptReasoner implements ConceptReasoner<LogicalCausationSemantic> {
+public class CausalConceptReasoner implements ConceptReasoner<TripleSemantic> {
 
   @Setter private InductiveConceptReasoner inductiveConceptReasoner;
   @Setter private BuilderCatalog builderCatalog;
@@ -45,17 +45,14 @@ public class CausalConceptReasoner implements ConceptReasoner<LogicalCausationSe
   @Setter private GraphState<IVertexId> graphState;
 
   @Override
-  public List<BaseSPGRecord> reason(
-      List<BaseSPGRecord> records, LogicalCausationSemantic conceptSemantic) {
+  public List<BaseSPGRecord> reason(List<BaseSPGRecord> records, TripleSemantic conceptSemantic) {
     List<BaseSPGRecord> results = new ArrayList<>(records);
     propagate(records, conceptSemantic, results);
     return results;
   }
 
   private void propagate(
-      List<BaseSPGRecord> spgRecords,
-      LogicalCausationSemantic conceptSemantic,
-      List<BaseSPGRecord> results) {
+      List<BaseSPGRecord> spgRecords, TripleSemantic conceptSemantic, List<BaseSPGRecord> results) {
     List<BaseAdvancedRecord> toPropagated = new ArrayList<>();
     for (BaseSPGRecord spgRecord : spgRecords) {
       if (!(spgRecord instanceof BaseAdvancedRecord)) {
@@ -102,7 +99,7 @@ public class CausalConceptReasoner implements ConceptReasoner<LogicalCausationSe
           nextSpgRecords = inductiveConceptReasoner.reason(nextSpgRecords, belongTo);
         }
 
-        for (LogicalCausationSemantic nextLeadTo :
+        for (TripleSemantic nextLeadTo :
             conceptList.getLogicalCausation(conceptSemantic.getObjectIdentifier())) {
           propagate(nextSpgRecords, nextLeadTo, results);
         }
@@ -110,7 +107,7 @@ public class CausalConceptReasoner implements ConceptReasoner<LogicalCausationSe
     }
   }
 
-  private List<BaseSPGRecord> leadTo(BaseAdvancedRecord record, LogicalCausationSemantic leadTo) {
+  private List<BaseSPGRecord> leadTo(BaseAdvancedRecord record, TripleSemantic leadTo) {
     LocalReasonerTask reasonerTask = new LocalReasonerTask();
 
     reasonerTask.setCatalog(catalog);

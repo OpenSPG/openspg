@@ -15,11 +15,11 @@ package com.antgroup.openspg.server.infra.dao.repository.schema;
 
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.server.common.service.SequenceRepository;
-import com.antgroup.openspg.server.core.schema.service.semantic.model.LogicalCausationQuery;
 import com.antgroup.openspg.server.core.schema.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.core.schema.service.semantic.model.TripleSemanticQuery;
 import com.antgroup.openspg.server.core.schema.service.semantic.repository.SemanticRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.SemanticDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.SemanticDOExample;
@@ -101,7 +101,7 @@ public class SemanticRepositoryImpl implements SemanticRepository {
   }
 
   @Override
-  public int deleteConceptSemantic(LogicalCausationSemantic conceptSemantic) {
+  public int deleteConceptSemantic(TripleSemantic conceptSemantic) {
     SemanticDOExample example = new SemanticDOExample();
     SemanticDOExample.Criteria criteria = example.createCriteria();
     if (conceptSemantic.getSubjectTypeIdentifier() != null) {
@@ -123,10 +123,14 @@ public class SemanticRepositoryImpl implements SemanticRepository {
   }
 
   @Override
-  public List<SimpleSemantic> queryConceptSemanticByCond(LogicalCausationQuery query) {
+  public List<SimpleSemantic> queryConceptSemanticByCond(TripleSemanticQuery query) {
     SemanticDOExample example = new SemanticDOExample();
     SemanticDOExample.Criteria criteria = example.createCriteria();
-    criteria.andResourceTypeEqualTo(SPGOntologyEnum.CONCEPT.name());
+    if (query.getSpgOntologyEnum() == null) {
+      criteria.andResourceTypeEqualTo(SPGOntologyEnum.CONCEPT.name());
+    } else {
+      criteria.andResourceTypeEqualTo(query.getSpgOntologyEnum().name());
+    }
 
     if (CollectionUtils.isNotEmpty(query.getSubjectTypeNames())) {
       criteria.andSubjectMetaTypeIn(query.getSubjectTypeNames());

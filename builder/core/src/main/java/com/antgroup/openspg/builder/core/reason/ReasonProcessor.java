@@ -26,7 +26,7 @@ import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.reasoner.catalog.impl.OpenSPGCatalog;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
@@ -106,7 +106,7 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
     }
 
     // then run causal reasoning logic
-    for (LogicalCausationSemantic leadTo : conceptList.getLogicalCausation()) {
+    for (TripleSemantic leadTo : conceptList.getLogicalCausation()) {
       spgRecords = causalConceptReasoner.reason(spgRecords, leadTo);
     }
     return spgRecords;

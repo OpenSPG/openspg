@@ -22,13 +22,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class LogicalCausationQuery {
-
-  /** The list of subject type name */
-  private List<String> subjectTypeNames;
-
-  /** The subject name. */
-  private String subjectName;
+public class ReasoningConclusionQuery {
 
   /** The list of object type name. */
   private List<String> objectTypeNames;
