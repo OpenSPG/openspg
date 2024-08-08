@@ -13,10 +13,9 @@
 
 package com.antgroup.openspg.server.api.facade.dto.schema.request;
 
-import java.util.List;
-
 import com.antgroup.openspg.server.common.model.base.BaseRequest;
 import com.google.common.collect.Lists;
+import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 
 /** Query schema type. */

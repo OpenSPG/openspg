@@ -31,9 +31,7 @@ public enum SPGOntologyEnum {
   /** Concept instance. */
   CONCEPT,
 
-  /**
-   * Reasoning concept instance.
-   */
+  /** Reasoning concept instance. */
   REASONING_CONCEPT;
 
   public static SPGOntologyEnum toEnum(String val) {

@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.core.schema.service.semantic.repository;
 
-import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.server.core.schema.service.semantic.model.TripleSemanticQuery;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.server.core.schema.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.core.schema.service.semantic.model.TripleSemanticQuery;
 import java.util.List;
 
 /**

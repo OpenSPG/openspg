@@ -87,7 +87,10 @@ class SPGConceptRuleMarkLang:
                 "please define namespace first"
             )
 
-            self.dst_concept = (reasoning_concept_match.group(1), reasoning_concept_match.group(2))
+            self.dst_concept = (
+                reasoning_concept_match.group(1),
+                reasoning_concept_match.group(2),
+            )
             self.is_reasoning = True
             return
 
@@ -101,7 +104,10 @@ class SPGConceptRuleMarkLang:
             )
 
             self.predicate = reasoning_po_match.group(1)
-            self.dst_concept = (reasoning_po_match.group(2), reasoning_po_match.group(3))
+            self.dst_concept = (
+                reasoning_po_match.group(2),
+                reasoning_po_match.group(3),
+            )
             self.is_reasoning = True
             return
 
@@ -114,9 +120,15 @@ class SPGConceptRuleMarkLang:
                 "please define namespace first"
             )
 
-            self.src_concept = (reasoning_spo_match.group(1), reasoning_spo_match.group(2))
+            self.src_concept = (
+                reasoning_spo_match.group(1),
+                reasoning_spo_match.group(2),
+            )
             self.predicate = reasoning_spo_match.group(3)
-            self.dst_concept = (reasoning_spo_match.group(4), reasoning_spo_match.group(5))
+            self.dst_concept = (
+                reasoning_spo_match.group(4),
+                reasoning_spo_match.group(5),
+            )
             self.is_reasoning = True
             return
 
@@ -149,7 +161,7 @@ class SPGConceptRuleMarkLang:
             if len(strip_rule) > 2:
                 if strip_rule.endswith("]]"):
                     self.rule_quote_open = False
-                    self.rule_text = strip_rule[2: len(strip_rule) - 2].lstrip()
+                    self.rule_text = strip_rule[2 : len(strip_rule) - 2].lstrip()
                 else:
                     self.rule_text = strip_rule[2].lstrip()
             else:
@@ -169,8 +181,12 @@ class SPGConceptRuleMarkLang:
             subject_name = None
             if self.is_reasoning:
                 predicate_name = self.predicate
-                subject_type = self.src_concept[0] if len(self.src_concept) > 0 else None
-                subject_name = self.src_concept[1] if len(self.src_concept) > 0 else None
+                subject_type = (
+                    self.src_concept[0] if len(self.src_concept) > 0 else None
+                )
+                subject_name = (
+                    self.src_concept[1] if len(self.src_concept) > 0 else None
+                )
                 object_type = self.dst_concept[0] if len(self.dst_concept) > 0 else None
                 object_name = self.dst_concept[1] if len(self.dst_concept) > 0 else None
             elif self.dst_concept[0] is not None:
@@ -199,26 +215,23 @@ class SPGConceptRuleMarkLang:
                             break
 
             if self.is_reasoning:
-                if subject_type is None and self.predicate is None and not self.is_priority:
-                    head = (
-                            f"Define ({object_type}/`{object_name}`)"
-                            + " {\n"
-                    )
+                if (
+                    subject_type is None
+                    and self.predicate is None
+                    and not self.is_priority
+                ):
+                    head = f"Define ({object_type}/`{object_name}`)" + " {\n"
                 elif subject_type is None and self.predicate is not None:
                     head = (
-                            f"Define ()-[:{predicate_name}]->(:{object_type}/`{object_name}`)"
-                            + " {\n"
+                        f"Define ()-[:{predicate_name}]->(:{object_type}/`{object_name}`)"
+                        + " {\n"
                     )
                 elif self.is_priority:
-                    head = (
-                            f"DefinePriority ({object_type})"
-                            + " {\n"
-                    )
+                    head = f"DefinePriority ({object_type})" + " {\n"
                 else:
                     head = (
-                            f"Define (:{object_type}/`{object_name}`)-[:{predicate_name}]->"
-                            f"(:{object_type}/`{object_name}`)"
-                            + " {\n"
+                        f"Define (:{object_type}/`{object_name}`)-[:{predicate_name}]->"
+                        f"(:{object_type}/`{object_name}`)" + " {\n"
                     )
             elif subject_name is None:
                 head = (
@@ -303,10 +316,15 @@ class SPGConceptRuleMarkLang:
             if not is_blank(self.rule_text):
                 self.concept_client.concept_define_logical_causation_post(
                     define_logical_causation_request=rest.DefineLogicalCausationRequest(
-                        subject_concept_type_name="Thing" if len(
-                            self.src_concept) == 0 else f"{self.namespace}.{self.src_concept[0]}",
-                        subject_concept_name="1" if len(self.src_concept) == 0 else self.src_concept[1],
-                        predicate_name="conclude" if self.predicate is None else self.predicate,
+                        subject_concept_type_name="Thing"
+                        if len(self.src_concept) == 0
+                        else f"{self.namespace}.{self.src_concept[0]}",
+                        subject_concept_name="1"
+                        if len(self.src_concept) == 0
+                        else self.src_concept[1],
+                        predicate_name="conclude"
+                        if self.predicate is None
+                        else self.predicate,
                         object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
                         object_concept_name=self.dst_concept[1],
                         semantic_type="REASONING_CONCEPT",
@@ -319,13 +337,18 @@ class SPGConceptRuleMarkLang:
             else:
                 self.concept_client.concept_remove_logical_causation_post(
                     remove_logical_causation_request=rest.RemoveLogicalCausationRequest(
-                        subject_concept_type_name="Thing" if len(
-                            self.src_concept) == 0 else f"{self.namespace}.{self.src_concept[0]}",
-                        subject_concept_name="1" if len(self.src_concept) == 0 else self.src_concept[1],
-                        predicate_name="conclude" if self.predicate is None else self.predicate,
+                        subject_concept_type_name="Thing"
+                        if len(self.src_concept) == 0
+                        else f"{self.namespace}.{self.src_concept[0]}",
+                        subject_concept_name="1"
+                        if len(self.src_concept) == 0
+                        else self.src_concept[1],
+                        predicate_name="conclude"
+                        if self.predicate is None
+                        else self.predicate,
                         object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
                         object_concept_name=self.dst_concept[1],
-                        semantic_type="REASONING_CONCEPT"
+                        semantic_type="REASONING_CONCEPT",
                     )
                 )
                 print(
@@ -349,7 +372,7 @@ class SPGConceptRuleMarkLang:
                 self.concept_client.concept_remove_dynamic_taxonomy_post(
                     remove_dynamic_taxonomy_request=rest.RemoveDynamicTaxonomyRequest(
                         object_concept_type_name=f"{self.namespace}.{self.src_concept[0]}",
-                        object_concept_name=self.src_concept[1]
+                        object_concept_name=self.src_concept[1],
                     )
                 )
                 print(
@@ -380,7 +403,7 @@ class SPGConceptRuleMarkLang:
                         subject_concept_name=self.src_concept[1],
                         predicate_name="leadTo",
                         object_concept_type_name=f"{self.namespace}.{self.dst_concept[0]}",
-                        object_concept_name=self.dst_concept[1]
+                        object_concept_name=self.dst_concept[1],
                     )
                 )
                 print(

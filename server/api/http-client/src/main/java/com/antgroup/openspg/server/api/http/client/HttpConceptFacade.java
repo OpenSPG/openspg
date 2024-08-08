@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.api.http.client;
 
-import java.util.List;
-
 import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
@@ -27,6 +25,7 @@ import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.SPGTypeRequest;
 import com.antgroup.openspg.server.api.http.client.forest.ForestUtils;
 import com.antgroup.openspg.server.api.http.client.forest.client.ConceptForestClient;
+import java.util.List;
 
 public class HttpConceptFacade implements ConceptFacade {
 

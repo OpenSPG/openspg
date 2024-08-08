@@ -13,9 +13,8 @@
 
 package com.antgroup.openspg.server.core.schema.service.semantic.model;
 
-import java.util.List;
-
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -41,8 +40,6 @@ public class TripleSemanticQuery {
   /** The predicate name. */
   private String predicateName;
 
-  /**
-   * The type of spg ontology
-   */
+  /** The type of spg ontology */
   private SPGOntologyEnum spgOntologyEnum;
 }

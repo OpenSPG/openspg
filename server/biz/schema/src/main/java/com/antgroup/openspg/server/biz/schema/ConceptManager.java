@@ -13,14 +13,13 @@
 
 package com.antgroup.openspg.server.biz.schema;
 
-import java.util.List;
-
 import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
+import java.util.List;
 
 /** Provide method to manage concept */
 public interface ConceptManager {
@@ -64,6 +63,7 @@ public interface ConceptManager {
 
   /**
    * Get reasoning concepts detail.
+   *
    * @param conceptTypeNames unique names of concept types
    * @return list of triple semantic
    */

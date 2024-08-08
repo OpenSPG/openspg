@@ -15,11 +15,11 @@ package com.antgroup.openspg.server.infra.dao.repository.schema;
 
 import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.server.common.service.SequenceRepository;
-import com.antgroup.openspg.server.core.schema.service.semantic.model.TripleSemanticQuery;
 import com.antgroup.openspg.server.core.schema.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.core.schema.service.semantic.model.TripleSemanticQuery;
 import com.antgroup.openspg.server.core.schema.service.semantic.repository.SemanticRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.SemanticDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.SemanticDOExample;

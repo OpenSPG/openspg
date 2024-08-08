@@ -38,9 +38,7 @@ public class DefineTripleSemanticRequest extends BaseRequest {
   /** The dsl content of logic rule defined in spo. */
   private String dsl;
 
-  /**
-   * The semantic type of the triple.
-   */
+  /** The semantic type of the triple. */
   private String semanticType;
 
   public String getSubjectConceptName() {

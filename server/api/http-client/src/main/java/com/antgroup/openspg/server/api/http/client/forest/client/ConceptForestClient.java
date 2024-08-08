@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.api.http.client.forest.client;
 
-import java.util.List;
-
 import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
@@ -31,6 +29,7 @@ import com.dtflys.forest.annotation.JSONBody;
 import com.dtflys.forest.annotation.Post;
 import com.dtflys.forest.annotation.Query;
 import com.dtflys.forest.http.ForestResponse;
+import java.util.List;
 
 @BodyType(type = "json")
 @Address(

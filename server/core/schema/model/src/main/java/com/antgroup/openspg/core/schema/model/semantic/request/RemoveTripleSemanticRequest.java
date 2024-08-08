@@ -35,9 +35,7 @@ public class RemoveTripleSemanticRequest extends BaseRequest {
   /** The concept name of object in spo triple */
   private String objectConceptName;
 
-  /**
-   * The semantic type of the triple.
-   */
+  /** The semantic type of the triple. */
   private String semanticType;
 
   public String getSubjectConceptName() {

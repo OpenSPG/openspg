@@ -20,10 +20,10 @@ import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.BaseConceptSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.RuleStatusEnum;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
@@ -149,7 +149,9 @@ public class ConceptManagerImpl implements ConceptManager {
             SPGTypeIdentifier.parse(request.getObjectConceptTypeName()),
             new ConceptIdentifier(request.getObjectConceptName()),
             logicalRule,
-            StringUtils.isNotBlank(request.getSemanticType()) ? SPGOntologyEnum.valueOf(request.getSemanticType()) : null);
+            StringUtils.isNotBlank(request.getSemanticType())
+                ? SPGOntologyEnum.valueOf(request.getSemanticType())
+                : null);
     if (conceptSemantic.getOntologyType() != conceptSemantic.getSemanticType()) {
       conceptSemantic.setOntologyType(conceptSemantic.getSemanticType());
     }
@@ -178,8 +180,15 @@ public class ConceptManagerImpl implements ConceptManager {
 
     TripleSemantic conceptSemantic =
         new TripleSemantic(
-            subjectType, subjectName, predicateIdentifier, objectType, objectName, null,
-            StringUtils.isNotBlank(request.getSemanticType()) ? SPGOntologyEnum.valueOf(request.getSemanticType()) : null);
+            subjectType,
+            subjectName,
+            predicateIdentifier,
+            objectType,
+            objectName,
+            null,
+            StringUtils.isNotBlank(request.getSemanticType())
+                ? SPGOntologyEnum.valueOf(request.getSemanticType())
+                : null);
     conceptService.deleteTripleSemantic(conceptSemantic);
   }
 
