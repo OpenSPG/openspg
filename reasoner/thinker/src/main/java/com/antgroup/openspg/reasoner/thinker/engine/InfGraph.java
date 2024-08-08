@@ -202,7 +202,7 @@ public class InfGraph implements Graph {
           List<List<Result>> singeRst = prepareElement(null, (Triple) e, context);
           if (CollectionUtils.isEmpty(elements)) {
             elements.addAll(singeRst);
-          } else {
+          } else if (CollectionUtils.isNotEmpty(singeRst)) {
             List<List<Result>> tmpElements = new LinkedList<>();
             for (List<Result> ele : elements) {
               for (List<Result> single : singeRst) {
