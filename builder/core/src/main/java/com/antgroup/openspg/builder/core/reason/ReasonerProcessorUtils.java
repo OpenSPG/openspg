@@ -78,6 +78,9 @@ public class ReasonerProcessorUtils {
           Map<String, String> properties = toProps(vertex.getValue());
           BaseSPGType spgType = catalog.getSPGType(SPGTypeIdentifier.parse(vertexId.getType()));
 
+          if (spgType == null) {
+            return;
+          }
           BaseAdvancedRecord advancedRecord =
               VertexRecordConvertor.toAdvancedRecord(spgType, vertexId.getBizId(), properties);
           results.add(advancedRecord);
@@ -88,6 +91,9 @@ public class ReasonerProcessorUtils {
           Relation relationType = catalog.getRelation(RelationIdentifier.parse(edge.getType()));
           Map<String, String> properties = toProps(edge.getValue());
 
+          if (relationType == null) {
+            return;
+          }
           RelationRecord relationRecord =
               EdgeRecordConvertor.toRelationRecord(
                   relationType,
