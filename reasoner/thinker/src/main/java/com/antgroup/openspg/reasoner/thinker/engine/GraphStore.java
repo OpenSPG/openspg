@@ -24,6 +24,7 @@ import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
 import java.util.*;
+import org.apache.commons.lang3.StringUtils;
 
 public class GraphStore implements Graph {
   private GraphState<IVertexId> graphState;
@@ -40,9 +41,19 @@ public class GraphStore implements Graph {
   public List<Result> find(Triple pattern, Map<String, Object> context) {
     List<Triple> data;
     if (pattern.getSubject() instanceof Entity) {
-      data = getTriple((Entity) pattern.getSubject(), Direction.OUT);
+      data =
+          getTriple(
+              (Entity) pattern.getSubject(),
+              pattern.getPredicate(),
+              pattern.getObject(),
+              Direction.OUT);
     } else if (pattern.getObject() instanceof Entity) {
-      data = getTriple((Entity) pattern.getObject(), Direction.IN);
+      data =
+          getTriple(
+              (Entity) pattern.getObject(),
+              pattern.getPredicate(),
+              pattern.getSubject(),
+              Direction.IN);
     } else if (pattern.getSubject() instanceof Triple) {
       data = getTriple((Triple) pattern.getSubject(), (Predicate) pattern.getPredicate());
     } else {
@@ -56,7 +67,7 @@ public class GraphStore implements Graph {
     return Collections.emptyList();
   }
 
-  protected List<Triple> getTriple(Entity s, Direction direction) {
+  protected List<Triple> getTriple(Entity s, Element predicate, Element o, Direction direction) {
     List<Triple> triples = new LinkedList<>();
     if (direction == Direction.OUT) {
       IVertex<IVertexId, IProperty> vertex =
@@ -68,13 +79,43 @@ public class GraphStore implements Graph {
         triples.add(new Triple(s, new Predicate(key), new Value(vertex.getValue().get(key))));
       }
     }
-    List<IEdge<IVertexId, IProperty>> edges =
-        this.graphState.getEdges(
-            IVertexId.from(s.getId(), s.getType()), null, null, null, direction);
+    List<IEdge<IVertexId, IProperty>> edges;
+    String spo = toSPO(s, predicate, o);
+    if (StringUtils.isNotBlank(spo)) {
+      edges =
+          this.graphState.getEdges(
+              IVertexId.from(s.getId(), s.getType()),
+              null,
+              null,
+              new HashSet<>(Arrays.asList(spo)),
+              direction);
+    } else {
+      edges =
+          this.graphState.getEdges(
+              IVertexId.from(s.getId(), s.getType()), null, null, null, direction);
+    }
+
     for (IEdge<IVertexId, IProperty> edge : edges) {
       triples.add(edgeToTriple(edge));
     }
     return triples;
+  }
+
+  private String toSPO(Entity s, Element predicate, Element o) {
+    if (!(predicate instanceof Predicate)
+        || StringUtils.isBlank(((Predicate) predicate).getName())) {
+      return null;
+    }
+    SPO spo;
+    if (o instanceof Node) {
+      spo = new SPO(s.getType(), ((Predicate) predicate).getName(), ((Node) o).getType());
+      return spo.toString();
+    } else if (o instanceof Entity) {
+      spo = new SPO(s.getType(), ((Predicate) predicate).getName(), ((Entity) o).getType());
+      return spo.toString();
+    } else {
+      return null;
+    }
   }
 
   protected List<Triple> getTriple(Triple triple, Predicate predicate) {
@@ -82,9 +123,21 @@ public class GraphStore implements Graph {
     Entity s = (Entity) triple.getSubject();
     Predicate p = (Predicate) triple.getPredicate();
     Entity o = (Entity) triple.getObject();
-    List<IEdge<IVertexId, IProperty>> edges =
-        this.graphState.getEdges(
-            IVertexId.from(s.getId(), s.getType()), null, null, null, Direction.OUT);
+    List<IEdge<IVertexId, IProperty>> edges;
+    String edgeType = toSPO(s, p, o);
+    if (StringUtils.isNotBlank(edgeType)) {
+      edges =
+          this.graphState.getEdges(
+              IVertexId.from(s.getId(), s.getType()),
+              null,
+              null,
+              new HashSet<>(Arrays.asList(edgeType)),
+              Direction.OUT);
+    } else {
+      edges =
+          this.graphState.getEdges(
+              IVertexId.from(s.getId(), s.getType()), null, null, null, Direction.OUT);
+    }
     for (IEdge<IVertexId, IProperty> edge : edges) {
       SPO spo = new SPO(edge.getType());
       if (edge.getTargetId().equals(IVertexId.from(o.getId(), o.getType()))

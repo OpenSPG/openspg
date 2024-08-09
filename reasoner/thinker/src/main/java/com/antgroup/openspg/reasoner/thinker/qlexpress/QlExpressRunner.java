@@ -65,12 +65,14 @@ public class QlExpressRunner extends RuleRunner {
         String aliasName = ((InstructionLoadAttr) instruction).getAttrName();
         Set<String> varSet = result.computeIfAbsent(aliasName, (k) -> new HashSet<>());
         // LoadAttr之后就是具体的属性名
-        Instruction next = instructionSet.getInstruction(i + 1);
-        if (next instanceof InstructionOperator) {
-          String opName = ((InstructionOperator) next).getOperator().getName();
-          if ("FieldCall".equalsIgnoreCase(opName)) {
-            String varName = ((InstructionOperator) next).getOperator().toString().split(":")[1];
-            varSet.add(varName);
+        if (i < instructionSet.getInstructionLength() - 1) {
+          Instruction next = instructionSet.getInstruction(i + 1);
+          if (next instanceof InstructionOperator) {
+            String opName = ((InstructionOperator) next).getOperator().getName();
+            if ("FieldCall".equalsIgnoreCase(opName)) {
+              String varName = ((InstructionOperator) next).getOperator().toString().split(":")[1];
+              varSet.add(varName);
+            }
           }
         }
       }

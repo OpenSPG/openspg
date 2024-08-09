@@ -30,12 +30,10 @@ import scala.collection.immutable.Map;
 import scala.collection.immutable.Set;
 
 public class ResourceLogicCatalog extends LogicCatalog {
-  private SimplifyThinkerParser parser;
   private String path;
 
   public ResourceLogicCatalog(String path) {
     this.path = path;
-    this.parser = new SimplifyThinkerParser();
   }
 
   @Override
@@ -62,6 +60,7 @@ public class ResourceLogicCatalog extends LogicCatalog {
     }
     LogicNetwork logicNetwork = new LogicNetwork();
     for (String r : rules) {
+      SimplifyThinkerParser parser = new SimplifyThinkerParser();
       Rule rule = parser.parseSimplifyDsl(r, null).head();
       logicNetwork.addRule(rule);
     }

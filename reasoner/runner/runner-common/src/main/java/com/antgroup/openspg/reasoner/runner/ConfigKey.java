@@ -64,6 +64,9 @@ public class ConfigKey {
   /** kg reasoner schema server token config */
   public static final String KG_REASONER_SCHEMA_SERVER_TOKEN = "kg.reasoner.schema.server.token";
 
+  /** kg reasoner schema dump address */
+  public static final String KG_REASONER_SCHEMA_DUMP_ADDRESS = "kg.reasoner.schema.dump.address";
+
   /** preload enable */
   public static final String KG_REASONER_PRE_LOAD_ENABLE = "kg.reasoner.preload.enable";
 

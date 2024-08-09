@@ -23,6 +23,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import lombok.Data;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 @Data
 public class QlExpressCondition extends Condition {
@@ -80,7 +81,7 @@ public class QlExpressCondition extends Condition {
       }
     }
     try {
-      boolean absent = absent(ruleCtx);
+      boolean absent = absent(ruleCtx, logger);
       if (absent) {
         return null;
       }
@@ -96,22 +97,28 @@ public class QlExpressCondition extends Condition {
     }
   }
 
-  private boolean absent(Map<String, Object> context) throws Exception {
+  private boolean absent(Map<String, Object> context, TreeLogger logger) throws Exception {
     if (qlExpress.toLowerCase().contains("get_value")
         || qlExpress.toLowerCase().contains("get_spo")
         || qlExpress.toLowerCase().contains("rule_value")) {
       return false;
     }
+    Set<String> absent = new HashSet<>();
     Map<String, Set<String>> vars = varsCache.get(qlExpress);
     for (String key : vars.keySet()) {
       if (CollectionUtils.isNotEmpty(vars.get(key))) {
         continue;
       }
       if (!context.containsKey(key)) {
-        return true;
+        absent.add(key);
       }
     }
-    return false;
+    if (CollectionUtils.isNotEmpty(absent)) {
+      logger.log(StringUtils.join(absent, ","));
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @Override
