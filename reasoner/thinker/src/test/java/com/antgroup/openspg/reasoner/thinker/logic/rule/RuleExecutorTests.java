@@ -63,8 +63,8 @@ public class RuleExecutorTests {
     TreeLogger logger = new TreeLogger(root.toString());
     Map<String, Object> session = new HashMap<>();
     session.put("孕酮", 14.29);
-    Boolean ret = rule.getRoot().accept(new LinkedList<>(), session, new RuleExecutor(), logger);
-    Assert.assertTrue(ret);
+    Boolean ret = rule.getRoot().accept(new LinkedList<>(), session, new RuleExecutor(true), logger);
+    Assert.assertTrue(!ret);
     for (TreeLogger log : logger.getChildren()) {
       if (log.getCurrentNodeName().equals("卵泡期")) {
         Assert.assertTrue(log.getCurrentNodeRst() == null);
