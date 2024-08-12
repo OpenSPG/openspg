@@ -34,9 +34,10 @@ public class RuleExecutorTests {
   }
 
   private Rule getR2() {
-    String rule = "Define (:Medical.ExaminationTerm/`孕酮`)-[:abnormalValue]->(: Medical.AbnormalExaminationIndicator/`偏高`) {\n" +
-            "  卵泡期 AND (孕酮 > 1.52)\n" +
-            "}";
+    String rule =
+        "Define (:Medical.ExaminationTerm/`孕酮`)-[:abnormalValue]->(: Medical.AbnormalExaminationIndicator/`偏高`) {\n"
+            + "  卵泡期 AND (孕酮 > 1.52)\n"
+            + "}";
     SimplifyThinkerParser parser = new SimplifyThinkerParser();
     return parser.parseSimplifyDsl(rule, null).head();
   }
@@ -63,7 +64,8 @@ public class RuleExecutorTests {
     TreeLogger logger = new TreeLogger(root.toString());
     Map<String, Object> session = new HashMap<>();
     session.put("孕酮", 14.29);
-    Boolean ret = rule.getRoot().accept(new LinkedList<>(), session, new RuleExecutor(true), logger);
+    Boolean ret =
+        rule.getRoot().accept(new LinkedList<>(), session, new RuleExecutor(true), logger);
     Assert.assertTrue(!ret);
     for (TreeLogger log : logger.getChildren()) {
       if (log.getCurrentNodeName().equals("卵泡期")) {

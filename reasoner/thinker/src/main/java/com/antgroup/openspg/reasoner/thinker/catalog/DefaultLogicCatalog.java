@@ -6,51 +6,50 @@ import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph;
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field;
 import com.antgroup.openspg.reasoner.thinker.logic.LogicNetwork;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
+import java.util.ArrayList;
+import java.util.List;
 import scala.collection.immutable.Map;
 import scala.collection.immutable.Set;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DefaultLogicCatalog extends LogicCatalog {
-    private Catalog kgCatalog;
-    private List<Rule> rules;
+  private Catalog kgCatalog;
+  private List<Rule> rules;
 
-    private DefaultLogicCatalog() {
-        rules = new ArrayList<>();
-    }
+  private DefaultLogicCatalog() {
+    rules = new ArrayList<>();
+  }
 
-    public DefaultLogicCatalog(List<Rule> rules, Catalog kgCatalog) {
-        this.rules = rules;
-        this.kgCatalog = kgCatalog;
-    }
+  public DefaultLogicCatalog(List<Rule> rules, Catalog kgCatalog) {
+    this.rules = rules;
+    this.kgCatalog = kgCatalog;
+  }
 
-    @Override
-    public LogicNetwork loadLogicNetwork() {
-        LogicNetwork logicNetwork = new LogicNetwork();
-        for (Rule r : rules) {
-            logicNetwork.addRule(r);
-        }
-        return logicNetwork;
+  @Override
+  public LogicNetwork loadLogicNetwork() {
+    LogicNetwork logicNetwork = new LogicNetwork();
+    for (Rule r : rules) {
+      logicNetwork.addRule(r);
     }
+    return logicNetwork;
+  }
 
-    @Override
-    public SemanticPropertyGraph getKnowledgeGraph() {
-        return kgCatalog.getKnowledgeGraph();
-    }
+  @Override
+  public SemanticPropertyGraph getKnowledgeGraph() {
+    return kgCatalog.getKnowledgeGraph();
+  }
 
-    @Override
-    public Map<AbstractConnection, Set<String>> getConnections() {
-        return kgCatalog.getConnections();
-    }
+  @Override
+  public Map<AbstractConnection, Set<String>> getConnections() {
+    return kgCatalog.getConnections();
+  }
 
-    @Override
-    public Set<Field> getDefaultNodeProperties() {
-        return kgCatalog.getDefaultNodeProperties();
-    }
+  @Override
+  public Set<Field> getDefaultNodeProperties() {
+    return kgCatalog.getDefaultNodeProperties();
+  }
 
-    @Override
-    public Set<Field> getDefaultEdgeProperties() {
-        return kgCatalog.getDefaultEdgeProperties();
-    }
+  @Override
+  public Set<Field> getDefaultEdgeProperties() {
+    return kgCatalog.getDefaultEdgeProperties();
+  }
 }
