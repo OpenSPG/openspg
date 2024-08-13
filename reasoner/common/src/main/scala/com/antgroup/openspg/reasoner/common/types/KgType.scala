@@ -13,7 +13,9 @@
 
 package com.antgroup.openspg.reasoner.common.types
 
-import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException
+import scala.language.implicitConversions
+
+import com.antgroup.openspg.reasoner.common.exception.{KGValueException, UnsupportedOperationException}
 
 trait KgType {
   def isNullable: Boolean = false
@@ -79,6 +81,23 @@ object KgType {
       case KTLong => 2
       case KTDouble => 3
       case _ => throw UnsupportedOperationException(s"cannot support number type $kgType")
+    }
+  }
+
+  implicit def toBasicKgType(basicType: String): BasicKgType = {
+    basicType.toUpperCase() match {
+      case "INTEGER" => KTLong
+      case "LONG" => KTLong
+      case "TEXT" => KTString
+      case "FLOAT" => KTDouble
+      case "DOUBLE" => KTDouble
+      case "BOOLEAN" => KTString
+      case "DATE" => KTString
+      case "TIME" => KTString
+      case "URL" => KTString
+      case "DATETIME" => KTString
+      case "TIMESTAMP" => KTString
+      case _ => throw KGValueException(s"unsupported type: $basicType")
     }
   }
 
