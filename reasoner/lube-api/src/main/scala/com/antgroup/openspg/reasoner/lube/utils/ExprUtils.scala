@@ -120,6 +120,10 @@ object ExprUtils {
           } else {
             List.apply(IRVariable(refName))
           }
+        case FunctionExpr(_, funcArgs) =>
+          funcArgs.map(arg => {
+            getAllInputFieldInRule(arg, nodesAlias, edgeAlias)
+          }).filter(_.nonEmpty).flatten
         case ListOpExpr(name, _) =>
           name match {
             case constraint: Constraint =>

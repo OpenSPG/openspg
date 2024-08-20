@@ -225,7 +225,13 @@ final case class PathOpExpr(name: PathOpSet, pathName: Ref) extends TypeValidate
 case class AggOpExpr(name: AggregatorOpSet, aggEleExpr: Expr) extends Aggregator {
   override def withNewChildren(newChildren: Array[Expr]): Expr = AggOpExpr(name, newChildren.head)
 
-  override def children: Array[Expr] = Array.apply(aggEleExpr)
+  override def children: Array[Expr] = {
+    name match {
+      case AggUdf(name, funcArgs) => Array.apply(aggEleExpr) ++ funcArgs
+      case _ => Array.apply(aggEleExpr)
+    }
+
+  }
 }
 
 /**

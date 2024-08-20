@@ -99,7 +99,6 @@ public class RuleExecutor implements RuleNodeVisitor<Boolean> {
   public Boolean visit(
       Condition node, List<Element> spoList, Map<String, Object> context, TreeLogger logger) {
     Boolean ret = node.execute(spoList, context, logger);
-    logger.log(ret);
     logger.setCurrentNodeRst(ret);
     if (strictMode) {
       return ret == null ? false : ret;

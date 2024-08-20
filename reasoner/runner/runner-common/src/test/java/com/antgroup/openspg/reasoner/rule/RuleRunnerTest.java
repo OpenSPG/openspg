@@ -598,4 +598,21 @@ public class RuleRunnerTest {
     Object rst = RuleRunner.getInstance().executeExpression(context, rules, "");
     Assert.assertEquals(rst, 0.15);
   }
+
+  @Test
+  public void testRepeatReduce3() {
+    Expr e =
+        ruleExprParser.parse(
+            "e.nodes().reduce((res, ele) => concat(res, \"#\", Cast(ele.age - A.age, 'String')), '')");
+    Expr2QlexpressTransformer transformer =
+        new Expr2QlexpressTransformer(RuleRunner::convertPropertyName);
+    List<String> rules =
+        Lists.newArrayList(JavaConversions.asJavaCollection(transformer.transform(e)));
+    Assert.assertEquals(
+        "repeat_reduce(e.nodes, \"\", 'res', 'ele', 'concat(res,\"#\",cast_type(ele.age - A.age,\"String\"))', context_capturer([\"A.age\"],[A.age]))",
+        rules.get(0));
+    Map<String, Object> context = getRepeatTestContext();
+    Object rst = RuleRunner.getInstance().executeExpression(context, rules, "");
+    Assert.assertEquals(rst, "#0#1#2");
+  }
 }

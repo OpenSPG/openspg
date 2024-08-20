@@ -14,76 +14,55 @@
 package com.antgroup.openspg.reasoner.thinker.catalog;
 
 import com.antgroup.openspg.reasoner.lube.catalog.AbstractConnection;
+import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph;
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field;
-import com.antgroup.openspg.reasoner.thinker.SimplifyThinkerParser;
 import com.antgroup.openspg.reasoner.thinker.logic.LogicNetwork;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 import scala.collection.immutable.Map;
 import scala.collection.immutable.Set;
 
-public class ResourceLogicCatalog extends LogicCatalog {
-  private String path;
+public class DefaultLogicCatalog extends LogicCatalog {
+  private Catalog kgCatalog;
+  private List<Rule> rules;
 
-  public ResourceLogicCatalog(String path) {
-    this.path = path;
+  private DefaultLogicCatalog() {
+    rules = new ArrayList<>();
+  }
+
+  public DefaultLogicCatalog(List<Rule> rules, Catalog kgCatalog) {
+    this.rules = rules;
+    this.kgCatalog = kgCatalog;
   }
 
   @Override
   public LogicNetwork loadLogicNetwork() {
-    InputStream inputStream = this.getClass().getResourceAsStream(path);
-    BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-    StringBuilder sb = new StringBuilder();
-    List<String> rules = new LinkedList<>();
-    try {
-      String line = null;
-      while ((line = reader.readLine()) != null) {
-        if (StringUtils.isNotBlank(line)) {
-          sb.append(line).append("\n");
-        } else {
-          rules.add(sb.toString());
-          sb = new StringBuilder();
-        }
-      }
-    } catch (IOException ex) {
-      throw new RuntimeException(ex);
-    }
-    if (StringUtils.isNotBlank(sb)) {
-      rules.add(sb.toString());
-    }
     LogicNetwork logicNetwork = new LogicNetwork();
-    for (String r : rules) {
-      SimplifyThinkerParser parser = new SimplifyThinkerParser();
-      Rule rule = parser.parseSimplifyDsl(r, null).head();
-      logicNetwork.addRule(rule);
+    for (Rule r : rules) {
+      logicNetwork.addRule(r);
     }
     return logicNetwork;
   }
 
   @Override
   public SemanticPropertyGraph getKnowledgeGraph() {
-    return null;
+    return kgCatalog.getKnowledgeGraph();
   }
 
   @Override
   public Map<AbstractConnection, Set<String>> getConnections() {
-    return null;
+    return kgCatalog.getConnections();
   }
 
   @Override
   public Set<Field> getDefaultNodeProperties() {
-    return null;
+    return kgCatalog.getDefaultNodeProperties();
   }
 
   @Override
   public Set<Field> getDefaultEdgeProperties() {
-    return null;
+    return kgCatalog.getDefaultEdgeProperties();
   }
 }
