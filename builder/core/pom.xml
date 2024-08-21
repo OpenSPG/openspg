@@ -17,7 +17,7 @@
   <parent>
     <groupId>com.antgroup.openspg.builder</groupId>
     <artifactId>builder-parent</artifactId>
-    <version>20240821-SNAPSHOT-SNAPSHOT</version>
+    <version>20240821-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
