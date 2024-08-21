@@ -24,6 +24,7 @@ import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Predicate;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import java.util.*;
 import org.junit.Assert;
@@ -41,6 +42,10 @@ public class DefaultThinkerTests {
     Edge bc = GraphUtil.makeEdge(b, c, "bc");
 
     return GraphUtil.buildMemState(Arrays.asList(a1, a2, b, c), Arrays.asList(a1b, a2b, bc));
+  }
+
+  private GraphState<IVertexId> buildEmptyGraphState() {
+    return GraphUtil.buildMemState(new LinkedList<>(), new LinkedList<>());
   }
 
   @Test
@@ -100,5 +105,20 @@ public class DefaultThinkerTests {
     Assert.assertTrue(triples.size() == 1);
     triples = thinker.find(new Node("A"), new Predicate("ac"), new Entity("c", "C"));
     Assert.assertTrue(triples.size() == 2);
+  }
+
+  @Test
+  public void testFindWithRule2Context() {
+    MockLogicCatalog logicCatalog = new MockLogicCatalog(Arrays.asList(getR2()));
+    logicCatalog.init();
+    Thinker thinker = new DefaultThinker(buildEmptyGraphState(), logicCatalog);
+    Map<String, Object> context = new HashMap<>();
+    Triple t1 = new Triple(new Entity("a", "A"), new Predicate("ab"), new Entity("b", "B"));
+    Triple t2 = new Triple(new Entity("b", "B"), new Predicate("bc"), new Entity("c", "C"));
+    context.put(t1.toString(), t1);
+    context.put(t2.toString(), t2);
+    List<Result> triples =
+        thinker.find(new Node("A"), new Predicate("ac"), new Entity("c", "C"), context);
+    Assert.assertTrue(triples.size() == 1);
   }
 }

@@ -87,6 +87,8 @@ public class InfGraph implements Graph {
       for (Object val : context.values()) {
         if (val instanceof Entity) {
           addEntity((Entity) val);
+        } else if (val instanceof Triple) {
+          addTriple((Triple) val);
         }
       }
     }
