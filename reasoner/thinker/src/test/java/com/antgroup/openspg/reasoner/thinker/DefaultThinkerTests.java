@@ -117,7 +117,8 @@ public class DefaultThinkerTests {
     Triple t2 = new Triple(new Entity("b", "B"), new Predicate("bc"), new Entity("c", "C"));
     context.put(t1.toString(), t1);
     context.put(t2.toString(), t2);
-    List<Result> triples = thinker.find(new Node("A"), new Predicate("ac"), new Entity("c", "C"), context);
+    List<Result> triples =
+        thinker.find(new Node("A"), new Predicate("ac"), new Entity("c", "C"), context);
     Assert.assertTrue(triples.size() == 1);
   }
 }
