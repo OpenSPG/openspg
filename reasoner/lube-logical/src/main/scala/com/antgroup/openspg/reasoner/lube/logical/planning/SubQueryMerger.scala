@@ -88,8 +88,16 @@ class SubQueryMerger(val dag: Dag[LogicalOperator])(implicit context: LogicalPla
                   .filter(_.alias.equals(name))
                   .filter(conn => {
                     val types =
-                      if (conn.direction == Direction.OUT) pattern.getNode(conn.target).typeNames
-                      else pattern.getNode(conn.source).typeNames
+                      if (conn.direction == Direction.OUT) {
+                        pattern.getNode(conn.target).typeNames
+                      }
+                      else if (conn.direction == Direction.IN) {
+                        pattern.getNode(conn.source).typeNames
+                      } else {
+                        pattern
+                          .getNode(conn.source)
+                          .typeNames ++ pattern.getNode(conn.target).typeNames
+                      }
                     conn.relTypes.contains(spo.getP) && (types.contains(
                       LabelTypeUtils.getMetaType(spo.getO)) || types.contains(spo.getO))
                   })

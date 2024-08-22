@@ -22,7 +22,13 @@ import com.antgroup.openspg.reasoner.lube.Logging
 import com.antgroup.openspg.reasoner.lube.block._
 import com.antgroup.openspg.reasoner.lube.catalog.{Catalog, SemanticRule, TemplateSemanticRule}
 import com.antgroup.openspg.reasoner.lube.common.pattern.Pattern
-import com.antgroup.openspg.reasoner.lube.logical.{EdgeVar, NodeVar, RepeatPathVar, SolvedModel, Var}
+import com.antgroup.openspg.reasoner.lube.logical.{
+  EdgeVar,
+  NodeVar,
+  RepeatPathVar,
+  SolvedModel,
+  Var
+}
 import com.antgroup.openspg.reasoner.lube.logical.operators._
 import com.antgroup.openspg.reasoner.lube.logical.planning.SubQueryPlanner.nodeName
 import com.antgroup.openspg.reasoner.lube.logical.validate.Dag
@@ -148,8 +154,16 @@ class SubQueryPlanner(val dag: Dag[Block])(implicit context: LogicalPlannerConte
                   .filter(_.alias.equals(name))
                   .filter(conn => {
                     val types =
-                      if (conn.direction == Direction.OUT) pattern.getNode(conn.target).typeNames
-                      else pattern.getNode(conn.source).typeNames
+                      if (conn.direction == Direction.OUT) {
+                        pattern.getNode(conn.target).typeNames
+                      }
+                      else if (conn.direction == Direction.IN) {
+                        pattern.getNode(conn.source).typeNames
+                      } else {
+                        pattern
+                          .getNode(conn.source)
+                          .typeNames ++ pattern.getNode(conn.target).typeNames
+                      }
                     conn.relTypes.contains(spo.getP) && (types.contains(
                       LabelTypeUtils.getMetaType(spo.getO)) || types.contains(spo.getO))
                   })
