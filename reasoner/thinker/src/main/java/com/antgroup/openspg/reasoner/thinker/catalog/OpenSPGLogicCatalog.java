@@ -41,6 +41,7 @@ import com.antgroup.openspg.server.api.http.client.HttpConceptFacade;
 import com.antgroup.openspg.server.api.http.client.HttpSchemaFacade;
 import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo;
 import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap;
+import org.apache.commons.lang3.StringUtils;
 
 public class OpenSPGLogicCatalog extends LogicCatalog {
     private Catalog       openSPGCatalog;
@@ -48,7 +49,7 @@ public class OpenSPGLogicCatalog extends LogicCatalog {
     private SchemaFacade  schemaFacade;
     private ConceptFacade conceptFacade;
 
-    public void OpenSPGLogicCatalog(Long projectId, KgSchemaConnectionInfo connInfo) {
+    public OpenSPGLogicCatalog(Long projectId, KgSchemaConnectionInfo connInfo) {
         this.openSPGCatalog = new OpenSPGCatalog(projectId, connInfo, null);
         HttpClientBootstrap.init(new ConnectionInfo(connInfo.uri()));
         this.projectId = projectId;
@@ -68,7 +69,7 @@ public class OpenSPGLogicCatalog extends LogicCatalog {
             .filter(e -> e.getSpgTypeEnum() == SPGTypeEnum.CONCEPT_TYPE).map(BaseSPGType::getName)
             .collect(Collectors.toSet());
 
-        SPGTypeRequest spgTypeRequest = new SPGTypeRequest(new ArrayList<>(conceptTypes));
+        SPGTypeRequest spgTypeRequest = new SPGTypeRequest(StringUtils.join(conceptTypes, ","));
         ApiResponse<List<TripleSemantic>> response = conceptFacade
             .getReasoningConceptsDetail(spgTypeRequest);
         if (!response.isSuccess()) {
