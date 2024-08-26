@@ -16,6 +16,9 @@ from knext.schema.client import SchemaClient
 from knext.schema.model.base import SpgTypeEnum
 
 
+combo_seperator = "\0+\0"
+
+
 def is_blank(text):
     if not text:
         return True
@@ -95,7 +98,7 @@ class SPGConceptRuleMarkLang:
             return
 
         reasoning_po_match = re.match(
-            r"^\[([^\]]+)\]->\(`?([a-zA-Z0-9\.]+)`?/`([^`]+)`\):$",
+            r"^\[([^\]]+)\]->\(`?([a-zA-Z0-9\.]+)`?/`([^`]+)`(\+`([^`]+)`)?\):$",
             expression,
         )
         if reasoning_po_match:
@@ -103,16 +106,19 @@ class SPGConceptRuleMarkLang:
                 "please define namespace first"
             )
 
+            combo_add = reasoning_po_match.group(5)
             self.predicate = reasoning_po_match.group(1)
             self.dst_concept = (
                 reasoning_po_match.group(2),
-                reasoning_po_match.group(3),
+                reasoning_po_match.group(3)
+                if combo_add is None
+                else reasoning_po_match.group(3) + combo_seperator + combo_add,
             )
             self.is_reasoning = True
             return
 
         reasoning_spo_match = re.match(
-            r"^\(`?([a-zA-Z0-9\.]+)`?/`([^`]+)`\)-\[([^\]]+)\]->\(`([a-zA-Z0-9\.]+)`/`([^`]+)`\):$",
+            r"^\(`?([a-zA-Z0-9\.]+)`?/`([^`]+)`\)-\[([^\]]+)\]->\(`([a-zA-Z0-9\.]+)`/`([^`]+)`(\+`([^`]+)`)?\):$",
             expression,
         )
         if reasoning_spo_match:
@@ -125,9 +131,12 @@ class SPGConceptRuleMarkLang:
                 reasoning_spo_match.group(2),
             )
             self.predicate = reasoning_spo_match.group(3)
+            combo_add = reasoning_po_match.group(7)
             self.dst_concept = (
                 reasoning_spo_match.group(4),
-                reasoning_spo_match.group(5),
+                reasoning_spo_match.group(5)
+                if combo_add is None
+                else reasoning_spo_match.group(5) + combo_seperator + combo_add,
             )
             self.is_reasoning = True
             return
@@ -215,6 +224,9 @@ class SPGConceptRuleMarkLang:
                             break
 
             if self.is_reasoning:
+                if combo_seperator in object_name:
+                    names = object_name.split(combo_seperator)
+                    object_name = f"{names[0]}`+{object_type}/`{names[1]}"
                 if (
                     subject_type is None
                     and self.predicate is None
@@ -230,7 +242,7 @@ class SPGConceptRuleMarkLang:
                     head = f"DefinePriority ({object_type})" + " {\n"
                 else:
                     head = (
-                        f"Define (:{object_type}/`{object_name}`)-[:{predicate_name}]->"
+                        f"Define (:{subject_type}/`{subject_name}`)-[:{predicate_name}]->"
                         f"(:{object_type}/`{object_name}`)" + " {\n"
                     )
             elif subject_name is None:
