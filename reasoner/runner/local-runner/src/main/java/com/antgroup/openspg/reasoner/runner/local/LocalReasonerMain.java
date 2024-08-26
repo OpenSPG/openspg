@@ -195,20 +195,30 @@ public class LocalReasonerMain {
     return task;
   }
 
-
-
   protected static Options getOptions() {
     Options options = new Options();
-    options.addRequiredOption(ParamsKey.PROJECT_ID_OPTION, ParamsKey.PROJECT_ID_OPTION, true, "project id");
-    options.addRequiredOption(ParamsKey.QUERY_OPTION, ParamsKey.QUERY_OPTION, true, "query dsl string");
-    options.addOption(ParamsKey.OUTPUT_OPTION, ParamsKey.OUTPUT_OPTION, true, "output file name");
-    options.addRequiredOption(ParamsKey.SCHEMA_URL_OPTION, ParamsKey.SCHEMA_URL_OPTION, true, "schema url");
-    options.addOption(
-            ParamsKey.GRAPH_STATE_CLASS_OPTION, ParamsKey.GRAPH_STATE_CLASS_OPTION, true, "graph state class name");
-    options.addOption(
-            ParamsKey.GRAPH_LOADER_CLASS_OPTION, ParamsKey.GRAPH_LOADER_CLASS_OPTION, true, "graph loader class name");
     options.addRequiredOption(
-            ParamsKey.GRAPH_STORE_URL_OPTION, ParamsKey.GRAPH_STORE_URL_OPTION, true, "graph store url");
+        ParamsKey.PROJECT_ID_OPTION, ParamsKey.PROJECT_ID_OPTION, true, "project id");
+    options.addRequiredOption(
+        ParamsKey.QUERY_OPTION, ParamsKey.QUERY_OPTION, true, "query dsl string");
+    options.addOption(ParamsKey.OUTPUT_OPTION, ParamsKey.OUTPUT_OPTION, true, "output file name");
+    options.addRequiredOption(
+        ParamsKey.SCHEMA_URL_OPTION, ParamsKey.SCHEMA_URL_OPTION, true, "schema url");
+    options.addOption(
+        ParamsKey.GRAPH_STATE_CLASS_OPTION,
+        ParamsKey.GRAPH_STATE_CLASS_OPTION,
+        true,
+        "graph state class name");
+    options.addOption(
+        ParamsKey.GRAPH_LOADER_CLASS_OPTION,
+        ParamsKey.GRAPH_LOADER_CLASS_OPTION,
+        true,
+        "graph loader class name");
+    options.addRequiredOption(
+        ParamsKey.GRAPH_STORE_URL_OPTION,
+        ParamsKey.GRAPH_STORE_URL_OPTION,
+        true,
+        "graph store url");
     options.addOption(ParamsKey.START_ID_OPTION, ParamsKey.START_ID_OPTION, true, "start id list");
     options.addOption(ParamsKey.PARAMs_OPTION, ParamsKey.PARAMs_OPTION, true, "params");
     options.addOption(ParamsKey.LOG_FILE_OPTION, ParamsKey.LOG_FILE_OPTION, true, "log file name");
