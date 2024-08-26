@@ -20,6 +20,7 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.FileAppender;
+import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.core.runtime.impl.DefaultBuilderCatalog;
 import com.antgroup.openspg.builder.model.BuilderJsonUtils;
@@ -161,7 +162,9 @@ public class LocalBuilderMain {
     ApiResponse<ProjectSchema> response =
         schemaFacade.queryProjectSchema(new ProjectSchemaRequest(projectId));
     if (response.isSuccess()) {
-      return response.getData();
+      ProjectSchema schema =
+          JSON.parseObject(JSON.toJSONString(response.getData()), ProjectSchema.class);
+      return schema;
     }
     throw new PipelineConfigException(
         "get schema error={}, schemaUrl={}, projectId={}",
@@ -186,7 +189,9 @@ public class LocalBuilderMain {
       ApiResponse<ConceptList> response =
           conceptFacade.queryConcept(new ConceptRequest().setConceptTypeName(spgType.getName()));
       if (response.isSuccess()) {
-        results.put(spgType.getBaseSpgIdentifier(), response.getData());
+        ConceptList list =
+            JSON.parseObject(JSON.toJSONString(response.getData()), ConceptList.class);
+        results.put(spgType.getBaseSpgIdentifier(), list);
       } else {
         throw new SchemaException("get schema error");
       }
