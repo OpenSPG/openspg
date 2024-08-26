@@ -13,28 +13,26 @@
 
 package com.antgroup.openspg.reasoner.runner.local.thinker;
 
-import java.io.Serializable;
-import java.util.Map;
-
 import com.antgroup.openspg.reasoner.catalog.impl.KgSchemaConnectionInfo;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
-
+import java.io.Serializable;
+import java.util.Map;
 import lombok.Data;
 
 @Data
 public class ThinkerParams implements Serializable {
-    private KgSchemaConnectionInfo connInfo             = null;
-    private Long                   projectId;
-    private Triple                 triple;
-    private Map<String, Object>    params;
+  private KgSchemaConnectionInfo connInfo = null;
+  private Long projectId;
+  private Triple triple;
+  private Map<String, Object> params;
 
-    /** Choose between graphLoadClass and graphState, or specify a class name */
-    private String                 graphLoadClass       = null;
+  /** Choose between graphLoadClass and graphState, or specify a class name */
+  private String graphLoadClass = null;
 
-    /** User specified the name of graphstate */
-    private String                 graphStateClassName  = null;
+  /** User specified the name of graphstate */
+  private String graphStateClassName = null;
 
-    private String                 graphStateInitString = null;
+  private String graphStateInitString = null;
 
-    private String                 mode                 = "spo";
+  private String mode = "spo";
 }

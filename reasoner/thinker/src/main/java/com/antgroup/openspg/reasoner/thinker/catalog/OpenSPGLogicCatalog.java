@@ -13,10 +13,6 @@
 
 package com.antgroup.openspg.reasoner.thinker.catalog;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
@@ -40,68 +36,73 @@ import com.antgroup.openspg.server.api.http.client.HttpConceptFacade;
 import com.antgroup.openspg.server.api.http.client.HttpSchemaFacade;
 import com.antgroup.openspg.server.api.http.client.util.ConnectionInfo;
 import com.antgroup.openspg.server.api.http.client.util.HttpClientBootstrap;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 public class OpenSPGLogicCatalog extends LogicCatalog {
-    private Catalog       openSPGCatalog;
-    private Long          projectId;
-    private SchemaFacade  schemaFacade;
-    private ConceptFacade conceptFacade;
+  private Catalog openSPGCatalog;
+  private Long projectId;
+  private SchemaFacade schemaFacade;
+  private ConceptFacade conceptFacade;
 
-    public OpenSPGLogicCatalog(Long projectId, KgSchemaConnectionInfo connInfo) {
-        this.openSPGCatalog = new OpenSPGCatalog(projectId, connInfo, null);
-        HttpClientBootstrap.init(new ConnectionInfo(connInfo.uri()));
-        this.projectId = projectId;
-        this.schemaFacade = new HttpSchemaFacade();
-        this.conceptFacade = new HttpConceptFacade();
+  public OpenSPGLogicCatalog(Long projectId, KgSchemaConnectionInfo connInfo) {
+    this.openSPGCatalog = new OpenSPGCatalog(projectId, connInfo, null);
+    HttpClientBootstrap.init(new ConnectionInfo(connInfo.uri()));
+    this.projectId = projectId;
+    this.schemaFacade = new HttpSchemaFacade();
+    this.conceptFacade = new HttpConceptFacade();
+  }
+
+  @Override
+  public LogicNetwork loadLogicNetwork() {
+    ProjectSchemaRequest request = new ProjectSchemaRequest();
+    request.setProjectId(projectId);
+    ApiResponse<ProjectSchema> projectSchema = schemaFacade.queryProjectSchema(request);
+    if (!projectSchema.isSuccess()) {
+      throw new SystemError("Cannot get schema for projectId=" + projectId, null);
     }
-
-    @Override
-    public LogicNetwork loadLogicNetwork() {
-        ProjectSchemaRequest request = new ProjectSchemaRequest();
-        request.setProjectId(projectId);
-        ApiResponse<ProjectSchema> projectSchema = schemaFacade.queryProjectSchema(request);
-        if (!projectSchema.isSuccess()) {
-            throw new SystemError("Cannot get schema for projectId=" + projectId, null);
-        }
-        Set<String> conceptTypes = projectSchema.getData().getSpgTypes().stream()
-            .filter(e -> e.getSpgTypeEnum() == SPGTypeEnum.CONCEPT_TYPE).map(BaseSPGType::getName)
+    Set<String> conceptTypes =
+        projectSchema.getData().getSpgTypes().stream()
+            .filter(e -> e.getSpgTypeEnum() == SPGTypeEnum.CONCEPT_TYPE)
+            .map(BaseSPGType::getName)
             .collect(Collectors.toSet());
 
-        SPGTypeRequest spgTypeRequest = new SPGTypeRequest(StringUtils.join(conceptTypes, ","));
-        ApiResponse<List<TripleSemantic>> response = conceptFacade
-            .getReasoningConceptsDetail(spgTypeRequest);
-        if (!response.isSuccess()) {
-            throw new SystemError("Cannot get schema for projectId=" + projectId, null);
-        }
-        LogicNetwork logicNetwork = new LogicNetwork();
-        for (TripleSemantic ts : response.getData()) {
-            SimplifyThinkerParser parser = new SimplifyThinkerParser();
-            Rule rule = parser.parseSimplifyDsl(ts.getLogicalRule().getContent(), null).head();
-            logicNetwork.addRule(rule);
-        }
-
-        return logicNetwork;
+    SPGTypeRequest spgTypeRequest = new SPGTypeRequest(StringUtils.join(conceptTypes, ","));
+    ApiResponse<List<TripleSemantic>> response =
+        conceptFacade.getReasoningConceptsDetail(spgTypeRequest);
+    if (!response.isSuccess()) {
+      throw new SystemError("Cannot get schema for projectId=" + projectId, null);
+    }
+    LogicNetwork logicNetwork = new LogicNetwork();
+    for (TripleSemantic ts : response.getData()) {
+      SimplifyThinkerParser parser = new SimplifyThinkerParser();
+      Rule rule = parser.parseSimplifyDsl(ts.getLogicalRule().getContent(), null).head();
+      logicNetwork.addRule(rule);
     }
 
-    @Override
-    public SemanticPropertyGraph getKnowledgeGraph() {
-        return this.openSPGCatalog.getKnowledgeGraph();
-    }
+    return logicNetwork;
+  }
 
-    @Override
-    public scala.collection.immutable.Map<AbstractConnection, scala.collection.immutable.Set<String>> getConnections() {
-        return this.openSPGCatalog.getConnections();
-    }
+  @Override
+  public SemanticPropertyGraph getKnowledgeGraph() {
+    return this.openSPGCatalog.getKnowledgeGraph();
+  }
 
-    @Override
-    public scala.collection.immutable.Set<Field> getDefaultNodeProperties() {
-        return this.openSPGCatalog.getDefaultNodeProperties();
-    }
+  @Override
+  public scala.collection.immutable.Map<AbstractConnection, scala.collection.immutable.Set<String>>
+      getConnections() {
+    return this.openSPGCatalog.getConnections();
+  }
 
-    @Override
-    public scala.collection.immutable.Set<Field> getDefaultEdgeProperties() {
-        return this.openSPGCatalog.getDefaultEdgeProperties();
-    }
+  @Override
+  public scala.collection.immutable.Set<Field> getDefaultNodeProperties() {
+    return this.openSPGCatalog.getDefaultNodeProperties();
+  }
 
+  @Override
+  public scala.collection.immutable.Set<Field> getDefaultEdgeProperties() {
+    return this.openSPGCatalog.getDefaultEdgeProperties();
+  }
 }
