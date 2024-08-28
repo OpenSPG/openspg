@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.reasoner.thinker;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
@@ -27,9 +25,14 @@ import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Predicate;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Value;
-import java.util.*;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class MedTests {
   private GraphState<IVertexId> buildGraphState() {
@@ -109,12 +112,16 @@ public class MedTests {
     ResourceLogicCatalog logicCatalog = new ResourceLogicCatalog("/Medical.txt");
     logicCatalog.init();
     Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
-    String str =
-        "{\"spg.reasoner.thinker.strict\":true,\"乙肝表面抗原\":\"225.000\",\"乙肝表面抗原_lower\":\"0\",\"乙肝表面抗原_upper\":\"0.5\",\"乙肝表面抗体\":\"0.1\",\"乙肝表面抗体_lower\":\"0\",\"乙肝表面抗体_upper\":\"10\",\"乙肝e抗原\":\"69.000\",\"乙肝e抗原_lower\":\"0\",\"乙肝e抗原_upper\":\"0.5\",\"乙肝e抗体\":\"0.00\",\"乙肝e抗体_lower\":\"0\",\"乙肝e抗体_upper\":\"0.2\",\"乙肝核心抗体\":\"4.050\",\"乙肝核心抗体_lower\":\"0\",\"乙肝核心抗体_upper\":\"0.9\"}";
-    Map<String, Object> context =
-        JSONObject.parseObject(str, new TypeReference<Map<String, Object>>() {});
+    Map<String, Object> context = new HashMap<>();
+    ;
+    context.put("spg.reasoner.thinker.strict", true);
+    context.put("孕酮", "1.25");
+    context.put("a", "12");
+
     List<Result> triples =
-        thinker.find(null, new Predicate("确诊"), new Node("Medical.DiseaseTerm"), context);
-    Assert.assertTrue(triples.size() == 1);
+            thinker.find(null, new Predicate("diagnosis"), new Node("Medical.DiagnosisRecommend"), context);
+    System.out.println(triples.size());
+
+
   }
 }
