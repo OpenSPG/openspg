@@ -1,43 +1,8 @@
-Define (a:Med.Examination/`尿酸`)-[:abnormalValue]->(c: Med.ExaminationResult/`偏低`) {
-  R1: contains(population, '男性') AND (value<150 || value in ["低", "阴性"])
-}
-Description: "对于男性,尿酸的正常范围是[150-416]umol/L"
-
-Define (a:Med.Examination/`尿酸`)-[:abnormalValue]->(c: Med.ExaminationResult/`偏高`) {
-  R1: contains(population, '男性') AND (value>416 || value in ["高", "阳性"])
-}
-Description: "对于男性,尿酸的正常范围是[150-416]umol/L"
-
-Define (a:Med.Examination/`尿酸`)-[:abnormalValue]->(c: Med.ExaminationResult/`偏低`) {
-  R1: contains(population, '女性') AND (value<89 || value in ["低", "阴性"])
-}
-Description: "对于女性,尿酸的正常范围是[89-357]umol/L"
-
-Define (a:Med.Examination/`尿酸`)-[:abnormalValue]->(c: Med.ExaminationResult/`偏高`) {
-  R1: contains(population, '女性') AND (value>357 || value in ["高", "阳性"])
-}
-Description: "对于女性,尿酸的正常范围是[89-357]umol/L"
-
-Define (a:Med.Examination)-[:abnormalRule]->(c: string) {
- R1: (a)-[:abnormalValue]->(b: Med.ExaminationResult/`偏高`) AND (a)-[: highExplain]->(c)
+Define()-[:abnormalValue]->(:Medical.AbnormalExaminationIndicator/`缺失`) {
+    a > 10
 }
 
-Define (a:Med.Examination)-[:abnormalRule]->(c: string) {
- R1: (a)-[:abnormalValue]->(b: Med.ExaminationResult/`偏低`) AND (a)-[: lowExplain]->(c)
+Define()-[:diagnosis]->(:Medical.DiagnosisRecommend/`随访`) {
+  R1: 孕酮 < 5.0 AND ()-[:abnormalValue]->(:Medical.AbnormalExaminationIndicator/`缺失`)
 }
-
-Define()-[: 确诊]->(: Medical.DiseaseTerm/`乙型肝炎大三阳`) {
- r:    (: Medical.ExaminationTerm/`乙肝表面抗原`)-[: abnormalValue]->(: Medical.AbnormalExaminationIndicator/`阳性`) and (: Medical.ExaminationTerm/`乙肝e抗原`)-[: abnormalValue]->(: Medical.AbnormalExaminationIndicator/`阳性`) and (: Medical.ExaminationTerm/`乙肝核心抗体`)-[: abnormalValue]->(: Medical.AbnormalExaminationIndicator/`阳性`)
-}
-
-Define (a:Medical.ExaminationTerm/`乙肝表面抗原`)-[:abnormalValue]->(c: Medical.AbnormalExaminationIndicator/`阳性`) {
-  R1: (乙肝表面抗原>rule_value(乙肝表面抗原_upper != null, 乙肝表面抗原_upper, 1))
-}
-
-Define (a:Medical.ExaminationTerm/`乙肝e抗原`)-[:abnormalValue]->(c: Medical.AbnormalExaminationIndicator/`阳性`) {
-  R1: (乙肝e抗原>rule_value(乙肝e抗原_upper != null, 乙肝e抗原_upper, 2.1))
-}
-
-Define (a:Medical.ExaminationTerm/`乙肝核心抗体`)-[:abnormalValue]->(c: Medical.AbnormalExaminationIndicator/`阳性`) {
-  R1: (乙肝核心抗体>rule_value(乙肝核心抗体_upper != null, 乙肝核心抗体_upper, 2.1))
-}
+Description: "β HCG正常，如果孕酮小于5，考虑已排完卵，过了排卵期，如在备孕期，建议月经推迟后检查是否怀孕"

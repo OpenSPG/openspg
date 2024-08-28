@@ -13,30 +13,21 @@
 
 package com.antgroup.openspg.reasoner.thinker
 
+import java.util.Locale
+
+import scala.collection.JavaConverters._
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
+
 import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
 import com.antgroup.openspg.reasoner.thinker.logic.graph
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{
-  CombinationEntity,
-  Element,
-  Entity,
-  Predicate,
-  Value
-}
-import com.antgroup.openspg.reasoner.thinker.logic.rule.{
-  ClauseEntry,
-  EntityPattern,
-  Node,
-  TriplePattern
-}
+import com.antgroup.openspg.reasoner.thinker.logic.graph._
+import com.antgroup.openspg.reasoner.thinker.logic.rule.{ClauseEntry, EntityPattern, Node, TriplePattern}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{Not, _}
-import java.util.Locale
 import org.apache.commons.lang3.StringUtils
-import scala.collection.JavaConverters._
-import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
 
 class ThinkerRuleParser extends RuleExprParser {
   val expr2StringTransformer = new Expr2QlexpressTransformer()
@@ -125,6 +116,7 @@ class ThinkerRuleParser extends RuleExprParser {
       case p: Predicate => p.getAlias
       case n: logic.graph.Node => n.getAlias
       case v: Value => v.getAlias
+      case a: logic.graph.Any => a.getAlias
       case _ => throw new IllegalArgumentException("%s element has no alias".format(element))
     }
   }
@@ -330,7 +322,12 @@ class ThinkerRuleParser extends RuleExprParser {
     if (aliasToElementMap.contains(sAlias)) {
       return aliasToElementMap(sAlias)
     }
-    var sNode: Element = new graph.Node(sType, sAlias)
+    var sNode: Element = null
+    if (StringUtils.isBlank(sType)) {
+      sNode = new graph.Any(sAlias)
+    } else {
+      sNode = new graph.Node(sType, sAlias)
+    }
     if (StringUtils.isNotEmpty(sType)) {
       val conceptContext = elementPatternDeclaration
         .element_lookup()
@@ -392,9 +389,6 @@ class ThinkerRuleParser extends RuleExprParser {
     var labelName = ""
     if (ctx.element_lookup() != null) {
       labelName = ctx.element_lookup().label_expression().label_name().getText
-    }
-    if (!isHead && StringUtils.isBlank(labelName) && !aliasToElementMap.contains(alias)) {
-      throw new IllegalArgumentException("alias " + alias + " is not defined")
     }
     (alias, labelName)
   }
