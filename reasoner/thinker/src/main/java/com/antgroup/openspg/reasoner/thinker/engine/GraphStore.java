@@ -163,12 +163,12 @@ public class GraphStore implements Graph {
     } else {
       return new Triple(
           new Entity(
-              (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY),
-              (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)),
+              (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY),
+              (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)),
           new Predicate(spo.getP()),
           new Entity(
-              (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY),
-              (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)));
+              (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY),
+              (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)));
     }
   }
 
