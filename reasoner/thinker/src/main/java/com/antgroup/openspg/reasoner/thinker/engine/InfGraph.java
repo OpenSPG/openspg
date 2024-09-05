@@ -54,7 +54,6 @@ public class InfGraph implements Graph {
   public List<Result> find(Triple pattern, Map<String, Object> context) {
     logger.info("InfGraph find pattern={}, context={}", pattern, context);
     List<Result> result = new LinkedList<>();
-    prepareContext(context);
     // Step1: find pattern in graph
     List<Result> dataInGraph = graphStore.find(pattern, context);
     logger.info("GraphStore find pattern={}, result={}", pattern, dataInGraph);
@@ -73,16 +72,15 @@ public class InfGraph implements Graph {
 
   @Override
   public List<Result> find(Node s, Map<String, Object> context) {
-    prepareContext(context);
     return inference(s, context);
   }
 
   public List<Result> find(Entity s, Map<String, Object> context) {
-    prepareContext(context);
     return inference(s, context);
   }
 
-  private void prepareContext(Map<String, Object> context) {
+  @Override
+  public void prepare(Map<String, Object> context) {
     if (context != null) {
       for (Object val : context.values()) {
         if (val instanceof Entity) {

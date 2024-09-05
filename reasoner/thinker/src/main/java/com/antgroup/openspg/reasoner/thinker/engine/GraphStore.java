@@ -38,6 +38,10 @@ public class GraphStore implements Graph {
   }
 
   @Override
+  public void prepare(Map<String, Object> context) {
+  }
+
+  @Override
   public List<Result> find(Triple pattern, Map<String, Object> context) {
     List<Triple> data;
     if (pattern.getSubject() instanceof Entity) {

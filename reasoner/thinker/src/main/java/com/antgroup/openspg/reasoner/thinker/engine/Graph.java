@@ -22,6 +22,8 @@ import java.util.Map;
 public interface Graph {
   void init(Map<String, String> param);
 
+  void prepare(Map<String, Object> context);
+
   List<Result> find(Triple pattern, Map<String, Object> context);
 
   List<Result> find(Node s, Map<String, Object> context);

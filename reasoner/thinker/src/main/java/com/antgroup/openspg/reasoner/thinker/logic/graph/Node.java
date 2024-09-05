@@ -56,7 +56,11 @@ public class Node extends Element {
       return true;
     }
     if (other instanceof Node) {
-      return Objects.equals(type, ((Node) other).getType());
+      if (type.equalsIgnoreCase("thing") || ((Node) other).getType().equalsIgnoreCase("thing")) {
+        return true;
+      } else {
+        return Objects.equals(type, ((Node) other).getType());
+      }
     }
     if (other instanceof Entity) {
       return Objects.equals(type, ((Entity) other).getType());
@@ -71,6 +75,8 @@ public class Node extends Element {
     } else if (pattern instanceof CombinationEntity) {
       Entity entity = ((CombinationEntity) pattern).getEntityList().get(0);
       return new Entity(entity.getId(), entity.getType(), entity.getAlias());
+    } else if (pattern instanceof Node){
+      return new Node(this.type, ((Node) pattern).getAlias());
     } else {
       return this;
     }
