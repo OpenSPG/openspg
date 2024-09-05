@@ -13,24 +13,22 @@
 
 package com.antgroup.openspg.reasoner.thinker;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.thinker.catalog.ResourceLogicCatalog;
 import com.antgroup.openspg.reasoner.thinker.engine.DefaultThinker;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Predicate;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ProntoQATests {
   private GraphState<IVertexId> buildGraphState() {
@@ -65,7 +63,9 @@ public class ProntoQATests {
 
     List<Triple> triples = Arrays.asList(t1, t2, t3, t4);
     triples.forEach(t -> context.put(t.toString(), t));
-    List<Result> result = thinker.find(new Entity("Polly", "Thing"), new Predicate("iss"), new Node("lorpus"), context);
+    List<Result> result =
+        thinker.find(
+            new Entity("Polly", "Thing"), new Predicate("iss"), new Node("lorpus"), context);
     Assert.assertTrue(result.size() == 1);
   }
 }

@@ -1,5 +1,5 @@
 Define (x:Thing)-[:iss]->(:young) {
-  (x)-[:iss]->(:kind) AND (x)-[c:visits]->(:rabbit)
+  (x)-[:iss]->(:kind) AND (x)-[:visits]->(:rabbit)
 }
 
 Define(x:Thing)-[:sees]->(:rabbit) {

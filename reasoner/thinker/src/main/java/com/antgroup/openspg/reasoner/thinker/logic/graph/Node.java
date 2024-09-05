@@ -75,7 +75,7 @@ public class Node extends Element {
     } else if (pattern instanceof CombinationEntity) {
       Entity entity = ((CombinationEntity) pattern).getEntityList().get(0);
       return new Entity(entity.getId(), entity.getType(), entity.getAlias());
-    } else if (pattern instanceof Node){
+    } else if (pattern instanceof Node) {
       return new Node(this.type, ((Node) pattern).getAlias());
     } else {
       return this;

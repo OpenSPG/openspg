@@ -13,15 +13,6 @@
 
 package com.antgroup.openspg.reasoner.thinker;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
@@ -30,6 +21,13 @@ import com.antgroup.openspg.reasoner.thinker.engine.DefaultThinker;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Predicate;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class ProofWriterTest {
   private GraphState<IVertexId> buildGraphState() {
@@ -67,7 +65,8 @@ public class ProofWriterTest {
     Triple t12 = makeTriple("tiger", "visits", "rabbit");
     List<Triple> triples = Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);
     triples.forEach(t -> context.put(t.toString(), t));
-    List<Result> result = thinker.find(new Node("tiger"), new Predicate("iss"), new Node("young"), context);
+    List<Result> result =
+        thinker.find(new Node("tiger"), new Predicate("iss"), new Node("young"), context);
     Assert.assertTrue(result.size() == 2);
   }
 }
