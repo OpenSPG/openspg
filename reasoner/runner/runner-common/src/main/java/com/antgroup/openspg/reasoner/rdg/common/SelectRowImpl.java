@@ -28,6 +28,7 @@ import com.antgroup.openspg.reasoner.lube.logical.Var;
 import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -60,8 +61,6 @@ public class SelectRowImpl implements Serializable {
 
       if (null == selectValue) {
         row[i] = null;
-      } else if (this.forceOutputString) {
-        row[i] = String.valueOf(selectValue);
       } else {
         FieldType type = FieldType.fromKgType(fieldType);
         if (FieldType.STRING.equals(type)) {
@@ -88,8 +87,28 @@ public class SelectRowImpl implements Serializable {
           row[i] = selectValue;
         }
       }
+      row[i] = convert2OutputFormat(row[i]);
     }
     return row;
+  }
+
+  private Object convert2OutputFormat(Object obj) {
+    if (!this.forceOutputString) {
+      return obj;
+    }
+    if (obj == null) {
+      return "null";
+    }
+
+    if (obj instanceof Double || obj instanceof Float) {
+      // 将Double或Float转换为BigDecimal
+      BigDecimal bd = new BigDecimal(obj.toString());
+      // 使用toPlainString以避免科学计数法
+      return bd.toPlainString();
+    } else {
+      // 对于其他类型，直接调用toString方法
+      return obj.toString();
+    }
   }
 
   public static Object getSelectValue(
