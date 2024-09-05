@@ -30,4 +30,7 @@ public class LinkedUdtfResult {
 
   /** edge type */
   private String edgeType = null;
+
+  /** vertex type */
+  private String vertexType = null;
 }
