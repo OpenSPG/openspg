@@ -323,7 +323,7 @@ class ThinkerRuleParser extends RuleExprParser {
       return aliasToElementMap(sAlias)
     }
     var sNode: Element = null
-    if (StringUtils.isBlank(sType)) {
+    if (StringUtils.isBlank(sType) || sType.toUpperCase().equals("THING")) {
       sNode = new graph.Any(sAlias)
     } else {
       sNode = new graph.Node(sType, sAlias)
