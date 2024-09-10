@@ -56,11 +56,7 @@ public class Node extends Element {
       return true;
     }
     if (other instanceof Node) {
-      if (type.equalsIgnoreCase("thing") || ((Node) other).getType().equalsIgnoreCase("thing")) {
-        return true;
-      } else {
-        return Objects.equals(type, ((Node) other).getType());
-      }
+      return Objects.equals(type, ((Node) other).getType());
     }
     if (other instanceof Entity) {
       return Objects.equals(type, ((Entity) other).getType());

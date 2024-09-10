@@ -23,7 +23,6 @@ import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleExecutor;
 import java.util.*;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -72,11 +71,11 @@ public class InfGraph implements Graph {
 
   @Override
   public List<Result> find(Node s, Map<String, Object> context) {
-    return inference(s, context);
+    return find(new Triple(Entity.ANY, Predicate.CONCLUDE, s), context);
   }
 
   public List<Result> find(Entity s, Map<String, Object> context) {
-    return inference(s, context);
+    return find(new Triple(Entity.ANY, Predicate.CONCLUDE, s), context);
   }
 
   @Override
@@ -92,14 +91,14 @@ public class InfGraph implements Graph {
     }
   }
 
-  private List<Result> inference(Element pattern, Map<String, Object> context) {
+  private List<Result> inference(Triple pattern, Map<String, Object> context) {
     List<Result> rst = new LinkedList<>();
     boolean strictMode =
         (Boolean) context.getOrDefault(Constants.SPG_REASONER_THINKER_STRICT, false);
     for (Rule rule : logicNetwork.getBackwardRules(pattern)) {
-      List<Element> body =
-          rule.getBody().stream().map(ClauseEntry::toElement).collect(Collectors.toList());
-      List<List<Result>> data = prepareElements(body, rule.getHead().toElement(), pattern, context);
+      List<Triple> body =
+          rule.getBody().stream().map(ClauseEntry::toTriple).collect(Collectors.toList());
+      List<List<Result>> data = prepareElements(body, rule.getHead().toTriple(), pattern, context);
       if (CollectionUtils.isEmpty(data)) {
         TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
         Boolean ret =
@@ -107,7 +106,7 @@ public class InfGraph implements Graph {
                 .accept(new LinkedList<>(), context, new RuleExecutor(strictMode), traceLogger);
         traceLogger.setCurrentNodeMsg(rule.getDesc());
         if (ret) {
-          Element ele = rule.getHead().toElement();
+          Element ele = rule.getHead().toTriple();
           rst.add(new Result(ele, traceLogger));
           if (ele instanceof Triple) {
             addTriple((Triple) ele);
@@ -134,7 +133,7 @@ public class InfGraph implements Graph {
           }
           traceLogger.setCurrentNodeMsg(StringUtils.join(msgs, ";"));
           if (ret) {
-            Element ele = rule.getHead().toElement();
+            Element ele = rule.getHead().toTriple();
             rst.add(new Result(bindResult(dList, ele), traceLogger));
             if (ele instanceof Triple) {
               addTriple((Triple) ele);
@@ -171,35 +170,17 @@ public class InfGraph implements Graph {
   }
 
   private List<List<Result>> prepareElements(
-      List<Element> body, Element head, Element pattern, Map<String, Object> context) {
+      List<Triple> body, Triple head, Triple pattern, Map<String, Object> context) {
     List<List<Result>> elements = new ArrayList<>();
-    Set<Element> choose = new HashSet<>();
-    Queue<Element> starts = new LinkedBlockingDeque<>();
-    Element start = getStart(pattern, head);
-    starts.add(start);
+    Set<Triple> choose = new HashSet<>();
+    Map<String, Element> starts = getStart(pattern, head);
     while (choose.size() < body.size()) {
-      Element s = starts.poll();
-      if (s == null) {
-        break;
-      }
-      if (s instanceof Node && elements.isEmpty()) {
-        break;
-      }
-      for (Element e : body) {
+      for (Triple e : body) {
         if (choose.contains(e)) {
           continue;
         }
-        if (e instanceof Entity) {
-          choose.add(e);
-          if (CollectionUtils.isEmpty(elements)) {
-            elements.add(new LinkedList<>(prepareElement(e, context)));
-          } else {
-            for (List<Result> evidence : elements) {
-              evidence.addAll(prepareElement(e, context));
-            }
-          }
-        } else if (!e.canInstantiated()) {
-          List<List<Result>> singeRst = prepareElement(null, (Triple) e, context);
+        if (!e.canInstantiated()) {
+          List<List<Result>> singeRst = prepareElement(null, e, context);
           if (CollectionUtils.isEmpty(elements)) {
             elements.addAll(singeRst);
           } else if (CollectionUtils.isNotEmpty(singeRst)) {
@@ -214,26 +195,26 @@ public class InfGraph implements Graph {
             elements.clear();
             elements = tmpElements;
           }
+          choose.add(e);
         } else {
-          Triple t = (Triple) e;
-          if (t.getSubject().alias().equals(s.alias())) {
-            starts.add(t.getObject());
-          } else if (t.getObject().alias().equals(s.alias())) {
-            starts.add(t.getSubject());
-          } else if (t.getSubject() instanceof Predicate) {
+          // 以下的s为起点
+          Collection<String> curStart =
+              CollectionUtils.disjunction(starts.keySet(), tripleAlias(e));
+          if (curStart.isEmpty()) {
+            continue;
+          } else if (e.getSubject() instanceof Predicate) {
             if (choose.stream()
                     .filter(ele -> ele instanceof Triple)
-                    .filter(ele -> ((Triple) ele).getPredicate().alias() == t.getSubject().alias())
+                    .filter(ele -> ele.getPredicate().alias() == e.getSubject().alias())
                     .count()
                 == 0) {
               continue;
             }
-          } else {
-            continue;
           }
           choose.add(e);
+          Element s = starts.get(curStart.iterator().next());
           if (CollectionUtils.isEmpty(elements)) {
-            Triple triple = buildTriple(null, s, t);
+            Triple triple = buildTriple(null, s, e);
             if (triple != null) {
               List<List<Result>> singeRst = prepareElement(null, triple, context);
               if (CollectionUtils.isNotEmpty(singeRst)) {
@@ -243,7 +224,7 @@ public class InfGraph implements Graph {
           } else {
             List<List<Result>> tmpElements = new LinkedList<>();
             for (List<Result> evidence : elements) {
-              Triple triple = buildTriple(evidence, s, t);
+              Triple triple = buildTriple(evidence, s, e);
               if (triple != null) {
                 List<List<Result>> singeRst = prepareElement(evidence, triple, context);
                 if (CollectionUtils.isNotEmpty(singeRst)) {
@@ -258,6 +239,10 @@ public class InfGraph implements Graph {
       }
     }
     return elements;
+  }
+
+  private Set<String> tripleAlias(Triple triple) {
+    return new HashSet<>(Arrays.asList(triple.getSubject().alias(), triple.getObject().alias()));
   }
 
   private Triple buildTriple(List<Result> evidence, Element s, Triple triple) {
@@ -299,16 +284,18 @@ public class InfGraph implements Graph {
     }
   }
 
-  private Element getStart(Element element, Element pattern) {
-    if (element instanceof Entity || element instanceof Node) {
-      return element.bind(pattern);
-    } else if (((Triple) element).getSubject() instanceof Entity) {
-      Element subject = ((Triple) pattern).getSubject();
-      return ((Triple) element).getSubject().bind(subject);
+  private Map<String, Element> getStart(Triple pattern, Triple head) {
+    Map<String, Element> starts = new HashMap<>();
+    Triple binding = (Triple) head.bind(pattern);
+    if (binding.getSubject() instanceof Entity) {
+      starts.put(binding.getSubject().alias(), binding.getSubject());
+    } else if (binding.getObject() instanceof Entity) {
+      starts.put(binding.getObject().alias(), binding.getObject());
     } else {
-      Element object = ((Triple) pattern).getObject();
-      return ((Triple) element).getObject().bind(object);
+      starts.put(binding.getSubject().alias(), binding.getSubject());
+      starts.put(binding.getObject().alias(), binding.getObject());
     }
+    return starts;
   }
 
   private List<List<Result>> prepareElement(
@@ -371,29 +358,27 @@ public class InfGraph implements Graph {
 
   private Collection<Result> prepareElement(Element pattern, Map<String, Object> context) {
     Collection<Result> result = new LinkedList<>();
-    Collection<Element> spo = this.tripleStore.find(pattern);
+    Triple triple = Triple.create(pattern);
+    Collection<Element> spo = this.tripleStore.find(triple);
     if (spo == null || spo.isEmpty()) {
-      if (pattern instanceof Node) {
-        result = find((Node) pattern, context);
-      } else if (pattern instanceof Entity) {
-        result = find((Entity) pattern, context);
-      } else if (!recorder.contains(pattern.cleanAlias())) {
-        result = find((Triple) pattern, context);
+      if (!recorder.contains(triple.cleanAlias())) {
+        result = find(triple, context);
       }
     } else {
       result = spo.stream().map(e -> new Result(e, null)).collect(Collectors.toList());
     }
     for (Result r : result) {
-      r.setData(r.getData().bind(pattern));
+      r.setData(r.getData().bind(triple));
     }
     return result;
   }
 
-  public void addEntity(Entity entity) {
-    this.tripleStore.addEntity(entity);
+  private void addEntity(Entity entity) {
+    Triple triple = new Triple(Element.ANY, Predicate.CONCLUDE, entity);
+    this.addTriple(triple);
   }
 
-  public void addTriple(Triple triple) {
+  private void addTriple(Triple triple) {
     this.tripleStore.addTriple(triple);
   }
 

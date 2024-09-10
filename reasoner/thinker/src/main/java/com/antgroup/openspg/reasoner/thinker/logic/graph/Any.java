@@ -12,6 +12,7 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
+import java.util.Objects;
 import lombok.Data;
 
 @Data
@@ -24,7 +25,6 @@ public class Any extends Element {
     this.alias = alias;
   }
 
-
   @Override
   public boolean matches(Element other) {
     return other != null;
@@ -35,10 +35,15 @@ public class Any extends Element {
     if (obj == null) {
       return false;
     } else if (obj instanceof Any) {
-      return true;
+      return Objects.equals(alias, ((Any) obj).alias);
     } else {
       return false;
     }
+  }
+
+  @Override
+  public Element bind(Element pattern) {
+    return pattern;
   }
 
   @Override

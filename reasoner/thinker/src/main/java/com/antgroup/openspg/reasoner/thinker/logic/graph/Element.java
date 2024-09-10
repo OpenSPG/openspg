@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
-import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException;
 import java.io.Serializable;
 
 public abstract class Element implements Serializable {
@@ -33,10 +32,7 @@ public abstract class Element implements Serializable {
     return true;
   }
 
-  public String alias() {
-    throw new UnsupportedOperationException(
-        this.getClass().getSimpleName() + " cannot support", null);
-  }
+  public abstract String alias();
 
   public Element cleanAlias() {
     return this;
