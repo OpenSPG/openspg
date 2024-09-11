@@ -109,6 +109,13 @@ class ThinkerRuleParser extends RuleExprParser {
     resultNode
   }
 
+  private def isDefaultAlias(alias: String): Boolean = {
+    if (StringUtils.isNotEmpty(alias) && alias.toLowerCase().startsWith("anonymous")) {
+      return true
+    }
+    false
+  }
+
   def get_concept_full_form(
                              concept_name: Concept_nameContext,
                              conceptAlias: String = ""): TriplePattern = {
@@ -116,7 +123,11 @@ class ThinkerRuleParser extends RuleExprParser {
     val entity_str = concept_name.getText
     if (spoRuleToSpoSetMap.contains(entity_str)) {
       val (s, p, o) = spoRuleToSpoSetMap(entity_str)
-      if (StringUtils.isNotBlank(conceptAlias)) {
+      if (!isDefaultAlias(conceptAlias) && !isDefaultAlias(conceptAlias)) {
+        throw new IllegalArgumentException(
+          "The same entity %s has different alias".format(entity_str))
+      }
+      if (!isDefaultAlias(conceptAlias)) {
         o.asInstanceOf[Entity].setAlias(conceptAlias)
       }
       return new TriplePattern(new logic.graph.Triple(s, p, o))
