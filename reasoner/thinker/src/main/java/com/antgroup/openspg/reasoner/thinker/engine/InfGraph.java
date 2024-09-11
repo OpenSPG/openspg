@@ -208,6 +208,7 @@ public class InfGraph implements Graph {
           } else {
             starts.put(e.getSubject().alias(), e.getSubject());
           }
+          starts.put(e.alias(), e);
           if (CollectionUtils.isEmpty(elements)) {
             Triple triple = bindTriple(null, s, e);
             if (triple != null) {
@@ -252,7 +253,9 @@ public class InfGraph implements Graph {
         }
       }
     }
-    aliasToElement.put(s.alias(), s);
+    if (!aliasToElement.containsKey(s.alias())) {
+      aliasToElement.put(s.alias(), s);
+    }
     Element sub = aliasToElement.getOrDefault(triple.getSubject().alias(), triple.getSubject());
     Element pre = aliasToElement.getOrDefault(triple.getPredicate().alias(), triple.getPredicate());
     Element obj = aliasToElement.getOrDefault(triple.getObject().alias(), triple.getObject());
