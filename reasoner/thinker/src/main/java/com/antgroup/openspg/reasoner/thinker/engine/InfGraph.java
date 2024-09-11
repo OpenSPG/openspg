@@ -209,7 +209,7 @@ public class InfGraph implements Graph {
             starts.put(e.getSubject().alias(), e.getSubject());
           }
           if (CollectionUtils.isEmpty(elements)) {
-            Triple triple = buildTriple(null, s, e);
+            Triple triple = bindTriple(null, s, e);
             if (triple != null) {
               List<List<Result>> singeRst = prepareElement(null, triple, context);
               if (CollectionUtils.isNotEmpty(singeRst)) {
@@ -219,7 +219,7 @@ public class InfGraph implements Graph {
           } else {
             List<List<Result>> tmpElements = new LinkedList<>();
             for (List<Result> evidence : elements) {
-              Triple triple = buildTriple(evidence, s, e);
+              Triple triple = bindTriple(evidence, s, e);
               if (triple != null) {
                 List<List<Result>> singeRst = prepareElement(evidence, triple, context);
                 if (CollectionUtils.isNotEmpty(singeRst)) {
@@ -240,43 +240,23 @@ public class InfGraph implements Graph {
     return new HashSet<>(Arrays.asList(triple.getSubject().alias(), triple.getObject().alias()));
   }
 
-  private Triple buildTriple(List<Result> evidence, Element s, Triple triple) {
-    Entity entity = null;
-    Triple trip = null;
-    if (CollectionUtils.isEmpty(evidence)) {
-      entity = (Entity) s;
-    } else {
+  private Triple bindTriple(List<Result> evidence, Element s, Triple triple) {
+    Map<String, Element> aliasToElement = new HashMap<>();
+    if (CollectionUtils.isNotEmpty(evidence)) {
       for (Result r : evidence) {
-        Element e = r.getData();
-        if (triple.getSubject() instanceof Predicate) {
-          if (e instanceof Triple
-              && ((Triple) e).getPredicate().alias() == triple.getSubject().alias()) {
-            trip = (Triple) e;
-          }
-        } else {
-          if (e instanceof Entity && e.alias() == s.alias()) {
-            entity = (Entity) r.getData();
-          } else if (e instanceof Triple && ((Triple) e).getSubject().alias() == s.alias()) {
-            entity = (Entity) ((Triple) e).getSubject();
-          } else if (e instanceof Triple && ((Triple) e).getObject().alias() == s.alias()) {
-            entity = (Entity) ((Triple) e).getObject();
-          }
+        Element data = r.getData();
+        aliasToElement.put(data.alias(), data);
+        if (data instanceof Triple) {
+          aliasToElement.put(((Triple) data).getSubject().alias(), ((Triple) data).getSubject());
+          aliasToElement.put(((Triple) data).getObject().alias(), ((Triple) data).getObject());
         }
       }
     }
-
-    if (entity == null && trip == null) {
-      return null;
-    }
-    if (triple.getSubject().alias() == s.alias()) {
-      return new Triple(entity, triple.getPredicate(), triple.getObject());
-    } else if (triple.getObject().alias() == s.alias()) {
-      return new Triple(triple.getSubject(), triple.getPredicate(), entity);
-    } else if (triple.getSubject() instanceof Predicate && trip != null) {
-      return new Triple(trip, triple.getPredicate(), triple.getObject());
-    } else {
-      return null;
-    }
+    aliasToElement.put(s.alias(), s);
+    Element sub = aliasToElement.getOrDefault(triple.getSubject().alias(), triple.getSubject());
+    Element pre = aliasToElement.getOrDefault(triple.getPredicate().alias(), triple.getPredicate());
+    Element obj = aliasToElement.getOrDefault(triple.getObject().alias(), triple.getObject());
+    return new Triple(sub, pre, obj);
   }
 
   private Map<String, Element> getStart(Triple pattern, Triple head) {

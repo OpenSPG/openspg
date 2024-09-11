@@ -55,7 +55,11 @@ public class MemTripleStore implements TripleStore {
         }
       }
     } else {
-      throw new RuntimeException("Cannot support " + t);
+      for (Triple tri : sToTriple.getOrDefault(t.getSubject(), new LinkedList<>())) {
+        if (t.matches(tri)) {
+          elements.add(tri);
+        }
+      }
     }
     return elements;
   }

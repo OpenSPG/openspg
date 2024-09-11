@@ -54,7 +54,7 @@ public class ProofWriterTest {
     Triple t2 = makeTriple("lion", "iss", "round");
     Triple t3 = makeTriple("rabbit", "iss", "kind");
     Triple t4 = makeTriple("tiger", "iss", "big");
-    Triple t5 = makeTriple("tiger", "iss", "round");
+    Triple t5 = makeTriple("tiger", "iss", "kind");
 
     Triple t6 = makeTriple("cow", "needs", "lion");
     Triple t7 = makeTriple("cow", "needs", "rabbit");
@@ -67,6 +67,6 @@ public class ProofWriterTest {
     triples.forEach(t -> context.put(t.toString(), t));
     List<Result> result =
         thinker.find(new Node("tiger"), new Predicate("iss"), new Node("young"), context);
-    Assert.assertTrue(result.size() == 2);
+    Assert.assertTrue(result.size() == 1);
   }
 }
