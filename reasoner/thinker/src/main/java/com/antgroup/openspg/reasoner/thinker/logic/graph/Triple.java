@@ -55,7 +55,7 @@ public class Triple extends Element {
 
   @Override
   public boolean canInstantiated() {
-    if (predicate.equals(Predicate.CONCLUDE)) {
+    if (predicate.matches(Predicate.CONCLUDE)) {
       return false;
     } else {
       return !(!subject.canInstantiated()

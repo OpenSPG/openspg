@@ -70,15 +70,6 @@ public class InfGraph implements Graph {
   }
 
   @Override
-  public List<Result> find(Node s, Map<String, Object> context) {
-    return find(new Triple(Entity.ANY, Predicate.CONCLUDE, s), context);
-  }
-
-  public List<Result> find(Entity s, Map<String, Object> context) {
-    return find(new Triple(Entity.ANY, Predicate.CONCLUDE, s), context);
-  }
-
-  @Override
   public void prepare(Map<String, Object> context) {
     if (context != null) {
       for (Object val : context.values()) {
@@ -197,9 +188,8 @@ public class InfGraph implements Graph {
           }
           choose.add(e);
         } else {
-          // 以下的s为起点
           Collection<String> curStart =
-              CollectionUtils.disjunction(starts.keySet(), tripleAlias(e));
+              CollectionUtils.intersection(starts.keySet(), tripleAlias(e));
           if (curStart.isEmpty()) {
             continue;
           } else if (e.getSubject() instanceof Predicate) {
@@ -213,6 +203,11 @@ public class InfGraph implements Graph {
           }
           choose.add(e);
           Element s = starts.get(curStart.iterator().next());
+          if (s.alias().equals(e.getSubject().alias())) {
+            starts.put(e.getObject().alias(), e.getObject());
+          } else {
+            starts.put(e.getSubject().alias(), e.getSubject());
+          }
           if (CollectionUtils.isEmpty(elements)) {
             Triple triple = buildTriple(null, s, e);
             if (triple != null) {
@@ -286,7 +281,7 @@ public class InfGraph implements Graph {
 
   private Map<String, Element> getStart(Triple pattern, Triple head) {
     Map<String, Element> starts = new HashMap<>();
-    Triple binding = (Triple) head.bind(pattern);
+    Triple binding = (Triple) pattern.bind(head);
     if (binding.getSubject() instanceof Entity) {
       starts.put(binding.getSubject().alias(), binding.getSubject());
     } else if (binding.getObject() instanceof Entity) {
