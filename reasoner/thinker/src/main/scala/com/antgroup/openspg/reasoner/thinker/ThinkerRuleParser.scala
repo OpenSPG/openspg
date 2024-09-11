@@ -381,7 +381,7 @@ class ThinkerRuleParser extends RuleExprParser {
           .asScala
           .foreach(concept => {
             val conceptTriple =
-              get_concept_full_form(conceptContext).getTriple.getObject.asInstanceOf[Entity]
+              get_concept_full_form(concept).getTriple.getObject.asInstanceOf[Entity]
             conceptEntityList += conceptTriple
           })
         val combinationEntity = new CombinationEntity(conceptEntityList.asJava)
