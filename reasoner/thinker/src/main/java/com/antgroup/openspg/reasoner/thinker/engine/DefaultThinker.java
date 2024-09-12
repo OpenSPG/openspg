@@ -19,7 +19,6 @@ import com.antgroup.openspg.reasoner.thinker.Thinker;
 import com.antgroup.openspg.reasoner.thinker.catalog.LogicCatalog;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
-
 import java.util.*;
 
 public class DefaultThinker implements Thinker {
@@ -54,7 +53,8 @@ public class DefaultThinker implements Thinker {
   public List<Result> find(Node s, Map<String, Object> context) {
     this.infGraph.clear();
     this.infGraph.prepare(context);
-    List<Result> triples = this.infGraph.find(Triple.create(s), context == null ? new HashMap<>() : context);
+    List<Result> triples =
+        this.infGraph.find(Triple.create(s), context == null ? new HashMap<>() : context);
     List<Result> results = new LinkedList<>();
     for (Result triple : triples) {
       results.add(new Result(((Triple) triple.getData()).getObject(), triple.getTraceLog()));
