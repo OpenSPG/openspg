@@ -188,7 +188,8 @@ public class InfGraph implements Graph {
           if (choose.contains(e)) {
             continue;
           }
-          Collection<String> curStart = CollectionUtils.intersection(starts.keySet(), tripleAlias(e));
+          Collection<String> curStart =
+              CollectionUtils.intersection(starts.keySet(), tripleAlias(e));
           if (curStart.isEmpty()) {
             continue;
           } else if (e.getSubject() instanceof Predicate) {
@@ -196,7 +197,7 @@ public class InfGraph implements Graph {
                     .filter(ele -> ele instanceof Triple)
                     .filter(ele -> ele.getPredicate().alias() == e.getSubject().alias())
                     .count()
-                    == 0) {
+                == 0) {
               continue;
             }
           }
