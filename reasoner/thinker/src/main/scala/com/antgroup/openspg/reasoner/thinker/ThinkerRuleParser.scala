@@ -84,8 +84,18 @@ class ThinkerRuleParser extends RuleExprParser {
     val existElementSet: mutable.Set[ClauseEntry] =
       conditionToElementMap.getOrElseUpdate(condition, mutable.HashSet())
     for (e <- element) {
-      if (e.isInstanceOf[EntityPattern]) {
-        existElementSet += e
+      e match {
+        case e: EntityPattern => existElementSet += e
+        case t: TriplePattern =>
+          val s = t.getTriple.getSubject
+          val p = t.getTriple.getPredicate
+          val o = t.getTriple.getObject
+          if (s.isInstanceOf[logic.graph.Any]
+            && o.isInstanceOf[Entity]
+            && p.isInstanceOf[Predicate]
+            && p.asInstanceOf[Predicate].getName.equals("conclude")) {
+            existElementSet += new EntityPattern(o.asInstanceOf[Entity])
+          }
       }
     }
   }
