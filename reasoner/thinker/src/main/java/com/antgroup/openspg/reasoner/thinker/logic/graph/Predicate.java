@@ -98,11 +98,6 @@ public class Predicate extends Element {
     return equals(other);
   }
 
-  @Override
-  public boolean canInstantiated() {
-    return false;
-  }
-
   public String alias() {
     return alias;
   }

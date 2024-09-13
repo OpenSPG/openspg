@@ -122,11 +122,6 @@ public class Entity extends Element {
   }
 
   @Override
-  public boolean canInstantiated() {
-    return false;
-  }
-
-  @Override
   public Element cleanAlias() {
     return new Entity(this.id, this.type);
   }
