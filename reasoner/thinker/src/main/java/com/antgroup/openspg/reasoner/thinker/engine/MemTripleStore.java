@@ -21,12 +21,10 @@ import com.antgroup.openspg.reasoner.thinker.logic.graph.Value;
 import java.util.*;
 
 public class MemTripleStore implements TripleStore {
-  private Map<String, Entity> entities;
   private Map<Element, List<Triple>> sToTriple;
   private Map<Element, List<Triple>> oToTriple;
 
   public MemTripleStore() {
-    this.entities = new HashMap<>();
     this.sToTriple = new HashMap<>();
     this.oToTriple = new HashMap<>();
   }
@@ -35,26 +33,10 @@ public class MemTripleStore implements TripleStore {
   public void init(Map<String, String> param) {}
 
   @Override
-  public Collection<Element> find(Element pattern) {
+  public Collection<Element> find(Triple pattern) {
     List<Element> elements = new LinkedList<>();
-    if (pattern instanceof Entity) {
-      Collection<Element> collection = findEntity((Entity) pattern);
-      if (collection != null) {
-        elements.addAll(collection);
-      }
-    } else if (pattern instanceof Triple) {
-      elements.addAll(findTriple((Triple) pattern));
-    }
+    elements.addAll(findTriple(pattern));
     return elements;
-  }
-
-  private Collection<Element> findEntity(Entity pattern) {
-    Entity entity = entities.getOrDefault(getKey(pattern), null);
-    if (entity != null) {
-      return Arrays.asList(entity);
-    } else {
-      return null;
-    }
   }
 
   private Collection<Element> findTriple(Triple tripleMatch) {
@@ -73,19 +55,13 @@ public class MemTripleStore implements TripleStore {
         }
       }
     } else {
-      throw new RuntimeException("Cannot support " + t);
+      for (Triple tri : sToTriple.getOrDefault(t.getSubject(), new LinkedList<>())) {
+        if (t.matches(tri)) {
+          elements.add(tri);
+        }
+      }
     }
     return elements;
-  }
-
-  private String getKey(Entity entity) {
-    return entity.getId() + entity.getType();
-  }
-
-  @Override
-  public void addEntity(Entity entity) {
-    String key = getKey(entity);
-    entities.put(key, (Entity) entity.cleanAlias());
   }
 
   @Override
@@ -102,7 +78,6 @@ public class MemTripleStore implements TripleStore {
 
   @Override
   public void clear() {
-    this.entities.clear();
     this.sToTriple.clear();
     this.oToTriple.clear();
   }

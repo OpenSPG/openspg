@@ -34,11 +34,6 @@ public class CombinationEntity extends Element {
     this.alias = alias;
   }
 
-  @Override
-  public boolean canInstantiated() {
-    return false;
-  }
-
   public Set<String> types() {
     return entityList.stream().map(Entity::getType).collect(Collectors.toSet());
   }

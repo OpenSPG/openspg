@@ -13,17 +13,12 @@
 
 package com.antgroup.openspg.reasoner.thinker.logic.rule;
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import java.util.Objects;
 
 public class EntityPattern implements ClauseEntry {
   private Entity entity;
-
-  @Override
-  public Element toElement() {
-    return entity;
-  }
 
   public EntityPattern() {}
 
@@ -64,5 +59,10 @@ public class EntityPattern implements ClauseEntry {
   @Override
   public int hashCode() {
     return Objects.hash(entity);
+  }
+
+  @Override
+  public Triple toTriple() {
+    return Triple.create(entity);
   }
 }

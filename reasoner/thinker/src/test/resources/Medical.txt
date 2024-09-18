@@ -41,3 +41,11 @@ Define (a:Medical.ExaminationTerm/`乙肝e抗原`)-[:abnormalValue]->(c: Medical
 Define (a:Medical.ExaminationTerm/`乙肝核心抗体`)-[:abnormalValue]->(c: Medical.AbnormalExaminationIndicator/`阳性`) {
   R1: (乙肝核心抗体>rule_value(乙肝核心抗体_upper != null, 乙肝核心抗体_upper, 2.1))
 }
+
+Define()-[:abnormalValue]->(:Medical.AbnormalExaminationIndicator/`缺失`) {
+    a > 10
+}
+
+Define()-[:diagnosis]->(:Medical.DiagnosisRecommend/`随访`) {
+  R1: 孕酮 < 5.0 AND ()-[:abnormalValue]->(:Medical.AbnormalExaminationIndicator/`缺失`)
+}

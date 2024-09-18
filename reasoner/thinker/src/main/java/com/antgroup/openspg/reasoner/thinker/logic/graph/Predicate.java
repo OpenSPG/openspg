@@ -19,6 +19,8 @@ import lombok.Data;
 
 @Data
 public class Predicate extends Element {
+  public static final Predicate CONCLUDE = new Predicate("conclude");
+
   private String name;
   private String alias;
 
@@ -94,11 +96,6 @@ public class Predicate extends Element {
       return Objects.equals(name, ((Predicate) other).getName());
     }
     return equals(other);
-  }
-
-  @Override
-  public boolean canInstantiated() {
-    return false;
   }
 
   public String alias() {

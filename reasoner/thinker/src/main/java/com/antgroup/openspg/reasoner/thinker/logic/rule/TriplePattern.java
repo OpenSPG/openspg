@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.reasoner.thinker.logic.rule;
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import java.util.Objects;
 
@@ -24,11 +23,6 @@ public class TriplePattern implements ClauseEntry {
 
   public TriplePattern(Triple triple) {
     this.triple = triple;
-  }
-
-  @Override
-  public Element toElement() {
-    return triple;
   }
 
   /**
@@ -64,5 +58,10 @@ public class TriplePattern implements ClauseEntry {
   @Override
   public int hashCode() {
     return Objects.hash(triple);
+  }
+
+  @Override
+  public Triple toTriple() {
+    return triple;
   }
 }

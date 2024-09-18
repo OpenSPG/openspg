@@ -1,0 +1,35 @@
+Define (x:Thing)-[:iss]->(:young) {
+  (x)-[:iss]->(:kind) AND (x)-[:visits]->(:rabbit)
+}
+
+Define(x:Thing)-[:sees]->(:rabbit) {
+  (x)-[:sees]->(:tiger) AND (x)-[:visits]->(:lion)
+}
+
+Define(x:Thing)-[:sees]->(:lion) {
+  (x:Thing)-[:iss]->(:big) AND (x)-[:iss]->(:young)
+}
+
+Define(y:rabbit)-[:needs]->(:lion) {
+  (x:Thing)-[:visits]->(y)
+}
+
+Define(x:Thing)-[:visits]->(:rabbit) {
+  (x)-[:iss]->(y:big)
+}
+
+Define(x:Thing)-[:iss]->(:rough) {
+  (x)-[:sees]->(y:tiger)
+}
+
+Define(y:rabbit)-[:needs]->(:lion) {
+  (x:Thing)-[:visits]->(y) AND (x)-[:iss]->(:kind)
+}
+
+Define(x:Thing)-[:visits]->(:lion) {
+  (x)-[:iss]->(y:rough) AND (x)-[:iss]->(:kind)
+}
+
+Define(x:Thing)-[:iss]->(:big) {
+  (x)-[:needs]->(y:lion)
+}

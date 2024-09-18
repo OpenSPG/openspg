@@ -18,9 +18,7 @@ import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.thinker.Thinker;
 import com.antgroup.openspg.reasoner.thinker.catalog.LogicCatalog;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
 import java.util.*;
 
 public class DefaultThinker implements Thinker {
@@ -46,6 +44,7 @@ public class DefaultThinker implements Thinker {
   public List<Result> find(Element s, Element p, Element o, Map<String, Object> context) {
     this.infGraph.clear();
     Triple pattern = Triple.create(s, p, o);
+    this.infGraph.prepare(context);
     List<Result> result = this.infGraph.find(pattern, context == null ? new HashMap<>() : context);
     return result;
   }
@@ -53,6 +52,13 @@ public class DefaultThinker implements Thinker {
   @Override
   public List<Result> find(Node s, Map<String, Object> context) {
     this.infGraph.clear();
-    return this.infGraph.find(s, context == null ? new HashMap<>() : context);
+    this.infGraph.prepare(context);
+    List<Result> triples =
+        this.infGraph.find(Triple.create(s), context == null ? new HashMap<>() : context);
+    List<Result> results = new LinkedList<>();
+    for (Result triple : triples) {
+      results.add(new Result(((Triple) triple.getData()).getObject(), triple.getTraceLog()));
+    }
+    return results;
   }
 }

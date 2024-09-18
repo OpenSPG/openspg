@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.reasoner.thinker;
 
-import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
@@ -22,54 +21,52 @@ import com.antgroup.openspg.reasoner.thinker.engine.DefaultThinker;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Predicate;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class HypertensionTest {
+public class ProofWriterTest {
   private GraphState<IVertexId> buildGraphState() {
     GraphState<IVertexId> graphState = new MemGraphState();
     return graphState;
   }
 
   private Thinker buildThinker() {
-    ResourceLogicCatalog logicCatalog = new ResourceLogicCatalog("/Hypertension.txt");
+    ResourceLogicCatalog logicCatalog = new ResourceLogicCatalog("/ProofWriter.txt");
     logicCatalog.init();
     Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
     return thinker;
   }
 
-  @Test
-  public void bloodPressureLevel() {
-    Thinker thinker = buildThinker();
-    Map<String, Object> context = new HashMap<>();
-    context.put("收缩压", 160);
-    List<Result> triples = thinker.find(new Node("血压水平分级"), context);
-    Assert.assertTrue(triples.size() == 3);
+  private Triple makeTriple(String sType, String rType, String oType) {
+    return new Triple(new Node(sType), new Predicate(rType), new Node(oType));
   }
 
   @Test
-  public void hypertensionLevel() {
+  public void testCase1() {
     Thinker thinker = buildThinker();
     Map<String, Object> context = new HashMap<>();
-    context.put("BMI", 35);
-    context.put("GFR", 35);
-    List<Result> triples = thinker.find(new Node("高血压分层"), context);
-    Assert.assertTrue(triples.size() == 2);
-  }
+    Triple t1 = makeTriple("cow", "iss", "round");
+    Triple t2 = makeTriple("lion", "iss", "round");
+    Triple t3 = makeTriple("rabbit", "iss", "kind");
+    Triple t4 = makeTriple("tiger", "iss", "big");
+    Triple t5 = makeTriple("tiger", "iss", "kind");
 
-  @Test
-  public void combinationDrug() {
-    Thinker thinker = buildThinker();
-    Map<String, Object> context = new HashMap<>();
-    context.put("收缩压", 160);
-    context.put("目标收缩压上界", 140);
-    context.put("BMI", 35);
-    context.put("GFR", 35);
-    context.put(Constants.SPG_REASONER_THINKER_STRICT, true);
-    List<Result> triples = thinker.find(null, new Predicate("基本用药方案"), new Node("药品"), context);
-    Assert.assertTrue(triples.size() == 2);
+    Triple t6 = makeTriple("cow", "needs", "lion");
+    Triple t7 = makeTriple("cow", "needs", "rabbit");
+    Triple t8 = makeTriple("cow", "sees", "lion");
+    Triple t9 = makeTriple("cow", "visits", "tiger");
+    Triple t10 = makeTriple("rabbit", "visits", "tiger");
+    Triple t11 = makeTriple("tiger", "sees", "rabbit");
+    Triple t12 = makeTriple("tiger", "visits", "rabbit");
+    List<Triple> triples = Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12);
+    triples.forEach(t -> context.put(t.toString(), t));
+    List<Result> result =
+        thinker.find(new Node("tiger"), new Predicate("iss"), new Node("young"), context);
+    Assert.assertTrue(result.size() == 1);
   }
 }

@@ -117,4 +117,19 @@ public class MedTests {
         thinker.find(null, new Predicate("确诊"), new Node("Medical.DiseaseTerm"), context);
     Assert.assertTrue(triples.size() == 1);
   }
+
+  @Test
+  public void testMultiAny() {
+    ResourceLogicCatalog logicCatalog = new ResourceLogicCatalog("/Medical.txt");
+    logicCatalog.init();
+    Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
+    Map<String, Object> context = new HashMap<>();
+    context.put("spg.reasoner.thinker.strict", true);
+    context.put("孕酮", "1.25");
+    context.put("a", "12");
+    List<Result> triples =
+        thinker.find(
+            null, new Predicate("diagnosis"), new Node("Medical.DiagnosisRecommend"), context);
+    Assert.assertTrue(triples.size() > 0);
+  }
 }

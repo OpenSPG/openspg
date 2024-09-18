@@ -23,7 +23,6 @@ import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleExecutor;
 import java.util.*;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +53,6 @@ public class InfGraph implements Graph {
   public List<Result> find(Triple pattern, Map<String, Object> context) {
     logger.info("InfGraph find pattern={}, context={}", pattern, context);
     List<Result> result = new LinkedList<>();
-    prepareContext(context);
     // Step1: find pattern in graph
     List<Result> dataInGraph = graphStore.find(pattern, context);
     logger.info("GraphStore find pattern={}, result={}", pattern, dataInGraph);
@@ -72,17 +70,7 @@ public class InfGraph implements Graph {
   }
 
   @Override
-  public List<Result> find(Node s, Map<String, Object> context) {
-    prepareContext(context);
-    return inference(s, context);
-  }
-
-  public List<Result> find(Entity s, Map<String, Object> context) {
-    prepareContext(context);
-    return inference(s, context);
-  }
-
-  private void prepareContext(Map<String, Object> context) {
+  public void prepare(Map<String, Object> context) {
     if (context != null) {
       for (Object val : context.values()) {
         if (val instanceof Entity) {
@@ -94,14 +82,14 @@ public class InfGraph implements Graph {
     }
   }
 
-  private List<Result> inference(Element pattern, Map<String, Object> context) {
+  private List<Result> inference(Triple pattern, Map<String, Object> context) {
     List<Result> rst = new LinkedList<>();
     boolean strictMode =
         (Boolean) context.getOrDefault(Constants.SPG_REASONER_THINKER_STRICT, false);
     for (Rule rule : logicNetwork.getBackwardRules(pattern)) {
-      List<Element> body =
-          rule.getBody().stream().map(ClauseEntry::toElement).collect(Collectors.toList());
-      List<List<Result>> data = prepareElements(body, rule.getHead().toElement(), pattern, context);
+      List<Triple> body =
+          rule.getBody().stream().map(ClauseEntry::toTriple).collect(Collectors.toList());
+      List<List<Result>> data = prepareElements(body, rule.getHead().toTriple(), pattern, context);
       if (CollectionUtils.isEmpty(data)) {
         TreeLogger traceLogger = new TreeLogger(rule.getRoot().toString());
         Boolean ret =
@@ -109,7 +97,7 @@ public class InfGraph implements Graph {
                 .accept(new LinkedList<>(), context, new RuleExecutor(strictMode), traceLogger);
         traceLogger.setCurrentNodeMsg(rule.getDesc());
         if (ret) {
-          Element ele = rule.getHead().toElement();
+          Element ele = rule.getHead().toTriple();
           rst.add(new Result(ele, traceLogger));
           if (ele instanceof Triple) {
             addTriple((Triple) ele);
@@ -136,7 +124,7 @@ public class InfGraph implements Graph {
           }
           traceLogger.setCurrentNodeMsg(StringUtils.join(msgs, ";"));
           if (ret) {
-            Element ele = rule.getHead().toElement();
+            Element ele = rule.getHead().toTriple();
             rst.add(new Result(bindResult(dList, ele), traceLogger));
             if (ele instanceof Triple) {
               addTriple((Triple) ele);
@@ -172,70 +160,57 @@ public class InfGraph implements Graph {
         map.getOrDefault(t.getObject().alias(), ((Triple) pattern).getObject()));
   }
 
+  private Triple binding(Triple triple, Triple pattern) {
+    Map<String, Element> aliasToElement = new HashMap<>();
+    aliasToElement.put(pattern.getSubject().alias(), pattern.getSubject());
+    aliasToElement.put(pattern.getObject().alias(), pattern.getObject());
+    Element sub = aliasToElement.getOrDefault(triple.getSubject().alias(), triple.getSubject());
+    Element pre = aliasToElement.getOrDefault(triple.getPredicate().alias(), triple.getPredicate());
+    Element obj = aliasToElement.getOrDefault(triple.getObject().alias(), triple.getObject());
+    return new Triple(sub, pre, obj);
+  }
+
   private List<List<Result>> prepareElements(
-      List<Element> body, Element head, Element pattern, Map<String, Object> context) {
+      List<Triple> body, Triple head, Triple pattern, Map<String, Object> context) {
     List<List<Result>> elements = new ArrayList<>();
-    Set<Element> choose = new HashSet<>();
-    Queue<Element> starts = new LinkedBlockingDeque<>();
-    Element start = getStart(pattern, head);
-    starts.add(start);
-    while (choose.size() < body.size()) {
-      Element s = starts.poll();
-      if (s == null) {
-        break;
-      }
-      if (s instanceof Node && elements.isEmpty()) {
-        break;
-      }
-      for (Element e : body) {
-        if (choose.contains(e)) {
-          continue;
-        }
-        if (e instanceof Entity) {
-          choose.add(e);
-          if (CollectionUtils.isEmpty(elements)) {
-            elements.add(new LinkedList<>(prepareElement(e, context)));
-          } else {
-            for (List<Result> evidence : elements) {
-              evidence.addAll(prepareElement(e, context));
-            }
+    Triple bindingPattern = (Triple) pattern.bind(head);
+    List<Triple> bindingBody = new ArrayList<>(body.size());
+    for (Triple e : body) {
+      bindingBody.add(binding(e, bindingPattern));
+    }
+    TripleGroup tripleGroup = new TripleGroup(bindingBody);
+    List<List<Triple>> groups = tripleGroup.group();
+    for (List<Triple> group : groups) {
+      Map<String, Element> starts = getStart(group);
+      Set<Triple> choose = new HashSet<>();
+      while (choose.size() < group.size()) {
+        for (Triple e : group) {
+          if (choose.contains(e)) {
+            continue;
           }
-        } else if (!e.canInstantiated()) {
-          List<List<Result>> singeRst = prepareElement(null, (Triple) e, context);
-          if (CollectionUtils.isEmpty(elements)) {
-            elements.addAll(singeRst);
-          } else if (CollectionUtils.isNotEmpty(singeRst)) {
-            List<List<Result>> tmpElements = new LinkedList<>();
-            for (List<Result> ele : elements) {
-              for (List<Result> single : singeRst) {
-                List<Result> cp = new LinkedList<>(ele);
-                cp.addAll(single);
-                tmpElements.add(cp);
-              }
-            }
-            elements.clear();
-            elements = tmpElements;
-          }
-        } else {
-          Triple t = (Triple) e;
-          if (t.getSubject().alias().equals(s.alias())) {
-            starts.add(t.getObject());
-          } else if (t.getObject().alias().equals(s.alias())) {
-            starts.add(t.getSubject());
-          } else if (t.getSubject() instanceof Predicate) {
+          Collection<String> curStart =
+              CollectionUtils.intersection(starts.keySet(), tripleAlias(e));
+          if (curStart.isEmpty()) {
+            continue;
+          } else if (e.getSubject() instanceof Predicate) {
             if (choose.stream()
                     .filter(ele -> ele instanceof Triple)
-                    .filter(ele -> ((Triple) ele).getPredicate().alias() == t.getSubject().alias())
+                    .filter(ele -> ele.getPredicate().alias() == e.getSubject().alias())
                     .count()
                 == 0) {
               continue;
             }
-          } else {
-            continue;
           }
           choose.add(e);
+          Element s = starts.get(curStart.iterator().next());
+          if (s.alias().equals(e.getSubject().alias())) {
+            starts.put(e.getObject().alias(), e.getObject());
+          } else {
+            starts.put(e.getSubject().alias(), e.getSubject());
+          }
+          starts.put(e.alias(), e);
           if (CollectionUtils.isEmpty(elements)) {
-            Triple triple = buildTriple(null, s, t);
+            Triple triple = bindTriple(null, s, e);
             if (triple != null) {
               List<List<Result>> singeRst = prepareElement(null, triple, context);
               if (CollectionUtils.isNotEmpty(singeRst)) {
@@ -245,7 +220,7 @@ public class InfGraph implements Graph {
           } else {
             List<List<Result>> tmpElements = new LinkedList<>();
             for (List<Result> evidence : elements) {
-              Triple triple = buildTriple(evidence, s, t);
+              Triple triple = bindTriple(evidence, s, e);
               if (triple != null) {
                 List<List<Result>> singeRst = prepareElement(evidence, triple, context);
                 if (CollectionUtils.isNotEmpty(singeRst)) {
@@ -262,55 +237,55 @@ public class InfGraph implements Graph {
     return elements;
   }
 
-  private Triple buildTriple(List<Result> evidence, Element s, Triple triple) {
-    Entity entity = null;
-    Triple trip = null;
-    if (CollectionUtils.isEmpty(evidence)) {
-      entity = (Entity) s;
-    } else {
+  private Set<String> tripleAlias(Triple triple) {
+    return new HashSet<>(Arrays.asList(triple.getSubject().alias(), triple.getObject().alias()));
+  }
+
+  private Triple bindTriple(List<Result> evidence, Element s, Triple triple) {
+    Map<String, Element> aliasToElement = new HashMap<>();
+    if (CollectionUtils.isNotEmpty(evidence)) {
       for (Result r : evidence) {
-        Element e = r.getData();
-        if (triple.getSubject() instanceof Predicate) {
-          if (e instanceof Triple
-              && ((Triple) e).getPredicate().alias() == triple.getSubject().alias()) {
-            trip = (Triple) e;
-          }
-        } else {
-          if (e instanceof Entity && e.alias() == s.alias()) {
-            entity = (Entity) r.getData();
-          } else if (e instanceof Triple && ((Triple) e).getSubject().alias() == s.alias()) {
-            entity = (Entity) ((Triple) e).getSubject();
-          } else if (e instanceof Triple && ((Triple) e).getObject().alias() == s.alias()) {
-            entity = (Entity) ((Triple) e).getObject();
-          }
+        Element data = r.getData();
+        aliasToElement.put(data.alias(), data);
+        if (data instanceof Triple) {
+          aliasToElement.put(((Triple) data).getSubject().alias(), ((Triple) data).getSubject());
+          aliasToElement.put(((Triple) data).getObject().alias(), ((Triple) data).getObject());
         }
       }
     }
-
-    if (entity == null && trip == null) {
-      return null;
+    if (!aliasToElement.containsKey(s.alias())) {
+      aliasToElement.put(s.alias(), s);
     }
-    if (triple.getSubject().alias() == s.alias()) {
-      return new Triple(entity, triple.getPredicate(), triple.getObject());
-    } else if (triple.getObject().alias() == s.alias()) {
-      return new Triple(triple.getSubject(), triple.getPredicate(), entity);
-    } else if (triple.getSubject() instanceof Predicate && trip != null) {
-      return new Triple(trip, triple.getPredicate(), triple.getObject());
-    } else {
-      return null;
-    }
+    Element sub = aliasToElement.getOrDefault(triple.getSubject().alias(), triple.getSubject());
+    Element pre = aliasToElement.getOrDefault(triple.getPredicate().alias(), triple.getPredicate());
+    Element obj = aliasToElement.getOrDefault(triple.getObject().alias(), triple.getObject());
+    return new Triple(sub, pre, obj);
   }
 
-  private Element getStart(Element element, Element pattern) {
-    if (element instanceof Entity || element instanceof Node) {
-      return element.bind(pattern);
-    } else if (((Triple) element).getSubject() instanceof Entity) {
-      Element subject = ((Triple) pattern).getSubject();
-      return ((Triple) element).getSubject().bind(subject);
-    } else {
-      Element object = ((Triple) pattern).getObject();
-      return ((Triple) element).getObject().bind(object);
+  private Map<String, Element> getStart(List<Triple> triples) {
+    Map<String, Element> starts = new HashMap<>();
+    for (Triple triple : triples) {
+      if (triple.getSubject() instanceof Entity) {
+        starts.put(triple.getSubject().alias(), triple.getSubject());
+        break;
+      } else if (triple.getObject() instanceof Entity) {
+        starts.put(triple.getObject().alias(), triple.getObject());
+        break;
+      }
     }
+    if (!starts.isEmpty()) {
+      return starts;
+    }
+    for (Triple triple : triples) {
+      if (triple.getSubject() instanceof Node) {
+        starts.put(triple.getSubject().alias(), triple.getSubject());
+        break;
+      } else if (triple.getObject() instanceof Node) {
+        starts.put(triple.getObject().alias(), triple.getObject());
+        break;
+      }
+    }
+    return starts;
   }
 
   private List<List<Result>> prepareElement(
@@ -373,29 +348,27 @@ public class InfGraph implements Graph {
 
   private Collection<Result> prepareElement(Element pattern, Map<String, Object> context) {
     Collection<Result> result = new LinkedList<>();
-    Collection<Element> spo = this.tripleStore.find(pattern);
+    Triple triple = Triple.create(pattern);
+    Collection<Element> spo = this.tripleStore.find(triple);
     if (spo == null || spo.isEmpty()) {
-      if (pattern instanceof Node) {
-        result = find((Node) pattern, context);
-      } else if (pattern instanceof Entity) {
-        result = find((Entity) pattern, context);
-      } else if (!recorder.contains(pattern.cleanAlias())) {
-        result = find((Triple) pattern, context);
+      if (!recorder.contains(triple.cleanAlias())) {
+        result = find(triple, context);
       }
     } else {
       result = spo.stream().map(e -> new Result(e, null)).collect(Collectors.toList());
     }
     for (Result r : result) {
-      r.setData(r.getData().bind(pattern));
+      r.setData(r.getData().bind(triple));
     }
     return result;
   }
 
-  public void addEntity(Entity entity) {
-    this.tripleStore.addEntity(entity);
+  private void addEntity(Entity entity) {
+    Triple triple = new Triple(Element.ANY, Predicate.CONCLUDE, entity);
+    this.addTriple(triple);
   }
 
-  public void addTriple(Triple triple) {
+  private void addTriple(Triple triple) {
     this.tripleStore.addTriple(triple);
   }
 

@@ -53,13 +53,6 @@ public class Triple extends Element {
     }
   }
 
-  @Override
-  public boolean canInstantiated() {
-    return !(!subject.canInstantiated()
-        && !predicate.canInstantiated()
-        && !object.canInstantiated());
-  }
-
   public String alias() {
     return predicate.alias();
   }
@@ -71,6 +64,14 @@ public class Triple extends Element {
 
   public static Triple create(Element s, Element p, Element o) {
     return new Triple(nullToAny(s), nullToAny(p), nullToAny(o));
+  }
+
+  public static Triple create(Element element) {
+    if (element instanceof Node || element instanceof Entity) {
+      return new Triple(Element.ANY, Predicate.CONCLUDE, element);
+    } else {
+      return (Triple) element;
+    }
   }
 
   private static Element nullToAny(Element n) {

@@ -78,7 +78,19 @@ public class GraphUtil {
         if (v.getId().equals(e.getSourceId())) {
           outEdges.add(e);
         } else if (v.getId().equals(e.getTargetId())) {
-          inEdges.add(e.reverse());
+          IEdge<IVertexId, IProperty> reverseEdge = e.reverse();
+          IProperty reverseProperty = e.getValue().clone();
+          String fromId = (String) reverseProperty.get(Constants.EDGE_FROM_ID_KEY);
+          String fromIdType = (String) reverseProperty.get(Constants.EDGE_FROM_ID_TYPE_KEY);
+          reverseProperty.put(
+              Constants.EDGE_FROM_ID_KEY, reverseEdge.getValue().get(Constants.EDGE_TO_ID_KEY));
+          reverseProperty.put(
+              Constants.EDGE_FROM_ID_TYPE_KEY,
+              reverseEdge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY));
+          reverseProperty.put(Constants.EDGE_TO_ID_KEY, fromId);
+          reverseProperty.put(Constants.EDGE_TO_ID_TYPE_KEY, fromIdType);
+          reverseEdge.setValue(reverseProperty);
+          inEdges.add(reverseEdge);
         }
       }
       graphState.addEdges(v.getId(), inEdges, outEdges);
