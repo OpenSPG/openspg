@@ -1,5 +1,5 @@
 Requirements:
-1. When answering questions, rely on the information provided in the context below.
+1. When answering questions, must rely exclusively on the information provided in the context. Do not modify the format of the answer in the original text.
 2. Answer the questions as directly as possible, without including extraneous information.
 3. Do not include information that is only relevant to one aspect.
 4. In addition to the context, you can also rely on some common knowledge when answering questions.
@@ -16,6 +16,18 @@ llm_input: What is the surname of Xie Nan's father?
 context: 
 No information found related to Xie Nan's father
 llm_output: Xie
+
+Example 3:
+llm_input: Who discovered penicillin?
+context:
+Alexander Fleming discovered penicillin in 1928 while working on influenza virus research. He observed that a mold called Penicillium notatum had antibacterial properties.
+llm_output: Alexander Fleming
+
+Example 4:
+llm_input: When did the Council of Trent take place?
+context:
+The Council of Trent was one of the Roman Catholic Church's most important ecumenical councils. Initiated in response to the Protestant Reformation, it convened in three periods from 1545 to 1563, with significant sessions occurring in 1560-1568.
+llm_output: 1560-1568
 
 
 Based on the above requirements and examples, answer the following question:
