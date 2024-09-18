@@ -46,37 +46,6 @@ dependent relationship:
 question1 deps None
 question2 deps question1
 
-Example 5:
-llm_input: What is the relationship between these two authors?
-llm_output:
-What is the relationship between these two authors?
-dependent relationship:
-question1 deps None
-
-Example 6:
-llm_input: If my hukou and social security are registered in Beijing, but my hometown is in Zhangjiakou, and I fully paid for a house in Zhangjiakou, can I withdraw from my housing provident fund?
-llm_output:
-Under what conditions can one withdraw from the housing provident fund in Beijing?
-Do the conditions of having a hukou and social security in Beijing, hometown in Zhangjiakou, and a fully paid house in Zhangjiakou meet the above requirements?
-dependent relationship:
-question1 deps None
-question2 deps question1
-
-Example 7:
-llm_input: Who are the cousin, father, mother, and second uncle of Qian Xuesen's wife?
-llm_output:
-Who is Qian Xuesen’s wife?
-Who is the cousin of Qian Xuesen’s wife?
-Who is the father of Qian Xuesen’s wife?
-Who is the mother of Qian Xuesen’s wife?
-Who is the second uncle of Qian Xuesen’s wife?
-dependent relationship:
-question1 deps None
-question2 deps question1
-question3 deps question1
-question4 deps question1
-question5 deps question1
-
 Based on the above requirements and examples, divide following question:
 llm_input: $question
 llm_output:

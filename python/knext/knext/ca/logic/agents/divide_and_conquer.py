@@ -100,8 +100,6 @@ class DivideAndConquerAgent(Agent):
 
             children_questions = self.divide_question.forward(current_question)
 
-            children_questions = self.check_divide_question.forward(current_question, children_questions)
-
             # display child question
             for child_idx, child_question in enumerate(children_questions):
                 info_dict = {
