@@ -17,7 +17,7 @@ class SolveQuestionWithContext(Solver):
     Module for answering questions based on context using a language model.
 
     """
-    def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None, is_prompt_template_cn=True):
+    def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None, is_prompt_template_cn=False):
         super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def get_module_name(self):

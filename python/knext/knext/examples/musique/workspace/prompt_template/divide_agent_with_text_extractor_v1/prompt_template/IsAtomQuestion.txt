@@ -1,0 +1,17 @@
+Requirements:
+1. Based on the question, determine whether this question is logically an atomic question that does not need further decomposition.
+2. The answer should be "YES" or "NO".
+
+Example 1:
+llm_input: Who is the father of Qian Xuesen's wife?
+llm_output: NO
+
+Example 2:
+llm_input: Who is Qian Xuesen's wife?
+llm_output: YES
+
+Based on the above requirements and examples, determine whether the following question is a resolved question?
+llm_input:
+question:$question
+answer:$$answer
+llm_output:

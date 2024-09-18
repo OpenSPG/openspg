@@ -24,7 +24,7 @@ class IsAtomQuestion(Reasoner):
 
     """
 
-    def __init__(self, llm, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn=True):
+    def __init__(self, llm, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn=False):
         use_default_prompt_template = False
         super().__init__(llm, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
@@ -66,7 +66,7 @@ class DoesQuestionNeedExtraInfo(Reasoner):
     """
 
     def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
-                 is_prompt_template_cn=True):
+                 is_prompt_template_cn=False):
         super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def get_module_name(self):
@@ -106,7 +106,7 @@ class ExtractTriplesFromTextModule(Reasoner):
     """
 
     def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
-                 is_prompt_template_cn=True):
+                 is_prompt_template_cn=False):
         super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def get_module_name(self):
@@ -132,7 +132,7 @@ class FetchSubject(Reasoner):
     """
 
     def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
-                 is_prompt_template_cn=True):
+                 is_prompt_template_cn=False):
         super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def preprocess(self, question: Question):
@@ -156,7 +156,7 @@ class FetchPredicate(Reasoner):
     """
 
     def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
-                 is_prompt_template_cn=True):
+                 is_prompt_template_cn=False):
         super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def preprocess(self, question: Question):
@@ -180,7 +180,7 @@ class FetchObject(Reasoner):
     """
 
     def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
-                 is_prompt_template_cn=True):
+                 is_prompt_template_cn=False):
         super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def preprocess(self, question: Question):

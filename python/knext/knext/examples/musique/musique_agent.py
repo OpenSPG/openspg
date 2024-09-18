@@ -104,7 +104,7 @@ class HierarchicalSolveQuestion(Solver):
             answer_with_text,
             use_default_prompt_template=True,
             prompt_template_dir=None,
-            is_prompt_template_cn=True,
+            is_prompt_template_cn=False,
             is_computational=False
     ):
         super().__init__(

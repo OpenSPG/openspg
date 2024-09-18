@@ -1,5 +1,5 @@
 Requirements:
-1. The response should only include sub-questions and dependencies, without any other information.
+1. The response must only include sub-questions and dependencies, without any other information.
 2. Decompose the question logically into several sub-questions, each separated by a comma, without using Chinese characters like "和".
 3. Only generate the specific content after llm_output, which includes two lists: the list of sub-questions and the list of question dependencies.
 4. Describe the dependencies of the decomposed questions. If a question has multiple dependencies, separate them with commas.
@@ -13,38 +13,69 @@ Who is the male lead of "Zhou Chu Eliminates the Three Evils"?
 What TV series has this male lead starred in?
 What TV series has Joe Chen starred in?
 What is the intersection of these two TV series lists?
-Dependencies:
-Question 1 depends on None
-Question 2 depends on Question 1
-Question 3 depends on None
-Question 4 depends on Question 1, Question 2
+dependent relationship:
+question1 deps None
+question2 deps question1
+question3 deps None
+question4 deps question1, question2
 
 Example 2:
 llm_input: In which dynasty was the Zhaozhou Bridge built, and who was its last emperor?
 llm_output:
 In which dynasty was the Zhaozhou Bridge built?
 Who was the last emperor of this dynasty?
-Dependencies:
-Question 1 depends on None
-Question 2 depends on Question 1
+dependent relationship:
+question1 deps None
+question2 deps question1
 
 Example 3:
 llm_input: In "Chinese Paladin 1", whose mother died to seal the Water Demon Beast?
 llm_output:
 In "Chinese Paladin 1", which character died to seal the Water Demon Beast?
 Who is the child of this character?
-Dependencies:
-Question 1 depends on None
-Question 2 depends on Question 1
+dependent relationship:
+question1 deps None
+question2 deps question1
 
 Example 4:
 llm_input: What is the relationship between Qian Xuesen's wife and Jiang Baili?
 llm_output:
 Who is Qian Xuesen's wife?
 What is the relationship between this woman and Jiang Baili?
-Dependencies:
-Question 1 depends on None
-Question 2 depends on Question 1 
+dependent relationship:
+question1 deps None
+question2 deps question1
+
+Example 5:
+llm_input: What is the relationship between these two authors?
+llm_output:
+What is the relationship between these two authors?
+dependent relationship:
+question1 deps None
+
+Example 6:
+llm_input: If my hukou and social security are registered in Beijing, but my hometown is in Zhangjiakou, and I fully paid for a house in Zhangjiakou, can I withdraw from my housing provident fund?
+llm_output:
+Under what conditions can one withdraw from the housing provident fund in Beijing?
+Do the conditions of having a hukou and social security in Beijing, hometown in Zhangjiakou, and a fully paid house in Zhangjiakou meet the above requirements?
+dependent relationship:
+question1 deps None
+question2 deps question1
+
+Example 7:
+llm_input: Who are the cousin, father, mother, and second uncle of Qian Xuesen's wife?
+llm_output:
+Who is Qian Xuesen’s wife?
+Who is the cousin of Qian Xuesen’s wife?
+Who is the father of Qian Xuesen’s wife?
+Who is the mother of Qian Xuesen’s wife?
+Who is the second uncle of Qian Xuesen’s wife?
+dependent relationship:
+question1 deps None
+question2 deps question1
+question3 deps question1
+question4 deps question1
+question5 deps question1
 
 Based on the above requirements and examples, divide following question:
 llm_input: $question

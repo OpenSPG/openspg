@@ -16,7 +16,7 @@ class Question(object):
     2. One question can be broken down into several sub-questions.
     """
 
-    def __init__(self, question, dependencies=[], children=[], parent=None, context=None):
+    def __init__(self, question, dependencies=[], children=[], parent=None, context=None, global_context=None):
         """
         Initialize a Question object.
 
@@ -32,6 +32,7 @@ class Question(object):
         self.parent = parent
         self.answer = None
         self.context = context
+        self.global_context = global_context
 
     def is_solved(self):
         return self.answer is not None
@@ -73,6 +74,10 @@ class Question(object):
         # context:
         if self.context:
             repr_str += f'context:{self.context}\n'
+
+        # global_context:
+        if self.global_context:
+            repr_str += f'context:{self.global_context}\n'
         return repr_str
 
 
@@ -91,7 +96,7 @@ class KagBaseModule(object):
             self,
             llm_module,
             use_default_prompt_template=True,
-            is_prompt_template_cn=True,
+            is_prompt_template_cn=False,
             prompt_template_dir=None,
             is_computational=True,
     ):
