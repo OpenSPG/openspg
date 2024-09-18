@@ -1,9 +1,10 @@
 Requirements:
 1. When answering questions, must rely exclusively on the information provided in the context. Do not modify the format of the answer in the original text.
-2. Answer the questions as directly as possible, without including extraneous information.
-3. Do not include information that is only relevant to one aspect.
-4. In addition to the context, you can also rely on some common knowledge when answering questions.
-5. If the context does not provide relevant information, respond with "No relevant information found," without fabricating an answer.
+2. Answer the questions as directly as possible, without including extraneous information. For example, if the question asks for the year, the answer should not include redundant information such as the month or date.
+3. Eliminate unnecessary elements such as articles, explanatory parentheses, quotation marks and other redundancies from your answers.
+4. Do not change the capitalization of the answer in the context.
+5. In addition to the context, you can also rely on some common knowledge when answering questions.
+6. If the context does not provide relevant information, search for keywords within the context based on the parts of speech, semantics, and the nature of the potential answers indicated in the question.
 
 Example 1:
 llm_input: What is the relationship between Jin Yong and Xu Zhimo?
