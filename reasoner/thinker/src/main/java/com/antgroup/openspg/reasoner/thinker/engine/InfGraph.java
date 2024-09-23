@@ -53,7 +53,14 @@ public class InfGraph implements Graph {
   public List<Result> find(Triple pattern, Map<String, Object> context) {
     logger.info("InfGraph find pattern={}, context={}", pattern, context);
     List<Result> result = new LinkedList<>();
-    // Step1: find pattern in graph
+
+    // Step1: find pattern in context or tripleStore
+    Collection<Element> spo = this.tripleStore.find(pattern);
+    if (CollectionUtils.isNotEmpty(spo)) {
+      result.addAll(
+          spo.stream().map(e -> new Result(e.bind(pattern), null)).collect(Collectors.toList()));
+    }
+    // Step2: find pattern in graph
     List<Result> dataInGraph = graphStore.find(pattern, context);
     logger.info("GraphStore find pattern={}, result={}", pattern, dataInGraph);
     if (CollectionUtils.isNotEmpty(dataInGraph)) {
@@ -63,6 +70,7 @@ public class InfGraph implements Graph {
       }
     }
     recorder.add((Triple) pattern.cleanAlias());
+    // Step3: inference pattern
     List<Result> infResult = inference(pattern, context);
     logger.info("InfGraph infer pattern={}, result={}", pattern, infResult);
     result.addAll(infResult);

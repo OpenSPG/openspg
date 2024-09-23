@@ -121,4 +121,17 @@ public class DefaultThinkerTests {
         thinker.find(new Node("A"), new Predicate("ac"), new Entity("c", "C"), context);
     Assert.assertTrue(triples.size() == 1);
   }
+
+  @Test
+  public void testFactExists() {
+    MockLogicCatalog logicCatalog = new MockLogicCatalog(Arrays.asList(getR2()));
+    logicCatalog.init();
+    Thinker thinker = new DefaultThinker(buildEmptyGraphState(), logicCatalog);
+    Map<String, Object> context = new HashMap<>();
+    Triple triple = new Triple(new Entity("a1", "A"), new Predicate("ac"), new Node("C"));
+    context.put(triple.toString(), triple);
+    List<Result> triples =
+        thinker.find(triple.getSubject(), triple.getPredicate(), triple.getObject(), context);
+    Assert.assertTrue(triples.size() == 1);
+  }
 }
