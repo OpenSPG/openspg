@@ -275,7 +275,7 @@ def run_deepseek_divide_and_conquer_experiment():
     failure_list = []
     exp_list = []
 
-    expr_num = 200
+    expr_num = 100
 
     for i in range(expr_num):
         exp = False
