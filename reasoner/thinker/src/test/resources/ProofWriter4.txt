@@ -1,0 +1,35 @@
+Define (s:Thing)-[:sees]->(o:Thing/`bald eagle`) {
+	(s)-[:iss]->(o1:green) AND (s)-[:eats]->(o2:Thing/`cow`)
+}
+
+Define (s:Thing/`tiger`)-[:iss]->(o:young) {
+	(s1:Thing)-[:eats]->(s)
+}
+
+Define (s:Thing)-[:eats]->(o:Thing/`tiger`) {
+	(s)-[:iss]->(o1:red)
+}
+
+Define (s:Thing)-[:eats]->(o:Thing/`cow`) {
+	(s)-[:sees]->(o1:Thing/`bald eagle`)
+}
+
+Define (s:Thing)-[:needs]->(o:Thing/`bald eagle`) {
+	(s)-[:iss]->(o1:green) AND (s)-[:needs]->(o2:Thing/`dog`)
+}
+
+Define (s:Thing)-[:needs]->(o:Thing/`bald eagle`) {
+	(s)-[:sees]->(o1:Thing/`tiger`)
+}
+
+Define (s:Thing)-[:eats]->(o:Thing/`bald eagle`) {
+	(s)-[:iss]->(o1:red)
+}
+
+Define (s:Thing)-[:iss]->(o:red) {
+	(s)-[:iss]->(o1:young)
+}
+
+Define (s:Thing/`dog`)-[:iss]->(o:young) {
+	(s1:Thing)-[:eats]->(s) AND (s1)-[:iss]->(o2:red)
+}

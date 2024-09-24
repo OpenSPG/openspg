@@ -51,6 +51,10 @@ public class ProofWriterTest {
     return new Triple(new Entity(id, sType), new Predicate(rType), new Node(oType));
   }
 
+  private Triple makeTriple(String id, String sType, String rType, String oId, String oType) {
+    return new Triple(new Entity(id, sType), new Predicate(rType), new Entity(oId, oType));
+  }
+
   @Test
   public void testCase1() {
     Thinker thinker = buildThinker("/ProofWriter.txt");
@@ -116,6 +120,25 @@ public class ProofWriterTest {
     List<Result> result =
         thinker.find(
             new Entity("Fiona", "Thing"), new Predicate("iss"), new Node("smart"), context);
+    Assert.assertTrue(result.size() == 1);
+  }
+
+  @Test
+  public void testCase4() {
+    Thinker thinker = buildThinker("/ProofWriter4.txt");
+    Map<String, Object> context = new HashMap<>();
+    Triple t1 = makeTriple("bald eagle", "Thing", "eats", "cow", "Thing");
+    Triple t2 = makeTriple("bald eagle", "Thing", "iss", "young");
+    Triple t3 = makeTriple("cow", "Thing", "iss", "nice");
+    Triple t4 = makeTriple("cow", "Thing", "sees", "bald eagle", "Thing");
+    Triple t5 = makeTriple("dog", "Thing", "eats", "bald eagle", "Thing");
+    Triple t6 = makeTriple("tiger", "Thing", "eats", "cow", "Thing");
+    Triple t7 = makeTriple("tiger", "Thing", "needs", "bald eagle", "Thing");
+    List<Triple> triples = Arrays.asList(t1, t2, t3, t4, t5, t6, t7);
+    triples.forEach(t -> context.put(t.toString(), t));
+    List<Result> result =
+        thinker.find(
+            new Entity("tiger", "Thing"), new Predicate("iss"), new Node("young"), context);
     Assert.assertTrue(result.size() == 1);
   }
 }

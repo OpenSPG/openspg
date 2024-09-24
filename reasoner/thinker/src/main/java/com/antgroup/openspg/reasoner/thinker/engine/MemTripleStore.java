@@ -19,6 +19,7 @@ import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Value;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MemTripleStore implements TripleStore {
   private Map<Element, List<Triple>> sToTriple;
@@ -55,7 +56,8 @@ public class MemTripleStore implements TripleStore {
         }
       }
     } else {
-      for (Triple tri : sToTriple.getOrDefault(t.getSubject(), new LinkedList<>())) {
+      for (Triple tri :
+          sToTriple.values().stream().flatMap(Collection::stream).collect(Collectors.toList())) {
         if (t.matches(tri)) {
           elements.add(tri);
         }
