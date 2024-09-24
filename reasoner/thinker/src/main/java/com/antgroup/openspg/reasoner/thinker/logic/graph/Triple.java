@@ -36,6 +36,8 @@ public class Triple extends Element {
       return subject.matches(((Triple) other).subject)
           && predicate.matches(((Triple) other).predicate)
           && object.matches(((Triple) other).object);
+    } else if (other instanceof Any) {
+      return true;
     } else {
       return false;
     }

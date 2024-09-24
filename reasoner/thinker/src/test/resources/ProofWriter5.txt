@@ -1,0 +1,31 @@
+Define (s:Thing)-[:visits]->(o:Thing/`lion`) {
+	(s)-[:needs]->(o1:Thing/`dog`)
+}
+
+Define (s:Thing)-[:iss]->(o:kind) {
+	(s)-[:needs]->(o1:Thing/`mouse`)
+}
+
+Define (s:Thing/`rabbit`)-[:visits]->(o:Thing/`mouse`) {
+	(s1:Thing)-[:iss]->(o1:round) AND (s1)-[:likes]->(s)
+}
+
+Define (s:Thing/`rabbit`)-[:visits]->(o:Thing/`mouse`) {
+	(s1:Thing)-[:visits]->(s)
+}
+
+Define (s:Thing/`dog`)-[:visits]->(o:Thing/`rabbit`) {
+	(s1:Thing)-[:likes]->(s)
+}
+
+Define (s:Thing/`dog`)-[:needs]->(o:Thing/`lion`) {
+	(s1:Thing/`mouse`)-[:visits]->(o) AND (s1)-[:needs]->(s)
+}
+
+Define (s:Thing/`lion`)-[:needs]->(o:Thing/`mouse`) {
+	(s1:Thing/`rabbit`)-[:needs]->(s)
+}
+
+Define (s:Thing/`mouse`)-[:needs]->(o:Thing/`dog`) {
+	(s1:Thing)-[:visits]->(s)
+}
