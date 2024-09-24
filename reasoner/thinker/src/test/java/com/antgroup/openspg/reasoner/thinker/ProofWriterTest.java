@@ -19,6 +19,7 @@ import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.thinker.catalog.ResourceLogicCatalog;
 import com.antgroup.openspg.reasoner.thinker.engine.DefaultThinker;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Predicate;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
@@ -35,8 +36,8 @@ public class ProofWriterTest {
     return graphState;
   }
 
-  private Thinker buildThinker() {
-    ResourceLogicCatalog logicCatalog = new ResourceLogicCatalog("/ProofWriter.txt");
+  private Thinker buildThinker(String fileName) {
+    ResourceLogicCatalog logicCatalog = new ResourceLogicCatalog(fileName);
     logicCatalog.init();
     Thinker thinker = new DefaultThinker(buildGraphState(), logicCatalog);
     return thinker;
@@ -46,9 +47,13 @@ public class ProofWriterTest {
     return new Triple(new Node(sType), new Predicate(rType), new Node(oType));
   }
 
+  private Triple makeTriple(String id, String sType, String rType, String oType) {
+    return new Triple(new Entity(id, sType), new Predicate(rType), new Node(oType));
+  }
+
   @Test
   public void testCase1() {
-    Thinker thinker = buildThinker();
+    Thinker thinker = buildThinker("/ProofWriter.txt");
     Map<String, Object> context = new HashMap<>();
     Triple t1 = makeTriple("cow", "iss", "round");
     Triple t2 = makeTriple("lion", "iss", "round");
@@ -67,6 +72,50 @@ public class ProofWriterTest {
     triples.forEach(t -> context.put(t.toString(), t));
     List<Result> result =
         thinker.find(new Node("tiger"), new Predicate("iss"), new Node("young"), context);
+    Assert.assertTrue(result.size() == 1);
+  }
+
+  @Test
+  public void testCase2() {
+    Thinker thinker = buildThinker("/ProofWriter2.txt");
+    Map<String, Object> context = new HashMap<>();
+    Triple t1 = makeTriple("Bob", "Thing", "iss", "big");
+    Triple t2 = makeTriple("Bob", "Thing", "iss", "nice");
+    Triple t3 = makeTriple("Bob", "Thing", "iss", "smart");
+    Triple t4 = makeTriple("Charlie", "Thing", "iss", "nice");
+    Triple t5 = makeTriple("Dave", "Thing", "iss", "nice");
+    Triple t6 = makeTriple("Erin", "Thing", "iss", "big");
+    Triple t7 = makeTriple("Erin", "Thing", "iss", "blue");
+    Triple t8 = makeTriple("Erin", "Thing", "iss", "furry");
+    Triple t9 = makeTriple("Erin", "Thing", "iss", "quiet");
+    Triple t10 = makeTriple("Erin", "Thing", "iss", "round");
+    Triple t11 = makeTriple("Erin", "Thing", "iss", "smart");
+    List<Triple> triples = Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11);
+    triples.forEach(t -> context.put(t.toString(), t));
+    List<Result> result =
+        thinker.find(
+            new Entity("Charlie", "Thing"), new Predicate("iss"), new Node("blue"), context);
+    Assert.assertTrue(result.size() == 1);
+  }
+
+  @Test
+  public void testCase3() {
+    Thinker thinker = buildThinker("/ProofWriter3.txt");
+    Map<String, Object> context = new HashMap<>();
+    Triple t1 = makeTriple("Anne", "Thing", "iss", "kind");
+    Triple t2 = makeTriple("Anne", "Thing", "iss", "quiet");
+    Triple t3 = makeTriple("Anne", "Thing", "iss", "smart");
+    Triple t4 = makeTriple("Bob", "Thing", "iss", "kind");
+    Triple t5 = makeTriple("Bob", "Thing", "iss", "nice");
+    Triple t6 = makeTriple("Bob", "Thing", "iss", "smart");
+    Triple t7 = makeTriple("Fiona", "Thing", "iss", "red");
+    Triple t8 = makeTriple("Gary", "Thing", "iss", "nice");
+    Triple t9 = makeTriple("Gary", "Thing", "iss", "white");
+    List<Triple> triples = Arrays.asList(t1, t2, t3, t4, t5, t6, t7, t8, t9);
+    triples.forEach(t -> context.put(t.toString(), t));
+    List<Result> result =
+        thinker.find(
+            new Entity("Fiona", "Thing"), new Predicate("iss"), new Node("smart"), context);
     Assert.assertTrue(result.size() == 1);
   }
 }

@@ -133,11 +133,12 @@ public class InfGraph implements Graph {
           traceLogger.setCurrentNodeMsg(StringUtils.join(msgs, ";"));
           if (ret) {
             Element ele = rule.getHead().toTriple();
-            rst.add(new Result(bindResult(dList, ele), traceLogger));
-            if (ele instanceof Triple) {
-              addTriple((Triple) ele);
+            Element bindingRst = bindResult(dList, ele);
+            rst.add(new Result(bindingRst, traceLogger));
+            if (bindingRst instanceof Triple) {
+              addTriple((Triple) bindingRst);
             } else {
-              addEntity((Entity) ele);
+              addEntity((Entity) bindingRst);
             }
           }
         }
@@ -236,8 +237,10 @@ public class InfGraph implements Graph {
                 }
               }
             }
-            elements.clear();
-            elements = tmpElements;
+            if (CollectionUtils.isNotEmpty(tmpElements)) {
+              elements.clear();
+              elements = tmpElements;
+            }
           }
         }
       }

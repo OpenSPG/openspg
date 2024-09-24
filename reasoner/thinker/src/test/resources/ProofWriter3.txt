@@ -1,0 +1,39 @@
+Define (s:Thing/`Bob`)-[:iss]->(o:smart) {
+	(s)-[:iss]->(o1:kind)
+}
+
+Define (s:Thing)-[:iss]->(o:smart) {
+	(s)-[:iss]->(o1:kind) AND (s)-[:iss]->(o2:nice)
+}
+
+Define (s:Thing)-[:iss]->(o:smart) {
+	(s)-[:iss]->(o1:nice) AND (s)-[:iss]->(o2:red)
+}
+
+Define (s:Thing)-[:iss]->(o:smart) {
+	(s)-[:iss]->(o1:nice) AND (s)-[:iss]->(o2:red)
+}
+
+Define (s:Thing)-[:iss]->(o:smart) {
+	(s)-[:iss]->(o1:quiet) AND NOT(s)-[:iss]->(o2:nice)
+}
+
+Define (s:Thing)-[:iss]->(o:kind) {
+	(s)-[:iss]->(o1:green)
+}
+
+Define (s:Thing/`Anne`)-[:iss]->(o:kind) {
+	(s)-[:iss]->(o1:quiet) AND (s)-[:iss]->(o2:white)
+}
+
+Define (s:Thing/`Fiona`)-[:iss]->(o:green) {
+	NOT(s)-[:iss]->(o1:nice)
+}
+
+Define (s:Thing)-[:iss]->(o:white) {
+	(s)-[:iss]->(o1:smart) AND (s)-[:iss]->(o2:kind)
+}
+
+Define (s:Thing)-[:iss]->(o:quiet) {
+	(s)-[:iss]->(o1:kind) AND (s)-[:iss]->(o2:green)
+}
