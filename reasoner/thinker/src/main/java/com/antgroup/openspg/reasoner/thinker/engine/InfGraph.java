@@ -73,6 +73,7 @@ public class InfGraph implements Graph {
     // Step3: inference pattern
     List<Result> infResult = inference(pattern, context);
     logger.info("InfGraph infer pattern={}, result={}", pattern, infResult);
+    this.recorder.remove((Triple) pattern.cleanAlias());
     result.addAll(infResult);
     return result;
   }

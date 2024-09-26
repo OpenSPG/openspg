@@ -1,0 +1,35 @@
+Define (s:Thing)-[:iss]->(o:big) {
+	(s)-[:iss]->(o1:kind)
+}
+
+Define (s:Thing)-[:iss]->(o:rough) {
+	(s)-[:iss]->(o1:kind) AND (s)-[:iss]->(o2:smart)
+}
+
+Define (s:Thing)-[:iss]->(o:big) {
+	(s)-[:iss]->(o1:red) AND (s)-[:iss]->(o2:quiet)
+}
+
+Define (s:Thing)-[:iss]->(o:cold) {
+	(s)-[:iss]->(o1:red)
+}
+
+Define (s:Thing)-[:iss]->(o:smart) {
+	(s)-[:iss]->(o1:cold) AND (s)-[:iss]->(o2:quiet)
+}
+
+Define (s:Thing)-[:iss]->(o:cold) {
+	(s)-[:iss]->(o1:big) AND (s)-[:iss]->(o2:smart)
+}
+
+Define (s:Thing)-[:iss]->(o:cold) {
+	(s)-[:iss]->(o1:quiet)
+}
+
+Define (s:Thing)-[:iss]->(o:red) {
+	(s)-[:iss]->(o1:kind) AND (s)-[:iss]->(o2:big)
+}
+
+Define (s:Thing)-[:iss]->(o:kind) {
+	(s)-[:iss]->(o1:cold) AND (s)-[:iss]->(o2:smart)
+}
