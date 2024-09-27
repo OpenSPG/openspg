@@ -54,8 +54,8 @@ public class InfGraph implements Graph {
     logger.info("InfGraph find pattern={}, context={}", pattern, context);
     List<Result> result = new LinkedList<>();
 
-    // Step1: find pattern in context or tripleStore
-    Collection<Element> spo = this.tripleStore.find(pattern);
+    // Step1: find pattern in context
+    Collection<Element> spo = matchInContext(pattern, context);
     if (CollectionUtils.isNotEmpty(spo)) {
       result.addAll(
           spo.stream().map(e -> new Result(e.bind(pattern), null)).collect(Collectors.toList()));
@@ -78,17 +78,19 @@ public class InfGraph implements Graph {
     return result;
   }
 
-  @Override
-  public void prepare(Map<String, Object> context) {
+  private List<Element> matchInContext(Triple pattern, Map<String, Object> context) {
+    List<Element> rst = new ArrayList<>();
     if (context != null) {
       for (Object val : context.values()) {
-        if (val instanceof Entity) {
-          addEntity((Entity) val);
-        } else if (val instanceof Triple) {
-          addTriple((Triple) val);
+        if (val instanceof Entity || val instanceof Triple) {
+          Triple value = Triple.create((Element) val);
+          if (pattern.matches(value)) {
+            rst.add(value);
+          }
         }
       }
     }
+    return rst;
   }
 
   private List<Result> inference(Triple pattern, Map<String, Object> context) {

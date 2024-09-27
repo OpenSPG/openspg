@@ -76,7 +76,7 @@ public class ProofWriterTest {
     triples.forEach(t -> context.put(t.toString(), t));
     List<Result> result =
         thinker.find(new Node("tiger"), new Predicate("iss"), new Node("young"), context);
-    Assert.assertTrue(result.size() == 1);
+    Assert.assertTrue(result.size() == 2);
   }
 
   @Test
@@ -186,6 +186,25 @@ public class ProofWriterTest {
     triples.forEach(t -> context.put(t.toString(), t));
     List<Result> result =
         thinker.find(new Entity("Fiona", "Thing"), new Predicate("iss"), new Node("red"), context);
+    Assert.assertTrue(result.size() == 1);
+  }
+
+  @Test
+  public void testCase7() {
+    Thinker thinker = buildThinker("/ProofWriter7.txt");
+    Map<String, Object> context = new HashMap<>();
+    Triple t1 = makeTriple("lion", "Thing", "chases", "mouse", "Thing");
+    Triple t2 = makeTriple("mouse", "Thing", "iss", "cold");
+    Triple t3 = makeTriple("mouse", "Thing", "needs", "rabbit", "Thing");
+    Triple t4 = makeTriple("rabbit", "Thing", "chases", "squirrel", "Thing");
+    Triple t5 = makeTriple("rabbit", "Thing", "sees", "lion", "Thing");
+    Triple t6 = makeTriple("rabbit", "Thing", "sees", "squirrel", "Thing");
+    Triple t7 = makeTriple("squirrel", "Thing", "chases", "lion", "Thing");
+    List<Triple> triples = Arrays.asList(t1, t2, t3, t4, t5, t6, t7);
+    triples.forEach(t -> context.put(t.toString(), t));
+    List<Result> result =
+        thinker.find(
+            new Entity("squirrel", "Thing"), new Predicate("iss"), new Node("cold"), context);
     Assert.assertTrue(result.size() == 1);
   }
 }

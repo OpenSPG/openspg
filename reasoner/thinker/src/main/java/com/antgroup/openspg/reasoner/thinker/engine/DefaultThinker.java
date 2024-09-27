@@ -44,7 +44,6 @@ public class DefaultThinker implements Thinker {
   public List<Result> find(Element s, Element p, Element o, Map<String, Object> context) {
     this.infGraph.clear();
     Triple pattern = Triple.create(s, p, o);
-    this.infGraph.prepare(context);
     List<Result> result = this.infGraph.find(pattern, context == null ? new HashMap<>() : context);
     return result;
   }
@@ -52,7 +51,6 @@ public class DefaultThinker implements Thinker {
   @Override
   public List<Result> find(Node s, Map<String, Object> context) {
     this.infGraph.clear();
-    this.infGraph.prepare(context);
     List<Result> triples =
         this.infGraph.find(Triple.create(s), context == null ? new HashMap<>() : context);
     List<Result> results = new LinkedList<>();

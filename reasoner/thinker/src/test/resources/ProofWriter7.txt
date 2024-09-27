@@ -1,0 +1,27 @@
+Define (s:Thing)-[:sees]->(o:Thing/`rabbit`) {
+	(s)-[:iss]->(o1:cold)
+}
+
+Define (s:Thing)-[:sees]->(o:Thing/`squirrel`) {
+	(s)-[:sees]->(o1:Thing/`rabbit`)
+}
+
+Define (s:Thing/`squirrel`)-[:iss]->(o:cold) {
+	(s1:Thing)-[:iss]->(o) AND (s1)-[:sees]->(s)
+}
+
+Define (s:Thing)-[:needs]->(o:Thing/`squirrel`) {
+	(s)-[:chases]->(o)
+}
+
+Define (s:Thing/`squirrel`)-[:chases]->(o:Thing/`rabbit`) {
+	(s1:Thing)-[:chases]->(s) AND NOT(s1)-[:iss]->(o2:cold)
+}
+
+Define (s:Thing/`rabbit`)-[:chases]->(o:Thing/`squirrel`) {
+	(s)-[:sees]->(o) AND (o)-[:chases]->(s)
+}
+
+Define (s:Thing/`squirrel`)-[:needs]->(o:Thing/`mouse`) {
+	(s1:Thing/`rabbit`)-[:chases]->(s) AND NOT(s)-[:chases]->(s1)
+}
