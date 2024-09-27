@@ -221,8 +221,7 @@ public class ProofWriterTest {
     List<Triple> triples = Arrays.asList(t1, t2, t3, t4, t5, t6);
     triples.forEach(t -> context.put(t.toString(), t));
     List<Result> result =
-            thinker.find(
-                    new Entity("Erin", "Thing"), new Predicate("iss"), new Node("furry"), context);
+        thinker.find(new Entity("Erin", "Thing"), new Predicate("iss"), new Node("furry"), context);
     Assert.assertTrue(result.size() == 1);
   }
 }
