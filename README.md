@@ -76,6 +76,7 @@ If you use this software, please cite it as below:
   title={KGFabric: A Scalable Knowledge Graph Warehouse for Enterprise Data Interconnection},
   author={Yi, Peng and Liang, Lei and Da Zhang, Yong Chen and Zhu, Jinye and Liu, Xiangyu and Tang, Kun and Chen, Jialin and Lin, Hao and Qiu, Leijie and Zhou, Jun}
 }
+```
 
 # License
 
