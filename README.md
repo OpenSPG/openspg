@@ -63,6 +63,8 @@ OpenSPG Core Capabilities:
 # Cite
 
 If you use this software, please cite it as below:
+* [KAG: Boosting LLMs in Professional Domains via Knowledge Augmented Generation](https://arxiv.org/abs/2409.13731)
+* KGFabric: A Scalable Knowledge Graph Warehouse for Enterprise Data Interconnection
 
 ```bibtex
 @article{liang2024kag,
