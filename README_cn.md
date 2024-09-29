@@ -74,7 +74,7 @@ OpenSPG核心能力模型包括：
   title={KGFabric: A Scalable Knowledge Graph Warehouse for Enterprise Data Interconnection},
   author={Yi, Peng and Liang, Lei and Da Zhang, Yong Chen and Zhu, Jinye and Liu, Xiangyu and Tang, Kun and Chen, Jialin and Lin, Hao and Qiu, Leijie and Zhou, Jun}
 }
-
+```
 
 # License
 
