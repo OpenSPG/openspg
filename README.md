@@ -62,6 +62,21 @@ OpenSPG Core Capabilities:
 
 # Cite
 
+If you use this software, please cite it as below:
+
+```bibtex
+@article{liang2024kag,
+  title={KAG: Boosting LLMs in Professional Domains via Knowledge Augmented Generation},
+  author={Liang, Lei and Sun, Mengshu and Gui, Zhengke and Zhu, Zhongshu and Jiang, Zhouyu and Zhong, Ling and Qu, Yuan and Zhao, Peilong and Bo, Zhongpu and Yang, Jin and others},
+  journal={arXiv preprint arXiv:2409.13731},
+  year={2024}
+}
+
+@article{yikgfabric,
+  title={KGFabric: A Scalable Knowledge Graph Warehouse for Enterprise Data Interconnection},
+  author={Yi, Peng and Liang, Lei and Da Zhang, Yong Chen and Zhu, Jinye and Liu, Xiangyu and Tang, Kun and Chen, Jialin and Lin, Hao and Qiu, Leijie and Zhou, Jun}
+}
+
 # License
 
 [Apache License 2.0](LICENSE)
