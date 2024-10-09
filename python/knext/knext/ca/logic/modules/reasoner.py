@@ -1,3 +1,14 @@
+# Copyright 2023 OpenSPG Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License. You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under the License
+# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+# or implied.
+
 import os
 import re
 import asyncio
@@ -27,7 +38,6 @@ class Reasoner(KagBaseModule):
 class IsAtomQuestion(Reasoner):
     """
     Module for determining if a question pertains to atomic concepts based on the input question.
-
     """
 
     def __init__(
@@ -76,7 +86,6 @@ class IsAtomQuestion(Reasoner):
 class DoesQuestionNeedExtraInfo(Reasoner):
     """
     Module for determining if a question needs additional information based on the question.
-
     """
 
     def __init__(
@@ -126,7 +135,6 @@ class DoesQuestionNeedExtraInfo(Reasoner):
 class ExtractTriplesFromTextModule(Reasoner):
     """
     Module to extract valid infomation into triples from a text.
-
     """
 
     def __init__(
@@ -164,7 +172,6 @@ class ExtractTriplesFromTextModule(Reasoner):
 class FetchSubject(Reasoner):
     """
     Module for determining the subject of a query.
-
     """
 
     def __init__(
@@ -197,7 +204,6 @@ class FetchSubject(Reasoner):
 class FetchPredicate(Reasoner):
     """
     Module for determining the predicate of a query.
-
     """
 
     def __init__(
@@ -230,7 +236,6 @@ class FetchPredicate(Reasoner):
 class FetchObject(Reasoner):
     """
     Module for determining the object of a query.
-
     """
 
     def __init__(
