@@ -41,14 +41,14 @@ CWD = os.path.dirname(os.path.abspath(__file__))
 WORKSPACE = os.path.join(CWD, "workspace")
 if not os.path.exists(WORKSPACE):
     os.makedirs(WORKSPACE)
-DATA_DIR = "MUSIQUE DATA DIR"
+DATA_DIR = "dataset"
 
 
 def get_official_deepseek_llm():
     client_config = {
-        "model_name": "deepseek-chat",
-        "base_url": "https://api.deepseek.com",
-        "api_key": "API-KEY",
+        "model_name": "qwen-plus",
+        "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "api_key": "sk-15eacb7b14774602a3e63bce9f0b4622",
     }
 
     llm = get_llm_client(
@@ -206,6 +206,7 @@ def run_experiment_impl(
     debug_mode=False,
     continue_run=True,
     seed=9527,
+    item_num=None,
 ):
     prompt_template_dir = os.path.join(WORKSPACE, "prompt_template", prompt_tag)
     if not os.path.exists(prompt_template_dir):
@@ -237,7 +238,7 @@ def run_experiment_impl(
     if debug_mode:
         seed = seed
         random.seed(seed)
-        question = random.choice(questions)
+        question = questions[item_num]
         questions = [question]
         data_line = musique_data.get_data_line_by_question(question)
         logger.info(f"\n***** DEBUG MODEL DATA INSPECT  *****")
@@ -250,20 +251,28 @@ def run_experiment_impl(
         workspace_dir=submit_dir,
     )
 
+    paragraph_texts = []
+    for paragraph in data_line["paragraphs"]:
+        if paragraph["is_supporting"]:
+            paragraph_texts.append(paragraph["paragraph_text"])
+
     agent_results = infer_runner.run(
         question_list=questions,
         create_agent_fn=runner_create_agent_fn,
         debug_mode=debug_mode,
+        global_context=paragraph_texts,
     )
+
+    expected_answer = data_line["answer"]
+    actual_answer = agent_results["predicted_answer"]
 
     if debug_mode:
         logger.info(f"\n***** DEBUG MODEL Finish Compare Result *****\n")
-        expected_answer = data_line["answer"]
+
         expected_predicted_support_idxs = [
             q_dict["paragraph_support_idx"]
             for q_dict in data_line["question_decomposition"]
         ]
-        actual_answer = agent_results["predicted_answer"]
         actual_predicted_support_idxs = agent_results["predicted_support_idxs"]
         logger.info(
             f"\n  expected answer: {expected_answer}\n"
@@ -277,6 +286,12 @@ def run_experiment_impl(
         )
         generate_submission_file(output_file_path, musique_data, agent_results)
 
+    if expected_answer.strip() == actual_answer.strip():
+        return 1
+    else:
+        logger.info(f"\n******* Wrong Answer *******\n")
+        return 0
+
 
 def run_deepseek_divide_and_conquer_experiment():
     data_dir = DATA_DIR
@@ -287,25 +302,56 @@ def run_deepseek_divide_and_conquer_experiment():
     submit_tag = "divide_agent_with_text_extractor_v2"
     parallel_num = 4
     continue_run = True
-
     debug_mode = True
     seed = 9527
 
-    run_experiment_impl(
-        create_agent_fn=create_divide_and_conquer_agent_hierarchical_info_tool,
-        get_llm_fn=get_official_deepseek_llm,
-        get_embed_fn=get_official_aliyun_embed_fn,
-        data_dir=data_dir,
-        data_version=data_version,
-        data_tag=data_tag,
-        prompt_tag=prompt_tag,
-        intermediate_tag=intermediate_tag,
-        submit_tag=submit_tag,
-        parallel_num=parallel_num,
-        continue_run=continue_run,
-        debug_mode=debug_mode,
-        seed=seed,
-    )
+    accuracy_count = 0
+    success_list = []
+    failure_list = []
+    exp_list = []
+
+    expr_num = 200
+
+    for i in range(expr_num):
+        exp = False
+        try:
+            per_accuracy_count = run_experiment_impl(
+                create_agent_fn=create_divide_and_conquer_agent_hierarchical_info_tool,
+                get_llm_fn=get_official_deepseek_llm,
+                get_embed_fn=get_official_aliyun_embed_fn,
+                data_dir=data_dir,
+                data_version=data_version,
+                data_tag=data_tag,
+                prompt_tag=prompt_tag,
+                intermediate_tag=intermediate_tag,
+                submit_tag=submit_tag,
+                parallel_num=parallel_num,
+                continue_run=continue_run,
+                debug_mode=debug_mode,
+                seed=seed,
+                item_num=i,
+            )
+        except Exception as e:
+            per_accuracy_count = 0
+            exp = True
+            print("Exception occurs.")
+
+        accuracy_count += per_accuracy_count
+
+        if per_accuracy_count == 1:
+            success_list.append(i)
+        elif exp:
+            exp_list.append(i)
+        else:
+            failure_list.append(i)
+
+    print("\n******* Statistics *******\n")
+    print("Total expr num: " + str(expr_num))
+    print("Exact match num: " + str(accuracy_count))
+    print("Exact match accuracy: " + str(accuracy_count / expr_num * 100) + "%")
+    print(f"""Exact match {len(success_list)} items id: {str(success_list)}""")
+    print(f"""Not exact match {len(failure_list)} items id: {str(failure_list)}""")
+    print(f"""Exception {len(exp_list)} items id: {str(exp_list)}""")
 
 
 if __name__ == "__main__":

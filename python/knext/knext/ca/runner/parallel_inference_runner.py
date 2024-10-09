@@ -73,15 +73,18 @@ class ParallelInferenceRunner(object):
                         question = agent_result["question"]
                         self.prev_temp_result_dict[question] = agent_result
 
-    def inference_impl(self, agent_runner, question):
+    def inference_impl(self, agent_runner, question, global_context):
         return agent_runner.run(question)
 
-    def run(self, question_list, create_agent_fn, debug_mode=False):
+    def run(
+        self, question_list, create_agent_fn, debug_mode=False, global_context=None
+    ):
         if debug_mode:
             agent = create_agent_fn()
             question = question_list[0]
             logger.info(f"\n********Debug Start**********\nquestion: {question}")
-            agent_result = agent.solve_problem(Question(question))
+            question_obj = Question(question, global_context=global_context)
+            agent_result = agent.solve_problem(question_obj)
             logger.info(
                 f"\n********Debug Finish**********\nagent_result: {agent_result}\n"
             )

@@ -33,7 +33,6 @@ class Solver(KagBaseModule):
 class SolveQuestionWithContext(Solver):
     """
     Module for answering questions based on context using a language model.
-
     """
 
     def __init__(
@@ -41,7 +40,7 @@ class SolveQuestionWithContext(Solver):
         llm_module,
         use_default_prompt_template=True,
         prompt_template_dir=None,
-        is_prompt_template_cn=True,
+        is_prompt_template_cn=False,
     ):
         super().__init__(
             llm_module,

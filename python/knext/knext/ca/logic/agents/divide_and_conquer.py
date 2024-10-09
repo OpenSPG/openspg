@@ -13,7 +13,11 @@ import asyncio
 
 from knext.ca.common.base import Question, Agent
 from knext.ca.logic.modules.solver import SolveQuestionWithContext
-from knext.ca.logic.modules.planner import DivideQuestion, RewriteQuestionBasedOnDeps
+from knext.ca.logic.modules.planner import (
+    DivideQuestion,
+    CheckDivideQuestion,
+    RewriteQuestionBasedOnDeps,
+)
 from knext.ca.logic.modules.reasoner import IsAtomQuestion
 
 
@@ -31,6 +35,7 @@ class DivideAndConquerAgent(Agent):
         use_default_prompt_template=False,
         prompt_template_dir=None,
         use_en_log=True,
+        check_divide_question=None,
         **kwargs,
     ):
         self.llm = llm
@@ -41,6 +46,14 @@ class DivideAndConquerAgent(Agent):
             divide_question
             if divide_question
             else DivideQuestion(
+                self.llm, use_default_prompt_template, prompt_template_dir
+            )
+        )
+
+        self.check_divide_question = (
+            check_divide_question
+            if check_divide_question
+            else CheckDivideQuestion(
                 self.llm, use_default_prompt_template, prompt_template_dir
             )
         )
@@ -106,6 +119,7 @@ class DivideAndConquerAgent(Agent):
                 question.children,
                 question.parent,
                 question.context,
+                question.global_context,
             )
             return current_question
         else:
@@ -146,6 +160,7 @@ class DivideAndConquerAgent(Agent):
                 self.process_intermediate_info(info_dict)
 
             # iteratively call
+            # 递归在这里，从上到下递归
             question_task_dict = {}
             for child_question in children_questions:
                 question_task_dict[child_question] = asyncio.create_task(
@@ -174,6 +189,7 @@ class DivideAndConquerAgent(Agent):
         else:
             atom_question = Question(
                 question=current_question.question,
+                context=current_question.global_context,
             )
             atom_answer = self.solve_atom_question.forward(atom_question)
             return atom_answer

@@ -38,7 +38,6 @@ class Reasoner(KagBaseModule):
 class IsAtomQuestion(Reasoner):
     """
     Module for determining if a question pertains to atomic concepts based on the input question.
-
     """
 
     def __init__(
@@ -46,7 +45,7 @@ class IsAtomQuestion(Reasoner):
         llm,
         use_default_prompt_template,
         prompt_template_dir,
-        is_prompt_template_cn=True,
+        is_prompt_template_cn=False,
     ):
         use_default_prompt_template = False
         super().__init__(
@@ -87,7 +86,6 @@ class IsAtomQuestion(Reasoner):
 class DoesQuestionNeedExtraInfo(Reasoner):
     """
     Module for determining if a question needs additional information based on the question.
-
     """
 
     def __init__(
@@ -95,7 +93,7 @@ class DoesQuestionNeedExtraInfo(Reasoner):
         llm_module,
         use_default_prompt_template=True,
         prompt_template_dir=None,
-        is_prompt_template_cn=True,
+        is_prompt_template_cn=False,
     ):
         super().__init__(
             llm_module,
@@ -137,7 +135,6 @@ class DoesQuestionNeedExtraInfo(Reasoner):
 class ExtractTriplesFromTextModule(Reasoner):
     """
     Module to extract valid infomation into triples from a text.
-
     """
 
     def __init__(
@@ -145,7 +142,7 @@ class ExtractTriplesFromTextModule(Reasoner):
         llm_module,
         use_default_prompt_template=True,
         prompt_template_dir=None,
-        is_prompt_template_cn=True,
+        is_prompt_template_cn=False,
     ):
         super().__init__(
             llm_module,
@@ -175,7 +172,6 @@ class ExtractTriplesFromTextModule(Reasoner):
 class FetchSubject(Reasoner):
     """
     Module for determining the subject of a query.
-
     """
 
     def __init__(
@@ -183,7 +179,7 @@ class FetchSubject(Reasoner):
         llm_module,
         use_default_prompt_template=True,
         prompt_template_dir=None,
-        is_prompt_template_cn=True,
+        is_prompt_template_cn=False,
     ):
         super().__init__(
             llm_module,
@@ -208,7 +204,6 @@ class FetchSubject(Reasoner):
 class FetchPredicate(Reasoner):
     """
     Module for determining the predicate of a query.
-
     """
 
     def __init__(
@@ -216,7 +211,7 @@ class FetchPredicate(Reasoner):
         llm_module,
         use_default_prompt_template=True,
         prompt_template_dir=None,
-        is_prompt_template_cn=True,
+        is_prompt_template_cn=False,
     ):
         super().__init__(
             llm_module,
@@ -241,7 +236,6 @@ class FetchPredicate(Reasoner):
 class FetchObject(Reasoner):
     """
     Module for determining the object of a query.
-
     """
 
     def __init__(
@@ -249,7 +243,7 @@ class FetchObject(Reasoner):
         llm_module,
         use_default_prompt_template=True,
         prompt_template_dir=None,
-        is_prompt_template_cn=True,
+        is_prompt_template_cn=False,
     ):
         super().__init__(
             llm_module,
