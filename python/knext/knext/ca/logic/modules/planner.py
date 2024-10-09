@@ -20,18 +20,12 @@ from knext.ca.common.utils import logger
 
 
 class Planner(KagBaseModule):
-    def __init__(
-        self,
-        llm_module,
-        use_default_prompt_template,
-        prompt_template_dir,
-        is_prompt_template_cn,
-    ):
+    def __init__(self, llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn):
         super().__init__(
             llm_module=llm_module,
             use_default_prompt_template=use_default_prompt_template,
             is_prompt_template_cn=is_prompt_template_cn,
-            prompt_template_dir=prompt_template_dir,
+            prompt_template_dir=prompt_template_dir
         )
 
 
@@ -40,28 +34,18 @@ class DivideQuestion(Planner):
     Module for dividing a question into serveral sub questions.
     """
 
-    def __init__(
-        self,
-        llm_module,
-        use_default_prompt_template=False,
-        prompt_template_dir=None,
-        is_prompt_template_cn=False,
-    ):
-        super().__init__(
-            llm_module,
-            use_default_prompt_template,
-            prompt_template_dir,
-            is_prompt_template_cn,
-        )
+    def __init__(self, llm_module, use_default_prompt_template=False, prompt_template_dir=None,
+                 is_prompt_template_cn=False):
+        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def get_module_name(self):
         return "DivideQuestion"
 
     def get_template_var_names(self):
-        return ["question"]
+        return ['question']
 
     def preprocess(self, question: Question):
-        prompt = self.state_dict["prompt_template"].substitute(
+        prompt = self.state_dict['prompt_template'].substitute(
             question=question.question
         )
         self.question = question
@@ -74,12 +58,12 @@ class DivideQuestion(Planner):
             result = parts[-1] if len(parts) > 1 else _output_string
             # parse \n
             if self.is_prompt_template_cn:
-                parts_2 = result.split("依赖关系是:")
+                parts_2 = result.split('依赖关系是:')
             else:
-                parts_2 = result.split("dependent relationship:")
-            qustion = parts_2[0].strip().split("\n")
+                parts_2 = result.split('dependent relationship:')
+            qustion = parts_2[0].strip().split('\n')
             # 依赖关系
-            dep = parts_2[1].strip().split("\n")
+            dep = parts_2[1].strip().split('\n')
             return qustion, dep
 
         def _process_dep(_input_list):
@@ -91,11 +75,7 @@ class DivideQuestion(Planner):
                     res = dep.split("deps")
                 assert len(res) == 2
                 key = res[0].strip()
-                dep = (
-                    res[1].strip('"').split(",")
-                    if "," in res[1]
-                    else res[1].strip().split("，")
-                )
+                dep = res[1].strip('"').split(",") if "," in res[1] else res[1].strip().split("，")
                 # 将子问题的依赖关系转换为字典
                 dep_real = [dep_i.strip() for dep_i in dep]
                 dep_dict[key] = dep_real
@@ -113,18 +93,16 @@ class DivideQuestion(Planner):
         org_question_children = []
         for q_ind, sub_question in enumerate(sub_questions_list):
             if self.is_prompt_template_cn:
-                q_key = f"问题{q_ind + 1}"
+                q_key = f'问题{q_ind + 1}'
             else:
-                q_key = f"question{q_ind + 1}"
+                q_key = f'question{q_ind + 1}'
             q_deps_Q_list = []
             for q_dep in sub_dependencies[q_key]:
                 if q_dep == "None":
                     pass
                 else:
                     q_deps_Q_list.append(qk_Q_map[q_dep])
-            qk_Q_map[q_key] = Question(
-                sub_question, q_deps_Q_list, [], global_context=question.global_context
-            )
+            qk_Q_map[q_key] = Question(sub_question, q_deps_Q_list, [], global_context=question.global_context)
             qk_Q_map[q_key].parent = question
             org_question_children.append(qk_Q_map[q_key])
         self.question.children = org_question_children
@@ -136,25 +114,15 @@ class CheckDivideQuestion(Planner):
     Module for checking the divided question.
     """
 
-    def __init__(
-        self,
-        llm_module,
-        use_default_prompt_template=False,
-        prompt_template_dir=None,
-        is_prompt_template_cn=False,
-    ):
-        super().__init__(
-            llm_module,
-            use_default_prompt_template,
-            prompt_template_dir,
-            is_prompt_template_cn,
-        )
+    def __init__(self, llm_module, use_default_prompt_template=False, prompt_template_dir=None,
+                 is_prompt_template_cn=False):
+        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def get_module_name(self):
         return "CheckDivideQuestion"
 
     def get_template_var_names(self):
-        return ["question", "sub_questions"]
+        return ['question', 'sub_questions']
 
     def forward(self, question: Question, sub_questions):
         prompt = self.preprocess(question, sub_questions)
@@ -168,8 +136,9 @@ class CheckDivideQuestion(Planner):
         for sub_question in sub_questions:
             sub_questions_str += sub_question.question
             sub_questions_str += "\n"
-        prompt = self.state_dict["prompt_template"].substitute(
-            question=question.question, sub_questions=sub_questions_str
+        prompt = self.state_dict['prompt_template'].substitute(
+            question=question.question,
+            sub_questions=sub_questions_str
         )
         self.question = question
         return prompt
@@ -187,9 +156,9 @@ class CheckDivideQuestion(Planner):
                 parts = _output_string.split("Correct decomposition approach:")[-1]
                 result = parts.split("dependent relationship:")
 
-            qustion = result[0].strip().split("\n")
+            qustion = result[0].strip().split('\n')
             # 依赖关系
-            dep = result[1].strip().split("\n")
+            dep = result[1].strip().split('\n')
             return qustion, dep
 
         def _process_dep(_input_list):
@@ -201,11 +170,7 @@ class CheckDivideQuestion(Planner):
                     res = dep.split("deps")
                 assert len(res) == 2
                 key = res[0].strip()
-                dep = (
-                    res[1].strip('"').split(",")
-                    if "," in res[1]
-                    else res[1].strip().split("，")
-                )
+                dep = res[1].strip('"').split(",") if "," in res[1] else res[1].strip().split("，")
                 # 将子问题的依赖关系转换为字典
                 dep_real = [dep_i.strip() for dep_i in dep]
                 dep_dict[key] = dep_real
@@ -226,21 +191,16 @@ class CheckDivideQuestion(Planner):
             org_question_children = []
             for q_ind, sub_question in enumerate(sub_questions_list):
                 if self.is_prompt_template_cn:
-                    q_key = f"问题{q_ind + 1}"
+                    q_key = f'问题{q_ind + 1}'
                 else:
-                    q_key = f"question{q_ind + 1}"
+                    q_key = f'question{q_ind + 1}'
                 q_deps_Q_list = []
                 for q_dep in sub_dependencies[q_key]:
                     if q_dep == "None":
                         pass
                     else:
                         q_deps_Q_list.append(qk_Q_map[q_dep])
-                qk_Q_map[q_key] = Question(
-                    sub_question,
-                    q_deps_Q_list,
-                    [],
-                    global_context=question.global_context,
-                )
+                qk_Q_map[q_key] = Question(sub_question, q_deps_Q_list, [], global_context=question.global_context)
                 qk_Q_map[q_key].parent = question
                 org_question_children.append(qk_Q_map[q_key])
             self.question.children = org_question_children
@@ -252,39 +212,28 @@ class RewriteQuestionBasedOnDeps(Planner):
     Module for rewriting a question based on the current question and dependent question
     """
 
-    def __init__(
-        self,
-        llm_module,
-        use_default_prompt_template=False,
-        prompt_template_dir=None,
-        is_prompt_template_cn=False,
-    ):
-        super().__init__(
-            llm_module,
-            use_default_prompt_template,
-            prompt_template_dir,
-            is_prompt_template_cn,
-        )
+    def __init__(self, llm_module, use_default_prompt_template=False, prompt_template_dir=None,
+                 is_prompt_template_cn=False):
+        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
 
     def get_module_name(self):
         return "RewriteQuestionBasedOnDeps"
 
     def get_template_var_names(self):
-        return ["question", "context"]
+        return ['question', 'context']
 
     def preprocess(self, question: Question):
-        context_string = ""
+        context_string = ''
         if len(question.dependencies) > 0:
             if self.is_prompt_template_cn:
                 for q in question.dependencies:
-                    context_string += f"问题: {q.question} \n 答案: {q.answer}" + "\n"
+                    context_string += f"问题: {q.question} \n 答案: {q.answer}" + '\n'
             else:
                 for q in question.dependencies:
-                    context_string += (
-                        f"question: {q.question} \n answer: {q.answer}" + "\n"
-                    )
-            prompt = self.state_dict["prompt_template"].substitute(
-                question=question.question, context=context_string
+                    context_string += f"question: {q.question} \n answer: {q.answer}" + '\n'
+            prompt = self.state_dict['prompt_template'].substitute(
+                question=question.question,
+                context=context_string
             )
             return prompt
         else:

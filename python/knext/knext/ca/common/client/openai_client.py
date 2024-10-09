@@ -16,11 +16,11 @@ from openai import OpenAI
 @register_llm_client("openai")
 class OpenaiClient(object):
     def __init__(
-        self,
-        model_name=None,
-        base_url=None,
-        api_key=None,
-        **kwargs,
+            self,
+            model_name=None,
+            base_url=None,
+            api_key=None,
+            **kwargs,
     ):
         self.model_name = model_name
         self.client = OpenAI(api_key=api_key, base_url=base_url, **kwargs)
@@ -37,3 +37,4 @@ class OpenaiClient(object):
         )
         result = response.choices[0].message.content
         return result
+

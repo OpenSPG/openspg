@@ -12,7 +12,6 @@
 import logging
 import inspect
 
-
 class CustomLogger(logging.Logger):
     def findCaller(self, stack_info=False, stacklevel=1):
         frame = logging.currentframe()
@@ -28,11 +27,10 @@ class CustomLogger(logging.Logger):
         co = frame.f_code
         return (co.co_filename, frame.f_lineno, co.co_name, None)
 
-
 logging.setLoggerClass(CustomLogger)
 logging.basicConfig(
     level=logging.INFO,
-    format="[%(asctime)s @ %(process)d] [%(levelname)s] [%(filename)s:%(lineno)d:%(funcName)s] %(message)s",
+    format='[%(asctime)s @ %(process)d] [%(levelname)s] [%(filename)s:%(lineno)d:%(funcName)s] %(message)s'
 )
 
 logger = logging.getLogger(__name__)
