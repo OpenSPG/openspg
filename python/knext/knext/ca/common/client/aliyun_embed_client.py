@@ -29,8 +29,9 @@ class MayaEmbClient:
         resp = dashscope.TextEmbedding.call(
             model=dashscope.TextEmbedding.Models.text_embedding_v1,
             api_key=self.api_key,
-            input=query)
-        
+            input=query,
+        )
+
         if resp.status_code == HTTPStatus.OK:
             return resp.output.embeddings.embedding
         else:

@@ -27,7 +27,15 @@ class Question(object):
     2. One question can be broken down into several sub-questions.
     """
 
-    def __init__(self, question, dependencies=[], children=[], parent=None, context=None, global_context=None):
+    def __init__(
+        self,
+        question,
+        dependencies=[],
+        children=[],
+        parent=None,
+        context=None,
+        global_context=None,
+    ):
         """
         Initialize a Question object.
 
@@ -67,28 +75,28 @@ class Question(object):
 
         :return: A string representation of the question.
         """
-        repr_str = f'''question: {self.question}\n'''
+        repr_str = f"""question: {self.question}\n"""
         # dependies
-        repr_str += 'deps:\n'
+        repr_str += "deps:\n"
         for ind, dep in enumerate(self.dependencies):
-            repr_str += f'  dep_question {ind}: {dep.question}\n'
+            repr_str += f"  dep_question {ind}: {dep.question}\n"
 
         # chilren
-        repr_str += 'children:\n'
+        repr_str += "children:\n"
         for ind, child in enumerate(self.children):
-            repr_str += f'  childe_question {ind}: {child.question}\n'
+            repr_str += f"  childe_question {ind}: {child.question}\n"
 
         # parent
         if self.parent:
-            repr_str += f'parent:\n  {self.parent.question}\n'
+            repr_str += f"parent:\n  {self.parent.question}\n"
 
         # context:
         if self.context:
-            repr_str += f'context:{self.context}\n'
+            repr_str += f"context:{self.context}\n"
 
         # global_context:
         if self.global_context:
-            repr_str += f'context:{self.global_context}\n'
+            repr_str += f"context:{self.global_context}\n"
         return repr_str
 
 
@@ -104,12 +112,12 @@ class KagBaseModule(object):
     """
 
     def __init__(
-            self,
-            llm_module,
-            use_default_prompt_template=True,
-            is_prompt_template_cn=False,
-            prompt_template_dir=None,
-            is_computational=True,
+        self,
+        llm_module,
+        use_default_prompt_template=True,
+        is_prompt_template_cn=False,
+        prompt_template_dir=None,
+        is_computational=True,
     ):
         """
         Initializes the KagBaseModule.
@@ -176,62 +184,64 @@ class KagBaseModule(object):
 
     def get_ca_default_prompt_template_dir(self):
         directory = os.path.dirname(os.path.abspath(__file__))
-        directory = os.path.join(directory, '..', 'logic/modules')
+        directory = os.path.join(directory, "..", "logic/modules")
         if self.is_prompt_template_cn:
-            return os.path.join(directory, 'default_prompt_template')
+            return os.path.join(directory, "default_prompt_template")
         else:
-            return os.path.join(directory, 'default_prompt_template_en')
+            return os.path.join(directory, "default_prompt_template_en")
 
     def load_prompt_template(self, prompt_dir):
-        prompt_file_path = os.path.join(
-            prompt_dir,
-            f'{self.get_module_name()}.txt'
+        prompt_file_path = os.path.join(prompt_dir, f"{self.get_module_name()}.txt")
+        logger.info(
+            f"##### {self.get_module_name()} prompt_file_path: {prompt_file_path} {os.path.exists(prompt_file_path)}"
         )
-        logger.info(f"##### {self.get_module_name()} prompt_file_path: {prompt_file_path} {os.path.exists(prompt_file_path)}")
         if os.path.exists(prompt_file_path):
-            with open(prompt_file_path, 'r') as f:
+            with open(prompt_file_path, "r") as f:
                 template_string = f.read()
-            template_string = self.process_template_string_to_avoid_doller_problem(template_string)
+            template_string = self.process_template_string_to_avoid_doller_problem(
+                template_string
+            )
         else:
-            template_string = '''default prompt. edit it anyway'''
+            template_string = """default prompt. edit it anyway"""
         return Template(template_string)
 
     def process_template_string_to_avoid_doller_problem(self, template_string):
-        new_template_str = template_string.replace('$', '$$')
+        new_template_str = template_string.replace("$", "$$")
         for var in self.get_template_var_names():
-            new_template_str = new_template_str.replace(f'$${var}', f'${var}')
+            new_template_str = new_template_str.replace(f"$${var}", f"${var}")
         return new_template_str
 
     def save_prompt_template(self, prompt_dir, prompt_template):
-        prompt_file_path = os.path.join(
-            prompt_dir, f'{self.get_module_name()}.txt')
-        with open(prompt_file_path, 'w') as f:
+        prompt_file_path = os.path.join(prompt_dir, f"{self.get_module_name()}.txt")
+        with open(prompt_file_path, "w") as f:
             f.write(prompt_template)
 
     def create_default_state_dict(self):
         default_prompt_template = self.load_prompt_template(
-            self.get_ca_default_prompt_template_dir())
+            self.get_ca_default_prompt_template_dir()
+        )
         state_dict = {
-            'prompt_template': default_prompt_template,
+            "prompt_template": default_prompt_template,
         }
         return state_dict
 
     def save_state_dict(self, save_dir, state_dict):
-        prompt_dir = os.path.join(save_dir, 'prompt_template')
+        prompt_dir = os.path.join(save_dir, "prompt_template")
         os.makedirs(prompt_dir, exist_ok=True)
-        self.save_prompt_template(prompt_dir, state_dict['prompt_template'].template)
+        self.save_prompt_template(prompt_dir, state_dict["prompt_template"].template)
 
     def load_state_dict(self, save_dir):
-        prompt_dir = os.path.join(save_dir, 'prompt_template')
+        prompt_dir = os.path.join(save_dir, "prompt_template")
         prompt_template = self.load_prompt_template(prompt_dir)
         state_dict = {
-            'prompt_template': prompt_template,
+            "prompt_template": prompt_template,
         }
         return state_dict
 
     def does_state_dict_exists(self, save_dir):
         prompt_file_path = os.path.join(
-            save_dir, 'prompt_template', f'{self.get_module_name()}.txt')
+            save_dir, "prompt_template", f"{self.get_module_name()}.txt"
+        )
         return os.path.exists(prompt_file_path)
 
     def init_state_dict(self):
