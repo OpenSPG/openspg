@@ -75,7 +75,7 @@ class SimplifyThinkerParser {
     val rule = new Rule()
     val concept_nameContext =
       ctx.define_rule_on_concept_structure().concept_declaration().concept_name()
-    rule.setHead(new EntityPattern(thinkerRuleParser.constructConceptEntity(concept_nameContext)))
+    rule.setHead(thinkerRuleParser.get_concept_full_form(concept_nameContext))
     if (null != ctx.description()) {
       rule.setDesc(ctx.description().unbroken_character_string_literal().getText)
     }

@@ -17,6 +17,7 @@ import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
+import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.property.IVersionProperty;
@@ -44,8 +45,14 @@ public class GraphUtil {
       valueMap.put(0L, entry.getValue());
       props.put(entry.getKey(), valueMap);
     }
+    SPO spo = new SPO(from.getId().getType(), edgeType, to.getId().getType());
     return new Edge<>(
-        from.getId(), to.getId(), new VertexVersionProperty(props), 0L, Direction.OUT, edgeType);
+        from.getId(),
+        to.getId(),
+        new VertexVersionProperty(props),
+        0L,
+        Direction.OUT,
+        spo.toString());
   }
 
   public static Vertex<IVertexId, IProperty> makeVertex(String id, String type, Object... kvs) {
@@ -71,7 +78,19 @@ public class GraphUtil {
         if (v.getId().equals(e.getSourceId())) {
           outEdges.add(e);
         } else if (v.getId().equals(e.getTargetId())) {
-          inEdges.add(e.reverse());
+          IEdge<IVertexId, IProperty> reverseEdge = e.reverse();
+          IProperty reverseProperty = e.getValue().clone();
+          String fromId = (String) reverseProperty.get(Constants.EDGE_FROM_ID_KEY);
+          String fromIdType = (String) reverseProperty.get(Constants.EDGE_FROM_ID_TYPE_KEY);
+          reverseProperty.put(
+              Constants.EDGE_FROM_ID_KEY, reverseEdge.getValue().get(Constants.EDGE_TO_ID_KEY));
+          reverseProperty.put(
+              Constants.EDGE_FROM_ID_TYPE_KEY,
+              reverseEdge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY));
+          reverseProperty.put(Constants.EDGE_TO_ID_KEY, fromId);
+          reverseProperty.put(Constants.EDGE_TO_ID_TYPE_KEY, fromIdType);
+          reverseEdge.setValue(reverseProperty);
+          inEdges.add(reverseEdge);
         }
       }
       graphState.addEdges(v.getId(), inEdges, outEdges);

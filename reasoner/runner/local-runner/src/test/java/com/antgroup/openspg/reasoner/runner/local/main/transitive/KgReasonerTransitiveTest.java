@@ -270,7 +270,7 @@ public class KgReasonerTransitiveTest {
             + "  A->B [holdShare] repeat(1,10) as e\n"
             + "}\n"
             + "Rule {\n"
-            + "totalRate = e.edges().reduce((x,y) => y.rate * x, 1)"
+            + "totalRate = e.edges().reduce((x,y) => y.rate * x, 1.0)\n"
             + "  R1(\"只保留最长的路径\"): group(A).keep_longest_path(e)\n"
             + "}\n"
             + "Action {\n"

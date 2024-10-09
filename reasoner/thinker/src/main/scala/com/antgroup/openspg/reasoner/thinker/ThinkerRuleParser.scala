@@ -13,30 +13,21 @@
 
 package com.antgroup.openspg.reasoner.thinker
 
+import java.util.Locale
+
+import scala.collection.JavaConverters._
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
+
 import com.antgroup.openspg.reasoner.KGDSLParser._
 import com.antgroup.openspg.reasoner.lube.common.expr._
 import com.antgroup.openspg.reasoner.lube.utils.transformer.impl.Expr2QlexpressTransformer
 import com.antgroup.openspg.reasoner.parser.expr.RuleExprParser
 import com.antgroup.openspg.reasoner.thinker.logic.graph
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{
-  CombinationEntity,
-  Element,
-  Entity,
-  Predicate,
-  Value
-}
-import com.antgroup.openspg.reasoner.thinker.logic.rule.{
-  ClauseEntry,
-  EntityPattern,
-  Node,
-  TriplePattern
-}
+import com.antgroup.openspg.reasoner.thinker.logic.graph._
+import com.antgroup.openspg.reasoner.thinker.logic.rule.{ClauseEntry, EntityPattern, Node, TriplePattern}
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact.{Not, _}
-import java.util.Locale
 import org.apache.commons.lang3.StringUtils
-import scala.collection.JavaConverters._
-import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
 
 class ThinkerRuleParser extends RuleExprParser {
   val expr2StringTransformer = new Expr2QlexpressTransformer()
@@ -93,8 +84,18 @@ class ThinkerRuleParser extends RuleExprParser {
     val existElementSet: mutable.Set[ClauseEntry] =
       conditionToElementMap.getOrElseUpdate(condition, mutable.HashSet())
     for (e <- element) {
-      if (e.isInstanceOf[EntityPattern]) {
-        existElementSet += e
+      e match {
+        case e: EntityPattern => existElementSet += e
+        case t: TriplePattern =>
+          val s = t.getTriple.getSubject
+          val p = t.getTriple.getPredicate
+          val o = t.getTriple.getObject
+          if (s.isInstanceOf[logic.graph.Any]
+            && o.isInstanceOf[Entity]
+            && p.isInstanceOf[Predicate]
+            && p.asInstanceOf[Predicate].getName.equals("conclude")) {
+            existElementSet += new EntityPattern(o.asInstanceOf[Entity])
+          }
       }
     }
   }
@@ -107,8 +108,7 @@ class ThinkerRuleParser extends RuleExprParser {
         newBody += new TriplePattern(new logic.graph.Triple(subject, predicate, object_))
         new QlExpressCondition(expr2StringTransformer.transform(parseLogicTest(ctx)).head)
       case c: Concept_nameContext =>
-        val conceptEntity = constructConceptEntity(c)
-        newBody += new EntityPattern(conceptEntity)
+        newBody += get_concept_full_form(c)
         new QlExpressCondition(expr2StringTransformer.transform(parseLogicTest(ctx)).head)
       case c: ExprContext => thinkerParseExpr(c, newBody)
     }
@@ -119,12 +119,50 @@ class ThinkerRuleParser extends RuleExprParser {
     resultNode
   }
 
+  private def isDefaultAlias(alias: String): Boolean = {
+    if (alias.toLowerCase().startsWith("anonymous")) {
+      return true
+    }
+    false
+  }
+
+  def get_concept_full_form(
+                             concept_name: Concept_nameContext,
+                             conceptAlias: String = ""): TriplePattern = {
+    val conceptEntity: Entity = constructConceptEntity(concept_name)
+    val entity_str = concept_name.getText
+    if (spoRuleToSpoSetMap.contains(entity_str)) {
+      val (s, p, o) = spoRuleToSpoSetMap(entity_str)
+      if (StringUtils.isNotBlank(conceptAlias) &&
+        !isDefaultAlias(conceptAlias) && !isDefaultAlias(o.alias())) {
+        throw new IllegalArgumentException(
+          "The same entity %s has different alias".format(entity_str))
+      }
+      if (StringUtils.isNotBlank(conceptAlias)
+        && !isDefaultAlias(conceptAlias)) {
+        o.asInstanceOf[Entity].setAlias(conceptAlias)
+      }
+      return new TriplePattern(new logic.graph.Triple(s, p, o))
+    }
+    val default_s = new Any(getDefaultAliasNum)
+    val default_p = new Predicate("conclude", getDefaultAliasNum)
+    var newConceptAlias: String = conceptAlias
+    if (StringUtils.isBlank(newConceptAlias)) {
+      newConceptAlias = getDefaultAliasNum
+    }
+    conceptEntity.setAlias(newConceptAlias)
+    val nested_value = (default_s, default_p, conceptEntity)
+    spoRuleToSpoSetMap += (entity_str -> nested_value)
+    new TriplePattern(new logic.graph.Triple(default_s, default_p, conceptEntity))
+  }
+
   def getAliasFromElement(element: Element): String = {
     element match {
       case e: Entity => e.getAlias
       case p: Predicate => p.getAlias
       case n: logic.graph.Node => n.getAlias
       case v: Value => v.getAlias
+      case a: logic.graph.Any => a.getAlias
       case _ => throw new IllegalArgumentException("%s element has no alias".format(element))
     }
   }
@@ -136,16 +174,21 @@ class ThinkerRuleParser extends RuleExprParser {
     metaConceptName + "/" + conceptInstanceIdName
   }
 
+  private def formTripleExpr(subject: Element, predicate: Element, object_ : Element) = {
+    TripleExpr(
+      getAliasFromElement(subject),
+      getAliasFromElement(predicate),
+      getAliasFromElement(object_))
+  }
+
   override def parseLogicTest(ctx: Logic_testContext): Expr = {
     val bExpr: Expr = ctx.getChild(0) match {
       case c: Spo_ruleContext =>
         val (subject, predicate, object_) = parseSpoRule(c)
-        TripleExpr(
-          getAliasFromElement(subject),
-          getAliasFromElement(predicate),
-          getAliasFromElement(object_))
+        formTripleExpr(subject, predicate, object_)
       case concept: Concept_nameContext =>
-        ConceptExpr(refactorConceptName(concept))
+        val triple: Triple = get_concept_full_form(concept).getTriple
+        formTripleExpr(triple.getSubject, triple.getPredicate, triple.getObject)
       case expr: ExprContext => parseExpr(expr)
     }
     Option(ctx.getChild(1)) match {
@@ -212,7 +255,7 @@ class ThinkerRuleParser extends RuleExprParser {
       body: ListBuffer[ClauseEntry]): Unit = {
     ctx.getChild(0) match {
       case c: Concept_nameContext =>
-        body += new EntityPattern(constructConceptEntity(c))
+        body += get_concept_full_form(c)
       case c: Value_expression_primaryContext =>
         thinkerParseValueExpressionPrimary(c, body)
       case c: Numeric_value_functionContext =>
@@ -223,7 +266,8 @@ class ThinkerRuleParser extends RuleExprParser {
   override def parseProjectPrimary(ctx: Project_primaryContext): Expr = {
     ctx.getChild(0) match {
       case c: Concept_nameContext =>
-        ConceptExpr(refactorConceptName(c))
+        val triple: Triple = get_concept_full_form(c).getTriple
+        formTripleExpr(triple.getSubject, triple.getPredicate, triple.getObject)
       case c: Value_expression_primaryContext =>
         parseValueExpressionPrimary(c)
       case c: Numeric_value_functionContext =>
@@ -269,7 +313,7 @@ class ThinkerRuleParser extends RuleExprParser {
       val propertyName: String = propertyNameList.head.getText
       val subject = aliasToElementMap(alias)
       val predicate = new Predicate(propertyName)
-      val o = new Value(null, "anonymous_" + getDefaultAliasNum)
+      val o = new Value(null, getDefaultAliasNum)
       body += new TriplePattern(new logic.graph.Triple(subject, predicate, o))
     }
   }
@@ -330,7 +374,12 @@ class ThinkerRuleParser extends RuleExprParser {
     if (aliasToElementMap.contains(sAlias)) {
       return aliasToElementMap(sAlias)
     }
-    var sNode: Element = new graph.Node(sType, sAlias)
+    var sNode: Element = null
+    if (StringUtils.isBlank(sType) || sType.toUpperCase().equals("THING")) {
+      sNode = new graph.Any(sAlias)
+    } else {
+      sNode = new graph.Node(sType, sAlias)
+    }
     if (StringUtils.isNotEmpty(sType)) {
       val conceptContext = elementPatternDeclaration
         .element_lookup()
@@ -338,8 +387,7 @@ class ThinkerRuleParser extends RuleExprParser {
         .label_name()
         .concept_name()
       if (conceptContext != null) {
-        val conceptEntity = constructConceptEntity(conceptContext)
-        conceptEntity.setAlias(sAlias)
+        val conceptEntity = get_concept_full_form(conceptContext, sAlias).getTriple.getObject
         sNode = conceptEntity
       } else if (valueTypeSet.contains(sType.toUpperCase())) {
         sNode = new Value(null, sAlias)
@@ -355,8 +403,9 @@ class ThinkerRuleParser extends RuleExprParser {
           .concept_name()
           .asScala
           .foreach(concept => {
-            val conceptEntity = constructConceptEntity(concept)
-            conceptEntityList += conceptEntity
+            val conceptTriple =
+              get_concept_full_form(concept).getTriple.getObject.asInstanceOf[Entity]
+            conceptEntityList += conceptTriple
           })
         val combinationEntity = new CombinationEntity(conceptEntityList.asJava)
         combinationEntity.setAlias(sAlias)
@@ -387,21 +436,18 @@ class ThinkerRuleParser extends RuleExprParser {
     if (ctx.element_variable_declaration() != null) {
       alias = ctx.element_variable_declaration().element_variable().getText
     } else {
-      alias = "anonymous_" + getDefaultAliasNum
+      alias = getDefaultAliasNum
     }
     var labelName = ""
     if (ctx.element_lookup() != null) {
       labelName = ctx.element_lookup().label_expression().label_name().getText
-    }
-    if (!isHead && StringUtils.isBlank(labelName) && !aliasToElementMap.contains(alias)) {
-      throw new IllegalArgumentException("alias " + alias + " is not defined")
     }
     (alias, labelName)
   }
 
   def getDefaultAliasNum: String = {
     defaultAliasNum += 1
-    defaultAliasNum.toString
+    s"anonymous_$defaultAliasNum"
   }
 
 }

@@ -16,6 +16,7 @@ package com.antgroup.openspg.reasoner.thinker.engine;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
+import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
@@ -23,6 +24,7 @@ import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
 import java.util.*;
+import org.apache.commons.lang3.StringUtils;
 
 public class GraphStore implements Graph {
   private GraphState<IVertexId> graphState;
@@ -36,12 +38,25 @@ public class GraphStore implements Graph {
   }
 
   @Override
+  public void prepare(Map<String, Object> context) {}
+
+  @Override
   public List<Result> find(Triple pattern, Map<String, Object> context) {
     List<Triple> data;
     if (pattern.getSubject() instanceof Entity) {
-      data = getTriple((Entity) pattern.getSubject(), Direction.OUT);
+      data =
+          getTriple(
+              (Entity) pattern.getSubject(),
+              pattern.getPredicate(),
+              pattern.getObject(),
+              Direction.OUT);
     } else if (pattern.getObject() instanceof Entity) {
-      data = getTriple((Entity) pattern.getObject(), Direction.IN);
+      data =
+          getTriple(
+              (Entity) pattern.getObject(),
+              pattern.getPredicate(),
+              pattern.getSubject(),
+              Direction.IN);
     } else if (pattern.getSubject() instanceof Triple) {
       data = getTriple((Triple) pattern.getSubject(), (Predicate) pattern.getPredicate());
     } else {
@@ -50,12 +65,7 @@ public class GraphStore implements Graph {
     return matchInGraph(pattern, data);
   }
 
-  @Override
-  public List<Result> find(Node s, Map<String, Object> context) {
-    return Collections.emptyList();
-  }
-
-  protected List<Triple> getTriple(Entity s, Direction direction) {
+  protected List<Triple> getTriple(Entity s, Element predicate, Element o, Direction direction) {
     List<Triple> triples = new LinkedList<>();
     if (direction == Direction.OUT) {
       IVertex<IVertexId, IProperty> vertex =
@@ -67,13 +77,51 @@ public class GraphStore implements Graph {
         triples.add(new Triple(s, new Predicate(key), new Value(vertex.getValue().get(key))));
       }
     }
-    List<IEdge<IVertexId, IProperty>> edges =
-        this.graphState.getEdges(
-            IVertexId.from(s.getId(), s.getType()), null, null, null, direction);
+    List<IEdge<IVertexId, IProperty>> edges;
+    String spo = toSPO(s, predicate, o, direction);
+    if (StringUtils.isNotBlank(spo)) {
+      edges =
+          this.graphState.getEdges(
+              IVertexId.from(s.getId(), s.getType()),
+              null,
+              null,
+              new HashSet<>(Arrays.asList(spo)),
+              direction);
+    } else {
+      edges =
+          this.graphState.getEdges(
+              IVertexId.from(s.getId(), s.getType()), null, null, null, direction);
+    }
+
     for (IEdge<IVertexId, IProperty> edge : edges) {
       triples.add(edgeToTriple(edge));
     }
     return triples;
+  }
+
+  private String toSPO(Entity s, Element predicate, Element o, Direction direction) {
+    if (!(predicate instanceof Predicate)
+        || StringUtils.isBlank(((Predicate) predicate).getName())) {
+      return null;
+    }
+    SPO spo;
+    if (o instanceof Node) {
+      if (direction == Direction.OUT) {
+        spo = new SPO(s.getType(), ((Predicate) predicate).getName(), ((Node) o).getType());
+      } else {
+        spo = new SPO(((Node) o).getType(), ((Predicate) predicate).getName(), s.getType());
+      }
+      return spo.toString();
+    } else if (o instanceof Entity) {
+      if (direction == Direction.OUT) {
+        spo = new SPO(s.getType(), ((Predicate) predicate).getName(), ((Entity) o).getType());
+      } else {
+        spo = new SPO(((Entity) o).getType(), ((Predicate) predicate).getName(), s.getType());
+      }
+      return spo.toString();
+    } else {
+      return null;
+    }
   }
 
   protected List<Triple> getTriple(Triple triple, Predicate predicate) {
@@ -81,12 +129,25 @@ public class GraphStore implements Graph {
     Entity s = (Entity) triple.getSubject();
     Predicate p = (Predicate) triple.getPredicate();
     Entity o = (Entity) triple.getObject();
-    List<IEdge<IVertexId, IProperty>> edges =
-        this.graphState.getEdges(
-            IVertexId.from(s.getId(), s.getType()), null, null, null, Direction.OUT);
+    List<IEdge<IVertexId, IProperty>> edges;
+    String edgeType = toSPO(s, p, o, Direction.OUT);
+    if (StringUtils.isNotBlank(edgeType)) {
+      edges =
+          this.graphState.getEdges(
+              IVertexId.from(s.getId(), s.getType()),
+              null,
+              null,
+              new HashSet<>(Arrays.asList(edgeType)),
+              Direction.OUT);
+    } else {
+      edges =
+          this.graphState.getEdges(
+              IVertexId.from(s.getId(), s.getType()), null, null, null, Direction.OUT);
+    }
     for (IEdge<IVertexId, IProperty> edge : edges) {
+      SPO spo = new SPO(edge.getType());
       if (edge.getTargetId().equals(IVertexId.from(o.getId(), o.getType()))
-          && edge.getType().equals(p.getName())) {
+          && spo.getP().equals(p.getName())) {
         triples.add(
             new Triple(triple, predicate, new Value(edge.getValue().get(predicate.getName()))));
       }
@@ -95,24 +156,25 @@ public class GraphStore implements Graph {
   }
 
   private Triple edgeToTriple(IEdge<IVertexId, IProperty> edge) {
+    SPO spo = new SPO(edge.getType());
     if (edge.getDirection() == Direction.OUT) {
       return new Triple(
           new Entity(
               (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY),
               (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)),
-          new Predicate(edge.getType()),
+          new Predicate(spo.getP()),
           new Entity(
               (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY),
               (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)));
     } else {
       return new Triple(
           new Entity(
-              (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY),
-              (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)),
-          new Predicate(edge.getType()),
-          new Entity(
               (String) edge.getValue().get(Constants.EDGE_TO_ID_KEY),
-              (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)));
+              (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY)),
+          new Predicate(spo.getP()),
+          new Entity(
+              (String) edge.getValue().get(Constants.EDGE_FROM_ID_KEY),
+              (String) edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY)));
     }
   }
 

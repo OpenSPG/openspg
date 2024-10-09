@@ -13,17 +13,21 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SPGTypeRequest;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.server.biz.common.util.AssertUtils;
 import com.antgroup.openspg.server.biz.schema.ConceptManager;
+import com.google.common.collect.Lists;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -57,6 +61,25 @@ public class ConceptController extends BaseController {
         });
   }
 
+  @RequestMapping(value = "/getReasoningConcept", method = RequestMethod.GET)
+  @ResponseBody
+  public ResponseEntity<Object> getReasoningConcept(SPGTypeRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<List<TripleSemantic>>() {
+          @Override
+          public void check() {
+            AssertUtils.assertParamObjectIsNotNull("request", request);
+            AssertUtils.assertParamObjectIsNotNull("conceptTypeName", request.getNameList());
+          }
+
+          @Override
+          public List<TripleSemantic> action() {
+            List<String> nameList = Lists.newArrayList(request.getName().split(","));
+            return conceptManager.getReasoningConceptsDetail(nameList);
+          }
+        });
+  }
+
   @RequestMapping(value = "/defineDynamicTaxonomy", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<Object> defineDynamicTaxonomy(
@@ -81,7 +104,7 @@ public class ConceptController extends BaseController {
   @RequestMapping(value = "/defineLogicalCausation", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<Object> defineLogicalCausation(
-      @RequestBody DefineLogicalCausationRequest request) {
+      @RequestBody DefineTripleSemanticRequest request) {
     return HttpBizTemplate.execute(
         new HttpBizCallback<Boolean>() {
           @Override
@@ -129,7 +152,7 @@ public class ConceptController extends BaseController {
   @RequestMapping(value = "/removeLogicalCausation", method = RequestMethod.POST)
   @ResponseBody
   public ResponseEntity<Object> removeLogicalCausation(
-      @RequestBody RemoveLogicalCausationRequest request) {
+      @RequestBody RemoveTripleSemanticRequest request) {
     return HttpBizTemplate.execute(
         new HttpBizCallback<Boolean>() {
           @Override

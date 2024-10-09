@@ -12,10 +12,19 @@
  */
 package com.antgroup.openspg.reasoner.thinker.logic.graph;
 
+import java.util.Objects;
 import lombok.Data;
 
 @Data
 public class Any extends Element {
+  private String alias;
+
+  public Any() {}
+
+  public Any(String alias) {
+    this.alias = alias;
+  }
+
   @Override
   public boolean matches(Element other) {
     return other != null;
@@ -26,14 +35,42 @@ public class Any extends Element {
     if (obj == null) {
       return false;
     } else if (obj instanceof Any) {
-      return true;
+      return Objects.equals(alias, ((Any) obj).alias);
     } else {
       return false;
     }
   }
 
   @Override
+  public Element bind(Element pattern) {
+    return pattern;
+  }
+
+  @Override
+  public String alias() {
+    return this.alias;
+  }
+
+  @Override
   public int hashCode() {
     return HASH_ANY;
+  }
+
+  /**
+   * Getter method for property <tt>alias</tt>.
+   *
+   * @return property value of alias
+   */
+  public String getAlias() {
+    return alias;
+  }
+
+  /**
+   * Setter method for property <tt>alias</tt>.
+   *
+   * @param alias value to be assigned to property alias
+   */
+  public void setAlias(String alias) {
+    this.alias = alias;
   }
 }

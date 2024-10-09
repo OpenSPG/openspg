@@ -131,7 +131,13 @@ object PatternOps {
               val typeSet = conn.relTypes
               val targetSet = pattern.getNode(conn.target).typeNames
               val spoSet = sourceSet.flatMap(s =>
-                typeSet.flatMap(p => targetSet.map(o => new SPO(s, p, o).toString)))
+                typeSet.flatMap(p => targetSet.map(o => {
+                  if (conn.direction == Direction.OUT) {
+                    new SPO(s, p, o).toString
+                  } else {
+                    new SPO(o, p, s).toString
+                  }
+                })))
               typeMap.put(conn.alias, spoSet)
             })
           }
