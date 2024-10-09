@@ -38,6 +38,7 @@ class Planner(KagBaseModule):
 class DivideQuestion(Planner):
     """
     Module for dividing a question into serveral sub questions.
+
     """
 
     def __init__(
@@ -134,6 +135,7 @@ class DivideQuestion(Planner):
 class CheckDivideQuestion(Planner):
     """
     Module for checking the divided question.
+
     """
 
     def __init__(
@@ -250,6 +252,7 @@ class CheckDivideQuestion(Planner):
 class RewriteQuestionBasedOnDeps(Planner):
     """
     Module for rewriting a question based on the current question and dependent question
+
     """
 
     def __init__(

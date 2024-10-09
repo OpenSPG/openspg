@@ -1,0 +1,113 @@
+Requirements:
+1. Determine whether several subquestions are the correct result of decomposing the original question.
+2. If the question decomposition is correct, only output "YES" without including any additional information.
+3. If the question decomposition is not correct, output "NO" and provide a concise reason and then give the correct question decomposition and the list of question dependencies.
+3.1. Describe the dependencies of the decomposed questions. If a question has multiple dependencies, separate them with commas.
+3.2. Avoid using pronouns in sub-questions unless the pronoun is the answer to another question.
+3.3. If the question does not need to be decomposed to be answered, output the original question.
+
+Example 1:
+llm_input:
+question: In which dynasty was the Zhaozhou Bridge built, and who was its last emperor?
+subquestions:
+Who built the Zhaozhou Bridge?
+In which year was the Zhaozhou Bridge built?
+Who was the first emperor of this dynasty?
+llm_output:
+NO
+The decomposition is incorrect because it includes irrelevant subquestions. The original question asks for the dynasty during which the Zhaozhou Bridge was built and its last emperor, but the subquestions inquire about the bridge's builder, the construction year, and the dynasty's first emperor. The relevant subquestions should directly focus on the dynasty and its last emperor.
+Correct decomposition approach:
+In which dynasty was the Zhaozhou Bridge built?
+Who was the last emperor of this dynasty?
+dependent relationship:
+question1 deps None
+question2 deps question1
+
+Example 2:
+llm_input:
+question: Who are the cousin, father, mother, and second uncle of Qian Xuesen's wife?
+subquestions:
+Who is Qian Xuesen’s wife?
+Who is the cousin of Qian Xuesen’s wife?
+Who is the father of Qian Xuesen’s wife?
+Who is the mother of Qian Xuesen’s wife?
+Who is the second uncle of Qian Xuesen’s wife?
+llm_output:
+YES
+
+Example 3:
+llm_input:
+question: In "Chinese Paladin 1", whose mother died to seal the Water Demon Beast?
+subquestions:
+In "Chinese Paladin 1", who is the mother of the Water Demon Beast?
+Who died to seal the Water Demon Beast?
+llm_output:
+NO
+The decomposition does not accurately address the original question. The first subquestion incorrectly seeks the identity of the Water Demon Beast's mother, which is not relevant. The correct focus should be on identifying the character whose mother died to seal the Water Demon Beast.
+Correct decomposition approach:
+In "Chinese Paladin 1", which character died to seal the Water Demon Beast?
+Who is the child of this character?
+dependent relationship:
+question1 deps None
+question2 deps question1
+
+Example 4:
+llm_input:
+question: If my hukou and social security are registered in Beijing, but my hometown is in Zhangjiakou, and I fully paid for a house in Zhangjiakou, can I withdraw from my housing provident fund?
+subquestions:
+Under what conditions can one withdraw from the housing provident fund in Beijing?
+Do the conditions of having a hukou and social security in Beijing, hometown in Zhangjiakou, and a fully paid house in Zhangjiakou meet the above requirements?
+llm_output:
+YES
+
+Example 5:
+llm_input:
+question: What is the relationship between Qian Xuesen's wife and Jiang Baili?
+subquestions:
+Who is Jiang Baili's wife?
+What is the relationship between this woman and Qian Xuesen?
+llm_output:
+NO
+The subquestions imply an incorrect relationship, suggesting that Jiang Baili’s wife has a direct relationship with Qian Xuesen. The correct approach should focus on identifying Qian Xuesen's wife and then exploring her relationship with Jiang Baili.
+Correct decomposition approach:
+Who is Qian Xuesen's wife?
+What is the relationship between this woman and Jiang Baili?
+dependent relationship:
+question1 deps None
+question2 deps question1
+
+Example 6:
+llm_input:
+question: What TV series did the male lead of "Zhou Chu Eliminates the Three Evils" co-star with Joe Chen?
+subquestions:
+Who is the male lead of Joe Chen?
+Is "Zhou Chu Eliminates the Three Evils" a TV series?
+Who co-starred with Joe Chen?
+llm_output:
+NO
+The subquestions are incorrect and misleading. The first assumes Joe Chen is a show, not a person. The second is unrelated, questioning the media type of "Zhou Chu Eliminates the Three Evils." The third is too broad, not specific to the TV series in question. Correct subquestions should identify the male lead of the specific TV series and then explore who co-starred with Joe Chen in any relevant series.
+Correct decomposition approach:
+Who is the male lead of "Zhou Chu Eliminates the Three Evils"?
+What TV series has this male lead starred in?
+What TV series has Joe Chen starred in?
+What is the intersection of these two TV series lists?
+dependent relationship:
+question1 deps None
+question2 deps question1
+question3 deps None
+question4 deps question1, question2
+
+Example 7:
+llm_input:
+question: What is the relationship between these two authors?
+subquestions:
+What is the relationship between these two authors?
+llm_output:
+YES
+
+Based on the above requirements and examples, analyze the following question decomposition:
+llm_input:
+question: $question
+subquestions:
+$sub_questions
+llm_output:
