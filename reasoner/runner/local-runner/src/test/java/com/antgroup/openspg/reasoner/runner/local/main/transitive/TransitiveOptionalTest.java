@@ -470,7 +470,7 @@ public class TransitiveOptionalTest {
       dSet.add(row[3]);
     }
     Assert.assertTrue(dSet.contains("D_333"));
-    Assert.assertTrue(dSet.contains(null));
+    Assert.assertTrue(dSet.contains("null"));
 
     dataGraphStr =
         "Graph {\n"

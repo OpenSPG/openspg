@@ -1077,4 +1077,38 @@ public class KgReasonerDependencyFilmTest {
     Assert.assertEquals("root", result.get(0)[0]);
     Assert.assertEquals("100", result.get(0)[1]);
   }
+
+  @Test
+  public void test21() {
+    FileMutex.runTestWithMutex(this::doTest21);
+  }
+
+  private void doTest21() {
+    String dsl =
+        "\n"
+            + "GraphStructure {\n"
+            + "  A [FilmStar] \n"
+            + "  B [Film,__start__='true'] \n"
+            + "  C [Film] \n"
+            + "\n"
+            + "  B->A [starOfFilm, __optional__='true'] as BA  \n"
+            + "  C->A [starOfFilm, __optional__='true'] as CA\n"
+            + "\n"
+            + "}\n"
+            + "Rule {\n"
+            + "     R2: exist(BA) and BA.joinTs >=100\n"
+            + "     R3: exist(CA) and CA.joinTs >=100\n"
+            + "}\n"
+            + "Action {\n"
+            + "  get(\n"
+            + "  A.id,\n"
+            + "  B.id,\n"
+            + "  BA.joinTs,\n"
+            + "  C.id,\n"
+            + "  CA.joinTs\n"
+            + "  )   \n"
+            + "}";
+    List<String[]> result = runTestResult(dsl);
+    Assert.assertEquals(11, result.size());
+  }
 }

@@ -18,6 +18,7 @@ from knext.command.sub_command.config import list_config
 from knext.command.sub_command.project import create_project
 from knext.command.sub_command.project import list_project
 from knext.command.sub_command.reasoner import execute_reasoner_job
+from knext.command.sub_command.thinker import execute_thinker_job
 from knext.command.sub_command.schema import commit_schema
 from knext.command.sub_command.schema import list_schema
 from knext.command.sub_command.schema import reg_concept_rule
@@ -78,6 +79,16 @@ def reasoner() -> None:
 
 
 reasoner.command("execute")(execute_reasoner_job)
+
+
+@_main.group()
+def thinker() -> None:
+    """Thinker client."""
+    pass
+
+
+thinker.command("execute")(execute_thinker_job)
+
 
 if __name__ == "__main__":
     _main()

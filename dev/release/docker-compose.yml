@@ -2,7 +2,7 @@ version: "3.7"
 services:
   server:
     restart: always
-    image: openspg/openspg-server:latest
+    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-server:latest
     container_name: release-openspg-server
     ports:
       - "8887:8887"
@@ -19,7 +19,7 @@ services:
 
   mysql:
     restart: always
-    image: openspg/openspg-mysql:latest
+    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-mysql:latest
     container_name: release-openspg-mysql
     environment:
       TZ: Asia/Shanghai

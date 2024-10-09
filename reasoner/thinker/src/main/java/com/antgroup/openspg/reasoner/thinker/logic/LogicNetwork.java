@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.reasoner.thinker.logic;
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.ClauseEntry;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import java.util.*;
@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 public class LogicNetwork {
   private static final Logger logger = LoggerFactory.getLogger(LogicNetwork.class);
 
-  private Map<Element, Map<Element, List<Rule>>> forwardRules;
-  private Map<Element, Map<List<Element>, List<Rule>>> backwardRules;
+  private Map<Triple, Map<Triple, List<Rule>>> forwardRules;
+  private Map<Triple, Map<List<Triple>, List<Rule>>> backwardRules;
 
   public LogicNetwork() {
     this.forwardRules = new HashMap<>();
@@ -36,24 +36,24 @@ public class LogicNetwork {
 
   public void addRule(Rule rule) {
     for (ClauseEntry body : rule.getBody()) {
-      Map<Element, List<Rule>> rules =
-          forwardRules.computeIfAbsent(body.toElement(), (key) -> new HashMap<>());
+      Map<Triple, List<Rule>> rules =
+          forwardRules.computeIfAbsent(body.toTriple(), (key) -> new HashMap<>());
       List<Rule> rList =
-          rules.computeIfAbsent(rule.getHead().toElement(), (k) -> new LinkedList<>());
+          rules.computeIfAbsent(rule.getHead().toTriple(), (k) -> new LinkedList<>());
       rList.add(rule);
     }
-    Map<List<Element>, List<Rule>> rules =
-        backwardRules.computeIfAbsent(rule.getHead().toElement(), (key) -> new HashMap<>());
+    Map<List<Triple>, List<Rule>> rules =
+        backwardRules.computeIfAbsent(rule.getHead().toTriple(), (key) -> new HashMap<>());
     List<Rule> rList =
         rules.computeIfAbsent(
-            rule.getBody().stream().map(ClauseEntry::toElement).collect(Collectors.toList()),
+            rule.getBody().stream().map(ClauseEntry::toTriple).collect(Collectors.toList()),
             (k) -> new LinkedList<>());
     rList.add(rule);
   }
 
-  public Collection<Rule> getForwardRules(Element e) {
+  public Collection<Rule> getForwardRules(Triple e) {
     Set<Rule> rules = new HashSet<>();
-    for (Map.Entry<Element, Map<Element, List<Rule>>> entry : forwardRules.entrySet()) {
+    for (Map.Entry<Triple, Map<Triple, List<Rule>>> entry : forwardRules.entrySet()) {
       if (entry.getKey().matches(e)) {
         entry.getValue().values().stream().forEach(list -> rules.addAll(list));
       }
@@ -61,9 +61,9 @@ public class LogicNetwork {
     return rules;
   }
 
-  public Collection<Rule> getBackwardRules(Element triple) {
+  public Collection<Rule> getBackwardRules(Triple triple) {
     Set<Rule> rules = new HashSet<>();
-    for (Map.Entry<Element, Map<List<Element>, List<Rule>>> entry : backwardRules.entrySet()) {
+    for (Map.Entry<Triple, Map<List<Triple>, List<Rule>>> entry : backwardRules.entrySet()) {
       if (entry.getKey().matches(triple)) {
         entry.getValue().values().stream().forEach(list -> rules.addAll(list));
       }

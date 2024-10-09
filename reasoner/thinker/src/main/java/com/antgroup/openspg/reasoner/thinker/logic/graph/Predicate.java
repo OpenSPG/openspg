@@ -19,6 +19,8 @@ import lombok.Data;
 
 @Data
 public class Predicate extends Element {
+  public static final Predicate CONCLUDE = new Predicate("conclude");
+
   private String name;
   private String alias;
 

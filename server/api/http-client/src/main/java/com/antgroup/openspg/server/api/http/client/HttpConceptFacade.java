@@ -13,16 +13,19 @@
 
 package com.antgroup.openspg.server.api.http.client;
 
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.api.facade.ApiResponse;
 import com.antgroup.openspg.server.api.facade.client.ConceptFacade;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SPGTypeRequest;
 import com.antgroup.openspg.server.api.http.client.forest.ForestUtils;
 import com.antgroup.openspg.server.api.http.client.forest.client.ConceptForestClient;
+import java.util.List;
 
 public class HttpConceptFacade implements ConceptFacade {
 
@@ -32,12 +35,17 @@ public class HttpConceptFacade implements ConceptFacade {
   }
 
   @Override
+  public ApiResponse<List<TripleSemantic>> getReasoningConceptsDetail(SPGTypeRequest request) {
+    return ForestUtils.call(ConceptForestClient.class, c -> c.getReasoningConcept(request));
+  }
+
+  @Override
   public ApiResponse<Boolean> defineDynamicTaxonomy(DefineDynamicTaxonomyRequest request) {
     return ForestUtils.call(ConceptForestClient.class, c -> c.defineDynamicTaxonomy(request));
   }
 
   @Override
-  public ApiResponse<Boolean> defineLogicalCausation(DefineLogicalCausationRequest request) {
+  public ApiResponse<Boolean> defineLogicalCausation(DefineTripleSemanticRequest request) {
     return ForestUtils.call(ConceptForestClient.class, c -> c.defineLogicalCausation(request));
   }
 
@@ -47,7 +55,7 @@ public class HttpConceptFacade implements ConceptFacade {
   }
 
   @Override
-  public ApiResponse<Boolean> removeLogicalCausation(RemoveLogicalCausationRequest request) {
+  public ApiResponse<Boolean> removeLogicalCausation(RemoveTripleSemanticRequest request) {
     return ForestUtils.call(ConceptForestClient.class, c -> c.removeLogicalCausation(request));
   }
 }

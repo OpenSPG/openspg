@@ -70,6 +70,10 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-thinker</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
       <artifactId>reasoner-cloudext-warehouse</artifactId>
     </dependency>
     <dependency>

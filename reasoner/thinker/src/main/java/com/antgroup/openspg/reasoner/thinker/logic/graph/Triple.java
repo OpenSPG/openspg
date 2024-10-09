@@ -66,6 +66,14 @@ public class Triple extends Element {
     return new Triple(nullToAny(s), nullToAny(p), nullToAny(o));
   }
 
+  public static Triple create(Element element) {
+    if (element instanceof Node || element instanceof Entity) {
+      return new Triple(Element.ANY, Predicate.CONCLUDE, element);
+    } else {
+      return (Triple) element;
+    }
+  }
+
   private static Element nullToAny(Element n) {
     return n == null ? ANY : n;
   }

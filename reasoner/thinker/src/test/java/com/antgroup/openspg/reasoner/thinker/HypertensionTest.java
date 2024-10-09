@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.thinker;
 
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
@@ -67,6 +68,7 @@ public class HypertensionTest {
     context.put("目标收缩压上界", 140);
     context.put("BMI", 35);
     context.put("GFR", 35);
+    context.put(Constants.SPG_REASONER_THINKER_STRICT, true);
     List<Result> triples = thinker.find(null, new Predicate("基本用药方案"), new Node("药品"), context);
     Assert.assertTrue(triples.size() == 2);
   }

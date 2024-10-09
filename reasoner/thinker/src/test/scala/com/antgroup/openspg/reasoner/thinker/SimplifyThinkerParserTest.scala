@@ -16,13 +16,7 @@ package com.antgroup.openspg.reasoner.thinker
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
-import com.antgroup.openspg.reasoner.thinker.logic.graph.{
-  CombinationEntity,
-  Entity,
-  Predicate,
-  Triple,
-  Value
-}
+import com.antgroup.openspg.reasoner.thinker.logic.graph.{CombinationEntity, Entity, Predicate, Triple, Value}
 import com.antgroup.openspg.reasoner.thinker.logic.graph
 import com.antgroup.openspg.reasoner.thinker.logic.rule._
 import com.antgroup.openspg.reasoner.thinker.logic.rule.exact._
@@ -45,12 +39,18 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     val ruleList: List[Rule] = parser.parseSimplifyDsl(thinkerDsl)
     assert(ruleList.size == 1)
     val rule: Rule = ruleList.head
-    assert(rule.getHead.isInstanceOf[EntityPattern])
+    val head = rule.getHead
+    assert(head.isInstanceOf[TriplePattern])
+    val headTriple = head.asInstanceOf[TriplePattern].getTriple
+    assert(headTriple.getSubject.isInstanceOf[logic.graph.Any])
+    assert(headTriple.getPredicate.asInstanceOf[Predicate].getName.equals("conclude"))
+
     val body = rule.getBody.asScala
     assert(body.size == 1)
     // body
     val clauseCount = calculateClauseCount(body.toList)
-    assert(clauseCount.entityPattern == 1)
+    assert(clauseCount.entityPattern == 0)
+    assert(clauseCount.triplePattern == 1)
 
     val root = rule.getRoot
     assert(root.isInstanceOf[Or])
@@ -66,8 +66,8 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     val conditionToElementMap: Map[Condition, Set[ClauseEntry]] =
       parser.getConditionToElementMap()
     assert(
-      conditionToElementMap(new QlExpressCondition("get_value(\"高血压分层/临床并发症\")")).head
-        .equals(new EntityPattern(new Entity("临床并发症", "高血压分层"))))
+      conditionToElementMap(new QlExpressCondition("get_spo(anonymous_4, anonymous_5, anonymous_6)")).head
+        .equals(new EntityPattern(new Entity("临床并发症", "高血压分层", "anonymous_6"))))
   }
 
   def getAllConditionInNode(node: Node): List[Condition] = {
@@ -111,7 +111,10 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
         |}
         |""".stripMargin
     val rule: Rule = parser.parseSimplifyDsl(thinkerDsl).head
-    assert(rule.getBody.size() == 3)
+    val body = rule.getBody.asScala
+    assert(body.size == 3)
+    val clauseCount = calculateClauseCount(body.toList)
+    assert(clauseCount.triplePattern == 3)
     val root = rule.getRoot
     assert(root.isInstanceOf[Or])
     val outermostOrChildrenList = root.asInstanceOf[Or].getChildren.asScala
@@ -124,8 +127,8 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
     assert(firstLineChildrenList.size == 3)
     assert(
       firstLineChildrenList.head.equals(
-        new QlExpressCondition("hits(get_value(\"高血压分层/心血管危险因素\")) >= 3")))
-    assert(firstLineChildrenList(1).equals(new QlExpressCondition("get_value(\"高血压分层/靶器官损害\")")))
+        new QlExpressCondition("hits(get_spo(anonymous_4, anonymous_5, anonymous_6)) >= 3")))
+    assert(firstLineChildrenList(1).equals(new QlExpressCondition("get_spo(anonymous_7, anonymous_8, anonymous_9)")))
     assert(firstLineChildrenList(2).equals(new QlExpressCondition("\"无并发症的糖尿病\" in 症状")))
 
     // second line
@@ -210,8 +213,8 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
 
     assert(rule.getBody.size() == 6)
     val (entityCount, tripleCount) = countClauseCount(rule.getBody.asScala.toList)
-    assert(entityCount == 2)
-    assert(tripleCount == 4)
+    assert(entityCount == 0)
+    assert(tripleCount == 6)
     val expectTriplePatternSet = Set.apply(
       new TriplePattern(
         new graph.Triple(
@@ -221,17 +224,17 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
       new TriplePattern(
         new graph.Triple(
           new graph.Node("InsDiseaseDisclaim", "b"),
-          new Predicate("clauseVersion", "anonymous_2"),
+          new Predicate("clauseVersion", "anonymous_8"),
           new graph.Node("InsClause", "c"))),
       new TriplePattern(
         new graph.Triple(
           new Predicate("disclaimClause", "p"),
           new Predicate("disclaimType"),
-          new Value(null, "anonymous_3"))),
+          new Value(null, "anonymous_9"))),
       new TriplePattern(
         new graph.Triple(
           new graph.Node("InsClause", "c"),
-          new Predicate("insClauseVersion", "anonymous_4"),
+          new Predicate("insClauseVersion", "anonymous_10"),
           new graph.Node("InsComProd", "d"))))
     assert(rule.getBody.containsAll(expectTriplePatternSet.asJava))
     assert(rule.getRoot.isInstanceOf[Or])
@@ -246,7 +249,7 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
             child
               .asInstanceOf[QlExpressCondition]
               .getQlExpress
-              .equals("hits(get_spo(a, p, b),get_spo(c, anonymous_4, d)) > 2"))
+              .equals("hits(get_spo(a, p, b),get_spo(c, anonymous_10, d)) > 2"))
         }
       })
   }
@@ -313,5 +316,60 @@ class SimplifyThinkerParserTest extends AnyFunSpec {
       }
     })
 
+  }
+
+  it("convert_concept_to_triple_1") {
+    val thinkerDsl =
+      """
+        |Define(a:InsDisease)-[:abnormalRule]->(o:A/`a1`) {
+        |    R1: (a)-[p: disclaimClause]->(o) AND A/`a1`
+        |}
+        |""".stripMargin
+    val rule: Rule = parser.parseSimplifyDsl(thinkerDsl).head
+    var conceptCount = 0
+    rule.getBody.asScala.foreach(clause => {
+      val triple = clause.asInstanceOf[TriplePattern].getTriple
+      if (triple.getSubject.isInstanceOf[logic.graph.Any]) {
+        assert(triple.getObject.alias().equals("o"))
+        conceptCount += 1
+      }
+    })
+    assert(conceptCount == 1)
+  }
+
+  it("define_rule_on_relation_to_concept5") {
+    val thinkerDsl =
+      """
+        |Define(a:InsDisease)-[:abnormalRule]->(o:String) {
+        |    R1: A/`a2` AND (a)-[p: disclaimClause]->(b: A/`a2`)
+        |}
+        |""".stripMargin
+    val rule: Rule = parser.parseSimplifyDsl(thinkerDsl).head
+    var conceptCount = 0
+    rule.getBody.asScala.foreach(clause => {
+      val triple = clause.asInstanceOf[TriplePattern].getTriple
+      if (triple.getSubject.isInstanceOf[logic.graph.Any]) {
+        assert(triple.getObject.alias().equals("b"))
+        conceptCount += 1
+      }
+    })
+    assert(conceptCount == 1)
+  }
+
+  it("define_rule_on_relation_to_concept6") {
+    val thinkerDsl =
+      """
+        |Define()-[: 确诊]->(: Medical.DiseaseTerm/`乙型肝炎大三阳`) {
+        | r:    (: Medical.ExaminationTerm/`乙肝表面抗原`)-[: abnormalValue]->(: Medical.AbnormalExaminationIndicator/`阳性`) and (: Medical.ExaminationTerm/`乙肝e抗原`)-[: abnormalValue]->(: Medical.AbnormalExaminationIndicator/`阳性`) and (: Medical.ExaminationTerm/`乙肝核心抗体`)-[: abnormalValue]->(: Medical.AbnormalExaminationIndicator/`阳性`)
+        |}
+        |""".stripMargin
+    val rule: Rule = parser.parseSimplifyDsl(thinkerDsl).head
+    val triplePatternList = rule.getBody.asScala.toList
+    assert(triplePatternList.size == 3)
+    val expectAlias = triplePatternList.head.asInstanceOf[TriplePattern].getTriple.getObject.alias()
+    triplePatternList.foreach(clause => {
+      val triple = clause.asInstanceOf[TriplePattern].getTriple
+      assert(triple.getObject.alias().equals(expectAlias))
+    })
   }
 }
