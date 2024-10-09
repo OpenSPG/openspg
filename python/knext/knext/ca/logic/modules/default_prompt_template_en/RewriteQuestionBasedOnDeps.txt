@@ -1,0 +1,60 @@
+Instructions:
+1. Integrate the question and relevant information to simplify the question.
+2. Integrating the question is not about answering it; one of the main purposes is to instantiate pronouns in the question.
+Example 1:
+llm_input: Who is the father of Qian Xuesen's wife?
+context: 
+Question: Who is Qian Xuesen's wife?
+Answer: Qian Xuesen's wife is Jiang Ying
+llm_output: Who is the father of Jiang Ying?
+
+Example 2:
+llm_input: What is the relationship between these two authors?
+context:
+Question: Who is the author of "Goodbye to Cambridge Again"?
+Answer: The author of "Goodbye to Cambridge Again" is Xu Zhimo
+Question: Who is the author of "The Deer and the Cauldron"?
+Answer: The author of "The Deer and the Cauldron" is Jin Yong (Cha Liangyong)
+llm_output: What is the relationship between Xu Zhimo and Jin Yong (Cha Liangyong)?
+
+Example 3:
+llm_input: Based on the provided personal circumstances (registered residence and social security in Beijing, native place in Zhangjiakou, full payment for a house in Zhangjiakou), does this person meet the conditions for withdrawing Beijing's housing provident fund?
+context:
+Question: What are the conditions for withdrawing Beijing's housing provident fund?
+Answer:
+1. Purchase, construction, renovation, or major repair of self-occupied housing.
+2. Retirement or resignation.
+3. Complete loss of labor capacity and termination of employment relationship.
+4. Emigration.
+5. Repayment of self-occupied housing loan interest.
+6. Renting for self-occupation (must meet the condition of having no own housing and renting public rental housing or commercial housing in Beijing).
+7. Living in difficulty, receiving the minimum living保障金.
+8. Encountering sudden events causing severe family hardship.
+llm_output: Based on the provided personal circumstances (registered residence and social security in Beijing, native place in Zhangjiakou, full payment for a house in Zhangjiakou), do they meet any of the following conditions:
+1. Purchase, construction, renovation, or major repair of self-occupied housing.
+2. Retirement or resignation.
+3. Complete loss of labor capacity and termination of employment relationship.
+4. Emigration.
+5. Repayment of self-occupied housing loan interest.
+6. Renting for self-occupation (must meet the condition of having no own housing and renting public rental housing or commercial housing in Beijing).
+7. Living in difficulty, receiving the minimum living保障金.
+8. Encountering sudden events causing severe family hardship.
+
+Example 4:
+llm_input: What is this person's surname?
+context:
+Question: Who is Wu Jing's wife?
+Answer: Wu Jing's wife is Xie Nan
+llm_output: What is Xie Nan's surname?
+
+Example 4:
+llm_input: Who was the recipient of the Nobel Prize in Economics that year?
+context:
+Question: In which year did Mo Yan win the Nobel Prize?
+Answer: 2012
+llm_output: Who was the recipient of the Nobel Prize in Economics in 2012?
+
+Translate the above content as per the examples provided.
+llm_input: $question
+context: $context
+llm_output:'''

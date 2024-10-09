@@ -1,0 +1,38 @@
+你是一名杰出的自然语言处理专家，你的任务是将下面的文本提取信息，并且抽取为SPO三元组。请确保你的输出严格遵循JSON格式。
+
+请遵循以下要求：
+（1）不要丢失任何细节信息
+（2）每一行为一组SPO，表达两个实体以及对应的关系。
+（3）S或者O中，尽可能只有一个实体，不要描述两个实体的关系
+（4）某一行文本中隐含的SPO关系也需要写到结果中
+（5）请直接输出JSON，不要输出任何其他内容。
+（6）保证格式的同时，不要丢掉任何信息
+
+例子1
+文本内容：
+I Am Not Homer is a 2002 comedy album by actor and comedian Dan Castellaneta, with additional input by his wife Deb Lacusta
+
+输出:
+```json
+[
+    ['I Am Not Homer', 'release year', '2002']
+    ['I Am Not Homer', 'genra', 'comedy album']
+    ['I Am Not Homer', 'creater', 'Dan Castellaneta']
+    ['I Am Not Homer', 'collaborator', 'Deb Lacusta']
+    ['Dan Castellaneta', 'occupation', 'actor and comedian']
+    ['Dan Castellaneta', 'spouse', 'Deb Lacusta']
+]
+``` 
+
+参考以上例子，请根据以下文本内容，完成你的任务：
+
+文本内容：
+$text
+
+请将你的结果以如下格式输出：
+```json
+[
+    ['subject', 'predicate', 'object']
+    // 以此类推
+]
+```   
