@@ -1,0 +1,19 @@
+要求:
+1. 根据给定的问题和答案，获取对应的客体
+2. 回答尽可能简单
+
+例子1:
+llm_input: 蒋英的表哥是谁？
+answer: 徐志摩
+llm_output: 徐志摩
+
+例子2:
+llm_input: 贾宝玉的妻子是？
+answer: 薛宝钗
+llm_output: 薛宝钗
+
+
+根据以上要求和例子，判断以下问题和答案中，获取对应的客体
+llm_input: $question
+answer: $answer
+llm_output:
