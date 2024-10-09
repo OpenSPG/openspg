@@ -19,14 +19,14 @@ class MusiqueSolveQuestionWithSPO(SolveQuestionWithContext):
         return "MusiqueSolveQuestionWithSPO"
 
     def get_template_var_names(self):
-        return ['question', 'context']
+        return ["question", "context"]
 
     def get_extra_info_fetch_tools(self):
         return [self.spo_info_tool]
 
     def preprocess(self, question: Question):
         context = self.spo_info_tool.fetch_info(question.question)
-        prompt = self.state_dict['prompt_template'].substitute(
+        prompt = self.state_dict["prompt_template"].substitute(
             question=question.question,
             context=context,
         )
@@ -34,21 +34,22 @@ class MusiqueSolveQuestionWithSPO(SolveQuestionWithContext):
 
     def postprocess(self, question: Question, llm_output):
         info_dict = {
-            'status': 'MusiqueSolveQuestionWithSPO postprocess',
-            'log_info': f'question: {question.question}\nllm_output: {llm_output}'
+            "status": "MusiqueSolveQuestionWithSPO postprocess",
+            "log_info": f"question: {question.question}\nllm_output: {llm_output}",
         }
         self.process_intermediate_info(info_dict)
         try:
-            parts = llm_output.split('.')
-            answer = parts[0].split(':')[-1].strip()
-            para_idx = parts[1].split(':')[-1].strip()
+            parts = llm_output.split(".")
+            answer = parts[0].split(":")[-1].strip()
+            para_idx = parts[1].split(":")[-1].strip()
             if para_idx.isdigit():
                 self.spo_info_tool.store_supported_idx([int(para_idx)])
             return answer
         except Exception as err:
             logger.warning(
-                f'MusiqueSolveQuestionWithSPO postprocess fail with err: {err}.\n  question: {question.question}\n  llm_output: {llm_output}\n')
-            return 'not_found'
+                f"MusiqueSolveQuestionWithSPO postprocess fail with err: {err}.\n  question: {question.question}\n  llm_output: {llm_output}\n"
+            )
+            return "not_found"
 
 
 class MusiqueSolveQuestionWithText(SolveQuestionWithContext):
@@ -60,7 +61,7 @@ class MusiqueSolveQuestionWithText(SolveQuestionWithContext):
         return "MusiqueSolveQuestionWithText"
 
     def get_template_var_names(self):
-        return ['question', 'context']
+        return ["question", "context"]
 
     def get_extra_info_fetch_tools(self):
         return [self.text_info_tool]
@@ -71,7 +72,7 @@ class MusiqueSolveQuestionWithText(SolveQuestionWithContext):
         for idx, text in text_list:
             context += f"text: {text}; para_idx: {idx}\n"
 
-        prompt = self.state_dict['prompt_template'].substitute(
+        prompt = self.state_dict["prompt_template"].substitute(
             question=question.question,
             context=context,
         )
@@ -79,49 +80,51 @@ class MusiqueSolveQuestionWithText(SolveQuestionWithContext):
 
     def postprocess(self, question: Question, llm_output):
         info_dict = {
-            'status': 'MusiqueSolveQuestionWithSPO postprocess',
-            'log_info': f'question: {question.question}\nllm_output: {llm_output}'
+            "status": "MusiqueSolveQuestionWithSPO postprocess",
+            "log_info": f"question: {question.question}\nllm_output: {llm_output}",
         }
         self.process_intermediate_info(info_dict)
         try:
-            parts = llm_output.split('.')
-            answer = parts[0].split(':')[-1].strip()
-            para_idx = parts[1].split(':')[-1].strip()
+            parts = llm_output.split(".")
+            answer = parts[0].split(":")[-1].strip()
+            para_idx = parts[1].split(":")[-1].strip()
             if para_idx.isdigit():
                 self.text_info_tool.store_supported_idx([int(para_idx)])
             return answer
         except Exception as err:
             logger.warning(
-                f'MusiqueSolveQuestionWithSPO postprocess fail with err: {err}.\n  question: {question.question}\n  llm_output: {llm_output}\n')
-            return 'not found'
+                f"MusiqueSolveQuestionWithSPO postprocess fail with err: {err}.\n  question: {question.question}\n  llm_output: {llm_output}\n"
+            )
+            return "not found"
 
 
 class HierarchicalSolveQuestion(Solver):
     def __init__(
-            self,
-            llm_module,
-            answer_with_spo,
-            answer_with_text,
-            use_default_prompt_template=True,
-            prompt_template_dir=None,
-            is_prompt_template_cn=False,
-            is_computational=False
+        self,
+        llm_module,
+        answer_with_spo,
+        answer_with_text,
+        use_default_prompt_template=True,
+        prompt_template_dir=None,
+        is_prompt_template_cn=False,
+        is_computational=False,
     ):
         super().__init__(
             llm_module,
             use_default_prompt_template=use_default_prompt_template,
             prompt_template_dir=prompt_template_dir,
             is_prompt_template_cn=is_prompt_template_cn,
-            is_computational=is_computational
+            is_computational=is_computational,
         )
         self.answer_with_spo = answer_with_spo
         self.answer_with_text = answer_with_text
 
     def forward(self, question: Question):
         spo_result = self.answer_with_spo.forward(question)
-        if spo_result == 'not_found':
+        if spo_result == "not_found":
             logger.info(
-                f'answer_with_spo not found result for question {question.question}, prepare to call answer_with_text')
+                f"answer_with_spo not found result for question {question.question}, prepare to call answer_with_text"
+            )
             text_result = self.answer_with_text.forward(question)
             return text_result
         else:
@@ -135,14 +138,15 @@ class HierarchicalSolveQuestion(Solver):
 
 
 class MusiqueDivideAndConquerAgent(DivideAndConquerAgent):
-    def __init__(self,
-                 llm,
-                 prompt_template_dir,
-                 answer_parent_question,
-                 answer_atom_question,
-                 debug_mode,
-                 max_depth=1,
-                 ):
+    def __init__(
+        self,
+        llm,
+        prompt_template_dir,
+        answer_parent_question,
+        answer_atom_question,
+        debug_mode,
+        max_depth=1,
+    ):
         use_default_prompt_template = True
         intermediate_process_tools = []
         intermediate_process_tools.append(
@@ -167,11 +171,13 @@ class MusiqueDivideAndConquerAgent(DivideAndConquerAgent):
 
         predicted_support_idxs = []
         for extra_info_tool in self.extra_info_fetch_tools:
-            predicted_support_idxs.extend(extra_info_tool.fetch_supported_idx_by_question(question.question))
+            predicted_support_idxs.extend(
+                extra_info_tool.fetch_supported_idx_by_question(question.question)
+            )
 
         result = {
-            'question': question.question,
-            'predicted_answer': answer,
-            'predicted_support_idxs': predicted_support_idxs,
+            "question": question.question,
+            "predicted_answer": answer,
+            "predicted_support_idxs": predicted_support_idxs,
         }
         return result

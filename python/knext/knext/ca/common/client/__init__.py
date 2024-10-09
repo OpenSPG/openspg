@@ -11,7 +11,9 @@ def register_llm_client(name):
     def decorator(cls):
         _LLM_CLIENTS[name] = cls
         return cls
+
     return decorator
+
 
 # Function to get an LLM client instance
 def get_llm_client(client_name, client_config=None):
@@ -22,12 +24,15 @@ def get_llm_client(client_name, client_config=None):
     else:
         raise ValueError(f"No client registered with the name '{client_name}'")
 
+
 # Registration decorator for EMB clients
 def register_emb_client(name):
     def decorator(cls):
         _EMB_CLIENTS[name] = cls
         return cls
+
     return decorator
+
 
 # Function to get an EMB client instance
 def get_emb_client(client_name, client_config=None):
@@ -38,14 +43,16 @@ def get_emb_client(client_name, client_config=None):
     else:
         raise ValueError(f"No client registered with the name '{client_name}'")
 
+
 # Automatically register modules in the current directory
 def _auto_register():
     current_dir = Path(__file__).parent  # Get the directory where __init__.py resides
-    for file in current_dir.glob('*.py'):
-        if file.name != '__init__.py':  # Exclude __init__.py itself
+    for file in current_dir.glob("*.py"):
+        if file.name != "__init__.py":  # Exclude __init__.py itself
             module_name = file.stem  # Get the module name without .py extension
             spec = importlib.util.spec_from_file_location(module_name, file)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
+
 
 _auto_register()

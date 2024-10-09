@@ -30,26 +30,27 @@ class RagInfoRetriver(ExtraInfoRetriver):
     Subclass implementing a retrieval system with similarity search
 
     """
+
     def __init__(self, llm, embedding_fn):
         super().__init__()
         self.llm = llm
         self.embedding_fn = embedding_fn
         self.question_supported_idx_dict = {}
 
-        
     def get_embeddings(self, entities, batch_size=32):
         num_iter = int((len(entities) + batch_size - 1) / batch_size)
         embeddings = []
         for i in range(num_iter):
             s_idx = i * batch_size
             e_idx = (i + 1) * batch_size
-            entity_batch = entities[s_idx: e_idx]
+            entity_batch = entities[s_idx:e_idx]
             embedding_batch = self.embedding_fn.generate(entity_batch)
             embeddings.extend(embedding_batch)
         return np.array(embeddings)
-    
+
     def create_embedding_index(self, entity_embeddings):
         import faiss
+
         dim = entity_embeddings.shape[1]
         index = faiss.IndexFlatL2(dim)
         index.add(entity_embeddings)
@@ -60,7 +61,9 @@ class RagInfoRetriver(ExtraInfoRetriver):
         self.question_supported_idx_dict[self.current_root_question] = []
 
     def store_supported_idx(self, predicted_support_idxs):
-        self.question_supported_idx_dict[self.current_root_question].extend(predicted_support_idxs)
+        self.question_supported_idx_dict[self.current_root_question].extend(
+            predicted_support_idxs
+        )
 
     def fetch_supported_idx_by_question(self, current_root_question):
         return list(set(self.question_supported_idx_dict[current_root_question]))

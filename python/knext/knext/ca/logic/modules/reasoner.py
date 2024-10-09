@@ -9,12 +9,18 @@ from knext.ca.common.utils import logger
 
 
 class Reasoner(KagBaseModule):
-    def __init__(self, llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn):
+    def __init__(
+        self,
+        llm_module,
+        use_default_prompt_template,
+        prompt_template_dir,
+        is_prompt_template_cn,
+    ):
         super().__init__(
             llm_module=llm_module,
             use_default_prompt_template=use_default_prompt_template,
             prompt_template_dir=prompt_template_dir,
-            is_prompt_template_cn=is_prompt_template_cn
+            is_prompt_template_cn=is_prompt_template_cn,
         )
 
 
@@ -24,38 +30,46 @@ class IsAtomQuestion(Reasoner):
 
     """
 
-    def __init__(self, llm, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn=False):
+    def __init__(
+        self,
+        llm,
+        use_default_prompt_template,
+        prompt_template_dir,
+        is_prompt_template_cn=False,
+    ):
         use_default_prompt_template = False
-        super().__init__(llm, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
+        super().__init__(
+            llm, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn
+        )
 
     def get_module_name(self):
         return "IsAtomQuestion"
 
     def get_template_var_names(self):
-        return ['question']
+        return ["question"]
 
     def preprocess(self, question: Question):
-        prompt = self.state_dict['prompt_template'].substitute(
+        prompt = self.state_dict["prompt_template"].substitute(
             question=question.question,
         )
         return prompt
 
     def postprocess(self, question: Question, llm_output):
-        llm_output = llm_output.split(':')[-1].strip()
+        llm_output = llm_output.split(":")[-1].strip()
         if self.is_prompt_template_cn:
-            yes_token = '是'
-            no_token = '否'
+            yes_token = "是"
+            no_token = "否"
         else:
-            yes_token = 'YES'
-            no_token = 'NO'
+            yes_token = "YES"
+            no_token = "NO"
 
         if llm_output == yes_token:
             return True
         elif llm_output == no_token:
             return False
         else:
-            warning_reuslt = f'result: {llm_output}'
-            logger.warning(f'{warning_reuslt}')
+            warning_reuslt = f"result: {llm_output}"
+            logger.warning(f"{warning_reuslt}")
             return True
 
 
@@ -65,37 +79,47 @@ class DoesQuestionNeedExtraInfo(Reasoner):
 
     """
 
-    def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
-                 is_prompt_template_cn=False):
-        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
+    def __init__(
+        self,
+        llm_module,
+        use_default_prompt_template=True,
+        prompt_template_dir=None,
+        is_prompt_template_cn=False,
+    ):
+        super().__init__(
+            llm_module,
+            use_default_prompt_template,
+            prompt_template_dir,
+            is_prompt_template_cn,
+        )
 
     def get_module_name(self):
         return "DoesQuestionNeedExtraInfo"
 
     def get_template_var_names(self):
-        return ['question']
+        return ["question"]
 
     def preprocess(self, question: Question):
-        prompt = self.state_dict['prompt_template'].substitute(
+        prompt = self.state_dict["prompt_template"].substitute(
             question=question.question
         )
         return prompt
 
     def postprocess(self, question: Question, llm_output):
         if self.is_prompt_template_cn:
-            yes_token = '是'
-            no_token = '否'
+            yes_token = "是"
+            no_token = "否"
         else:
-            yes_token = 'YES'
-            no_token = 'NO'
+            yes_token = "YES"
+            no_token = "NO"
 
         if llm_output == yes_token:
             return True
         elif llm_output == no_token:
             return False
         else:
-            warning_reuslt = f'result: {llm_output}'
-            logger.debug(f'{warning_reuslt}')
+            warning_reuslt = f"result: {llm_output}"
+            logger.debug(f"{warning_reuslt}")
             return False
 
 
@@ -105,23 +129,35 @@ class ExtractTriplesFromTextModule(Reasoner):
 
     """
 
-    def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
-                 is_prompt_template_cn=False):
-        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
+    def __init__(
+        self,
+        llm_module,
+        use_default_prompt_template=True,
+        prompt_template_dir=None,
+        is_prompt_template_cn=False,
+    ):
+        super().__init__(
+            llm_module,
+            use_default_prompt_template,
+            prompt_template_dir,
+            is_prompt_template_cn,
+        )
 
     def get_module_name(self):
         return "ExtractTriplesFromTextModule"
 
     def get_template_var_names(self):
-        return ['text']
+        return ["text"]
 
     def forward(self, text):
         TEMPERATURE = 0.0
-        prompt = self.state_dict['prompt_template'].substitute(
+        prompt = self.state_dict["prompt_template"].substitute(
             text=text,
         )
         llm_output = self.llm_module.generate(prompt, temperature=TEMPERATURE)
-        triples_list = json.loads(llm_output.replace('```json', '').replace('```', '').strip())
+        triples_list = json.loads(
+            llm_output.replace("```json", "").replace("```", "").strip()
+        )
         return triples_list
 
 
@@ -131,14 +167,23 @@ class FetchSubject(Reasoner):
 
     """
 
-    def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
-                 is_prompt_template_cn=False):
-        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
+    def __init__(
+        self,
+        llm_module,
+        use_default_prompt_template=True,
+        prompt_template_dir=None,
+        is_prompt_template_cn=False,
+    ):
+        super().__init__(
+            llm_module,
+            use_default_prompt_template,
+            prompt_template_dir,
+            is_prompt_template_cn,
+        )
 
     def preprocess(self, question: Question):
-        prompt = self.state_dict['prompt_template'].substitute(
-            question=question.question,
-            answer=question.answer
+        prompt = self.state_dict["prompt_template"].substitute(
+            question=question.question, answer=question.answer
         )
         return prompt
 
@@ -146,7 +191,7 @@ class FetchSubject(Reasoner):
         return "FetchSubject"
 
     def get_template_var_names(self):
-        return ['question', 'answer']
+        return ["question", "answer"]
 
 
 class FetchPredicate(Reasoner):
@@ -155,14 +200,23 @@ class FetchPredicate(Reasoner):
 
     """
 
-    def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
-                 is_prompt_template_cn=False):
-        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
+    def __init__(
+        self,
+        llm_module,
+        use_default_prompt_template=True,
+        prompt_template_dir=None,
+        is_prompt_template_cn=False,
+    ):
+        super().__init__(
+            llm_module,
+            use_default_prompt_template,
+            prompt_template_dir,
+            is_prompt_template_cn,
+        )
 
     def preprocess(self, question: Question):
-        prompt = self.state_dict['prompt_template'].substitute(
-            question=question.question,
-            answer=question.answer
+        prompt = self.state_dict["prompt_template"].substitute(
+            question=question.question, answer=question.answer
         )
         return prompt
 
@@ -170,7 +224,7 @@ class FetchPredicate(Reasoner):
         return "FetchPredicate"
 
     def get_template_var_names(self):
-        return ['question', 'answer']
+        return ["question", "answer"]
 
 
 class FetchObject(Reasoner):
@@ -179,14 +233,23 @@ class FetchObject(Reasoner):
 
     """
 
-    def __init__(self, llm_module, use_default_prompt_template=True, prompt_template_dir=None,
-                 is_prompt_template_cn=False):
-        super().__init__(llm_module, use_default_prompt_template, prompt_template_dir, is_prompt_template_cn)
+    def __init__(
+        self,
+        llm_module,
+        use_default_prompt_template=True,
+        prompt_template_dir=None,
+        is_prompt_template_cn=False,
+    ):
+        super().__init__(
+            llm_module,
+            use_default_prompt_template,
+            prompt_template_dir,
+            is_prompt_template_cn,
+        )
 
     def preprocess(self, question: Question):
-        prompt = self.state_dict['prompt_template'].substitute(
-            question=question.question,
-            answer=question.answer
+        prompt = self.state_dict["prompt_template"].substitute(
+            question=question.question, answer=question.answer
         )
         return prompt
 
@@ -194,8 +257,4 @@ class FetchObject(Reasoner):
         return "FetchObject"
 
     def get_template_var_names(self):
-        return ['question', 'answer']
-
-
-
-
+        return ["question", "answer"]
