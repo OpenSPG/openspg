@@ -33,7 +33,6 @@ class Solver(KagBaseModule):
 class SolveQuestionWithContext(Solver):
     """
     Module for answering questions based on context using a language model.
-
     """
 
     def __init__(
