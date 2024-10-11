@@ -608,7 +608,7 @@ floor_operator: FLOOR;
 ceiling_operator: CEIL|CEILING;
 
 function_expr : function_name left_paren function_args? right_paren;
-function_name : identifier;
+function_name : identifier | list_common_agg_name;
 function_args : list_element_list;
 
 lambda_expr : left_paren binary_lambda_args right_paren labmda_body_array value_expression;

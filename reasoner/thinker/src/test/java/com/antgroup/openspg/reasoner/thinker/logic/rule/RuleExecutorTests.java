@@ -16,18 +16,19 @@ package com.antgroup.openspg.reasoner.thinker.logic.rule;
 import com.antgroup.openspg.reasoner.thinker.SimplifyThinkerParser;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleExecutor;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class RuleExecutorTests {
   private Rule getR1() {
     String rule =
         "Define (危险水平分层/`很高危`) {\n"
-            + "  R1:高血压分层/`临床并发症` and (\"有并发症的糖尿病\" in 症状) and 伸缩压>=140\n"
+                + "  R1: max(伸缩压)>=140\n"
             + "}";
     SimplifyThinkerParser parser = new SimplifyThinkerParser();
     return parser.parseSimplifyDsl(rule, null).head();
@@ -48,7 +49,7 @@ public class RuleExecutorTests {
     Node root = rule.getRoot();
     TreeLogger logger = new TreeLogger(root.toString());
     Map<String, Object> session = new HashMap<>();
-    session.put("伸缩压", 141);
+    session.put("伸缩压", Arrays.asList(130, 141));
     session.put("症状", "有并发症的糖尿病");
     Boolean ret =
         rule.getRoot()
