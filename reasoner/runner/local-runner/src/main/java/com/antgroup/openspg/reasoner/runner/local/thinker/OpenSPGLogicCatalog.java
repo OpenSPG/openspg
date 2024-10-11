@@ -11,8 +11,12 @@
  * or implied.
  */
 
-package com.antgroup.openspg.reasoner.thinker.catalog;
+package com.antgroup.openspg.reasoner.runner.local.thinker;
 
+import com.antgroup.kg.reasoner.thinker.SimplifyThinkerParser;
+import com.antgroup.kg.reasoner.thinker.catalog.LogicCatalog;
+import com.antgroup.kg.reasoner.thinker.logic.LogicNetwork;
+import com.antgroup.kg.reasoner.thinker.logic.rule.Rule;
 import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
@@ -24,9 +28,6 @@ import com.antgroup.openspg.reasoner.lube.catalog.AbstractConnection;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.lube.catalog.SemanticPropertyGraph;
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field;
-import com.antgroup.openspg.reasoner.thinker.SimplifyThinkerParser;
-import com.antgroup.openspg.reasoner.thinker.logic.LogicNetwork;
-import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import com.antgroup.openspg.server.api.facade.ApiResponse;
 import com.antgroup.openspg.server.api.facade.client.ConceptFacade;
 import com.antgroup.openspg.server.api.facade.client.SchemaFacade;

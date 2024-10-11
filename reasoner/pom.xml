@@ -36,7 +36,6 @@
     <module>runner/runner-common</module>
     <module>runner/local-runner</module>
     <module>catalog/openspg-catalog</module>
-    <module>thinker</module>
   </modules>
 
   <properties>

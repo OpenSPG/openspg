@@ -13,8 +13,8 @@
 
 package com.antgroup.openspg.reasoner.runner.local.thinker;
 
+import com.antgroup.kg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.catalog.impl.KgSchemaConnectionInfo;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import java.io.Serializable;
 import java.util.Map;
 import lombok.Data;

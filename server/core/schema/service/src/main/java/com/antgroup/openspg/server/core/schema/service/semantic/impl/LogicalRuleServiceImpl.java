@@ -13,13 +13,13 @@
 
 package com.antgroup.openspg.server.core.schema.service.semantic.impl;
 
+import com.antgroup.kg.reasoner.thinker.SimplifyThinkerParser;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.DslSyntaxError;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
 import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
 import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser;
-import com.antgroup.openspg.reasoner.thinker.SimplifyThinkerParser;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
 import com.antgroup.openspg.server.core.schema.service.semantic.LogicalRuleService;
 import com.antgroup.openspg.server.core.schema.service.semantic.model.DslCheckResult;
