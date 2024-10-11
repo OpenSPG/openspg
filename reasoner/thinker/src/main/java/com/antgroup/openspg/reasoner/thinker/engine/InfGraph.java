@@ -17,17 +17,30 @@ import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.thinker.TripleStore;
 import com.antgroup.openspg.reasoner.thinker.logic.LogicNetwork;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Element;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Entity;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Predicate;
+import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.ClauseEntry;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.Rule;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.TreeLogger;
 import com.antgroup.openspg.reasoner.thinker.logic.rule.visitor.RuleExecutor;
-import java.util.*;
-import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class InfGraph implements Graph {
   private static final Logger logger = LoggerFactory.getLogger(InfGraph.class);
@@ -69,6 +82,7 @@ public class InfGraph implements Graph {
         result.add(tri);
       }
     }
+    // TODO 像是记录推理的哪些Pattern，应该写在最前呀
     recorder.add((Triple) pattern.cleanAlias());
     // Step3: inference pattern
     List<Result> infResult = inference(pattern, context);
@@ -178,9 +192,12 @@ public class InfGraph implements Graph {
     return new Triple(sub, pre, obj);
   }
 
+  // TODO 别名的解决是，比如规则1中用到的规则2，但别名与规则2不同，那在计算规则2时用head的别名代替Pattern？
   private List<List<Result>> prepareElements(
       List<Triple> body, Triple head, Triple pattern, Map<String, Object> context) {
     List<List<Result>> elements = new ArrayList<>();
+    // TODO 为什么不直接用head作为起点，而是要将其bind到Pattern上？
+    // 1. 别名更换，2. node的实例化
     Triple bindingPattern = (Triple) pattern.bind(head);
     List<Triple> bindingBody = new ArrayList<>(body.size());
     for (Triple e : body) {
@@ -189,6 +206,7 @@ public class InfGraph implements Graph {
     TripleGroup tripleGroup = new TripleGroup(bindingBody);
     List<List<Triple>> groups = tripleGroup.group();
     for (List<Triple> group : groups) {
+      // TODO starts是什么作用
       Map<String, Element> starts = getStart(group);
       Set<Triple> choose = new HashSet<>();
       while (choose.size() < group.size()) {
@@ -310,6 +328,7 @@ public class InfGraph implements Graph {
     for (Result r : curRst) {
       List<Result> merged = new LinkedList<>(evidences);
       merged.add(r);
+      // TODO 这个保证应该在语法阶段就确认了
       if (reserve(merged)) {
         rst.add(merged);
       }
@@ -328,6 +347,8 @@ public class InfGraph implements Graph {
         if (!StringUtils.equals(((Entity) e).getId(), aliasToId.get(e.alias()))) {
           return false;
         }
+        // TODO 为什么会有Triple的subject又是Triple的情况
+        //p.disclaimType
       } else if (!(((Triple) e).getSubject() instanceof Triple)) {
         if (((Triple) e).getSubject() instanceof Entity) {
           Entity s = (Entity) ((Triple) e).getSubject();
@@ -354,11 +375,19 @@ public class InfGraph implements Graph {
     return true;
   }
 
+  /**
+   * rule1 -> rule2 -> rule1
+   *
+   * @param pattern
+   * @param context
+   * @return
+   */
   private Collection<Result> prepareElement(Element pattern, Map<String, Object> context) {
     Collection<Result> result = new LinkedList<>();
     Triple triple = Triple.create(pattern);
     Collection<Element> spo = this.tripleStore.find(triple);
     if (spo == null || spo.isEmpty()) {
+      // TODO 这里是为了防止对同一个Triple递归吗
       if (!recorder.contains(triple.cleanAlias())) {
         result = find(triple, context);
       }

@@ -13,7 +13,13 @@
 package com.antgroup.openspg.reasoner.thinker.engine;
 
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Triple;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class TripleGroup {
   private List<Triple> triples;
@@ -22,11 +28,14 @@ public class TripleGroup {
     this.triples = triples;
   }
 
+  // TODO group像是将body中的triple按照alias分组，具体是什么作用,
+  // 并查集找连通图
   public List<List<Triple>> group() {
     Map<String, String> resp = new HashMap<>();
     for (Triple triple : triples) {
       String s = findRootRep(triple.getSubject().alias(), resp);
       String o = findRootRep(triple.getObject().alias(), resp);
+      // TODO alias没有规则, 这里的比较有什么意义？
       if (s.compareTo(o) > 0) {
         resp.put(o, s);
         resp.put(triple.alias(), s);

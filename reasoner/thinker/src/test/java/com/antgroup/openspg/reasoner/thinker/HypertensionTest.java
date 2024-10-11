@@ -22,11 +22,12 @@ import com.antgroup.openspg.reasoner.thinker.engine.DefaultThinker;
 import com.antgroup.openspg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.thinker.logic.graph.Predicate;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class HypertensionTest {
   private GraphState<IVertexId> buildGraphState() {
@@ -65,11 +66,9 @@ public class HypertensionTest {
     Thinker thinker = buildThinker();
     Map<String, Object> context = new HashMap<>();
     context.put("收缩压", 160);
-    context.put("目标收缩压上界", 140);
-    context.put("BMI", 35);
-    context.put("GFR", 35);
+    context.put("舒张压", 200);
     context.put(Constants.SPG_REASONER_THINKER_STRICT, true);
     List<Result> triples = thinker.find(null, new Predicate("基本用药方案"), new Node("药品"), context);
-    Assert.assertTrue(triples.size() == 2);
+    Assert.assertTrue(triples.size() == 1);
   }
 }
