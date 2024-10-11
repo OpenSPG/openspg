@@ -28,8 +28,8 @@ public class RuleExecutorTests {
   private Rule getR1() {
     String rule =
         "Define (危险水平分层/`很高危`) {\n"
-                + "  R1: max(伸缩压)>=140\n"
-            + "}";
+                + "  R1:高血压分层/`临床并发症` and (\"有并发症的糖尿病\" in 症状) and 伸缩压>=140\n"
+                + "}";
     SimplifyThinkerParser parser = new SimplifyThinkerParser();
     return parser.parseSimplifyDsl(rule, null).head();
   }
@@ -43,13 +43,22 @@ public class RuleExecutorTests {
     return parser.parseSimplifyDsl(rule, null).head();
   }
 
+  private Rule getR3() {
+    String rule =
+            "Define (危险水平分层/`很高危`) {\n"
+                    + "  R1: max(伸缩压)>=140 AND min(舒张压) <= 50"
+                    + "}";
+    SimplifyThinkerParser parser = new SimplifyThinkerParser();
+    return parser.parseSimplifyDsl(rule, null).head();
+  }
+
   @Test
   public void testRuleExe() {
     Rule rule = getR1();
     Node root = rule.getRoot();
     TreeLogger logger = new TreeLogger(root.toString());
     Map<String, Object> session = new HashMap<>();
-    session.put("伸缩压", Arrays.asList(130, 141));
+    session.put("伸缩压", 141);
     session.put("症状", "有并发症的糖尿病");
     Boolean ret =
         rule.getRoot()
@@ -74,5 +83,19 @@ public class RuleExecutorTests {
         Assert.assertTrue(log.getCurrentNodeMsg().equals("卵泡期"));
       }
     }
+  }
+
+  @Test
+  public void testListAggRule() {
+    Rule rule = getR3();
+    Node root = rule.getRoot();
+    TreeLogger logger = new TreeLogger(root.toString());
+    Map<String, Object> session = new HashMap<>();
+    session.put("伸缩压", Arrays.asList(120, 141));
+    session.put("舒张压", Arrays.asList(60, 40));
+    Boolean ret =
+            rule.getRoot()
+                    .accept(new LinkedList<>(), session, new RuleExecutor(), logger);
+    Assert.assertTrue(ret);
   }
 }
