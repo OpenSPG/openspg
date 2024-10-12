@@ -69,8 +69,11 @@
       <artifactId>reasoner-warehouse-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg.reasoner</groupId>
-      <artifactId>reasoner-thinker</artifactId>
+      <groupId>com.antgroup.kg.reasoner</groupId>
+      <artifactId>thinker</artifactId>
+      <version>0.0.1</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../../../lib/thinker-0.0.1.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.reasoner</groupId>
@@ -126,9 +129,6 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.6.0</version>
         <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
           <archive>
             <manifest>
               <mainClass>com.antgroup.openspg.reasoner.runner.local.LocalReasonerMain</mainClass>
@@ -143,6 +143,11 @@
               <goal>single</goal>
             </goals>
             <phase>package</phase>
+            <configuration>
+              <descriptors>
+                <descriptor>src/assembly/assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
           </execution>
         </executions>
       </plugin>

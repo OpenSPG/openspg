@@ -14,6 +14,11 @@
 package com.antgroup.openspg.reasoner.runner.local.thinker;
 
 import com.alibaba.fastjson.JSON;
+import com.antgroup.kg.reasoner.thinker.Thinker;
+import com.antgroup.kg.reasoner.thinker.catalog.LogicCatalog;
+import com.antgroup.kg.reasoner.thinker.engine.DefaultThinker;
+import com.antgroup.kg.reasoner.thinker.logic.Result;
+import com.antgroup.kg.reasoner.thinker.logic.graph.*;
 import com.antgroup.openspg.reasoner.catalog.impl.KgSchemaConnectionInfo;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
@@ -21,12 +26,6 @@ import com.antgroup.openspg.reasoner.graphstate.impl.MemGraphState;
 import com.antgroup.openspg.reasoner.runner.local.LogUtil;
 import com.antgroup.openspg.reasoner.runner.local.ParamsKey;
 import com.antgroup.openspg.reasoner.runner.local.load.graph.AbstractLocalGraphLoader;
-import com.antgroup.openspg.reasoner.thinker.Thinker;
-import com.antgroup.openspg.reasoner.thinker.catalog.LogicCatalog;
-import com.antgroup.openspg.reasoner.thinker.catalog.OpenSPGLogicCatalog;
-import com.antgroup.openspg.reasoner.thinker.engine.DefaultThinker;
-import com.antgroup.openspg.reasoner.thinker.logic.Result;
-import com.antgroup.openspg.reasoner.thinker.logic.graph.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

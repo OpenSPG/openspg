@@ -60,6 +60,7 @@ OpenSPG核心能力模型包括：
 * [Contribution Guidelines](https://spg.openkg.cn/quick-start/contribution)
 
 # Cite
+
 如果您使用此软件，请引用引用:
 * [KAG: Boosting LLMs in Professional Domains via Knowledge Augmented Generation](https://arxiv.org/abs/2409.13731)
 * KGFabric: A Scalable Knowledge Graph Warehouse for Enterprise Data Interconnection

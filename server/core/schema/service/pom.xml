@@ -29,8 +29,11 @@
       <artifactId>reasoner-local-runner</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.openspg.reasoner</groupId>
-      <artifactId>reasoner-thinker</artifactId>
+      <groupId>com.antgroup.kg.reasoner</groupId>
+      <artifactId>thinker</artifactId>
+      <version>0.0.1</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../../../../lib/thinker-0.0.1.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
