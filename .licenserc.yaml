@@ -38,6 +38,7 @@ header:
     - '**/*.conf'
     - '**/*.yml'
     - '**/*.yaml'
+    - 'CITATION.cff'
 
   comment: on-failure
 
