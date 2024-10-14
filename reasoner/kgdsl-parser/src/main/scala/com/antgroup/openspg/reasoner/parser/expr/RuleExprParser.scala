@@ -495,9 +495,14 @@ class RuleExprParser extends Serializable {
     }
   }
 
+  def parseLogicItem(ctx: Logic_itemContext): Expr = {
+    val eorList = ctx.logic_factor().asScala.toList.map(x => parseLogicFactor(x))
+    eorList.reduce((A: Expr, B: Expr) => BinaryOpExpr(BEOr, A, B))
+  }
+
   def parseLogicTerm(ctx: Logic_termContext): Expr = {
-    val andlist = ctx.logic_factor().asScala.toList.map(x => parseLogicFactor(x))
-    andlist.reduce((A: Expr, B: Expr) => BinaryOpExpr(BAnd, A, B))
+    val andList = ctx.logic_item().asScala.toList.map(x => parseLogicItem(x))
+    andList.reduce((A: Expr, B: Expr) => BinaryOpExpr(BAnd, A, B))
   }
 
   def parseLogicValueExpression(ctx: Logic_value_expressionContext): Expr = {

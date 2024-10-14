@@ -357,6 +357,8 @@ case object BNotGreaterThan extends BinaryOpSet
 case object BSmallerThan extends BinaryOpSet
 case object BNotSmallerThan extends BinaryOpSet
 case object BOr extends BinaryOpSet
+
+case object BEOr extends BinaryOpSet
 case object BXor extends BinaryOpSet
 case object BIn extends BinaryOpSet
 case object BLike extends BinaryOpSet
