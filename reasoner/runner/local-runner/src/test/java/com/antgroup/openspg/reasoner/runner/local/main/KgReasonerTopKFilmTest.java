@@ -457,4 +457,17 @@ public class KgReasonerTopKFilmTest {
     Assert.assertEquals("root", result.get(0)[0]);
     Assert.assertEquals("L1_1_star", result.get(0)[1]);
   }
+
+  @Test
+  public void test15() {
+    FileMutex.runTestWithMutex(this::doTest15);
+  }
+
+  private void doTest15() {
+    String dsl =
+            "match (s:Film)-[p:starOfFilm|directOfFilm  PER_NODE_LIMIT 1]->(o:FilmStar|FilmDirector) where s.id = 'root' return s.id, o.id";
+    List<String[]> result = runTestResult(dsl);
+    Assert.assertEquals(2, result.size());
+    Assert.assertEquals(2, result.get(0).length);
+  }
 }

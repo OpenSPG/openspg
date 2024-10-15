@@ -301,8 +301,12 @@ public class PatternMatcher implements Serializable {
       Map<String, List<String>> edgeRuleMap,
       Long limit) {
     ArrayList<IEdge<IVertexId, IProperty>> result = new ArrayList<>();
-    long oneTypeEdgeCount = 0;
+    Map<String, Integer> edgeTypeCountMap = new HashMap<>();
     for (IEdge<IVertexId, IProperty> edge : edgeList) {
+      String edgeType = edge.getType();
+      if (!edgeTypeCountMap.containsKey(edgeType)) {
+        edgeTypeCountMap.put(edgeType, 0);
+      }
       if (!isEdgeMatch(
           vertexContext,
           edge,
@@ -311,10 +315,10 @@ public class PatternMatcher implements Serializable {
           edgeRuleMap.get(patternConnection.alias()))) {
         continue;
       }
-      oneTypeEdgeCount++;
-      if (null != limit && oneTypeEdgeCount > limit) {
-        // reach max path limit
-        break;
+      Integer currentEdgeTypeCount = edgeTypeCountMap.get(edgeType) + 1;
+      edgeTypeCountMap.put(edgeType, currentEdgeTypeCount);
+      if (null != limit && currentEdgeTypeCount > limit) {
+        continue;
       }
       result.add(edge);
     }
