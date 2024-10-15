@@ -465,7 +465,7 @@ public class KgReasonerTopKFilmTest {
 
   private void doTest15() {
     String dsl =
-            "match (s:Film)-[p:starOfFilm|directOfFilm  PER_NODE_LIMIT 1]->(o:FilmStar|FilmDirector) where s.id = 'root' return s.id, o.id";
+        "match (s:Film)-[p:starOfFilm|directOfFilm  PER_NODE_LIMIT 1]->(o:FilmStar|FilmDirector) where s.id = 'root' return s.id, o.id";
     List<String[]> result = runTestResult(dsl);
     Assert.assertEquals(2, result.size());
     Assert.assertEquals(2, result.get(0).length);
