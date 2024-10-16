@@ -525,7 +525,7 @@ LIMIT : ('L' | 'l')('I' | 'i')('M' | 'm')('I' | 'i')('T' | 't');
 OFFSET :('O' | 'o')('F' | 'f')('F' | 'f')('S' | 's')('E' | 'e')('T' | 't');
 
 AND : (('A' | 'a')('N' | 'n')('D' | 'd'))|('&&') ;
-EOR : ('E' | 'e')('O' | 'o')('R' | 'r') ;
+XOR : ('X' | 'o')('O' | 'o')('R' | 'r') ;
 OR_Latter : ('O' | 'o')('R' | 'r') ;
 OR_Symb : '||';
 
@@ -617,7 +617,7 @@ binary_lambda_args : identifier comma identifier ;
 // 逻辑 计算
 logic_value_expression : logic_term (or logic_term)*;
 logic_term : logic_item (AND logic_item)* ;
-logic_item : logic_factor (EOR logic_factor)*;
+logic_item : logic_factor (XOR logic_factor)*;
 logic_factor : (not)? logic_test ;
 logic_test : (spo_rule | concept_name | expr) ( (IS ( NOT_Latter )?|equals_operator|not_equals_operator) truth_value )? ;
 truth_value : TRUE|FALSE|NULL ;
