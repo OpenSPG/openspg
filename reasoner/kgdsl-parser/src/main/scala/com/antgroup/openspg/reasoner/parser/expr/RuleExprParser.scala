@@ -703,7 +703,13 @@ class RuleExprParser extends Serializable {
     val passArgs: List[Expr] = refExpr +: funcArgs
     val functionExpr = parseFunctionExprDetail(ctx.function_name().getText, passArgs)
     functionExpr match {
-      case c: FunctionExpr => AggOpExpr(AggUdf(c.name, funcArgs), refExpr)
+      case c: FunctionExpr =>
+        try {
+          parseAggFunc(c.name, c.funcArgs.head)
+        } catch {
+          case _: Exception =>
+            AggOpExpr(AggUdf(c.name, funcArgs), refExpr)
+        }
       case c => c
     }
   }
