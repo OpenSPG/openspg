@@ -525,6 +525,7 @@ LIMIT : ('L' | 'l')('I' | 'i')('M' | 'm')('I' | 'i')('T' | 't');
 OFFSET :('O' | 'o')('F' | 'f')('F' | 'f')('S' | 's')('E' | 'e')('T' | 't');
 
 AND : (('A' | 'a')('N' | 'n')('D' | 'd'))|('&&') ;
+XOR : ('X' | 'x')('O' | 'o')('R' | 'r') ;
 OR_Latter : ('O' | 'o')('R' | 'r') ;
 OR_Symb : '||';
 
@@ -547,6 +548,7 @@ DESCRIPTION : 'Description';
 // rule 表达式
 or : OR_Latter|OR_Symb;
 not : NOT_Latter | NOT_Symb;
+xor: XOR;
 value_expression_primary : parenthesized_value_expression|non_parenthesized_value_expression_primary_with_property ;
 parenthesized_value_expression : left_paren value_expression right_paren ;
 non_parenthesized_value_expression_primary_with_property: non_parenthesized_value_expression_primary (period property_name ) * ;
@@ -608,14 +610,15 @@ floor_operator: FLOOR;
 ceiling_operator: CEIL|CEILING;
 
 function_expr : function_name left_paren function_args? right_paren;
-function_name : identifier;
+function_name : identifier | list_common_agg_name;
 function_args : list_element_list;
 
 lambda_expr : left_paren binary_lambda_args right_paren labmda_body_array value_expression;
 binary_lambda_args : identifier comma identifier ;
 // 逻辑 计算
-logic_value_expression : logic_term (or logic_term)* ;
-logic_term : logic_factor (AND logic_factor)* ;
+logic_value_expression : logic_term (or logic_term)*;
+logic_term : logic_item (AND logic_item)* ;
+logic_item : logic_factor (xor logic_factor)*;
 logic_factor : (not)? logic_test ;
 logic_test : (spo_rule | concept_name | expr) ( (IS ( NOT_Latter )?|equals_operator|not_equals_operator) truth_value )? ;
 truth_value : TRUE|FALSE|NULL ;
@@ -963,6 +966,7 @@ thinker_script: (
 		define_rule_on_concept
 		| define_rule_on_relation_to_concept
 		| define_proiority_rule_on_concept
+		| logical_deduce
 )*;
 
 /*
@@ -978,6 +982,12 @@ Define (Med.drug)-[基本用药方案]->(药品/`ACEI+噻嗪类利尿剂`) {
 }
 */
 define_rule_on_relation_to_concept : define_rule_on_relation_to_concept_structure (description)?;
+
+logical_deduce : deduce_premise labmda_body_array deduce_conclusion description?;
+
+deduce_premise : logical_statement;
+
+deduce_conclusion : logical_statement;
 
 /*
 DefinePriority(危险水平分层) {

@@ -495,9 +495,14 @@ class RuleExprParser extends Serializable {
     }
   }
 
+  def parseLogicItem(ctx: Logic_itemContext): Expr = {
+    val xorList = ctx.logic_factor().asScala.toList.map(x => parseLogicFactor(x))
+    xorList.reduce((A: Expr, B: Expr) => BinaryOpExpr(BXor, A, B))
+  }
+
   def parseLogicTerm(ctx: Logic_termContext): Expr = {
-    val andlist = ctx.logic_factor().asScala.toList.map(x => parseLogicFactor(x))
-    andlist.reduce((A: Expr, B: Expr) => BinaryOpExpr(BAnd, A, B))
+    val andList = ctx.logic_item().asScala.toList.map(x => parseLogicItem(x))
+    andList.reduce((A: Expr, B: Expr) => BinaryOpExpr(BAnd, A, B))
   }
 
   def parseLogicValueExpression(ctx: Logic_value_expressionContext): Expr = {
@@ -698,7 +703,13 @@ class RuleExprParser extends Serializable {
     val passArgs: List[Expr] = refExpr +: funcArgs
     val functionExpr = parseFunctionExprDetail(ctx.function_name().getText, passArgs)
     functionExpr match {
-      case c: FunctionExpr => AggOpExpr(AggUdf(c.name, funcArgs), refExpr)
+      case c: FunctionExpr =>
+        try {
+          parseAggFunc(c.name, c.funcArgs.head)
+        } catch {
+          case _: Exception =>
+            AggOpExpr(AggUdf(c.name, funcArgs), refExpr)
+        }
       case c => c
     }
   }
