@@ -96,6 +96,8 @@ public class PatternMatcher implements Serializable {
       boolean enableStarPathLimit,
       long timeoutMillis) {
 
+    this.debugEnable = true;
+
     if (timeoutMillis != 0 && (System.currentTimeMillis() - this.initTime) > timeoutMillis) {
       log.warn("PatternMatcher patternMatch timeout id=" + id.toString());
       return null;
@@ -298,12 +300,12 @@ public class PatternMatcher implements Serializable {
       Map<String, List<String>> edgeRuleMap,
       Long totalLimit) {
     ArrayList<IEdge<IVertexId, IProperty>> result = new ArrayList<>();
-    Map<String, Integer> edgeTypeCountMap = new HashMap<>();
+    Map<String, Long> edgeTypeCountMap = new HashMap<>();
     Long totalCount = 0L;
     for (IEdge<IVertexId, IProperty> edge : edgeList) {
       String edgeType = edge.getType();
       if (!edgeTypeCountMap.containsKey(edgeType)) {
-        edgeTypeCountMap.put(edgeType, 0);
+        edgeTypeCountMap.put(edgeType, 0L);
       }
       if (!isEdgeMatch(
           vertexContext,
@@ -317,9 +319,9 @@ public class PatternMatcher implements Serializable {
       if (null != totalLimit && totalCount > totalLimit) {
         break;
       }
-      Integer currentEdgeTypeCount = edgeTypeCountMap.get(edgeType) + 1;
+      long currentEdgeTypeCount = edgeTypeCountMap.get(edgeType) + 1;
       edgeTypeCountMap.put(edgeType, currentEdgeTypeCount);
-      if (null != patternConnection.limit() && currentEdgeTypeCount > patternConnection.limit()) {
+      if (null != patternConnection.limit() && patternConnection.limit() > 0 && currentEdgeTypeCount > patternConnection.limit()) {
         continue;
       }
       result.add(edge);
