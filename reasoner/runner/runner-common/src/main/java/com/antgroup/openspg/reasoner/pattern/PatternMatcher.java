@@ -96,8 +96,6 @@ public class PatternMatcher implements Serializable {
       boolean enableStarPathLimit,
       long timeoutMillis) {
 
-    this.debugEnable = true;
-
     if (timeoutMillis != 0 && (System.currentTimeMillis() - this.initTime) > timeoutMillis) {
       log.warn("PatternMatcher patternMatch timeout id=" + id.toString());
       return null;
