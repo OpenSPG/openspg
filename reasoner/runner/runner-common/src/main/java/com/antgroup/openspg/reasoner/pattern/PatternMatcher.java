@@ -256,9 +256,6 @@ public class PatternMatcher implements Serializable {
                   + JSON.toJSONString(dstVertexRuleList));
         }
       }
-      if (patternConnection.limit() != null && patternConnection.limit() > 0) {
-        limit = new Long(patternConnection.limit());
-      }
       List<IEdge<IVertexId, IProperty>> validEdges =
           matchEdges(
               vertexContext, willMatchEdgeList, patternConnection, pattern, edgeRuleMap, limit);
@@ -299,10 +296,15 @@ public class PatternMatcher implements Serializable {
       Connection patternConnection,
       Pattern pattern,
       Map<String, List<String>> edgeRuleMap,
-      Long limit) {
+      Long totalLimit) {
     ArrayList<IEdge<IVertexId, IProperty>> result = new ArrayList<>();
-    long oneTypeEdgeCount = 0;
+    Map<String, Long> edgeTypeCountMap = new HashMap<>();
+    Long totalCount = 0L;
     for (IEdge<IVertexId, IProperty> edge : edgeList) {
+      String edgeType = edge.getType();
+      if (!edgeTypeCountMap.containsKey(edgeType)) {
+        edgeTypeCountMap.put(edgeType, 0L);
+      }
       if (!isEdgeMatch(
           vertexContext,
           edge,
@@ -311,10 +313,16 @@ public class PatternMatcher implements Serializable {
           edgeRuleMap.get(patternConnection.alias()))) {
         continue;
       }
-      oneTypeEdgeCount++;
-      if (null != limit && oneTypeEdgeCount > limit) {
-        // reach max path limit
+      totalCount = totalCount + 1;
+      if (null != totalLimit && totalCount > totalLimit) {
         break;
+      }
+      long currentEdgeTypeCount = edgeTypeCountMap.get(edgeType) + 1;
+      edgeTypeCountMap.put(edgeType, currentEdgeTypeCount);
+      if (null != patternConnection.limit()
+          && patternConnection.limit() > 0
+          && currentEdgeTypeCount > patternConnection.limit()) {
+        continue;
       }
       result.add(edge);
     }
