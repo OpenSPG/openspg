@@ -256,9 +256,6 @@ public class PatternMatcher implements Serializable {
                   + JSON.toJSONString(dstVertexRuleList));
         }
       }
-      if (patternConnection.limit() != null && patternConnection.limit() > 0) {
-        limit = new Long(patternConnection.limit());
-      }
       List<IEdge<IVertexId, IProperty>> validEdges =
           matchEdges(
               vertexContext, willMatchEdgeList, patternConnection, pattern, edgeRuleMap, limit);
@@ -299,9 +296,10 @@ public class PatternMatcher implements Serializable {
       Connection patternConnection,
       Pattern pattern,
       Map<String, List<String>> edgeRuleMap,
-      Long limit) {
+      Long totalLimit) {
     ArrayList<IEdge<IVertexId, IProperty>> result = new ArrayList<>();
     Map<String, Integer> edgeTypeCountMap = new HashMap<>();
+    Long totalCount = 0L;
     for (IEdge<IVertexId, IProperty> edge : edgeList) {
       String edgeType = edge.getType();
       if (!edgeTypeCountMap.containsKey(edgeType)) {
@@ -315,9 +313,13 @@ public class PatternMatcher implements Serializable {
           edgeRuleMap.get(patternConnection.alias()))) {
         continue;
       }
+      totalCount = totalCount + 1;
+      if (null != totalLimit && totalCount > totalLimit) {
+        break;
+      }
       Integer currentEdgeTypeCount = edgeTypeCountMap.get(edgeType) + 1;
       edgeTypeCountMap.put(edgeType, currentEdgeTypeCount);
-      if (null != limit && currentEdgeTypeCount > limit) {
+      if (null != patternConnection.limit() && currentEdgeTypeCount > patternConnection.limit()) {
         continue;
       }
       result.add(edge);
