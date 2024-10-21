@@ -319,7 +319,9 @@ public class PatternMatcher implements Serializable {
       }
       long currentEdgeTypeCount = edgeTypeCountMap.get(edgeType) + 1;
       edgeTypeCountMap.put(edgeType, currentEdgeTypeCount);
-      if (null != patternConnection.limit() && patternConnection.limit() > 0 && currentEdgeTypeCount > patternConnection.limit()) {
+      if (null != patternConnection.limit()
+          && patternConnection.limit() > 0
+          && currentEdgeTypeCount > patternConnection.limit()) {
         continue;
       }
       result.add(edge);
