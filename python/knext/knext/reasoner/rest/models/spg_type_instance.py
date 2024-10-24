@@ -32,19 +32,13 @@ class SpgTypeInstance(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'id': 'str',
-        'spg_type': 'str',
-        'properties': 'object'
-    }
+    openapi_types = {"id": "str", "spg_type": "str", "properties": "object"}
 
-    attribute_map = {
-        'id': 'id',
-        'spg_type': 'spgType',
-        'properties': 'properties'
-    }
+    attribute_map = {"id": "id", "spg_type": "spgType", "properties": "properties"}
 
-    def __init__(self, id=None, spg_type=None, properties=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, id=None, spg_type=None, properties=None, local_vars_configuration=None
+    ):  # noqa: E501
         """SpgTypeInstance - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -78,7 +72,9 @@ class SpgTypeInstance(object):
         :param id: The id of this SpgTypeInstance.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and id is None:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and id is None
+        ):  # noqa: E501
             raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
 
         self._id = id
@@ -101,8 +97,12 @@ class SpgTypeInstance(object):
         :param spg_type: The spg_type of this SpgTypeInstance.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and spg_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `spg_type`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and spg_type is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `spg_type`, must not be `None`"
+            )  # noqa: E501
 
         self._spg_type = spg_type
 
@@ -134,18 +134,20 @@ class SpgTypeInstance(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

@@ -22,8 +22,10 @@ from knext.schema.model.base import SpgTypeEnum
 
 reason_cache = knext.common.cache.SchemaCache()
 
+
 class ReasonerClient(Client):
     """SPG Reasoner Client."""
+
     _rest_client = rest.ReasonerApi()
 
     def __init__(self, host_addr: str = None, project_id: int = None, namespace=None):
@@ -51,7 +53,12 @@ class ReasonerClient(Client):
         - Return the constructed dictionary `schema`.
         """
         schema_session = self.create_session()
-        schema = {k: v for k, v in schema_session.spg_types.items() if v.spg_type_enum in [SpgTypeEnum.Concept, SpgTypeEnum.Entity, SpgTypeEnum.Event]}
+        schema = {
+            k: v
+            for k, v in schema_session.spg_types.items()
+            if v.spg_type_enum
+            in [SpgTypeEnum.Concept, SpgTypeEnum.Entity, SpgTypeEnum.Event]
+        }
         return schema
 
     def generate_graph_connect_config(self, lib):
@@ -95,7 +102,9 @@ class ReasonerClient(Client):
         print(task)
 
     def query_node(self, label, id_value):
-        req = SpgTypeQueryRequest(project_id=self._project_id, spg_type=label, ids=[id_value])
+        req = SpgTypeQueryRequest(
+            project_id=self._project_id, spg_type=label, ids=[id_value]
+        )
         resp = self._rest_client.query_spg_type_post(spg_type_query_request=req)
         if len(resp) == 0:
             return {}
@@ -106,17 +115,19 @@ class ReasonerClient(Client):
         return self._rest_client.reason_run_post(reason_task=task)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     sc = ReasonerClient("http://127.0.0.1:8887", 4)
     reason_schema = sc.get_reason_schema()
     print(reason_schema)
     prop_set = sc.query_node("KQA.Others", "Panic_disorder")
     import time
+
     start_time = time.time()
-    ret = sc.syn_execute("MATCH (n:KQA.Others)-[p:rdf_expand()]-(o:Entity) WHERE n.id in $nid and o.id in $oid RETURN p",
-                         start_alias="n",
-                         nid="[\"Panic_disorder\"]",
-                         oid="[\"Anxiety_and_nervousness\"]")
+    ret = sc.syn_execute(
+        "MATCH (n:KQA.Others)-[p:rdf_expand()]-(o:Entity) WHERE n.id in $nid and o.id in $oid RETURN p",
+        start_alias="n",
+        nid='["Panic_disorder"]',
+        oid='["Anxiety_and_nervousness"]',
+    )
     print(ret)
     print(f"cost={time.time() - start_time}")

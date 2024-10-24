@@ -15,7 +15,8 @@ from typing import List, Type, Union, Dict
 from knext.schema.model.base import (
     ConstraintTypeEnum,
     PropertyGroupEnum,
-    BaseProperty, IndexTypeEnum,
+    BaseProperty,
+    IndexTypeEnum,
 )
 
 

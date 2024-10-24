@@ -28,8 +28,10 @@ __version__ = "1"
 
 
 from knext.reasoner.rest.models.reason_task import ReasonTask
+
 # import models into sdk package
 from knext.reasoner.rest.models.reason_task_response import ReasonTaskResponse
 from knext.reasoner.rest.models.table_result import TableResult
+
 # import apis into sdk package
 from knext.reasoner.rest.reasoner_api import ReasonerApi

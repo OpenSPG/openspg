@@ -25,7 +25,9 @@ def execute_reasoner_job(file, dsl, output=None):
     """
     with_server = eval(os.getenv("KAG_PROJECT_WITH_SERVER", "False"))
     if not with_server:
-        click.secho("ERROR: Reasoner must be executed with SPG Server.", fg="bright_red")
+        click.secho(
+            "ERROR: Reasoner must be executed with SPG Server.", fg="bright_red"
+        )
         sys.exit()
     client = ReasonerClient()
     if file and not dsl:

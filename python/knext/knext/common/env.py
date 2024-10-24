@@ -18,9 +18,11 @@ from typing import Union, Optional
 
 import knext.common as common
 
+
 class ConfigParser(CP):
-    def __init__(self,defaults=None):
-        CP.__init__(self,defaults=defaults)
+    def __init__(self, defaults=None):
+        CP.__init__(self, defaults=defaults)
+
     def optionxform(self, optionstr):
         return optionstr
 

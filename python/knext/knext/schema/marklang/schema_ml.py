@@ -21,7 +21,7 @@ from knext.schema.model.base import (
     AlterOperationEnum,
     SpgTypeEnum,
     PropertyGroupEnum,
-    IndexTypeEnum
+    IndexTypeEnum,
 )
 from knext.schema.model.spg_type import (
     EntityType,
@@ -29,7 +29,8 @@ from knext.schema.model.spg_type import (
     EventType,
     StandardType,
     Property,
-    Relation, BasicType,
+    Relation,
+    BasicType,
 )
 from knext.schema.client import SchemaClient
 
@@ -72,7 +73,13 @@ class SPGSchemaMarkLang:
     entity_internal_property = set()
     event_internal_property = {"eventTime"}
     concept_internal_property = {"stdId", "alias"}
-    keyword_type = {"EntityType", "ConceptType", "EventType", "StandardType", "BasicType"}
+    keyword_type = {
+        "EntityType",
+        "ConceptType",
+        "EventType",
+        "StandardType",
+        "BasicType",
+    }
     semantic_rel = {
         "SYNANT": [
             "synonym",
@@ -169,7 +176,13 @@ class SPGSchemaMarkLang:
         self.entity_internal_property = set()
         self.event_internal_property = {"eventTime"}
         self.concept_internal_property = {"stdId", "alias"}
-        self.keyword_type = {"EntityType", "ConceptType", "EventType", "StandardType", "BasicType"}
+        self.keyword_type = {
+            "EntityType",
+            "ConceptType",
+            "EventType",
+            "StandardType",
+            "BasicType",
+        }
 
         self.parsing_register = {
             RegisterUnit.Type: None,
@@ -784,7 +797,9 @@ class SPGSchemaMarkLang:
         parse the property meta definition of SPG type
         """
 
-        match = re.match(r"^(desc|properties|constraint|rule|index):\s*?(.*)$", expression)
+        match = re.match(
+            r"^(desc|properties|constraint|rule|index):\s*?(.*)$", expression
+        )
         assert match, self.error_msg(
             "Unrecognized expression, expect desc:|properties:|constraint:|rule:|index:"
         )
@@ -1458,5 +1473,7 @@ class SPGSchemaMarkLang:
 
 if __name__ == "__main__":
     os.environ["KAG_PROJECT_ID"] = "4"
-    schema = SPGSchemaMarkLang("/Users/jier/Desktop/openspgapp/openspg/python/knext/knext/examples/medicine/schema/medicine.schema")
+    schema = SPGSchemaMarkLang(
+        "/Users/jier/Desktop/openspgapp/openspg/python/knext/knext/examples/medicine/schema/medicine.schema"
+    )
     schema.diff_and_sync(False)

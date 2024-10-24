@@ -34,9 +34,15 @@ class Chain(Runnable, RESTable):
 
         def execute_node(node, inputs: List[str]):
             with ThreadPoolExecutor(max_workers) as inner_executor:
-                inner_futures = [inner_executor.submit(node.invoke, inp) for inp in inputs]
+                inner_futures = [
+                    inner_executor.submit(node.invoke, inp) for inp in inputs
+                ]
                 result = []
-                for idx, inner_future in tqdm(enumerate(as_completed(inner_futures)), total=len(inner_futures), desc=f"Processing {node.name}"):
+                for idx, inner_future in tqdm(
+                    enumerate(as_completed(inner_futures)),
+                    total=len(inner_futures),
+                    desc=f"Processing {node.name}",
+                ):
                     ret = inner_future.result()
                     result.extend(ret)
                 return node, result
@@ -44,7 +50,9 @@ class Chain(Runnable, RESTable):
         # Initialize a ThreadPoolExecutor
         with ThreadPoolExecutor(max_workers) as executor:
             # Find the starting nodes (nodes with no predecessors)
-            start_nodes = [node for node in self.dag.nodes if self.dag.in_degree(node) == 0]
+            start_nodes = [
+                node for node in self.dag.nodes if self.dag.in_degree(node) == 0
+            ]
 
             # Initialize the first set of tasks
             for node in start_nodes:
@@ -61,15 +69,22 @@ class Chain(Runnable, RESTable):
                     successors = list(self.dag.successors(node))
                     for successor in successors:
                         # Check if all predecessors of the successor have finished processing
-                        if all(pred in node_results for pred in self.dag.predecessors(successor)):
+                        if all(
+                            pred in node_results
+                            for pred in self.dag.predecessors(successor)
+                        ):
                             # Gather all inputs from predecessors for this successor
                             inputs = []
                             for pred in self.dag.predecessors(successor):
                                 inputs.extend(node_results[pred])
-                            futures.append(executor.submit(execute_node, successor, inputs))
+                            futures.append(
+                                executor.submit(execute_node, successor, inputs)
+                            )
 
         # Collect the final results from the output nodes
-        output_nodes = [node for node in self.dag.nodes if self.dag.out_degree(node) == 0]
+        output_nodes = [
+            node for node in self.dag.nodes if self.dag.out_degree(node) == 0
+        ]
         final_output = []
         for node in output_nodes:
             if node in node_results:
@@ -83,7 +98,6 @@ class Chain(Runnable, RESTable):
 
     def to_rest(self):
         from knext.builder import rest
-
 
     def __rshift__(
         self,
@@ -103,7 +117,7 @@ class Chain(Runnable, RESTable):
         When linking Chain objects, the DAGs of both Chains are merged.
 
         Parameters:
-        other (Union[Type["Chain"], List[Type["Chain"]], Type["Component"], List[Type["Component"]], None]): 
+        other (Union[Type["Chain"], List[Type["Chain"]], Type["Component"], List[Type["Component"]], None]):
             The subsequent steps to link, which can be a single or list of Component/Chain objects.
 
         Returns:

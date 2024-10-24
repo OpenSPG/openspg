@@ -13,7 +13,11 @@
 import click
 
 # from knext.command.sub_command.builder import execute
-from knext.command.sub_command.project import create_project, restore_project, update_project
+from knext.command.sub_command.project import (
+    create_project,
+    restore_project,
+    update_project,
+)
 from knext.command.sub_command.reasoner import execute_reasoner_job
 from knext.command.sub_command.schema import commit_schema
 from knext.command.sub_command.schema import reg_concept_rule

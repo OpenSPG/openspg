@@ -18,10 +18,7 @@ import re  # noqa: F401
 import six
 
 from knext.common.rest.api_client import ApiClient
-from knext.common.rest.exceptions import (  # noqa: F401
-    ApiTypeError,
-    ApiValueError
-)
+from knext.common.rest.exceptions import ApiTypeError, ApiValueError  # noqa: F401
 
 
 class ReasonerApi(object):
@@ -57,7 +54,7 @@ class ReasonerApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.query_spg_type_post_with_http_info(**kwargs)  # noqa: E501
 
     def query_spg_type_post_with_http_info(self, **kwargs):  # noqa: E501
@@ -86,26 +83,24 @@ class ReasonerApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'spg_type_query_request'
-        ]
+        all_params = ["spg_type_query_request"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method query_spg_type_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -119,34 +114,42 @@ class ReasonerApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'spg_type_query_request' in local_var_params:
-            body_params = local_var_params['spg_type_query_request']
+        if "spg_type_query_request" in local_var_params:
+            body_params = local_var_params["spg_type_query_request"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/query/spgType', 'POST',
+            "/query/spgType",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='list[SpgTypeInstance]',  # noqa: E501
+            response_type="list[SpgTypeInstance]",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def schema_query_project_schema_get(self, project_id, **kwargs):  # noqa: E501
         """reason_schema  # noqa: E501
@@ -169,8 +172,10 @@ class ReasonerApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.schema_query_project_schema_get_info(project_id, **kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.schema_query_project_schema_get_info(
+            project_id, **kwargs
+        )  # noqa: E501
 
     def schema_query_project_schema_get_info(self, project_id, **kwargs):  # noqa: E501
         """reason_schema  # noqa: E501
@@ -198,34 +203,37 @@ class ReasonerApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'project_id'
-        ]
+        all_params = ["project_id"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method reason_schema_get" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'project_id' in local_var_params and local_var_params['project_id'] is not None:  # noqa: E501
-            query_params.append(('projectId', local_var_params['project_id']))  # noqa: E501
+        if (
+            "project_id" in local_var_params
+            and local_var_params["project_id"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("projectId", local_var_params["project_id"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -234,27 +242,32 @@ class ReasonerApi(object):
 
         body_params = None
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/reason/schema', 'GET',
+            "/reason/schema",
+            "GET",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='ProjectSchema',  # noqa: E501
+            response_type="ProjectSchema",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def reason_run_post(self, **kwargs):  # noqa: E501
         """reason_run  # noqa: E501
@@ -277,7 +290,7 @@ class ReasonerApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
+        kwargs["_return_http_data_only"] = True
         return self.reason_run_post_with_http_info(**kwargs)  # noqa: E501
 
     def reason_run_post_with_http_info(self, **kwargs):  # noqa: E501
@@ -306,26 +319,24 @@ class ReasonerApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'reason_task'
-        ]
+        all_params = ["reason_task"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method reason_run_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -339,35 +350,42 @@ class ReasonerApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'reason_task' in local_var_params:
-            body_params = local_var_params['reason_task']
+        if "reason_task" in local_var_params:
+            body_params = local_var_params["reason_task"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/reason/run', 'POST',
+            "/reason/run",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='ReasonTaskResponse',  # noqa: E501
+            response_type="ReasonTaskResponse",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
-
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def reasoner_dialog_report_node_post(self, **kwargs):  # noqa: E501
         """report_node  # noqa: E501
@@ -390,8 +408,10 @@ class ReasonerApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.reasoner_dialog_report_node_post_with_http_info(**kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.reasoner_dialog_report_node_post_with_http_info(
+            **kwargs
+        )  # noqa: E501
 
     def reasoner_dialog_report_node_post_with_http_info(self, **kwargs):  # noqa: E501
         """report_node  # noqa: E501
@@ -419,26 +439,24 @@ class ReasonerApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'report_pipeline_request'
-        ]
+        all_params = ["report_pipeline_request"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method reasoner_dialog_report_node_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
@@ -452,34 +470,42 @@ class ReasonerApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'report_pipeline_request' in local_var_params:
-            body_params = local_var_params['report_pipeline_request']
+        if "report_pipeline_request" in local_var_params:
+            body_params = local_var_params["report_pipeline_request"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/reasoner/dialog/report/node', 'POST',
+            "/reasoner/dialog/report/node",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='object',  # noqa: E501
+            response_type="object",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )
 
     def reasoner_dialog_report_pipeline_post(self, **kwargs):  # noqa: E501
         """report_pipeline  # noqa: E501
@@ -504,10 +530,14 @@ class ReasonerApi(object):
                  If the method is called asynchronously,
                  returns the request thread.
         """
-        kwargs['_return_http_data_only'] = True
-        return self.reasoner_dialog_report_pipeline_post_with_http_info(**kwargs)  # noqa: E501
+        kwargs["_return_http_data_only"] = True
+        return self.reasoner_dialog_report_pipeline_post_with_http_info(
+            **kwargs
+        )  # noqa: E501
 
-    def reasoner_dialog_report_pipeline_post_with_http_info(self, **kwargs):  # noqa: E501
+    def reasoner_dialog_report_pipeline_post_with_http_info(
+        self, **kwargs
+    ):  # noqa: E501
         """report_pipeline  # noqa: E501
 
         This method makes a synchronous HTTP request by default. To make an
@@ -535,38 +565,40 @@ class ReasonerApi(object):
 
         local_var_params = locals()
 
-        all_params = [
-            'task_id',
-            'pipeline',
-            'report_pipeline_request'
-        ]
+        all_params = ["task_id", "pipeline", "report_pipeline_request"]
         all_params.extend(
             [
-                'async_req',
-                '_return_http_data_only',
-                '_preload_content',
-                '_request_timeout'
+                "async_req",
+                "_return_http_data_only",
+                "_preload_content",
+                "_request_timeout",
             ]
         )
 
-        for key, val in six.iteritems(local_var_params['kwargs']):
+        for key, val in six.iteritems(local_var_params["kwargs"]):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method reasoner_dialog_report_pipeline_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params['kwargs']
+        del local_var_params["kwargs"]
 
         collection_formats = {}
 
         path_params = {}
 
         query_params = []
-        if 'task_id' in local_var_params and local_var_params['task_id'] is not None:  # noqa: E501
-            query_params.append(('taskId', local_var_params['task_id']))  # noqa: E501
-        if 'pipeline' in local_var_params and local_var_params['pipeline'] is not None:  # noqa: E501
-            query_params.append(('pipeline', local_var_params['pipeline']))  # noqa: E501
+        if (
+            "task_id" in local_var_params and local_var_params["task_id"] is not None
+        ):  # noqa: E501
+            query_params.append(("taskId", local_var_params["task_id"]))  # noqa: E501
+        if (
+            "pipeline" in local_var_params and local_var_params["pipeline"] is not None
+        ):  # noqa: E501
+            query_params.append(
+                ("pipeline", local_var_params["pipeline"])
+            )  # noqa: E501
 
         header_params = {}
 
@@ -574,31 +606,39 @@ class ReasonerApi(object):
         local_var_files = {}
 
         body_params = None
-        if 'report_pipeline_request' in local_var_params:
-            body_params = local_var_params['report_pipeline_request']
+        if "report_pipeline_request" in local_var_params:
+            body_params = local_var_params["report_pipeline_request"]
         # HTTP header `Accept`
-        header_params['Accept'] = self.api_client.select_header_accept(
-            ['application/json'])  # noqa: E501
+        header_params["Accept"] = self.api_client.select_header_accept(
+            ["application/json"]
+        )  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
-            ['application/json'])  # noqa: E501
+        header_params[
+            "Content-Type"
+        ] = self.api_client.select_header_content_type(  # noqa: E501
+            ["application/json"]
+        )  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            '/reasoner/dialog/report/pipeline', 'POST',
+            "/reasoner/dialog/report/pipeline",
+            "POST",
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type='object',  # noqa: E501
+            response_type="object",  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get('async_req'),
-            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
-            _preload_content=local_var_params.get('_preload_content', True),
-            _request_timeout=local_var_params.get('_request_timeout'),
-            collection_formats=collection_formats)
+            async_req=local_var_params.get("async_req"),
+            _return_http_data_only=local_var_params.get(
+                "_return_http_data_only"
+            ),  # noqa: E501
+            _preload_content=local_var_params.get("_preload_content", True),
+            _request_timeout=local_var_params.get("_request_timeout"),
+            collection_formats=collection_formats,
+        )

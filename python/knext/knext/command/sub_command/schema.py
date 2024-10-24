@@ -27,7 +27,9 @@ def commit_schema():
     schema_file = os.path.join(
         os.environ["KAG_PROJECT_ROOT_PATH"],
         knext.project.DEFAULT_SCHEMA_DIR,
-        knext.project.DEFAULT_SCHEMA_FILE.replace("$namespace", os.getenv("KAG_PROJECT_NAMESPACE")),
+        knext.project.DEFAULT_SCHEMA_FILE.replace(
+            "$namespace", os.getenv("KAG_PROJECT_NAMESPACE")
+        ),
     )
     if not Path(schema_file).exists():
         click.secho(f"ERROR: File {schema_file} not exists.", fg="bright_red")

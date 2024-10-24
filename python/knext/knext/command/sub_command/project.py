@@ -26,7 +26,6 @@ from knext.common.env import init_kag_config
 from shutil import copy2
 
 
-
 def _configparser_to_dict(config):
     """
     Convert configparser object to dictionary.
@@ -81,7 +80,7 @@ def _render_template(namespace: str, tmpl: str, **kwargs):
     project_id = kwargs.get("id", None)
     cfg2["project"]["id"] = project_id
     config_file_path = project_dir.resolve() / "kag_config.cfg"
-    with open(config_file_path, 'w') as config_file:
+    with open(config_file_path, "w") as config_file:
         cfg2.write(config_file)
     delete_cfg = kwargs.get("delete_cfg", False)
     if delete_cfg:
@@ -114,7 +113,9 @@ def _recover_project(prj_path: str):
     )
 
     client = ProjectClient()
-    project = client.get(namespace=namespace) or client.create(name=project_name, desc=desc, namespace=namespace)
+    project = client.get(namespace=namespace) or client.create(
+        name=project_name, desc=desc, namespace=namespace
+    )
 
     cfg.set("project", "id", str(project.id))
     with open(cfg_file, "w") as config_file:
@@ -127,12 +128,20 @@ def _recover_project(prj_path: str):
 
 
 @click.option("--config_path", help="Path of config.", required=True)
-@click.option("--tmpl", help="Template of project, use default if not specified.", default="default",type=click.Choice(['default', 'medical'], case_sensitive=False))
-@click.option("--delete_cfg", help="whether delete your defined .cfg file.", default=True,hidden=True)
+@click.option(
+    "--tmpl",
+    help="Template of project, use default if not specified.",
+    default="default",
+    type=click.Choice(["default", "medical"], case_sensitive=False),
+)
+@click.option(
+    "--delete_cfg",
+    help="whether delete your defined .cfg file.",
+    default=True,
+    hidden=True,
+)
 def create_project(
-        config_path: str,
-        tmpl: Optional[str] = None,
-        delete_cfg: bool = False
+    config_path: str, tmpl: Optional[str] = None, delete_cfg: bool = False
 ):
     """
     Create new project with a demo case.
@@ -214,9 +223,9 @@ def restore_project(host_addr, proj_path):
         update_project(proj_path)
 
 
-@click.option("--proj_path", help="Path of config.",default="./examples/kag_demo")
+@click.option("--proj_path", help="Path of config.", default="./examples/kag_demo")
 def update_project(proj_path):
-    config_path = os.path.join(proj_path,"kag_config.cfg")
+    config_path = os.path.join(proj_path, "kag_config.cfg")
     if not Path(config_path).exists():
         # find *.cfg file
         cfg_files = list(Path(proj_path).glob("*.cfg"))
@@ -232,7 +241,7 @@ def update_project(proj_path):
     host_addr = os.getenv("KAG_PROJECT_HOST_ADDR")
     client = ProjectClient(host_addr=host_addr)
     config = str(_configparser_to_dict(cp))
-    client.update(id = project_id, config = config)
+    client.update(id=project_id, config=config)
     project_name = os.getenv("KAG_PROJECT_NAMESPACE")
     namespace = os.getenv("KAG_PROJECT_NAMESPACE")
     click.secho(

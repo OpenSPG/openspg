@@ -25,6 +25,7 @@ class Client(ABC):
     Attributes:
         _rest_client (rest.BaseApi): REST client instance for sending API requests.
     """
+
     _rest_client: rest.BaseApi
 
     def __init__(self, host_addr: str = None, project_id: str = None):

@@ -32,19 +32,13 @@ class TableResult(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'total': 'int',
-        'header': 'list[str]',
-        'rows': 'list[list[str]]'
-    }
+    openapi_types = {"total": "int", "header": "list[str]", "rows": "list[list[str]]"}
 
-    attribute_map = {
-        'total': 'total',
-        'header': 'header',
-        'rows': 'rows'
-    }
+    attribute_map = {"total": "total", "header": "header", "rows": "rows"}
 
-    def __init__(self, total=None, header=None, rows=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, total=None, header=None, rows=None, local_vars_configuration=None
+    ):  # noqa: E501
         """TableResult - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -77,8 +71,12 @@ class TableResult(object):
         :param total: The total of this TableResult.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and total is None:  # noqa: E501
-            raise ValueError("Invalid value for `total`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and total is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `total`, must not be `None`"
+            )  # noqa: E501
 
         self._total = total
 
@@ -100,8 +98,12 @@ class TableResult(object):
         :param header: The header of this TableResult.  # noqa: E501
         :type: list[str]
         """
-        if self.local_vars_configuration.client_side_validation and header is None:  # noqa: E501
-            raise ValueError("Invalid value for `header`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and header is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `header`, must not be `None`"
+            )  # noqa: E501
 
         self._header = header
 
@@ -123,8 +125,12 @@ class TableResult(object):
         :param rows: The rows of this TableResult.  # noqa: E501
         :type: list[list[str]]
         """
-        if self.local_vars_configuration.client_side_validation and rows is None:  # noqa: E501
-            raise ValueError("Invalid value for `rows`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and rows is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `rows`, must not be `None`"
+            )  # noqa: E501
 
         self._rows = rows
 
@@ -135,18 +141,20 @@ class TableResult(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

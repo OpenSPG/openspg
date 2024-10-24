@@ -78,7 +78,9 @@ class Configuration(object):
         """Constructor"""
         from knext.common import env
 
-        self.host = os.environ.get("KAG_PROJECT_HOST_ADDR") or host or env.LOCAL_SCHEMA_URL
+        self.host = (
+            os.environ.get("KAG_PROJECT_HOST_ADDR") or host or env.LOCAL_SCHEMA_URL
+        )
         """Default Base url
         """
         self.temp_folder_path = None

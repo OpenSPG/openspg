@@ -124,7 +124,6 @@ class SchemaSession:
         self._rest_client.schema_alter_schema_post(schema_alter_request=request)
 
 
-
 class SchemaClient(Client):
     """ """
 
@@ -169,7 +168,12 @@ class SchemaClient(Client):
 
     def load(self):
         schema_session = self.create_session()
-        schema = {k.split('.')[-1]: v for k, v in schema_session.spg_types.items() if v.spg_type_enum in [SpgTypeEnum.Concept, SpgTypeEnum.Entity, SpgTypeEnum.Event]}
+        schema = {
+            k.split(".")[-1]: v
+            for k, v in schema_session.spg_types.items()
+            if v.spg_type_enum
+            in [SpgTypeEnum.Concept, SpgTypeEnum.Entity, SpgTypeEnum.Event]
+        }
         return schema
 
     def extract_types(self):

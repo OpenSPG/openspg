@@ -15,7 +15,6 @@ from knext.common.base.chain import Chain
 
 
 class BuilderChainABC(Chain, ABC):
-
     @abstractmethod
     def build(self, **kwargs) -> Chain:
         raise NotImplementedError(

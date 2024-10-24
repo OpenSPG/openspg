@@ -33,30 +33,42 @@ class ReasonTask(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'task_id': 'str',
-        'project_id': 'int',
-        'graph_store_url': 'str',
-        'dsl': 'str',
-        'params': 'object',
-        'status': 'str',
-        'result_table_result': 'TableResult',
-        'result_nodes': 'list[str]',
-        'result_edges': 'list[str]'
+        "task_id": "str",
+        "project_id": "int",
+        "graph_store_url": "str",
+        "dsl": "str",
+        "params": "object",
+        "status": "str",
+        "result_table_result": "TableResult",
+        "result_nodes": "list[str]",
+        "result_edges": "list[str]",
     }
 
     attribute_map = {
-        'task_id': 'taskId',
-        'project_id': 'projectId',
-        'graph_store_url': 'graphStoreUrl',
-        'dsl': 'dsl',
-        'params': 'params',
-        'status': 'status',
-        'result_table_result': 'resultTableResult',
-        'result_nodes': 'resultNodes',
-        'result_edges': 'resultEdges'
+        "task_id": "taskId",
+        "project_id": "projectId",
+        "graph_store_url": "graphStoreUrl",
+        "dsl": "dsl",
+        "params": "params",
+        "status": "status",
+        "result_table_result": "resultTableResult",
+        "result_nodes": "resultNodes",
+        "result_edges": "resultEdges",
     }
 
-    def __init__(self, task_id=None, project_id=None, graph_store_url=None, dsl=None, params=None, status=None, result_table_result=None, result_nodes=None, result_edges=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        task_id=None,
+        project_id=None,
+        graph_store_url=None,
+        dsl=None,
+        params=None,
+        status=None,
+        result_table_result=None,
+        result_nodes=None,
+        result_edges=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """ReasonTask - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -129,8 +141,12 @@ class ReasonTask(object):
         :param project_id: The project_id of this ReasonTask.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and project_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `project_id`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and project_id is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `project_id`, must not be `None`"
+            )  # noqa: E501
 
         self._project_id = project_id
 
@@ -173,8 +189,12 @@ class ReasonTask(object):
         :param dsl: The dsl of this ReasonTask.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and dsl is None:  # noqa: E501
-            raise ValueError("Invalid value for `dsl`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and dsl is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `dsl`, must not be `None`"
+            )  # noqa: E501
 
         self._dsl = dsl
 
@@ -290,18 +310,20 @@ class ReasonTask(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

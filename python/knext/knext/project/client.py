@@ -53,12 +53,14 @@ class ProjectClient(Client):
             name=name, desc=desc, namespace=namespace, auto_schema=auto_schema
         )
 
-        project = self._rest_client.project_create_post(project_create_request=project_create_request)
+        project = self._rest_client.project_create_post(
+            project_create_request=project_create_request
+        )
         return project
 
-    def update(self,id,config):
-        project_create_request = rest.ProjectCreateRequest(
-            id=id, config=config
+    def update(self, id, config):
+        project_create_request = rest.ProjectCreateRequest(id=id, config=config)
+        project = self._rest_client.update_post(
+            project_create_request=project_create_request
         )
-        project = self._rest_client.update_post(project_create_request=project_create_request)
         return project

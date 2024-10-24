@@ -33,24 +33,33 @@ class VectorSearchRequest(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'project_id': 'int',
-        'label': 'str',
-        'property_key': 'str',
-        'query_vector': 'list[float]',
-        'ef_search': 'int',
-        'topk': 'int'
+        "project_id": "int",
+        "label": "str",
+        "property_key": "str",
+        "query_vector": "list[float]",
+        "ef_search": "int",
+        "topk": "int",
     }
 
     attribute_map = {
-        'project_id': 'projectId',
-        'label': 'label',
-        'property_key': 'propertyKey',
-        'query_vector': 'queryVector',
-        'ef_search': 'efSearch',
-        'topk': 'topk'
+        "project_id": "projectId",
+        "label": "label",
+        "property_key": "propertyKey",
+        "query_vector": "queryVector",
+        "ef_search": "efSearch",
+        "topk": "topk",
     }
 
-    def __init__(self, project_id=None, label=None, property_key=None, query_vector=None, ef_search=None, topk=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        project_id=None,
+        label=None,
+        property_key=None,
+        query_vector=None,
+        ef_search=None,
+        topk=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """VectorSearchRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -90,8 +99,12 @@ class VectorSearchRequest(object):
         :param project_id: The project_id of this VectorSearchRequest.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and project_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `project_id`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and project_id is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `project_id`, must not be `None`"
+            )  # noqa: E501
 
         self._project_id = project_id
 
@@ -113,8 +126,12 @@ class VectorSearchRequest(object):
         :param label: The label of this VectorSearchRequest.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and label is None:  # noqa: E501
-            raise ValueError("Invalid value for `label`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and label is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `label`, must not be `None`"
+            )  # noqa: E501
 
         self._label = label
 
@@ -136,8 +153,13 @@ class VectorSearchRequest(object):
         :param property_key: The property_key of this VectorSearchRequest.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and property_key is None:  # noqa: E501
-            raise ValueError("Invalid value for `property_key`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and property_key is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `property_key`, must not be `None`"
+            )  # noqa: E501
 
         self._property_key = property_key
 
@@ -159,8 +181,13 @@ class VectorSearchRequest(object):
         :param query_vector: The query_vector of this VectorSearchRequest.  # noqa: E501
         :type: list[float]
         """
-        if self.local_vars_configuration.client_side_validation and query_vector is None:  # noqa: E501
-            raise ValueError("Invalid value for `query_vector`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and query_vector is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `query_vector`, must not be `None`"
+            )  # noqa: E501
 
         self._query_vector = query_vector
 
@@ -203,8 +230,12 @@ class VectorSearchRequest(object):
         :param topk: The topk of this VectorSearchRequest.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and topk is None:  # noqa: E501
-            raise ValueError("Invalid value for `topk`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and topk is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `topk`, must not be `None`"
+            )  # noqa: E501
 
         self._topk = topk
 
@@ -215,18 +246,20 @@ class VectorSearchRequest(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

@@ -32,19 +32,13 @@ class ReportPipelineRequest(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {
-        'task_id': 'int',
-        'pipeline': 'CaPipeline',
-        'node': 'Node'
-    }
+    openapi_types = {"task_id": "int", "pipeline": "CaPipeline", "node": "Node"}
 
-    attribute_map = {
-        'task_id': 'taskId',
-        'pipeline': 'pipeline',
-        'node': 'node'
-    }
+    attribute_map = {"task_id": "taskId", "pipeline": "pipeline", "node": "node"}
 
-    def __init__(self, task_id=None, pipeline=None, node=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self, task_id=None, pipeline=None, node=None, local_vars_configuration=None
+    ):  # noqa: E501
         """ReportPipelineRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -132,18 +126,20 @@ class ReportPipelineRequest(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

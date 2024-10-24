@@ -24,8 +24,12 @@ class BuilderClient(Client):
         super().__init__(host_addr, project_id)
 
     def write_graph(self, sub_graph: dict, operation: str, lead_to_builder: bool):
-        request = WriterGraphRequest(project_id=self._project_id, sub_graph=sub_graph,
-                                     operation=operation, enable_lead_to=lead_to_builder)
+        request = WriterGraphRequest(
+            project_id=self._project_id,
+            sub_graph=sub_graph,
+            operation=operation,
+            enable_lead_to=lead_to_builder,
+        )
         self._rest_client.builder_job_writer_graph_post(writer_graph_request=request)
 
     def submit(self, builder_job: dict):
