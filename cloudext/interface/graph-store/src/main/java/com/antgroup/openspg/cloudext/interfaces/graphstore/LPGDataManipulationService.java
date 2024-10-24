@@ -44,7 +44,18 @@ public interface LPGDataManipulationService {
    * @param edgeRecords {@link EdgeRecord}s with the same {@link EdgeTypeName EdgeTypeName} to
    *     upsert.
    */
+  @Deprecated
   void upsertEdge(String edgeTypeName, List<EdgeRecord> edgeRecords) throws Exception;
+
+  /**
+   * Batch upsert edge by {@link EdgeRecord}s which have the same {@link EdgeTypeName EdgeTypeName}.
+   *
+   * @param edgeTypeName type name of edge
+   * @param edgeRecords {@link EdgeRecord}s with the same {@link EdgeTypeName EdgeTypeName} to
+   * @param upsertAdjacentVertices if upsert adjacent vertices meanwhile.
+   */
+  void upsertEdge(String edgeTypeName, List<EdgeRecord> edgeRecords, boolean upsertAdjacentVertices)
+      throws Exception;
 
   /**
    * Batch delete edge by {@link EdgeRecord}s which have the same {@link EdgeTypeName EdgeTypeName}.

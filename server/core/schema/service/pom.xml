@@ -52,6 +52,10 @@
       <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-search-engine-neo4j</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
     </dependency>

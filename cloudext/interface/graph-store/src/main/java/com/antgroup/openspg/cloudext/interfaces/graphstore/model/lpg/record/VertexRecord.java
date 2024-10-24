@@ -60,4 +60,9 @@ public class VertexRecord extends BaseLPGRecord {
         });
     return results;
   }
+
+  @Override
+  public String generateUniqueString() {
+    return vertexType + UNIQUE_STRING_SEPARATOR + id;
+  }
 }

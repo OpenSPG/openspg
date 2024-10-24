@@ -11,18 +11,14 @@
  * or implied.
  */
 
-package com.antgroup.openspg.builder.model.pipeline.config;
+package com.antgroup.openspg.builder.core.logical;
 
+import com.antgroup.openspg.builder.model.pipeline.config.BuilderIndexNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
-import lombok.Getter;
 
-@Getter
-public abstract class BaseExtractNodeConfig extends BaseNodeConfig {
+public class BuilderIndexNode extends BaseLogicalNode<BuilderIndexNodeConfig> {
 
-  private final OperatorConfig operatorConfig;
-
-  public BaseExtractNodeConfig(NodeTypeEnum type, OperatorConfig operatorConfig) {
-    super(type);
-    this.operatorConfig = operatorConfig;
+  public BuilderIndexNode(String id, String name, BuilderIndexNodeConfig nodeConfig) {
+    super(id, name, NodeTypeEnum.BUILDER_INDEX, nodeConfig);
   }
 }

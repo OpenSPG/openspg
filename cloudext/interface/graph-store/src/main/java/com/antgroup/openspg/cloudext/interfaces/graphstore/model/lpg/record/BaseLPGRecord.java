@@ -36,6 +36,9 @@ import org.apache.commons.collections4.CollectionUtils;
 @EqualsAndHashCode(callSuper = false)
 public abstract class BaseLPGRecord extends BaseValObj {
 
+  /** the separator '|' for unique string generation. */
+  protected static final String UNIQUE_STRING_SEPARATOR = "|";
+
   private final LPGRecordTypeEnum recordType;
 
   private final List<LPGPropertyRecord> properties;
@@ -70,4 +73,11 @@ public abstract class BaseLPGRecord extends BaseValObj {
    * @return a map
    */
   public abstract Map<String, Object> toPropertyMapWithId();
+
+  /**
+   * Generate the unique string of this record.
+   *
+   * @return a string
+   */
+  public abstract String generateUniqueString();
 }

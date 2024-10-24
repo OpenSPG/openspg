@@ -20,6 +20,7 @@ CREATE TABLE `kg_project_info` (
 `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
 `namespace` varchar(64) NOT NULL DEFAULT '' comment '命名空间',
 `biz_domain_id` bigint(20) DEFAULT NULL comment '业务域主键',
+`config` text DEFAULT NULL comment '项目配置信息',
 PRIMARY KEY(`id`),
 UNIQUE KEY `uk_name`(`name`),
 KEY `idx_biz_domain_id`(`biz_domain_id`)
@@ -115,6 +116,7 @@ CREATE TABLE `kg_ontology_entity_property_range` (
 `relation_source` varchar(2550) DEFAULT NULL comment '记录关系对应的属性(用于属性转关系)',
 `direction` varchar(10) DEFAULT NULL comment 'BOTH:表示双向边',
 `mask_type` varchar(20) DEFAULT NULL comment '数据加密规则。',
+`index_type` varchar(1024) DEFAULT NULL comment '索引规则。',
 `multiver_config` varchar(1024) DEFAULT NULL comment '多版本配置,json格式文本',
 `property_source` bigint(20) DEFAULT NULL comment '属性的来源，对应全局属性的id',
 `property_config` text DEFAULT NULL comment '针对属性的配置信息，如运营配置',
@@ -214,6 +216,22 @@ CREATE TABLE `kg_ontology_release` (
 PRIMARY KEY(`id`),
 UNIQUE KEY `uk_project_version`(`project_id`, `version`)
 ) DEFAULT CHARSET = utf8mb4 COMMENT = '本体建模发布版本';
+
+CREATE TABLE `kg_ontology_ext` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
+  `resource_id` varchar(128) NOT NULL comment '实体类型id、关系类型id、属性id',
+  `resource_type` varchar(64) NOT NULL comment '操作的类型枚举：实体类型、关系类型、属性',
+  `ext_type` varchar(64) NOT NULL comment '扩展类型：标签、回流、颜色',
+  `field` varchar(64) NOT NULL comment '扩展属性所属域，比如区分用户',
+  `config` mediumtext DEFAULT NULL comment '配置内容',
+  `creator` varchar(64) NOT NULL comment '创建者',
+  `modifier` varchar(64) NOT NULL comment '更新者',
+  `status` int(10) unsigned NOT NULL comment '状态 1：有效 0：无效',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_id_type_field`(`resource_id`, `resource_type`, `ext_type`, `field`)
+) AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COMMENT = 'schema的扩展属性';
 
 INSERT INTO kg_biz_domain (`id`,`gmt_create`,`gmt_modified`,`name`,`status`,`description`,`global_config`) VALUES(1,'2023-09-01 00:00:00','2023-09-01 00:00:00','defaultTenant','VALID','',null);
 INSERT INTO kg_project_info (`id`,`name`,`description`,`status`,`gmt_create`,`gmt_modified`,`namespace`,`biz_domain_id`) VALUES(1,'defaultProject','defaultProject','VALID','2023-09-01 00:00:00','2023-09-01 00:00:00','DEFAULT',1);

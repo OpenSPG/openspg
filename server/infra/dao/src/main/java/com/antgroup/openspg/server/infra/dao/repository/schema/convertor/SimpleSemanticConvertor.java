@@ -51,6 +51,8 @@ public class SimpleSemanticConvertor {
             subjectId,
             objectId,
             new PredicateIdentifier(semanticDO.getSemanticType()));
+    simpleSemantic.setId(semanticDO.getId());
+    simpleSemantic.setModifiedDate(semanticDO.getGmtModified());
     if (StringUtils.isNotBlank(semanticDO.getSubjectMetaType())) {
       simpleSemantic.setSubjectTypeIdentifier(
           SPGTypeIdentifier.parse(semanticDO.getSubjectMetaType()));

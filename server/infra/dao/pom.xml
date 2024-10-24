@@ -46,7 +46,7 @@
     </dependency>
     <dependency>
       <groupId>com.github.pagehelper</groupId>
-      <artifactId>pagehelper</artifactId>
+      <artifactId>pagehelper-spring-boot-starter</artifactId>
     </dependency>
     <dependency>
       <groupId>org.mybatis.generator</groupId>

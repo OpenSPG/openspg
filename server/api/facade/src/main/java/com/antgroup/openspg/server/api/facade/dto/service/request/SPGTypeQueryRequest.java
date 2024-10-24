@@ -18,6 +18,7 @@ import lombok.Data;
 
 @Data
 public class SPGTypeQueryRequest {
+  private Long projectId;
   private String spgType;
   private Set<String> ids;
 }

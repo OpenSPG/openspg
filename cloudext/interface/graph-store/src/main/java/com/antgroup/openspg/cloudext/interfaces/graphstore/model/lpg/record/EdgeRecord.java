@@ -71,4 +71,15 @@ public class EdgeRecord extends BaseLPGRecord {
     otherProperties.put(EdgeType.VERSION, version);
     return otherProperties;
   }
+
+  @Override
+  public String generateUniqueString() {
+    return srcId
+        + UNIQUE_STRING_SEPARATOR
+        + edgeType.toString()
+        + UNIQUE_STRING_SEPARATOR
+        + dstId
+        + UNIQUE_STRING_SEPARATOR
+        + version;
+  }
 }

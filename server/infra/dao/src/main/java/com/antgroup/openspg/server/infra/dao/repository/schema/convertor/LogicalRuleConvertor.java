@@ -48,13 +48,16 @@ public class LogicalRuleConvertor {
       return null;
     }
 
-    return new LogicalRule(
-        new RuleCode(ruleDO.getRuleId()),
-        ruleDO.getVersionId(),
-        ruleDO.getName(),
-        new Byte((byte) 1).equals(ruleDO.getIsMaster()),
-        RuleStatusEnum.toEnum(ruleDO.getStatus()),
-        ruleDO.getExpression(),
-        new UserInfo(ruleDO.getUserNo(), null));
+    LogicalRule logicalRule =
+        new LogicalRule(
+            new RuleCode(ruleDO.getRuleId()),
+            ruleDO.getVersionId(),
+            ruleDO.getName(),
+            new Byte((byte) 1).equals(ruleDO.getIsMaster()),
+            RuleStatusEnum.toEnum(ruleDO.getStatus()),
+            ruleDO.getExpression(),
+            new UserInfo(ruleDO.getUserNo(), null));
+    logicalRule.setModifiedDate(ruleDO.getGmtModified());
+    return logicalRule;
   }
 }

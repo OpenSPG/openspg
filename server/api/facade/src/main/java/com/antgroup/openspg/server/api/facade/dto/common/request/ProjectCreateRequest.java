@@ -17,6 +17,8 @@ import com.antgroup.openspg.server.common.model.base.BaseRequest;
 
 public class ProjectCreateRequest extends BaseRequest {
 
+  private Long id;
+
   private String name;
 
   private String desc;
@@ -24,6 +26,18 @@ public class ProjectCreateRequest extends BaseRequest {
   private String namespace;
 
   private Long tenantId;
+
+  private String config;
+
+  private Boolean autoSchema;
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
 
   public String getName() {
     return name;
@@ -55,5 +69,21 @@ public class ProjectCreateRequest extends BaseRequest {
 
   public void setTenantId(Long tenantId) {
     this.tenantId = tenantId;
+  }
+
+  public String getConfig() {
+    return config;
+  }
+
+  public void setConfig(String config) {
+    this.config = config;
+  }
+
+  public Boolean getAutoSchema() {
+    return autoSchema;
+  }
+
+  public void setAutoSchema(Boolean autoSchema) {
+    this.autoSchema = autoSchema;
   }
 }

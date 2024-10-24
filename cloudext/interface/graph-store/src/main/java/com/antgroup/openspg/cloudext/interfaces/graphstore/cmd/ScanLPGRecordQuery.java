@@ -15,7 +15,9 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.cmd;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGTypeNameConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
+import lombok.Getter;
 
+@Getter
 public class ScanLPGRecordQuery extends BaseLPGRecordQuery {
 
   private final Object typeName;

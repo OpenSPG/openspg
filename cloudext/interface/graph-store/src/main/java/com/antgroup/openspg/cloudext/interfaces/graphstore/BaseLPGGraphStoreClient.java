@@ -79,7 +79,8 @@ public abstract class BaseLPGGraphStoreClient
     implements GraphStoreClient,
         LPGDataDefinitionService,
         LPGDataManipulationService,
-        LPGDataQueryService {
+        LPGDataQueryService,
+        LPGDataComputeService {
 
   private final SPGSchema2LPGService spgSchema2LpgService = new SPGSchema2LPGServiceImpl(this);
   private final SPGRecord2LPGService spgRecord2LpgService = new SPGRecord2LPGServiceImpl(this);
@@ -176,7 +177,7 @@ public abstract class BaseLPGGraphStoreClient
    * @return <code>true</code> if results of alterations are all successfully, <code>false</code>
    *     otherwise
    */
-  private boolean manipulateLPGRecord(List<LPGRecordAlterItem> alterItems) {
+  public boolean manipulateLPGRecord(List<LPGRecordAlterItem> alterItems) {
     try {
       manipulateEdgeRecord(
           getEdgeRecord(alterItems, RecordAlterOperationEnum.DELETE),

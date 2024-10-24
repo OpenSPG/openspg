@@ -14,6 +14,7 @@
 package com.antgroup.openspg.server.infra.dao.repository.common;
 
 import com.antgroup.openspg.common.util.CollectionsUtils;
+import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.server.common.model.exception.ProjectException;
 import com.antgroup.openspg.server.common.model.project.Project;
@@ -22,7 +23,9 @@ import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.ProjectDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.common.convertor.ProjectConvertor;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -47,6 +50,13 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     ProjectDO projectDO = ProjectConvertor.toDO(project);
     projectDOMapper.insert(projectDO);
     return projectDO.getId();
+  }
+
+  @Override
+  public Project update(Project project) {
+    ProjectDO projectDO = ProjectConvertor.toDO(project);
+    projectDOMapper.updateByPrimaryKeySelective(projectDO);
+    return project;
   }
 
   @Override
@@ -75,5 +85,29 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
     List<ProjectDO> projectDOS = projectDOMapper.selectByExample(example);
     return CollectionsUtils.listMap(projectDOS, ProjectConvertor::toModel);
+  }
+
+  @Override
+  public Paged<Project> queryPaged(ProjectQueryRequest request, int start, int size) {
+    Paged<Project> result = new Paged<>();
+    result.setPageIdx(start);
+    result.setPageSize(size);
+    ProjectDO projectDO = new ProjectDO();
+    projectDO.setName(request.getName());
+    projectDO.setBizDomainId(request.getTenantId());
+    long count =
+        projectDOMapper.selectCountByCondition(projectDO, request.getOrderByGmtCreateDesc());
+    result.setTotal(count);
+    List<Project> list = new ArrayList<>();
+    start = start > 0 ? start : 1;
+    int startPage = (start - 1) * size;
+    List<ProjectDO> projectDOS =
+        projectDOMapper.selectByCondition(
+            projectDO, request.getOrderByGmtCreateDesc(), startPage, size);
+    if (CollectionUtils.isNotEmpty(projectDOS)) {
+      list = projectDOS.stream().map(ProjectConvertor::toModel).collect(Collectors.toList());
+    }
+    result.setResults(list);
+    return result;
   }
 }

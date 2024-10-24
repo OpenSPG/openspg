@@ -31,6 +31,8 @@ public interface BuilderExecutor {
    */
   void init(PhysicalPlan plan, BuilderContext context) throws BuilderException;
 
+  void close() throws Exception;
+
   /**
    * Input a batch of records, execute the physical plan, and return the computational results. If
    * an exception is thrown, it signifies a processing failure of this batch of data, and the

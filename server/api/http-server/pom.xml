@@ -52,5 +52,9 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.builder</groupId>
+      <artifactId>builder-runner-local</artifactId>
+    </dependency>
   </dependencies>
 </project>

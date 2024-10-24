@@ -52,7 +52,7 @@ public class SchemaManagerImpl implements SchemaManager {
   @Autowired private DistributeLockService distributeLockService;
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Transactional(value = "transactionManager", rollbackFor = Exception.class)
   public void alterSchema(SchemaAlterRequest request) {
     Long projectId = request.getProjectId();
     Project project = projectService.queryById(projectId);

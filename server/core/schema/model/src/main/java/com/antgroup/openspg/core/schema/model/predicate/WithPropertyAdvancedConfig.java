@@ -71,6 +71,15 @@ public interface WithPropertyAdvancedConfig {
   }
 
   /**
+   * Get property index
+   *
+   * @return index type enum
+   */
+  default IndexTypeEnum getIndexType() {
+    return getAdvancedConfig() != null ? getAdvancedConfig().getIndexType() : null;
+  }
+
+  /**
    * Get constraint of property.
    *
    * @return constraint

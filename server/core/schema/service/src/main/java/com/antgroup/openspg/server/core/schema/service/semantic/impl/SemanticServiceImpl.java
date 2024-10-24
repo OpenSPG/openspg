@@ -53,13 +53,19 @@ public class SemanticServiceImpl implements SemanticService {
     }
 
     Set<Long> propertyIds = new HashSet<>();
-    semantics.forEach(
-        e -> {
-          propertyIds.add(Long.parseLong(e.getSubjectId()));
-          propertyIds.add(Long.parseLong(e.getObjectId()));
-        });
+    SPGOntologyEnum conceptOntologyEnum = null;
+    for (SimpleSemantic e : semantics) {
+      propertyIds.add(Long.parseLong(e.getSubjectId()));
+      if (SPGOntologyEnum.CONCEPT != e.getOntologyType()) {
+        propertyIds.add(Long.parseLong(e.getObjectId()));
+      } else {
+        conceptOntologyEnum = SPGOntologyEnum.PROPERTY;
+      }
+    }
     List<PropertyRef> propertyRefs =
-        propertyRepository.queryRefByUniqueId(Lists.newArrayList(propertyIds), ontologyEnum);
+        propertyRepository.queryRefByUniqueId(
+            Lists.newArrayList(propertyIds),
+            conceptOntologyEnum != null ? conceptOntologyEnum : ontologyEnum);
 
     return SemanticConvertor.toPredicateSemantic(semantics, propertyRefs, ontologyEnum);
   }

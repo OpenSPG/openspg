@@ -19,7 +19,7 @@ import com.antgroup.openspg.builder.core.physical.operator.protocol.InvokeResult
 import com.antgroup.openspg.builder.core.physical.operator.protocol.PythonRecord;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
-import com.antgroup.openspg.builder.model.pipeline.config.BaseExtractNodeConfig;
+import com.antgroup.openspg.builder.model.pipeline.config.BasePythonNodeConfig;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BuilderRecord;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
@@ -31,13 +31,12 @@ import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 
 @SuppressWarnings("unchecked")
-public abstract class BaseExtractProcessor<T extends BaseExtractNodeConfig>
-    extends BaseProcessor<T> {
+public abstract class BasePythonProcessor<T extends BasePythonNodeConfig> extends BaseProcessor<T> {
 
   protected static final ObjectMapper mapper = new ObjectMapper();
   protected final OperatorFactory operatorFactory;
 
-  public BaseExtractProcessor(String id, String name, T config) {
+  public BasePythonProcessor(String id, String name, T config) {
     super(id, name, config);
     this.operatorFactory = PythonOperatorFactory.getInstance();
   }

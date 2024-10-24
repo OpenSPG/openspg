@@ -23,9 +23,9 @@ import com.antgroup.openspg.server.api.facade.dto.service.request.RelationSampli
 import com.antgroup.openspg.server.api.facade.dto.service.request.SPGTypeSamplingRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.response.RelationInstance;
 import com.antgroup.openspg.server.api.facade.dto.service.response.SPGTypeInstance;
+import com.antgroup.openspg.server.biz.common.ProjectManager;
 import com.antgroup.openspg.server.biz.service.SamplingManager;
 import com.antgroup.openspg.server.biz.service.convertor.InstanceConvertor;
-import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +33,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class SamplingManagerImpl implements SamplingManager {
 
-  @Autowired private AppEnvConfig appEnvConfig;
+  @Autowired private ProjectManager projectManager;
 
   @Override
   public List<SPGTypeInstance> spgTypeSampling(SPGTypeSamplingRequest request) {
-    LPGDataQueryService graphStoreClient = getGraphStoreClient();
+    LPGDataQueryService graphStoreClient = getGraphStoreClient(request.getProjectId());
     GraphLPGRecordStruct results =
         (GraphLPGRecordStruct)
             graphStoreClient.queryRecord(
@@ -47,7 +47,7 @@ public class SamplingManagerImpl implements SamplingManager {
 
   @Override
   public List<RelationInstance> relationSampling(RelationSamplingRequest request) {
-    LPGDataQueryService graphStoreClient = getGraphStoreClient();
+    LPGDataQueryService graphStoreClient = getGraphStoreClient(request.getProjectId());
     GraphLPGRecordStruct results =
         (GraphLPGRecordStruct)
             graphStoreClient.queryRecord(
@@ -58,8 +58,8 @@ public class SamplingManagerImpl implements SamplingManager {
     return CollectionsUtils.listMap(results.getEdges(), InstanceConvertor::toInstance);
   }
 
-  private LPGDataQueryService getGraphStoreClient() {
+  private LPGDataQueryService getGraphStoreClient(Long projectId) {
     return (LPGDataQueryService)
-        GraphStoreClientDriverManager.getClient(appEnvConfig.getGraphStoreUrl());
+        GraphStoreClientDriverManager.getClient(projectManager.getGraphStoreUrl(projectId));
   }
 }

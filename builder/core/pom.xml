@@ -45,11 +45,27 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-graph-store-neo4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-interface-search-engine</artifactId>
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-search-engine-neo4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-interface-cache</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-cache-redis</artifactId>
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>

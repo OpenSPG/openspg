@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.server.common.service.project;
 
+import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.server.common.model.project.Project;
 import java.util.List;
@@ -21,7 +22,11 @@ public interface ProjectRepository {
 
   Long save(Project project);
 
+  Project update(Project project);
+
   Project queryById(Long projectId);
 
   List<Project> query(ProjectQueryRequest request);
+
+  Paged<Project> queryPaged(ProjectQueryRequest request, int start, int size);
 }

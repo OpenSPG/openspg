@@ -15,7 +15,9 @@ package com.antgroup.openspg.builder.runner.local.physical.sink;
 
 import com.antgroup.openspg.builder.core.logical.BaseLogicalNode;
 import com.antgroup.openspg.builder.core.logical.GraphStoreSinkNode;
+import com.antgroup.openspg.builder.core.logical.Neo4jSinkNode;
 import com.antgroup.openspg.builder.runner.local.physical.sink.impl.GraphStoreSinkWriter;
+import com.antgroup.openspg.builder.runner.local.physical.sink.impl.Neo4jSinkWriter;
 
 public class SinkWriterFactory {
 
@@ -24,6 +26,9 @@ public class SinkWriterFactory {
       case GRAPH_SINK:
         return new GraphStoreSinkWriter(
             baseNode.getId(), baseNode.getName(), ((GraphStoreSinkNode) baseNode).getNodeConfig());
+      case NEO4J_SINK:
+        return new Neo4jSinkWriter(
+            baseNode.getId(), baseNode.getName(), ((Neo4jSinkNode) baseNode).getNodeConfig());
       default:
         throw new IllegalArgumentException("illegal nodeType=" + baseNode.getType());
     }

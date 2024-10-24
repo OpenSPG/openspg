@@ -21,9 +21,9 @@ import com.antgroup.openspg.common.util.CollectionsUtils;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.api.facade.dto.service.request.SPGTypeQueryRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.response.SPGTypeInstance;
+import com.antgroup.openspg.server.biz.common.ProjectManager;
 import com.antgroup.openspg.server.biz.service.QueryManager;
 import com.antgroup.openspg.server.biz.service.convertor.InstanceConvertor;
-import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
@@ -33,14 +33,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class QueryManagerImpl implements QueryManager {
 
-  @Autowired private AppEnvConfig appEnvConfig;
+  @Autowired private ProjectManager projectManager;
 
   @Override
   public List<SPGTypeInstance> query(SPGTypeQueryRequest query) {
     if (CollectionUtils.isEmpty(query.getIds()) || StringUtils.isBlank(query.getSpgType())) {
       return Collections.emptyList();
     }
-    LPGDataQueryService graphStoreClient = getGraphStoreClient();
+    LPGDataQueryService graphStoreClient = getGraphStoreClient(query.getProjectId());
     GraphLPGRecordStruct results =
         (GraphLPGRecordStruct)
             graphStoreClient.queryRecord(
@@ -49,8 +49,8 @@ public class QueryManagerImpl implements QueryManager {
     return CollectionsUtils.listMap(results.getVertices(), InstanceConvertor::toInstance);
   }
 
-  private LPGDataQueryService getGraphStoreClient() {
+  private LPGDataQueryService getGraphStoreClient(Long projectId) {
     return (LPGDataQueryService)
-        GraphStoreClientDriverManager.getClient(appEnvConfig.getGraphStoreUrl());
+        GraphStoreClientDriverManager.getClient(projectManager.getGraphStoreUrl(projectId));
   }
 }

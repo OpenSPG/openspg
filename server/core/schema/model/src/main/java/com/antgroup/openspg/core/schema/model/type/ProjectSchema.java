@@ -57,6 +57,9 @@ public class ProjectSchema extends BaseToString {
 
   public Relation getByName(RelationIdentifier identifier) {
     BaseSPGType spgType = getByName(identifier.getStart());
+    if (spgType == null) {
+      return null;
+    }
     return spgType.getRelationByName(
         new SPGTripleIdentifier(
             identifier.getStart(), identifier.getPredicate(), identifier.getEnd()));

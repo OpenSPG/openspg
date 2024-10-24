@@ -21,6 +21,7 @@ import com.antgroup.openspg.core.schema.model.SchemaExtInfo;
 import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
 import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.EncryptTypeEnum;
+import com.antgroup.openspg.core.schema.model.predicate.IndexTypeEnum;
 import com.antgroup.openspg.core.schema.model.predicate.MountedConceptConfig;
 import com.antgroup.openspg.core.schema.model.predicate.PropertyGroupEnum;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
@@ -77,6 +78,8 @@ public class SimplePropertyConvertor {
         simpleProperty.getEncryptTypeEnum() == null
             ? EncryptTypeEnum.NONE.getType()
             : simpleProperty.getEncryptTypeEnum().getType());
+    propertyRangeDO.setIndexType(
+        simpleProperty.getIndexType() == null ? null : simpleProperty.getIndexType().getNameEn());
     propertyRangeDO.setMultiverConfig(
         simpleProperty.getMultiVersionConfig() == null
             ? null
@@ -105,6 +108,8 @@ public class SimplePropertyConvertor {
         simpleProperty.getEncryptTypeEnum() == null
             ? EncryptTypeEnum.NONE.getType()
             : simpleProperty.getEncryptTypeEnum().getType());
+    propertyRangeDO.setIndexType(
+        simpleProperty.getIndexType() == null ? null : simpleProperty.getIndexType().getNameEn());
     propertyRangeDO.setMultiverConfig(
         simpleProperty.getMultiVersionConfig() == null
             ? null
@@ -132,6 +137,7 @@ public class SimplePropertyConvertor {
             schemaExtInfo, SchemaConstants.MOUNT_CONCEPT_CONFIG_KEY, MountedConceptConfig.class);
 
     EncryptTypeEnum encryptTypeEnum = EncryptTypeEnum.toEnum(propertyRangeDO.getMaskType());
+    IndexTypeEnum indexTypeEnum = IndexTypeEnum.toEnum(propertyRangeDO.getIndexType());
     PropertyGroupEnum propertyGroup =
         schemaExtInfo.getString(SchemaConstants.PROPERTY_GROUP_KEY) == null
             ? null
@@ -171,6 +177,7 @@ public class SimplePropertyConvertor {
             mountedConceptConfig,
             encryptTypeEnum,
             propertyGroup,
+            indexTypeEnum,
             constraintId,
             ruleCode,
             ontologyEnum);
