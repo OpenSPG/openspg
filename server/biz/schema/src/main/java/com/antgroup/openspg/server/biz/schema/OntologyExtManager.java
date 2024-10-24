@@ -18,10 +18,6 @@ import com.antgroup.openspg.server.core.schema.service.type.model.OntologyExt;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author xcj01388694
- * @version OntologyExtManager.java, v 0.1 2024年03月05日 下午7:05 xcj01388694
- */
 public interface OntologyExtManager {
 
   List<OntologyExt> getExtInfoListByIds(

@@ -15,10 +15,6 @@ package com.antgroup.openspg.server.infra.dao.dataobject;
 
 import java.util.Date;
 
-/**
- * @author xcj01388694
- * @version OntologyExtDO.java, v 0.1 2024年03月05日 下午4:54 xcj01388694
- */
 public class OntologyExtDO {
   private Long id;
 

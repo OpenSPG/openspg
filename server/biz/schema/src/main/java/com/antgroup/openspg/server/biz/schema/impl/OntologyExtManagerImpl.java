@@ -22,10 +22,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * @author xcj01388694
- * @version OntologyExtManager.java, v 0.1 2024年03月05日 下午7:05 xcj01388694
- */
 @Service
 public class OntologyExtManagerImpl implements OntologyExtManager {
 

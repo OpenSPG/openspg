@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.server.infra.dao.repository.schema;
 
 import com.antgroup.openspg.core.schema.model.type.ExtTypeEnum;
@@ -31,10 +30,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author xcj01388694
- * @version OntologyExtRepositoryImpl.java, v 0.1 2024年03月05日 下午5:53 xcj01388694
- */
 @Repository
 public class OntologyExtRepositoryImpl implements OntologyExtRepository {
 

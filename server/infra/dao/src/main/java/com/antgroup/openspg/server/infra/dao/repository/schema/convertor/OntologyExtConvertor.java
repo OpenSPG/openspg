@@ -11,17 +11,12 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.server.infra.dao.repository.schema.convertor;
 
 import com.antgroup.openspg.core.schema.model.type.ExtTypeEnum;
 import com.antgroup.openspg.server.core.schema.service.type.model.OntologyExt;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyExtDO;
 
-/**
- * @author xcj01388694
- * @version OntologyExtConvertor.java, v 0.1 2024年03月06日 上午11:31 xcj01388694
- */
 public class OntologyExtConvertor {
 
   public static OntologyExt toOntologyExt(OntologyExtDO ontologyExtDO) {

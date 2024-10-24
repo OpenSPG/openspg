@@ -15,10 +15,6 @@ package com.antgroup.openspg.server.core.schema.service.type.model;
 
 import com.antgroup.openspg.core.schema.model.type.ExtTypeEnum;
 
-/**
- * @author xcj01388694
- * @version OntologyExt.java, v 0.1 2024年03月06日 上午11:03 xcj01388694
- */
 public class OntologyExt {
 
   private Long id;

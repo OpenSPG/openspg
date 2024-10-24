@@ -11,7 +11,6 @@
  * or implied.
  */
 
-
 package com.antgroup.openspg.server.infra.dao.mapper;
 
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyExtDO;
@@ -19,10 +18,6 @@ import java.util.List;
 import java.util.Set;
 import org.apache.ibatis.annotations.Param;
 
-/**
- * @author xcj01388694
- * @version OntologyExtDOMapper.java, v 0.1 2024年03月05日 下午4:53 xcj01388694
- */
 public interface OntologyExtDOMapper {
 
   int insert(OntologyExtDO record);
