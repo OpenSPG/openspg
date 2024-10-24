@@ -22,7 +22,6 @@ from knext.schema.model.base import (
 )
 from knext.schema.model.property import Property
 from knext.schema.model.relation import Relation
-from knext.builder.operator.op import LinkOp, FuseOp
 
 
 class EntityType(BaseSpgType):
@@ -35,8 +34,6 @@ class EntityType(BaseSpgType):
     parent_type_name: str
     properties: Dict[str, Property]
     relations: Dict[str, Relation]
-    link_operator: LinkOp
-    fuse_operator: FuseOp
 
     def __init__(
         self,
@@ -46,8 +43,6 @@ class EntityType(BaseSpgType):
         parent_type_name: str = ROOT_TYPE_UNIQUE_NAME,
         properties: List[Property] = None,
         relations: List[Relation] = None,
-        link_operator: LinkOp = None,
-        fuse_operator: FuseOp = None,
         **kwargs,
     ):
         super().__init__(
@@ -58,87 +53,8 @@ class EntityType(BaseSpgType):
             properties=properties,
             relations=relations,
             parent_type_name=parent_type_name,
-            link_operator=link_operator,
-            fuse_operator=fuse_operator,
             **kwargs,
         )
-        if "rest_model" not in kwargs:
-            self.link_operator = link_operator
-            self.fuse_operator = fuse_operator
-
-    @property
-    def link_operator(self):
-        """Gets the link_operator of this EntityType.  # noqa: E501
-
-
-        :return: The link_operator of this EntityType.  # noqa: E501
-        :rtype: Operator
-        """
-        if self._rest_model.advanced_config.link_operator is None:
-            return None
-        op_name = self._rest_model.advanced_config.link_operator.name
-        op_version = self._rest_model.advanced_config.link_operator.version
-        return self.link_operator.to_rest(op_name, op_version)
-
-    @link_operator.setter
-    def link_operator(self, link_operator: LinkOp):
-        """Sets the link_operator of this EntityType.
-
-
-        :param link_operator: The link_operator of this EntityType.  # noqa: E501
-        :type: Operator
-        """
-
-        if link_operator is None:
-            self._rest_model.advanced_config.link_operator = None
-            return
-        if self._rest_model.advanced_config.link_operator is None:
-            self._rest_model.advanced_config.link_operator = rest.OperatorKey()
-        self._rest_model.advanced_config.link_operator.name = link_operator.name
-        self._rest_model.advanced_config.link_operator.version = link_operator._version
-
-    def bind_link_operator(self, operator: LinkOp):
-        """Binds a link operator to this EntityType."""
-
-        self.link_operator = operator
-        return self
-
-    @property
-    def fuse_operator(self):
-        """Gets the fuse_operator of this EntityType.  # noqa: E501
-
-
-        :return: The fuse_operator of this EntityType.  # noqa: E501
-        :rtype: Operator
-        """
-        if self._rest_model.advanced_config.fuse_operator is None:
-            return None
-        op_name = self._rest_model.advanced_config.fuse_operator.name
-        op_version = self._rest_model.advanced_config.fuse_operator.version
-        return self.fuse_operator.to_rest(op_name, op_version)
-
-    @fuse_operator.setter
-    def fuse_operator(self, fuse_operator: FuseOp):
-        """Sets the fuse_operator of this EntityType.
-
-
-        :param fuse_operator: The fuse_operator of this EntityType.  # noqa: E501
-        :type: Operator
-        """
-
-        if fuse_operator is None:
-            self._rest_model.advanced_config.fuse_operator = None
-            return
-        if self._rest_model.advanced_config.fuse_operator is None:
-            self._rest_model.advanced_config.fuse_operator = rest.OperatorKey()
-        self._rest_model.advanced_config.fuse_operator.name = fuse_operator.name
-        self._rest_model.advanced_config.fuse_operator.version = fuse_operator._version
-
-    def bind_fuse_operator(self, operator: FuseOp):
-        """Binds a fuse operator to this EntityType."""
-
-        self.fuse_operator = operator
-        return self
 
 
 class ConceptType(BaseSpgType):
@@ -152,8 +68,6 @@ class ConceptType(BaseSpgType):
     parent_type_name: str
     properties: Dict[str, Property]
     relations: Dict[str, Relation]
-    link_operator: LinkOp
-    fuse_operator: FuseOp
     taxonomic_type_name: str
 
     def __init__(
@@ -165,7 +79,6 @@ class ConceptType(BaseSpgType):
         parent_type_name: str = ROOT_TYPE_UNIQUE_NAME,
         properties: List[Property] = None,
         relations: List[Relation] = None,
-        link_operator: LinkOp = None,
         taxonomic_type_name: str = None,
         **kwargs,
     ):
@@ -182,7 +95,6 @@ class ConceptType(BaseSpgType):
         if "rest_model" not in kwargs:
             self.hypernym_predicate = hypernym_predicate
             self.taxonomic_type_name = taxonomic_type_name
-            self.link_operator = link_operator
 
     @property
     def hypernym_predicate(self) -> Optional[HypernymPredicateEnum]:
@@ -233,82 +145,6 @@ class ConceptType(BaseSpgType):
             taxonomic_type_name
         )
 
-    @property
-    def link_operator(self):
-        """Gets the link_operator of this ConceptType.  # noqa: E501
-
-
-        :return: The link_operator of this ConceptType.  # noqa: E501
-        :rtype: Operator
-        """
-        if self._rest_model.advanced_config.normalized_operator is None:
-            return None
-        op_name = self._rest_model.advanced_config.normalized_operator.name
-        op_version = self._rest_model.advanced_config.normalized_operator.version
-        return self.link_operator(op_name, op_version)
-
-    @link_operator.setter
-    def link_operator(self, link_operator: LinkOp):
-        """Sets the link_operator of this ConceptType.
-
-
-        :param link_operator: The link_operator of this ConceptType.  # noqa: E501
-        :type: Operator
-        """
-
-        if link_operator is None:
-            self._rest_model.advanced_config.normalized_operator = None
-            return
-        if self._rest_model.advanced_config.normalized_operator is None:
-            self._rest_model.advanced_config.normalized_operator = rest.OperatorKey()
-        self._rest_model.advanced_config.normalized_operator.name = link_operator.name
-        self._rest_model.advanced_config.normalized_operator.version = (
-            link_operator._version
-        )
-
-    def bind_link_operator(self, operator: LinkOp):
-        """Binds a property normalize operator to this ConceptType."""
-
-        self.link_operator = operator
-        return self
-
-    @property
-    def fuse_operator(self):
-        """Gets the fuse_operator of this EntityType.  # noqa: E501
-
-
-        :return: The fuse_operator of this EntityType.  # noqa: E501
-        :rtype: Operator
-        """
-        if self._rest_model.advanced_config.fuse_operator is None:
-            return None
-        op_name = self._rest_model.advanced_config.fuse_operator.name
-        op_version = self._rest_model.advanced_config.fuse_operator.version
-        return self.fuse_operator.to_rest(op_name, op_version)
-
-    @fuse_operator.setter
-    def fuse_operator(self, fuse_operator: FuseOp):
-        """Sets the fuse_operator of this EntityType.
-
-
-        :param fuse_operator: The fuse_operator of this EntityType.  # noqa: E501
-        :type: Operator
-        """
-
-        if fuse_operator is None:
-            self._rest_model.advanced_config.fuse_operator = None
-            return
-        if self._rest_model.advanced_config.fuse_operator is None:
-            self._rest_model.advanced_config.fuse_operator = rest.OperatorKey()
-        self._rest_model.advanced_config.fuse_operator.name = fuse_operator.name
-        self._rest_model.advanced_config.fuse_operator.version = fuse_operator._version
-
-    def bind_fuse_operator(self, operator: FuseOp):
-        """Binds a fuse operator to this EntityType."""
-
-        self.fuse_operator = operator
-        return self
-
 
 class EventType(BaseSpgType):
     """EventType Model."""
@@ -320,7 +156,6 @@ class EventType(BaseSpgType):
     parent_type_name: str
     properties: Dict[str, Property]
     relations: Dict[str, Relation]
-    link_operator: LinkOp
 
     def __init__(
         self,
@@ -330,7 +165,6 @@ class EventType(BaseSpgType):
         parent_type_name: str = ROOT_TYPE_UNIQUE_NAME,
         properties: List[Property] = None,
         relations: List[Relation] = None,
-        link_operator: LinkOp = None,
         **kwargs,
     ):
         super().__init__(
@@ -343,45 +177,6 @@ class EventType(BaseSpgType):
             parent_type_name=parent_type_name,
             **kwargs,
         )
-        if "rest_model" not in kwargs:
-            self.link_operator = link_operator
-
-    @property
-    def link_operator(self):
-        """Gets the link_operator of this EventType.  # noqa: E501
-
-
-        :return: The link_operator of this EventType.  # noqa: E501
-        :rtype: Operator
-        """
-        if self._rest_model.advanced_config.link_operator is None:
-            return None
-        op_name = self._rest_model.advanced_config.normalized_operator.name
-        op_version = self._rest_model.advanced_config.normalized_operator.version
-        return self.link_operator(op_name, op_version)
-
-    @link_operator.setter
-    def link_operator(self, link_operator: LinkOp):
-        """Sets the link_operator of this EventType.
-
-
-        :param link_operator: The link_operator of this EventType.  # noqa: E501
-        :type: Operator
-        """
-
-        if link_operator is None:
-            self._rest_model.advanced_config.link_operator = None
-            return
-        if self._rest_model.advanced_config.link_operator is None:
-            self._rest_model.advanced_config.link_operator = rest.OperatorKey()
-        self._rest_model.advanced_config.link_operator.name = link_operator.name
-        self._rest_model.advanced_config.link_operator.version = link_operator._version
-
-    def bind_link_operator(self, operator: LinkOp):
-        """Binds a link operator to this EventType."""
-
-        self.link_operator = operator
-        return self
 
 
 class BasicType(BaseSpgType):

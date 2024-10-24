@@ -9,11 +9,9 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-import os
-from abc import ABC
-from typing import Dict, Any, Type
 
-from knext.builder import rest
+from abc import ABC
+from typing import Dict, Type
 
 
 class BaseOp(ABC):
@@ -38,28 +36,11 @@ class BaseOp(ABC):
     def __init__(self, params: Dict[str, str] = None):
         self.params = params
 
-    def invoke(self, *args):
+    def invoke(self, **kwargs):
         """Used to implement operator execution logic."""
         raise NotImplementedError(
             f"{self.__class__.__name__} need to implement `invoke` method."
         )
-
-    def _handle(self, *inputs) -> Dict[str, Any]:
-        """Only available for Builder in OpenSPG to call through the pemja tool."""
-        pre_input = self._pre_process(*inputs)
-        output = self.invoke(*pre_input)
-        post_output = self._post_process(output)
-        return post_output
-
-    @staticmethod
-    def _pre_process(*inputs):
-        """Convert data structures in building job into structures in operator before `eval` method."""
-        return inputs
-
-    @staticmethod
-    def _post_process(output) -> Dict[str, Any]:
-        """Convert result structures in operator into structures in building job after `eval` method."""
-        return output.to_dict()
 
     @classmethod
     def register(cls, name: str, local_path: str, module_path: str):
@@ -91,23 +72,6 @@ class BaseOp(ABC):
             return subclass
         else:
             raise ValueError(f"{name} is not a registered name for {cls.__name__}. ")
-
-    def to_rest(self):
-        if not hasattr(self, "_local_path"):
-            import inspect
-
-            self._local_path = inspect.getfile(self.__class__)
-        if not hasattr(self, "name"):
-            self.name = self.__class__.__name__
-        if not hasattr(self, "_module_path"):
-            self._module_path = os.path.splitext(os.path.basename(self._local_path))[0]
-        return rest.OperatorConfig(
-            file_path=self._local_path,
-            module_path=self._module_path,
-            class_name=self.name,
-            method="_handle",
-            params=self.params,
-        )
 
     @property
     def has_registered(self):

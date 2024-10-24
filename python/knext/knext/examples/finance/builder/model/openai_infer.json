@@ -1,6 +1,0 @@
-{
-  "nn_name": "gpt-4",
-  "openai_api_key": "EMPTY",
-  "openai_api_base": "http://127.0.0.1:38080/v1",
-  "openai_max_tokens": 2000
-}

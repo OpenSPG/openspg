@@ -11,36 +11,13 @@
 # or implied.
 
 import os
-import string
 from pathlib import Path
 
 import click
+import knext.project
 
 from knext.schema.marklang.concept_rule_ml import SPGConceptRuleMarkLang
 from knext.schema.marklang.schema_ml import SPGSchemaMarkLang
-from knext.common.template import copytree
-
-TEMPLATE_TO_RENDER = "${project}_schema_helper.py.tmpl"
-
-
-def list_schema():
-    """
-    List all server-side schemas.
-    """
-    click.secho("Not support yes.", fg="bright_yellow")
-
-
-def diff_schema():
-    """
-    Print differences of schema between local and server.
-    """
-    schema_path = os.path.join(
-        os.environ["KNEXT_ROOT_PATH"],
-        os.environ["KNEXT_SCHEMA_DIR"],
-        os.environ["KNEXT_SCHEMA_FILE"],
-    )
-    ml = SPGSchemaMarkLang(schema_path)
-    ml.print_diff()
 
 
 def commit_schema():
@@ -48,9 +25,9 @@ def commit_schema():
     Commit local schema and generate schema helper.
     """
     schema_file = os.path.join(
-        os.environ["KNEXT_ROOT_PATH"],
-        os.environ["KNEXT_SCHEMA_DIR"],
-        os.environ["KNEXT_SCHEMA_FILE"],
+        os.environ["KAG_PROJECT_ROOT_PATH"],
+        knext.project.DEFAULT_SCHEMA_DIR,
+        knext.project.DEFAULT_SCHEMA_FILE.replace("$namespace", os.getenv("KAG_PROJECT_NAMESPACE")),
     )
     if not Path(schema_file).exists():
         click.secho(f"ERROR: File {schema_file} not exists.", fg="bright_red")
@@ -59,24 +36,8 @@ def commit_schema():
     ml = SPGSchemaMarkLang(schema_file)
     is_altered = ml.sync_schema()
 
-    helper_file = os.path.join(
-        os.environ["KNEXT_ROOT_PATH"],
-        os.environ["KNEXT_SCHEMA_DIR"],
-        TEMPLATE_TO_RENDER,
-    )
-    copytree(
-        Path("schema_helper"), Path(helper_file).parent, os.environ["KNEXT_PROJECT_DIR"]
-    )
-    tplfile = string.Template(helper_file).substitute(
-        project=os.environ["KNEXT_PROJECT_DIR"]
-    )
-    ml.export_schema_python(tplfile)
     if is_altered:
         click.secho("Schema is successfully committed.", fg="bright_green")
-        click.secho(
-            f"SchemaHelper is created in {os.environ['KNEXT_SCHEMA_DIR']}/{os.environ['KNEXT_PROJECT_DIR']}_schema_helper.py.",
-            fg="bright_green",
-        )
     else:
         click.secho(
             "There is no diff between local and server-side schema.", fg="bright_yellow"
