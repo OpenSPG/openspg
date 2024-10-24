@@ -40,5 +40,9 @@
       <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-graph-store-neo4j</artifactId>
+    </dependency>
   </dependencies>
 </project>

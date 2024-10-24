@@ -113,7 +113,7 @@ public class PatternMatcher implements Serializable {
 
     // check root types
     PatternElement patternElement = pattern.root();
-    if (!patternElement.getMetaTypeNames().contains(RunnerUtil.getVertexType(vertex))) {
+    if (!patternElement.judgeLabelIsInMetaType(RunnerUtil.getVertexType(vertex))) {
       if (this.debugEnable) {
         log.warn(
             "PatternMatcher patternMatch meta type match failed id="

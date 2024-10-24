@@ -50,11 +50,11 @@ case class ConceptLabelType(label: String, id: String) extends LabelType
  * @param linkedEdge
  */
 class LinkedPatternDeclarationInfo(
-    alias: String,
-    typeNames: Set[LabelType],
-    rule: Expr,
-    val linkedEdge: FunctionExpr)
-    extends PatternDeclarationInfo(alias, typeNames, rule) {}
+                                    alias: String,
+                                    typeNames: Set[LabelType],
+                                    rule: Expr,
+                                    val linkedEdge: FunctionExpr)
+  extends PatternDeclarationInfo(alias, typeNames, rule) {}
 
 /**
  * This class is an ANTLR parsing class used for parsing DSL.
@@ -118,9 +118,9 @@ class PatternParser extends Serializable {
   // All functions below are parsing and processing functions for ANTLR
 
   def parseGraphStructureDefine(
-      ctx: Graph_structure_defineContext,
-      head: Element = null,
-      predicate: PredicateElement = null): MatchBlock = {
+                                 ctx: Graph_structure_defineContext,
+                                 head: Element = null,
+                                 predicate: PredicateElement = null): MatchBlock = {
     var pathMaps = Map[String, GraphPath]()
 
     if (ctx != null) {
@@ -155,8 +155,8 @@ class PatternParser extends Serializable {
   }
 
   def parseSourceAndMatchBlock(
-      refFieldsMap: Map[String, Set[String]],
-      patterns: Map[String, GraphPath]): MatchBlock = {
+                                refFieldsMap: Map[String, Set[String]],
+                                patterns: Map[String, GraphPath]): MatchBlock = {
     val nodesProp = new mutable.HashMap[String, IRNode]()
     val edgesProp = new mutable.HashMap[String, IREdge]()
     patterns.foreach(path => {
@@ -216,9 +216,9 @@ class PatternParser extends Serializable {
   }
 
   def parseGraphStructureBody(
-      ctx: Graph_structure_bodyContext,
-      head: Element,
-      predicate: PredicateElement): Set[GraphPath] = {
+                               ctx: Graph_structure_bodyContext,
+                               head: Element,
+                               predicate: PredicateElement): Set[GraphPath] = {
     val patterns: List[GraphPath] = ctx
       .graph_structure_one_line()
       .asScala
@@ -479,9 +479,9 @@ class PatternParser extends Serializable {
   }
 
   def parsePathPatternList(
-      ctx: Path_pattern_listContext,
-      head: Element,
-      predicate: PredicateElement): Set[GraphPath] = {
+                            ctx: Path_pattern_listContext,
+                            head: Element,
+                            predicate: PredicateElement): Set[GraphPath] = {
     var pathList = Set[GraphPath]()
     var nodes = Map[String, Element]()
     if (head != null && head.alias != null && head.typeNames != null) {
@@ -813,10 +813,10 @@ class PatternParser extends Serializable {
   }
 
   def parseEdgeInfo(
-      dec: Element_pattern_declaration_and_fillerContext,
-      limitClause: Edge_pattern_pernodelimit_clauseContext,
-      direction: Direction,
-      isOptional: Boolean): Connection = {
+                     dec: Element_pattern_declaration_and_fillerContext,
+                     limitClause: Edge_pattern_pernodelimit_clauseContext,
+                     direction: Direction,
+                     isOptional: Boolean): Connection = {
     val declInfo = parseElePatternAndFilter(dec)
     var limit = -1
     if (limitClause != null && !limitClause.isEmpty) {
@@ -951,15 +951,15 @@ class PatternParser extends Serializable {
     }
   }
 
-  def parseEntityType(ctx: Entity_typeContext): LabelType = {
-    val name = ctx.getChild(0) match {
-      case c: IdentifierContext => parseIdentifier(c)
-      case c: Prefix_nameContext =>
-        parseIdentifier(c.identifier(0)) +
-          c.period().getText +
-          parseIdentifier(c.identifier(1))
+  def parseEntityType(ctx: Entity_typeContext): EntityLabelType = {
+    ctx.getChild(0) match {
+      case c: IdentifierContext => EntityLabelType(parseIdentifier(c))
+      case c: Prefix_nameContext => EntityLabelType(parsePrefixName(c))
     }
-    EntityLabelType(name)
+  }
+
+  def parsePrefixName(ctx: Prefix_nameContext): String = {
+    parseIdentifier(ctx.identifier(0)) + "." + parseIdentifier(ctx.identifier(1))
   }
 
   def parseIdentifier(ctx: IdentifierContext): String = {

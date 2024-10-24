@@ -22,7 +22,7 @@ import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
-import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexId;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexBizId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.kggraph.impl.KgGraphImpl;
@@ -136,19 +136,28 @@ public class LinkEdgeImpl implements Serializable {
 
       Map<String, Set<IVertex<IVertexId, IProperty>>> newAliasVertexMap = new HashMap<>();
       Map<String, Set<IEdge<IVertexId, IProperty>>> newAliasEdgeMap = new HashMap<>();
+
+      // add target vertex
+      PatternElement targetVertexMeta = linkedEdgePattern.dst();
+      String targetAlias = targetVertexMeta.alias();
+      List<String> targetVertexTypes =
+          new ArrayList<>(JavaConversions.setAsJavaSet(targetVertexMeta.typeNames()));
+
       for (LinkedUdtfResult linkedUdtfResult : linkedUdtfResultList) {
-        for (String targetIdStr : linkedUdtfResult.getTargetVertexIdList()) {
-          // add target vertex
-          PatternElement targetVertexMeta = linkedEdgePattern.dst();
-          String targetAlias = targetVertexMeta.alias();
-          List<String> targetVertexTypes =
-              new ArrayList<>(JavaConversions.setAsJavaSet(targetVertexMeta.typeNames()));
-          if (targetVertexTypes.size() == 0) {
+
+        for (int i = 0; i < linkedUdtfResult.getTargetVertexIdList().size(); i++) {
+          List<String> genTargetVertexTypes = targetVertexTypes;
+          if (i < linkedUdtfResult.getTargetVertexTypeList().size()) {
+            genTargetVertexTypes =
+                Lists.newArrayList(linkedUdtfResult.getTargetVertexTypeList().get(i));
+          }
+          if (genTargetVertexTypes.size() == 0) {
             throw new RuntimeException(
                 "Linked edge target vertex type must contains at least one type");
           }
-          for (String targetVertexType : targetVertexTypes) {
-            IVertexId targetId = new VertexId(targetIdStr, targetVertexType);
+          String targetIdStr = linkedUdtfResult.getTargetVertexIdList().get(i);
+          for (String targetVertexType : genTargetVertexTypes) {
+            IVertexId targetId = new VertexBizId(targetIdStr, targetVertexType);
             Map<String, Object> propertyMap = new HashMap<>();
             VertexProperty vertexProperty = new VertexProperty(propertyMap);
             vertexProperty.put(Constants.NODE_ID_KEY, targetIdStr);

@@ -41,6 +41,8 @@ import com.antgroup.openspg.reasoner.udf.rule.RuleRunner;
 import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
 import com.antgroup.openspg.reasoner.utils.RunnerUtil;
 import com.google.common.collect.Lists;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,9 +69,17 @@ public class LocalReasonerRunner {
     try {
       return doRun(task);
     } catch (Throwable e) {
-      log.error("KGReasonerLocalRunner,error", e);
-      return new LocalReasonerResult("KGReasonerLocalRunner,error:" + e.getMessage());
+      log.error("KGReasonerLocalRunner,error：" + e.getMessage() + "\n" + getStackTrace(e));
+      return new LocalReasonerResult(
+          "KGReasonerLocalRunner,error:" + e.getMessage() + "\n" + getStackTrace(e));
     }
+  }
+
+  private String getStackTrace(Throwable e) {
+    StringWriter sw = new StringWriter();
+    PrintWriter pw = new PrintWriter(sw);
+    e.printStackTrace(pw);
+    return sw.toString();
   }
 
   private LocalReasonerResult doRun(LocalReasonerTask task) {
@@ -110,7 +120,7 @@ public class LocalReasonerRunner {
       Map<String, String> idFilterMaps =
           JavaConversions.mapAsJavaMap(session.getIdFilterParameters());
       Map<String, Object> taskRunningContext =
-          RunnerUtil.getTaskRunningContext(session, task.getParams());
+          RunnerUtil.getTaskRunningContext(task.getId(), session, task.getParams());
 
       RuleRunner.getInstance().putRuleRunningContext(task.getId(), taskRunningContext);
       boolean isLastDsl = (i + 1 == dslDagList.size());

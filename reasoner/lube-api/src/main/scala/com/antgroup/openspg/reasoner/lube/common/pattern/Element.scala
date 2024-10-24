@@ -44,6 +44,16 @@ case class PatternElement(alias: String, typeNames: Set[String], var rule: Rule)
       LabelTypeUtils.getMetaType(x)
     })
   }
+
+  def judgeLabelIsInMetaType(label: String): Boolean = {
+    val metaTypes = getMetaTypeNames
+    if (metaTypes.contains("Entity") || metaTypes.contains(label)) {
+      true
+    } else {
+      false
+    }
+  }
+
   override def toString: String = {
     val stringBuilder = StringBuilder.newBuilder
     stringBuilder.append("(").append(alias).append(":")
