@@ -1,7 +1,7 @@
 services:
   server:
     restart: always
-    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-server:kag1
+    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-server:latest
     container_name: release-openspg-server
     ports:
       - "8887:8887"
@@ -17,7 +17,7 @@ services:
 
   mysql:
     restart: always
-    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-mysql:kag1
+    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-mysql:latest
     container_name: release-openspg-mysql
     environment:
       TZ: Asia/Shanghai
@@ -32,7 +32,7 @@ services:
     ]
 
   neo4j:
-    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-neo4j:kag1
+    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-neo4j:latest
     container_name: release-openspg-neo4j
     ports:
       - "7474:7474"
