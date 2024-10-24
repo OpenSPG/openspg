@@ -56,6 +56,9 @@ public class Neo4jSyncer extends BaseSchemaSyncer {
     if (StringUtils.isNotBlank(config)) {
       JSONObject vectorizerConfig =
           JSON.parseObject(config).getJSONObject(CommonConstants.VECTORIZER);
+      if (vectorizerConfig == null) {
+        return Neo4jCommonUtils.DEFAULT_VECTOR_DIMENSIONS;
+      }
       Integer vectorDimensions = vectorizerConfig.getInteger(CommonConstants.VECTOR_DIMENSIONS);
       if (vectorDimensions != null) return vectorDimensions;
     }
