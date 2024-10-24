@@ -32,6 +32,8 @@ public class ProjectDO {
 
   private Long bizDomainId;
 
+  private String config;
+
   public Long getId() {
     return id;
   }
@@ -94,5 +96,13 @@ public class ProjectDO {
 
   public void setBizDomainId(Long bizDomainId) {
     this.bizDomainId = bizDomainId;
+  }
+
+  public String getConfig() {
+    return config;
+  }
+
+  public void setConfig(String config) {
+    this.config = config;
   }
 }

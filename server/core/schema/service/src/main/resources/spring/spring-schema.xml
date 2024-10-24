@@ -40,13 +40,16 @@
           class="com.antgroup.openspg.server.core.schema.service.alter.sync.GraphStorageSyncer"/>
     <bean id="searchEngineSyncer"
           class="com.antgroup.openspg.server.core.schema.service.alter.sync.SearchEngineSyncer"/>
+    <bean id="neo4jSyncer"
+          class="com.antgroup.openspg.server.core.schema.service.alter.sync.Neo4jSyncer"/>
 
     <bean id="schemaSyncerFactory"
           class="com.antgroup.openspg.server.core.schema.service.alter.sync.SchemaSyncerFactory">
         <property name="schemaSyncerMap">
             <map>
-                <entry key="GRAPH" value-ref="graphStorageSyncer"/>
-                <entry key="SEARCH_ENGINE" value-ref="searchEngineSyncer"/>
+                <!--<entry key="GRAPH" value-ref="graphStorageSyncer"/>
+                <entry key="SEARCH_ENGINE" value-ref="searchEngineSyncer"/>-->
+                <entry key="GRAPH" value-ref="neo4jSyncer"/>
             </map>
         </property>
     </bean>

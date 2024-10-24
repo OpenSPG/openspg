@@ -31,6 +31,9 @@ public class PredicateSemantic extends BaseSemantic {
   /** Property reference as the object */
   private PropertyRef objectTypeRef;
 
+  /** Rule code of logic rule. */
+  private RuleCode ruleCode;
+
   public PredicateSemantic() {}
 
   public PredicateSemantic(
@@ -63,6 +66,14 @@ public class PredicateSemantic extends BaseSemantic {
 
   public Long getObjectUniqueId() {
     return objectTypeRef == null ? null : objectTypeRef.getUniqueId();
+  }
+
+  public RuleCode getRuleCode() {
+    return ruleCode;
+  }
+
+  public void setRuleCode(RuleCode ruleCode) {
+    this.ruleCode = ruleCode;
   }
 
   public SPGTripleIdentifier getTripleName() {

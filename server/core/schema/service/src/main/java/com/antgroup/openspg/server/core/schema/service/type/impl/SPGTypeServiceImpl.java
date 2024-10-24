@@ -56,7 +56,7 @@ public class SPGTypeServiceImpl implements SPGTypeService {
   @Autowired private ProjectOntologyRelRepository projectOntologyRelRepository;
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Transactional(value = "transactionManager", rollbackFor = Exception.class)
   public int create(BaseAdvancedType advancedType) {
     if (CollectionUtils.isNotEmpty(advancedType.getProperties())) {
       advancedType.getProperties().forEach(property -> propertyService.create(property));

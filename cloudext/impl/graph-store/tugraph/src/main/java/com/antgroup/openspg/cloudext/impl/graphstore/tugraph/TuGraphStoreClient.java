@@ -25,7 +25,9 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.BaseLPGGraphStoreClie
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGInternalIdGenerator;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.LPGTypeNameConvertor;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.BaseLPGRecordQuery;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.PageRankCompete;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.impl.NoChangedIdGenerator;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.ComputeResultRow;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.BaseLPGRecordStruct;
@@ -48,6 +50,7 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.util.TypeNameUtils;
 import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum;
 import com.antgroup.openspg.server.api.facade.ApiConstants;
 import com.antgroup.tugraph.TuGraphDbRpcClient;
+import com.google.common.collect.Lists;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,6 +64,7 @@ import java.util.stream.Collectors;
 import lgraph.Lgraph;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -99,6 +103,19 @@ public class TuGraphStoreClient extends BaseLPGGraphStoreClient {
     LPGSchema lpgSchema = new LPGSchema(vertexTypes, edgeTypes);
     TypeNameUtils.restoreTypeName(lpgSchema, typeNameConvertor);
     return lpgSchema;
+  }
+
+  @Override
+  public List<String> queryAllVertexLabels() {
+    LPGSchema lpgSchema = querySchema();
+    if (CollectionUtils.isEmpty(lpgSchema.getVertexTypes())) {
+      return Lists.newArrayList();
+    } else {
+      return lpgSchema.getVertexTypes().stream()
+          .map(
+              vertexType -> typeNameConvertor.restoreVertexTypeName(vertexType.getVertexTypeName()))
+          .collect(Collectors.toList());
+    }
   }
 
   @Override
@@ -322,8 +339,24 @@ public class TuGraphStoreClient extends BaseLPGGraphStoreClient {
   }
 
   @Override
+  public void upsertEdge(
+      String edgeTypeName, List<EdgeRecord> edgeRecords, boolean upsertAdjacentVertices)
+      throws Exception {
+    if (upsertAdjacentVertices) {
+      throw new RuntimeException(
+          "upsert both edges and adjacent vertices is not supported by tugraph driver yet.");
+    }
+    upsertEdge(edgeTypeName, edgeRecords);
+  }
+
+  @Override
   public void deleteEdge(String edgeTypeName, List<EdgeRecord> edgeRecords) throws Exception {
     TypeNameUtils.convertTypeName(edgeRecords, typeNameConvertor);
     TuGraphRecordUtils.deleteEdgeRecords(edgeRecords, client, graphName, timeout);
+  }
+
+  @Override
+  public List<ComputeResultRow> runPageRank(PageRankCompete compete) {
+    throw new RuntimeException("page rank is not supported by tugraph driver yet.");
   }
 }

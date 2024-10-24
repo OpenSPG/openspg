@@ -25,3 +25,18 @@ class LinkCache:
 
     def get(self, key):
         return self.cache.get(key)
+
+
+class SchemaCache:
+    def __init__(self, maxsize: int = 10, ttl: int = 300):
+        self._cache = TTLCache(maxsize=maxsize, ttl=ttl)
+
+    @property
+    def cache(self):
+        return self._cache
+
+    def put(self, key, value):
+        self.cache[key] = value
+
+    def get(self, key):
+        return self.cache.get(key)

@@ -131,7 +131,8 @@ public class LocalPropertyGraph implements PropertyGraph<LocalRDG> {
     List<String> exprQlList =
         Lists.newArrayList(JavaConversions.seqAsJavaList(transformer.transform(id)));
     List<String> idStrList = new ArrayList<>();
-    Object idObj = RuleRunner.getInstance().executeExpression(new HashMap<>(), exprQlList, "");
+    Object idObj =
+        RuleRunner.getInstance().executeExpression(new HashMap<>(), exprQlList, getTaskId());
     if (idObj instanceof String) {
       idStrList.add(String.valueOf(idObj));
     } else if (idObj instanceof List) {

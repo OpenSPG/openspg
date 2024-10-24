@@ -16,6 +16,10 @@ package com.antgroup.openspg.builder.model.pipeline.enums;
 public enum NodeTypeEnum {
   /** SOURCE Component */
   CSV_SOURCE,
+  STRING_SOURCE,
+
+  PARAGRAPH_SPLIT,
+  BUILDER_INDEX,
 
   /** MAPPING Component */
   RELATION_MAPPING,
@@ -25,6 +29,10 @@ public enum NodeTypeEnum {
   /** EXTRACT Component */
   USER_DEFINED_EXTRACT,
   LLM_BASED_EXTRACT,
+  LLM_NL_EXTRACT,
+
+  VECTORIZER_PROCESSOR,
+  EXTRACT_POST_PROCESSOR,
 
   /** OTHER Component */
   CHECK,
@@ -32,5 +40,6 @@ public enum NodeTypeEnum {
 
   /** SINK Component */
   GRAPH_SINK,
+  NEO4J_SINK,
   ;
 }

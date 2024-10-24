@@ -15,6 +15,7 @@ package com.antgroup.openspg.core.schema.model.semantic;
 
 import com.antgroup.openspg.server.common.model.UserInfo;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
+import java.util.Date;
 
 /**
  * The logic rule that defined on the property or relation<br>
@@ -31,6 +32,8 @@ import com.antgroup.openspg.server.common.model.base.BaseModel;
 public class LogicalRule extends BaseModel {
 
   private static final long serialVersionUID = -1513161593222131407L;
+
+  private Date modifiedDate;
 
   /** The unique id of the rule. */
   private RuleCode code;
@@ -74,6 +77,14 @@ public class LogicalRule extends BaseModel {
     this.status = ruleStatus;
     this.content = ruleContent;
     this.creator = creator;
+  }
+
+  public Date getModifiedDate() {
+    return modifiedDate;
+  }
+
+  public void setModifiedDate(Date modifiedDate) {
+    this.modifiedDate = modifiedDate;
   }
 
   public RuleCode getCode() {

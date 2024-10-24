@@ -11,7 +11,7 @@
 
 LOCAL_REASONER_JAR = "reasoner-local-runner-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
 
-LOCAL_GRAPH_STORE_URL = "tugraph://127.0.0.1:9090?graphName=default&timeout=50000&accessId=admin&accessKey=73@TuGraph"
+LOCAL_GRAPH_STORE_URL = "neo4j://127.0.0.1:7687"
 
 LOCAL_GRAPH_STATE_CLASS = (
     "com.antgroup.openspg.reasoner.warehouse.cloudext.CloudExtGraphState"

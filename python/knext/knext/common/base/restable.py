@@ -59,12 +59,3 @@ class RESTable(ABC):
         raise NotImplementedError(
             f"`from_rest` is not currently supported for {cls.__name__}."
         )
-
-    def submit(self):
-        """Submit to the SPG Server.
-        Usually, it is necessary to call the `to_rest` method firstly.
-
-        """
-        raise NotImplementedError(
-            f"`submit` is not currently supported for {self.__class__.__name__}."
-        )

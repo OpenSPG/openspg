@@ -148,14 +148,17 @@ public class CloudExtGraphState extends MemGraphState {
     if (CollectionUtils.isNotEmpty(edges)) {
       return edges;
     }
-
+    Set<EdgeTypeName> processTypes = null;
+    if (types != null) {
+      processTypes = types.stream().map(EdgeTypeName::parse).collect(Collectors.toSet());
+    }
     GraphLPGRecordStruct recordStruct =
         (GraphLPGRecordStruct)
             lpgGraphStoreClient.queryRecord(
                 new OneHopLPGRecordQuery(
                     ((VertexBizId) vertexId).getBizId(),
                     vertexId.getType(),
-                    types.stream().map(EdgeTypeName::parse).collect(Collectors.toSet()),
+                    processTypes,
                     com.antgroup.openspg.cloudext.interfaces.graphstore.model.Direction.valueOf(
                         direction.name())));
 

@@ -46,6 +46,8 @@
     <module>common/service</module>
     <module>core/schema/model</module>
     <module>core/schema/service</module>
+    <module>core/reasoner/model</module>
+    <module>core/reasoner/service</module>
     <module>infra/dao</module>
     <module>test</module>
     <module>testdata</module>
@@ -113,6 +115,11 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.server</groupId>
+        <artifactId>core-reasoner-service</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.server</groupId>
         <artifactId>infra-dao</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -140,8 +147,8 @@
       </dependency>
       <dependency>
         <groupId>com.github.pagehelper</groupId>
-        <artifactId>pagehelper</artifactId>
-        <version>4.1.6</version>
+        <artifactId>pagehelper-spring-boot-starter</artifactId>
+        <version>2.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.mybatis</groupId>

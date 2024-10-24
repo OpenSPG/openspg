@@ -9,7 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
+import os
 import sys
 import click
 
@@ -23,6 +23,12 @@ def execute_reasoner_job(file, dsl, output=None):
     """
     Submit asynchronous reasoner jobs to server by providing DSL file or string.
     """
+    with_server = eval(os.getenv("KAG_PROJECT_WITH_SERVER", "False"))
+    if not with_server:
+        click.secho(
+            "ERROR: Reasoner must be executed with SPG Server.", fg="bright_red"
+        )
+        sys.exit()
     client = ReasonerClient()
     if file and not dsl:
         with open(file, "r") as f:

@@ -37,8 +37,12 @@
   <modules>
     <module>interface/graph-store</module>
     <module>interface/search-engine</module>
+    <module>interface/cache</module>
     <module>impl/graph-store/tugraph</module>
+    <module>impl/graph-store/neo4j</module>
     <module>impl/search-engine/elasticsearch</module>
+    <module>impl/search-engine/neo4j</module>
+    <module>impl/cache/redis</module>
   </modules>
 
   <properties/>

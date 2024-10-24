@@ -27,6 +27,7 @@ public class ProjectConvertor {
     projectInfoDO.setStatus("VALID");
     projectInfoDO.setBizDomainId(project.getTenantId());
     projectInfoDO.setNamespace(project.getNamespace());
+    projectInfoDO.setConfig(project.getConfig());
     return projectInfoDO;
   }
 
@@ -40,6 +41,7 @@ public class ProjectConvertor {
         projectInfoDO.getName(),
         projectInfoDO.getDescription(),
         projectInfoDO.getNamespace(),
-        projectInfoDO.getBizDomainId());
+        projectInfoDO.getBizDomainId(),
+        projectInfoDO.getConfig());
   }
 }

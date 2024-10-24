@@ -17,6 +17,7 @@ import com.antgroup.openspg.builder.core.logical.BaseLogicalNode;
 import com.antgroup.openspg.builder.core.logical.LogicalPlan;
 import com.antgroup.openspg.builder.core.physical.process.*;
 import com.antgroup.openspg.builder.model.pipeline.config.*;
+import com.antgroup.openspg.builder.model.pipeline.config.predicting.VectorizerProcessorNodeConfig;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -88,6 +89,21 @@ public class PhysicalPlan implements Serializable {
    */
   private static BaseProcessor<?> parse(BaseLogicalNode<?> node) {
     switch (node.getType()) {
+      case PARAGRAPH_SPLIT:
+        return new ParagraphSplitProcessor(
+            node.getId(), node.getName(), (ParagraphSplitNodeConfig) node.getNodeConfig());
+      case BUILDER_INDEX:
+        return new BuilderIndexProcessor(
+            node.getId(), node.getName(), (BuilderIndexNodeConfig) node.getNodeConfig());
+      case LLM_NL_EXTRACT:
+        return new LLMNlExtractProcessor(
+            node.getId(), node.getName(), (LLMNlExtractNodeConfig) node.getNodeConfig());
+      case EXTRACT_POST_PROCESSOR:
+        return new ExtractPostProcessor(
+            node.getId(), node.getName(), (ExtractPostProcessorNodeConfig) node.getNodeConfig());
+      case VECTORIZER_PROCESSOR:
+        return new VectorizerProcessor(
+            node.getId(), node.getName(), (VectorizerProcessorNodeConfig) node.getNodeConfig());
       case USER_DEFINED_EXTRACT:
         return new UserDefinedExtractProcessor(
             node.getId(), node.getName(), (UserDefinedExtractNodeConfig) node.getNodeConfig());

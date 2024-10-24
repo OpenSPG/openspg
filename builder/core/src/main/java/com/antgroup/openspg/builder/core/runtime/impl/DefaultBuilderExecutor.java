@@ -39,6 +39,19 @@ public class DefaultBuilderExecutor implements BuilderExecutor {
   }
 
   @Override
+  public void close() throws Exception {
+    if (plan == null) {
+      return;
+    }
+    if (CollectionUtils.isEmpty(plan.nodes())) {
+      return;
+    }
+    for (BasePhysicalNode node : plan.nodes()) {
+      node.close();
+    }
+  }
+
+  @Override
   public List<BaseRecord> eval(List<BaseRecord> inputRecords) throws BuilderRecordException {
     if (CollectionUtils.isEmpty(inputRecords)) {
       return new ArrayList<>(0);

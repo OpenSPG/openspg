@@ -1,2 +1,0 @@
-recursive-include nn4k *
-recursive-exclude nn4k/examples *

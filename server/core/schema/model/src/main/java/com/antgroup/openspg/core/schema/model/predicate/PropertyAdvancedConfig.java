@@ -53,6 +53,9 @@ public class PropertyAdvancedConfig extends BaseValObj {
   /** The logic rule defined on the property. */
   private LogicalRule logicalRule;
 
+  /** The index type on the property. */
+  private IndexTypeEnum indexType;
+
   public PropertyAdvancedConfig() {
     subProperties = new ArrayList<>();
     semantics = new ArrayList<>();
@@ -91,6 +94,15 @@ public class PropertyAdvancedConfig extends BaseValObj {
 
   public PropertyAdvancedConfig setPropertyGroup(PropertyGroupEnum propertyGroup) {
     this.propertyGroup = propertyGroup;
+    return this;
+  }
+
+  public IndexTypeEnum getIndexType() {
+    return indexType;
+  }
+
+  public PropertyAdvancedConfig setIndexType(IndexTypeEnum indexType) {
+    this.indexType = indexType;
     return this;
   }
 

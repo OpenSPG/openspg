@@ -37,6 +37,8 @@ public interface LPGDataDefinitionService {
    */
   LPGSchema querySchema();
 
+  List<String> queryAllVertexLabels();
+
   /**
    * Create a new {@link VertexType VertexType}.
    *

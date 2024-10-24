@@ -15,37 +15,31 @@ package com.antgroup.openspg.builder.core.physical.operator;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
-import com.antgroup.openspg.common.util.StringUtils;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import pemja.core.PythonInterpreter;
 import pemja.core.PythonInterpreterConfig;
 
 @Slf4j
 public class PythonOperatorFactory implements OperatorFactory {
 
-  private static volatile PythonInterpreter pythonInterpreter;
-  private final Map<OperatorConfig, String> operatorObjects = new ConcurrentHashMap<>();
+  private String pythonExec;
+  private String[] pythonPaths;
+  private String pythonKnextPath;
 
   private PythonOperatorFactory() {}
 
-  private static final PythonOperatorFactory INSTANCE = new PythonOperatorFactory();
-
   public static OperatorFactory getInstance() {
-    return INSTANCE;
+    return new PythonOperatorFactory();
   }
 
-  private static PythonInterpreter newPythonInterpreter(BuilderContext context) {
-    String pythonExec = context.getPythonExec();
-    String[] pythonPaths =
-        (context.getPythonPaths() != null ? context.getPythonPaths().split(";") : null);
+  private PythonInterpreter newPythonInterpreter() {
 
     PythonInterpreterConfig.PythonInterpreterConfigBuilder builder =
         PythonInterpreterConfig.newBuilder();
-    log.info("pythonExec={}, pythonPaths={}", pythonExec, Arrays.toString(pythonPaths));
     if (pythonExec != null) {
       builder.setPythonExec(pythonExec);
     }
@@ -57,51 +51,63 @@ public class PythonOperatorFactory implements OperatorFactory {
 
   @Override
   public void init(BuilderContext context) {
-    if (pythonInterpreter == null) {
-      synchronized (PythonOperatorFactory.class) {
-        if (pythonInterpreter == null) {
-          pythonInterpreter = newPythonInterpreter(context);
-        }
-      }
-    }
+    pythonExec = context.getPythonExec();
+    pythonPaths = (context.getPythonPaths() != null ? context.getPythonPaths().split(";") : null);
+    pythonKnextPath = context.getPythonKnextPath();
+    log.info("pythonExec={}, pythonPaths={}", pythonExec, Arrays.toString(pythonPaths));
+  }
+
+  public PythonInterpreter getPythonInterpreter(OperatorConfig config) {
+    PythonInterpreter interpreter = newPythonInterpreter();
+    loadOperatorObject(config, interpreter);
+    return interpreter;
   }
 
   @Override
-  public void loadOperator(OperatorConfig config) {
-    loadOperatorObject(config);
-  }
+  public void loadOperator(OperatorConfig config) {}
 
   @Override
   public Object invoke(OperatorConfig config, Object... input) {
-    String pythonObject = operatorObjects.get(config);
-    if (StringUtils.isBlank(pythonObject)) {
-      throw new IllegalStateException();
+    PythonInterpreter interpreter = getPythonInterpreter(config);
+    String pythonObject = getPythonOperatorObject(config);
+    try {
+      return interpreter.invokeMethod(pythonObject, config.getMethod(), input);
+    } finally {
+      interpreter.close();
     }
-    return pythonInterpreter.invokeMethod(pythonObject, config.getMethod(), input);
   }
 
-  private void loadOperatorObject(OperatorConfig config) {
-    if (operatorObjects.containsKey(config)) {
-      return;
+  private void loadOperatorObject(OperatorConfig config, PythonInterpreter interpreter) {
+    if (StringUtils.isNotBlank(pythonKnextPath)) {
+      interpreter.exec(String.format("import sys; sys.path.append(\"%s\")", pythonKnextPath));
     }
-    String pythonOperatorObject = config.getClassName() + "_" + config.getUniqueKey();
-    pythonInterpreter.exec(
+    String pythonOperatorObject = getPythonOperatorObject(config);
+    interpreter.exec(
         String.format("from %s import %s", config.getModulePath(), config.getClassName()));
-    pythonInterpreter.exec(
+    interpreter.exec(
         String.format(
             "%s=%s(%s)",
-            pythonOperatorObject, config.getClassName(), paramToPythonString(config.getParams())));
-    operatorObjects.put(config, pythonOperatorObject);
+            pythonOperatorObject,
+            config.getClassName(),
+            paramToPythonString(config.getParams(), config.getParamsPrefix())));
   }
 
-  private String paramToPythonString(Map<String, String> params) {
+  private String getPythonOperatorObject(OperatorConfig config) {
+    String pythonOperatorObject = config.getClassName() + "_" + config.getUniqueKey();
+    return pythonOperatorObject;
+  }
+
+  private String paramToPythonString(Map<String, String> params, String paramsPrefix) {
     if (MapUtils.isEmpty(params)) {
       return "";
+    }
+    if (StringUtils.isBlank(paramsPrefix)) {
+      paramsPrefix = "";
     }
     String keyValue =
         params.entrySet().stream()
             .map(entry -> String.format("'%s': '%s'", entry.getKey(), entry.getValue()))
             .collect(Collectors.joining(","));
-    return String.format("{%s}", keyValue);
+    return String.format("%s{%s}", paramsPrefix, keyValue);
   }
 }

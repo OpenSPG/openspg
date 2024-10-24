@@ -215,6 +215,7 @@ public class PropertyUtils {
     config.setMultiVersionConfig(advancedConfig.getMultiVersionConfig());
     config.setMountedConceptConfig(advancedConfig.getMountedConceptConfig());
     config.setEncryptTypeEnum(advancedConfig.getEncryptTypeEnum());
+    config.setIndexType(advancedConfig.getIndexType());
     config.setPropertyGroup(advancedConfig.getPropertyGroup());
     config.setConstraint(advancedConfig.getConstraint());
     config.setWithIndex(withIndex(propertyRef));

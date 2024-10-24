@@ -29,12 +29,20 @@
       <artifactId>common-service</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>biz-common</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-interface-graph-store</artifactId>
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-interface-search-engine</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>core-reasoner-service</artifactId>
     </dependency>
   </dependencies>
 </project>

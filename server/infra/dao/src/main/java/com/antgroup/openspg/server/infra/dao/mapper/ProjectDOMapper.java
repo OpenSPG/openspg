@@ -42,4 +42,14 @@ public interface ProjectDOMapper {
   int updateByPrimaryKeySelective(ProjectDO record);
 
   int updateByPrimaryKey(ProjectDO record);
+
+  List<ProjectDO> selectByCondition(
+      @Param("record") ProjectDO record,
+      @Param("orderByGmtCreateDesc") Boolean orderByGmtCreateDesc,
+      @Param("start") int start,
+      @Param("size") int size);
+
+  long selectCountByCondition(
+      @Param("record") ProjectDO record,
+      @Param("orderByGmtCreateDesc") Boolean orderByGmtCreateDesc);
 }

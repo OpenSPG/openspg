@@ -15,6 +15,8 @@ package com.antgroup.openspg.server.api.http.server.openapi;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
 import com.antgroup.openspg.server.api.facade.dto.service.request.SPGTypeSearchRequest;
+import com.antgroup.openspg.server.api.facade.dto.service.request.TextSearchRequest;
+import com.antgroup.openspg.server.api.facade.dto.service.request.VectorSearchRequest;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
@@ -23,6 +25,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -42,6 +45,34 @@ public class SearchController extends BaseController {
           @Override
           public List<IdxRecord> action() {
             return searchManager.spgTypeSearch(request);
+          }
+        });
+  }
+
+  @RequestMapping(method = RequestMethod.POST, value = "/text")
+  public ResponseEntity<Object> textSearch(@RequestBody TextSearchRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<List<IdxRecord>>() {
+          @Override
+          public void check() {}
+
+          @Override
+          public List<IdxRecord> action() {
+            return searchManager.textSearch(request);
+          }
+        });
+  }
+
+  @RequestMapping(method = RequestMethod.POST, value = "/vector")
+  public ResponseEntity<Object> vectorSearch(@RequestBody VectorSearchRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<List<IdxRecord>>() {
+          @Override
+          public void check() {}
+
+          @Override
+          public List<IdxRecord> action() {
+            return searchManager.vectorSearch(request);
           }
         });
   }

@@ -158,6 +158,15 @@ public class LocalBuilderRunner implements BuilderRunner {
     if (builderMetric != null) {
       builderMetric.close();
     }
+    if (sourceReader != null) {
+      sourceReader.close();
+    }
+    if (builderExecutor != null) {
+      builderExecutor.close();
+    }
+    if (sinkWriter != null) {
+      sinkWriter.close();
+    }
     if (threadPoolExecutor != null) {
       threadPoolExecutor.shutdownNow();
     }

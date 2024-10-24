@@ -14,9 +14,16 @@
 package com.antgroup.openspg.server.biz.service.convertor;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
+import com.antgroup.openspg.server.api.facade.dto.service.request.EdgeRecordInstance;
+import com.antgroup.openspg.server.api.facade.dto.service.request.VertexRecordInstance;
 import com.antgroup.openspg.server.api.facade.dto.service.response.RelationInstance;
 import com.antgroup.openspg.server.api.facade.dto.service.response.SPGTypeInstance;
+import com.google.common.collect.Lists;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class InstanceConvertor {
 
@@ -35,5 +42,26 @@ public class InstanceConvertor {
     instance.setRelationType(edgeRecord.getEdgeType().getEdgeLabel());
     instance.setProperties(edgeRecord.toPropertyMapWithId());
     return instance;
+  }
+
+  public static VertexRecord toVertexRecord(VertexRecordInstance instance) {
+    List<LPGPropertyRecord> propertyList = Lists.newArrayList();
+    instance.getProperties().entrySet().stream()
+        .map(entry -> new LPGPropertyRecord(entry.getKey(), entry.getValue()))
+        .forEach(propertyList::add);
+    instance.getVectors().entrySet().stream()
+        .map(entry -> new LPGPropertyRecord(entry.getKey(), entry.getValue()))
+        .forEach(propertyList::add);
+    return new VertexRecord(instance.getId(), instance.getType(), propertyList);
+  }
+
+  public static EdgeRecord toEdgeRecord(EdgeRecordInstance instance) {
+    EdgeTypeName edgeTypeName =
+        new EdgeTypeName(instance.getSrcType(), instance.getLabel(), instance.getDstType());
+    List<LPGPropertyRecord> propertyList =
+        instance.getProperties().entrySet().stream()
+            .map(entry -> new LPGPropertyRecord(entry.getKey(), entry.getValue()))
+            .collect(Collectors.toList());
+    return new EdgeRecord(instance.getSrcId(), instance.getDstId(), edgeTypeName, propertyList);
   }
 }

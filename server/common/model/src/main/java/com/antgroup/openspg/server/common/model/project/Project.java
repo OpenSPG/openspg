@@ -38,12 +38,17 @@ public class Project extends BaseModel {
   /** The tenant id that project belong to. */
   private final Long tenantId;
 
-  public Project(Long id, String name, String description, String namespace, Long tenantId) {
+  /** Base configuration for the project dimension. */
+  private final String config;
+
+  public Project(
+      Long id, String name, String description, String namespace, Long tenantId, String config) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.namespace = namespace;
     this.tenantId = tenantId;
+    this.config = config;
   }
 
   public void setId(Long id) {
@@ -68,5 +73,9 @@ public class Project extends BaseModel {
 
   public String getNamespace() {
     return namespace;
+  }
+
+  public String getConfig() {
+    return config;
   }
 }

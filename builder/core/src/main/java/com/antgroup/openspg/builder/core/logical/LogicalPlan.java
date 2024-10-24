@@ -17,6 +17,7 @@ import com.antgroup.openspg.builder.model.pipeline.Edge;
 import com.antgroup.openspg.builder.model.pipeline.Node;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 import com.antgroup.openspg.builder.model.pipeline.config.*;
+import com.antgroup.openspg.builder.model.pipeline.config.predicting.VectorizerProcessorNodeConfig;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -83,12 +84,30 @@ public class LogicalPlan implements Serializable {
       case CSV_SOURCE:
         return new CsvSourceNode(
             node.getId(), node.getName(), (CsvSourceNodeConfig) node.getNodeConfig());
+      case STRING_SOURCE:
+        return new StringSourceNode(
+            node.getId(), node.getName(), (StringSourceNodeConfig) node.getNodeConfig());
+      case BUILDER_INDEX:
+        return new BuilderIndexNode(
+            node.getId(), node.getName(), (BuilderIndexNodeConfig) node.getNodeConfig());
+      case PARAGRAPH_SPLIT:
+        return new ParagraphSplitNode(
+            node.getId(), node.getName(), (ParagraphSplitNodeConfig) node.getNodeConfig());
       case USER_DEFINED_EXTRACT:
         return new UserDefinedExtractNode(
             node.getId(), node.getName(), (UserDefinedExtractNodeConfig) node.getNodeConfig());
       case LLM_BASED_EXTRACT:
         return new LLMBasedExtractNode(
             node.getId(), node.getName(), (LLMBasedExtractNodeConfig) node.getNodeConfig());
+      case LLM_NL_EXTRACT:
+        return new LLMNlExtractNode(
+            node.getId(), node.getName(), (LLMNlExtractNodeConfig) node.getNodeConfig());
+      case EXTRACT_POST_PROCESSOR:
+        return new ExtractPostProcessorNode(
+            node.getId(), node.getName(), (ExtractPostProcessorNodeConfig) node.getNodeConfig());
+      case VECTORIZER_PROCESSOR:
+        return new VectorizerProcessorNode(
+            node.getId(), node.getName(), (VectorizerProcessorNodeConfig) node.getNodeConfig());
       case SPG_TYPE_MAPPINGS:
         return new SPGTypeMappingNode(
             node.getId(), node.getName(), (SPGTypeMappingNodeConfigs) node.getNodeConfig());
@@ -98,6 +117,9 @@ public class LogicalPlan implements Serializable {
       case GRAPH_SINK:
         return new GraphStoreSinkNode(
             node.getId(), node.getName(), (GraphStoreSinkNodeConfig) node.getNodeConfig());
+      case NEO4J_SINK:
+        return new Neo4jSinkNode(
+            node.getId(), node.getName(), (Neo4jSinkNodeConfig) node.getNodeConfig());
       default:
         throw new IllegalArgumentException("illegal nodeType=" + node.getType());
     }

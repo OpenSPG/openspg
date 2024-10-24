@@ -118,6 +118,7 @@ public class PredicateAssemble {
     advancedConfig.setSubProperties(subProperties == null ? new ArrayList<>() : subProperties);
     advancedConfig.setSemantics(semantics == null ? new ArrayList<>() : semantics);
     advancedConfig.setLogicalRule(logicalRule);
+    advancedConfig.setIndexType(simpleProperty.getIndexType());
 
     Property property =
         new Property(

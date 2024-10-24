@@ -19,7 +19,14 @@ import lombok.Getter;
 @Getter
 public class GraphStoreSinkNodeConfig extends BaseNodeConfig {
 
+  private final Boolean isWriter;
+
   public GraphStoreSinkNodeConfig() {
+    this(true);
+  }
+
+  public GraphStoreSinkNodeConfig(Boolean isWriter) {
     super(NodeTypeEnum.GRAPH_SINK);
+    this.isWriter = isWriter;
   }
 }

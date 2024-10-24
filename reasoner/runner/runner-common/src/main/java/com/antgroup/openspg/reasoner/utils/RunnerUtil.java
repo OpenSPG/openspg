@@ -152,11 +152,12 @@ public class RunnerUtil {
       Pattern kgGraphSchema,
       KgGraphSplitStaticParameters staticParameters,
       List<String> ruleList,
-      Long maxPathLimit) {
+      Long maxPathLimit,
+      String taskId) {
     KgGraph<IVertexId> resultMsg = new KgGraphImpl();
     List<KgGraph<IVertexId>> mergeMsgList = new ArrayList<>();
 
-    Predicate<KgGraph<IVertexId>> predicate = new PredicateKgGraph(kgGraphSchema, ruleList);
+    Predicate<KgGraph<IVertexId>> predicate = new PredicateKgGraph(kgGraphSchema, ruleList, taskId);
     Iterator<KgGraph<IVertexId>> pathIt = value.getPath(staticParameters, predicate);
     long count = 0;
     while (pathIt.hasNext()) {
@@ -188,10 +189,11 @@ public class RunnerUtil {
       Pattern kgGraphSchema,
       KgGraphSplitStaticParameters staticParameters,
       List<String> ruleList,
-      Long maxPathLimit) {
+      Long maxPathLimit,
+      String taskId) {
     List<String> sortedEdgeAliasList = Lists.newArrayList(edgeAliasSet);
     ArrayList<KgGraph<IVertexId>> result = new ArrayList<>();
-    Predicate<KgGraph<IVertexId>> predicate = new PredicateKgGraph(kgGraphSchema, ruleList);
+    Predicate<KgGraph<IVertexId>> predicate = new PredicateKgGraph(kgGraphSchema, ruleList, taskId);
     List<KgGraph<IVertexId>> splitList =
         value.split(splitAliasSet, kgGraphSchema, staticParameters, null, maxPathLimit);
     for (KgGraph<IVertexId> kgGraph : splitList) {
@@ -1175,7 +1177,7 @@ public class RunnerUtil {
 
   /** get running context */
   public static Map<String, Object> getTaskRunningContext(
-      KGReasonerSession session, Map<String, Object> params) {
+      String taskId, KGReasonerSession session, Map<String, Object> params) {
     Map<String, Object> taskRunningContext = new HashMap<>();
     Map<String, String> idFilterMaps =
         JavaConversions.mapAsJavaMap(session.getIdFilterParameters());
@@ -1187,7 +1189,7 @@ public class RunnerUtil {
         }
         Expr expr = session.parser().parseExpr(params.get(var).toString());
         List<String> rule = WareHouseUtils.getRuleList(expr);
-        Object obj = RuleRunner.getInstance().executeExpression(new HashMap<>(), rule, "");
+        Object obj = RuleRunner.getInstance().executeExpression(new HashMap<>(), rule, taskId);
 
         if (idFilterMaps.containsValue(var)) {
           // convert 2 string id
