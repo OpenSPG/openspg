@@ -3,6 +3,9 @@ services:
     restart: always
     image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-mysql:latest
     container_name: release-openspg-mysql
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     environment:
       TZ: Asia/Shanghai
       LANG: C.UTF-8
@@ -22,6 +25,7 @@ services:
       - "7474:7474"
       - "7687:7687"
     environment:
+      - TZ=Asia/Shanghai
       - NEO4J_AUTH=neo4j/neo4j@openspg
       - NEO4J_PLUGINS=["apoc"]
       - NEO4J_server_memory_heap_initial__size=1G
@@ -32,7 +36,8 @@ services:
       - NEO4J_dbms_security_procedures_unrestricted=*
       - NEO4J_dbms_security_procedures_allowlist=*
     volumes:
-      - /etc/localtime:/etc/localtime
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
       - $HOME/dozerdb/data:/data
       - $HOME/dozerdb/logs:/logs
       - $HOME/dozerdb/import:/var/lib/neo4j/import
