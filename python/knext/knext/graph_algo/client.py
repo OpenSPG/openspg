@@ -12,6 +12,7 @@
 from typing import List, Dict
 
 from knext.common.base.client import Client
+from knext.common.rest import ApiClient, Configuration
 from knext.graph_algo import (
     GetPageRankScoresRequest,
     GetPageRankScoresRequestStartNodes,
@@ -23,10 +24,11 @@ from knext.graph_algo import rest
 class GraphAlgoClient(Client):
     """ """
 
-    _rest_client = rest.GraphApi()
-
     def __init__(self, host_addr: str = None, project_id: int = None):
         super().__init__(host_addr, project_id)
+        self._rest_client: rest.GraphApi = rest.GraphApi(
+            api_client=ApiClient(configuration=Configuration(host=host_addr))
+        )
 
     def calculate_pagerank_scores(self, target_vertex_type, start_nodes: List[Dict]):
         """

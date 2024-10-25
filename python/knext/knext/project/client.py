@@ -12,16 +12,18 @@
 import json
 
 from knext.common.base.client import Client
+from knext.common.rest import Configuration, ApiClient
 from knext.project import rest
 
 
 class ProjectClient(Client):
     """ """
 
-    _rest_client = rest.ProjectApi()
-
     def __init__(self, host_addr: str = None, project_id: int = None):
         super().__init__(host_addr, project_id)
+        self._rest_client: rest.ProjectApi = rest.ProjectApi(
+            api_client=ApiClient(configuration=Configuration(host=host_addr))
+        )
 
     def get_config(self, project_id: str):
         project = self.get(id=int(project_id))
@@ -36,7 +38,7 @@ class ProjectClient(Client):
         for project in projects:
             condition = True
             for k, v in conditions.items():
-                condition = condition and getattr(project, k) == v
+                condition = condition and str(getattr(project, k)) == str(v)
             if condition:
                 return project
         return None
