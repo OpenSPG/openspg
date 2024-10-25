@@ -36,7 +36,7 @@ class ProjectClient(Client):
         for project in projects:
             condition = True
             for k, v in conditions.items():
-                condition = condition and getattr(project, k) == v
+                condition = condition and int(getattr(project, k)) == v
             if condition:
                 return project
         return None
