@@ -11,7 +11,7 @@
 
 
 __package_name__ = "openspg-knext"
-__version__ = "0.5.20241025.1"
+__version__ = "0.5-beta1"
 
 from knext.common.env import init_env
 
