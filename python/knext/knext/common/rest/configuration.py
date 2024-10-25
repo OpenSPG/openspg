@@ -79,7 +79,7 @@ class Configuration(object):
         from knext.common import env
 
         self.host = (
-            os.environ.get("KAG_PROJECT_HOST_ADDR") or host or env.LOCAL_SCHEMA_URL
+             host or os.environ.get("KAG_PROJECT_HOST_ADDR") or env.LOCAL_SCHEMA_URL
         )
         """Default Base url
         """
