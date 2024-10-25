@@ -26,10 +26,12 @@ reason_cache = knext.common.cache.SchemaCache()
 
 class ReasonerClient(Client):
     """SPG Reasoner Client."""
+
     def __init__(self, host_addr: str = None, project_id: int = None, namespace=None):
         super().__init__(host_addr, project_id)
         self._rest_client: rest.ReasonerApi = rest.ReasonerApi(
-            api_client=ApiClient(configuration=Configuration(host=host_addr)))
+            api_client=ApiClient(configuration=Configuration(host=host_addr))
+        )
         self._namespace = namespace or os.environ.get("KAG_PROJECT_NAMESPACE")
         self._session = None
         # load schema cache

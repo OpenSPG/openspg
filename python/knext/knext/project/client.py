@@ -22,7 +22,8 @@ class ProjectClient(Client):
     def __init__(self, host_addr: str = None, project_id: int = None):
         super().__init__(host_addr, project_id)
         self._rest_client: rest.ProjectApi = rest.ProjectApi(
-            api_client=ApiClient(configuration=Configuration(host=host_addr)))
+            api_client=ApiClient(configuration=Configuration(host=host_addr))
+        )
 
     def get_config(self, project_id: str):
         project = self.get(id=int(project_id))

@@ -27,7 +27,8 @@ class GraphAlgoClient(Client):
     def __init__(self, host_addr: str = None, project_id: int = None):
         super().__init__(host_addr, project_id)
         self._rest_client: rest.GraphApi = rest.GraphApi(
-            api_client=ApiClient(configuration=Configuration(host=host_addr)))
+            api_client=ApiClient(configuration=Configuration(host=host_addr))
+        )
 
     def calculate_pagerank_scores(self, target_vertex_type, start_nodes: List[Dict]):
         """

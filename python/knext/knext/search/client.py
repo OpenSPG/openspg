@@ -25,7 +25,8 @@ class SearchClient(Client):
     def __init__(self, host_addr: str = None, project_id: int = None):
         super().__init__(host_addr, project_id)
         self._rest_client: rest.SearchApi = rest.SearchApi(
-            api_client=ApiClient(configuration=Configuration(host=host_addr)))
+            api_client=ApiClient(configuration=Configuration(host=host_addr))
+        )
 
     def search_text(self, query_string, label_constraints=None, topk=10):
         req = TextSearchRequest(self._project_id, query_string, label_constraints, topk)
