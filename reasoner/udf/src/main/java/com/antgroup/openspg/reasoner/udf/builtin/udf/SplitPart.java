@@ -18,8 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public class SplitPart {
   @UdfDefine(name = "split_part", compatibleName = "SplitPart")
-  public String split(String str, String delim, Integer partNum) throws Exception {
-    String[] strings = StringUtils.split(str, delim);
+  public String split(String str, String separator, Integer partNum) throws Exception {
+    String[] strings = StringUtils.split(str, separator);
     int length = strings.length;
     if (partNum < 0) {
       partNum = length - 1;
