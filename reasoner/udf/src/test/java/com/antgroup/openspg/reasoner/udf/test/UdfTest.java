@@ -173,7 +173,9 @@ public class UdfTest {
   public void testSplitPart() {
     UdfMng mng = UdfMngFactory.getUdfMng();
     IUdfMeta udfMeta =
-            mng.getUdfMeta("split_part", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$, KTInteger$.MODULE$));
+        mng.getUdfMeta(
+            "split_part",
+            Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$, KTInteger$.MODULE$));
     Object rst1 = udfMeta.invoke("Hello,World!", ",", 0);
     Assert.assertEquals("Hello", rst1);
     Object rst2 = udfMeta.invoke("Hello,Ni,Hao", ",", -1);
