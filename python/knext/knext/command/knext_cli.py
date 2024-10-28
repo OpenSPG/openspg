@@ -23,6 +23,7 @@ from knext.command.sub_command.schema import commit_schema
 from knext.command.sub_command.schema import reg_concept_rule
 from knext.command.exception import _ApiExceptionHandler
 from knext import __version__
+from knext.command.sub_command.thinker import execute_thinker_job
 
 
 @click.group(cls=_ApiExceptionHandler)
@@ -69,6 +70,14 @@ def reasoner() -> None:
 
 reasoner.command("execute")(execute_reasoner_job)
 
+
+@_main.group()
+def thinker() -> None:
+    """Thinker client."""
+    pass
+
+
+thinker.command("execute")(execute_thinker_job)
 
 if __name__ == "__main__":
     _main()
