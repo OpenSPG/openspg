@@ -10,11 +10,16 @@ services:
       - neo4j
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     environment:
       TZ: Asia/Shanghai
       LANG: C.UTF-8
     command: [
+      "java",
+      "-Dfile.encoding=UTF-8",
+      "-Xms4096m",
+      "-Xmx4096m",
+      "-jar",
+      "arks-sofaboot-0.0.1-SNAPSHOT-executable.jar",
       '--server.repository.impl.jdbc.host=mysql',
       '--server.repository.impl.jdbc.password=openspg',
       '--cloudext.graphstore.url=neo4j://release-openspg-neo4j:7687?user=neo4j&password=neo4j@openspg&database=neo4j',
@@ -27,7 +32,6 @@ services:
     container_name: release-openspg-mysql
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     environment:
       TZ: Asia/Shanghai
       LANG: C.UTF-8
@@ -59,7 +63,4 @@ services:
       - NEO4J_dbms_security_procedures_allowlist=*
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-      - $HOME/dozerdb/data:/data
       - $HOME/dozerdb/logs:/logs
-      - $HOME/dozerdb/import:/var/lib/neo4j/import
