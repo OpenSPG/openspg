@@ -5,7 +5,6 @@ services:
     container_name: release-openspg-mysql
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     environment:
       TZ: Asia/Shanghai
       LANG: C.UTF-8
@@ -37,7 +36,4 @@ services:
       - NEO4J_dbms_security_procedures_allowlist=*
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-      - $HOME/dozerdb/data:/data
       - $HOME/dozerdb/logs:/logs
-      - $HOME/dozerdb/import:/var/lib/neo4j/import
