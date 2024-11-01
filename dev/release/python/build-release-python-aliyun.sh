@@ -10,7 +10,7 @@
 # or implied.
 
 IMAGE="spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-python"
-VERSION="kag1"
+VERSION="0.5"
 cd ../../../../
 docker build -f openspg/dev/release/python/Dockerfile --platform linux/arm64/v8 --push \
   -t  ${IMAGE}:${VERSION}-arm64 \
@@ -32,3 +32,17 @@ docker manifest create \
    ${IMAGE}:${VERSION}-arm64
 
 docker manifest push  ${IMAGE}:${VERSION}
+
+if docker manifest inspect ${IMAGE}:${LATEST} &> /dev/null; then
+  echo "Manifest already exists, removing it..."
+  docker manifest rm ${IMAGE}:${LATEST}
+else
+  echo "Manifest does not exist, proceeding with creation and push."
+fi
+
+docker manifest create \
+  ${IMAGE}:${LATEST} \
+  ${IMAGE}:${VERSION}-amd64 \
+  ${IMAGE}:${VERSION}-arm64
+
+docker manifest push ${IMAGE}:${LATEST}

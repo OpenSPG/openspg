@@ -30,7 +30,6 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.Edge
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
-import com.antgroup.openspg.reasoner.runner.local.impl.LocalRunnerThreadPool;
 import com.antgroup.openspg.server.common.model.project.Project;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
@@ -39,16 +38,23 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
 
+  private static final int NUM_THREADS = 10;
+
   private ExecuteNode node;
   private Neo4jStoreClient client;
   private Project project;
   private static final String DOT = ".";
+  ExecutorService nodeExecutor;
+  ExecutorService edgeExecutor;
 
   public Neo4jSinkWriter(String id, String name, Neo4jSinkNodeConfig config) {
     super(id, name, config);
@@ -63,6 +69,22 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
     }
     client = new Neo4jStoreClient(context.getGraphStoreUrl());
     project = JSON.parseObject(context.getProject(), Project.class);
+    nodeExecutor =
+        new ThreadPoolExecutor(
+            NUM_THREADS,
+            NUM_THREADS,
+            2 * 60L,
+            TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(1000),
+            new ThreadPoolExecutor.CallerRunsPolicy());
+    edgeExecutor =
+        new ThreadPoolExecutor(
+            NUM_THREADS,
+            NUM_THREADS,
+            2 * 60L,
+            TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(1000),
+            new ThreadPoolExecutor.CallerRunsPolicy());
   }
 
   @Override
@@ -90,8 +112,6 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
   public void writeToNeo4j(SubGraphRecord subGraphRecord) {
     subGraphRecord.getResultNodes().forEach(node -> convertProperties(node.getProperties()));
     subGraphRecord.getResultEdges().forEach(edge -> convertProperties(edge.getProperties()));
-
-    ExecutorService nodeExecutor = LocalRunnerThreadPool.getThreadPoolExecutor(null);
     try {
       node.addTraceLog("Start Writer Nodes processor...");
       List<Future<Void>> nodeFutures =
@@ -102,8 +122,6 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
       Thread.currentThread().interrupt();
       throw new RuntimeException("Error during node upsert", e);
     }
-
-    ExecutorService edgeExecutor = LocalRunnerThreadPool.getThreadPoolExecutor(null);
     try {
       node.addTraceLog("Start Writer Edges processor...");
       List<Future<Void>> edgeFutures =

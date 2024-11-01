@@ -47,9 +47,12 @@ public class VectorizerProcessor extends BasePythonProcessor<VectorizerProcessor
     node.addTraceLog("Start vectorizer processor...");
     List<BaseRecord> results = new ArrayList<>();
     SubGraphRecord subGraph = new SubGraphRecord(Lists.newArrayList(), Lists.newArrayList());
+    SubGraphRecord outputs = new SubGraphRecord(Lists.newArrayList(), Lists.newArrayList());
 
     for (BaseRecord record : inputs) {
       SubGraphRecord spgRecord = (SubGraphRecord) record;
+      outputs.getResultNodes().addAll(spgRecord.getResultNodes());
+      outputs.getResultEdges().addAll(spgRecord.getResultEdges());
       Map map = mapper.convertValue(spgRecord, Map.class);
       node.addTraceLog(
           "invoke vectorizer processor operator:%s", config.getOperatorConfig().getClassName());
@@ -69,7 +72,7 @@ public class VectorizerProcessor extends BasePythonProcessor<VectorizerProcessor
     }
     results.add(subGraph);
     node.addTraceLog("post vectorizer complete...");
-    node.setOutputs(subGraph);
+    node.setOutputs(outputs);
     node.setStatus(StatusEnum.FINISH);
     return results;
   }
