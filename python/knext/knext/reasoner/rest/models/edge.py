@@ -10,6 +10,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
+
 """
     knext
 
@@ -47,7 +48,7 @@ class Edge(object):
     attribute_map = {"_from": "from", "to": "to"}
 
     def __init__(
-        self, _from=None, to=None, local_vars_configuration=None
+            self, _from=None, to=None, local_vars_configuration=None
     ):  # noqa: E501
         """Edge - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:

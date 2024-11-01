@@ -8,12 +8,3 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
-# gpu 环境，本地加载向量模型，需要执行如下代码：
-pip install -U FlagEmbedding huggingface_hub
-pip uninstall nvidia-cublas-cu11 nvidia-cuda-nvrtc-cu11 nvidia-cuda-runtime-cu11 nvidia-cudnn-cu11 -y
-pip install numpy==1.26.1
-
-
-# 要调用qwen2，需要执行如下代码
-pip uninstall nscommon -y && pip install -U http://alps-common.oss-cn-hangzhou-zmf.aliyuncs.com/nscommon/fengxi_0613/nscommon-0.0.1.tar.gz
