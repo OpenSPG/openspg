@@ -1,4 +1,5 @@
 version: "3.7"
+services:
   mysql:
     restart: always
     image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-mysql:latest
