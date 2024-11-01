@@ -54,6 +54,6 @@ class ThinkerClient(Client):
             os.environ.get("KNEXT_GRAPH_STATE_CLASS") or lib.LOCAL_GRAPH_STATE_CLASS,
             "--graphStoreUrl",
             os.environ.get("KNEXT_GRAPH_STORE_URL") or lib.LOCAL_GRAPH_STORE_URL,
-            ]
+        ]
 
         subprocess.call(java_cmd)

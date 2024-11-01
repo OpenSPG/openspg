@@ -67,19 +67,19 @@ class Configuration(object):
     _default = None
 
     def __init__(
-            self,
-            host=None,
-            api_key=None,
-            api_key_prefix=None,
-            username=None,
-            password=None,
-            discard_unknown_keys=False,
+        self,
+        host=None,
+        api_key=None,
+        api_key_prefix=None,
+        username=None,
+        password=None,
+        discard_unknown_keys=False,
     ):
         """Constructor"""
         from knext.common import env
 
         self.host = (
-                host or os.environ.get("KAG_PROJECT_HOST_ADDR") or env.LOCAL_SCHEMA_URL
+            host or os.environ.get("KAG_PROJECT_HOST_ADDR") or env.LOCAL_SCHEMA_URL
         )
         """Default Base url
         """

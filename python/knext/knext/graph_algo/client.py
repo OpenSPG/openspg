@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -9,60 +8,70 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-import json
+
+from typing import List, Dict
 
 from knext.common.base.client import Client
-from knext.common.rest import Configuration, ApiClient
-from knext.project import rest
+from knext.common.rest import ApiClient, Configuration
+from knext.graph_algo import (
+    GetPageRankScoresRequest,
+    GetPageRankScoresRequestStartNodes,
+    WriterGraphRequest,
+)
+from knext.graph_algo import rest
 
 
-class ProjectClient(Client):
+class GraphAlgoClient(Client):
     """ """
 
     def __init__(self, host_addr: str = None, project_id: int = None):
         super().__init__(host_addr, project_id)
-        self._rest_client: rest.ProjectApi = rest.ProjectApi(
+        self._rest_client: rest.GraphApi = rest.GraphApi(
             api_client=ApiClient(configuration=Configuration(host=host_addr))
         )
 
-    def get_config(self, project_id: str):
-        project = self.get(id=int(project_id))
-        if not project:
-            return {}
-        config = project.config
-        config = json.loads(config) if config else {}
-        return config
+    def calculate_pagerank_scores(self, target_vertex_type, start_nodes: List[Dict]):
+        """
+        Calculate and retrieve PageRank scores for the given starting nodes.
 
-    def get(self, **conditions):
-        projects = self._rest_client.project_get()
-        for project in projects:
-            condition = True
-            for k, v in conditions.items():
-                condition = condition and str(getattr(project, k)) == str(v)
-            if condition:
-                return project
-        return None
+        Parameters:
+        target_vertex_type (str): Return target vectex type ppr score
+        start_nodes (list): A list containing document fragment IDs to be used as starting nodes for the PageRank algorithm.
 
-    def get_by_namespace(self, namespace: str):
-        projects = self._rest_client.project_get()
-        for project in projects:
-            if str(project.namespace) == str(namespace):
-                return project
-        return None
+        Returns:
+        ppr_doc_scores (dict): A dictionary containing each document fragment ID and its corresponding PageRank score.
 
-    def create(self, name: str, namespace: str, desc: str = None, auto_schema=False):
-        project_create_request = rest.ProjectCreateRequest(
-            name=name, desc=desc, namespace=namespace, auto_schema=auto_schema
+        This method uses the PageRank algorithm in the graph store to compute scores for document fragments. If `start_nodes` is empty,
+        it returns an empty dictionary. Otherwise, it attempts to retrieve PageRank scores from the graph store and converts the result
+        into a dictionary format where keys are document fragment IDs and values are their respective PageRank scores. Any exceptions,
+        such as failures in running `run_pagerank_igraph_chunk`, are logged.
+        """
+        ppr_start_nodes = [
+            GetPageRankScoresRequestStartNodes(id=node["name"], type=node["type"])
+            for node in start_nodes
+        ]
+        req = GetPageRankScoresRequest(
+            self._project_id, target_vertex_type, ppr_start_nodes
         )
-
-        project = self._rest_client.project_create_post(
-            project_create_request=project_create_request
+        resp = self._rest_client.graph_get_page_rank_scores_post(
+            get_page_rank_scores_request=req
         )
-        return project
+        return {item.id: item.score for item in resp}
 
-    def update(self, id, config):
-        project_create_request = rest.ProjectCreateRequest(id=id, config=config)
-        project = self._rest_client.update_post(
-            project_create_request=project_create_request
+    def write_graph(self, sub_graph: dict, operation: str, lead_to_builder: bool):
+        request = WriterGraphRequest(
+            project_id=self._project_id,
+            sub_graph=sub_graph,
+            operation=operation,
+            enable_lead_to=lead_to_builder,
         )
-        return project
+        self._rest_client.graph_writer_graph_post(writer_graph_request=request)
+
+
+if __name__ == "__main__":
+    sc = GraphAlgoClient("http://127.0.0.1:8887", 4)
+    out = sc.calculate_pagerank_scores(
+        "Entity", [{"name": "Anxiety_and_nervousness", "type": "Entity"}]
+    )
+    for o in out:
+        print(o)

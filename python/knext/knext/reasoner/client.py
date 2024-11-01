@@ -60,7 +60,7 @@ class ReasonerClient(Client):
             k: v
             for k, v in schema_session.spg_types.items()
             if v.spg_type_enum
-               in [SpgTypeEnum.Concept, SpgTypeEnum.Entity, SpgTypeEnum.Event]
+            in [SpgTypeEnum.Concept, SpgTypeEnum.Entity, SpgTypeEnum.Event]
         }
         return schema
 
@@ -110,8 +110,8 @@ class ReasonerClient(Client):
                 f"./{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv"
             )
             show_data = [
-                            task.result_table_result.header
-                        ] + task.result_table_result.rows
+                task.result_table_result.header
+            ] + task.result_table_result.rows
             import pandas as pd
 
             df = pd.DataFrame(show_data)
