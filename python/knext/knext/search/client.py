@@ -10,7 +10,6 @@
 # or implied.
 
 from knext.common.base.client import Client
-from knext.common.rest import Configuration, ApiClient
 
 from knext.search import rest, TextSearchRequest, VectorSearchRequest, IdxRecord
 
@@ -22,11 +21,10 @@ def idx_record_to_dict(record: IdxRecord):
 class SearchClient(Client):
     """ """
 
+    _rest_client = rest.SearchApi()
+
     def __init__(self, host_addr: str = None, project_id: int = None):
         super().__init__(host_addr, project_id)
-        self._rest_client: rest.SearchApi = rest.SearchApi(
-            api_client=ApiClient(configuration=Configuration(host=host_addr))
-        )
 
     def search_text(self, query_string, label_constraints=None, topk=10):
         req = TextSearchRequest(self._project_id, query_string, label_constraints, topk)

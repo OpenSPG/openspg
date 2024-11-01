@@ -35,5 +35,9 @@
       <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-impl-graph-store-neo4j</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>pemja</artifactId>
+    </dependency>
   </dependencies>
 </project>

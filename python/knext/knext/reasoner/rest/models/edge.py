@@ -1,15 +1,4 @@
 # coding: utf-8
-# Copyright 2023 OpenSPG Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
-# in compliance with the License. You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software distributed under the License
-# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-# or implied.
-
 
 """
     knext
@@ -43,13 +32,17 @@ class Edge(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"_from": "str", "to": "str"}
+    openapi_types = {
+        '_from': 'str',
+        'to': 'str'
+    }
 
-    attribute_map = {"_from": "from", "to": "to"}
+    attribute_map = {
+        '_from': 'from',
+        'to': 'to'
+    }
 
-    def __init__(
-        self, _from=None, to=None, local_vars_configuration=None
-    ):  # noqa: E501
+    def __init__(self, _from=None, to=None, local_vars_configuration=None):  # noqa: E501
         """Edge - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -113,20 +106,18 @@ class Edge(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
+                result[attr] = list(map(
+                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
+                    value
+                ))
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
-                )
+                result[attr] = dict(map(
+                    lambda item: (item[0], item[1].to_dict())
+                    if hasattr(item[1], "to_dict") else item,
+                    value.items()
+                ))
             else:
                 result[attr] = value
 

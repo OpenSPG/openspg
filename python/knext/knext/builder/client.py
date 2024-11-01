@@ -13,17 +13,15 @@
 from knext.builder import rest
 from knext.builder.rest.models.writer_graph_request import WriterGraphRequest
 from knext.common.base.client import Client
-from knext.common.rest import ApiClient, Configuration
 
 
 class BuilderClient(Client):
     """ """
 
+    _rest_client = rest.BuilderApi()
+
     def __init__(self, host_addr: str = None, project_id: int = None):
         super().__init__(host_addr, project_id)
-        self._rest_client: rest.BuilderApi = rest.BuilderApi(
-            api_client=ApiClient(configuration=Configuration(host=host_addr))
-        )
 
     def write_graph(self, sub_graph: dict, operation: str, lead_to_builder: bool):
         request = WriterGraphRequest(

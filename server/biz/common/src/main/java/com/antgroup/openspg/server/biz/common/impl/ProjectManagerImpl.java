@@ -44,6 +44,7 @@ public class ProjectManagerImpl implements ProjectManager {
   @Override
   public Project create(ProjectCreateRequest request) {
     JSONObject config = setDatabase(request.getConfig(), request.getNamespace());
+    createNeo4jDatabase(request.getNamespace(), config);
     Project project =
         new Project(
             null,
@@ -52,7 +53,6 @@ public class ProjectManagerImpl implements ProjectManager {
             request.getNamespace(),
             request.getTenantId(),
             config.toJSONString());
-    createNeo4jDatabase(project.getNamespace(), config);
     Long projectId = projectRepository.save(project);
     project.setId(projectId);
     return project;
@@ -62,6 +62,7 @@ public class ProjectManagerImpl implements ProjectManager {
   public Project update(ProjectCreateRequest request) {
     Project project = projectRepository.queryById(request.getId());
     JSONObject config = setDatabase(request.getConfig(), project.getNamespace());
+    config = setVectorDimensions(config, project);
     Project update = new Project(request.getId(), null, null, null, null, config.toJSONString());
     return projectRepository.update(update);
   }
@@ -79,6 +80,30 @@ public class ProjectManagerImpl implements ProjectManager {
       JSONObject graphStore = new JSONObject();
       graphStore.put(CommonConstants.DATABASE, namespace.toLowerCase());
       config.put(CommonConstants.GRAPH_STORE, graphStore);
+    }
+    return config;
+  }
+
+  private JSONObject setVectorDimensions(JSONObject config, Project project) {
+    JSONObject oldConfig = JSONObject.parseObject(project.getConfig());
+    String vectorDimensions = null;
+    if (oldConfig.containsKey(CommonConstants.VECTORIZER)) {
+      vectorDimensions =
+          oldConfig
+              .getJSONObject(CommonConstants.VECTORIZER)
+              .getString(CommonConstants.VECTOR_DIMENSIONS);
+    }
+    if (StringUtils.isBlank(vectorDimensions)) {
+      return config;
+    }
+    if (config.containsKey(CommonConstants.VECTORIZER)) {
+      config
+          .getJSONObject(CommonConstants.VECTORIZER)
+          .put(CommonConstants.VECTOR_DIMENSIONS, vectorDimensions);
+    } else {
+      JSONObject graphStore = new JSONObject();
+      graphStore.put(CommonConstants.VECTOR_DIMENSIONS, vectorDimensions);
+      config.put(CommonConstants.VECTORIZER, graphStore);
     }
     return config;
   }
@@ -104,9 +129,13 @@ public class ProjectManagerImpl implements ProjectManager {
     }
     if (graphStore.containsKey(Neo4jConstants.USER)) {
       user = graphStore.getString(Neo4jConstants.USER);
+    } else {
+      graphStore.put(Neo4jConstants.USER, user);
     }
     if (graphStore.containsKey(Neo4jConstants.PASSWORD)) {
       password = graphStore.getString(Neo4jConstants.PASSWORD);
+    } else {
+      graphStore.put(Neo4jConstants.PASSWORD, password);
     }
 
     Neo4jAdminUtils driver = new Neo4jAdminUtils(host, user, password, database);

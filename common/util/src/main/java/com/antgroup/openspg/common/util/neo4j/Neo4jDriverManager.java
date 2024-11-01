@@ -14,9 +14,11 @@ package com.antgroup.openspg.common.util.neo4j;
 
 import com.google.common.collect.Maps;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.neo4j.driver.AuthTokens;
+import org.neo4j.driver.Config;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 
@@ -32,7 +34,14 @@ public class Neo4jDriverManager {
         if (instanceMap.get(uniqueKey) == null) {
           Driver driver;
           try {
-            driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
+            Config config =
+                Config.builder()
+                    .withMaxConnectionPoolSize(200)
+                    .withMaxConnectionLifetime(2, TimeUnit.HOURS)
+                    .withMaxTransactionRetryTime(300, TimeUnit.SECONDS)
+                    .withConnectionAcquisitionTimeout(300, TimeUnit.SECONDS)
+                    .build();
+            driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password), config);
             driver.verifyConnectivity();
           } catch (Exception e) {
             throw new RuntimeException("init Neo4j Client failed :" + uri, e);

@@ -117,7 +117,6 @@ public class LLMNlExtractProcessor extends BasePythonProcessor<LLMNlExtractNodeC
       log.info("LLMNlExtractProcessor invoke Chunks: {}", names);
       List<Object> result =
           (List<Object>) operatorFactory.invoke(config.getOperatorConfig(), record);
-      log.info("LLMNlExtractProcessor invoke result: {}", JSON.toJSONString(result));
       List<SubGraphRecord> records =
           JSON.parseObject(JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
       node.addTraceLog(
