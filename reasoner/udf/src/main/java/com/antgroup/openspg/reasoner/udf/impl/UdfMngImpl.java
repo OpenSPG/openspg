@@ -55,7 +55,7 @@ public class UdfMngImpl implements UdfMng {
 
   private static volatile UdfMngImpl instance = null;
 
-  public static Boolean allowUDFThrowException = false;
+  public static ThreadLocal<Boolean> allowUDFThrowException = ThreadLocal.withInitial(() -> false);
 
   /** 单例 */
   public static UdfMngImpl getInstance() {

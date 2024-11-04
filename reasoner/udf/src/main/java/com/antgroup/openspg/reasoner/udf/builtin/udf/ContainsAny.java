@@ -18,11 +18,8 @@ import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
 import org.apache.commons.lang3.StringUtils;
 
 public class ContainsAny {
-  private Boolean allowUDFThrowException = false;
 
-  public ContainsAny() {
-    allowUDFThrowException = UdfMngImpl.allowUDFThrowException;
-  }
+  public ContainsAny() {}
 
   /**
    * Contains any function. Return true if the first element of the input array (a string) contains
@@ -59,6 +56,7 @@ public class ContainsAny {
    */
   @UdfDefine(name = "contains_any", compatibleName = "contains")
   public boolean contains(String toCheckedStr, String keyword) {
+    Boolean allowUDFThrowException = UdfMngImpl.allowUDFThrowException.get();
     if ((toCheckedStr == null || keyword == null) && allowUDFThrowException) {
       throw new RuntimeException("contains_any arguments is null");
     }
