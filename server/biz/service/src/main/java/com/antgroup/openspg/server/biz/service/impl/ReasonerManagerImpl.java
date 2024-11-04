@@ -25,7 +25,7 @@ import com.antgroup.openspg.server.common.model.reasoner.ThinkerTask;
 import com.antgroup.openspg.server.core.reasoner.service.CatalogService;
 import com.antgroup.openspg.server.core.reasoner.service.ReasonerService;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class ReasonerManagerImpl implements ReasonerManager {
     ThinkerTaskResponse response = new ThinkerTaskResponse();
     response.setProjectId(request.getProjectId());
     response.setTaskId(task.getTaskId());
-    response.setResult(Collections.singletonList(res));
+    response.setResult(new ArrayList<>(res));
     return response;
   }
 
