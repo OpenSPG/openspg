@@ -46,6 +46,7 @@ public class ReasonerManagerImpl implements ReasonerManager {
     task.setPredicate(request.getPredicate());
     task.setSubject(request.getSubject());
     task.setProjectId(request.getProjectId());
+    task.setParams(request.getParams());
     String graphStoreUrl = getGraphStoreUrl(request.getProjectId());
     task.setGraphStoreUrl(graphStoreUrl);
     List<Result> res =  reasonerService.thinker(task);

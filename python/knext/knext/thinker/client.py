@@ -46,5 +46,5 @@ class ThinkerClient(Client):
 
 
 if __name__ == "__main__":
-    sc = ThinkerClient("http://127.0.0.1:8887", 1)
-    sc.execute()
+    sc = ThinkerClient("http://127.0.0.1:8887", 2)
+    sc.execute(subject="DiseaseLevel", mode="node", params="{\"spg.reasoner.thinker.strict\": true, \"收缩压\":150}")

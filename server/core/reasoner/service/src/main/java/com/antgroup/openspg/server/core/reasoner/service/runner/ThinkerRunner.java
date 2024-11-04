@@ -37,6 +37,7 @@ public class ThinkerRunner {
 
     public List<Result> run() {
         LogicCatalog logicCatalog = new OpenSPGLogicCatalog(task.getProjectId(), task.getConnInfo());
+        logicCatalog.init();
         Thinker thinker = new DefaultThinker(LocalThinkerMain.loadGraph(graphStateClass, task.getGraphStateInitString()), logicCatalog);
         List<Result> result;
         if (task.getMode().toLowerCase().equals("spo")) {
@@ -47,7 +48,7 @@ public class ThinkerRunner {
                             task.getTriple().getObject(),
                             task.getParams());
         } else {
-            result = thinker.find((Node) task.getTriple().getSubject(), task.getParams());
+            result = thinker.find((Node) task.getTriple().getObject(), task.getParams());
         }
         return result;
     }
