@@ -15,3 +15,4 @@ from knext.reasoner.rest.models import *
 from knext.project.rest.models import *
 from knext.search.rest.models import *
 from knext.graph_algo.rest.models import *
+from knext.thinker.rest.models import *
