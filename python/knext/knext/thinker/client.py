@@ -50,5 +50,5 @@ if __name__ == "__main__":
     sc.execute(
         subject="DiseaseLevel",
         mode="node",
-        params="{\"spg.reasoner.thinker.strict\": true, \"收缩压\":150}",
+        params='{"spg.reasoner.thinker.strict":·true,·"收缩压":150}',
     )
