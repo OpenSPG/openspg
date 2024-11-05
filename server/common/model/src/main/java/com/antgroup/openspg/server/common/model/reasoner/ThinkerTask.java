@@ -16,12 +16,12 @@ import lombok.Data;
 
 @Data
 public class ThinkerTask {
-    private String taskId;
-    private Long projectId;
-    private String subject;
-    private String predicate;
-    private String object;
-    private String mode;
-    private String params;
-    private String graphStoreUrl;
+  private String taskId;
+  private Long projectId;
+  private String subject;
+  private String predicate;
+  private String object;
+  private String mode;
+  private String params;
+  private String graphStoreUrl;
 }

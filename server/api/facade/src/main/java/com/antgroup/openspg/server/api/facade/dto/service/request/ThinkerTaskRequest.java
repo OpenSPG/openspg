@@ -16,10 +16,10 @@ import lombok.Data;
 
 @Data
 public class ThinkerTaskRequest {
-    private Long projectId;
-    private String subject;
-    private String predicate;
-    private String object;
-    private String mode;
-    private String params;
+  private Long projectId;
+  private String subject;
+  private String predicate;
+  private String object;
+  private String mode;
+  private String params;
 }

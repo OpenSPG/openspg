@@ -13,12 +13,11 @@
 package com.antgroup.openspg.server.api.facade.dto.service.response;
 
 import java.util.List;
-
 import lombok.Data;
 
 @Data
 public class ThinkerTaskResponse {
-    private List<Object> result;
-    private String taskId;
-    private Long projectId;
+  private List<Object> result;
+  private String taskId;
+  private Long projectId;
 }

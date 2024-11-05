@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.core.reasoner.service.runner;
 
-import java.util.List;
-
 import com.antgroup.kg.reasoner.thinker.Thinker;
 import com.antgroup.kg.reasoner.thinker.catalog.LogicCatalog;
 import com.antgroup.kg.reasoner.thinker.engine.DefaultThinker;
@@ -23,33 +21,37 @@ import com.antgroup.kg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.runner.local.thinker.LocalThinkerMain;
 import com.antgroup.openspg.reasoner.runner.local.thinker.OpenSPGLogicCatalog;
 import com.antgroup.openspg.reasoner.runner.local.thinker.ThinkerParams;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ThinkerRunner {
-    private final ThinkerParams task;
-    private final String graphStateClass = "com.antgroup.openspg.reasoner.warehouse.cloudext.CloudExtGraphState";
+  private final ThinkerParams task;
+  private final String graphStateClass =
+      "com.antgroup.openspg.reasoner.warehouse.cloudext.CloudExtGraphState";
 
+  public ThinkerRunner(ThinkerParams task) {
+    this.task = task;
+  }
 
-    public ThinkerRunner(ThinkerParams task) {
-        this.task = task;
+  public List<Result> run() {
+    LogicCatalog logicCatalog = new OpenSPGLogicCatalog(task.getProjectId(), task.getConnInfo());
+    logicCatalog.init();
+    Thinker thinker =
+        new DefaultThinker(
+            LocalThinkerMain.loadGraph(graphStateClass, task.getGraphStateInitString()),
+            logicCatalog);
+    List<Result> result;
+    if (task.getMode().toLowerCase().equals("spo")) {
+      result =
+          thinker.find(
+              task.getTriple().getSubject(),
+              task.getTriple().getPredicate(),
+              task.getTriple().getObject(),
+              task.getParams());
+    } else {
+      result = thinker.find((Node) task.getTriple().getObject(), task.getParams());
     }
-
-    public List<Result> run() {
-        LogicCatalog logicCatalog = new OpenSPGLogicCatalog(task.getProjectId(), task.getConnInfo());
-        logicCatalog.init();
-        Thinker thinker = new DefaultThinker(LocalThinkerMain.loadGraph(graphStateClass, task.getGraphStateInitString()), logicCatalog);
-        List<Result> result;
-        if (task.getMode().toLowerCase().equals("spo")) {
-            result =
-                    thinker.find(
-                            task.getTriple().getSubject(),
-                            task.getTriple().getPredicate(),
-                            task.getTriple().getObject(),
-                            task.getParams());
-        } else {
-            result = thinker.find((Node) task.getTriple().getObject(), task.getParams());
-        }
-        return result;
-    }
+    return result;
+  }
 }

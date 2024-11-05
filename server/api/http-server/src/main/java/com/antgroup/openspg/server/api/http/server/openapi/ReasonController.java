@@ -50,22 +50,21 @@ public class ReasonController extends BaseController {
         });
   }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/thinker")
-    public ResponseEntity<Object> reason(@RequestBody ThinkerTaskRequest request) {
-        return HttpBizTemplate.execute(
-                new HttpBizCallback<ThinkerTaskResponse>() {
-                    @Override
-                    public void check() {}
+  @RequestMapping(method = RequestMethod.POST, value = "/thinker")
+  public ResponseEntity<Object> reason(@RequestBody ThinkerTaskRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<ThinkerTaskResponse>() {
+          @Override
+          public void check() {}
 
-                    @Override
-                    public ThinkerTaskResponse action() {
-                        return reasonerManager.thinker(request);
-                    }
-                });
-    }
+          @Override
+          public ThinkerTaskResponse action() {
+            return reasonerManager.thinker(request);
+          }
+        });
+  }
 
-
-    @RequestMapping(method = RequestMethod.GET, value = "/schema")
+  @RequestMapping(method = RequestMethod.GET, value = "/schema")
   public ResponseEntity<Object> getReasonSchema(@RequestParam Long projectId) {
     return HttpBizTemplate.execute(
         new HttpBizCallback<ProjectSchema>() {

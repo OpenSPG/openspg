@@ -12,13 +12,13 @@
  */
 package com.antgroup.openspg.server.core.reasoner.service;
 
-import java.util.List;
-
 import com.antgroup.kg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.server.common.model.reasoner.ReasonerTask;
 import com.antgroup.openspg.server.common.model.reasoner.ThinkerTask;
+import java.util.List;
 
 public interface ReasonerService {
   ReasonerTask runTask(ReasonerTask request);
+
   List<Result> thinker(ThinkerTask request);
 }

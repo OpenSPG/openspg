@@ -24,7 +24,6 @@ import com.antgroup.openspg.server.common.model.reasoner.ReasonerTask;
 import com.antgroup.openspg.server.common.model.reasoner.ThinkerTask;
 import com.antgroup.openspg.server.core.reasoner.service.CatalogService;
 import com.antgroup.openspg.server.core.reasoner.service.ReasonerService;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -49,7 +48,7 @@ public class ReasonerManagerImpl implements ReasonerManager {
     task.setParams(request.getParams());
     String graphStoreUrl = getGraphStoreUrl(request.getProjectId());
     task.setGraphStoreUrl(graphStoreUrl);
-    List<Result> res =  reasonerService.thinker(task);
+    List<Result> res = reasonerService.thinker(task);
     ThinkerTaskResponse response = new ThinkerTaskResponse();
     response.setProjectId(request.getProjectId());
     response.setTaskId(task.getTaskId());

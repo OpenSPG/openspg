@@ -12,22 +12,15 @@
  */
 package com.antgroup.openspg.server.core.reasoner.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSON;
-
 import com.antgroup.kg.reasoner.thinker.logic.Result;
 import com.antgroup.kg.reasoner.thinker.logic.graph.Element;
 import com.antgroup.kg.reasoner.thinker.logic.graph.Triple;
 import com.antgroup.openspg.reasoner.catalog.impl.KgSchemaConnectionInfo;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
-import com.antgroup.openspg.reasoner.runner.local.ParamsKey;
 import com.antgroup.openspg.reasoner.runner.local.thinker.LocalThinkerMain;
 import com.antgroup.openspg.reasoner.runner.local.thinker.ThinkerParams;
 import com.antgroup.openspg.reasoner.udf.impl.UdfMngImpl;
-import com.antgroup.openspg.server.api.facade.dto.service.request.ThinkerTaskRequest;
 import com.antgroup.openspg.server.common.model.reasoner.ReasonerTask;
 import com.antgroup.openspg.server.common.model.reasoner.StatusEnum;
 import com.antgroup.openspg.server.common.model.reasoner.ThinkerTask;
@@ -37,6 +30,9 @@ import com.antgroup.openspg.server.core.reasoner.service.ReasonerService;
 import com.antgroup.openspg.server.core.reasoner.service.runner.ReasonerRunner;
 import com.antgroup.openspg.server.core.reasoner.service.runner.ThinkerRunner;
 import com.google.common.collect.Lists;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -103,7 +99,7 @@ public class ReasonerServiceImpl implements ReasonerService {
     }
     if (s == Element.ANY && p == Element.ANY && o == Element.ANY) {
       throw new RuntimeException(
-              "subject, predicate, object cannot all be empty at the same time.");
+          "subject, predicate, object cannot all be empty at the same time.");
     }
 
     String m = request.getMode();
