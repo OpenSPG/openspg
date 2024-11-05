@@ -14,7 +14,6 @@
 package com.antgroup.openspg.reasoner.common.constants;
 
 import com.google.common.collect.Sets;
-
 import java.util.Set;
 
 public class Constants {
@@ -58,16 +57,6 @@ public class Constants {
 
   /** enable strict mode in thinker during rule engine execution, default is false */
   public static final String SPG_REASONER_THINKER_STRICT = "spg.reasoner.thinker.strict";
-
-  /**
-   * enable unknown result in thinker, default is false
-   */
-  public static final String THINKER_ENABLE_UNKNOWN = "thinker.enable.unknown";
-
-  /**
-   * enable false result in thinker, default is false
-   */
-  public static final String THINKER_ENABLE_FALSE = "thinker.enable.false";
 
   /** start label config */
   public static final String START_LABEL = "start_label";
