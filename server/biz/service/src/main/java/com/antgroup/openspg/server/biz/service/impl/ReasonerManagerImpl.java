@@ -12,14 +12,20 @@
  */
 package com.antgroup.openspg.server.biz.service.impl;
 
+import com.antgroup.kg.reasoner.thinker.logic.Result;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.server.api.facade.dto.service.request.ReasonerTaskRequest;
+import com.antgroup.openspg.server.api.facade.dto.service.request.ThinkerTaskRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ReasonerTaskResponse;
+import com.antgroup.openspg.server.api.facade.dto.service.response.ThinkerTaskResponse;
 import com.antgroup.openspg.server.biz.common.ProjectManager;
 import com.antgroup.openspg.server.biz.service.ReasonerManager;
 import com.antgroup.openspg.server.common.model.reasoner.ReasonerTask;
+import com.antgroup.openspg.server.common.model.reasoner.ThinkerTask;
 import com.antgroup.openspg.server.core.reasoner.service.CatalogService;
 import com.antgroup.openspg.server.core.reasoner.service.ReasonerService;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +35,26 @@ public class ReasonerManagerImpl implements ReasonerManager {
   @Autowired private ProjectManager projectManager;
   @Autowired private ReasonerService reasonerService;
   @Autowired private CatalogService catalogService;
+
+  @Override
+  public ThinkerTaskResponse thinker(ThinkerTaskRequest request) {
+    ThinkerTask task = new ThinkerTask();
+    task.setTaskId(UUID.randomUUID().toString());
+    task.setMode(request.getMode());
+    task.setObject(request.getObject());
+    task.setPredicate(request.getPredicate());
+    task.setSubject(request.getSubject());
+    task.setProjectId(request.getProjectId());
+    task.setParams(request.getParams());
+    String graphStoreUrl = getGraphStoreUrl(request.getProjectId());
+    task.setGraphStoreUrl(graphStoreUrl);
+    List<Result> res = reasonerService.thinker(task);
+    ThinkerTaskResponse response = new ThinkerTaskResponse();
+    response.setProjectId(request.getProjectId());
+    response.setTaskId(task.getTaskId());
+    response.setResult(new ArrayList<>(res));
+    return response;
+  }
 
   @Override
   public ReasonerTaskResponse reason(ReasonerTaskRequest request) {

@@ -15,7 +15,9 @@ package com.antgroup.openspg.server.api.http.server.openapi;
 
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.server.api.facade.dto.service.request.ReasonerTaskRequest;
+import com.antgroup.openspg.server.api.facade.dto.service.request.ThinkerTaskRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ReasonerTaskResponse;
+import com.antgroup.openspg.server.api.facade.dto.service.response.ThinkerTaskResponse;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
@@ -44,6 +46,20 @@ public class ReasonController extends BaseController {
           @Override
           public ReasonerTaskResponse action() {
             return reasonerManager.reason(request);
+          }
+        });
+  }
+
+  @RequestMapping(method = RequestMethod.POST, value = "/thinker")
+  public ResponseEntity<Object> reason(@RequestBody ThinkerTaskRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<ThinkerTaskResponse>() {
+          @Override
+          public void check() {}
+
+          @Override
+          public ThinkerTaskResponse action() {
+            return reasonerManager.thinker(request);
           }
         });
   }

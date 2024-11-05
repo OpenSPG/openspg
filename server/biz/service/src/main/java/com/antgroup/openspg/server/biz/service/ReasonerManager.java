@@ -14,9 +14,13 @@ package com.antgroup.openspg.server.biz.service;
 
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.server.api.facade.dto.service.request.ReasonerTaskRequest;
+import com.antgroup.openspg.server.api.facade.dto.service.request.ThinkerTaskRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ReasonerTaskResponse;
+import com.antgroup.openspg.server.api.facade.dto.service.response.ThinkerTaskResponse;
 
 public interface ReasonerManager {
+  ThinkerTaskResponse thinker(ThinkerTaskRequest request);
+
   ReasonerTaskResponse reason(ReasonerTaskRequest request);
 
   ProjectSchema getReasonSchema(Long projectId);
