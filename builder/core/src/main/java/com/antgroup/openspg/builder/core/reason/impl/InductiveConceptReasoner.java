@@ -19,17 +19,23 @@ import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
+import com.antgroup.openspg.reasoner.recorder.DefaultRecorder;
 import com.antgroup.openspg.reasoner.runner.local.LocalReasonerRunner;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerResult;
 import com.antgroup.openspg.reasoner.runner.local.model.LocalReasonerTask;
 import com.google.common.collect.Lists;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import scala.Tuple2;
 
+@Slf4j
 public class InductiveConceptReasoner implements ConceptReasoner<DynamicTaxonomySemantic> {
 
   @Setter private Catalog catalog;
@@ -46,9 +52,15 @@ public class InductiveConceptReasoner implements ConceptReasoner<DynamicTaxonomy
       reasonerTask.setGraphState(graphState);
       reasonerTask.setDsl(conceptSemantic.getLogicalRule().getContent());
       reasonerTask.setStartIdList(Lists.newArrayList(getTupleFrom(advancedRecord)));
+      Map<String, Object> params = new HashMap<>();
+      params.put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, "false");
+      params.put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, "true");
+      reasonerTask.setParams(params);
+      reasonerTask.setExecutionRecorder(new DefaultRecorder());
 
       LocalReasonerRunner runner = new LocalReasonerRunner();
       LocalReasonerResult reasonerResult = runner.run(reasonerTask);
+      log.info(reasonerTask.getExecutionRecorder().toReadableString());
       ReasonerProcessorUtils.setBelongToProperty(reasonerResult, advancedRecord);
     }
     return records;

@@ -26,17 +26,19 @@ public class PredicateKgGraph implements Predicate<KgGraph<IVertexId>> {
   private final Pattern kgGraphSchema;
   private final Map<String, Object> initRuleContext;
   private final List<String> ruleList;
+  private final String taskId;
 
   /** implement a predicate for KgGraph */
-  public PredicateKgGraph(Pattern kgGraphSchema, List<String> ruleList) {
+  public PredicateKgGraph(Pattern kgGraphSchema, List<String> ruleList, String taskId) {
     this.kgGraphSchema = kgGraphSchema;
     this.initRuleContext = RunnerUtil.getKgGraphInitContext(this.kgGraphSchema);
     this.ruleList = ruleList;
+    this.taskId = taskId;
   }
 
   @Override
   public boolean test(KgGraph<IVertexId> kgGraph) {
     Map<String, Object> context = RunnerUtil.kgGraph2Context(this.initRuleContext, kgGraph);
-    return RuleRunner.getInstance().check(context, ruleList, "");
+    return RuleRunner.getInstance().check(context, ruleList, this.taskId);
   }
 }

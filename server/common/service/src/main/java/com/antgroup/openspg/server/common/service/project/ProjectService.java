@@ -28,4 +28,12 @@ public interface ProjectService {
    * @return project information
    */
   Project queryById(Long projectId);
+
+  /**
+   * get GraphStore Url by project ID.
+   *
+   * @param projectId the unique id of project
+   * @return GraphStore url
+   */
+  String getGraphStoreUrl(Long projectId);
 }

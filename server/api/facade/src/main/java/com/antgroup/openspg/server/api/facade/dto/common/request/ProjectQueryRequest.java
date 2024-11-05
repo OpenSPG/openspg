@@ -25,6 +25,8 @@ public class ProjectQueryRequest extends BaseRequest {
 
   private String namespace;
 
+  private Boolean orderByGmtCreateDesc;
+
   public Long getTenantId() {
     return tenantId;
   }
@@ -59,5 +61,13 @@ public class ProjectQueryRequest extends BaseRequest {
   public ProjectQueryRequest setNamespace(String namespace) {
     this.namespace = namespace;
     return this;
+  }
+
+  public Boolean getOrderByGmtCreateDesc() {
+    return orderByGmtCreateDesc;
+  }
+
+  public void setOrderByGmtCreateDesc(Boolean orderByGmtCreateDesc) {
+    this.orderByGmtCreateDesc = orderByGmtCreateDesc;
   }
 }

@@ -9,6 +9,7 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
+import os
 import re
 from enum import Enum
 from pathlib import Path
@@ -20,6 +21,7 @@ from knext.schema.model.base import (
     AlterOperationEnum,
     SpgTypeEnum,
     PropertyGroupEnum,
+    IndexTypeEnum,
 )
 from knext.schema.model.spg_type import (
     EntityType,
@@ -28,6 +30,7 @@ from knext.schema.model.spg_type import (
     StandardType,
     Property,
     Relation,
+    BasicType,
 )
 from knext.schema.client import SchemaClient
 
@@ -42,7 +45,7 @@ class IndentLevel(Enum):
     # Define property/relation name of type
     Predicate = 2
 
-    # Define description/constraint/rule of property/relation
+    # Define description/constraint/rule/index of property/relation
     PredicateMeta = 3
 
     # Define property about property
@@ -70,7 +73,13 @@ class SPGSchemaMarkLang:
     entity_internal_property = set()
     event_internal_property = {"eventTime"}
     concept_internal_property = {"stdId", "alias"}
-    keyword_type = {"EntityType", "ConceptType", "EventType", "StandardType"}
+    keyword_type = {
+        "EntityType",
+        "ConceptType",
+        "EventType",
+        "StandardType",
+        "BasicType",
+    }
     semantic_rel = {
         "SYNANT": [
             "synonym",
@@ -139,24 +148,27 @@ class SPGSchemaMarkLang:
     types = {}
     defined_types = {}
 
-    def __init__(self, filename):
+    def __init__(self, filename, with_server=True):
         self.reset()
         self.schema_file = filename
         self.current_line_num = 0
-        self.schema = SchemaClient()
-        thing = self.schema.query_spg_type("Thing")
-        for prop in thing.properties:
-            self.entity_internal_property.add(prop)
-            self.event_internal_property.add(prop)
-            self.concept_internal_property.add(prop)
-        session = self.schema.create_session()
-        for type_name in session.spg_types:
-            spg_type = session.get(type_name)
-            if session.get(type_name).spg_type_enum in [
-                SpgTypeEnum.Basic,
-                SpgTypeEnum.Standard,
-            ]:
-                self.internal_type.add(spg_type.name)
+        if with_server:
+            self.schema = SchemaClient()
+            thing = self.schema.query_spg_type("Thing")
+            for prop in thing.properties:
+                self.entity_internal_property.add(prop)
+                self.event_internal_property.add(prop)
+                self.concept_internal_property.add(prop)
+            session = self.schema.create_session()
+            for type_name in session.spg_types:
+                spg_type = session.get(type_name)
+                if session.get(type_name).spg_type_enum in [
+                    SpgTypeEnum.Basic,
+                    SpgTypeEnum.Standard,
+                ]:
+                    self.internal_type.add(spg_type.name)
+        else:
+            self.internal_type = {"Text", "Float", "Integer"}
         self.load_script()
 
     def reset(self):
@@ -164,7 +176,13 @@ class SPGSchemaMarkLang:
         self.entity_internal_property = set()
         self.event_internal_property = {"eventTime"}
         self.concept_internal_property = {"stdId", "alias"}
-        self.keyword_type = {"EntityType", "ConceptType", "EventType", "StandardType"}
+        self.keyword_type = {
+            "EntityType",
+            "ConceptType",
+            "EventType",
+            "StandardType",
+            "BasicType",
+        }
 
         self.parsing_register = {
             RegisterUnit.Type: None,
@@ -297,6 +315,12 @@ class SPGSchemaMarkLang:
                 assert type_name.startswith("STD."), self.error_msg(
                     "The name of standard type must start with STD."
                 )
+            elif type_class == "BasicType" and type_name == "Text":
+                spg_type = BasicType.Text
+            elif type_class == "BasicType" and type_name == "Integer":
+                spg_type = BasicType.Integer
+            elif type_class == "BasicType" and type_name == "Float":
+                spg_type = BasicType.Float
             ns_type_name = self.get_type_name_with_ns(type_name)
             assert ns_type_name not in self.types, self.error_msg(
                 f'Type "{type_name}" is duplicated in the schema'
@@ -607,9 +631,9 @@ class SPGSchemaMarkLang:
             f"{predicate_class} is illegal, please ensure that it appears in this schema."
         )
 
-        assert predicate_name not in self.entity_internal_property, self.error_msg(
-            f"property {predicate_name} is the default property of type"
-        )
+        # assert predicate_name not in self.entity_internal_property, self.error_msg(
+        #     f"property {predicate_name} is the default property of type"
+        # )
         if predicate_class not in self.internal_type:
             spg_type_enum = SpgTypeEnum.Entity
             if self.get_type_name_with_ns(predicate_class) in self.types:
@@ -693,6 +717,7 @@ class SPGSchemaMarkLang:
             )
             if predicate_class in self.types:
                 predicate.object_spg_type = self.types[predicate_class].spg_type_enum
+                predicate.object_type_name_zh = self.types[predicate_class].name_zh
             if (
                 self.parsing_register[RegisterUnit.Type].spg_type_enum
                 == SpgTypeEnum.Event
@@ -762,6 +787,7 @@ class SPGSchemaMarkLang:
             predicate = Relation(name=predicate_name, object_type_name=predicate_class)
             if predicate_class in self.types:
                 predicate.object_spg_type = self.types[predicate_class].spg_type_enum
+                predicate.object_type_name_zh = self.types[predicate_class].name_zh
             self.parsing_register[RegisterUnit.Type].add_relation(predicate)
             self.save_register(RegisterUnit.Relation, predicate)
         predicate.name_zh = predicate_name_zh
@@ -771,9 +797,11 @@ class SPGSchemaMarkLang:
         parse the property meta definition of SPG type
         """
 
-        match = re.match(r"^(desc|properties|constraint|rule):\s*?(.*)$", expression)
+        match = re.match(
+            r"^(desc|properties|constraint|rule|index):\s*?(.*)$", expression
+        )
         assert match, self.error_msg(
-            "Unrecognized expression, expect desc:|properties:|constraint:|rule:"
+            "Unrecognized expression, expect desc:|properties:|constraint:|rule:|index:"
         )
 
         property_meta = match.group(1)
@@ -794,6 +822,15 @@ class SPGSchemaMarkLang:
                 )
             elif self.parsing_register[RegisterUnit.Property] is not None:
                 self.parse_constraint_for_property(
+                    meta_value, self.parsing_register[RegisterUnit.Property]
+                )
+        elif property_meta == "index":
+            if self.parsing_register[RegisterUnit.SubProperty] is not None:
+                self.parse_index_for_property(
+                    meta_value, self.parsing_register[RegisterUnit.SubProperty]
+                )
+            elif self.parsing_register[RegisterUnit.Property] is not None:
+                self.parse_index_for_property(
                     meta_value, self.parsing_register[RegisterUnit.Property]
                 )
 
@@ -899,6 +936,26 @@ class SPGSchemaMarkLang:
 
             elif cons.lower() == "notnull":
                 prop.add_constraint(ConstraintTypeEnum.NotNull)
+
+    def parse_index_for_property(self, expression, prop):
+        """
+        parse the index definition of property
+        """
+
+        if len(expression) == 0:
+            return
+
+        array = expression.split(",")
+        for cons in array:
+            cons = cons.strip()
+            if cons.lower() == "text":
+                prop.index_type = IndexTypeEnum.Text
+
+            elif cons.lower() == "vector":
+                prop.index_type = IndexTypeEnum.Vector
+
+            elif cons.lower() == "textandvector":
+                prop.index_type = IndexTypeEnum.TextAndVector
 
     def complete_rule(self, rule):
         """
@@ -1105,8 +1162,7 @@ class SPGSchemaMarkLang:
         """
         Get the schema diff and then sync to graph storage
         """
-        schema = SchemaClient()
-        session = schema.create_session()
+        session = self.schema.create_session()
 
         # generate the delete list of spg type
         for spg_type in session.spg_types:
@@ -1410,6 +1466,14 @@ class SPGSchemaMarkLang:
 
         metadata = {"namespace": self.namespace, "spg_types": spg_types}
 
-        from knext.common.template import render_template
+        from knext.common.utils import render_template
 
         render_template(Path(filename).parent, Path(filename).name, **metadata)
+
+
+if __name__ == "__main__":
+    os.environ["KAG_PROJECT_ID"] = "4"
+    schema = SPGSchemaMarkLang(
+        "/Users/jier/Desktop/openspgapp/openspg/python/knext/knext/examples/medicine/schema/medicine.schema"
+    )
+    schema.diff_and_sync(False)

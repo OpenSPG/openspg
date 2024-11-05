@@ -17,6 +17,7 @@ import lombok.Data;
 
 @Data
 public class SPGTypeSamplingRequest {
+  private Long projectId;
   private String spgType;
   private Integer limit;
 }

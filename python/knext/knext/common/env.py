@@ -9,33 +9,28 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
+import logging
 import os
 import sys
-from configparser import ConfigParser
+from configparser import ConfigParser as CP
 from pathlib import Path
 from typing import Union, Optional
 
+import knext.common as common
 
-GLOBAL_CONFIG = ["host_addr", "graph_store_url", "search_engine_url"]
-LOCAL_CONFIG = [
-    "project_name",
-    "project_id",
-    "namespace",
-    "description",
-    "project_dir",
-    "schema_dir",
-    "schema_file",
-    "builder_dir",
-    "builder_record_dir",
-    "builder_operator_dir",
-    "builder_job_dir",
-    "builder_model_dir",
-    "reasoner_dir",
-    "reasoner_result_dir",
-]
-CFG_PREFIX = "KNEXT_"
+
+class ConfigParser(CP):
+    def __init__(self, defaults=None):
+        CP.__init__(self, defaults=defaults)
+
+    def optionxform(self, optionstr):
+        return optionstr
+
+
 LOCAL_SCHEMA_URL = "http://localhost:8887"
+DEFAULT_KAG_CONFIG_FILE_NAME = "default_config.cfg"
+DEFAULT_KAG_CONFIG_PATH = os.path.join(common.__path__[0], DEFAULT_KAG_CONFIG_FILE_NAME)
+KAG_CFG_PREFIX = "KAG"
 
 
 def init_env():
@@ -45,34 +40,24 @@ def init_env():
     """
     project_cfg, root_path = get_config()
 
-    if project_cfg.has_section("global"):
-        for cfg in GLOBAL_CONFIG:
-            if project_cfg.has_option("global", cfg):
-                os.environ[CFG_PREFIX + cfg.upper()] = project_cfg.get("global", cfg)
-
-    if project_cfg.has_section("local"):
-        for cfg in LOCAL_CONFIG:
-            if project_cfg.has_option("local", cfg):
-                os.environ[CFG_PREFIX + cfg.upper()] = project_cfg.get("local", cfg)
-
-        os.environ[CFG_PREFIX + "ROOT_PATH"] = str(root_path.resolve())
-
-    load_operator()
-    load_builder_job()
+    init_kag_config(Path(root_path) / "kag_config.cfg")
 
 
 def get_config():
     """
     Get knext config file as a ConfigParser.
     """
-    global_cfg, _, local_cfg, local_cfg_path = get_cfg_files()
+    local_cfg_path = _closest_cfg()
+    local_cfg = ConfigParser()
+    local_cfg.read(local_cfg_path)
 
-    for section in global_cfg.sections():
-        local_cfg.add_section(section)
-        for key, value in global_cfg.items(section):
-            local_cfg.set(section, key, value)
+    projdir = ""
+    if local_cfg_path:
+        projdir = str(Path(local_cfg_path).parent)
+        if projdir not in sys.path:
+            sys.path.append(projdir)
 
-    return local_cfg, Path(local_cfg_path).parent
+    return local_cfg, projdir
 
 
 def _closest_cfg(
@@ -86,7 +71,7 @@ def _closest_cfg(
     if prev_path is not None and str(path) == str(prev_path):
         return ""
     path = Path(path).resolve()
-    cfg_file = path / ".knext.cfg"
+    cfg_file = path / "kag_config.cfg"
     if cfg_file.exists():
         return str(cfg_file)
     return _closest_cfg(path.parent, path)
@@ -96,13 +81,6 @@ def get_cfg_files():
     """
     Get global and local knext config files and paths.
     """
-    global_cfg_path = (
-        Path(os.environ.get("XDG_CONFIG_HOME") or "~/.config").expanduser()
-    ) / ".knext.cfg"
-    if not global_cfg_path.parent.exists():
-        Path.mkdir(global_cfg_path.parent)
-    global_cfg = ConfigParser()
-    global_cfg.read(global_cfg_path)
     local_cfg_path = _closest_cfg()
     local_cfg = ConfigParser()
     local_cfg.read(local_cfg_path)
@@ -112,44 +90,29 @@ def get_cfg_files():
         if projdir not in sys.path:
             sys.path.append(projdir)
 
-    return global_cfg, global_cfg_path, local_cfg, local_cfg_path
+    return local_cfg, local_cfg_path
 
 
-def load_operator():
-    """
-    Load all operators in [builder_operator_dir].
-    """
-    from knext.builder.operator.base import BaseOp
-    from knext.builder.operator import builtin
+def init_kag_config(config_path: Union[str, Path] = None):
+    if not config_path or isinstance(config_path, Path) and not config_path.exists():
+        config_path = DEFAULT_KAG_CONFIG_PATH
+    kag_cfg = ConfigParser()
+    kag_cfg.read(config_path)
+    os.environ["KAG_PROJECT_ROOT_PATH"] = os.path.abspath(os.path.dirname(config_path))
 
-    if not BaseOp._has_registered and (
-        "KNEXT_ROOT_PATH" in os.environ and "KNEXT_BUILDER_OPERATOR_DIR" in os.environ
-    ):
-
-        from knext.common.class_register import register_from_package
-
-        builder_operator_path = os.path.join(
-            os.environ["KNEXT_ROOT_PATH"], os.environ["KNEXT_BUILDER_OPERATOR_DIR"]
-        )
-
-        register_from_package(builder_operator_path, BaseOp)
-        sys.path.append(builtin.__path__[0])
-
-
-def load_builder_job():
-    """
-    Load all builder jobs in [builder_job_dir].
-    """
-    from knext.builder.model.builder_job import BuilderJob
-
-    if not BuilderJob._has_registered and (
-        "KNEXT_ROOT_PATH" in os.environ and "KNEXT_BUILDER_JOB_DIR" in os.environ
-    ):
-
-        from knext.common.class_register import register_from_package
-
-        builder_operator_path = os.path.join(
-            os.environ["KNEXT_ROOT_PATH"], os.environ["KNEXT_BUILDER_JOB_DIR"]
-        )
-
-        register_from_package(builder_operator_path, BuilderJob)
+    for section in kag_cfg.sections():
+        sec_cfg = {}
+        for key, value in kag_cfg.items(section):
+            item_cfg_key = f"{KAG_CFG_PREFIX}_{section}_{key}".upper()
+            os.environ[item_cfg_key] = value
+            sec_cfg[key] = value
+        sec_cfg_key = f"{KAG_CFG_PREFIX}_{section}".upper()
+        os.environ[sec_cfg_key] = str(sec_cfg)
+        if section == "log":
+            for key, value in kag_cfg.items(section):
+                if key == "level":
+                    logging.basicConfig(level=logging.getLevelName(value))
+                    # neo4j log level set to be default error
+                    logging.getLogger("neo4j.notifications").setLevel(logging.ERROR)
+                    logging.getLogger("neo4j.io").setLevel(logging.INFO)
+                    logging.getLogger("neo4j.pool").setLevel(logging.INFO)

@@ -51,6 +51,7 @@ class PropertyAdvancedConfig(object):
         "sub_properties": "list[SubProperty]",
         "semantics": "list[PredicateSemantic]",
         "logical_rule": "LogicalRule",
+        "index_type": "str",
     }
 
     attribute_map = {
@@ -61,6 +62,7 @@ class PropertyAdvancedConfig(object):
         "sub_properties": "subProperties",
         "semantics": "semantics",
         "logical_rule": "logicalRule",
+        "index_type": "indexType",
     }
 
     def __init__(
@@ -72,6 +74,7 @@ class PropertyAdvancedConfig(object):
         sub_properties=None,
         semantics=None,
         logical_rule=None,
+        index_type=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """PropertyAdvancedConfig - a model defined in OpenAPI"""  # noqa: E501
@@ -86,6 +89,7 @@ class PropertyAdvancedConfig(object):
         self._sub_properties = None
         self._semantics = None
         self._logical_rule = None
+        self._index_type = None
         self.discriminator = None
 
         if multi_version_config is not None:
@@ -102,6 +106,8 @@ class PropertyAdvancedConfig(object):
             self.semantics = semantics
         if logical_rule is not None:
             self.logical_rule = logical_rule
+        if index_type is not None:
+            self.index_type = index_type
 
     @property
     def multi_version_config(self):
@@ -259,6 +265,27 @@ class PropertyAdvancedConfig(object):
         """
 
         self._logical_rule = logical_rule
+
+    @property
+    def index_type(self):
+        """Gets the index_type of this PropertyAdvancedConfig.  # noqa: E501
+
+
+        :return: The index_type of this PropertyAdvancedConfig.  # noqa: E501
+        :rtype: str
+        """
+        return self._index_type
+
+    @index_type.setter
+    def index_type(self, index_type):
+        """Sets the index_type of this PropertyAdvancedConfig.
+
+
+        :param index_type: The logical_rule of this PropertyAdvancedConfig.  # noqa: E501
+        :type: str
+        """
+
+        self._index_type = index_type
 
     def to_dict(self):
         """Returns the model properties as a dict"""

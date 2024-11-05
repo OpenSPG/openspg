@@ -41,6 +41,10 @@
       <artifactId>cloudext-interface-search-engine</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-graph-store-neo4j</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-beans</artifactId>
     </dependency>

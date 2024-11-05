@@ -12,18 +12,18 @@
 
 import click
 
-from knext.command.sub_command.builder import execute_job
-from knext.command.sub_command.config import edit_config
-from knext.command.sub_command.config import list_config
-from knext.command.sub_command.project import create_project
-from knext.command.sub_command.project import list_project
+# from knext.command.sub_command.builder import execute
+from knext.command.sub_command.project import (
+    create_project,
+    restore_project,
+    update_project,
+)
 from knext.command.sub_command.reasoner import execute_reasoner_job
-from knext.command.sub_command.thinker import execute_thinker_job
 from knext.command.sub_command.schema import commit_schema
-from knext.command.sub_command.schema import list_schema
 from knext.command.sub_command.schema import reg_concept_rule
 from knext.command.exception import _ApiExceptionHandler
 from knext import __version__
+from knext.command.sub_command.thinker import execute_thinker_job
 
 
 @click.group(cls=_ApiExceptionHandler)
@@ -32,23 +32,13 @@ def _main() -> None:
     pass
 
 
-@_main.group()
-def config() -> None:
-    """Knext config."""
-    pass
-
-
-config.command("list")(list_config)
-config.command("set")(edit_config)
-
-
-@_main.group()
-def builder() -> None:
-    """Builder client."""
-    pass
-
-
-builder.command("execute")(execute_job)
+# @_main.group()
+# def builder() -> None:
+#     """Builder client."""
+#     pass
+#
+#
+# builder.command("execute")(execute)
 
 
 @_main.group()
@@ -58,7 +48,8 @@ def project() -> None:
 
 
 project.command("create")(create_project)
-project.command("list")(list_project)
+project.command("restore")(restore_project)
+project.command("update")(update_project)
 
 
 @_main.group()
@@ -68,7 +59,6 @@ def schema() -> None:
 
 
 schema.command("commit")(commit_schema)
-schema.command("list")(list_schema)
 schema.command("reg_concept_rule")(reg_concept_rule)
 
 
@@ -88,7 +78,6 @@ def thinker() -> None:
 
 
 thinker.command("execute")(execute_thinker_job)
-
 
 if __name__ == "__main__":
     _main()

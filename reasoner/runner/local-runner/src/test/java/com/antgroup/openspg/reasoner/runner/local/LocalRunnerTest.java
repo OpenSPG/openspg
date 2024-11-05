@@ -40,6 +40,99 @@ import scala.Tuple2;
 
 public class LocalRunnerTest {
   @Test
+  public void testConceptExpand() {
+    String rule1 =
+        "Define (s:RiskMining.App)-[p:belongTo]->(o:`RiskMining.TaxOfRiskApp`/`赌博应用`) {\n"
+            + "            Structure {\n"
+            + "                (s)\n"
+            + "            }\n"
+            + "            Constraint {\n"
+            + "                R1(\"风险标记为赌博\"): s.riskMark like \"%赌博%\"\n"
+            + "            }\n"
+            + "        }";
+    String rule2 =
+        "Define (s:RiskMining.Person)-[p:belongTo]->(o:`RiskMining.TaxOfRiskUser`/`赌博App开发者`) {\n"
+            + "            Structure {\n"
+            + "                (s)-[:developed]->(app:`RiskMining.TaxOfRiskApp`/`赌博应用`)\n"
+            + "            }\n"
+            + "            Constraint {\n"
+            + "            }\n"
+            + "        }";
+    String dsl = "MATCH (u:`RiskMining.TaxOfRiskUser`/`赌博App开发者`) RETURN u.name";
+
+    // add mock catalog
+    Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
+    schema.put(
+        "RiskMining.App",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name", "nightTrader")));
+    schema.put(
+        "RiskMining.Person", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
+    schema.put(
+        "RiskMining.TaxOfRiskApp",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
+    schema.put(
+        "RiskMining.TaxOfRiskUser",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "name")));
+    schema.put(
+        "RiskMining.Person_belongTo_RiskMining.TaxOfRiskUser",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put(
+        "RiskMining.App_belongTo_RiskMining.TaxOfRiskApp",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put(
+        "RiskMining.Person_developed_RiskMining.App",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+
+    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
+    catalog.init();
+    catalog
+        .getGraph("KG")
+        .registerRule(
+            "RiskMining.App_belongTo_RiskMining.TaxOfRiskApp/赌博应用", new GeneralSemanticRule(rule1));
+    catalog
+        .getGraph("KG")
+        .addEdge(
+            "RiskMining.App",
+            "belongTo",
+            "RiskMining.TaxOfRiskApp/赌博应用",
+            Direction.OUT,
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()),
+            false);
+    catalog
+        .getGraph("KG")
+        .registerRule(
+            "RiskMining.Person_belongTo_RiskMining.TaxOfRiskUser/赌博应用",
+            new GeneralSemanticRule(rule2));
+    catalog
+        .getGraph("KG")
+        .addEdge(
+            "RiskMining.User",
+            "belongTo",
+            "RiskMining.TaxOfRiskUser/赌博应用",
+            Direction.OUT,
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()),
+            false);
+    //    String dsl = rule;
+    LocalReasonerTask task = new LocalReasonerTask();
+    task.setDsl(dsl);
+    task.setGraphLoadClass(
+        "com.antgroup.openspg.reasoner.runner.local.loader.TestFanxiqianGraphLoader");
+    task.getParams().put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true);
+    task.getParams().put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
+    task.getParams().put(ConfigKey.KG_REASONER_OUTPUT_GRAPH, true);
+    task.setStartIdList(Lists.newArrayList(new Tuple2<>("张三", "Test.User")));
+    task.setExecutionRecorder(new DefaultRecorder());
+    task.setExecutorTimeoutMs(99999999999999999L);
+
+    task.setCatalog(catalog);
+
+    LocalReasonerRunner runner = new LocalReasonerRunner();
+    LocalReasonerResult result = runner.run(task);
+    System.out.println(result);
+    System.out.println(task.getExecutionRecorder().toReadableString());
+  }
+
+  @Test
   public void testCreateConceptInstance() {
     String rule =
         "Define (s:Test.User)-[p:belongTo]->(o:`Test.UserFeature`/`白领`) {\n"

@@ -16,6 +16,7 @@ from knext.schema.model.base import (
     ConstraintTypeEnum,
     PropertyGroupEnum,
     BaseProperty,
+    IndexTypeEnum,
 )
 
 
@@ -30,6 +31,7 @@ class Property(BaseProperty):
     sub_properties: Dict[str, Type["Property"]]
     constraint: Dict[ConstraintTypeEnum, Union[str, List[str]]]
     logical_rule: str
+    index_type: IndexTypeEnum
 
     def __init__(
         self,
@@ -41,6 +43,7 @@ class Property(BaseProperty):
         sub_properties: List[Type["Property"]] = None,
         constraint: Dict[ConstraintTypeEnum, Union[str, List[str]]] = None,
         logical_rule: str = None,
+        index_type: IndexTypeEnum = None,
         **kwargs
     ):
         super().__init__(
@@ -52,5 +55,6 @@ class Property(BaseProperty):
             sub_properties=sub_properties,
             constraint=constraint,
             logical_rule=logical_rule,
+            index_type=index_type,
             **kwargs
         )

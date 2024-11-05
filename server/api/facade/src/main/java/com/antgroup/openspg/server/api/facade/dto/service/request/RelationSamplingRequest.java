@@ -17,6 +17,7 @@ import lombok.Data;
 
 @Data
 public class RelationSamplingRequest {
+  private Long projectId;
   private String srcSpgType;
   private String relation;
   private String dstSpgType;

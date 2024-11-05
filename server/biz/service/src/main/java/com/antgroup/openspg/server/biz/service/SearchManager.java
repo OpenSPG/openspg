@@ -15,9 +15,15 @@ package com.antgroup.openspg.server.biz.service;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
 import com.antgroup.openspg.server.api.facade.dto.service.request.SPGTypeSearchRequest;
+import com.antgroup.openspg.server.api.facade.dto.service.request.TextSearchRequest;
+import com.antgroup.openspg.server.api.facade.dto.service.request.VectorSearchRequest;
 import java.util.List;
 
 public interface SearchManager {
 
   List<IdxRecord> spgTypeSearch(SPGTypeSearchRequest request);
+
+  List<IdxRecord> textSearch(TextSearchRequest request);
+
+  List<IdxRecord> vectorSearch(VectorSearchRequest request);
 }

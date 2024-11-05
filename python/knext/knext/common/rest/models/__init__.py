@@ -9,6 +9,10 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-from knext.builder.rest.models import *
+# import models into sdk package
 from knext.schema.rest.models import *
-from knext.common.project.models import *
+from knext.reasoner.rest.models import *
+from knext.project.rest.models import *
+from knext.search.rest.models import *
+from knext.graph_algo.rest.models import *
+from knext.thinker.rest.models import *

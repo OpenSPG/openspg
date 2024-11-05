@@ -47,6 +47,7 @@
     <json4s.version>4.0.6</json4s.version>
     <kgreasoner-version>20231018-OPENSOURCE</kgreasoner-version>
     <logback.version>1.2.11</logback.version>
+    <neo4j.client.version>4.4.7</neo4j.client.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <scala.binary.version>2.11</scala.binary.version>
@@ -75,8 +76,18 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.antgroup.openspg.builder</groupId>
+        <artifactId>builder-runner-local</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.antgroup.openspg.reasoner</groupId>
         <artifactId>reasoner-cloudext-warehouse</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-common</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -121,12 +132,32 @@
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.cloudext</groupId>
+        <artifactId>cloudext-interface-cache</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.antgroup.openspg.cloudext</groupId>
+        <artifactId>cloudext-impl-graph-store-neo4j</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
         <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
+        <artifactId>cloudext-impl-search-engine-neo4j</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.cloudext</groupId>
+        <artifactId>cloudext-impl-cache-redis</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- openspg end -->
@@ -201,6 +232,11 @@
         <groupId>com.antgroup.tugraph</groupId>
         <artifactId>tugraph-db-java-rpc-client</artifactId>
         <version>${tugraph.client.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.neo4j.driver</groupId>
+        <artifactId>neo4j-java-driver</artifactId>
+        <version>${neo4j.client.version}</version>
       </dependency>
       <dependency>
         <groupId>com.opencsv</groupId>
@@ -323,7 +359,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.22</version>
+      <version>1.18.24</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>

@@ -17,6 +17,7 @@ import lombok.Data;
 
 @Data
 public class SPGTypeSearchRequest {
+  private Long projectId;
   private String keyword;
   private Integer pageSize = 10;
   private Integer pageIdx = 0;

@@ -166,7 +166,7 @@ public class KgGraphAggregateImpl implements Serializable {
       if (CollectionUtils.isNotEmpty(ruleList)) {
         KgGraph<IVertexId> kgGraph =
             RunnerUtil.filterKgGraph(
-                value, kgGraphSchema, staticParameters, ruleList, maxPathLimit);
+                value, kgGraphSchema, staticParameters, ruleList, maxPathLimit, this.taskId);
         if (null != kgGraph) {
           valueFilteredList.add(kgGraph);
         }

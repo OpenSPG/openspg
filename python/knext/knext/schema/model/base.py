@@ -61,6 +61,12 @@ class AlterOperationEnum(str, Enum):
     Delete = "DELETE"
 
 
+class IndexTypeEnum(str, Enum):
+    Vector = "VECTOR"
+    Text = "TEXT"
+    TextAndVector = "TEXT_AND_VECTOR"
+
+
 def iter_init(klass):
     """Initialize a REST model."""
     instance = klass()
@@ -92,6 +98,7 @@ class BaseProperty(ABC):
         sub_properties=None,
         constraint=None,
         logical_rule=None,
+        index_type=None,
         **kwargs,
     ):
         if "rest_model" in kwargs:
@@ -106,6 +113,7 @@ class BaseProperty(ABC):
                 sub_properties=sub_properties,
                 constraint=constraint,
                 logical_rule=logical_rule,
+                index_type=index_type,
             )
 
     def _init_rest_model(self, **kwargs):
@@ -145,6 +153,16 @@ class BaseProperty(ABC):
         :rtype: str
         """
         return self._rest_model.object_type_ref.basic_info.name.name
+
+    @property
+    def object_type_name_en(self) -> str:
+        """Gets the object_type_name_en of this Property/Relation.  # noqa: E501
+
+
+        :return: The object_type_name_en of this Property/Relation.  # noqa: E501
+        :rtype: str
+        """
+        return self._rest_model.object_type_ref.basic_info.name.name_en
 
     @object_type_name.setter
     def object_type_name(self, object_type_name: str):
@@ -440,6 +458,29 @@ class BaseProperty(ABC):
         self._rest_model.advanced_config.logical_rule.content = logical_rule
 
     @property
+    def index_type(self) -> IndexTypeEnum:
+        """Gets the index_type of this Property/Relation.  # noqa: E501
+
+
+        :return: The index_type of this Property/Relation.  # noqa: E501
+        :rtype: str
+        """
+        return self._rest_model.advanced_config.index_type
+
+    @index_type.setter
+    def index_type(self, index_type: IndexTypeEnum):
+        """Sets the index_type of this Property/Relation.
+
+
+        :param index_type: The index_type of this Property/Relation.  # noqa: E501
+        :type: str
+        """
+        if index_type is None:
+            return
+
+        self._rest_model.advanced_config.index_type = index_type
+
+    @property
     def alter_operation(self) -> AlterOperationEnum:
         """Gets the alter_operation of this Property/Relation.  # noqa: E501
 
@@ -598,6 +639,16 @@ class BaseSpgType(ABC):
         :rtype: str
         """
         return self._rest_model.basic_info.name.name
+
+    @property
+    def name_en(self) -> str:
+        """Gets the name_en of this SpgType.  # noqa: E501
+
+
+        :return: The name_en of this SpgType.  # noqa: E501
+        :rtype: str
+        """
+        return self._rest_model.basic_info.name.name_en
 
     @name.setter
     def name(self, name: str):

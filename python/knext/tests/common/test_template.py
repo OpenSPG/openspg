@@ -11,7 +11,7 @@
 # or implied.
 
 import os
-from knext.common.template import render_template
+from knext.common.utils import render_template
 
 PWD = os.path.dirname(__file__)
 

@@ -6,7 +6,7 @@
 
 [OpenSPG](https://spg.openkg.cn/en-US) is a knowledge graph engine developed by Ant Group in collaboration with OpenKG, based on the SPG (Semantic-enhanced Programmable Graph) framework, which is a summary of Ant Group's years of experience in constructing and applying diverse domain knowledge graphs in the financial scenarios.
 
-![OpenSPG Architecture](https://mdn.alipayobjects.com/huamei_xgb3qj/afts/img/A*DsIHS7Fe78AAAAAAAAAAAAAADtmcAQ/original)
+![OpenSPG Architecture](https://github.com/user-attachments/assets/56c2772b-7343-41ce-a17e-f6d838d2f791)
 
 # SPG Background
 

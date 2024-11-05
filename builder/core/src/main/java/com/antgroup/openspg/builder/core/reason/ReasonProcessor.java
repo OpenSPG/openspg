@@ -13,7 +13,9 @@
 
 package com.antgroup.openspg.builder.core.reason;
 
+import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.builder.core.physical.process.BaseProcessor;
+import com.antgroup.openspg.builder.core.physical.utils.CommonUtils;
 import com.antgroup.openspg.builder.core.reason.impl.CausalConceptReasoner;
 import com.antgroup.openspg.builder.core.reason.impl.InductiveConceptReasoner;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
@@ -25,6 +27,7 @@ import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.record.BaseAdvancedRecord;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.BaseSPGRecord;
+import com.antgroup.openspg.builder.model.record.SubGraphRecord;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
 import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
@@ -33,6 +36,7 @@ import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.reasoner.warehouse.cloudext.CloudExtGraphState;
+import com.antgroup.openspg.server.common.model.project.Project;
 import com.google.common.collect.Lists;
 import java.util.*;
 
@@ -48,6 +52,7 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
   private RecordLinking recordNormalizer;
   private InductiveConceptReasoner inductiveConceptReasoner;
   private CausalConceptReasoner causalConceptReasoner;
+  private Project project = null;
 
   public ReasonProcessor() {
     super("", "", null);
@@ -70,11 +75,35 @@ public class ReasonProcessor extends BaseProcessor<ReasonProcessor.ReasonerNodeC
 
     this.recordNormalizer = new RecordLinkingImpl();
     this.recordNormalizer.init(context);
+    if (context.getProject() != null) {
+      project = JSON.parseObject(context.getProject(), Project.class);
+    }
+  }
+
+  private List<BaseRecord> recordConvertor(List<BaseRecord> inputs) {
+    List<BaseRecord> results = new ArrayList<>();
+    for (BaseRecord baseRecord : inputs) {
+      if (!(baseRecord instanceof SubGraphRecord)) {
+        results.add(baseRecord);
+        continue;
+      }
+      SubGraphRecord subGraph = (SubGraphRecord) baseRecord;
+      String namespace = (project == null) ? "" : project.getNamespace();
+      List<BaseSPGRecord> nodes =
+          CommonUtils.convertNodes(subGraph, context.getCatalog().getProjectSchema(), namespace);
+      List<BaseSPGRecord> edges =
+          CommonUtils.convertEdges(subGraph, context.getCatalog().getProjectSchema(), namespace);
+      results.addAll(nodes);
+      results.addAll(edges);
+    }
+    return results;
   }
 
   @Override
   public List<BaseRecord> process(List<BaseRecord> inputs) {
     List<BaseRecord> results = new ArrayList<>();
+    // SubGraphRecord to BaseAdvancedRecord
+    inputs = recordConvertor(inputs);
     for (BaseRecord baseRecord : inputs) {
       if (!(baseRecord instanceof BaseAdvancedRecord)) {
         continue;

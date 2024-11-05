@@ -31,5 +31,13 @@
       <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>common-service</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-graph-store-neo4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>pemja</artifactId>
+    </dependency>
   </dependencies>
 </project>

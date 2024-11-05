@@ -12,6 +12,9 @@
 import os
 
 from knext.common.base.client import Client
+from knext.common.rest import Configuration, ApiClient
+from knext.thinker import rest
+from knext.thinker.rest import ThinkerTaskRequest, ThinkerTaskResponse
 
 
 class ThinkerClient(Client):
@@ -20,40 +23,32 @@ class ThinkerClient(Client):
     def __init__(self, host_addr: str = None, project_id: int = None):
         super().__init__(host_addr, project_id)
 
+        self._rest_client: rest.ThinkerApi = rest.ThinkerApi(
+            api_client=ApiClient(configuration=Configuration(host=host_addr))
+        )
+
     def execute(self, subject="", predicate="", object="", mode="spo", params=""):
         """
         Execute a synchronous builder job in local runner.
         """
+        req: ThinkerTaskRequest = ThinkerTaskRequest(
+            project_id=self._project_id,
+            subject=subject,
+            predicate=predicate,
+            object=object,
+            mode=mode,
+            params=params,
+        )
+        rep: ThinkerTaskResponse = self._rest_client.reason_thinker_post(
+            thinker_task_request=req
+        )
+        print(rep)
 
-        import subprocess
-        from knext.reasoner import lib
-        from knext.common import env
 
-        jar_path = os.path.join(lib.__path__[0], lib.LOCAL_REASONER_JAR)
-
-        java_cmd = [
-            "java",
-            "-cp",
-            jar_path,
-            "com.antgroup.openspg.reasoner.runner.local.thinker.LocalThinkerMain",
-            "--projectId",
-            self._project_id,
-            "--subject",
-            subject or "",
-            "--predicate",
-            predicate or "",
-            "--object",
-            object or "",
-            "--mode",
-            mode,
-            "--params" or "",
-            params,
-            "--schemaUrl",
-            os.environ.get("KNEXT_HOST_ADDR") or env.LOCAL_SCHEMA_URL,
-            "--graphStateClass",
-            os.environ.get("KNEXT_GRAPH_STATE_CLASS") or lib.LOCAL_GRAPH_STATE_CLASS,
-            "--graphStoreUrl",
-            os.environ.get("KNEXT_GRAPH_STORE_URL") or lib.LOCAL_GRAPH_STORE_URL,
-        ]
-
-        subprocess.call(java_cmd)
+if __name__ == "__main__":
+    sc = ThinkerClient("http://127.0.0.1:8887", 2)
+    sc.execute(
+        subject="DiseaseLevel",
+        mode="node",
+        params='{"spg.reasoner.thinker.strict":·true,·"收缩压":150}',
+    )

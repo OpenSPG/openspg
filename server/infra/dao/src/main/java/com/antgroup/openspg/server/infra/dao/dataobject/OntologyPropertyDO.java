@@ -70,6 +70,8 @@ public class OntologyPropertyDO {
 
   private String propertyConfig;
 
+  private String indexType;
+
   public Long getId() {
     return id;
   }
@@ -284,5 +286,13 @@ public class OntologyPropertyDO {
 
   public void setPropertyConfig(String propertyConfig) {
     this.propertyConfig = propertyConfig == null ? null : propertyConfig.trim();
+  }
+
+  public String getIndexType() {
+    return indexType;
+  }
+
+  public void setIndexType(String indexType) {
+    this.indexType = indexType;
   }
 }

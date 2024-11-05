@@ -31,11 +31,6 @@ import java.util.List;
 
 public class TypeNameUtils {
 
-  public static <T extends BaseLPGRecord> void convertTypeName(
-      List<T> lpgRecords, LPGTypeNameConvertor convertor) {
-    lpgRecords.forEach(record -> convertTypeName(record, convertor));
-  }
-
   public static void convertTypeName(
       BaseLPGSchemaOperation schemaOperationRecord, LPGTypeNameConvertor convertor) {
     EdgeTypeName edgeTypeName;
@@ -106,6 +101,11 @@ public class TypeNameUtils {
             edgeType ->
                 edgeType.setEdgeTypeName(
                     convertor.restoreEdgeTypeName(edgeType.getEdgeTypeName().getEdgeLabel())));
+  }
+
+  public static <T extends BaseLPGRecord> void convertTypeName(
+      List<T> lpgRecords, LPGTypeNameConvertor convertor) {
+    lpgRecords.forEach(record -> convertTypeName(record, convertor));
   }
 
   private static void convertTypeName(BaseLPGRecord lpgRecord, LPGTypeNameConvertor convertor) {

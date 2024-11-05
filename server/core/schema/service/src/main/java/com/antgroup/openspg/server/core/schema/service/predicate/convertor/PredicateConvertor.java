@@ -15,6 +15,7 @@ package com.antgroup.openspg.server.core.schema.service.predicate.convertor;
 
 import com.antgroup.openspg.core.schema.model.OntologyId;
 import com.antgroup.openspg.core.schema.model.predicate.EncryptTypeEnum;
+import com.antgroup.openspg.core.schema.model.predicate.IndexTypeEnum;
 import com.antgroup.openspg.core.schema.model.predicate.MountedConceptConfig;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.predicate.PropertyGroupEnum;
@@ -35,6 +36,7 @@ public class PredicateConvertor {
     MountedConceptConfig mountedConceptConfig = property.getMountedConceptConfig();
     EncryptTypeEnum encryptTypeEnum = property.getEncryptTypeEnum();
     PropertyGroupEnum propertyGroup = property.getPropertyGroup();
+    IndexTypeEnum indexType = property.getIndexType();
     Long constraintId = property.getConstraint() == null ? null : property.getConstraint().getId();
     RuleCode ruleCode =
         property.getLogicalRule() == null ? null : property.getLogicalRule().getCode();
@@ -51,6 +53,7 @@ public class PredicateConvertor {
             mountedConceptConfig,
             encryptTypeEnum,
             propertyGroup,
+            indexType,
             constraintId,
             ruleCode,
             ontologyEnum);

@@ -325,13 +325,20 @@ class PatternMatchPlanner(val pattern: GraphPattern)(implicit context: LogicalPl
     val patternScan = PatternScan(start, EdgePattern(edgePattern.src, targetElement, edge))
     ExpandInto(patternScan, targetElement, NodePattern(targetElement))
   }
-
+  private def getConceptScore(ele: Element): Int = {
+    ele match {
+      case PatternElement(_, _, _) => 2
+      case _ => 1
+    }
+  }
   private def getMaxDegree: String = {
     val degree = new mutable.HashMap[String, Int]()
     pattern.edges.foreach(pair =>
       pair._2.foreach(conn => {
-        degree.put(conn.source, degree.getOrElse(conn.source, 0) + 1)
-        degree.put(conn.target, degree.getOrElse(conn.target, 0) + 1)
+        degree.put(conn.source, degree.getOrElse(conn.source, 0) + 1
+          + getConceptScore(pattern.getNode(conn.source)))
+        degree.put(conn.target, degree.getOrElse(conn.target, 0) + 1
+          + getConceptScore(pattern.getNode(conn.target)))
       }))
     if (degree.isEmpty) {
       pattern.nodes.head._1

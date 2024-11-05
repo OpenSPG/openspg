@@ -679,7 +679,7 @@ public class LocalRDG extends RDG<LocalRDG> {
     for (KgGraph<IVertexId> kgGraph : this.kgGraphList) {
       Predicate<KgGraph<IVertexId>> filter = null;
       if (CollectionUtils.isNotEmpty(crossBorderRuleList)) {
-        filter = new PredicateKgGraph(this.kgGraphSchema, crossBorderRuleList);
+        filter = new PredicateKgGraph(this.kgGraphSchema, crossBorderRuleList, this.taskId);
       }
       Iterator<KgGraph<IVertexId>> pathIt = kgGraph.getPath(staticParameters, filter);
       long count = 0;
@@ -729,7 +729,8 @@ public class LocalRDG extends RDG<LocalRDG> {
               this.kgGraphSchema,
               staticParameters,
               exprStringSet,
-              this.maxPathLimit);
+              this.maxPathLimit,
+              this.taskId);
       count += resultList.size();
       newKgGraphList.addAll(resultList);
     }

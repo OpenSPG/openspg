@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.rdg.common;
 
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.kggraph.KgGraph;
 import com.antgroup.openspg.reasoner.lube.catalog.struct.Field;
@@ -128,6 +129,9 @@ public class KgGraphDropFieldsImpl implements Serializable {
     Map<String, Object> propertyMap =
         this.dropEdgeAlias2PropertyMap.computeIfAbsent(alias, k -> new HashMap<>());
     for (String key : propertySet) {
+      if (Constants.EDGE_FROM_ID_KEY.equals(key) || Constants.EDGE_TO_ID_KEY.equals(key)) {
+        continue;
+      }
       propertyMap.put(key, null);
     }
   }

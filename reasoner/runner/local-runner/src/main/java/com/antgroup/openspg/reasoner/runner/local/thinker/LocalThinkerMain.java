@@ -145,7 +145,7 @@ public class LocalThinkerMain {
     return task;
   }
 
-  private static Element strToElement(String content, Boolean isPredicate) {
+  public static Element strToElement(String content, Boolean isPredicate) {
     String[] parts = StringUtils.split(content, ",");
     if (parts.length == 2) {
       return new Entity(parts[0], parts[1]);
@@ -191,6 +191,23 @@ public class LocalThinkerMain {
     options.addOption(ParamsKey.LOG_FILE_OPTION, ParamsKey.LOG_FILE_OPTION, true, "log file name");
     options.addOption(ParamsKey.MODE, ParamsKey.MODE, true, "infer mode, eg: spo or node");
     return options;
+  }
+
+  public static GraphState<IVertexId> loadGraph(String graphStateClass, String graphStoreUrl) {
+    GraphState<IVertexId> graphState;
+    if (StringUtils.isNotEmpty(graphStateClass)) {
+      try {
+        graphState =
+            (GraphState<IVertexId>)
+                Class.forName(graphStateClass)
+                    .getConstructor(String.class)
+                    .newInstance(graphStoreUrl);
+      } catch (Exception e) {
+        throw new RuntimeException("can not create graph state from " + graphStateClass, e);
+      }
+      return graphState;
+    }
+    return null;
   }
 
   protected static GraphState<IVertexId> loadGraph(ThinkerParams params) {

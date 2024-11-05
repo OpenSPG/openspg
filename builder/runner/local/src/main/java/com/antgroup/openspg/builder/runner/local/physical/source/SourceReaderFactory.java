@@ -15,7 +15,9 @@ package com.antgroup.openspg.builder.runner.local.physical.source;
 
 import com.antgroup.openspg.builder.core.logical.BaseLogicalNode;
 import com.antgroup.openspg.builder.core.logical.CsvSourceNode;
+import com.antgroup.openspg.builder.core.logical.StringSourceNode;
 import com.antgroup.openspg.builder.runner.local.physical.source.impl.CsvFileSourceReader;
+import com.antgroup.openspg.builder.runner.local.physical.source.impl.StringSourceReader;
 
 public class SourceReaderFactory {
 
@@ -24,6 +26,9 @@ public class SourceReaderFactory {
       case CSV_SOURCE:
         return new CsvFileSourceReader(
             baseNode.getId(), baseNode.getName(), ((CsvSourceNode) baseNode).getNodeConfig());
+      case STRING_SOURCE:
+        return new StringSourceReader(
+            baseNode.getId(), baseNode.getName(), ((StringSourceNode) baseNode).getNodeConfig());
       default:
         throw new IllegalArgumentException("illegal nodeType=" + baseNode.getType());
     }

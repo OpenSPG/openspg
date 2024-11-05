@@ -28,7 +28,6 @@ __version__ = "1"
 
 # import apis into sdk package
 from knext.schema.rest.concept_api import ConceptApi
-from knext.schema.rest.operator_api import OperatorApi
 from knext.schema.rest.schema_api import SchemaApi
 
 # import models into sdk package

@@ -140,6 +140,7 @@ public class SPGTypeConvertor {
     switch (simpleSpgType.getSpgTypeEnum()) {
       case BASIC_TYPE:
         baseSpgType = BasicType.from(simpleSpgType.getBasicInfo().getName().toString());
+        baseSpgType.getBasicInfo().setNameZh(simpleSpgType.getBasicInfo().getNameZh());
         break;
       case STANDARD_TYPE:
         baseSpgType =
