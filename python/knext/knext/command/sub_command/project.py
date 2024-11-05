@@ -14,6 +14,7 @@ import os
 import sys
 from configparser import ConfigParser
 from pathlib import Path
+import yaml
 from typing import Optional
 
 import click
@@ -75,13 +76,12 @@ def _render_template(namespace: str, tmpl: str, **kwargs):
 
     tmpls = [tmpl, "default"] if tmpl != "default" else [tmpl]
     # find all .cfg files in project dir
-    cfg2 = ConfigParser()
-    cfg2.read(config_path)
+    config = yaml.safe_load(Path(config_path).read_text())
     project_id = kwargs.get("id", None)
-    cfg2["project"]["id"] = project_id
-    config_file_path = project_dir.resolve() / "kag_config.cfg"
+    config["project"]["id"] = project_id
+    config_file_path = project_dir.resolve() / "kag_config.yaml"
     with open(config_file_path, "w") as config_file:
-        cfg2.write(config_file)
+        yaml.safe_dump(config, config_file)
     delete_cfg = kwargs.get("delete_cfg", False)
     if delete_cfg:
         os.remove(config_path)
@@ -100,26 +100,26 @@ def _recover_project(prj_path: str):
         sys.path.append(prj_path)
     prj = Path(prj_path).resolve()
 
-    cfg_file = prj / "kag_config.cfg"
-    cfg = ConfigParser()
-    cfg.optionxform = str
-    cfg.read(cfg_file)
-    project_name = cfg.get("project", "namespace")
-    namespace = cfg.get("project", "namespace")
-    desc = (
-        cfg.get("project", "description")
-        if cfg.has_option("project", "description")
-        else None
-    )
+    cfg_file = prj / "kag_config.yaml"
+    config = yaml.safe_load(cfg_file.read_text())
+    project_config = config.get("project", {})
+    project_name = project_config.get("namespace", None)
+    namespace = project_config.get("namespace", None)
+    desc = project_config.get("description",None)
+    if not namespace:
+        click.secho(
+            f"ERROR: No project namespace found in {cfg_file}.",
+            fg="bright_red",
+        )
+        sys.exit()
 
     client = ProjectClient()
     project = client.get(namespace=namespace) or client.create(
         name=project_name, desc=desc, namespace=namespace
     )
 
-    cfg.set("project", "id", str(project.id))
-    with open(cfg_file, "w") as config_file:
-        cfg.write(config_file)
+    config["project"]["id"] =  str(project.id)
+    yaml.safe_dump(config, Path(cfg_file).open("w"))
 
     click.secho(
         f"Project [{project_name}] with namespace [{namespace}] was successfully recovered from [{prj_path}].",
@@ -146,13 +146,15 @@ def create_project(
     """
     Create new project with a demo case.
     """
-    init_kag_config(config_path)
-    name = os.getenv("KAG_PROJECT_NAMESPACE")
-    namespace = os.getenv("KAG_PROJECT_NAMESPACE")
-    host_addr = os.getenv("KAG_PROJECT_HOST_ADDR")
+
+    config = yaml.safe_load(Path(config_path).read_text())
+    project_config = config.get("project", {})
+    namespace = project_config.get("namespace",None)
+    name = project_config.get("namespace",None)
+    host_addr = project_config.get("host_addr",None)
 
     if not namespace:
-        click.secho("ERROR: Option [--namespace] is required.")
+        click.secho("ERROR: namespace is required.")
         sys.exit()
 
     if not re.match(r"^[A-Z][A-Za-z0-9]{0,15}$", namespace):
@@ -160,10 +162,9 @@ def create_project(
             f"Invalid namespace: {namespace}."
             f" Must start with an uppercase letter, only contain letters and numbers, and have a maximum length of 16."
         )
+
     if not tmpl:
         tmpl = "default"
-    if not name:
-        name = namespace
 
     project_id = None
     if host_addr:
@@ -172,6 +173,9 @@ def create_project(
 
         if project and project.id:
             project_id = project.id
+    else:
+        click.secho("ERROR: host_addr is required.", fg="bright_red")
+        sys.exit()
 
     project_dir = _render_template(
         namespace=namespace,
@@ -195,12 +199,17 @@ def create_project(
 
 
 @click.option("--host_addr", help="Address of spg server.")
-@click.option("--proj_path", help="Path of config.", default="./examples/kag_demo")
+@click.option("--proj_path", help="Path of project.", default="./examples/kag_demo")
 def restore_project(host_addr, proj_path):
     proj_client = ProjectClient(host_addr=host_addr)
-    init_kag_config(os.path.join(proj_path, "kag_config.cfg"))
-    name = os.environ["KAG_PROJECT_NAMESPACE"]
-    namespace = os.environ["KAG_PROJECT_NAMESPACE"]
+    config = yaml.safe_load(Path(os.path.join(proj_path, "kag_config.yaml")).read_text())
+    project_config = config.get("project", {})
+    name = project_config.get("namespace")
+    namespace = project_config.get("namespace")
+    if namespace is None:
+        click.secho("ERROR: namespace is required.", fg="bright_red")
+        sys.exit()
+
     project_wanted = proj_client.get_by_namespace(namespace=namespace)
     if not project_wanted:
         if host_addr:
@@ -210,14 +219,10 @@ def restore_project(host_addr, proj_path):
     else:
         project_id = project_wanted.id
     # write project id and host addr to kag_config.cfg
-    cfg = ConfigParser()
-    cfg.optionxform = str
-    cfg.read(os.path.join(proj_path, "kag_config.cfg"))
-    cfg.set("project", "id", str(project_id))
-    cfg.set("project", "host_addr", host_addr)
-    with open(os.path.join(proj_path, "kag_config.cfg"), "w") as config_file:
-        cfg.write(config_file)
-    init_kag_config(os.path.join(proj_path, "kag_config.cfg"))
+
+    config["project"]["id"] = project_id
+    config["project"]["host_addr"] = host_addr
+    yaml.safe_dump(config, Path(os.path.join(proj_path, "kag_config.yaml")).open("w"))
     if proj_path:
         _recover_project(proj_path)
         update_project(proj_path)
@@ -225,7 +230,7 @@ def restore_project(host_addr, proj_path):
 
 @click.option("--proj_path", help="Path of config.", default="./examples/kag_demo")
 def update_project(proj_path):
-    config_path = os.path.join(proj_path, "kag_config.cfg")
+    config_path = os.path.join(proj_path, "kag_config.yaml")
     if not Path(config_path).exists():
         # find *.cfg file
         cfg_files = list(Path(proj_path).glob("*.cfg"))
@@ -233,17 +238,21 @@ def update_project(proj_path):
             click.secho("ERROR: No .cfg file found.", fg="bright_red")
             sys.exit()
         config_path = cfg_files[0]
-    init_kag_config(config_path)
+    config = yaml.safe_load(Path(config_path).read_text())
+    project_config = config.get("project", {})
     # update kag_config.cfg to remote server
-    cp = ConfigParser()
-    cp.read(config_path)
-    project_id = int(os.getenv("KAG_PROJECT_ID"))
-    host_addr = os.getenv("KAG_PROJECT_HOST_ADDR")
+    project_id = project_config.get("id")
+    host_addr = project_config.get("host_addr")
+    if not host_addr:
+        click.secho("ERROR: host_addr is required.", fg="bright_red")
+        sys.exit()
+    if not project_id:
+        click.secho("ERROR: project_id is required.", fg="bright_red")
+        sys.exit()
     client = ProjectClient(host_addr=host_addr)
-    config = str(_configparser_to_dict(cp))
-    client.update(id=project_id, config=config)
-    project_name = os.getenv("KAG_PROJECT_NAMESPACE")
-    namespace = os.getenv("KAG_PROJECT_NAMESPACE")
+    client.update(id=project_id, config=str(config))
+    project_name = config["project"]["namespace"]
+    namespace = config["project"]["namespace"]
     click.secho(
         f"Project [{project_name}] with namespace [{namespace}] was successfully updated from [{proj_path}].",
         fg="bright_green",
