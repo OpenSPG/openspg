@@ -13,9 +13,12 @@
 
 package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
+import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.udf.impl.UdfMngImpl;
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 public class ContainsAny {
 
@@ -56,7 +59,8 @@ public class ContainsAny {
    */
   @UdfDefine(name = "contains_any", compatibleName = "contains")
   public boolean contains(String toCheckedStr, String keyword) {
-    Boolean allowUDFThrowException = UdfMngImpl.allowUDFThrowException.get();
+    Map<String, Object> configMap = UdfMngImpl.sceneConfigMap.get();
+    Boolean allowUDFThrowException = (Boolean) configMap.getOrDefault(Constants.ALLOW_UDF_EXCEPTION, false);
     if ((toCheckedStr == null || keyword == null) && allowUDFThrowException) {
       throw new RuntimeException("contains_any arguments is null");
     }

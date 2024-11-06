@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.reasoner.udf.impl;
 
-import static com.antgroup.openspg.reasoner.common.Utils.javaType2KgType;
-
 import com.antgroup.openspg.reasoner.common.exception.UdfExistsException;
 import com.antgroup.openspg.reasoner.common.types.KgType;
 import com.antgroup.openspg.reasoner.udf.UdfMng;
@@ -31,6 +29,10 @@ import com.antgroup.openspg.reasoner.udf.model.UdtfMeta;
 import com.antgroup.openspg.reasoner.udf.utils.UdfUtils;
 import com.google.common.collect.Lists;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import scala.Tuple2;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -41,9 +43,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import scala.Tuple2;
+
+import static com.antgroup.openspg.reasoner.common.Utils.javaType2KgType;
 
 @Slf4j(topic = "userlogger")
 public class UdfMngImpl implements UdfMng {
@@ -54,7 +55,7 @@ public class UdfMngImpl implements UdfMng {
 
   private static volatile UdfMngImpl instance = null;
 
-  public static ThreadLocal<Boolean> allowUDFThrowException = ThreadLocal.withInitial(() -> false);
+  public static ThreadLocal<Map<String, Object>> sceneConfigMap = ThreadLocal.withInitial(HashMap::new);
 
   /** 单例 */
   public static UdfMngImpl getInstance() {
