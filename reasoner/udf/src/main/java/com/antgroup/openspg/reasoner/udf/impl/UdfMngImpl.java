@@ -54,6 +54,9 @@ public class UdfMngImpl implements UdfMng {
 
   private static volatile UdfMngImpl instance = null;
 
+  public static ThreadLocal<Map<String, Object>> sceneConfigMap =
+      ThreadLocal.withInitial(HashMap::new);
+
   /** 单例 */
   public static UdfMngImpl getInstance() {
     if (null == instance) {

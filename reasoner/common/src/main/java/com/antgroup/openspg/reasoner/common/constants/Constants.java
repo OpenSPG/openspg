@@ -85,4 +85,7 @@ public class Constants {
       Sets.newHashSet("isA", "locateAt");
 
   public static final String CONCEPT_EDGE_EXPAND_FUNC_NAME = "concept_edge_expand";
+
+  /** allow throw exception in udf */
+  public static final String ALLOW_UDF_EXCEPTION = "allowUDFThrowException";
 }

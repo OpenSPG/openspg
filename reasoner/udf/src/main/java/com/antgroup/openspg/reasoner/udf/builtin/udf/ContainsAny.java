@@ -13,10 +13,15 @@
 
 package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
+import com.antgroup.openspg.reasoner.common.constants.Constants;
+import com.antgroup.openspg.reasoner.udf.impl.UdfMngImpl;
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 public class ContainsAny {
+
+  public ContainsAny() {}
 
   /**
    * Contains any function. Return true if the first element of the input array (a string) contains
@@ -53,6 +58,12 @@ public class ContainsAny {
    */
   @UdfDefine(name = "contains_any", compatibleName = "contains")
   public boolean contains(String toCheckedStr, String keyword) {
+    Map<String, Object> configMap = UdfMngImpl.sceneConfigMap.get();
+    Boolean allowUDFThrowException =
+        (Boolean) configMap.getOrDefault(Constants.ALLOW_UDF_EXCEPTION, false);
+    if ((toCheckedStr == null || keyword == null) && allowUDFThrowException) {
+      throw new RuntimeException("contains_any arguments is null");
+    }
     if (StringUtils.isEmpty(toCheckedStr) || null == keyword) {
       return false;
     }
