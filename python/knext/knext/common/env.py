@@ -13,6 +13,7 @@ import logging
 import os
 import sys
 from configparser import ConfigParser as CP
+import yaml
 from pathlib import Path
 from typing import Union, Optional
 
@@ -40,7 +41,15 @@ def init_env():
     """
     project_cfg, root_path = get_config()
 
-    init_kag_config(Path(root_path) / "kag_config.cfg")
+    config = yaml.safe_load(
+        Path(os.path.join(root_path, "kag_config.yaml")).read_text()
+    )
+    project_config = config.get("project", {})
+    project_id = project_config.get("project_id", None)
+    os.environ["KAG_PROJECT_ID"] = project_id
+    log_config = config.get("log", {})
+    value = log_config.get("level", "INFO")
+    logging.basicConfig(level=logging.getLevelName(value))
 
 
 def get_config():
@@ -48,8 +57,7 @@ def get_config():
     Get knext config file as a ConfigParser.
     """
     local_cfg_path = _closest_cfg()
-    local_cfg = ConfigParser()
-    local_cfg.read(local_cfg_path)
+    local_cfg = yaml.safe_load(Path(local_cfg_path).read_text())
 
     projdir = ""
     if local_cfg_path:
@@ -71,48 +79,7 @@ def _closest_cfg(
     if prev_path is not None and str(path) == str(prev_path):
         return ""
     path = Path(path).resolve()
-    cfg_file = path / "kag_config.cfg"
+    cfg_file = path / "kag_config.yaml"
     if cfg_file.exists():
         return str(cfg_file)
     return _closest_cfg(path.parent, path)
-
-
-def get_cfg_files():
-    """
-    Get global and local knext config files and paths.
-    """
-    local_cfg_path = _closest_cfg()
-    local_cfg = ConfigParser()
-    local_cfg.read(local_cfg_path)
-
-    if local_cfg_path:
-        projdir = str(Path(local_cfg_path).parent)
-        if projdir not in sys.path:
-            sys.path.append(projdir)
-
-    return local_cfg, local_cfg_path
-
-
-def init_kag_config(config_path: Union[str, Path] = None):
-    if not config_path or isinstance(config_path, Path) and not config_path.exists():
-        config_path = DEFAULT_KAG_CONFIG_PATH
-    kag_cfg = ConfigParser()
-    kag_cfg.read(config_path)
-    os.environ["KAG_PROJECT_ROOT_PATH"] = os.path.abspath(os.path.dirname(config_path))
-
-    for section in kag_cfg.sections():
-        sec_cfg = {}
-        for key, value in kag_cfg.items(section):
-            item_cfg_key = f"{KAG_CFG_PREFIX}_{section}_{key}".upper()
-            os.environ[item_cfg_key] = value
-            sec_cfg[key] = value
-        sec_cfg_key = f"{KAG_CFG_PREFIX}_{section}".upper()
-        os.environ[sec_cfg_key] = str(sec_cfg)
-        if section == "log":
-            for key, value in kag_cfg.items(section):
-                if key == "level":
-                    logging.basicConfig(level=logging.getLevelName(value))
-                    # neo4j log level set to be default error
-                    logging.getLogger("neo4j.notifications").setLevel(logging.ERROR)
-                    logging.getLogger("neo4j.io").setLevel(logging.INFO)
-                    logging.getLogger("neo4j.pool").setLevel(logging.INFO)

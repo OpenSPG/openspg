@@ -22,7 +22,6 @@ import click
 from knext.common.utils import copytree, copyfile
 from knext.project.client import ProjectClient
 
-from knext.common.env import init_kag_config
 
 from shutil import copy2
 
@@ -105,7 +104,7 @@ def _recover_project(prj_path: str):
     project_config = config.get("project", {})
     project_name = project_config.get("namespace", None)
     namespace = project_config.get("namespace", None)
-    desc = project_config.get("description",None)
+    desc = project_config.get("description", None)
     if not namespace:
         click.secho(
             f"ERROR: No project namespace found in {cfg_file}.",
@@ -118,7 +117,7 @@ def _recover_project(prj_path: str):
         name=project_name, desc=desc, namespace=namespace
     )
 
-    config["project"]["id"] =  str(project.id)
+    config["project"]["id"] = str(project.id)
     yaml.safe_dump(config, Path(cfg_file).open("w"))
 
     click.secho(
@@ -149,9 +148,9 @@ def create_project(
 
     config = yaml.safe_load(Path(config_path).read_text())
     project_config = config.get("project", {})
-    namespace = project_config.get("namespace",None)
-    name = project_config.get("namespace",None)
-    host_addr = project_config.get("host_addr",None)
+    namespace = project_config.get("namespace", None)
+    name = project_config.get("namespace", None)
+    host_addr = project_config.get("host_addr", None)
 
     if not namespace:
         click.secho("ERROR: namespace is required.")
@@ -202,7 +201,9 @@ def create_project(
 @click.option("--proj_path", help="Path of project.", default="./examples/kag_demo")
 def restore_project(host_addr, proj_path):
     proj_client = ProjectClient(host_addr=host_addr)
-    config = yaml.safe_load(Path(os.path.join(proj_path, "kag_config.yaml")).read_text())
+    config = yaml.safe_load(
+        Path(os.path.join(proj_path, "kag_config.yaml")).read_text()
+    )
     project_config = config.get("project", {})
     name = project_config.get("namespace")
     namespace = project_config.get("namespace")

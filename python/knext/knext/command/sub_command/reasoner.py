@@ -12,9 +12,8 @@
 import os
 import sys
 from pathlib import Path
-
+import yaml
 import click
-from knext.common.env import init_kag_config
 
 from knext.reasoner.client import ReasonerClient
 
@@ -27,17 +26,20 @@ def execute_reasoner_job(file, dsl, output=None, proj_path="./"):
     """
     Submit asynchronous reasoner jobs to server by providing DSL file or string.
     """
-    config_path = os.path.join(proj_path, "kag_config.cfg")
+    config_path = os.path.join(proj_path, "kag_config.yaml")
     if not Path(config_path).exists():
         # find *.cfg file
-        cfg_files = list(Path(proj_path).glob("*.cfg"))
+        cfg_files = list(Path(proj_path).glob("*.yaml"))
         if len(cfg_files) == 0:
-            click.secho("ERROR: No .cfg file found.", fg="bright_red")
+            click.secho("ERROR: No .yaml file found.", fg="bright_red")
             sys.exit()
         config_path = cfg_files[0]
-    init_kag_config(config_path)
-    host_addr = os.getenv("KAG_PROJECT_ADDR", "http://127.0.0.1:8887")
-    project_id = os.getenv("KAG_PROJECT_ID")
+    config = yaml.safe_load(Path(config_path).read_text())
+    project_config = config.get("project", {})
+
+    host_addr = project_config.get("host_addr", "http://127.0.0.1:8887")
+    project_id = project_config.get("id", None)
+
     if not project_id:
         click.secho(
             "ERROR: Reasoner must be executed with SPG Server. Need assign proj_path",
