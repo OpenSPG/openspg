@@ -10,6 +10,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 import json
+import os
 
 from knext.common.base.client import Client
 from knext.common.rest import Configuration, ApiClient
@@ -26,7 +27,7 @@ class ProjectClient(Client):
         )
 
     def get_config(self, project_id: str):
-        project = self.get(id=int(project_id))
+        project = self.get(id=int(project_id or os.getenv("KAG_PROJECT_ID")))
         if not project:
             return {}
         config = project.config
@@ -66,3 +67,10 @@ class ProjectClient(Client):
             project_create_request=project_create_request
         )
         return project
+
+    def get_all(self):
+        project_list = {}
+        projects = self._rest_client.project_get()
+        for project in projects:
+            project_list[project.namespace] = project.id
+        return project_list

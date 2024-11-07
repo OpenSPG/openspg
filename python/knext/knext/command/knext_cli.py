@@ -17,6 +17,7 @@ from knext.command.sub_command.project import (
     create_project,
     restore_project,
     update_project,
+    list_project,
 )
 from knext.command.sub_command.reasoner import execute_reasoner_job
 from knext.command.sub_command.schema import commit_schema
@@ -50,6 +51,7 @@ def project() -> None:
 project.command("create")(create_project)
 project.command("restore")(restore_project)
 project.command("update")(update_project)
+project.command("list")(list_project)
 
 
 @_main.group()

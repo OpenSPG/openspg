@@ -79,7 +79,7 @@ class Configuration(object):
         discard_unknown_keys=False,
     ):
         """Constructor"""
-        self.host = host or env.host_addr
+        self.host = host or os.getenv("KAG_PROJECT_HOST_ADDR") or env.host_addr
         """Default Base url
         """
         self.temp_folder_path = None

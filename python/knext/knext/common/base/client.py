@@ -43,6 +43,10 @@ class Client(ABC):
         self._host_addr = host_addr or env.host_addr
         # self._project_id = project_id or env.id
 
+    @property
+    def _project_id(self):
+        return env.id
+
     @staticmethod
     def serialize(obj):
         """

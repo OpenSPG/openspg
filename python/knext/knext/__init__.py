@@ -11,4 +11,4 @@
 
 
 __package_name__ = "openspg-knext"
-__version__ = "0.5.2-beta2"
+__version__ = "0.6-beta2"

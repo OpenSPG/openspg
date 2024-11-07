@@ -18,6 +18,8 @@ from typing import Union, Optional
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_HOST_ADDR = "http://127.0.0.1:8887"
+
 
 class Environment:
     _instance = None
@@ -57,6 +59,8 @@ class Environment:
 
     @property
     def id(self):
+        if os.getenv("KAG_PROJECT_ID"):
+            return os.getenv("KAG_PROJECT_ID")
         id = self.project_config.get("id", None)
         if id is None:
             raise Exception(
@@ -70,6 +74,8 @@ class Environment:
 
     @property
     def namespace(self):
+        if os.getenv("KAG_PROJECT_NAMESPACE"):
+            return os.getenv("KAG_PROJECT_NAMESPACE")
         namespace = self.project_config.get("namespace", None)
         if namespace is None:
             raise Exception("project namespace is not defined")
@@ -81,6 +87,8 @@ class Environment:
 
     @property
     def host_addr(self):
+        if os.getenv("KAG_PROJECT_HOST_ADDR"):
+            return os.getenv("KAG_PROJECT_HOST_ADDR")
         host_addr = self.project_config.get("host_addr", None)
         if host_addr is None:
             raise Exception("project host_addr is not defined")
@@ -91,7 +99,10 @@ class Environment:
         Get knext config file as a ConfigParser.
         """
         local_cfg_path = self._closest_config()
-        local_cfg = yaml.safe_load(Path(local_cfg_path).read_text())
+        try:
+            local_cfg = yaml.safe_load(Path(local_cfg_path).read_text())
+        except:
+            return {}
 
         projdir = ""
         if local_cfg_path:

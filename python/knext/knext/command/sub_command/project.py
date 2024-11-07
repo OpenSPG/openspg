@@ -22,7 +22,7 @@ import click
 from knext.common.utils import copytree, copyfile
 from knext.project.client import ProjectClient
 
-from knext.common.env import env
+from knext.common.env import env, DEFAULT_HOST_ADDR
 from shutil import copy2
 
 
@@ -63,9 +63,6 @@ def _render_template(namespace: str, tmpl: str, **kwargs):
     config_file_path = project_dir.resolve() / "kag_config.yaml"
     with open(config_file_path, "w") as config_file:
         yaml.safe_dump(config, config_file)
-    delete_cfg = kwargs.get("delete_cfg", False)
-    if delete_cfg:
-        os.remove(config_path)
     return project_dir
 
 
@@ -162,7 +159,11 @@ def create_project(
         delete_cfg=delete_cfg,
     )
 
-    update_project(proj_path=project_dir)
+    config = yaml.safe_load((Path(project_dir) / "kag_config.yaml").read_text())
+    client.update(id=project_id, config=str(config))
+
+    if delete_cfg:
+        os.remove(env.config_path)
 
     click.secho(
         f"Project with namespace [{namespace}] was successfully created in {project_dir.resolve()} \n"
@@ -210,3 +211,26 @@ def update_project(proj_path):
         f"Project [{env.name}] with namespace [{env.namespace}] was successfully updated from [{proj_path}].",
         fg="bright_green",
     )
+
+
+def list_project():
+    client = ProjectClient(
+        host_addr=env.host_addr
+        or os.getenv("KAG_PROJECT_HOST_ADDR")
+        or DEFAULT_HOST_ADDR
+    )
+    projects = client.get_all()
+
+    headers = ["Project Name", "Project ID"]
+
+    click.echo(click.style(f"{' | '.join(headers)}", fg="bright_green", bold=True))
+    click.echo(
+        click.style(
+            f"{'-' * (len(headers[0]) + len(headers[1]) + 3)}", fg="bright_green"
+        )
+    )
+
+    for project_name, project_id in projects.items():
+        click.echo(
+            click.style(f"{project_name:<20} | {project_id:<10}", fg="bright_green")
+        )
