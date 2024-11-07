@@ -202,11 +202,11 @@ def restore_project(host_addr, proj_path):
 @click.option("--proj_path", help="Path of config.", default=None)
 def update_project(proj_path):
     if not proj_path:
-        proj_path = env.proj_path
+        proj_path = env.project_path
     client = ProjectClient(host_addr=env.host_addr)
 
     client.update(id=env.id, config=str(env.config))
     click.secho(
-        f"Project [{env.project_name}] with namespace [{env.namespace}] was successfully updated from [{proj_path}].",
+        f"Project [{env.name}] with namespace [{env.namespace}] was successfully updated from [{proj_path}].",
         fg="bright_green",
     )
