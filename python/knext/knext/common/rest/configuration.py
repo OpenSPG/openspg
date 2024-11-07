@@ -34,6 +34,7 @@ import yaml
 import six
 import urllib3
 from six.moves import http_client as httplib
+from knext.common.env import env
 
 
 class Configuration(object):
@@ -78,11 +79,7 @@ class Configuration(object):
         discard_unknown_keys=False,
     ):
         """Constructor"""
-        from knext.common import env
-
-        self.host = (
-            host or os.environ.get("KAG_PROJECT_HOST_ADDR") or env.LOCAL_SCHEMA_URL
-        )
+        self.host = host or env.host_addr
         """Default Base url
         """
         self.temp_folder_path = None

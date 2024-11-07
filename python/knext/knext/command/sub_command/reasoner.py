@@ -16,6 +16,7 @@ import yaml
 import click
 
 from knext.reasoner.client import ReasonerClient
+from knext.common.env import env
 
 
 @click.option("--file", help="Path of DSL file.")
@@ -26,27 +27,7 @@ def execute_reasoner_job(file, dsl, output=None, proj_path="./"):
     """
     Submit asynchronous reasoner jobs to server by providing DSL file or string.
     """
-    config_path = os.path.join(proj_path, "kag_config.yaml")
-    if not Path(config_path).exists():
-        # find *.cfg file
-        cfg_files = list(Path(proj_path).glob("*.yaml"))
-        if len(cfg_files) == 0:
-            click.secho("ERROR: No .yaml file found.", fg="bright_red")
-            sys.exit()
-        config_path = cfg_files[0]
-    config = yaml.safe_load(Path(config_path).read_text())
-    project_config = config.get("project", {})
-
-    host_addr = project_config.get("host_addr", "http://127.0.0.1:8887")
-    project_id = project_config.get("id", None)
-
-    if not project_id:
-        click.secho(
-            "ERROR: Reasoner must be executed with SPG Server. Need assign proj_path",
-            fg="bright_red",
-        )
-        sys.exit()
-    client = ReasonerClient(host_addr=host_addr, project_id=int(project_id))
+    client = ReasonerClient(host_addr=env.host_addr, project_id=int(env.project_id))
     if file and not dsl:
         with open(file, "r") as f:
             dsl_content = f.read()
