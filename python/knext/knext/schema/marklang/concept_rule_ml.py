@@ -191,12 +191,12 @@ class SPGConceptRuleMarkLang:
             if self.is_reasoning:
                 predicate_name = self.predicate
                 subject_type = (
-                    self.src_concept[0] if len(self.src_concept) > 0 else None
+                    f"{self.namespace}.{self.src_concept[0]}" if len(self.src_concept) > 0 else None
                 )
                 subject_name = (
                     self.src_concept[1] if len(self.src_concept) > 0 else None
                 )
-                object_type = self.dst_concept[0] if len(self.dst_concept) > 0 else None
+                object_type = f"{self.namespace}.{self.dst_concept[0]}" if len(self.dst_concept) > 0 else None
                 object_name = self.dst_concept[1] if len(self.dst_concept) > 0 else None
             elif self.dst_concept[0] is not None:
                 predicate_name = "leadTo"
