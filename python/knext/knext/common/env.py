@@ -101,9 +101,8 @@ class Environment:
         local_cfg_path = self._closest_config()
         try:
             local_cfg = yaml.safe_load(Path(local_cfg_path).read_text())
-        except:
-            return {}
-
+        except Exception as e:
+            raise Exception(f"failed to load config from {local_cfg_path}, error: {e}")
         projdir = ""
         if local_cfg_path:
             projdir = str(Path(local_cfg_path).parent)
