@@ -24,11 +24,9 @@ import com.antgroup.kg.reasoner.thinker.logic.graph.Node;
 import com.antgroup.openspg.reasoner.runner.local.thinker.LocalThinkerMain;
 import com.antgroup.openspg.reasoner.runner.local.thinker.OpenSPGLogicCatalog;
 import com.antgroup.openspg.reasoner.runner.local.thinker.ThinkerParams;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -52,7 +50,10 @@ public class ThinkerRunner {
     Map<String, Object> params = new HashMap<>();
     for (Map.Entry<String, Object> entry : task.getParams().entrySet()) {
       if (entry.getKey().equals("entities")) {
-        List<Map<String, String>> entities = JSON.parseObject(String.valueOf(entry.getValue()), new TypeReference<List<Map<String, String>>>() {});
+        List<Map<String, String>> entities =
+            JSON.parseObject(
+                String.valueOf(entry.getValue()),
+                new TypeReference<List<Map<String, String>>>() {});
         for (Map<String, String> map : entities) {
           Entity entity = new Entity(map.get("id"), map.get("type"));
           params.put(entity.toString(), entity);
