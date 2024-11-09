@@ -10,6 +10,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 import re
+import json
 import os
 import sys
 from configparser import ConfigParser
@@ -160,7 +161,7 @@ def create_project(
     )
 
     config = yaml.safe_load((Path(project_dir) / "kag_config.yaml").read_text())
-    client.update(id=project_id, config=str(config))
+    client.update(id=project_id, config=json.dumps(config))
 
     if delete_cfg:
         os.remove(env.config_path)
@@ -206,7 +207,7 @@ def update_project(proj_path):
         proj_path = env.project_path
     client = ProjectClient(host_addr=env.host_addr)
 
-    client.update(id=env.id, config=str(env.config))
+    client.update(id=env.id, config=json.dumps(env.config))
     click.secho(
         f"Project [{env.name}] with namespace [{env.namespace}] was successfully updated from [{proj_path}].",
         fg="bright_green",
