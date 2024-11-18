@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -36,10 +36,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import scala.Tuple2;
 
 @Slf4j(topic = "userlogger")
@@ -51,23 +54,91 @@ public class UdfMngImpl implements UdfMng {
 
   private static volatile UdfMngImpl instance = null;
 
+  public static ThreadLocal<Map<String, Object>> sceneConfigMap =
+      ThreadLocal.withInitial(HashMap::new);
+
   /** 单例 */
   public static UdfMngImpl getInstance() {
     if (null == instance) {
       synchronized (UdfMngImpl.class) {
         if (null == instance) {
-          instance = createInstance();
+          instance =
+              createInstance(
+                  Lists.newArrayList(KGDSL_UDF_PACKAGE_PATH),
+                  Lists.newArrayList(KGDSL_UDAF_PACKAGE_PATH),
+                  Lists.newArrayList(KGDSL_UDTF_PACKAGE_PATH),
+                  null,
+                  null,
+                  null);
         }
       }
     }
     return instance;
   }
 
-  private static UdfMngImpl createInstance() {
+  /** 多路径 */
+  public static UdfMngImpl getInstance(
+      List<String> udfPackagePaths,
+      List<String> udafPackagePaths,
+      List<String> udtfPackagePaths,
+      List<UdfMeta> udfMetaList,
+      List<UdafMeta> udafMetaList,
+      List<UdtfMeta> udtfMetaList) {
+    if (null == instance) {
+      synchronized (UdfMngImpl.class) {
+        if (null == instance) {
+          List<String> _udfPackagePaths = Lists.newArrayList(KGDSL_UDF_PACKAGE_PATH);
+          if (CollectionUtils.isNotEmpty(udfPackagePaths)) {
+            _udfPackagePaths.addAll(udfPackagePaths);
+          }
+          List<String> _udafPackagePaths = Lists.newArrayList(KGDSL_UDAF_PACKAGE_PATH);
+          if (CollectionUtils.isNotEmpty(udafPackagePaths)) {
+            _udafPackagePaths.addAll(udafPackagePaths);
+          }
+          List<String> _udtfPackagePaths = Lists.newArrayList(KGDSL_UDTF_PACKAGE_PATH);
+          if (CollectionUtils.isNotEmpty(udtfPackagePaths)) {
+            _udtfPackagePaths.addAll(udtfPackagePaths);
+          }
+          instance =
+              createInstance(
+                  _udfPackagePaths,
+                  _udafPackagePaths,
+                  _udtfPackagePaths,
+                  udfMetaList,
+                  udafMetaList,
+                  udtfMetaList);
+        }
+      }
+    }
+    return instance;
+  }
+
+  private static UdfMngImpl createInstance(
+      List<String> udfPackagePaths,
+      List<String> udafPackagePaths,
+      List<String> udtfPackagePaths,
+      List<UdfMeta> udfMetaList,
+      List<UdafMeta> udafMetaList,
+      List<UdtfMeta> udtfMetaList) {
     UdfMngImpl udfMng = new UdfMngImpl();
-    udfMng.getAllUdf();
-    udfMng.getAllUdaf();
-    udfMng.getAllUdtf();
+    for (String packagePath : udfPackagePaths) {
+      udfMng.getUdfInPath(packagePath);
+    }
+    for (String packagePath : udafPackagePaths) {
+      udfMng.getUdafInPath(packagePath);
+    }
+    for (String packagePath : udtfPackagePaths) {
+      udfMng.getUdtfInPath(packagePath);
+    }
+    if (CollectionUtils.isNotEmpty(udfMetaList)) {
+      udfMetaList.forEach(udfMng::addUdfMeta);
+    }
+    if (CollectionUtils.isNotEmpty(udafMetaList)) {
+      udafMetaList.forEach(udfMng::addUdafMeta);
+    }
+    if (CollectionUtils.isNotEmpty(udtfMetaList)) {
+      udtfMetaList.forEach(udfMng::addUdtfMeta);
+    }
     udfMng.udfCheck();
     return udfMng;
   }
@@ -77,8 +148,8 @@ public class UdfMngImpl implements UdfMng {
   private static final String KGDSL_UDF_PACKAGE_PATH =
       "com.antgroup.openspg.reasoner.udf.builtin.udf";
 
-  private void getAllUdf() {
-    FastClasspathScanner classpathScanner = new FastClasspathScanner(KGDSL_UDF_PACKAGE_PATH);
+  private void getUdfInPath(String packagePath) {
+    FastClasspathScanner classpathScanner = new FastClasspathScanner(packagePath);
     classpathScanner.addClassLoader(getClass().getClassLoader());
     classpathScanner
         .matchAllStandardClasses(
@@ -130,8 +201,8 @@ public class UdfMngImpl implements UdfMng {
   private static final String KGDSL_UDAF_PACKAGE_PATH =
       "com.antgroup.openspg.reasoner.udf.builtin.udaf";
 
-  private void getAllUdaf() {
-    FastClasspathScanner classpathScanner = new FastClasspathScanner(KGDSL_UDAF_PACKAGE_PATH);
+  private void getUdafInPath(String packagePath) {
+    FastClasspathScanner classpathScanner = new FastClasspathScanner(packagePath);
     classpathScanner.addClassLoader(getClass().getClassLoader());
     classpathScanner
         .matchClassesImplementing(
@@ -158,8 +229,8 @@ public class UdfMngImpl implements UdfMng {
   private static final String KGDSL_UDTF_PACKAGE_PATH =
       "com.antgroup.openspg.reasoner.udf.builtin.udtf";
 
-  private void getAllUdtf() {
-    FastClasspathScanner classpathScanner = new FastClasspathScanner(KGDSL_UDTF_PACKAGE_PATH);
+  private void getUdtfInPath(String packagePath) {
+    FastClasspathScanner classpathScanner = new FastClasspathScanner(packagePath);
     classpathScanner.addClassLoader(getClass().getClassLoader());
     classpathScanner
         .matchClassesWithAnnotation(
@@ -190,37 +261,52 @@ public class UdfMngImpl implements UdfMng {
   }
 
   private void addUdfMeta(IUdfMeta udfMeta) {
-    String name = udfMeta.getName();
-    Map<String, IUdfMeta> metaMap =
-        udfMetaMap.computeIfAbsent(UdfName.from(name), k -> new HashMap<>());
-    String paramKeyString = UdfUtils.getTypeKeyString(udfMeta.getParamTypeList(), "(", ")");
-    if (metaMap.containsKey(paramKeyString)) {
-      throw new UdfExistsException("duplicated udf " + udfMeta, null);
+    Set<UdfName> nameSet = new HashSet<>();
+    nameSet.add(UdfName.from(udfMeta.getName()));
+    for (String compatibleName : udfMeta.getCompatibleNames()) {
+      nameSet.add(UdfName.from(compatibleName));
     }
-    metaMap.put(paramKeyString, udfMeta);
+    for (UdfName udfName : nameSet) {
+      Map<String, IUdfMeta> metaMap = udfMetaMap.computeIfAbsent(udfName, k -> new HashMap<>());
+      String paramKeyString = UdfUtils.getTypeKeyString(udfMeta.getParamTypeList(), "(", ")");
+      if (metaMap.containsKey(paramKeyString)) {
+        throw new UdfExistsException("duplicated udf " + udfMeta, null);
+      }
+      metaMap.put(paramKeyString, udfMeta);
+    }
   }
 
   private void addUdafMeta(UdafMeta udafMeta) {
-    String name = udafMeta.getName();
-    Map<String, UdafMeta> metaMap =
-        udafMetaMap.computeIfAbsent(UdfName.from(name), k -> new HashMap<>());
-    String paramKeyString =
-        UdfUtils.getTypeKeyString(Lists.newArrayList(udafMeta.getRowDataType()), "(", ")");
-    if (metaMap.containsKey(paramKeyString)) {
-      throw new UdfExistsException("duplicated udaf " + udafMeta, null);
+    Set<UdfName> nameSet = new HashSet<>();
+    nameSet.add(UdfName.from(udafMeta.getName()));
+    for (String compatibleName : udafMeta.getCompatibleNames()) {
+      nameSet.add(UdfName.from(compatibleName));
     }
-    metaMap.put(paramKeyString, udafMeta);
+    for (UdfName udfName : nameSet) {
+      Map<String, UdafMeta> metaMap = udafMetaMap.computeIfAbsent(udfName, k -> new HashMap<>());
+      String paramKeyString =
+          UdfUtils.getTypeKeyString(Lists.newArrayList(udafMeta.getRowDataType()), "(", ")");
+      if (metaMap.containsKey(paramKeyString)) {
+        throw new UdfExistsException("duplicated udaf " + udafMeta, null);
+      }
+      metaMap.put(paramKeyString, udafMeta);
+    }
   }
 
   private void addUdtfMeta(UdtfMeta udtfMeta) {
-    String name = udtfMeta.getName();
-    Map<String, UdtfMeta> metaMap =
-        udtfMetaMap.computeIfAbsent(UdfName.from(name), k -> new HashMap<>());
-    String paramKeyString = UdfUtils.getTypeKeyString(udtfMeta.getRowDataTypes(), "(", ")");
-    if (metaMap.containsKey(paramKeyString)) {
-      throw new UdfExistsException("duplicated udaf " + udtfMeta, null);
+    Set<UdfName> nameSet = new HashSet<>();
+    nameSet.add(UdfName.from(udtfMeta.getName()));
+    for (String compatibleName : udtfMeta.getCompatibleNames()) {
+      nameSet.add(UdfName.from(compatibleName));
     }
-    metaMap.put(paramKeyString, udtfMeta);
+    for (UdfName udfName : nameSet) {
+      Map<String, UdtfMeta> metaMap = udtfMetaMap.computeIfAbsent(udfName, k -> new HashMap<>());
+      String paramKeyString = UdfUtils.getTypeKeyString(udtfMeta.getRowDataTypes(), "(", ")");
+      if (metaMap.containsKey(paramKeyString)) {
+        throw new UdfExistsException("duplicated udaf " + udtfMeta, null);
+      }
+      metaMap.put(paramKeyString, udtfMeta);
+    }
   }
 
   @Override
@@ -240,6 +326,15 @@ public class UdfMngImpl implements UdfMng {
   @Override
   public UdafMeta getUdafMeta(String name, KgType rowDataTypes) {
     return getMeta(name, Lists.newArrayList(rowDataTypes), this.udafMetaMap);
+  }
+
+  @Override
+  public List<UdafMeta> getUdafMetas(String name) {
+    Map<String, UdafMeta> subMetaMap = this.udafMetaMap.get(UdfName.from(name));
+    if (null == subMetaMap) {
+      return null;
+    }
+    return Lists.newArrayList(subMetaMap.values());
   }
 
   @Override

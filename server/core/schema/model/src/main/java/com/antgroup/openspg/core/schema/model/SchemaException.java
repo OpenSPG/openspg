@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ public class SchemaException extends OpenSPGException {
     super(cause, true, true, messagePattern, args);
   }
 
-  private SchemaException(String messagePattern, Object... args) {
+  public SchemaException(String messagePattern, Object... args) {
     this(null, messagePattern, args);
   }
 
@@ -60,5 +60,11 @@ public class SchemaException extends OpenSPGException {
 
   public static SchemaException relationNotExist(String relationName) {
     return new SchemaException("there is no relation with name={}", relationName);
+  }
+
+  public static SchemaException existReference(String spgTypeName) {
+    return new SchemaException(
+        "{} is referenced by another project, so that it cannot be deleted until the reference is released",
+        spgTypeName);
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.builder.core.logical;
 
-import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
 import com.antgroup.openspg.builder.model.pipeline.config.GraphStoreSinkNodeConfig;
+import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
 
-public class GraphStoreSinkNode extends BaseNode<GraphStoreSinkNodeConfig> {
+public class GraphStoreSinkNode extends BaseLogicalNode<GraphStoreSinkNodeConfig> {
 
   public GraphStoreSinkNode(String id, String name, GraphStoreSinkNodeConfig nodeConfig) {
     super(id, name, NodeTypeEnum.GRAPH_SINK, nodeConfig);

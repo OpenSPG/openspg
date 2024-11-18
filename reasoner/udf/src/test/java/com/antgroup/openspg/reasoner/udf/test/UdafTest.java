@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -107,5 +107,22 @@ public class UdafTest {
     aggregateFunctionOnWorker1.merge(aggregateFunctionOnWorker2);
 
     Assert.assertEquals(111L, aggregateFunctionOnWorker1.evaluate());
+  }
+
+  @Test
+  public void testAggCountDistinct() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    UdafMeta udafMeta = mng.getUdafMeta("count_distinct", KTObject$.MODULE$);
+    BaseUdaf aggregateFunctionOnWorker1 = udafMeta.createAggregateFunction();
+    aggregateFunctionOnWorker1.initialize();
+    aggregateFunctionOnWorker1.update(1);
+    aggregateFunctionOnWorker1.update(2);
+    aggregateFunctionOnWorker1.update(2);
+    BaseUdaf aggregateFunctionOnWorker2 = udafMeta.createAggregateFunction();
+    aggregateFunctionOnWorker2.initialize();
+    aggregateFunctionOnWorker2.update(2);
+    aggregateFunctionOnWorker2.update(3);
+    aggregateFunctionOnWorker1.merge(aggregateFunctionOnWorker2);
+    Assert.assertEquals(3L, aggregateFunctionOnWorker1.evaluate());
   }
 }

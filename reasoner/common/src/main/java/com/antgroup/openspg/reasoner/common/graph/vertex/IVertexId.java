@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.reasoner.common.graph.vertex;
 
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexBizId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexId;
 import java.io.Serializable;
 
@@ -22,7 +23,7 @@ public interface IVertexId extends Serializable, Comparable<IVertexId> {
   }
 
   static IVertexId from(String bizId, String type) {
-    return new VertexId(bizId, type);
+    return new VertexBizId(bizId, type);
   }
 
   static IVertexId from(byte[] bytes) {

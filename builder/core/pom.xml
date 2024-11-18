@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2023 Ant Group CO., Ltd.
+  ~ Copyright 2023 OpenSPG Authors
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
   ~ in compliance with the License. You may obtain a copy of the License at
@@ -24,6 +24,14 @@
   <artifactId>builder-core</artifactId>
   <dependencies>
     <dependency>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-local-runner</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.reasoner</groupId>
+      <artifactId>reasoner-cloudext-warehouse</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>api-http-client</artifactId>
     </dependency>
@@ -33,22 +41,39 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.cloudext</groupId>
-      <artifactId>cloudext-interface-table-store</artifactId>
+      <artifactId>cloudext-impl-graph-store-tugraph</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-graph-store-neo4j</artifactId>
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.cloudext</groupId>
       <artifactId>cloudext-interface-search-engine</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.antgroup.kg.reasoner</groupId>
-      <artifactId>local</artifactId>
-      <version>${kgreasoner-version}</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/../../server/lib/spgreasoner-local-0.0.1.jar</systemPath>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-search-engine-elasticsearch</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-search-engine-neo4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-interface-cache</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-cache-redis</artifactId>
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>core-schema-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.builder</groupId>
+      <artifactId>builder-model</artifactId>
     </dependency>
     <dependency>
       <groupId>org.scala-lang</groupId>
@@ -77,10 +102,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
     </dependency>
   </dependencies>
 </project>

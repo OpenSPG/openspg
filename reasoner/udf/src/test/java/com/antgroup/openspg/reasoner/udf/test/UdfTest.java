@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,6 +13,8 @@
 
 package com.antgroup.openspg.reasoner.udf.test;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.reasoner.common.types.KTArray;
 import com.antgroup.openspg.reasoner.common.types.KTBoolean$;
 import com.antgroup.openspg.reasoner.common.types.KTDouble$;
@@ -51,6 +53,80 @@ public class UdfTest {
   @Before
   public void init() {
     DateUtils.timeZone = TimeZone.getTimeZone("Asia/Shanghai");
+  }
+
+  @Test
+  public void testReMatch() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    IUdfMeta udfMeta =
+        mng.getUdfMeta("regex_match", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
+    Object rst =
+        udfMeta.invoke("Hello, my email address is example@example.com", "\\b\\w+@\\w+\\.\\w+\\b");
+    Assert.assertEquals(rst, "example@example.com");
+  }
+
+  @Test
+  public void testJsonGet() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    String params = "{\"v\":\"123\"}";
+    IUdfMeta udfMeta =
+        mng.getUdfMeta("json_get", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
+    Object rst = udfMeta.invoke(params, "$.v");
+    Assert.assertEquals("123", rst);
+  }
+
+  @Test
+  public void testJsonGet2() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    String params = "[{\"v\":\"123\"}, {\"k\":\"456\"}]";
+    IUdfMeta udfMeta =
+        mng.getUdfMeta("json_get", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
+    Object rst = udfMeta.invoke(params, "$.k");
+    Assert.assertEquals(JSONArray.parse("[\"456\"]"), rst);
+  }
+
+  @Test
+  public void testJsonGet3() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    String params =
+        "[{\"v\": {\"v1\": \"111\", \"v2\": \"222\"}}, {\"k\": {\"k1\": \"333\", \"k2\": \"444\"}}]";
+    IUdfMeta udfMeta =
+        mng.getUdfMeta("json_get", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
+    Object rst = udfMeta.invoke(params, "$.k.k2");
+    Assert.assertEquals(JSONArray.parse("[\"444\"]"), rst);
+  }
+
+  @Test
+  public void testJsonGet4() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    String params =
+        "[{\"案由\": \"打架斗殴\", \"日期\": \"20240101\"}, {\"案由\": \"制造毒品\", \"日期\": \"20240202\"}]";
+    IUdfMeta udfMeta =
+        mng.getUdfMeta("json_get", Lists.newArrayList(KTString$.MODULE$, KTString$.MODULE$));
+    Object rst = udfMeta.invoke(params, "$[案由 rlike '(.*)毒品(.*)'].案由");
+    Assert.assertEquals(JSONArray.parse("[\"制造毒品\"]"), rst);
+    rst = udfMeta.invoke(params, null);
+    Assert.assertEquals("", rst);
+  }
+
+  @Test
+  public void testRdfProperty() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    String params =
+        "{\n"
+            + "  \"B\": {\n"
+            + "    \"extInfo\": \"gen_pic_gamble_hitsp_flag=1\",\n"
+            + "    \"lbs\": \"{'v':'123'}\"\n"
+            + "  }\n"
+            + "}";
+    ;
+    Map<String, Object> paramsMap = JSONObject.parseObject(params, Map.class);
+    paramsMap.put("basicInfo", "{\"v\":\"123\"}");
+    IUdfMeta udfMeta =
+        mng.getUdfMeta(
+            "get_rdf_property", Lists.newArrayList(KTObject$.MODULE$, KTString$.MODULE$));
+    Object rst = udfMeta.invoke(paramsMap, "v");
+    Assert.assertEquals("123", rst);
   }
 
   @Test
@@ -102,6 +178,10 @@ public class UdfTest {
     Assert.assertEquals(rst, 60L);
     rst = udfMeta.invoke("60.1", "float");
     Assert.assertEquals(rst, 60.1);
+    rst = udfMeta.invoke("3.3e7", "long");
+    Assert.assertEquals(rst, 33000000L);
+    rst = udfMeta.invoke("1.234E2", "double");
+    Assert.assertEquals(rst, 123.4);
     try {
       udfMeta.invoke("abc", "float");
       Assert.assertTrue(false);
@@ -772,5 +852,14 @@ public class UdfTest {
     randomMeta = mng.getUdfMeta("randomLong", Lists.newArrayList());
     value = randomMeta.invoke();
     Assert.assertTrue(value instanceof Long);
+  }
+
+  @Test
+  public void testToTimeStamp() {
+    UdfMng mng = UdfMngFactory.getUdfMng();
+    IUdfMeta toTimestampUdf = mng.getUdfMeta("to_timestamp", Lists.newArrayList(KTLong$.MODULE$));
+    Assert.assertTrue(toTimestampUdf.getCompatibleNames().contains("ToTimestamp"));
+    System.out.println(toTimestampUdf.invoke(1688545587325L));
+    Assert.assertEquals(toTimestampUdf.invoke(1688545587325L), "2023-07-05 16:26:27");
   }
 }

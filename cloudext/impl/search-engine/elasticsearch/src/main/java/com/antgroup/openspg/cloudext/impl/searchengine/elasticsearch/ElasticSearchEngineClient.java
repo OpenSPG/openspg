@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -26,14 +26,14 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.cmd.IdxSchemaAlterC
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchema;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.SearchRequest;
-import com.antgroup.openspg.server.api.facade.ApiConstants;
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
 import com.dtflys.forest.Forest;
 import com.dtflys.forest.config.ForestConfiguration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 public class ElasticSearchEngineClient extends BaseIdxSearchEngineClient {
@@ -43,14 +43,13 @@ public class ElasticSearchEngineClient extends BaseIdxSearchEngineClient {
 
   @Getter private final IdxNameConvertor idxNameConvertor;
 
-  @Getter private final SearchEngineConnectionInfo connInfo;
+  @Getter private final String connUrl;
 
-  public ElasticSearchEngineClient(
-      SearchEngineConnectionInfo connInfo, IdxNameConvertor idxNameConvertor) {
+  public ElasticSearchEngineClient(String connUrl, IdxNameConvertor idxNameConvertor) {
     this.idxNameConvertor = idxNameConvertor;
 
-    this.connInfo = connInfo;
-    initElasticSearchEngine(connInfo);
+    this.connUrl = connUrl;
+    initElasticSearchEngine(connUrl);
 
     elasticSearchIdxClient = Forest.client(ElasticSearchSchemaClient.class);
     elasticSearchDocClient = Forest.client(ElasticSearchRecordClient.class);
@@ -108,16 +107,15 @@ public class ElasticSearchEngineClient extends BaseIdxSearchEngineClient {
     return 0;
   }
 
-  private void initElasticSearchEngine(SearchEngineConnectionInfo connInfo) {
+  private void initElasticSearchEngine(String connInfo) {
     ForestConfiguration configuration = Forest.config();
 
-    String scheme = (String) connInfo.getNotNullParam(ApiConstants.SCHEME);
-    String host = (String) connInfo.getNotNullParam(ApiConstants.HOST);
-    Long port = Long.parseLong((String) connInfo.getNotNullParam(ApiConstants.PORT));
+    UriComponents uriComponents = UriComponentsBuilder.fromUriString(connInfo).build();
 
+    String scheme = uriComponents.getQueryParams().getFirst("scheme");
     configuration.setVariableValue(ElasticSearchConstants.SCHEME, scheme);
-    configuration.setVariableValue(ElasticSearchConstants.HOST, host);
-    configuration.setVariableValue(ElasticSearchConstants.PORT, port);
+    configuration.setVariableValue(ElasticSearchConstants.HOST, uriComponents.getHost());
+    configuration.setVariableValue(ElasticSearchConstants.PORT, uriComponents.getPort());
     configuration.setReadTimeout(30, TimeUnit.SECONDS);
     configuration.setLogEnabled(false);
     configuration.setBackendName("httpclient");

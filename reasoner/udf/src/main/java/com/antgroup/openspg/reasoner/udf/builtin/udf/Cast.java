@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.udf.builtin.udf;
 
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
+import java.math.BigDecimal;
 
 public class Cast {
   @UdfDefine(name = "cast_type", compatibleName = "Cast")
@@ -25,7 +26,7 @@ public class Cast {
     if ("long".equalsIgnoreCase(castType)
         || "bigint".equalsIgnoreCase(castType)
         || "int".equalsIgnoreCase(castType)) {
-      return Long.valueOf(opdata1);
+      return Long.valueOf(new BigDecimal(opdata1).longValueExact());
     } else if ("double".equalsIgnoreCase(castType) || "float".equalsIgnoreCase(castType)) {
       return Double.valueOf(opdata1);
     } else {

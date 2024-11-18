@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,9 +13,7 @@
 
 package com.antgroup.openspg.reasoner.udf.model;
 
-import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.exception.UnsupportedOperationException;
-import com.antgroup.openspg.reasoner.common.types.KTObject$;
 import com.antgroup.openspg.reasoner.common.types.KgType;
 import com.antgroup.openspg.reasoner.udf.utils.UdfUtils;
 import java.util.ArrayList;
@@ -92,7 +90,7 @@ public class RuntimeUdfMeta {
    */
   public Object invoke(Object... args) {
     IUdfMeta udfMeta = null;
-    List<KgType> inputParamTypeList = getParamTypeList(args);
+    List<KgType> inputParamTypeList = UdfUtils.getParamTypeList(args);
     List<List<KgType>> groupByParamNumList = this.udfParamQueryMap.get(inputParamTypeList.size());
     if (null != groupByParamNumList) {
       for (List<KgType> udfParamTypeList : groupByParamNumList) {
@@ -107,25 +105,6 @@ public class RuntimeUdfMeta {
           "unsupported udf " + this.name + ", args=" + Arrays.toString(args), null);
     }
     return udfMeta.invoke(args);
-  }
-
-  private List<KgType> getParamTypeList(Object... args) {
-    List<KgType> kgTypeList = new ArrayList<>(args.length);
-    for (Object arg : args) {
-      if (null == arg) {
-        kgTypeList.add(KTObject$.MODULE$);
-        continue;
-      }
-      String className = arg.getClass().getName();
-      if ("java.util.ArrayList".equals(className)) {
-        ArrayList list = (ArrayList) arg;
-        String memberType =
-            (list.isEmpty() || list.get(0) == null) ? "null" : list.get(0).getClass().getName();
-        className = "java.util.List<" + memberType + ">";
-      }
-      kgTypeList.add(Utils.javaType2KgType(className));
-    }
-    return kgTypeList;
   }
 
   @Override

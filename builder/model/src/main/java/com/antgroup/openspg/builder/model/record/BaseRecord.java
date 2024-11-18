@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,24 +14,5 @@
 package com.antgroup.openspg.builder.model.record;
 
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
-import java.util.Comparator;
 
-public abstract class BaseRecord extends BaseValObj {
-
-  public static final Comparator<BaseRecord> ADVANCED_RECORD_FIRST_COMPARATOR =
-      (o1, o2) -> {
-        if (o1 instanceof BaseAdvancedRecord) {
-          if (o2 instanceof BaseAdvancedRecord) {
-            return 0;
-          } else {
-            return -1;
-          }
-        } else {
-          if (o2 instanceof BaseAdvancedRecord) {
-            return 1;
-          } else {
-            return 0;
-          }
-        }
-      };
-}
+public abstract class BaseRecord extends BaseValObj {}

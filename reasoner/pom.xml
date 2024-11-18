@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2023 Ant Group CO., Ltd.
+  ~ Copyright 2023 OpenSPG Authors
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
   ~ in compliance with the License. You may obtain a copy of the License at
@@ -27,6 +27,15 @@
   <modules>
     <module>common</module>
     <module>udf</module>
+    <module>lube-api</module>
+    <module>lube-logical</module>
+    <module>lube-physical</module>
+    <module>warehouse/warehouse-common</module>
+    <module>warehouse/cloudext-warehouse</module>
+    <module>kgdsl-parser</module>
+    <module>runner/runner-common</module>
+    <module>runner/local-runner</module>
+    <module>catalog/openspg-catalog</module>
   </modules>
 
   <properties>
@@ -61,6 +70,51 @@
         <artifactId>reasoner-udf</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-lube-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-lube-logical</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-lube-physical</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-kgdsl-parser</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-runner-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-openspg-catalog</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-warehouse-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-cloudext-warehouse</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspg.reasoner</groupId>
+        <artifactId>reasoner-local-runner</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>org.antlr</groupId>
@@ -75,11 +129,6 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>1.7.25</version>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
         <version>1.7.25</version>
       </dependency>
       <dependency>
@@ -106,11 +155,6 @@
         <groupId>org.typelevel</groupId>
         <artifactId>cats-core_2.11</artifactId>
         <version>2.0.0</version>
-      </dependency>
-      <dependency>
-        <groupId>io.github.lukehutch</groupId>
-        <artifactId>fast-classpath-scanner</artifactId>
-        <version>2.21</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -142,7 +186,7 @@
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
-        <version>1.18.22</version>
+        <version>1.18.24</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>
@@ -175,115 +219,6 @@
         <version>${json4s.version}</version>
       </dependency>
 
-      <!-- kg state start -->
-      <dependency>
-        <groupId>com.antfin.aikg</groupId>
-        <artifactId>kgstate-reader</artifactId>
-        <version>${kgstate.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>jdk.tools</groupId>
-            <artifactId>jdk.tools</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.alibaba</groupId>
-            <artifactId>QLExpress</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.antfin.aikg</groupId>
-        <artifactId>kgstate-rt</artifactId>
-        <version>${kgstate.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>com.alipay.sofa.common</groupId>
-            <artifactId>sofa-common-tools</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.alipay.sofa.common.log</groupId>
-            <artifactId>sofa-middleware-log</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.aliyun.odps</groupId>
-            <artifactId>odps-sdk-mapred</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.taobao.diamond</groupId>
-            <artifactId>diamond-client</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.alipay.sofa</groupId>
-        <artifactId>sofa-security-util</artifactId>
-        <version>1.0.3</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antfin.aikg</groupId>
-        <artifactId>kgstate-tool</artifactId>
-        <version>${kgstate.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>jdk.tools</groupId>
-            <artifactId>jdk.tools</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4-runtime</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr4</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>com.antfin.aikg</groupId>
-        <artifactId>kgstate-meta</artifactId>
-        <version>${kgstate.version}</version>
-      </dependency>
-      <!-- kg state end-->
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-text</artifactId>
@@ -301,6 +236,12 @@
         <artifactId>hadoop-common</artifactId>
         <version>${hadoop.version}</version>
         <scope>provided</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -329,6 +270,12 @@
         <groupId>com.aliyun.odps</groupId>
         <artifactId>odps-sdk-commons</artifactId>
         <version>${odps.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>3.8.0</version>
+        <scope>provided</scope>
       </dependency>
 
       <!-- parquet start -->
@@ -377,109 +324,42 @@
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase-server</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.arrow</groupId>
+            <artifactId>arrow-vector</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.netty</groupId>
+            <artifactId>netty</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-mapreduce</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-yarn-server-resourcemanager</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
       <!-- hive end -->
 
-      <!-- cloud sdk-->
+      <!-- sls start -->
       <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>cloud-sdk-common</artifactId>
-        <version>1.2.1.20221206</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-          </exclusion>
-        </exclusions>
+        <groupId>com.aliyun.openservices</groupId>
+        <artifactId>log-loghub-producer</artifactId>
+        <version>0.1.4</version>
       </dependency>
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>logservice-cloud-sdk</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>logservice-cloud-driver-sls</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>logservice-cloud-driver-kafka</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
-      </dependency>
-      <!-- objectstorage sdk层依赖，定义接口和模型 -->
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>object-storage-cloud-sdk</artifactId>
-        <version>2.0.0.20221213-SNAPSHOT</version>
-      </dependency>
-      <!-- objectstorage oss driver层依赖，接口实现 -->
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>object-storage-cloud-driver-oss</artifactId>
-        <version>2.0.0.20221115-SNAPSHOT</version>
-      </dependency>
-      <!-- objectstorage minio driver层依赖，接口实现 -->
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>object-storage-cloud-driver-minio</artifactId>
-        <version>2.0.0.20221115-SNAPSHOT</version>
-      </dependency>
-      <!-- objectstorage s3 driver层依赖，接口实现 -->
-      <dependency>
-        <groupId>com.alipay.cloudsdk</groupId>
-        <artifactId>object-storage-cloud-driver-s3</artifactId>
-        <version>2.0.0.20221213-SNAPSHOT</version>
-        <exclusions>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport-classes-epoll</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-common</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec-http2</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <!-- cloud sdk end-->
+      <!-- sls end -->
 
-      <!-- msg broker start -->
-      <dependency>
-        <groupId>com.antgroup.kg</groupId>
-        <artifactId>msg-open-interface</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>com.antgroup.kg</groupId>
-        <artifactId>msg-impl</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-      </dependency>
-      <!-- msg broker end -->
       <dependency>
         <groupId>com.opencsv</groupId>
         <artifactId>opencsv</artifactId>
@@ -660,7 +540,7 @@
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
-              <version>1.18.16</version>
+              <version>1.18.24</version>
             </path>
           </annotationProcessorPaths>
           <source>${java.version}</source>

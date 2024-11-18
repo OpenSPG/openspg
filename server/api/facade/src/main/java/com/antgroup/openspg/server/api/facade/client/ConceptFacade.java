@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,13 +13,16 @@
 
 package com.antgroup.openspg.server.api.facade.client;
 
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.server.api.facade.ApiResponse;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.ConceptRequest;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SPGTypeRequest;
+import java.util.List;
 
 /**
  * The interface to query concepts that defined under a concept type, also provides method to define
@@ -39,6 +42,15 @@ public interface ConceptFacade {
   ApiResponse<ConceptList> queryConcept(ConceptRequest request);
 
   /**
+   * Query reasoning concepts detail by the concept types, the interface returned triple semantic
+   * object for rule detail.
+   *
+   * @param request
+   * @return
+   */
+  ApiResponse<List<TripleSemantic>> getReasoningConceptsDetail(SPGTypeRequest request);
+
+  /**
    * Define dynamic taxonomy rule between an entity and a concept, Currently the taxonomic predicate
    * is belongTo.
    *
@@ -53,7 +65,7 @@ public interface ConceptFacade {
    * @param request The Request to save concept relation
    * @return true or false
    */
-  ApiResponse<Boolean> defineLogicalCausation(DefineLogicalCausationRequest request);
+  ApiResponse<Boolean> defineLogicalCausation(DefineTripleSemanticRequest request);
 
   /**
    * Remove dynamic taxonomy rule of concept.
@@ -69,5 +81,5 @@ public interface ConceptFacade {
    * @param request The request to delete concept relation
    * @return true or false
    */
-  ApiResponse<Boolean> removeLogicalCausation(RemoveLogicalCausationRequest request);
+  ApiResponse<Boolean> removeLogicalCausation(RemoveTripleSemanticRequest request);
 }

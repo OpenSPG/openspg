@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,6 +17,7 @@ package com.antgroup.openspg.cloudext.interfaces.searchengine.impl
 import com.antgroup.openspg.cloudext.interfaces.searchengine.BaseIdxSearchEngineClient
 import com.antgroup.openspg.cloudext.interfaces.searchengine.adapter.schema.SPGSchema2IdxService
 import com.antgroup.openspg.cloudext.interfaces.searchengine.adapter.schema.impl.SPGSchema2IdxServiceImpl
+import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxField
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxMapping
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchema
 import com.antgroup.openspg.common.util.StringUtils
@@ -27,13 +28,7 @@ import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier
 import com.antgroup.openspg.core.schema.model.predicate.Property
 import com.antgroup.openspg.core.schema.model.predicate.PropertyAdvancedConfig
-import com.antgroup.openspg.core.schema.model.type.BaseSPGType
-import com.antgroup.openspg.core.schema.model.type.EntityType
-import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo
-import com.antgroup.openspg.core.schema.model.type.SPGTypeAdvancedConfig
-import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum
-import com.antgroup.openspg.core.schema.model.type.SPGTypeRef
-import com.antgroup.openspg.schema.model.type.*
+import com.antgroup.openspg.core.schema.model.type.*
 import com.google.common.collect.Lists
 import com.google.common.collect.Sets
 import spock.lang.Specification
@@ -156,7 +151,7 @@ class SPGSchema2IdxServiceTest extends Specification {
             {
                 add(new IdxSchema(
                         SPG_TYPE_UNIQUE_NAME,
-                        new IdxMapping(Lists.newArrayList())
+                        new IdxMapping(Lists.newArrayList(new IdxField("id", BasicTypeEnum.TEXT)))
                 ))
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,6 +15,7 @@ package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record;
 
 import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
@@ -34,6 +35,7 @@ import lombok.Getter;
  * </ul>
  */
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public class LPGPropertyRecord extends BaseValObj {
 
   /** The property name */

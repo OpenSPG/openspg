@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,30 +14,26 @@
 package com.antgroup.openspg.server.biz.common.impl;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClient;
-import com.antgroup.openspg.server.api.facade.JSON;
+import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientDriverManager;
 import com.antgroup.openspg.server.api.facade.dto.common.request.SearchEngineIndexRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.response.SearchEngineIndexResponse;
 import com.antgroup.openspg.server.biz.common.SearchEngineManager;
-import com.antgroup.openspg.server.common.model.datasource.connection.SearchEngineConnectionInfo;
-import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
+import com.antgroup.openspg.server.common.service.config.AppEnvConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SearchEngineManagerImpl implements SearchEngineManager {
 
-  @Autowired private DataSourceService dataSourceService;
+  @Autowired private AppEnvConfig appEnvConfig;
 
   @Override
   public SearchEngineIndexResponse queryIndex(SearchEngineIndexRequest request) {
-    SearchEngineClient searchEngineClient = dataSourceService.buildSharedSearchEngineClient();
+    SearchEngineClient searchEngineClient =
+        SearchEngineClientDriverManager.getClient(appEnvConfig.getSearchEngineUrl());
 
     String convertedIndexName =
         searchEngineClient.getIdxNameConvertor().convertIdxName(request.getSpgType());
-    SearchEngineConnectionInfo connInfo =
-        (SearchEngineConnectionInfo) searchEngineClient.getConnInfo();
-    return new SearchEngineIndexResponse()
-        .setIndexName(convertedIndexName)
-        .setConnInfo(JSON.serialize(connInfo));
+    return new SearchEngineIndexResponse().setIndexName(convertedIndexName);
   }
 }

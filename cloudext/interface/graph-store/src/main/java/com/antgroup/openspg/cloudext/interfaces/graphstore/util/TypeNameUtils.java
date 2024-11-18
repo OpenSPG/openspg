@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -30,11 +30,6 @@ import com.antgroup.openspg.server.common.model.exception.GraphStoreException;
 import java.util.List;
 
 public class TypeNameUtils {
-
-  public static <T extends BaseLPGRecord> void convertTypeName(
-      List<T> lpgRecords, LPGTypeNameConvertor convertor) {
-    lpgRecords.forEach(record -> convertTypeName(record, convertor));
-  }
 
   public static void convertTypeName(
       BaseLPGSchemaOperation schemaOperationRecord, LPGTypeNameConvertor convertor) {
@@ -106,6 +101,11 @@ public class TypeNameUtils {
             edgeType ->
                 edgeType.setEdgeTypeName(
                     convertor.restoreEdgeTypeName(edgeType.getEdgeTypeName().getEdgeLabel())));
+  }
+
+  public static <T extends BaseLPGRecord> void convertTypeName(
+      List<T> lpgRecords, LPGTypeNameConvertor convertor) {
+    lpgRecords.forEach(record -> convertTypeName(record, convertor));
   }
 
   private static void convertTypeName(BaseLPGRecord lpgRecord, LPGTypeNameConvertor convertor) {

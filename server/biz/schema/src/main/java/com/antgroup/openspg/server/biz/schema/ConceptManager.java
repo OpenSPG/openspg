@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,11 +13,13 @@
 
 package com.antgroup.openspg.server.biz.schema;
 
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.request.DefineDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.DefineLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.DefineTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.semantic.request.RemoveDynamicTaxonomyRequest;
-import com.antgroup.openspg.core.schema.model.semantic.request.RemoveLogicalCausationRequest;
+import com.antgroup.openspg.core.schema.model.semantic.request.RemoveTripleSemanticRequest;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
+import java.util.List;
 
 /** Provide method to manage concept */
 public interface ConceptManager {
@@ -41,14 +43,14 @@ public interface ConceptManager {
    *
    * @param request request
    */
-  void defineLogicalCausation(DefineLogicalCausationRequest request);
+  void defineLogicalCausation(DefineTripleSemanticRequest request);
 
   /**
    * remove logical causation.
    *
    * @param request
    */
-  void removeLogicalCausation(RemoveLogicalCausationRequest request);
+  void removeLogicalCausation(RemoveTripleSemanticRequest request);
 
   /**
    * Get concept detail by concept type.
@@ -58,4 +60,12 @@ public interface ConceptManager {
    * @return list of concept
    */
   ConceptList getConceptDetail(String conceptTypeName, String conceptName);
+
+  /**
+   * Get reasoning concepts detail.
+   *
+   * @param conceptTypeNames unique names of concept types
+   * @return list of triple semantic
+   */
+  List<TripleSemantic> getReasoningConceptsDetail(List<String> conceptTypeNames);
 }

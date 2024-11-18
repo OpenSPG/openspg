@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -53,6 +53,9 @@ public class PropertyAdvancedConfig extends BaseValObj {
   /** The logic rule defined on the property. */
   private LogicalRule logicalRule;
 
+  /** The index type on the property. */
+  private IndexTypeEnum indexType;
+
   public PropertyAdvancedConfig() {
     subProperties = new ArrayList<>();
     semantics = new ArrayList<>();
@@ -91,6 +94,15 @@ public class PropertyAdvancedConfig extends BaseValObj {
 
   public PropertyAdvancedConfig setPropertyGroup(PropertyGroupEnum propertyGroup) {
     this.propertyGroup = propertyGroup;
+    return this;
+  }
+
+  public IndexTypeEnum getIndexType() {
+    return indexType;
+  }
+
+  public PropertyAdvancedConfig setIndexType(IndexTypeEnum indexType) {
+    this.indexType = indexType;
     return this;
   }
 

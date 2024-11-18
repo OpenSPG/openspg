@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2023 Ant Group CO., Ltd.
+  ~ Copyright 2023 OpenSPG Authors
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
   ~ in compliance with the License. You may obtain a copy of the License at
@@ -39,6 +39,7 @@
     <result column="relation_source" jdbcType="VARCHAR" property="relationSource" />
     <result column="direction" jdbcType="VARCHAR" property="direction" />
     <result column="mask_type" jdbcType="VARCHAR" property="maskType" />
+    <result column="index_type" jdbcType="VARCHAR" property="indexType" />
     <result column="multiver_config" jdbcType="VARCHAR" property="multiverConfig" />
     <result column="property_source" jdbcType="BIGINT" property="propertySource" />
   </resultMap>
@@ -48,7 +49,7 @@
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
+        <if test="criteria.isValid()">
           <trim prefix="(" prefixOverrides="and" suffix=")">
             <foreach collection="criteria.criteria" item="criterion">
               <choose>
@@ -77,7 +78,7 @@
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
+        <if test="criteria.isValid()">
           <trim prefix="(" prefixOverrides="and" suffix=")">
             <foreach collection="criteria.criteria" item="criterion">
               <choose>
@@ -107,7 +108,7 @@
     id, domain_id, property_name, range_id, property_name_zh, constraint_id, property_category, 
     map_type, version, status, gmt_create, gmt_modified, original_id, store_property_name, 
     transformer_id, property_desc, property_desc_zh, project_id, original_domain_id, 
-    original_range_id, version_status, relation_source, direction, mask_type, multiver_config, 
+    original_range_id, version_status, relation_source, direction, mask_type, index_type, multiver_config,
     property_source
   </sql>
   <sql id="Blob_Column_List">
@@ -169,7 +170,7 @@
       original_id, store_property_name, transformer_id, 
       property_desc, property_desc_zh, project_id, 
       original_domain_id, original_range_id, version_status, 
-      relation_source, direction, mask_type, 
+      relation_source, direction, mask_type, index_type,
       multiver_config, property_source, property_config
       )
     values (#{id,jdbcType=BIGINT}, #{domainId,jdbcType=BIGINT}, #{propertyName,jdbcType=VARCHAR}, 
@@ -179,7 +180,7 @@
       #{originalId,jdbcType=BIGINT}, #{storePropertyName,jdbcType=VARCHAR}, #{transformerId,jdbcType=BIGINT}, 
       #{propertyDesc,jdbcType=VARCHAR}, #{propertyDescZh,jdbcType=VARCHAR}, #{projectId,jdbcType=BIGINT}, 
       #{originalDomainId,jdbcType=BIGINT}, #{originalRangeId,jdbcType=BIGINT}, #{versionStatus,jdbcType=VARCHAR}, 
-      #{relationSource,jdbcType=VARCHAR}, #{direction,jdbcType=VARCHAR}, #{maskType,jdbcType=VARCHAR}, 
+      #{relationSource,jdbcType=VARCHAR}, #{direction,jdbcType=VARCHAR}, #{maskType,jdbcType=VARCHAR}, #{indexType,jdbcType=VARCHAR},
       #{multiverConfig,jdbcType=VARCHAR}, #{propertySource,jdbcType=BIGINT}, #{propertyConfig,jdbcType=LONGVARCHAR}
       )
   </insert>
@@ -257,6 +258,9 @@
       </if>
       <if test="maskType != null">
         mask_type,
+      </if>
+      <if test="indexType != null">
+        index_type,
       </if>
       <if test="multiverConfig != null">
         multiver_config,
@@ -340,6 +344,9 @@
       </if>
       <if test="maskType != null">
         #{maskType,jdbcType=VARCHAR},
+      </if>
+      <if test="indexType != null">
+        #{indexType,jdbcType=VARCHAR},
       </if>
       <if test="multiverConfig != null">
         #{multiverConfig,jdbcType=VARCHAR},
@@ -433,6 +440,9 @@
       <if test="record.maskType != null">
         mask_type = #{record.maskType,jdbcType=VARCHAR},
       </if>
+      <if test="record.indexType != null">
+        index_type = #{record.indexType,jdbcType=VARCHAR},
+      </if>
       <if test="record.multiverConfig != null">
         multiver_config = #{record.multiverConfig,jdbcType=VARCHAR},
       </if>
@@ -473,6 +483,7 @@
       relation_source = #{record.relationSource,jdbcType=VARCHAR},
       direction = #{record.direction,jdbcType=VARCHAR},
       mask_type = #{record.maskType,jdbcType=VARCHAR},
+      index_type = #{record.indexType,jdbcType=VARCHAR},
       multiver_config = #{record.multiverConfig,jdbcType=VARCHAR},
       property_source = #{record.propertySource,jdbcType=BIGINT},
       property_config = #{record.propertyConfig,jdbcType=LONGVARCHAR}
@@ -506,6 +517,7 @@
       relation_source = #{record.relationSource,jdbcType=VARCHAR},
       direction = #{record.direction,jdbcType=VARCHAR},
       mask_type = #{record.maskType,jdbcType=VARCHAR},
+      index_type = #{record.indexType,jdbcType=VARCHAR},
       multiver_config = #{record.multiverConfig,jdbcType=VARCHAR},
       property_source = #{record.propertySource,jdbcType=BIGINT}
     <if test="_parameter != null">
@@ -584,6 +596,9 @@
       <if test="maskType != null">
         mask_type = #{maskType,jdbcType=VARCHAR},
       </if>
+      <if test="indexType != null">
+        index_type = #{indexType,jdbcType=VARCHAR},
+      </if>
       <if test="multiverConfig != null">
         multiver_config = #{multiverConfig,jdbcType=VARCHAR},
       </if>
@@ -621,6 +636,7 @@
       relation_source = #{relationSource,jdbcType=VARCHAR},
       direction = #{direction,jdbcType=VARCHAR},
       mask_type = #{maskType,jdbcType=VARCHAR},
+      index_type = #{indexType,jdbcType=VARCHAR},
       multiver_config = #{multiverConfig,jdbcType=VARCHAR},
       property_source = #{propertySource,jdbcType=BIGINT},
       property_config = #{propertyConfig,jdbcType=LONGVARCHAR}
@@ -651,6 +667,7 @@
       relation_source = #{relationSource,jdbcType=VARCHAR},
       direction = #{direction,jdbcType=VARCHAR},
       mask_type = #{maskType,jdbcType=VARCHAR},
+      index_type = #{indexType,jdbcType=VARCHAR},
       multiver_config = #{multiverConfig,jdbcType=VARCHAR},
       property_source = #{propertySource,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}

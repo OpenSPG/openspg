@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VertexProperty implements IProperty {
-  private final Map<String, Object> props;
+  protected final Map<String, Object> props;
 
   public VertexProperty() {
     this.props = new HashMap<>();

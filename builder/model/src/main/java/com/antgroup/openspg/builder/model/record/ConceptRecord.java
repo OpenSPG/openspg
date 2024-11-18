@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,6 +13,9 @@
 
 package com.antgroup.openspg.builder.model.record;
 
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyValue;
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
@@ -20,14 +23,15 @@ import com.antgroup.openspg.core.schema.model.type.ConceptType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 
 public class ConceptRecord extends BaseAdvancedRecord {
 
   private static final String NAME = "name";
 
-  private final ConceptType conceptType;
+  @Getter private final ConceptType conceptType;
 
-  private final ConceptIdentifier conceptName;
+  @Getter private final ConceptIdentifier conceptName;
 
   private final List<SPGPropertyRecord> properties;
 
@@ -43,7 +47,6 @@ public class ConceptRecord extends BaseAdvancedRecord {
   private void addNameProperty() {
     Property property = conceptType.getPropertyMap().get(NAME);
     if (property != null) {
-      // 把原来的属性中的name删除，补上从id里面抽取出来的name
       properties.removeIf(record -> NAME.equals(record.getName()));
       SPGPropertyValue spgPropertyValue = new SPGPropertyValue(conceptName.getName());
       this.properties.add(new SPGPropertyRecord(property, spgPropertyValue));
@@ -73,13 +76,5 @@ public class ConceptRecord extends BaseAdvancedRecord {
   @Override
   public void addSpgProperties(SPGPropertyRecord record) {
     properties.add(record);
-  }
-
-  public ConceptType getConceptType() {
-    return conceptType;
-  }
-
-  public ConceptIdentifier getConceptName() {
-    return conceptName;
   }
 }

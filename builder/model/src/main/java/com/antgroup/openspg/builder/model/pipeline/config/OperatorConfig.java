@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,87 +13,59 @@
 
 package com.antgroup.openspg.builder.model.pipeline.config;
 
-import com.antgroup.openspg.core.schema.model.type.OperatorKey;
-import com.antgroup.openspg.core.schema.model.type.OperatorTypeEnum;
-import com.antgroup.openspg.server.common.model.LangTypeEnum;
+import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import com.google.common.collect.Lists;
 import java.util.Map;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import org.apache.commons.codec.digest.DigestUtils;
 
-/** Operator related configuration, including name, version, operator address, entry class, etc. */
+@Getter
+@EqualsAndHashCode(callSuper = false)
 public class OperatorConfig extends BaseValObj {
 
-  /** The name of the operator. */
-  private final String name;
+  private final String filePath;
 
-  /** The version of the operator. */
-  private final Integer version;
+  private final String modulePath;
 
-  /** The address where the operator is deployed. */
-  private final String jarAddress;
+  private final String className;
 
-  /** The entry class for executing the operator. */
-  private final String mainClass;
+  private final String method;
 
-  /** The programming language type of the operator. */
-  private final LangTypeEnum langType;
-
-  /**
-   * Operator types, including linking operator, extraction operator, and standardization operator.
-   */
-  private final OperatorTypeEnum operatorType;
-
-  /**
-   * The extension parameters of the operator, mainly defined by the user and used internally within
-   * the operator.
-   */
   private final Map<String, String> params;
 
+  private final String paramsPrefix;
+
   public OperatorConfig(
-      String name,
-      Integer version,
-      String jarAddress,
-      String mainClass,
-      LangTypeEnum langType,
-      OperatorTypeEnum operatorType,
+      String filePath,
+      String modulePath,
+      String className,
+      String method,
       Map<String, String> params) {
-    this.name = name;
-    this.version = version;
-    this.jarAddress = jarAddress;
-    this.mainClass = mainClass;
-    this.langType = langType;
-    this.operatorType = operatorType;
+    this(filePath, modulePath, className, method, params, "");
+  }
+
+  public OperatorConfig(
+      String filePath,
+      String modulePath,
+      String className,
+      String method,
+      Map<String, String> params,
+      String paramsPrefix) {
+    this.filePath = filePath;
+    this.modulePath = modulePath;
+    this.className = className;
+    this.method = method;
     this.params = params;
+    this.paramsPrefix = paramsPrefix;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public Integer getVersion() {
-    return version;
-  }
-
-  public Map<String, String> getParams() {
-    return params;
-  }
-
-  public String getMainClass() {
-    return mainClass;
-  }
-
-  public String getJarAddress() {
-    return jarAddress;
-  }
-
-  public OperatorTypeEnum getOperatorType() {
-    return operatorType;
-  }
-
-  public LangTypeEnum getLangType() {
-    return langType;
-  }
-
-  public OperatorKey toKey() {
-    return new OperatorKey(name, version);
+  public String getUniqueKey() {
+    return DigestUtils.md5Hex(
+        String.join(
+            ";",
+            Lists.newArrayList(
+                filePath, modulePath, className, method, JSON.toJSONString(params), paramsPrefix)));
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -215,6 +215,7 @@ public class PropertyUtils {
     config.setMultiVersionConfig(advancedConfig.getMultiVersionConfig());
     config.setMountedConceptConfig(advancedConfig.getMountedConceptConfig());
     config.setEncryptTypeEnum(advancedConfig.getEncryptTypeEnum());
+    config.setIndexType(advancedConfig.getIndexType());
     config.setPropertyGroup(advancedConfig.getPropertyGroup());
     config.setConstraint(advancedConfig.getConstraint());
     config.setWithIndex(withIndex(propertyRef));

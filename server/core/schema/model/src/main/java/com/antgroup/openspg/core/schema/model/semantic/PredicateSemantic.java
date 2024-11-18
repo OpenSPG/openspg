@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -30,6 +30,9 @@ public class PredicateSemantic extends BaseSemantic {
 
   /** Property reference as the object */
   private PropertyRef objectTypeRef;
+
+  /** Rule code of logic rule. */
+  private RuleCode ruleCode;
 
   public PredicateSemantic() {}
 
@@ -63,6 +66,14 @@ public class PredicateSemantic extends BaseSemantic {
 
   public Long getObjectUniqueId() {
     return objectTypeRef == null ? null : objectTypeRef.getUniqueId();
+  }
+
+  public RuleCode getRuleCode() {
+    return ruleCode;
+  }
+
+  public void setRuleCode(RuleCode ruleCode) {
+    this.ruleCode = ruleCode;
   }
 
   public SPGTripleIdentifier getTripleName() {

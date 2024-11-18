@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -23,6 +23,8 @@ public class ConceptIdentifier extends BaseSPGIdentifier {
 
   /** The seperator symbol between parent and child concept names. */
   public static final String SEPARATOR = "-";
+
+  public static final String ROOT = "__ROOT__";
 
   /** Unique id of concept node. */
   private final String id;
@@ -51,8 +53,11 @@ public class ConceptIdentifier extends BaseSPGIdentifier {
 
   public String getFatherId() {
     String[] splits = id.split(SEPARATOR);
-    if (splits.length <= 1) {
+    if (ROOT.equals(id)) {
       return StringUtils.EMPTY;
+    }
+    if (splits.length <= 1) {
+      return ROOT;
     } else {
       StringBuilder stringBuilder = new StringBuilder();
       for (int i = 0; i < splits.length - 2; i++) {
@@ -61,6 +66,10 @@ public class ConceptIdentifier extends BaseSPGIdentifier {
       stringBuilder.append(splits[splits.length - 2]);
       return stringBuilder.toString();
     }
+  }
+
+  public boolean isRootConcept() {
+    return ROOT.equals(id);
   }
 
   @Override

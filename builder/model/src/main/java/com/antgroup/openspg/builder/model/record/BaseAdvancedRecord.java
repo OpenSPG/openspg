@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,20 +13,27 @@
 
 package com.antgroup.openspg.builder.model.record;
 
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
-import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.semantic.SystemPredicateEnum;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.WithBasicInfo;
 import com.antgroup.openspg.core.schema.model.type.WithSPGTypeEnum;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
 public abstract class BaseAdvancedRecord extends BaseSPGRecord
     implements WithBasicInfo<SPGTypeIdentifier>, WithSPGTypeEnum {
+
+  @Setter private List<RelationRecord> relationRecords;
 
   public BaseAdvancedRecord(SPGRecordTypeEnum recordType) {
     super(recordType);
@@ -50,16 +57,6 @@ public abstract class BaseAdvancedRecord extends BaseSPGRecord
     return getSpgType().getBasicInfo();
   }
 
-  public SPGPropertyRecord getPropertyRecord(Property property) {
-    for (SPGPropertyRecord record : getSpgProperties()) {
-      if (record.getPropertyType().getName().equals(property.getName())) {
-        return record;
-      }
-    }
-    return null;
-  }
-
-  /** 获取语义属性的记录 */
   public List<SPGPropertyRecord> getSemanticPropertyRecords() {
     return getSpgProperties().stream()
         .filter(BasePropertyRecord::isSemanticProperty)
@@ -69,7 +66,7 @@ public abstract class BaseAdvancedRecord extends BaseSPGRecord
   public void mergePropertyValue(SPGPropertyRecord otherRecord) {
     boolean find = false;
     for (SPGPropertyRecord existRecord : getSpgProperties()) {
-      if (otherRecord.getPropertyType().equals(existRecord.getPropertyType())) {
+      if (otherRecord.getProperty().equals(existRecord.getProperty())) {
         existRecord.getValue().merge(otherRecord.getValue());
         find = true;
       }
@@ -77,6 +74,13 @@ public abstract class BaseAdvancedRecord extends BaseSPGRecord
     if (!find) {
       addSpgProperties(otherRecord);
     }
+  }
+
+  public void addRelationRecord(RelationRecord relationRecord) {
+    if (relationRecords == null) {
+      relationRecords = new ArrayList<>();
+    }
+    relationRecords.add(relationRecord);
   }
 
   @Override
@@ -89,7 +93,7 @@ public abstract class BaseAdvancedRecord extends BaseSPGRecord
 
   public SPGPropertyRecord getPredicateProperty(SystemPredicateEnum predicate) {
     for (SPGPropertyRecord propertyRecord : getSpgProperties()) {
-      if (predicate.getName().equals(propertyRecord.getPropertyType().getName())) {
+      if (predicate.getName().equals(propertyRecord.getProperty().getName())) {
         return propertyRecord;
       }
     }

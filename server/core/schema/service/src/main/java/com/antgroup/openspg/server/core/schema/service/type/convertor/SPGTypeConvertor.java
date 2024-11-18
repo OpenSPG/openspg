@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -140,6 +140,7 @@ public class SPGTypeConvertor {
     switch (simpleSpgType.getSpgTypeEnum()) {
       case BASIC_TYPE:
         baseSpgType = BasicType.from(simpleSpgType.getBasicInfo().getName().toString());
+        baseSpgType.getBasicInfo().setNameZh(simpleSpgType.getBasicInfo().getNameZh());
         break;
       case STANDARD_TYPE:
         baseSpgType =

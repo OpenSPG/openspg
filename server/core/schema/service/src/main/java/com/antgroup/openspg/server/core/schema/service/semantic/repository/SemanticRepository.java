@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,10 +13,10 @@
 
 package com.antgroup.openspg.server.core.schema.service.semantic.repository;
 
-import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
-import com.antgroup.openspg.server.core.schema.service.semantic.model.LogicalCausationQuery;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.server.core.schema.service.semantic.model.SimpleSemantic;
+import com.antgroup.openspg.server.core.schema.service.semantic.model.TripleSemanticQuery;
 import java.util.List;
 
 /**
@@ -62,7 +62,7 @@ public interface SemanticRepository {
    * @param conceptSemantic relation semantic of concept
    * @return record count
    */
-  int deleteConceptSemantic(LogicalCausationSemantic conceptSemantic);
+  int deleteConceptSemantic(TripleSemantic conceptSemantic);
 
   /**
    * Query concept semantic record by condition.
@@ -70,7 +70,7 @@ public interface SemanticRepository {
    * @param query query condition
    * @return list of semantic record
    */
-  List<SimpleSemantic> queryConceptSemanticByCond(LogicalCausationQuery query);
+  List<SimpleSemantic> queryConceptSemanticByCond(TripleSemanticQuery query);
 
   /**
    * Query semantic record by subject.

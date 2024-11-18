@@ -267,7 +267,7 @@ hs_err_pid*
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
-python/.idea
+python/**/.idea
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -456,5 +456,7 @@ hs_err_pid*
 # knext operators directory for debug
 /python/knext/debug_operators/.
 !/server/lib/spgreasoner-local-0.0.1.jar
+!/lib/*.jar
 /logs/
 **/spotless-index-file
+**/pom.xml.versionsBackup

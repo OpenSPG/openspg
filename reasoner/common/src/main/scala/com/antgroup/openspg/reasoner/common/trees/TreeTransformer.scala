@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -116,6 +116,41 @@ case class TopDown[T <: AbstractTreeNode[T]: ClassTag](rule: PartialFunction[T, 
       }
       afterSelf.withNewChildren(updatedChildren)
     }
+  }
+
+}
+
+/**
+ * Applies the given partial function starting from the root of this tree.
+ * An additional context is being recursively passed
+ * from the leftmost child to its siblings and eventually to its parent.
+ */
+case class TopDownWithContext[T <: AbstractTreeNode[T]: ClassTag, C](
+    rule: PartialFunction[(T, C), (T, C)])
+    extends TreeRewriterWithContext[T, C] {
+
+  def transform(tree: T, context: C): (T, C) = {
+    var (afterSelf, updatedContext) = if (rule.isDefinedAt(tree -> context)) {
+      rule(tree -> context)
+    } else {
+      tree -> context
+    }
+
+    val childrenLength = afterSelf.children.length
+    val afterChildren = if (childrenLength == 0) {
+      afterSelf
+    } else {
+      val updatedChildren = new Array[T](childrenLength)
+      var i = 0
+      while (i < childrenLength) {
+        val pair = transform(afterSelf.children(i), updatedContext)
+        updatedChildren(i) = pair._1
+        updatedContext = pair._2
+        i += 1
+      }
+      afterSelf.withNewChildren(updatedChildren)
+    }
+    afterChildren -> updatedContext
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,13 +14,14 @@
 package com.antgroup.openspg.reasoner.common.graph.property.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.antgroup.openspg.reasoner.common.Utils;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class EdgeProperty implements IProperty {
-  private final Map<String, Object> props;
+  protected final Map<String, Object> props;
 
   /**
    * new edge property with property data
@@ -40,6 +41,10 @@ public class EdgeProperty implements IProperty {
 
   public EdgeProperty(Map<String, Object> props) {
     this.props = props;
+  }
+  /** constructor by kvs */
+  public EdgeProperty(Object... kvs) {
+    this.props = Utils.convert2Property(kvs);
   }
 
   @Override

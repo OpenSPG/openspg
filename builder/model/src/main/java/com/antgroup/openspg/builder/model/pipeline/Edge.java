@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,8 +14,12 @@
 package com.antgroup.openspg.builder.model.pipeline;
 
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /** The connection relationship between nodes. */
+@Getter
+@AllArgsConstructor
 public class Edge extends BaseValObj {
 
   /** The id of the starting node. */
@@ -23,17 +27,4 @@ public class Edge extends BaseValObj {
 
   /** The id of the ending node. */
   private final String to;
-
-  public Edge(String from, String to) {
-    this.from = from;
-    this.to = to;
-  }
-
-  public String getFrom() {
-    return from;
-  }
-
-  public String getTo() {
-    return to;
-  }
 }

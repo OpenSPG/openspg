@@ -1,25 +1,40 @@
 version: "3.7"
 services:
-    mysql:
-        extends:
-            file: docker-compose-no-es.yml
-            service: mysql
+  mysql:
+    restart: always
+    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-mysql:latest
+    container_name: release-openspg-mysql
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      TZ: Asia/Shanghai
+      LANG: C.UTF-8
+      MYSQL_ROOT_PASSWORD: openspg
+      MYSQL_DATABASE: openspg
+    ports:
+      - "3306:3306"
+    command: [
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_general_ci'
+    ]
 
-    tugraph:
-        extends:
-            file: docker-compose-no-es.yml
-            service: tugraph
-
-    elasticsearch:
-        image: elasticsearch:8.5.3
-        container_name: test-openspg-elasticsearch
-        ports:
-            - "9200:9200"
-            - "9300:9300"
-        environment:
-            - discovery.type=single-node
-            - xpack.security.enabled=false
-
-
-
-
+  neo4j:
+    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-neo4j:latest
+    container_name: release-openspg-neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - TZ=Asia/Shanghai
+      - NEO4J_AUTH=neo4j/neo4j@openspg
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_server_memory_heap_initial__size=1G
+      - NEO4J_server_memory_heap_max__size=4G
+      - NEO4J_server_memory_pagecache_size=1G
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_dbms_security_procedures_unrestricted=*
+      - NEO4J_dbms_security_procedures_allowlist=*
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $HOME/dozerdb/logs:/logs

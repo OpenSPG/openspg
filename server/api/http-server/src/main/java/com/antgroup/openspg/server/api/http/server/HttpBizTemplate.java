@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -25,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 
 @Slf4j
 public class HttpBizTemplate {
-
   /**
    * HTTP execution interface template.
    *
@@ -53,7 +52,7 @@ public class HttpBizTemplate {
       } else if (StringUtils.isBlank(errorMsg)) {
         errorMsg = "system unknown error";
       }
-      response = ResponseEntity.internalServerError().body(errorMsg);
+      response = ResponseEntity.badRequest().body(errorMsg);
     }
 
     HttpHeaders headers = new HttpHeaders();
@@ -62,5 +61,39 @@ public class HttpBizTemplate {
     return ResponseEntity.status(response.getStatusCode())
         .headers(headers)
         .body(response.getBody());
+  }
+
+  /**
+   * HTTP execution interface template.
+   *
+   * @param callback The callback for executing the logic.
+   * @param <T> The type of the return result.
+   * @return The execution result.
+   */
+  public static <T> HttpResult<T> execute2(HttpBizCallback<T> callback) {
+    HttpResult<T> httpResult = null;
+    try {
+      callback.check();
+      T result = callback.action();
+      httpResult = HttpResult.success(result);
+    } catch (IllegalParamsException e) {
+      log.error("error http illegal params", e);
+      httpResult = HttpResult.failed("illegal params", e.getMessage());
+    } catch (OpenSPGException e) {
+      log.error("execute http biz callback error", e);
+      httpResult = HttpResult.failed("openspg error", e.getMessage());
+    } catch (Throwable e) {
+      log.error("execute http biz callback unknown error", e);
+      String errorMsg = e.getMessage();
+      if (e instanceof NullPointerException) {
+        errorMsg = "system unknown error with NullPointerException";
+      } else if (StringUtils.isBlank(errorMsg)) {
+        errorMsg = "system unknown error";
+      }
+      httpResult = HttpResult.failed("unknown error", errorMsg);
+    }
+    httpResult.setTraceId(BizThreadLocal.getTraceId());
+    httpResult.setRemote(NetworkAddressUtils.LOCAL_IP);
+    return httpResult;
   }
 }

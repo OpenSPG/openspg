@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,8 +13,6 @@
 
 package com.antgroup.openspg.server.common.model.exception;
 
-import com.antgroup.openspg.server.common.model.datasource.connection.BaseConnectionInfo;
-
 public class CloudExtException extends OpenSPGException {
 
   protected CloudExtException(Throwable cause, String messagePattern, Object... args) {
@@ -25,7 +23,7 @@ public class CloudExtException extends OpenSPGException {
     this(null, messagePattern, args);
   }
 
-  public static CloudExtException driverNotExist(BaseConnectionInfo connInfo) {
-    return new CloudExtException("cannot find driver for {}", connInfo.getScheme());
+  public static CloudExtException driverNotExist(String url) {
+    return new CloudExtException("cannot find driver for {}", url);
   }
 }

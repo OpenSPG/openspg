@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.server.common.service.project;
 
+import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.server.common.model.project.Project;
 import java.util.List;
@@ -21,7 +22,11 @@ public interface ProjectRepository {
 
   Long save(Project project);
 
+  Project update(Project project);
+
   Project queryById(Long projectId);
 
   List<Project> query(ProjectQueryRequest request);
+
+  Paged<Project> queryPaged(ProjectQueryRequest request, int start, int size);
 }

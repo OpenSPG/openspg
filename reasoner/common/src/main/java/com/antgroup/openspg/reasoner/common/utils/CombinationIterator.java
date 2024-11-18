@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -22,9 +22,6 @@ import java.util.Stack;
 /**
  * Combinatorial iterator for example: input two list ["1", "2", "3"] ["A", "B"] output [["1",
  * "A"],["1", "B"],["2","A"],["2","B"],["3","A"],["3","B"]]
- *
- * @author donghai.ydh
- * @version CombinationIterator.java, v 0.1 2023-04-21 17:23 donghai.ydh
  */
 public class CombinationIterator<T> implements Iterator<List<T>> {
 

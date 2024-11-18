@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,31 +13,16 @@
 
 package com.antgroup.openspg.test.kgschema
 
-import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphConstants
+
 import com.antgroup.openspg.cloudext.impl.graphstore.tugraph.TuGraphStoreClient
-import com.antgroup.openspg.cloudext.interfaces.graphstore.impl.DefaultLPGTypeNameConvertor
-import com.antgroup.openspg.core.schema.model.predicate.Property
-import com.antgroup.openspg.core.schema.model.predicate.PropertyAdvancedConfig
-import com.antgroup.openspg.core.schema.model.predicate.PropertyRef
-import com.antgroup.openspg.core.schema.model.predicate.Relation
-import com.antgroup.openspg.core.schema.model.predicate.SubProperty
-import com.antgroup.openspg.core.schema.model.type.BaseSPGType
-import com.antgroup.openspg.core.schema.model.type.ConceptLayerConfig
-import com.antgroup.openspg.core.schema.model.type.ConceptTaxonomicConfig
-import com.antgroup.openspg.core.schema.model.type.ConceptType
-import com.antgroup.openspg.core.schema.model.type.EntityType
-import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo
-import com.antgroup.openspg.core.schema.model.type.SPGTypeAdvancedConfig
-import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum
-import com.antgroup.openspg.core.schema.model.type.SPGTypeRef
-import com.antgroup.openspg.server.api.facade.ApiConstants
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo
 import com.antgroup.openspg.core.schema.model.BasicInfo
 import com.antgroup.openspg.core.schema.model.SPGSchema
 import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd
 import com.antgroup.openspg.core.schema.model.alter.AlterOperationEnum
 import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier
+import com.antgroup.openspg.core.schema.model.predicate.*
+import com.antgroup.openspg.core.schema.model.type.*
 import com.google.common.collect.Lists
 import com.google.common.collect.Sets
 import spock.lang.Specification
@@ -352,21 +337,6 @@ class SPGSchema2LpgServiceSpec extends Specification {
 
         expect:
         1 == 1
-    }
-
-    private static TuGraphStoreClient genTuGraphStoreClient() {
-        GraphStoreConnectionInfo connInfo = new GraphStoreConnectionInfo();
-        connInfo.setScheme("tugraph");
-
-        Map<String, Object> params = new HashMap<>(5);
-        params.put(TuGraphConstants.GRAPH_NAME, "Spg2LpgTest")
-        params.put(ApiConstants.TIMEOUT, 5000d)
-        params.put(ApiConstants.HOST, "127.0.0.1:9090")
-        params.put(ApiConstants.ACCESS_ID, "admin")
-        params.put(ApiConstants.ACCESS_KEY, "73@TuGraph")
-
-        connInfo.setParams(params)
-        return new TuGraphStoreClient(connInfo, new DefaultLPGTypeNameConvertor())
     }
 
     private static SubProperty mockSingle(String objectType, PropertyRef propertyTypeRef) {

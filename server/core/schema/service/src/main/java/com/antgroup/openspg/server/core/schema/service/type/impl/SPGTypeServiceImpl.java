@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,9 +13,11 @@
 
 package com.antgroup.openspg.server.core.schema.service.type.impl;
 
+import com.antgroup.openspg.core.schema.model.SchemaException;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
@@ -26,7 +28,9 @@ import com.antgroup.openspg.server.core.schema.service.predicate.RelationService
 import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
 import com.antgroup.openspg.server.core.schema.service.type.convertor.SPGTypeAssemble;
 import com.antgroup.openspg.server.core.schema.service.type.convertor.SPGTypeConvertor;
+import com.antgroup.openspg.server.core.schema.service.type.model.ProjectOntologyRel;
 import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
+import com.antgroup.openspg.server.core.schema.service.type.repository.ProjectOntologyRelRepository;
 import com.antgroup.openspg.server.core.schema.service.type.repository.SPGTypeRepository;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -49,9 +53,10 @@ public class SPGTypeServiceImpl implements SPGTypeService {
   @Autowired private SPGTypeRepository spgTypeRepository;
   @Autowired private PropertyService propertyService;
   @Autowired private RelationService relationService;
+  @Autowired private ProjectOntologyRelRepository projectOntologyRelRepository;
 
   @Override
-  @Transactional(rollbackFor = Exception.class)
+  @Transactional(value = "transactionManager", rollbackFor = Exception.class)
   public int create(BaseAdvancedType advancedType) {
     if (CollectionUtils.isNotEmpty(advancedType.getProperties())) {
       advancedType.getProperties().forEach(property -> propertyService.create(property));
@@ -87,6 +92,13 @@ public class SPGTypeServiceImpl implements SPGTypeService {
 
   @Override
   public int delete(BaseAdvancedType advancedType) {
+    List<ProjectOntologyRel> references =
+        projectOntologyRelRepository.queryReferences(
+            advancedType.getUniqueId(), SPGOntologyEnum.TYPE);
+    if (CollectionUtils.isNotEmpty(references)) {
+      throw SchemaException.existReference(advancedType.getName());
+    }
+
     if (CollectionUtils.isNotEmpty(advancedType.getProperties())) {
       advancedType.getProperties().forEach(property -> propertyService.delete(property));
       log.info("property of schemaType: {} is deleted", advancedType.getName());

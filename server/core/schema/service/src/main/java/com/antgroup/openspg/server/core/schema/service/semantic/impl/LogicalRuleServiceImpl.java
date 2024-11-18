@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,16 +13,19 @@
 
 package com.antgroup.openspg.server.core.schema.service.semantic.impl;
 
-import com.antgroup.kg.reasoner.lube.parser.ParserInterface;
-import com.antgroup.kg.reasoner.parser.KgDslParser;
+import com.antgroup.kg.reasoner.thinker.SimplifyThinkerParser;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.DslSyntaxError;
 import com.antgroup.openspg.core.schema.model.semantic.LogicalRule;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
+import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser;
+import com.antgroup.openspg.reasoner.util.Convert2ScalaUtil;
 import com.antgroup.openspg.server.core.schema.service.semantic.LogicalRuleService;
 import com.antgroup.openspg.server.core.schema.service.semantic.model.DslCheckResult;
 import com.antgroup.openspg.server.core.schema.service.semantic.repository.LogicalRuleRepository;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -82,14 +85,25 @@ public class LogicalRuleServiceImpl implements LogicalRuleService {
   @Override
   public DslCheckResult checkDslSyntax(String dsl) {
     DslCheckResult result = new DslCheckResult();
+    if (StringUtils.isEmpty(dsl)) {
+      result.setPass(false);
+      result.setErrorPart("empty dsl");
+      return result;
+    }
     try {
-      ParserInterface parser = new KgDslParser();
-      if (StringUtils.isEmpty(dsl)) {
-        result.setPass(false);
-        result.setErrorPart("empty dsl");
-        return result;
-      }
+      ParserInterface parser = new OpenSPGDslParser();
       parser.parseMultipleStatement(dsl, null).iterator();
+      return result;
+    } catch (Exception ex) {
+      return checkThinkerDslSyntax(dsl);
+    }
+  }
+
+  private DslCheckResult checkThinkerDslSyntax(String dsl) {
+    DslCheckResult result = new DslCheckResult();
+    try {
+      SimplifyThinkerParser parser = new SimplifyThinkerParser();
+      parser.parseSimplifyDsl(dsl, Convert2ScalaUtil.toScalaImmutableMap(new HashMap<>()));
       return result;
     } catch (Exception ex) {
       result.setPass(false);

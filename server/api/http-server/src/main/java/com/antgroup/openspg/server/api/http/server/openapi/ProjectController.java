@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,6 +15,7 @@ package com.antgroup.openspg.server.api.http.server.openapi;
 
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectCreateRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
+import com.antgroup.openspg.server.api.facade.dto.schema.request.SchemaAlterRequest;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
@@ -33,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/public/v1/project")
 public class ProjectController extends BaseController {
 
+  @Autowired private SchemaController schemaController;
+
   @Autowired private ProjectManager projectManager;
 
   @RequestMapping(method = RequestMethod.POST)
@@ -44,7 +47,15 @@ public class ProjectController extends BaseController {
 
           @Override
           public Project action() {
-            return projectManager.create(request);
+            Project project = projectManager.create(request);
+            if (request.getAutoSchema() == null || Boolean.TRUE.equals(request.getAutoSchema())) {
+              SchemaAlterRequest request = new SchemaAlterRequest();
+              request.setProjectId(project.getId());
+              request.setSchemaDraft(
+                  SchemaController.getDefaultSchemaDraft(project.getNamespace()));
+              schemaController.alterSchema(request);
+            }
+            return project;
           }
         });
   }
@@ -64,6 +75,20 @@ public class ProjectController extends BaseController {
             request.setTenantId(tenantId);
             request.setProjectId(projectId);
             return projectManager.query(request);
+          }
+        });
+  }
+
+  @RequestMapping(method = RequestMethod.POST, value = "/update")
+  public ResponseEntity<Object> update(@RequestBody ProjectCreateRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<Project>() {
+          @Override
+          public void check() {}
+
+          @Override
+          public Project action() {
+            return projectManager.update(request);
           }
         });
   }

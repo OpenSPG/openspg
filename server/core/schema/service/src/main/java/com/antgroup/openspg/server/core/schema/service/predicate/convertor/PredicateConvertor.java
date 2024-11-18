@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,6 +15,7 @@ package com.antgroup.openspg.server.core.schema.service.predicate.convertor;
 
 import com.antgroup.openspg.core.schema.model.OntologyId;
 import com.antgroup.openspg.core.schema.model.predicate.EncryptTypeEnum;
+import com.antgroup.openspg.core.schema.model.predicate.IndexTypeEnum;
 import com.antgroup.openspg.core.schema.model.predicate.MountedConceptConfig;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.predicate.PropertyGroupEnum;
@@ -35,6 +36,7 @@ public class PredicateConvertor {
     MountedConceptConfig mountedConceptConfig = property.getMountedConceptConfig();
     EncryptTypeEnum encryptTypeEnum = property.getEncryptTypeEnum();
     PropertyGroupEnum propertyGroup = property.getPropertyGroup();
+    IndexTypeEnum indexType = property.getIndexType();
     Long constraintId = property.getConstraint() == null ? null : property.getConstraint().getId();
     RuleCode ruleCode =
         property.getLogicalRule() == null ? null : property.getLogicalRule().getCode();
@@ -51,6 +53,7 @@ public class PredicateConvertor {
             mountedConceptConfig,
             encryptTypeEnum,
             propertyGroup,
+            indexType,
             constraintId,
             ruleCode,
             ontologyEnum);

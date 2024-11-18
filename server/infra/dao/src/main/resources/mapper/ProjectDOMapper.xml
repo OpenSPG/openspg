@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2023 Ant Group CO., Ltd.
+  ~ Copyright 2023 OpenSPG Authors
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
   ~ in compliance with the License. You may obtain a copy of the License at
@@ -23,11 +23,12 @@
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
     <result column="namespace" jdbcType="VARCHAR" property="namespace" />
     <result column="biz_domain_id" jdbcType="BIGINT" property="bizDomainId" />
+    <result column="config" jdbcType="LONGVARCHAR" property="config" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
+        <if test="criteria.isValid()">
           <trim prefix="(" prefixOverrides="and" suffix=")">
             <foreach collection="criteria.criteria" item="criterion">
               <choose>
@@ -56,7 +57,7 @@
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
+        <if test="criteria.isValid()">
           <trim prefix="(" prefixOverrides="and" suffix=")">
             <foreach collection="criteria.criteria" item="criterion">
               <choose>
@@ -83,7 +84,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, description, status, gmt_create, gmt_modified, namespace, biz_domain_id
+    id, name, description, status, gmt_create, gmt_modified, namespace, biz_domain_id, config
   </sql>
   <select id="selectByExample" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.ProjectDOExample" resultMap="BaseResultMap">
     select
@@ -121,10 +122,10 @@
     </selectKey>
     insert into kg_project_info (name, description, status, 
       gmt_create, gmt_modified, namespace, 
-      biz_domain_id)
+      biz_domain_id, config)
     values (#{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
       #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{namespace,jdbcType=VARCHAR}, 
-      #{bizDomainId,jdbcType=BIGINT})
+      #{bizDomainId,jdbcType=BIGINT}, #{config,jdbcType=LONGVARCHAR} )
   </insert>
   <insert id="insertSelective" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.ProjectDO">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -176,6 +177,9 @@
       <if test="bizDomainId != null">
         #{bizDomainId,jdbcType=BIGINT},
       </if>
+      <if test="config != null">
+        #{config,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.ProjectDOExample" resultType="java.lang.Long">
@@ -211,6 +215,9 @@
       <if test="record.bizDomainId != null">
         biz_domain_id = #{record.bizDomainId,jdbcType=BIGINT},
       </if>
+      <if test="record.config != null">
+        config = #{record.config,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -225,7 +232,8 @@
       gmt_create = #{record.gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
       namespace = #{record.namespace,jdbcType=VARCHAR},
-      biz_domain_id = #{record.bizDomainId,jdbcType=BIGINT}
+      biz_domain_id = #{record.bizDomainId,jdbcType=BIGINT},
+      config = #{record.config,jdbcType=LONGVARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -254,6 +262,9 @@
       <if test="bizDomainId != null">
         biz_domain_id = #{bizDomainId,jdbcType=BIGINT},
       </if>
+      <if test="config != null">
+        config = #{config,jdbcType=LONGVARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -265,7 +276,55 @@
       gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       namespace = #{namespace,jdbcType=VARCHAR},
-      biz_domain_id = #{bizDomainId,jdbcType=BIGINT}
+      biz_domain_id = #{bizDomainId,jdbcType=BIGINT},
+      config = #{config,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <sql id="Query_Condition">
+    <if test="record.id != null">
+       id = #{record.id, jdbcType=BIGINT} and
+    </if>
+    <if test="record.name != null and record.name != ''">
+      ( name like concat('%', #{record.name}, '%') or
+      namespace like concat('%', #{record.name}, '%') or
+      id like concat('%', #{record.name}, '%') ) and
+    </if>
+    <if test="record.namespace != null and record.namespace != ''">
+      namespace like concat('%', #{record.namespace}, '%') and
+    </if>
+    <if test="record.bizDomainId != null">
+      biz_domain_id = #{record.bizDomainId,jdbcType=BIGINT} and
+    </if>
+    <if test="record.config != null and record.config != ''">
+      config like concat('%', #{record.config}, '%') and
+    </if>
+    1 = 1
+  </sql>
+  <sql id="Order_Condition">
+    ORDER BY
+    <if test="orderByGmtCreateDesc != null">
+      <choose>
+        <when test="orderByGmtCreateDesc">
+          gmt_create DESC,
+        </when>
+        <otherwise>
+          gmt_create ASC,
+        </otherwise>
+      </choose>
+    </if>
+    gmt_modified DESC
+  </sql>
+
+  <select id="selectByCondition" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/> from kg_project_info where
+    <include refid="Query_Condition"/>
+    <include refid="Order_Condition"/>
+    limit #{start}, #{size}
+  </select>
+  <select id="selectCountByCondition" resultType="java.lang.Long">
+    select count(*) from kg_project_info where
+    <include refid="Query_Condition"/>
+    <include refid="Order_Condition"/>
+  </select>
 </mapper>

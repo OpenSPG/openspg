@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,8 +13,10 @@
 
 package com.antgroup.openspg.builder.model.pipeline.config;
 
-import com.antgroup.openspg.builder.model.pipeline.NodeTypeEnum;
+import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
+import lombok.Getter;
 
+@Getter
 public abstract class BaseNodeConfig {
 
   /** The type of the node. */
@@ -22,9 +24,5 @@ public abstract class BaseNodeConfig {
 
   public BaseNodeConfig(NodeTypeEnum type) {
     this.type = type;
-  }
-
-  public NodeTypeEnum getType() {
-    return type;
   }
 }

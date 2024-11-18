@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,9 +13,9 @@
 
 package com.antgroup.openspg.builder.core.physical;
 
-import com.antgroup.openspg.builder.core.runtime.RuntimeContext;
+import com.antgroup.openspg.builder.core.runtime.BuilderContext;
+import com.antgroup.openspg.builder.model.exception.BuilderException;
 import java.util.Objects;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -36,7 +36,6 @@ import lombok.Getter;
  * </ul>
  */
 @Getter
-@AllArgsConstructor
 public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
 
   /** ID of the physical node. */
@@ -52,9 +51,9 @@ public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
    * instance ID, task parallelism, and so on. The task parallelism can be used for distributed data
    * reading and partitioning.
    *
-   * <p>For detailed runtime parameters, please refer to the {@link RuntimeContext} class.
+   * <p>For detailed runtime parameters, please refer to the {@link BuilderContext} class.
    */
-  protected RuntimeContext context;
+  protected BuilderContext context;
 
   /** Whether the node is initialized. */
   private volatile boolean isInitialized = false;
@@ -64,7 +63,7 @@ public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
     this.name = name;
   }
 
-  public void init(RuntimeContext context) throws Exception {
+  public void init(BuilderContext context) throws BuilderException {
     this.context = context;
     if (!isInitialized) {
       synchronized (this) {
@@ -76,7 +75,7 @@ public abstract class BasePhysicalNode implements Comparable<BasePhysicalNode> {
     }
   }
 
-  public void doInit(RuntimeContext context) throws Exception {}
+  public void doInit(BuilderContext context) throws BuilderException {}
 
   public abstract void close() throws Exception;
 

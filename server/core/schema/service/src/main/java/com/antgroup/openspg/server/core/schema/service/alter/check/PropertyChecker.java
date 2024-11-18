@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,13 +13,6 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.check;
 
-import com.antgroup.kg.reasoner.catalog.impl.OpenKgCatalog;
-import com.antgroup.kg.reasoner.lube.block.Block;
-import com.antgroup.kg.reasoner.lube.catalog.Catalog;
-import com.antgroup.kg.reasoner.lube.logical.planning.LogicalPlannerContext;
-import com.antgroup.kg.reasoner.lube.logical.validate.Validator;
-import com.antgroup.kg.reasoner.lube.parser.ParserInterface;
-import com.antgroup.kg.reasoner.parser.KgDslParser;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.DslSyntaxError;
 import com.antgroup.openspg.core.schema.model.SchemaConstants;
@@ -28,10 +21,19 @@ import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
 import com.antgroup.openspg.core.schema.model.type.*;
 import com.antgroup.openspg.core.schema.model.type.BasicType.TextBasicType;
+import com.antgroup.openspg.reasoner.catalog.impl.OpenSPGCatalog;
+import com.antgroup.openspg.reasoner.lube.block.Block;
+import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
+import com.antgroup.openspg.reasoner.lube.logical.planning.LogicalPlannerContext;
+import com.antgroup.openspg.reasoner.lube.logical.validate.Validator;
+import com.antgroup.openspg.reasoner.lube.parser.ParserInterface;
+import com.antgroup.openspg.reasoner.parser.OpenSPGDslParser;
 import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
+import com.google.common.collect.Lists;
 import java.util.*;
 import java.util.regex.Pattern;
 import org.apache.commons.collections4.CollectionUtils;
+import scala.collection.JavaConversions;
 
 /**
  * Check the information of property type in spg type is legal, the list of property in spg type
@@ -135,7 +137,12 @@ public class PropertyChecker {
               "objectTypeRef.typeName of property/relation: %s can not be null",
               property.getBasicInfo().getName()));
     }
-    if (!context.containSpgType(property.getObjectTypeRef().getBaseSpgIdentifier())) {
+    if (!context.containSpgType(property.getObjectTypeRef().getBaseSpgIdentifier())
+        && property
+            .getObjectTypeRef()
+            .getBaseSpgIdentifier()
+            .getNamespace()
+            .equals(property.getSubjectTypeRef().getBaseSpgIdentifier().getNamespace())) {
       throw new IllegalArgumentException(
           String.format(
               "property/relation: %s depends on type: %s, but not exist",
@@ -165,18 +172,23 @@ public class PropertyChecker {
   protected Catalog buildCatalog(SchemaCheckContext context) {
     List<BaseSPGType> spgTypes = context.getMergedSchema();
     ProjectSchema projectSchema = new ProjectSchema(spgTypes);
-    Catalog catalog = new OpenKgCatalog(context.getProjectId(), null, projectSchema);
+    Catalog catalog = new OpenSPGCatalog(context.getProjectId(), null, projectSchema);
     catalog.init();
     return catalog;
   }
 
   protected void checkDSL(String dsl, Catalog catalog) {
     try {
-      ParserInterface parser = new KgDslParser();
-      Block block = parser.parse(dsl);
+      ParserInterface parser = new OpenSPGDslParser();
+      List<Block> blocks =
+          Lists.newArrayList(
+              JavaConversions.asJavaCollection(
+                  parser.parseMultipleStatement(dsl, new scala.collection.immutable.HashMap<>())));
       LogicalPlannerContext context =
           new LogicalPlannerContext(catalog, parser, new scala.collection.immutable.HashMap<>());
-      Validator.validate(parser, block, context);
+      for (Block block : blocks) {
+        Validator.validate(parser, block, context);
+      }
     } catch (Exception e) {
       throw DslSyntaxError.dslSyntaxError(e);
     }

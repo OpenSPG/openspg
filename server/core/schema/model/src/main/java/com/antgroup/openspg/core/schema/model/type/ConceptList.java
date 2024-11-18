@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -15,7 +15,7 @@ package com.antgroup.openspg.core.schema.model.type;
 
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,16 +50,16 @@ public class ConceptList extends BaseValObj {
     return semantics;
   }
 
-  public List<LogicalCausationSemantic> getLogicalCausation() {
-    List<LogicalCausationSemantic> semantics = new ArrayList<>();
+  public List<TripleSemantic> getLogicalCausation() {
+    List<TripleSemantic> semantics = new ArrayList<>();
     for (Concept concept : concepts) {
       semantics.addAll(concept.getLogicalCausationSemantics());
     }
     return semantics;
   }
 
-  public List<LogicalCausationSemantic> getLogicalCausation(ConceptIdentifier conceptName) {
-    List<LogicalCausationSemantic> semantics = new ArrayList<>();
+  public List<TripleSemantic> getLogicalCausation(ConceptIdentifier conceptName) {
+    List<TripleSemantic> semantics = new ArrayList<>();
     for (Concept concept : concepts) {
       if (concept.getName().equals(conceptName)) {
         semantics.addAll(concept.getLogicalCausationSemantics());

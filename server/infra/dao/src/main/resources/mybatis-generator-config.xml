@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2023 Ant Group CO., Ltd.
+  ~ Copyright 2023 OpenSPG Authors
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
   ~ in compliance with the License. You may obtain a copy of the License at
@@ -57,24 +57,8 @@
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
         </table>
-        <table tableName="kg_data_source" domainObjectName="DataSourceDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
-        </table>
-        <table tableName="kg_data_source_usage" domainObjectName="DataSourceUsageDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
-        </table>
         <table tableName="kg_sys_lock" domainObjectName="SysLockDO">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
-        </table>
-        <table tableName="kg_operator_overview" domainObjectName="OperatorOverviewDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
-        </table>
-        <table tableName="kg_operator_version" domainObjectName="OperatorVersionDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
         </table>
         <table tableName="kg_ontology_entity" domainObjectName="OntologyDO">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
@@ -99,22 +83,6 @@
         </table>
         <table tableName="kg_ontology_release" domainObjectName="ReleaseDO">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
-        </table>
-        <table tableName="kg_spg_job_info" domainObjectName="SPGJobInfoDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
-        </table>
-        <table tableName="kg_spg_job_inst" domainObjectName="SPGJobInstDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
-        </table>
-        <table tableName="kg_schedule_job_info" domainObjectName="JobInfoDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
-        </table>
-        <table tableName="kg_schedule_job_inst" domainObjectName="JobInstDO">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
         </table>
     </context>
 </generatorConfiguration>

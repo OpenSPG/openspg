@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.check;
 
-import com.antgroup.kg.reasoner.lube.catalog.Catalog;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
+import com.antgroup.openspg.reasoner.lube.catalog.Catalog;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -22,6 +22,8 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.Id
 import com.antgroup.openspg.core.schema.model.SPGSchema;
 import com.antgroup.openspg.core.schema.model.alter.AlterOperationEnum;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -124,7 +126,19 @@ public class SPGSchema2IdxServiceImpl implements SPGSchema2IdxService {
   }
 
   private IdxSchema toIndexSchema(BaseSPGType spgType) {
-    // es支持动态schema，这里不传入mapping，由es自己判断
-    return new IdxSchema(spgType.getName(), null);
+    IdxMapping idxMapping =
+        new IdxMapping(
+            spgType.getProperties().stream()
+                .map(x -> new IdxField(x.getName(), toBasicType(x.getObjectTypeRef())))
+                .collect(Collectors.toList()));
+    return new IdxSchema(spgType.getName(), idxMapping);
+  }
+
+  private BasicTypeEnum toBasicType(SPGTypeRef spgTypeRef) {
+    if (spgTypeRef.isBasicType()) {
+      return BasicTypeEnum.from(spgTypeRef.getName());
+    } else {
+      return BasicTypeEnum.TEXT;
+    }
   }
 }

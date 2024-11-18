@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,14 +14,9 @@
 package com.antgroup.openspg.server.core.schema.service.alter.sync;
 
 import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
-import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /** The abstract class of schema writer. */
 public abstract class BaseSchemaSyncer {
-
-  @Autowired protected DataSourceService dataSourceService;
-
   /**
    * sync new schema of project into db.
    *

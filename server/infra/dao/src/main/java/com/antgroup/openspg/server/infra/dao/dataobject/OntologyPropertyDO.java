@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -69,6 +69,8 @@ public class OntologyPropertyDO {
   private Long propertySource;
 
   private String propertyConfig;
+
+  private String indexType;
 
   public Long getId() {
     return id;
@@ -284,5 +286,13 @@ public class OntologyPropertyDO {
 
   public void setPropertyConfig(String propertyConfig) {
     this.propertyConfig = propertyConfig == null ? null : propertyConfig.trim();
+  }
+
+  public String getIndexType() {
+    return indexType;
+  }
+
+  public void setIndexType(String indexType) {
+    this.indexType = indexType;
   }
 }

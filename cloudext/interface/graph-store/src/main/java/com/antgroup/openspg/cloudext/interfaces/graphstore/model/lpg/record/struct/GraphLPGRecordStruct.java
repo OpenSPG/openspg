@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -17,6 +17,8 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.Edge
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -47,5 +49,42 @@ public class GraphLPGRecordStruct extends BaseLPGRecordStruct {
 
   public boolean isEmpty() {
     return CollectionUtils.isEmpty(vertices) && CollectionUtils.isEmpty(edges);
+  }
+
+  /**
+   * Add all record from the other graph lpg record struct.
+   *
+   * @param other the other graph lpg record struct
+   */
+  public void addAll(GraphLPGRecordStruct other) {
+    if (other == null || other.isEmpty()) {
+      return;
+    }
+    // add vertex record if absent.
+    if (CollectionUtils.isNotEmpty(other.getVertices())) {
+      Set<String> uniqueStringOfVertices =
+          this.vertices.stream()
+              .map(VertexRecord::generateUniqueString)
+              .collect(Collectors.toSet());
+      for (VertexRecord vertexRecordToAdd : other.getVertices()) {
+        String uniqueString = vertexRecordToAdd.generateUniqueString();
+        if (!uniqueStringOfVertices.contains(uniqueString)) {
+          this.vertices.add(vertexRecordToAdd);
+          uniqueStringOfVertices.add(uniqueString);
+        }
+      }
+    }
+    // add edge record if absent
+    if (CollectionUtils.isNotEmpty(other.getEdges())) {
+      Set<String> uniqueStringOfEdges =
+          this.edges.stream().map(EdgeRecord::generateUniqueString).collect(Collectors.toSet());
+      for (EdgeRecord edgeRecordToAdd : other.getEdges()) {
+        String uniqueString = edgeRecordToAdd.generateUniqueString();
+        if (!uniqueStringOfEdges.contains(uniqueString)) {
+          this.edges.add(edgeRecordToAdd);
+          uniqueStringOfEdges.add(uniqueString);
+        }
+      }
+    }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -16,8 +16,8 @@ package com.antgroup.openspg.core.schema.model.type;
 import com.antgroup.openspg.core.schema.model.identifier.ConceptIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.BaseConceptSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.DynamicTaxonomySemantic;
-import com.antgroup.openspg.core.schema.model.semantic.LogicalCausationSemantic;
 import com.antgroup.openspg.core.schema.model.semantic.SystemPredicateEnum;
+import com.antgroup.openspg.core.schema.model.semantic.TripleSemantic;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import java.util.List;
 import java.util.Objects;
@@ -63,14 +63,14 @@ public class Concept extends BaseValObj {
         .collect(Collectors.toList());
   }
 
-  public List<LogicalCausationSemantic> getLogicalCausationSemantics() {
+  public List<TripleSemantic> getLogicalCausationSemantics() {
     return semantics.stream()
         .map(
             semantic -> {
-              if (!(semantic instanceof LogicalCausationSemantic)) {
+              if (!(semantic instanceof TripleSemantic)) {
                 return null;
               }
-              LogicalCausationSemantic relationSemantic = (LogicalCausationSemantic) semantic;
+              TripleSemantic relationSemantic = (TripleSemantic) semantic;
               if (!SystemPredicateEnum.LEAD_TO
                   .getName()
                   .equals(relationSemantic.getPredicateIdentifier().getName())) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -70,5 +70,16 @@ public class EdgeRecord extends BaseLPGRecord {
     otherProperties.put(EdgeType.DST_ID, dstId);
     otherProperties.put(EdgeType.VERSION, version);
     return otherProperties;
+  }
+
+  @Override
+  public String generateUniqueString() {
+    return srcId
+        + UNIQUE_STRING_SEPARATOR
+        + edgeType.toString()
+        + UNIQUE_STRING_SEPARATOR
+        + dstId
+        + UNIQUE_STRING_SEPARATOR
+        + version;
   }
 }

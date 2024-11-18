@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -18,6 +18,8 @@ import com.antgroup.openspg.server.api.facade.ApiConstants;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +28,7 @@ import lombok.Setter;
  * VertexType} in <tt>LPG</tt>, identified by vertex id <tt>(id)</tt>.
  */
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class VertexRecord extends BaseLPGRecord {
 
   @Setter private String vertexType;
@@ -45,16 +48,21 @@ public class VertexRecord extends BaseLPGRecord {
     return otherProperties;
   }
 
-  public Map<String, Map<Long, Object>> toPropertyMapWithIdAndVersion() {
+  public Map<String, TreeMap<Long, Object>> toPropertyMapWithIdAndVersion() {
     Map<String, Object> otherProperties = toPropertyMapWithId();
 
-    Map<String, Map<Long, Object>> results = new HashMap<>(otherProperties.size());
+    Map<String, TreeMap<Long, Object>> results = new HashMap<>(otherProperties.size());
     otherProperties.forEach(
         (key, value) -> {
-          Map<Long, Object> propertyVersion = new HashMap<>(1);
+          TreeMap<Long, Object> propertyVersion = new TreeMap<>();
           propertyVersion.put(ApiConstants.DEFAULT_VERSION, value);
           results.put(key, propertyVersion);
         });
     return results;
+  }
+
+  @Override
+  public String generateUniqueString() {
+    return vertexType + UNIQUE_STRING_SEPARATOR + id;
   }
 }

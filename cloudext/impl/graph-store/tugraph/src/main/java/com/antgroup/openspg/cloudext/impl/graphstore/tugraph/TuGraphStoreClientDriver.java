@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -18,10 +18,8 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClientDrive
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClientDriverManager;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.impl.DefaultLPGTypeNameConvertor;
 import com.antgroup.openspg.common.util.cloudext.CachedCloudExtClientDriver;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 
-public class TuGraphStoreClientDriver
-    extends CachedCloudExtClientDriver<GraphStoreClient, GraphStoreConnectionInfo>
+public class TuGraphStoreClientDriver extends CachedCloudExtClientDriver<GraphStoreClient>
     implements GraphStoreClientDriver {
 
   static {
@@ -34,7 +32,7 @@ public class TuGraphStoreClientDriver
   }
 
   @Override
-  protected GraphStoreClient innerConnect(GraphStoreConnectionInfo connInfo) {
+  protected GraphStoreClient innerConnect(String connInfo) {
     return new TuGraphStoreClient(connInfo, new DefaultLPGTypeNameConvertor());
   }
 }

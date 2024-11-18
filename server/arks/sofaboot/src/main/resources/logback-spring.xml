@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2023 Ant Group CO., Ltd.
+  ~ Copyright 2023 OpenSPG Authors
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
   ~ in compliance with the License. You may obtain a copy of the License at
@@ -14,85 +14,85 @@
 
 <Configuration>
 
-    <springProperty scope="context" name="appname" source="spring.application.name"/>
-    <springProperty scope="context" name="logging.path" source="logging.path"/>
-    <springProperty scope="context" name="logging.level" source="logging.level.com.alipay.sofa"/>
+  <springProperty scope="context" name="appname" source="spring.application.name"/>
+  <springProperty scope="context" name="logging.path" source="logging.path"/>
+  <springProperty scope="context" name="logging.level" source="logging.level.com.alipay.sofa"/>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d [%X{traceId}] [%X{rpcId}] [%t] %-5p %c{2} - %m%n</Pattern>
-        </encoder>
-    </appender>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <Pattern>%d [%X{traceId}] [%X{rpcId}] [%t] %-5p %c{2} - %m%n</Pattern>
+    </encoder>
+  </appender>
 
-    <appender name="ERROR-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <append>true</append>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>error</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-        <file>${logging.path}/${appname}/common-error.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${logging.path}/${appname}/common-error.log.%d{yyyy-MM-dd}</FileNamePattern>
-            <MaxHistory>30</MaxHistory>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d [%X{traceId}] [%X{rpcId}] [%t] %-5p %c{2} - %m%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
+  <appender name="ERROR-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>true</append>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>error</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <file>${logging.path}/${appname}/common-error.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>${logging.path}/${appname}/common-error.log.%d{yyyy-MM-dd}</FileNamePattern>
+      <MaxHistory>30</MaxHistory>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>%d [%X{traceId}] [%X{rpcId}] [%t] %-5p %c{2} - %m%n</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
 
-    <appender name="ROOT-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <append>true</append>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>${logging.level}</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-        <file>${logging.path}/${appname}/common-default.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${logging.path}/${appname}/common-default.log.%d{yyyy-MM-dd}
-            </FileNamePattern>
-            <MaxHistory>30</MaxHistory>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d [%X{traceId}] [%X{rpcId}] [%t] %-5p %c{2} - %m%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
+  <appender name="ROOT-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>true</append>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>${logging.level}</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <file>${logging.path}/${appname}/common-default.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>${logging.path}/${appname}/common-default.log.%d{yyyy-MM-dd}
+      </FileNamePattern>
+      <MaxHistory>30</MaxHistory>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>%d [%X{traceId}] [%X{rpcId}] [%t] %-5p %c{2} - %m%n</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
 
-    <appender name="CONTROLLER-DIGEST-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <append>true</append>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>${logging.level}</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-        <file>${logging.path}/${appname}/controller-digest.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${logging.path}/${appname}/controller-digest.log.%d{yyyy-MM-dd}
-            </FileNamePattern>
-            <MaxHistory>30</MaxHistory>
-        </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d [%X{traceId}] [%X{rpcId}] [%t] %-5p %c{2} - %m%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-    </appender>
+  <appender name="CONTROLLER-DIGEST-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <append>true</append>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>${logging.level}</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <file>${logging.path}/${appname}/controller-digest.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <FileNamePattern>${logging.path}/${appname}/controller-digest.log.%d{yyyy-MM-dd}
+      </FileNamePattern>
+      <MaxHistory>30</MaxHistory>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>%d [%X{traceId}] [%X{rpcId}] [%t] %-5p %c{2} - %m%n</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
 
-    <logger name="com.alipay.sofa" level="${logging.level}" additivity="false">
-        <appender-ref ref="ROOT-APPENDER"/>
-        <appender-ref ref="ERROR-APPENDER"/>
-    </logger>
+  <logger name="com.alipay.sofa" level="${logging.level}" additivity="false">
+    <appender-ref ref="ROOT-APPENDER"/>
+    <appender-ref ref="ERROR-APPENDER"/>
+  </logger>
 
-    <root level="${logging.level}">
-        <appender-ref ref="STDOUT"/>
-        <appender-ref ref="ROOT-APPENDER"/>
-        <appender-ref ref="ERROR-APPENDER"/>
-    </root>
+  <root level="${logging.level}">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="ROOT-APPENDER"/>
+    <appender-ref ref="ERROR-APPENDER"/>
+  </root>
 
-    <logger name="CONTROLLER-DIGEST" level="${logging.level}" additivity="false">
-        <appender-ref ref="CONTROLLER-DIGEST-APPENDER"/>
-        <appender-ref ref="ERROR-APPENDER"/>
-    </logger>
+  <logger name="CONTROLLER-DIGEST" level="${logging.level}" additivity="false">
+    <appender-ref ref="CONTROLLER-DIGEST-APPENDER"/>
+    <appender-ref ref="ERROR-APPENDER"/>
+  </logger>
 </Configuration>

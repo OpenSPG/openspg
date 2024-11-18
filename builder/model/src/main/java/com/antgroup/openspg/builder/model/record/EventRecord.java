@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,16 +13,19 @@
 
 package com.antgroup.openspg.builder.model.record;
 
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGPropertyRecord;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.EventType;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 
 public class EventRecord extends BaseAdvancedRecord {
 
-  private final EventType eventType;
+  @Getter private final EventType eventType;
 
-  private final String eventId;
+  @Getter private final String eventId;
 
   private final List<SPGPropertyRecord> properties;
 
@@ -56,13 +59,5 @@ public class EventRecord extends BaseAdvancedRecord {
   @Override
   public List<BasePropertyRecord> getProperties() {
     return Collections.unmodifiableList(properties);
-  }
-
-  public EventType getEventType() {
-    return eventType;
-  }
-
-  public String getEventId() {
-    return eventId;
   }
 }

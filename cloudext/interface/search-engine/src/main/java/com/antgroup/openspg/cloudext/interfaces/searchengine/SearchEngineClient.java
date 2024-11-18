@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,6 +14,8 @@
 package com.antgroup.openspg.cloudext.interfaces.searchengine;
 
 import com.antgroup.openspg.builder.model.record.SPGRecordManipulateCmd;
+import com.antgroup.openspg.cloudext.interfaces.searchengine.cmd.IdxRecordManipulateCmd;
+import com.antgroup.openspg.cloudext.interfaces.searchengine.cmd.IdxSchemaAlterCmd;
 import com.antgroup.openspg.common.util.cloudext.CloudExtClient;
 import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
 
@@ -21,7 +23,11 @@ public interface SearchEngineClient extends CloudExtClient, IdxDataQueryService 
 
   int alterSchema(SPGSchemaAlterCmd cmd);
 
+  int alterSchema(IdxSchemaAlterCmd cmd);
+
   int manipulateRecord(SPGRecordManipulateCmd cmd);
+
+  int manipulateRecord(IdxRecordManipulateCmd cmd);
 
   void close() throws Exception;
 

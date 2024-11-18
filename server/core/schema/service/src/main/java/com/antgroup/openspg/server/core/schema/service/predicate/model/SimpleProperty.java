@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -18,6 +18,7 @@ import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.OntologyId;
 import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.EncryptTypeEnum;
+import com.antgroup.openspg.core.schema.model.predicate.IndexTypeEnum;
 import com.antgroup.openspg.core.schema.model.predicate.MountedConceptConfig;
 import com.antgroup.openspg.core.schema.model.predicate.PropertyGroupEnum;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
@@ -57,6 +58,9 @@ public class SimpleProperty extends BaseSpoTriple {
   /** The group that property belongs to , since every event must have */
   private final PropertyGroupEnum propertyGroup;
 
+  /** The index type on the property. */
+  private IndexTypeEnum indexType;
+
   /** The id of constraint defined on property. */
   private final Long constraintId;
 
@@ -75,6 +79,7 @@ public class SimpleProperty extends BaseSpoTriple {
       MountedConceptConfig mountedConceptConfig,
       EncryptTypeEnum encryptTypeEnum,
       PropertyGroupEnum propertyGroup,
+      IndexTypeEnum indexType,
       Long constraintId,
       RuleCode ruleCode,
       SPGOntologyEnum ontologyEnum) {
@@ -86,6 +91,7 @@ public class SimpleProperty extends BaseSpoTriple {
     this.mountedConceptConfig = mountedConceptConfig;
     this.encryptTypeEnum = encryptTypeEnum;
     this.propertyGroup = propertyGroup;
+    this.indexType = indexType;
     this.constraintId = constraintId;
     this.ruleCode = ruleCode;
     this.ontologyEnum = ontologyEnum;
@@ -117,6 +123,10 @@ public class SimpleProperty extends BaseSpoTriple {
 
   public PropertyGroupEnum getPropertyGroup() {
     return propertyGroup;
+  }
+
+  public IndexTypeEnum getIndexType() {
+    return indexType;
   }
 
   public Long getConstraintId() {

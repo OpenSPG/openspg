@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -39,7 +39,6 @@ public interface ElasticSearchRecordClient {
   @Delete(value = "/{idxName}/_doc/{docId}")
   ForestResponse<String> delete(@Var("idxName") String idxName, @Var("docId") String docId);
 
-  // 由于okhttp的backend对于get请求会丢弃body，这里换成httpclient
   @Get(value = "/{idxName}/_mget")
   ForestResponse<String> mGet(
       @Var("idxName") String idxName, @JSONBody(name = "ids") Set<String> docIds);
@@ -47,4 +46,8 @@ public interface ElasticSearchRecordClient {
   @Get(value = "/{idxName}/_search")
   ForestResponse<String> search(
       @Var("idxName") String idxName, @JSONBody(name = "query") Object query);
+
+  @Get(value = "/_search?from={from}&size={size}")
+  ForestResponse<String> searchAll(
+      @JSONBody(name = "query") Object query, @Var("from") Integer from, @Var("size") Integer size);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,18 +13,21 @@
 
 package com.antgroup.openspg.builder.model.record;
 
+import com.antgroup.openspg.builder.model.record.property.BasePropertyRecord;
+import com.antgroup.openspg.builder.model.record.property.SPGSubPropertyRecord;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
-import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
 public class RelationRecord extends BaseSPGRecord {
 
-  private final Relation relationType;
+  @Getter private final Relation relationType;
 
-  private final String srcId;
-  private final String dstId;
+  @Setter @Getter private String srcId;
+  @Setter @Getter private String dstId;
 
   private final List<SPGSubPropertyRecord> properties;
 
@@ -37,29 +40,8 @@ public class RelationRecord extends BaseSPGRecord {
     this.properties = properties;
   }
 
-  public Relation getRelationType() {
-    return relationType;
-  }
-
-  public String getSrcId() {
-    return srcId;
-  }
-
-  public String getDstId() {
-    return dstId;
-  }
-
   public List<SPGSubPropertyRecord> getSubProperties() {
     return properties;
-  }
-
-  public SPGSubPropertyRecord getSubPropertyRecord(SubProperty property) {
-    for (SPGSubPropertyRecord record : getSubProperties()) {
-      if (record.getSubPropertyType().getName().equals(property.getName())) {
-        return record;
-      }
-    }
-    return null;
   }
 
   @Override

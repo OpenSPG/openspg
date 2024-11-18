@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -32,7 +33,11 @@ import org.apache.commons.collections4.CollectionUtils;
  * </ul>
  */
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public abstract class BaseLPGRecord extends BaseValObj {
+
+  /** the separator '|' for unique string generation. */
+  protected static final String UNIQUE_STRING_SEPARATOR = "|";
 
   private final LPGRecordTypeEnum recordType;
 
@@ -68,4 +73,11 @@ public abstract class BaseLPGRecord extends BaseValObj {
    * @return a map
    */
   public abstract Map<String, Object> toPropertyMapWithId();
+
+  /**
+   * Generate the unique string of this record.
+   *
+   * @return a string
+   */
+  public abstract String generateUniqueString();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,10 +14,11 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore;
 
 import com.antgroup.openspg.common.util.DriverManagerUtils;
-import com.antgroup.openspg.server.common.model.datasource.connection.GraphStoreConnectionInfo;
 import com.antgroup.openspg.server.common.model.exception.CloudExtException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 public class GraphStoreClientDriverManager {
@@ -41,12 +42,13 @@ public class GraphStoreClientDriverManager {
     log.info("registerDriver: {}", driver);
   }
 
-  public static GraphStoreClient getClient(GraphStoreConnectionInfo config) {
+  public static GraphStoreClient getClient(String connUrl) {
+    UriComponents uriComponents = UriComponentsBuilder.fromUriString(connUrl).build();
     for (GraphStoreClientDriver driver : registeredDrivers) {
-      if (driver.acceptsConfig(config)) {
-        return driver.connect(config);
+      if (driver.acceptsConfig(uriComponents.getScheme())) {
+        return driver.connect(connUrl);
       }
     }
-    throw CloudExtException.driverNotExist(config);
+    throw CloudExtException.driverNotExist(connUrl);
   }
 }

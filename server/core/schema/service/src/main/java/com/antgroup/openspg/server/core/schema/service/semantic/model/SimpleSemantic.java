@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -18,11 +18,16 @@ import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
+import java.util.Date;
 
 /** Simple semantic object, mapping data object */
 public class SimpleSemantic extends BaseValObj {
 
   private static final long serialVersionUID = 3587557458744988394L;
+
+  private Long id;
+
+  private Date modifiedDate;
 
   /** The unique id of subject. */
   private final String subjectId;
@@ -115,5 +120,21 @@ public class SimpleSemantic extends BaseValObj {
 
   public void setOntologyType(SPGOntologyEnum ontologyEnum) {
     this.ontologyEnum = ontologyEnum;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public Date getModifiedDate() {
+    return modifiedDate;
+  }
+
+  public void setModifiedDate(Date modifiedDate) {
+    this.modifiedDate = modifiedDate;
   }
 }

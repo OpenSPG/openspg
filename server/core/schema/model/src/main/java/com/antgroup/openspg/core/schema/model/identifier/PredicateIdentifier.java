@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -14,8 +14,10 @@
 package com.antgroup.openspg.core.schema.model.identifier;
 
 import java.util.Objects;
+import lombok.Getter;
 
 /** The identity of predicate, consists by the name of the predicate. */
+@Getter
 public class PredicateIdentifier extends BaseSPGIdentifier {
 
   private static final long serialVersionUID = 5678679675787525025L;
@@ -26,10 +28,6 @@ public class PredicateIdentifier extends BaseSPGIdentifier {
   public PredicateIdentifier(String name) {
     super(SPGIdentifierTypeEnum.PREDICATE);
     this.name = name;
-  }
-
-  public String getName() {
-    return name;
   }
 
   @Override

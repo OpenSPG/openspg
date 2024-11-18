@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -53,13 +53,19 @@ public class SemanticServiceImpl implements SemanticService {
     }
 
     Set<Long> propertyIds = new HashSet<>();
-    semantics.forEach(
-        e -> {
-          propertyIds.add(Long.parseLong(e.getSubjectId()));
-          propertyIds.add(Long.parseLong(e.getObjectId()));
-        });
+    SPGOntologyEnum conceptOntologyEnum = null;
+    for (SimpleSemantic e : semantics) {
+      propertyIds.add(Long.parseLong(e.getSubjectId()));
+      if (SPGOntologyEnum.CONCEPT != e.getOntologyType()) {
+        propertyIds.add(Long.parseLong(e.getObjectId()));
+      } else {
+        conceptOntologyEnum = SPGOntologyEnum.PROPERTY;
+      }
+    }
     List<PropertyRef> propertyRefs =
-        propertyRepository.queryRefByUniqueId(Lists.newArrayList(propertyIds), ontologyEnum);
+        propertyRepository.queryRefByUniqueId(
+            Lists.newArrayList(propertyIds),
+            conceptOntologyEnum != null ? conceptOntologyEnum : ontologyEnum);
 
     return SemanticConvertor.toPredicateSemantic(semantics, propertyRefs, ontologyEnum);
   }

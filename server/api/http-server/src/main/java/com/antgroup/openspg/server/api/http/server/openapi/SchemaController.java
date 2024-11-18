@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -13,23 +13,37 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
+import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.SchemaExtInfo;
+import com.antgroup.openspg.core.schema.model.alter.AlterOperationEnum;
+import com.antgroup.openspg.core.schema.model.alter.SchemaDraft;
+import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.predicate.IndexTypeEnum;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.predicate.PropertyAdvancedConfig;
 import com.antgroup.openspg.core.schema.model.predicate.Relation;
 import com.antgroup.openspg.core.schema.model.predicate.SubProperty;
 import com.antgroup.openspg.core.schema.model.semantic.PredicateSemantic;
 import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.core.schema.model.type.EntityType;
 import com.antgroup.openspg.core.schema.model.type.ParentTypeInfo;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeAdvancedConfig;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
+import com.antgroup.openspg.core.schema.model.type.SPGTypeRef;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.*;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.server.biz.common.util.AssertUtils;
 import com.antgroup.openspg.server.biz.schema.SchemaManager;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +58,73 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SchemaController extends BaseController {
 
   @Autowired private SchemaManager schemaManager;
+
+  public static SchemaDraft getDefaultSchemaDraft(String namespace) {
+    SchemaDraft sd = new SchemaDraft();
+    List<BaseAdvancedType> alterSpgTypes = getDefaultSchema(namespace);
+    sd.setAlterSpgTypes(alterSpgTypes);
+    return sd;
+  }
+
+  public static List<BaseAdvancedType> getDefaultSchema(String namespace) {
+    List<BaseAdvancedType> schemaTypes = Lists.newArrayList();
+
+    Map<String, IndexTypeEnum> chunkProperties = Maps.newHashMap();
+    chunkProperties.put("content", IndexTypeEnum.TEXT_AND_VECTOR);
+
+    Map<String, IndexTypeEnum> properties = Maps.newHashMap();
+    properties.put("desc", IndexTypeEnum.TEXT_AND_VECTOR);
+    properties.put("semanticType", IndexTypeEnum.TEXT);
+
+    schemaTypes.add(getBaseSPGType(namespace, "Chunk", "文本块", chunkProperties));
+    schemaTypes.add(getBaseSPGType(namespace, "ArtificialObject", "人造物体", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Astronomy", "天文学", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Building", "建筑", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Creature", "生物", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Concept", "概念", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Date", "日期", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "GeographicLocation", "地理位置", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Keyword", "关键词", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Medicine", "药物", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "NaturalScience", "自然科学", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Organization", "组织机构", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Person", "人物", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Transport", "运输", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Works", "作品", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Event", "事件", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "Others", "其他", properties));
+    schemaTypes.add(getBaseSPGType(namespace, "SemanticConcept", "语义概念", properties));
+    return schemaTypes;
+  }
+
+  public static EntityType getBaseSPGType(
+      String namespace, String label, String nameZh, Map<String, IndexTypeEnum> properties) {
+    List<Property> propertyList = Lists.newArrayList();
+    for (String pro : properties.keySet()) {
+
+      Property property =
+          new Property(
+              new BasicInfo<>(new PredicateIdentifier(pro), pro, StringUtils.EMPTY),
+              null,
+              new SPGTypeRef(
+                  new BasicInfo<>(new SPGTypeIdentifier(null, "Text"), "文本", "文本"),
+                  SPGTypeEnum.BASIC_TYPE),
+              false,
+              new PropertyAdvancedConfig().setIndexType(properties.get(pro)));
+      property.setAlterOperation(AlterOperationEnum.CREATE);
+      propertyList.add(property);
+    }
+
+    EntityType entityType =
+        new EntityType(
+            new BasicInfo(new SPGTypeIdentifier(namespace, label), nameZh, StringUtils.EMPTY),
+            ParentTypeInfo.THING,
+            propertyList,
+            null,
+            null);
+    entityType.setAlterOperation(AlterOperationEnum.CREATE);
+    return entityType;
+  }
 
   @RequestMapping(value = "/alterSchema", method = RequestMethod.POST)
   @ResponseBody

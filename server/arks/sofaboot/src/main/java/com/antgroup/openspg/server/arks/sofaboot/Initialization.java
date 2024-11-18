@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 Ant Group CO., Ltd.
+ * Copyright 2023 OpenSPG Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -20,6 +20,8 @@ import com.antgroup.openspg.server.common.service.spring.SpringContextAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+// todo delete this class
+
 @Service
 public class Initialization extends SpringContextAware {
 
@@ -28,7 +30,6 @@ public class Initialization extends SpringContextAware {
   @Override
   public void init() {
     initHttpClientBootstrap();
-    initScheduler();
   }
 
   private void initHttpClientBootstrap() {
@@ -36,15 +37,5 @@ public class Initialization extends SpringContextAware {
         new ConnectionInfo(appEnvConfig.getSchemaUri())
             .setConnectTimeout(60000)
             .setReadTimeout(60000));
-  }
-
-  private void initScheduler() {
-    try {
-      Class.forName(
-          "com.antgroup.openspg.cloudext.interfaces."
-              + "jobscheduler.JobSchedulerClientDriverManager");
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
   }
 }
