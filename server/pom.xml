@@ -46,8 +46,6 @@
     <module>common/service</module>
     <module>core/schema/model</module>
     <module>core/schema/service</module>
-    <module>core/builder/model</module>
-    <module>core/builder/service</module>
     <module>core/scheduler/model</module>
     <module>core/scheduler/service</module>
     <module>core/reasoner/model</module>
