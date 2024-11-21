@@ -1,0 +1,49 @@
+namespace Openkg
+
+Country(国家): EntityType
+
+School(学校): EntityType
+
+CreativeWork(创作): EntityType
+
+Place(地点): EntityType
+
+Organization(机构): EntityType
+
+Person(人物): EntityType
+     properties:
+            additionalName(别名):Text
+            familyName(姓):Text
+            givenName(名):Text
+            gender(性别):STD.Gender
+            nationality(国籍):Country
+            nativePlace(籍贯):Text
+            ethnicity(民族):Text
+            phone(电话):Text
+            email(电子邮箱):STD.Email
+            homeLocation(家庭地址):Place
+            height(身高):Text
+            weight(体重):Text
+            birthDate(出生日期):STD.Date
+            birthPlace(出生地点):Place
+            deathDate(逝世日期):STD.Date
+            deathPlace(逝世地点):Place
+
+            graduatedSchool(毕业院校):School
+            educationLevel(学历):Text
+            major(专业):Text
+
+            workLocation(工作地点):Place
+            workUnit(工作单位):Organization
+            namedPosition(角色职位):Text
+            department(所属部门):Text
+
+            honor(荣誉):Text
+            awards(所获奖项):Text
+            works(作品):CreativeWork
+
+            father(父亲):Person
+            mother(母亲):Person
+            spouse(配偶):Person
+            sibling(兄弟姐妹):Person
+            children(子女):Person
