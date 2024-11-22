@@ -37,7 +37,7 @@ public class Neo4jDriverManager {
             Config config =
                 Config.builder()
                     .withMaxConnectionPoolSize(200)
-                    .withMaxConnectionLifetime(2, TimeUnit.HOURS)
+                    .withMaxConnectionLifetime(4, TimeUnit.HOURS)
                     .withMaxTransactionRetryTime(300, TimeUnit.SECONDS)
                     .withConnectionAcquisitionTimeout(300, TimeUnit.SECONDS)
                     .build();

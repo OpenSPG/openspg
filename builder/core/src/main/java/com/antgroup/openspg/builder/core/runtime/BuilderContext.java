@@ -26,6 +26,8 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class BuilderContext implements Serializable {
 
+  private static final long serialVersionUID = 2446709406202543546L;
+
   private long projectId;
   private String project;
   private String jobName;
@@ -41,6 +43,7 @@ public class BuilderContext implements Serializable {
   private int batchSize = 1;
   private int parallelism = 1;
   private boolean enableLeadTo;
+  private Integer modelExecuteNum = 5;
 
   private Map<String, ExecuteNode> executeNodes;
   private String schemaUrl;

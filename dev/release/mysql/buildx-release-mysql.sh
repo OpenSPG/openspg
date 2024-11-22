@@ -10,6 +10,8 @@
 # or implied.
 
 docker buildx build -f Dockerfile --platform linux/arm64/v8,linux/amd64 --push \
-  -t openspg/openspg-mysql:0.5 \
+  -t spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-mysql:0.5.1 \
+  -t spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-mysql:latest \
+  -t openspg/openspg-mysql:0.5.1 \
   -t openspg/openspg-mysql:latest \
   .
