@@ -107,8 +107,31 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from kg_project_info
-    where id = #{id,jdbcType=BIGINT}
+    delete from kg_project_info where id = #{id,jdbcType=BIGINT};
+  </delete>
+  <delete id="deleteFromKgOntologyEntity"  parameterType="java.lang.String">
+    DELETE FROM kg_ontology_entity WHERE name like concat(#{namespace}, '.%') ;
+  </delete>
+  <delete id="deleteFromKgOntologyEntityPropertyRange" parameterType="java.lang.Long">
+    DELETE FROM kg_ontology_entity_property_range WHERE id = #{id,jdbcType=BIGINT};
+  </delete>
+  <delete id="deleteFromKgProjectEntity" parameterType="java.lang.Long">
+    DELETE FROM kg_project_entity WHERE id = #{id,jdbcType=BIGINT};
+  </delete>
+  <delete id="deleteFromKgOntologyRelease" parameterType="java.lang.Long">
+    DELETE FROM kg_ontology_release WHERE id = #{id,jdbcType=BIGINT};
+  </delete>
+  <delete id="deleteFromKgReasonSession" parameterType="java.lang.Long">
+    DELETE FROM kg_reason_session WHERE id = #{id,jdbcType=BIGINT};
+  </delete>
+  <delete id="deleteFromKgReasonTask" parameterType="java.lang.Long">
+    DELETE FROM kg_reason_task WHERE id = #{id,jdbcType=BIGINT};
+  </delete>
+  <delete id="deleteFromKgReasonTutorial" parameterType="java.lang.Long">
+    DELETE FROM kg_reason_tutorial WHERE id = #{id,jdbcType=BIGINT};
+  </delete>
+  <delete id="deleteFromKgBuilderJob" parameterType="java.lang.Long">
+    DELETE FROM kg_builder_job WHERE id = #{id,jdbcType=BIGINT};
   </delete>
   <delete id="deleteByExample" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.ProjectDOExample">
     delete from kg_project_info

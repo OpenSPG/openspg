@@ -28,7 +28,7 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/openspg?useUnicode=true&amp;characterEncoding=utf8"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/openspg?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true"
                         userId="root"
                         password="openspg">
         </jdbcConnection>
