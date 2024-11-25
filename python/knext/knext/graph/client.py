@@ -13,7 +13,8 @@ from typing import List, Dict
 
 from knext.common.base.client import Client
 from knext.common.rest import ApiClient, Configuration
-from knext.graph import rest, GetPageRankScoresRequest, GetPageRankScoresRequestStartNodes, WriterGraphRequest
+from knext.graph import (rest, GetPageRankScoresRequest, GetPageRankScoresRequestStartNodes, WriterGraphRequest,
+                         QueryVertexRequest, ExpendOneHopRequest, EdgeTypeName)
 
 class GraphClient(Client):
     """ """
@@ -61,11 +62,44 @@ class GraphClient(Client):
         )
         self._rest_client.graph_writer_graph_post(writer_graph_request=request)
 
+    def query_vertex(self, type_name: str, biz_id: str):
+        request = QueryVertexRequest(
+            project_id=self._project_id,
+            type_name=type_name,
+            biz_id=biz_id
+        )
+        return self._rest_client.graph_query_vertex_post(query_vertex_request=request)
+
+    def expend_one_hop(self, type_name: str, biz_id: str, edge_type_name_constraint: List[EdgeTypeName] = None):
+        request = ExpendOneHopRequest(
+            project_id=self._project_id,
+            type_name=type_name,
+            biz_id=biz_id,
+            edge_type_name_constraint=edge_type_name_constraint
+        )
+        return self._rest_client.graph_expend_one_hop_post(expend_one_hop_request=request)
 
 if __name__ == "__main__":
+    '''
     sc = GraphClient("http://127.0.0.1:8887", 4)
     out = sc.calculate_pagerank_scores(
         "Entity", [{"name": "Anxiety_and_nervousness", "type": "Entity"}]
     )
     for o in out:
         print(o)
+    '''
+
+    #test ant main-site
+    client = GraphClient("https://spgservice-standard-pre.alipay.com", 644000146)
+    v = client.query_vertex("Antwork.EntityName", "千三")
+    #print(v)
+
+    edge_name = EdgeTypeName(start_vertex_type="BCTEST.DeleteDataEntity3",
+                             edge_label="concept",
+                             end_vertex_type="BCTEST.TestConcept")
+    client2 = GraphClient("https://spgservice-standard-pre.alipay.com", 363000133)
+    edge_type_name_constraint =[]
+    edge_type_name_constraint.append(edge_name)
+    g1 = client2.expend_one_hop("BCTEST.DeleteDataEntity3", "秉初测试", edge_type_name_constraint)
+    #g1 = client2.expend_one_hop("BCTEST.DeleteDataEntity3", "秉初测试", [edge_name])
+    print(g1)
