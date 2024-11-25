@@ -25,6 +25,22 @@ public interface ProjectDOMapper {
 
   int deleteByPrimaryKey(Long id);
 
+  void deleteFromKgOntologyEntity(String namespace);
+
+  void deleteFromKgOntologyEntityPropertyRange(Long id);
+
+  void deleteFromKgProjectEntity(Long id);
+
+  void deleteFromKgOntologyRelease(Long id);
+
+  void deleteFromKgReasonSession(Long id);
+
+  void deleteFromKgReasonTask(Long id);
+
+  void deleteFromKgReasonTutorial(Long id);
+
+  void deleteFromKgBuilderJob(Long id);
+
   int insert(ProjectDO record);
 
   int insertSelective(ProjectDO record);

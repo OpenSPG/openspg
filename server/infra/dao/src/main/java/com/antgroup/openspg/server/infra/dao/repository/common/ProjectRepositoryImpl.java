@@ -24,11 +24,13 @@ import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.ProjectDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.common.convertor.ProjectConvertor;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class ProjectRepositoryImpl implements ProjectRepository {
@@ -48,6 +50,8 @@ public class ProjectRepositoryImpl implements ProjectRepository {
       throw ProjectException.namespaceAlreadyExist(project.getNamespace());
     }
     ProjectDO projectDO = ProjectConvertor.toDO(project);
+    projectDO.setGmtModified(new Date());
+    projectDO.setGmtCreate(new Date());
     projectDOMapper.insert(projectDO);
     return projectDO.getId();
   }
@@ -63,6 +67,21 @@ public class ProjectRepositoryImpl implements ProjectRepository {
   public Project queryById(Long projectId) {
     ProjectDO projectDO = projectDOMapper.selectByPrimaryKey(projectId);
     return ProjectConvertor.toModel(projectDO);
+  }
+
+  @Override
+  @Transactional(value = "transactionManager", rollbackFor = Exception.class)
+  public Integer deleteById(Long projectId) {
+    ProjectDO projectDO = projectDOMapper.selectByPrimaryKey(projectId);
+    projectDOMapper.deleteFromKgOntologyEntity(projectDO.getNamespace());
+    projectDOMapper.deleteFromKgOntologyEntityPropertyRange(projectId);
+    projectDOMapper.deleteFromKgProjectEntity(projectId);
+    projectDOMapper.deleteFromKgOntologyRelease(projectId);
+    projectDOMapper.deleteFromKgReasonSession(projectId);
+    projectDOMapper.deleteFromKgReasonTask(projectId);
+    projectDOMapper.deleteFromKgReasonTutorial(projectId);
+    projectDOMapper.deleteFromKgBuilderJob(projectId);
+    return projectDOMapper.deleteByPrimaryKey(projectId);
   }
 
   @Override

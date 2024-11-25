@@ -30,6 +30,8 @@ import org.jgrapht.graph.builder.GraphTypeBuilder;
 @AllArgsConstructor
 public class LogicalPlan implements Serializable {
 
+  private static final long serialVersionUID = -4487139289740223319L;
+
   /** DAG (Directed Acyclic Graph) of the logical execution plan. */
   private final Graph<BaseLogicalNode<?>, DefaultEdge> dag;
 

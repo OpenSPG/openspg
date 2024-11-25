@@ -93,7 +93,7 @@ public class CommonUtils {
     return records;
   }
 
-  private static String labelPrefix(String namespace, String label) {
+  public static String labelPrefix(String namespace, String label) {
     if (label.contains(DOT)) {
       return label;
     }

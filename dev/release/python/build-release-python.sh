@@ -11,6 +11,8 @@
 
 # for amd64
 docker build -f Dockerfile --platform linux/amd64 --push \
-  -t openspg/openspg-python:0.5 \
+  -t spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-python:0.5.1 \
+  -t spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-python:latest \
+  -t openspg/openspg-python:0.5.1 \
   -t openspg/openspg-python:latest \
   .

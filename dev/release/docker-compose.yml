@@ -17,12 +17,13 @@ services:
     command: [
       "java",
       "-Dfile.encoding=UTF-8",
-      "-Xms4096m",
-      "-Xmx4096m",
+      "-Xms2048m",
+      "-Xmx8192m",
       "-jar",
       "arks-sofaboot-0.0.1-SNAPSHOT-executable.jar",
       '--server.repository.impl.jdbc.host=mysql',
       '--server.repository.impl.jdbc.password=openspg',
+      '--builder.model.execute.num=5',
       '--cloudext.graphstore.url=neo4j://release-openspg-neo4j:7687?user=neo4j&password=neo4j@openspg&database=neo4j',
       '--cloudext.searchengine.url=neo4j://release-openspg-neo4j:7687?user=neo4j&password=neo4j@openspg&database=neo4j'
     ]

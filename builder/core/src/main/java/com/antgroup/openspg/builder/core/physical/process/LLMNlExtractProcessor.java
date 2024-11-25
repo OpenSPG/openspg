@@ -32,6 +32,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
@@ -41,14 +42,16 @@ public class LLMNlExtractProcessor extends BasePythonProcessor<LLMNlExtractNodeC
 
   private ExecuteNode node;
 
-  private static final ThreadPoolExecutor executor =
-      new ThreadPoolExecutor(
-          30,
-          60,
-          60 * 60,
-          TimeUnit.SECONDS,
-          new LinkedBlockingQueue<>(1000),
-          new ThreadPoolExecutor.CallerRunsPolicy());
+  private static final RejectedExecutionHandler handler =
+      (r, executor) -> {
+        try {
+          executor.getQueue().put(r);
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+        }
+      };
+
+  private static ThreadPoolExecutor executor;
 
   public LLMNlExtractProcessor(String id, String name, LLMNlExtractNodeConfig config) {
     super(id, name, config);
@@ -58,6 +61,16 @@ public class LLMNlExtractProcessor extends BasePythonProcessor<LLMNlExtractNodeC
   public void doInit(BuilderContext context) throws BuilderException {
     super.doInit(context);
     this.node = context.getExecuteNodes().get(getId());
+    if (executor == null) {
+      executor =
+          new ThreadPoolExecutor(
+              context.getModelExecuteNum(),
+              context.getModelExecuteNum(),
+              60 * 60,
+              TimeUnit.SECONDS,
+              new LinkedBlockingQueue<>(100),
+              handler);
+    }
   }
 
   @Override

@@ -44,7 +44,7 @@ public class ProjectManagerImpl implements ProjectManager {
   @Override
   public Project create(ProjectCreateRequest request) {
     JSONObject config = setDatabase(request.getConfig(), request.getNamespace());
-    createNeo4jDatabase(request.getNamespace(), config);
+    setGraphStore(request.getNamespace(), config, true);
     Project project =
         new Project(
             null,
@@ -62,6 +62,7 @@ public class ProjectManagerImpl implements ProjectManager {
   public Project update(ProjectCreateRequest request) {
     Project project = projectRepository.queryById(request.getId());
     JSONObject config = setDatabase(request.getConfig(), project.getNamespace());
+    setGraphStore(request.getNamespace(), config, false);
     config = setVectorDimensions(config, project);
     Project update = new Project(request.getId(), null, null, null, null, config.toJSONString());
     return projectRepository.update(update);
@@ -113,7 +114,31 @@ public class ProjectManagerImpl implements ProjectManager {
     return projectRepository.queryById(projectId);
   }
 
-  public void createNeo4jDatabase(String namespace, JSONObject config) {
+  @Override
+  public Integer deleteById(Long projectId) {
+    Project project = projectRepository.queryById(projectId);
+    if (project == null) {
+      return 0;
+    }
+    deleteDatabase(project);
+
+    return projectRepository.deleteById(projectId);
+  }
+
+  public void deleteDatabase(Project project) {
+    JSONObject config = JSONObject.parseObject(project.getConfig());
+    UriComponents uriComponents = UriComponentsBuilder.fromUriString(url).build();
+    String database = uriComponents.getQueryParams().getFirst(Neo4jConstants.DATABASE);
+    JSONObject graphStore = config.getJSONObject(CommonConstants.GRAPH_STORE);
+    String host = graphStore.getString(Neo4jConstants.URI);
+    String user = graphStore.getString(Neo4jConstants.USER);
+    String password = graphStore.getString(Neo4jConstants.PASSWORD);
+    String dropDatabase = project.getNamespace().toLowerCase();
+    Neo4jAdminUtils driver = new Neo4jAdminUtils(host, user, password, database);
+    driver.neo4jGraph.dropDatabase(dropDatabase);
+  }
+
+  public void setGraphStore(String namespace, JSONObject config, boolean createDatabase) {
     UriComponents uriComponents = UriComponentsBuilder.fromUriString(url).build();
     String database = uriComponents.getQueryParams().getFirst(Neo4jConstants.DATABASE);
     String host =
@@ -137,10 +162,11 @@ public class ProjectManagerImpl implements ProjectManager {
     } else {
       graphStore.put(Neo4jConstants.PASSWORD, password);
     }
-
-    Neo4jAdminUtils driver = new Neo4jAdminUtils(host, user, password, database);
-    String projectDatabase = namespace.toLowerCase();
-    driver.neo4jGraph.createDatabase(projectDatabase);
+    if (createDatabase) {
+      Neo4jAdminUtils driver = new Neo4jAdminUtils(host, user, password, database);
+      String projectDatabase = namespace.toLowerCase();
+      driver.neo4jGraph.createDatabase(projectDatabase);
+    }
   }
 
   @Override

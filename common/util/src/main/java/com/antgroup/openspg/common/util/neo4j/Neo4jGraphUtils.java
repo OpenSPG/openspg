@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.common.util.neo4j;
 
+import com.antgroup.openspg.common.util.Md5Utils;
 import com.antgroup.openspg.common.util.tuple.Tuple2;
 import com.antgroup.openspg.core.schema.model.predicate.IndexTypeEnum;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +36,6 @@ import org.neo4j.driver.summary.ResultSummary;
 
 @Slf4j
 public class Neo4jGraphUtils {
-
-  private static final String ALL_GRAPH = "allGraph";
 
   private Driver driver;
   private String database;
@@ -127,7 +127,7 @@ public class Neo4jGraphUtils {
     return labels;
   }
 
-  public void createAllGraph() {
+  public void createAllGraph(String allGraph) {
     Session session = driver.session(SessionConfig.forDatabase(this.database));
     String existsQuery =
         String.format(
@@ -135,14 +135,14 @@ public class Neo4jGraphUtils {
                 + "WHERE exists "
                 + "CALL gds.graph.drop('%s') YIELD graphName "
                 + "RETURN graphName",
-            ALL_GRAPH, ALL_GRAPH);
+            allGraph, allGraph);
 
     Result result = session.run(existsQuery);
     ResultSummary summary = result.consume();
     log.debug(
         "create pagerank graph exists graph_name: {} database: {} succeed "
             + "executed: {} consumed: {}",
-        ALL_GRAPH,
+        allGraph,
         database,
         summary.resultAvailableAfter(TimeUnit.MILLISECONDS),
         summary.resultConsumedAfter(TimeUnit.MILLISECONDS));
@@ -152,13 +152,33 @@ public class Neo4jGraphUtils {
             "CALL gds.graph.project('%s','*','*') "
                 + "YIELD graphName, nodeCount AS nodes, relationshipCount AS rels "
                 + "RETURN graphName, nodes, rels",
-            ALL_GRAPH);
+            allGraph);
 
     result = session.run(projectQuery);
     summary = result.consume();
     log.debug(
         "create pagerank graph graph_name: {} database: {} succeed " + "executed: {} consumed: {}",
-        ALL_GRAPH,
+        allGraph,
+        database,
+        summary.resultAvailableAfter(TimeUnit.MILLISECONDS),
+        summary.resultConsumedAfter(TimeUnit.MILLISECONDS));
+  }
+
+  public void dropAllGraph(String allGraph) {
+    Session session = driver.session(SessionConfig.forDatabase(this.database));
+    String existsQuery =
+        String.format(
+            "CALL gds.graph.exists('%s') YIELD exists "
+                + "WHERE exists "
+                + "CALL gds.graph.drop('%s') YIELD graphName "
+                + "RETURN graphName",
+            allGraph, allGraph);
+
+    Result result = session.run(existsQuery);
+    ResultSummary summary = result.consume();
+    log.debug(
+        "drop pagerank graph graph_name: {} database: {} succeed executed: {} consumed: {}",
+        allGraph,
         database,
         summary.resultAvailableAfter(TimeUnit.MILLISECONDS),
         summary.resultConsumedAfter(TimeUnit.MILLISECONDS));
@@ -167,12 +187,18 @@ public class Neo4jGraphUtils {
   public List<Map<String, Object>> getPageRankScores(
       List<Map<String, String>> startNodes, String targetType) {
     Session session = driver.session(SessionConfig.forDatabase(this.database));
-    createAllGraph();
-    return session.writeTransaction(tx -> getPageRankScores(tx, startNodes, targetType));
+    String allGraph = "allGraph_" + Md5Utils.md5Of(UUID.randomUUID().toString());
+    createAllGraph(allGraph);
+    try {
+      return session.writeTransaction(
+          tx -> getPageRankScores(tx, allGraph, startNodes, targetType));
+    } finally {
+      dropAllGraph(allGraph);
+    }
   }
 
   private List<Map<String, Object>> getPageRankScores(
-      Transaction tx, List<Map<String, String>> startNodes, String returnType) {
+      Transaction tx, String allGraph, List<Map<String, String>> startNodes, String returnType) {
     List<String> matchClauses = new ArrayList<>();
     List<String> matchIdentifiers = new ArrayList<>();
 
@@ -205,7 +231,7 @@ public class Neo4jGraphUtils {
                 + "RETURN id(m) AS g_id, gds.util.asNode(nodeId).id AS id, score "
                 + "ORDER BY score DESC",
             matchQuery,
-            ALL_GRAPH,
+            allGraph,
             matchIdentifierStr,
             Neo4jCommonUtils.escapeNeo4jIdentifier(returnType));
 
@@ -226,6 +252,16 @@ public class Neo4jGraphUtils {
     session.writeTransaction(
         tx -> {
           tx.run(String.format("CREATE DATABASE %s IF NOT EXISTS", database));
+          tx.commit();
+          return null;
+        });
+  }
+
+  public void dropDatabase(String database) {
+    Session session = driver.session(SessionConfig.forDatabase(this.database));
+    session.writeTransaction(
+        tx -> {
+          tx.run(String.format("DROP DATABASE %s IF EXISTS", database));
           tx.commit();
           return null;
         });

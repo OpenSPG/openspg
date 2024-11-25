@@ -27,6 +27,8 @@ public interface ProjectManager {
 
   Project queryById(Long projectId);
 
+  Integer deleteById(Long projectId);
+
   List<Project> query(ProjectQueryRequest request);
 
   Paged<Project> queryPaged(ProjectQueryRequest request, int start, int size);

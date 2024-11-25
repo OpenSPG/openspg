@@ -47,6 +47,7 @@ class Expr2QlexpressTransformer(
     case BRLike => " rlike "
     case BMod => " % "
     case BAssign => " = "
+    case BXor => " ^ "
   }
 
   val unaryOpSetTrans: PartialFunction[UnaryOpSet, String] = {

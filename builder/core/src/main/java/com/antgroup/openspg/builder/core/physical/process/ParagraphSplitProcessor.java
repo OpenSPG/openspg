@@ -146,6 +146,10 @@ public class ParagraphSplitProcessor extends BasePythonProcessor<ParagraphSplitN
         case "json":
           className = "JSONReader";
           break;
+        case "doc":
+        case "docx":
+          className = "DocxReader";
+          break;
       }
       node.addTraceLog("invoke chunk operator:%s", className);
       pythonInterpreter.exec("from kag.builder.component.reader import " + className);
