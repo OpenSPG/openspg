@@ -13,15 +13,9 @@ from typing import List, Dict
 
 from knext.common.base.client import Client
 from knext.common.rest import ApiClient, Configuration
-from knext.graph_algo import (
-    GetPageRankScoresRequest,
-    GetPageRankScoresRequestStartNodes,
-    WriterGraphRequest,
-)
-from knext.graph_algo import rest
+from knext.graph import rest, GetPageRankScoresRequest, GetPageRankScoresRequestStartNodes, WriterGraphRequest
 
-
-class GraphAlgoClient(Client):
+class GraphClient(Client):
     """ """
 
     def __init__(self, host_addr: str = None, project_id: int = None):
@@ -69,7 +63,7 @@ class GraphAlgoClient(Client):
 
 
 if __name__ == "__main__":
-    sc = GraphAlgoClient("http://127.0.0.1:8887", 4)
+    sc = GraphClient("http://127.0.0.1:8887", 4)
     out = sc.calculate_pagerank_scores(
         "Entity", [{"name": "Anxiety_and_nervousness", "type": "Entity"}]
     )

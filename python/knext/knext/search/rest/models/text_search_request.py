@@ -10,7 +10,6 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-
 """
     knext
 
@@ -44,27 +43,22 @@ class TextSearchRequest(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        "project_id": "int",
-        "query_string": "str",
-        "label_constraints": "list[str]",
-        "topk": "int",
+        'project_id': 'int',
+        'query_string': 'str',
+        'label_constraints': 'list[str]',
+        'topk': 'int',
+        'params': 'object'
     }
 
     attribute_map = {
-        "project_id": "projectId",
-        "query_string": "queryString",
-        "label_constraints": "labelConstraints",
-        "topk": "topk",
+        'project_id': 'projectId',
+        'query_string': 'queryString',
+        'label_constraints': 'labelConstraints',
+        'topk': 'topk',
+        'params': 'params'
     }
 
-    def __init__(
-        self,
-        project_id=None,
-        query_string=None,
-        label_constraints=None,
-        topk=None,
-        local_vars_configuration=None,
-    ):  # noqa: E501
+    def __init__(self, project_id=None, query_string=None, label_constraints=None, topk=None, params=None, local_vars_configuration=None):  # noqa: E501
         """TextSearchRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -74,12 +68,14 @@ class TextSearchRequest(object):
         self._query_string = None
         self._label_constraints = None
         self._topk = None
+        self._params = None
         self.discriminator = None
 
         self.project_id = project_id
         self.query_string = query_string
         self.label_constraints = label_constraints
         self.topk = topk
+        self.params = params
 
     @property
     def project_id(self):
@@ -99,12 +95,8 @@ class TextSearchRequest(object):
         :param project_id: The project_id of this TextSearchRequest.  # noqa: E501
         :type: int
         """
-        if (
-            self.local_vars_configuration.client_side_validation and project_id is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `project_id`, must not be `None`"
-            )  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and project_id is None:  # noqa: E501
+            raise ValueError("Invalid value for `project_id`, must not be `None`")  # noqa: E501
 
         self._project_id = project_id
 
@@ -126,13 +118,8 @@ class TextSearchRequest(object):
         :param query_string: The query_string of this TextSearchRequest.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation
-            and query_string is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `query_string`, must not be `None`"
-            )  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and query_string is None:  # noqa: E501
+            raise ValueError("Invalid value for `query_string`, must not be `None`")  # noqa: E501
 
         self._query_string = query_string
 
@@ -154,6 +141,9 @@ class TextSearchRequest(object):
         :param label_constraints: The label_constraints of this TextSearchRequest.  # noqa: E501
         :type: list[str]
         """
+        if self.local_vars_configuration.client_side_validation and label_constraints is None:  # noqa: E501
+            raise ValueError("Invalid value for `label_constraints`, must not be `None`")  # noqa: E501
+
         self._label_constraints = label_constraints
 
     @property
@@ -174,14 +164,33 @@ class TextSearchRequest(object):
         :param topk: The topk of this TextSearchRequest.  # noqa: E501
         :type: int
         """
-        if (
-            self.local_vars_configuration.client_side_validation and topk is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `topk`, must not be `None`"
-            )  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and topk is None:  # noqa: E501
+            raise ValueError("Invalid value for `topk`, must not be `None`")  # noqa: E501
 
         self._topk = topk
+
+    @property
+    def params(self):
+        """Gets the params of this TextSearchRequest.  # noqa: E501
+
+
+        :return: The params of this TextSearchRequest.  # noqa: E501
+        :rtype: object
+        """
+        return self._params
+
+    @params.setter
+    def params(self, params):
+        """Sets the params of this TextSearchRequest.
+
+
+        :param params: The params of this TextSearchRequest.  # noqa: E501
+        :type: object
+        """
+        if self.local_vars_configuration.client_side_validation and params is None:  # noqa: E501
+            raise ValueError("Invalid value for `params`, must not be `None`")  # noqa: E501
+
+        self._params = params
 
     def to_dict(self):
         """Returns the model properties as a dict"""
@@ -190,20 +199,18 @@ class TextSearchRequest(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
+                result[attr] = list(map(
+                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
+                    value
+                ))
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
-                )
+                result[attr] = dict(map(
+                    lambda item: (item[0], item[1].to_dict())
+                    if hasattr(item[1], "to_dict") else item,
+                    value.items()
+                ))
             else:
                 result[attr] = value
 
