@@ -44,18 +44,24 @@ class EdgeTypeName(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'start_vertex_type': 'str',
-        'edge_label': 'str',
-        'end_vertex_type': 'str'
+        "start_vertex_type": "str",
+        "edge_label": "str",
+        "end_vertex_type": "str",
     }
 
     attribute_map = {
-        'start_vertex_type': 'startVertexType',
-        'edge_label': 'edgeLabel',
-        'end_vertex_type': 'endVertexType'
+        "start_vertex_type": "startVertexType",
+        "edge_label": "edgeLabel",
+        "end_vertex_type": "endVertexType",
     }
 
-    def __init__(self, start_vertex_type=None, edge_label=None, end_vertex_type=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        start_vertex_type=None,
+        edge_label=None,
+        end_vertex_type=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """EdgeTypeName - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -88,8 +94,13 @@ class EdgeTypeName(object):
         :param start_vertex_type: The start_vertex_type of this EdgeTypeName.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and start_vertex_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `start_vertex_type`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and start_vertex_type is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `start_vertex_type`, must not be `None`"
+            )  # noqa: E501
 
         self._start_vertex_type = start_vertex_type
 
@@ -111,8 +122,12 @@ class EdgeTypeName(object):
         :param edge_label: The edge_label of this EdgeTypeName.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and edge_label is None:  # noqa: E501
-            raise ValueError("Invalid value for `edge_label`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and edge_label is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `edge_label`, must not be `None`"
+            )  # noqa: E501
 
         self._edge_label = edge_label
 
@@ -134,8 +149,13 @@ class EdgeTypeName(object):
         :param end_vertex_type: The end_vertex_type of this EdgeTypeName.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and end_vertex_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `end_vertex_type`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and end_vertex_type is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `end_vertex_type`, must not be `None`"
+            )  # noqa: E501
 
         self._end_vertex_type = end_vertex_type
 
@@ -146,18 +166,20 @@ class EdgeTypeName(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

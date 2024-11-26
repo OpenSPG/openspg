@@ -15,17 +15,24 @@ package com.antgroup.openspg.server.biz.service.impl;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.BaseLPGGraphStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClientDriverManager;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.OneHopLPGRecordQuery;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.PageRankCompete;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.VertexLPGRecordQuery;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.ComputeResultRow;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.Direction;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.GraphLPGRecordStruct;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
 import com.antgroup.openspg.server.api.facade.dto.service.request.*;
+import com.antgroup.openspg.server.api.facade.dto.service.response.ExpendOneHopResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ManipulateDataResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.PageRankScoreInstance;
 import com.antgroup.openspg.server.biz.common.ProjectManager;
 import com.antgroup.openspg.server.biz.service.GraphManager;
 import com.antgroup.openspg.server.biz.service.convertor.InstanceConvertor;
-import java.util.List;
+import com.google.common.collect.Lists;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,5 +170,77 @@ public class GraphManagerImpl implements GraphManager {
                 new PageRankScoreInstance(
                     row.getNode().getVertexType(), row.getNode().getId(), row.getScore()))
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public ExpendOneHopResponse expendOneHop(ExpendOneHopRequest request) {
+    String graphStoreUrl = projectManager.getGraphStoreUrl(request.getProjectId());
+    BaseLPGGraphStoreClient lpgGraphStoreClient =
+        (BaseLPGGraphStoreClient) GraphStoreClientDriverManager.getClient(graphStoreUrl);
+
+    Set<EdgeTypeName> edgeTypeNameSet =
+        request.getEdgeTypeNameConstraint() == null
+            ? null
+            : new HashSet<>(request.getEdgeTypeNameConstraint());
+    OneHopLPGRecordQuery query =
+        new OneHopLPGRecordQuery(
+            request.getBizId(), request.getTypeName(), edgeTypeNameSet, Direction.BOTH);
+    GraphLPGRecordStruct struct = (GraphLPGRecordStruct) lpgGraphStoreClient.queryRecord(query);
+    return convert2ExpendOneHopResponse(request.getTypeName(), request.getBizId(), struct);
+  }
+
+  private ExpendOneHopResponse convert2ExpendOneHopResponse(
+      String type, String id, GraphLPGRecordStruct graphLPGRecordStruct) {
+    if (graphLPGRecordStruct == null) {
+      return null;
+    }
+    ExpendOneHopResponse response = new ExpendOneHopResponse();
+    if (CollectionUtils.isEmpty(graphLPGRecordStruct.getVertices())
+        && CollectionUtils.isEmpty(graphLPGRecordStruct.getEdges())) {
+      return response;
+    }
+
+    Map<String, VertexRecord> vertexRecordMap = new HashMap<>();
+    for (VertexRecord vertexRecord : graphLPGRecordStruct.getVertices()) {
+      vertexRecordMap.put(vertexRecord.generateUniqueString(), vertexRecord);
+    }
+
+    String sourceVertexUniqueString = new VertexRecord(id, type, null).generateUniqueString();
+    response.setVertex(vertexRecordMap.get(sourceVertexUniqueString));
+
+    response.setEdges(graphLPGRecordStruct.getEdges());
+
+    List<VertexRecord> adjacentVertices = Lists.newArrayList();
+    for (EdgeRecord edgeRecord : graphLPGRecordStruct.getEdges()) {
+      String startVertexUniqueString =
+          new VertexRecord(edgeRecord.getSrcId(), edgeRecord.getEdgeType().getStartVertexType())
+              .generateUniqueString();
+      if (sourceVertexUniqueString.equals(startVertexUniqueString)) {
+        String endVertexUniqueString =
+            new VertexRecord(edgeRecord.getDstId(), edgeRecord.getEdgeType().getEndVertexType())
+                .generateUniqueString();
+        adjacentVertices.add(vertexRecordMap.get(endVertexUniqueString));
+      } else {
+        adjacentVertices.add(vertexRecordMap.get(startVertexUniqueString));
+      }
+    }
+    response.setAdjacentVertices(adjacentVertices);
+
+    return response;
+  }
+
+  @Override
+  public VertexRecord queryVertex(QueryVertexRequest request) {
+    String graphStoreUrl = projectManager.getGraphStoreUrl(request.getProjectId());
+    BaseLPGGraphStoreClient lpgGraphStoreClient =
+        (BaseLPGGraphStoreClient) GraphStoreClientDriverManager.getClient(graphStoreUrl);
+
+    VertexLPGRecordQuery query =
+        new VertexLPGRecordQuery(request.getBizId(), request.getTypeName());
+    GraphLPGRecordStruct struct = (GraphLPGRecordStruct) lpgGraphStoreClient.queryRecord(query);
+    if (struct == null || struct.getVertices().isEmpty()) {
+      return null;
+    }
+    return struct.getVertices().get(0);
   }
 }

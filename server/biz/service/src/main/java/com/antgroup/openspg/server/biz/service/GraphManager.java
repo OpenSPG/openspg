@@ -13,7 +13,9 @@
 
 package com.antgroup.openspg.server.biz.service;
 
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.server.api.facade.dto.service.request.*;
+import com.antgroup.openspg.server.api.facade.dto.service.response.ExpendOneHopResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ManipulateDataResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.PageRankScoreInstance;
 import java.util.List;
@@ -31,4 +33,8 @@ public interface GraphManager {
   ManipulateDataResponse deleteEdgeRequest(DeleteEdgeRequest request);
 
   List<PageRankScoreInstance> getPageRankScores(GetPageRankScoresRequest request);
+
+  VertexRecord queryVertex(QueryVertexRequest request);
+
+  ExpendOneHopResponse expendOneHop(ExpendOneHopRequest request);
 }

@@ -44,20 +44,27 @@ class VertexRecord(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'record_type': 'str',
-        'vertex_type': 'str',
-        'id': 'str',
-        'properties': 'list[LpgPropertyRecord]'
+        "record_type": "str",
+        "vertex_type": "str",
+        "id": "str",
+        "properties": "list[LpgPropertyRecord]",
     }
 
     attribute_map = {
-        'record_type': 'recordType',
-        'vertex_type': 'vertexType',
-        'id': 'id',
-        'properties': 'properties'
+        "record_type": "recordType",
+        "vertex_type": "vertexType",
+        "id": "id",
+        "properties": "properties",
     }
 
-    def __init__(self, record_type=None, vertex_type=None, id=None, properties=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        record_type=None,
+        vertex_type=None,
+        id=None,
+        properties=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """VertexRecord - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -92,8 +99,12 @@ class VertexRecord(object):
         :param record_type: The record_type of this VertexRecord.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and record_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `record_type`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and record_type is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `record_type`, must not be `None`"
+            )  # noqa: E501
 
         self._record_type = record_type
 
@@ -115,8 +126,12 @@ class VertexRecord(object):
         :param vertex_type: The vertex_type of this VertexRecord.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and vertex_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `vertex_type`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and vertex_type is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `vertex_type`, must not be `None`"
+            )  # noqa: E501
 
         self._vertex_type = vertex_type
 
@@ -138,7 +153,9 @@ class VertexRecord(object):
         :param id: The id of this VertexRecord.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and id is None:  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and id is None
+        ):  # noqa: E501
             raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
 
         self._id = id
@@ -161,8 +178,12 @@ class VertexRecord(object):
         :param properties: The properties of this VertexRecord.  # noqa: E501
         :type: list[LpgPropertyRecord]
         """
-        if self.local_vars_configuration.client_side_validation and properties is None:  # noqa: E501
-            raise ValueError("Invalid value for `properties`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and properties is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `properties`, must not be `None`"
+            )  # noqa: E501
 
         self._properties = properties
 
@@ -173,18 +194,20 @@ class VertexRecord(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 

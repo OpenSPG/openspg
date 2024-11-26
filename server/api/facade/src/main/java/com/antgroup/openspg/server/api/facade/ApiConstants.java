@@ -21,12 +21,7 @@ public class ApiConstants {
   public static final String TOKEN = "token";
 
   public static final String ENV = "env";
-  public static final String ACCESS_ID = "accessId";
-  public static final String ACCESS_KEY = "accessKey";
   public static final String HOST = "host";
-  public static final String TIMEOUT = "timeout";
   public static final String PORT = "port";
   public static final String SCHEME = "scheme";
-
-  public static final Long DEFAULT_VERSION = 0L;
 }

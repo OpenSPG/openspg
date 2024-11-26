@@ -15,7 +15,6 @@ package com.antgroup.openspg.server.api.facade.dto.service.request;
 
 import java.util.Map;
 import java.util.Set;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

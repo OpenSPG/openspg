@@ -16,8 +16,12 @@
 from __future__ import absolute_import
 
 # import models into model package
-from knext.graph.rest.models.get_page_rank_scores_request import GetPageRankScoresRequest
-from knext.graph.rest.models.get_page_rank_scores_request_start_nodes import GetPageRankScoresRequestStartNodes
+from knext.graph.rest.models.get_page_rank_scores_request import (
+    GetPageRankScoresRequest,
+)
+from knext.graph.rest.models.get_page_rank_scores_request_start_nodes import (
+    GetPageRankScoresRequestStartNodes,
+)
 from knext.graph.rest.models.page_rank_score_instance import PageRankScoreInstance
 from knext.graph.rest.models.delete_vertex_request import DeleteVertexRequest
 from knext.graph.rest.models.delete_edge_request import DeleteEdgeRequest

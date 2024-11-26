@@ -24,8 +24,7 @@ public class FullTextSearchQuery extends BaseQuery {
 
   @Getter private final String queryString;
   @Getter private final List<String> labelConstraints;
-  @Getter @Setter
-  private Map<String, Object> params;
+  @Getter @Setter private Map<String, Object> params;
 
   public FullTextSearchQuery(@NonNull String queryString) {
     this(queryString, null);

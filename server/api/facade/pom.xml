@@ -29,12 +29,8 @@
       <artifactId>core-schema-model</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.danilopianini</groupId>
-      <artifactId>gson-extras</artifactId>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-interface-graph-store</artifactId>
     </dependency>
   </dependencies>
 </project>
