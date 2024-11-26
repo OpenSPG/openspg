@@ -17,7 +17,7 @@
   <parent>
     <groupId>com.antgroup.openspg.reasoner</groupId>
     <artifactId>reasoner-parent</artifactId>
-    <version>20241024-SNAPSHOT</version>
+    <version>20241126-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
