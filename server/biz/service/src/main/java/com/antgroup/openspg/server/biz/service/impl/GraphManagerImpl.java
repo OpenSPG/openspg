@@ -28,6 +28,7 @@ import com.antgroup.openspg.server.api.facade.dto.service.request.*;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ExpendOneHopResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ManipulateDataResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.PageRankScoreInstance;
+import com.antgroup.openspg.server.api.facade.dto.service.response.QueryVertexResponse;
 import com.antgroup.openspg.server.biz.common.ProjectManager;
 import com.antgroup.openspg.server.biz.service.GraphManager;
 import com.antgroup.openspg.server.biz.service.convertor.InstanceConvertor;
@@ -230,7 +231,7 @@ public class GraphManagerImpl implements GraphManager {
   }
 
   @Override
-  public VertexRecord queryVertex(QueryVertexRequest request) {
+  public QueryVertexResponse queryVertex(QueryVertexRequest request) {
     String graphStoreUrl = projectManager.getGraphStoreUrl(request.getProjectId());
     BaseLPGGraphStoreClient lpgGraphStoreClient =
         (BaseLPGGraphStoreClient) GraphStoreClientDriverManager.getClient(graphStoreUrl);
@@ -238,9 +239,12 @@ public class GraphManagerImpl implements GraphManager {
     VertexLPGRecordQuery query =
         new VertexLPGRecordQuery(request.getBizId(), request.getTypeName());
     GraphLPGRecordStruct struct = (GraphLPGRecordStruct) lpgGraphStoreClient.queryRecord(query);
+
+    QueryVertexResponse response = new QueryVertexResponse();
     if (struct == null || struct.getVertices().isEmpty()) {
-      return null;
+      return response;
     }
-    return struct.getVertices().get(0);
+    response.setVertex(struct.getVertices().get(0));
+    return response;
   }
 }

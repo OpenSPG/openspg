@@ -51,5 +51,6 @@ from knext.graph.rest.models.edge_type_name import EdgeTypeName
 from knext.graph.rest.models.expend_one_hop_request import ExpendOneHopRequest
 from knext.graph.rest.models.lpg_property_record import LpgPropertyRecord
 from knext.graph.rest.models.query_vertex_request import QueryVertexRequest
+from knext.graph.rest.models.query_vertex_response import QueryVertexResponse
 from knext.graph.rest.models.vertex_record import VertexRecord
 from knext.graph.rest.models.expend_one_hop_response import ExpendOneHopResponse

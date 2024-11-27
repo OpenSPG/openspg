@@ -80,10 +80,14 @@ class EdgeRecord(object):
         self._properties = None
         self.discriminator = None
 
-        self.record_type = record_type
-        self.edge_type = edge_type
-        self.src_id = src_id
-        self.dst_id = dst_id
+        if record_type is not None:
+            self.record_type = record_type
+        if edge_type is not None:
+            self.edge_type = edge_type
+        if src_id is not None:
+            self.src_id = src_id
+        if dst_id is not None:
+            self.dst_id = dst_id
         if properties is not None:
             self.properties = properties
 
@@ -105,12 +109,6 @@ class EdgeRecord(object):
         :param record_type: The record_type of this EdgeRecord.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation and record_type is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `record_type`, must not be `None`"
-            )  # noqa: E501
 
         self._record_type = record_type
 
@@ -132,12 +130,6 @@ class EdgeRecord(object):
         :param edge_type: The edge_type of this EdgeRecord.  # noqa: E501
         :type: EdgeTypeName
         """
-        if (
-            self.local_vars_configuration.client_side_validation and edge_type is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `edge_type`, must not be `None`"
-            )  # noqa: E501
 
         self._edge_type = edge_type
 
@@ -159,12 +151,6 @@ class EdgeRecord(object):
         :param src_id: The src_id of this EdgeRecord.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation and src_id is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `src_id`, must not be `None`"
-            )  # noqa: E501
 
         self._src_id = src_id
 
@@ -186,12 +172,6 @@ class EdgeRecord(object):
         :param dst_id: The dst_id of this EdgeRecord.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation and dst_id is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `dst_id`, must not be `None`"
-            )  # noqa: E501
 
         self._dst_id = dst_id
 

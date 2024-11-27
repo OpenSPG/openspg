@@ -24,7 +24,6 @@ import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.builder.model.record.SubGraphRecord;
 import com.antgroup.openspg.builder.runner.local.physical.sink.impl.GraphStoreSinkWriter;
 import com.antgroup.openspg.builder.runner.local.physical.sink.impl.Neo4jSinkWriter;
-import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
@@ -33,6 +32,7 @@ import com.antgroup.openspg.server.api.facade.dto.service.request.*;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ExpendOneHopResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ManipulateDataResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.PageRankScoreInstance;
+import com.antgroup.openspg.server.api.facade.dto.service.response.QueryVertexResponse;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.server.api.http.server.HttpResult;
@@ -259,9 +259,9 @@ public class GraphController {
 
   @RequestMapping(value = "/queryVertex", method = RequestMethod.POST)
   @ResponseBody
-  public HttpResult<VertexRecord> queryVertex(@RequestBody QueryVertexRequest request) {
+  public HttpResult<QueryVertexResponse> queryVertex(@RequestBody QueryVertexRequest request) {
     return HttpBizTemplate.execute2(
-        new HttpBizCallback<VertexRecord>() {
+        new HttpBizCallback<QueryVertexResponse>() {
           @Override
           public void check() {
             AssertUtils.assertParamObjectIsNotNull("request", request);
@@ -271,7 +271,7 @@ public class GraphController {
           }
 
           @Override
-          public VertexRecord action() {
+          public QueryVertexResponse action() {
             return graphManager.queryVertex(request);
           }
         });

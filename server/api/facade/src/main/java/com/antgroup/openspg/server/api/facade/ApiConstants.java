@@ -24,4 +24,6 @@ public class ApiConstants {
   public static final String HOST = "host";
   public static final String PORT = "port";
   public static final String SCHEME = "scheme";
+
+  public static final Long DEFAULT_VERSION = 0L;
 }

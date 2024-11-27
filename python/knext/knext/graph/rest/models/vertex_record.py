@@ -76,10 +76,14 @@ class VertexRecord(object):
         self._properties = None
         self.discriminator = None
 
-        self.record_type = record_type
-        self.vertex_type = vertex_type
-        self.id = id
-        self.properties = properties
+        if record_type is not None:
+            self.record_type = record_type
+        if vertex_type is not None:
+            self.vertex_type = vertex_type
+        if id is not None:
+            self.id = id
+        if properties is not None:
+            self.properties = properties
 
     @property
     def record_type(self):
@@ -99,12 +103,6 @@ class VertexRecord(object):
         :param record_type: The record_type of this VertexRecord.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation and record_type is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `record_type`, must not be `None`"
-            )  # noqa: E501
 
         self._record_type = record_type
 
@@ -126,12 +124,6 @@ class VertexRecord(object):
         :param vertex_type: The vertex_type of this VertexRecord.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation and vertex_type is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `vertex_type`, must not be `None`"
-            )  # noqa: E501
 
         self._vertex_type = vertex_type
 
@@ -153,10 +145,6 @@ class VertexRecord(object):
         :param id: The id of this VertexRecord.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation and id is None
-        ):  # noqa: E501
-            raise ValueError("Invalid value for `id`, must not be `None`")  # noqa: E501
 
         self._id = id
 
@@ -178,12 +166,6 @@ class VertexRecord(object):
         :param properties: The properties of this VertexRecord.  # noqa: E501
         :type: list[LpgPropertyRecord]
         """
-        if (
-            self.local_vars_configuration.client_side_validation and properties is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `properties`, must not be `None`"
-            )  # noqa: E501
 
         self._properties = properties
 

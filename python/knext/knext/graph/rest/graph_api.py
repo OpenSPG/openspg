@@ -889,7 +889,7 @@ class GraphApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: VertexRecord
+        :return: QueryVertexResponse
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -915,7 +915,7 @@ class GraphApi(object):
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
                                  (connection, read) timeouts.
-        :return: tuple(VertexRecord, status_code(int), headers(HTTPHeaderDict))
+        :return: tuple(QueryVertexResponse, status_code(int), headers(HTTPHeaderDict))
                  If the method is called asynchronously,
                  returns the request thread.
         """
@@ -979,7 +979,7 @@ class GraphApi(object):
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="VertexRecord",  # noqa: E501
+            response_type="QueryVertexResponse",  # noqa: E501
             auth_settings=auth_settings,
             async_req=local_var_params.get("async_req"),
             _return_http_data_only=local_var_params.get(

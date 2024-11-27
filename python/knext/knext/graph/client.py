@@ -106,7 +106,7 @@ if __name__ == "__main__":
     # test ant main-site
     client = GraphClient("https://spgservice-standard-pre.alipay.com", 644000146)
     v = client.query_vertex("Antwork.EntityName", "千三")
-    # print(v)
+    print(v)
 
     edge_name = EdgeTypeName(
         start_vertex_type="BCTEST.DeleteDataEntity3",
@@ -115,9 +115,9 @@ if __name__ == "__main__":
     )
     client2 = GraphClient("https://spgservice-standard-pre.alipay.com", 363000133)
     edge_type_name_constraint = []
-    edge_type_name_constraint.append(edge_name)
+    # edge_type_name_constraint.append(edge_name)
     g1 = client2.expend_one_hop(
-        "BCTEST.DeleteDataEntity3", "秉初测试", edge_type_name_constraint
+        "BCTEST.DeleteDataEntity3", "秉初测试321", edge_type_name_constraint
     )
     # g1 = client2.expend_one_hop("BCTEST.DeleteDataEntity3", "秉初测试", [edge_name])
-    print(g1)
+    # print(g1)
