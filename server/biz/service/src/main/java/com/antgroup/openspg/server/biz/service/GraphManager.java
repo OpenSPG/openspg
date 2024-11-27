@@ -13,11 +13,11 @@
 
 package com.antgroup.openspg.server.biz.service;
 
-import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.server.api.facade.dto.service.request.*;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ExpendOneHopResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ManipulateDataResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.PageRankScoreInstance;
+import com.antgroup.openspg.server.api.facade.dto.service.response.QueryVertexResponse;
 import java.util.List;
 
 public interface GraphManager {
@@ -34,7 +34,7 @@ public interface GraphManager {
 
   List<PageRankScoreInstance> getPageRankScores(GetPageRankScoresRequest request);
 
-  VertexRecord queryVertex(QueryVertexRequest request);
+  QueryVertexResponse queryVertex(QueryVertexRequest request);
 
   ExpendOneHopResponse expendOneHop(ExpendOneHopRequest request);
 }
