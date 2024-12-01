@@ -69,7 +69,7 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
           NUM_THREADS,
             2 * 60L,
           TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(5000),
+            new LinkedBlockingQueue<>(100),
   handler);
 
   public Neo4jSinkWriter(String id, String name, Neo4jSinkNodeConfig config) {
