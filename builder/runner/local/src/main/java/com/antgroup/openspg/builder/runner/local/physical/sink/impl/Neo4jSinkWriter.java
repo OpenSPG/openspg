@@ -51,6 +51,8 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
 
   private static final int NUM_THREADS = 10;
 
+  private static final int MAX_NUM_THREADS = 200;
+
   private ExecuteNode node;
   private Neo4jStoreClient client;
   private Project project;
@@ -66,10 +68,10 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
   private static ExecutorService executor =
         new ThreadPoolExecutor(
           NUM_THREADS,
-          NUM_THREADS,
+                MAX_NUM_THREADS,
             2 * 60L,
           TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(100),
+            new LinkedBlockingQueue<>(200),
   handler);
 
   public Neo4jSinkWriter(String id, String name, Neo4jSinkNodeConfig config) {
