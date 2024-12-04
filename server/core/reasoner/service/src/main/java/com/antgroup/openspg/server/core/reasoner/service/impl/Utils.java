@@ -18,8 +18,12 @@ import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
+import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexProperty;
+import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexVersionProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexBizId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,9 +52,16 @@ public class Utils {
       log.info("vertex_property,{}", vertex);
       for (String propertyName : vertex.getValue().getKeySet()) {
         Object pValue = vertex.getValue().get(propertyName);
-        if (null == pValue) {
+        if (null == pValue || propertyName.startsWith("_")) {
           continue;
         }
+        IVertex<IVertexId, IProperty> propVertex = new Vertex<>();
+        propVertex.setId(new VertexBizId(String.valueOf(pValue), "Text"));
+        propVertex.setValue(new VertexVersionProperty(
+                "id", String.valueOf(pValue),
+                "name", String.valueOf(pValue)
+        ));
+        graphState.addVertex(propVertex);
         result
             .computeIfAbsent(propertyName, k -> new HashSet<>())
             .add(new Tuple2<>(String.valueOf(pValue), "Text"));
