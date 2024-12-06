@@ -29,8 +29,10 @@ import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.server.api.facade.dto.service.request.*;
+import com.antgroup.openspg.server.api.facade.dto.service.response.ExpendOneHopResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ManipulateDataResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.PageRankScoreInstance;
+import com.antgroup.openspg.server.api.facade.dto.service.response.QueryVertexResponse;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.server.api.http.server.HttpResult;
@@ -233,5 +235,45 @@ public class GraphController {
       results.put(spgType.getBaseSpgIdentifier(), conceptList);
     }
     return results;
+  }
+
+  @RequestMapping(value = "/expendOneHop", method = RequestMethod.POST)
+  @ResponseBody
+  public HttpResult<ExpendOneHopResponse> expendOneHop(@RequestBody ExpendOneHopRequest request) {
+    return HttpBizTemplate.execute2(
+        new HttpBizCallback<ExpendOneHopResponse>() {
+          @Override
+          public void check() {
+            AssertUtils.assertParamObjectIsNotNull("request", request);
+            AssertUtils.assertParamObjectIsNotNull("projectId", request.getProjectId());
+            AssertUtils.assertParamObjectIsNotNull("typeName", request.getTypeName());
+            AssertUtils.assertParamObjectIsNotNull("bizId", request.getBizId());
+          }
+
+          @Override
+          public ExpendOneHopResponse action() {
+            return graphManager.expendOneHop(request);
+          }
+        });
+  }
+
+  @RequestMapping(value = "/queryVertex", method = RequestMethod.POST)
+  @ResponseBody
+  public HttpResult<QueryVertexResponse> queryVertex(@RequestBody QueryVertexRequest request) {
+    return HttpBizTemplate.execute2(
+        new HttpBizCallback<QueryVertexResponse>() {
+          @Override
+          public void check() {
+            AssertUtils.assertParamObjectIsNotNull("request", request);
+            AssertUtils.assertParamObjectIsNotNull("projectId", request.getProjectId());
+            AssertUtils.assertParamObjectIsNotNull("typeName", request.getTypeName());
+            AssertUtils.assertParamObjectIsNotNull("bizId", request.getBizId());
+          }
+
+          @Override
+          public QueryVertexResponse action() {
+            return graphManager.queryVertex(request);
+          }
+        });
   }
 }

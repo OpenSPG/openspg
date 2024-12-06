@@ -28,14 +28,18 @@ class SearchClient(Client):
             api_client=ApiClient(configuration=Configuration(host=host_addr))
         )
 
-    def search_text(self, query_string, label_constraints=None, topk=10):
-        req = TextSearchRequest(self._project_id, query_string, label_constraints, topk)
+    def search_text(self, query_string, label_constraints=None, topk=10, params=None):
+        req = TextSearchRequest(
+            self._project_id, query_string, label_constraints, topk, params
+        )
         records = self._rest_client.search_text_post(text_search_request=req)
         return [idx_record_to_dict(record) for record in records]
 
-    def search_vector(self, label, property_key, query_vector, topk=10, ef_search=None):
+    def search_vector(
+        self, label, property_key, query_vector, topk=10, ef_search=None, params=None
+    ):
         req = VectorSearchRequest(
-            self._project_id, label, property_key, query_vector, ef_search, topk
+            self._project_id, label, property_key, query_vector, ef_search, topk, params
         )
         records = self._rest_client.search_vector_post(vector_search_request=req)
         return [idx_record_to_dict(record) for record in records]

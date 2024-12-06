@@ -14,5 +14,5 @@ from knext.schema.rest.models import *
 from knext.reasoner.rest.models import *
 from knext.project.rest.models import *
 from knext.search.rest.models import *
-from knext.graph_algo.rest.models import *
+from knext.graph.rest.models import *
 from knext.thinker.rest.models import *
