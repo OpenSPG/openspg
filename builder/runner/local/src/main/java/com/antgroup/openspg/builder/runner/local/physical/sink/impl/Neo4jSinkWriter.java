@@ -58,21 +58,21 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
   private Project project;
   private static final String DOT = ".";
   private static RejectedExecutionHandler handler =
-          (r, executor) -> {
-            try {
-              executor.getQueue().put(r);
-            } catch (InterruptedException e) {
-              Thread.currentThread().interrupt();
-            }
-          };
+      (r, executor) -> {
+        try {
+          executor.getQueue().put(r);
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+        }
+      };
   private static ExecutorService executor =
-        new ThreadPoolExecutor(
+      new ThreadPoolExecutor(
           NUM_THREADS,
-                MAX_NUM_THREADS,
-            2 * 60L,
+          MAX_NUM_THREADS,
+          2 * 60L,
           TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(200),
-  handler);
+          new LinkedBlockingQueue<>(200),
+          handler);
 
   public Neo4jSinkWriter(String id, String name, Neo4jSinkNodeConfig config) {
     super(id, name, config);
