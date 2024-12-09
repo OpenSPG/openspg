@@ -94,30 +94,9 @@ class GraphClient(Client):
 
 
 if __name__ == "__main__":
-    """
     sc = GraphClient("http://127.0.0.1:8887", 4)
     out = sc.calculate_pagerank_scores(
         "Entity", [{"name": "Anxiety_and_nervousness", "type": "Entity"}]
     )
     for o in out:
         print(o)
-    """
-
-    # test ant main-site
-    client = GraphClient("https://spgservice-standard-pre.alipay.com", 644000146)
-    v = client.query_vertex("Antwork.EntityName", "千三")
-    print(v)
-
-    edge_name = EdgeTypeName(
-        start_vertex_type="BCTEST.DeleteDataEntity3",
-        edge_label="concept",
-        end_vertex_type="BCTEST.TestConcept",
-    )
-    client2 = GraphClient("https://spgservice-standard-pre.alipay.com", 363000133)
-    edge_type_name_constraint = []
-    # edge_type_name_constraint.append(edge_name)
-    g1 = client2.expend_one_hop(
-        "BCTEST.DeleteDataEntity3", "秉初测试321", edge_type_name_constraint
-    )
-    # g1 = client2.expend_one_hop("BCTEST.DeleteDataEntity3", "秉初测试", [edge_name])
-    # print(g1)
