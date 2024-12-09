@@ -81,9 +81,11 @@ class TextSearchRequest(object):
 
         self.project_id = project_id
         self.query_string = query_string
-        self.label_constraints = label_constraints
+        if label_constraints is not None:
+            self.label_constraints = label_constraints
         self.topk = topk
-        self.params = params
+        if params is not None:
+            self.params = params
 
     @property
     def project_id(self):
@@ -158,13 +160,6 @@ class TextSearchRequest(object):
         :param label_constraints: The label_constraints of this TextSearchRequest.  # noqa: E501
         :type: list[str]
         """
-        if (
-            self.local_vars_configuration.client_side_validation
-            and label_constraints is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `label_constraints`, must not be `None`"
-            )  # noqa: E501
 
         self._label_constraints = label_constraints
 
@@ -213,12 +208,6 @@ class TextSearchRequest(object):
         :param params: The params of this TextSearchRequest.  # noqa: E501
         :type: object
         """
-        if (
-            self.local_vars_configuration.client_side_validation and params is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `params`, must not be `None`"
-            )  # noqa: E501
 
         self._params = params
 

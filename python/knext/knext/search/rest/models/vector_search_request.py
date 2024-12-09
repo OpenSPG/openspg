@@ -94,7 +94,8 @@ class VectorSearchRequest(object):
         if ef_search is not None:
             self.ef_search = ef_search
         self.topk = topk
-        self.params = params
+        if params is not None:
+            self.params = params
 
     @property
     def project_id(self):
@@ -272,12 +273,6 @@ class VectorSearchRequest(object):
         :param params: The params of this VectorSearchRequest.  # noqa: E501
         :type: object
         """
-        if (
-            self.local_vars_configuration.client_side_validation and params is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `params`, must not be `None`"
-            )  # noqa: E501
 
         self._params = params
 
