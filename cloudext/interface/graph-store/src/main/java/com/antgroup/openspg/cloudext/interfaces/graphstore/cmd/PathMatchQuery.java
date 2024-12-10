@@ -15,17 +15,17 @@ import org.apache.commons.lang3.NotImplementedException;
 @Getter
 public class PathMatchQuery extends BaseLPGRecordQuery {
 
-  private final String typeName;
+  private final String srcVertexName;
 
-  private final List<String> bizIds;
+  private final List<String> srcVertexIds;
 
-  public PathMatchQuery(List<String> bizIds, String typeName) {
+  public PathMatchQuery(List<String> srcVertexIds, String srcVertexName) {
     super(LpgRecordQueryType.PATH_MATCH);
-    this.bizIds = bizIds;
-    this.typeName = typeName;
+    this.srcVertexIds = srcVertexIds;
+    this.srcVertexName = srcVertexName;
   }
 
-  @Setter private VertexMatchRule startVertexRule;
+  @Setter private VertexMatchRule srcVertexRule;
 
   @Setter private List<HopMatchRule> hops;
 
