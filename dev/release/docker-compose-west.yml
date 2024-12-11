@@ -1,0 +1,68 @@
+version: "3.7"
+services:
+  server:
+    restart: always
+    image: spg-registry.us-west-1.cr.aliyuncs.com/spg/openspg-server:latest
+    container_name: release-openspg-server
+    ports:
+      - "8887:8887"
+    depends_on:
+      - mysql
+      - neo4j
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      TZ: Asia/Shanghai
+      LANG: C.UTF-8
+    command: [
+      "java",
+      "-Dfile.encoding=UTF-8",
+      "-Xms2048m",
+      "-Xmx8192m",
+      "-jar",
+      "arks-sofaboot-0.0.1-SNAPSHOT-executable.jar",
+      '--server.repository.impl.jdbc.host=mysql',
+      '--server.repository.impl.jdbc.password=openspg',
+      '--builder.model.execute.num=5',
+      '--cloudext.graphstore.url=neo4j://release-openspg-neo4j:7687?user=neo4j&password=neo4j@openspg&database=neo4j',
+      '--cloudext.searchengine.url=neo4j://release-openspg-neo4j:7687?user=neo4j&password=neo4j@openspg&database=neo4j'
+    ]
+
+  mysql:
+    restart: always
+    image: spg-registry.us-west-1.cr.aliyuncs.com/spg/openspg-mysql:latest
+    container_name: release-openspg-mysql
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      TZ: Asia/Shanghai
+      LANG: C.UTF-8
+      MYSQL_ROOT_PASSWORD: openspg
+      MYSQL_DATABASE: openspg
+    ports:
+      - "3306:3306"
+    command: [
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_general_ci'
+    ]
+
+  neo4j:
+    image: spg-registry.us-west-1.cr.aliyuncs.com/spg/openspg-neo4j:latest
+    container_name: release-openspg-neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - TZ=Asia/Shanghai
+      - NEO4J_AUTH=neo4j/neo4j@openspg
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_server_memory_heap_initial__size=1G
+      - NEO4J_server_memory_heap_max__size=4G
+      - NEO4J_server_memory_pagecache_size=1G
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4J_apoc_import_file_enabled=true
+      - NEO4J_dbms_security_procedures_unrestricted=*
+      - NEO4J_dbms_security_procedures_allowlist=*
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $HOME/dozerdb/logs:/logs
