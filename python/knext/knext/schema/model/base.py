@@ -165,13 +165,14 @@ class BaseProperty(ABC):
         return self._rest_model.object_type_ref.basic_info.name.name_en
 
     @object_type_name_en.setter
-    def object_type_name_en(self, object_type_name_en: str) -> str:
-        """Gets the object_type_name_en of this Property/Relation.  # noqa: E501
+    def object_type_name_en(self, object_type_name_en: str):
+        """Sets the object_type_name_en of this Property/Relation.
 
 
-        :return: The object_type_name_en of this Property/Relation.  # noqa: E501
-        :rtype: str
+        :param object_type_name_en: The object_type_name_en of this Property/Relation.  # noqa: E501
+        :type: str
         """
+
         self._rest_model.object_type_ref.basic_info.name.name_en = object_type_name_en
 
     @object_type_name.setter
