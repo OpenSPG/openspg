@@ -164,6 +164,17 @@ class BaseProperty(ABC):
         """
         return self._rest_model.object_type_ref.basic_info.name.name_en
 
+    @object_type_name_en.setter
+    def object_type_name_en(self, object_type_name_en: str):
+        """Sets the object_type_name_en of this Property/Relation.
+
+
+        :param object_type_name_en: The object_type_name_en of this Property/Relation.  # noqa: E501
+        :type: str
+        """
+
+        self._rest_model.object_type_ref.basic_info.name.name_en = object_type_name_en
+
     @object_type_name.setter
     def object_type_name(self, object_type_name: str):
         """Sets the object_type_name of this Property/Relation.
@@ -532,9 +543,11 @@ class BaseProperty(ABC):
             elif isinstance(value, typing.Dict):
                 result[attr] = dict(
                     map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
+                        lambda item: (
+                            (item[0], item[1].to_dict())
+                            if hasattr(item[1], "to_dict")
+                            else item
+                        ),
                         value.items(),
                     )
                 )
@@ -867,9 +880,11 @@ class BaseSpgType(ABC):
             elif isinstance(value, typing.Dict):
                 result[attr] = dict(
                     map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
+                        lambda item: (
+                            (item[0], item[1].to_dict())
+                            if hasattr(item[1], "to_dict")
+                            else item
+                        ),
                         value.items(),
                     )
                 )
