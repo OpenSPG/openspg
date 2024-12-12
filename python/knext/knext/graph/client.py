@@ -104,19 +104,19 @@ class GraphClient(Client):
         self,
         type_name: str,
         biz_ids: List[str],
-        srcVertexRule: VertexMatchRule = None,
+        src_vertex_rule: VertexMatchRule = None,
         hops: List[HopMatchRule] = None,
-        sortRule: SortRule = None,
-        pageRule: PageRule = None,
+        sort_rule: SortRule = None,
+        page_rule: PageRule = None,
     ):
         request = PathMatchRequest(
             project_id=self._project_id,
             type_name=type_name,
             biz_ids=biz_ids,
-            srcVertexRule=srcVertexRule,
+            src_vertex_rule=src_vertex_rule,
             hops=hops,
-            sortRule=sortRule,
-            pageRule=pageRule,
+            sort_rule=sort_rule,
+            page_rule=page_rule,
         )
         return self._rest_client.graph_match_path_post(path_match_request=request)
 
