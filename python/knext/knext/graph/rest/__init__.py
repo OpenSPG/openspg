@@ -59,6 +59,7 @@ from knext.graph.rest.models.hop_match_rule import HopMatchRule
 from knext.graph.rest.models.page_rule import PageRule
 from knext.graph.rest.models.path_match_request import PathMatchRequest
 from knext.graph.rest.models.path_match_response import PathMatchResponse
+from knext.graph.rest.models.path_match_response_paths import PathMatchResponsePaths
 from knext.graph.rest.models.property_filter import PropertyFilter
 from knext.graph.rest.models.sort_rule import SortRule
 from knext.graph.rest.models.vertex_match_rule import VertexMatchRule
