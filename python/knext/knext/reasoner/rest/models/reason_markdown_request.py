@@ -15,7 +15,7 @@ import re  # noqa: F401
 
 import six
 
-from openapi_client.configuration import Configuration
+from knext.common.rest.configuration import Configuration
 
 
 class ReportMarkdownRequest(object):
