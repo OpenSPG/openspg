@@ -1,0 +1,18 @@
+namespace Openkg
+
+Event(事件): EventType
+    properties:
+        subject(主体): Text
+          desc: 可能为人物、机构等，需要结合具体事件考虑，此处使用Text暂时替代
+        object(客体): Text
+        startTime(开始时间): STD.Date
+        endTime(结束时间): STD.Date
+        location(地点): Text
+        eventDescription(事件描述): Text
+        involvedEntities(参与实体): Text
+        causalRelationship(事件因果关系): Text
+        eventFrequency(事件频率): Text
+        eventSource(事件来源): Text
+
+        # eventAttributes(事件属性): Text
+        # type（事件类型: conceptType（政策事件、行业事件、用户行为事件）
