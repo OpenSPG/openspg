@@ -19,6 +19,7 @@ from knext.graph import (
     GetPageRankScoresRequestStartNodes,
     WriterGraphRequest,
     QueryVertexRequest,
+    BatchQueryVertexRequest,
     ExpendOneHopRequest,
     EdgeTypeName,
 )
@@ -75,6 +76,14 @@ class GraphClient(Client):
             project_id=self._project_id, type_name=type_name, biz_id=biz_id
         )
         return self._rest_client.graph_query_vertex_post(query_vertex_request=request)
+
+    def batch_query_vertex(self, type_name: str, biz_ids: List[str]):
+        request = BatchQueryVertexRequest(
+            project_id=self._project_id, type_name=type_name, biz_ids=biz_ids
+        )
+        return self._rest_client.graph_batch_query_vertex_post(
+            batch_query_vertex_request=request
+        )
 
     def expend_one_hop(
         self,
