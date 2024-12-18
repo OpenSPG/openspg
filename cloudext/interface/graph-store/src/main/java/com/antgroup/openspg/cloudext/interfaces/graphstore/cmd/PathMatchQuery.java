@@ -60,6 +60,8 @@ public class PathMatchQuery extends BaseLPGRecordQuery {
 
     private List<EdgeTypeName> edgeTypeNameConstraint;
 
+    private Integer edgeLimit;
+
     private Direction direction = Direction.BOTH;
   }
 

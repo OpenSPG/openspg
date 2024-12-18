@@ -22,6 +22,14 @@ from knext.graph import (
     BatchQueryVertexRequest,
     ExpendOneHopRequest,
     EdgeTypeName,
+    EdgeMatchRule,
+    HopMatchRule,
+    PageRule,
+    PathMatchRequest,
+    PathMatchResponse,
+    PropertyFilter,
+    SortRule,
+    VertexMatchRule,
 )
 
 
@@ -100,6 +108,26 @@ class GraphClient(Client):
         return self._rest_client.graph_expend_one_hop_post(
             expend_one_hop_request=request
         )
+
+    def match_path(
+        self,
+        type_name: str,
+        biz_ids: List[str],
+        src_vertex_rule: VertexMatchRule = None,
+        hops: List[HopMatchRule] = None,
+        sort_rule: SortRule = None,
+        page_rule: PageRule = None,
+    ):
+        request = PathMatchRequest(
+            project_id=self._project_id,
+            type_name=type_name,
+            biz_ids=biz_ids,
+            src_vertex_rule=src_vertex_rule,
+            hops=hops,
+            sort_rule=sort_rule,
+            page_rule=page_rule,
+        )
+        return self._rest_client.graph_match_path_post(path_match_request=request)
 
 
 if __name__ == "__main__":
