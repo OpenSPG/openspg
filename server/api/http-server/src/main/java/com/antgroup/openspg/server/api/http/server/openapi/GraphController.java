@@ -29,10 +29,7 @@ import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.server.api.facade.dto.service.request.*;
-import com.antgroup.openspg.server.api.facade.dto.service.response.ExpendOneHopResponse;
-import com.antgroup.openspg.server.api.facade.dto.service.response.ManipulateDataResponse;
-import com.antgroup.openspg.server.api.facade.dto.service.response.PageRankScoreInstance;
-import com.antgroup.openspg.server.api.facade.dto.service.response.QueryVertexResponse;
+import com.antgroup.openspg.server.api.facade.dto.service.response.*;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.server.api.http.server.HttpResult;
@@ -273,6 +270,27 @@ public class GraphController {
           @Override
           public QueryVertexResponse action() {
             return graphManager.queryVertex(request);
+          }
+        });
+  }
+
+  @RequestMapping(value = "/batchQueryVertex", method = RequestMethod.POST)
+  @ResponseBody
+  public HttpResult<BatchQueryVertexResponse> batchQueryVertex(
+      @RequestBody BatchQueryVertexRequest request) {
+    return HttpBizTemplate.execute2(
+        new HttpBizCallback<BatchQueryVertexResponse>() {
+          @Override
+          public void check() {
+            AssertUtils.assertParamObjectIsNotNull("request", request);
+            AssertUtils.assertParamObjectIsNotNull("projectId", request.getProjectId());
+            AssertUtils.assertParamObjectIsNotNull("typeName", request.getTypeName());
+            AssertUtils.assertParamObjectIsNotNull("bizIds", request.getBizIds());
+          }
+
+          @Override
+          public BatchQueryVertexResponse action() {
+            return graphManager.batchQueryVertex(request);
           }
         });
   }
