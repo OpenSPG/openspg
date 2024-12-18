@@ -15,6 +15,7 @@ package com.antgroup.openspg.server.biz.service.impl;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.BaseLPGGraphStoreClient;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.GraphStoreClientDriverManager;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.BatchVertexLPGRecordQuery;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.OneHopLPGRecordQuery;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.PageRankCompete;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.cmd.VertexLPGRecordQuery;
@@ -25,10 +26,7 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.Vert
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.struct.GraphLPGRecordStruct;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
 import com.antgroup.openspg.server.api.facade.dto.service.request.*;
-import com.antgroup.openspg.server.api.facade.dto.service.response.ExpendOneHopResponse;
-import com.antgroup.openspg.server.api.facade.dto.service.response.ManipulateDataResponse;
-import com.antgroup.openspg.server.api.facade.dto.service.response.PageRankScoreInstance;
-import com.antgroup.openspg.server.api.facade.dto.service.response.QueryVertexResponse;
+import com.antgroup.openspg.server.api.facade.dto.service.response.*;
 import com.antgroup.openspg.server.biz.common.ProjectManager;
 import com.antgroup.openspg.server.biz.service.GraphManager;
 import com.antgroup.openspg.server.biz.service.convertor.InstanceConvertor;
@@ -245,6 +243,30 @@ public class GraphManagerImpl implements GraphManager {
       return response;
     }
     response.setVertex(struct.getVertices().get(0));
+    return response;
+  }
+
+  @Override
+  public BatchQueryVertexResponse batchQueryVertex(BatchQueryVertexRequest request) {
+    String graphStoreUrl = projectManager.getGraphStoreUrl(request.getProjectId());
+    BaseLPGGraphStoreClient lpgGraphStoreClient =
+        (BaseLPGGraphStoreClient) GraphStoreClientDriverManager.getClient(graphStoreUrl);
+
+    BatchQueryVertexResponse response = new BatchQueryVertexResponse();
+    response.setVertices(Lists.newArrayList());
+
+    if (CollectionUtils.isEmpty(request.getBizIds())) {
+      return response;
+    }
+
+    Set<String> idSet = new HashSet<>(request.getBizIds());
+
+    BatchVertexLPGRecordQuery query = new BatchVertexLPGRecordQuery(idSet, request.getTypeName());
+    GraphLPGRecordStruct struct = (GraphLPGRecordStruct) lpgGraphStoreClient.queryRecord(query);
+
+    if (struct != null && !struct.getVertices().isEmpty()) {
+      response.setVertices(struct.getVertices());
+    }
     return response;
   }
 }
