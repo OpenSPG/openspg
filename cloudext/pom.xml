@@ -18,13 +18,13 @@
   <parent>
     <groupId>com.antgroup.openspg</groupId>
     <artifactId>openspg-parent</artifactId>
-    <version>bc-20241209-SNAPSHOT</version>
+    <version>bc-20241218-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>com.antgroup.openspg.cloudext</groupId>
   <artifactId>cloudext-parent</artifactId>
-  <version>bc-20241209-SNAPSHOT</version>
+  <version>bc-20241218-SNAPSHOT</version>
   <packaging>pom</packaging>
   <licenses>
     <license>

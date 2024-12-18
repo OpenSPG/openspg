@@ -17,7 +17,7 @@
   <parent>
     <groupId>com.antgroup.openspg.builder</groupId>
     <artifactId>builder-parent</artifactId>
-    <version>bc-20241209-SNAPSHOT</version>
+    <version>bc-20241218-SNAPSHOT</version>
   </parent>
 
   <artifactId>builder-testdata</artifactId>
