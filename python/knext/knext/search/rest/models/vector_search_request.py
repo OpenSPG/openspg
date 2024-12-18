@@ -70,7 +70,7 @@ class VectorSearchRequest(object):
         query_vector=None,
         ef_search=None,
         topk=None,
-        params=None,
+        params={},
         local_vars_configuration=None,
     ):  # noqa: E501
         """VectorSearchRequest - a model defined in OpenAPI"""  # noqa: E501
@@ -291,9 +291,11 @@ class VectorSearchRequest(object):
             elif isinstance(value, dict):
                 result[attr] = dict(
                     map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
+                        lambda item: (
+                            (item[0], item[1].to_dict())
+                            if hasattr(item[1], "to_dict")
+                            else item
+                        ),
                         value.items(),
                     )
                 )
