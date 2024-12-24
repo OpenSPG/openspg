@@ -75,7 +75,13 @@ public class Utils {
         graphState.getEdges(id, null, null, null, Direction.BOTH, new HashMap<>());
     if (CollectionUtils.isNotEmpty(edgeList)) {
       for (IEdge<IVertexId, IProperty> edge : edgeList) {
-        Object toIdObj = edge.getValue().get(Constants.EDGE_TO_ID_KEY);
+        Object toIdObj = null;
+        if (edge.getDirection().equals(Direction.OUT)) {
+          toIdObj = edge.getValue().get(Constants.EDGE_TO_ID_KEY);
+        }
+        else if (edge.getDirection().equals(Direction.IN)) {
+          toIdObj = edge.getValue().get(Constants.EDGE_FROM_ID_KEY);
+        }
         if (null == toIdObj) {
           continue;
         }
