@@ -14,6 +14,7 @@
 package com.antgroup.openspg.reasoner.rdg.common;
 
 import com.antgroup.openspg.reasoner.common.constants.Constants;
+import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.impl.Edge;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
@@ -151,6 +152,10 @@ public class LinkEdgeImpl implements Serializable {
             genTargetVertexTypes =
                 Lists.newArrayList(linkedUdtfResult.getTargetVertexTypeList().get(i));
           }
+          String direction = Direction.OUT.name();
+          if (CollectionUtils.isNotEmpty(linkedUdtfResult.getDirection()) && i < linkedUdtfResult.getDirection().size()) {
+            direction = linkedUdtfResult.getDirection().get(i);
+          }
           if (genTargetVertexTypes.size() == 0) {
             throw new RuntimeException(
                 "Linked edge target vertex type must contains at least one type");
@@ -170,21 +175,32 @@ public class LinkEdgeImpl implements Serializable {
                 newAliasVertexMap.computeIfAbsent(targetAlias, k -> new HashSet<>());
             newVertexSet.add(new Vertex<>(targetId, vertexProperty));
 
+
             Map<String, Object> props = new HashMap<>(linkedUdtfResult.getEdgePropertyMap());
-            props.put(Constants.EDGE_TO_ID_KEY, targetIdStr);
+            Object from_id = sourceVertex.getValue().get(Constants.NODE_ID_KEY);
+            Object to_id = targetIdStr;
+            if (Objects.equals(direction, Direction.IN.name())) {
+              to_id = from_id;
+              from_id = targetId;
+            }
+            props.put(Constants.EDGE_TO_ID_KEY, to_id);
             if (sourceVertex.getValue().isKeyExist(Constants.NODE_ID_KEY)) {
               props.put(
-                  Constants.EDGE_FROM_ID_KEY, sourceVertex.getValue().get(Constants.NODE_ID_KEY));
+                  Constants.EDGE_FROM_ID_KEY, from_id);
             }
             IProperty property = new EdgeProperty(props);
 
             // construct new edge
             IEdge<IVertexId, IProperty> linkedEdge = new Edge<>(sourceId, targetId, property);
+
             String edgeType =
                 StringUtils.isNotEmpty(linkedUdtfResult.getEdgeType())
                     ? linkedUdtfResult.getEdgeType()
                     : linkedEdgePattern.edge().funcName();
             linkedEdge.setType(sourceId.getType() + "_" + edgeType + "_" + targetVertexType);
+            if (Objects.equals(direction, Direction.IN.name())) {
+              linkedEdge.setType(targetVertexType + "_" + edgeType + "_" + sourceId.getType());
+            }
             String edgeAlias = pc.alias();
 
             Set<IEdge<IVertexId, IProperty>> newEdgeSet =
