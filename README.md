@@ -45,16 +45,15 @@ OpenSPG Core Capabilities:
 
 ## Get Started
 
-* [Install OpenSPG](https://openspg.yuque.com/ndx6g9/ns5nw2/yl9p847hcfpluv46)
+* [Install OpenSPG](https://openspg.yuque.com/ndx6g9/wc9oyq/yexegklu44bqqicm)
 * Quick start with examples:
-  * [Enterprise Supply Chain Knowledge Graph](https://openspg.yuque.com/ndx6g9/ns5nw2/gyd703vk4l5qqb9y)
-  * [Risk Mining Knowledge Graph](https://openspg.yuque.com/ndx6g9/ns5nw2/yoleogat9akvyqnz)
-  * [Medical Knowledge Graph](https://openspg.yuque.com/ndx6g9/ns5nw2/kadwgc3iarqqemo1)
+  * [Enterprise Supply Chain Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/wni2suux7g2tt6s2)
+  * [Risk Mining Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/da4h0fbphifg3dpe)
+  * [Medical Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/iiktuogkwigoegcv)
 
 ## Advanced tutorials
 
-* [OpenSPG User Guide](https://openspg.yuque.com/ndx6g9/ps5q6b)
-* [OneKE   User Guide](https://openspg.yuque.com/ndx6g9/ps5q6b/vfoi61ks3mqwygvy)
+* [OpenSPG User Guide](https://openspg.yuque.com/ndx6g9/wc9oyq)
 
 # How to contribute
 
