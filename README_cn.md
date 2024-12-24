@@ -46,9 +46,9 @@ OpenSPG核心能力模型包括：
 
 * [安装说明](https://openspg.yuque.com/ndx6g9/ooil9x/xht6kkegvs33cwwr)
 * 通过案例快速上手:
-  * [企业供应链图谱](https://openspg.yuque.com/ndx6g9/ooil9x/bf5kppyi5w0g7se5)
-  * [黑产挖掘图谱](https://openspg.yuque.com/ndx6g9/ooil9x/pst9v980k2u2p17o)
-  * [医疗知识图谱](https://openspg.yuque.com/ndx6g9/ooil9x/odbzpk4694lc7yfd)
+  * [企业供应链图谱](https://openspg.yuque.com/ndx6g9/0.5/cefh3sufvay63tb0)
+  * [黑产挖掘图谱](https://openspg.yuque.com/ndx6g9/0.5/haf99dg5w8wrkvop)
+  * [医疗知识图谱](https://openspg.yuque.com/ndx6g9/0.5/otced6rb3z4vtq2y)
 
 ## 进阶教程
 
