@@ -68,6 +68,10 @@ public class RdfExpand extends BaseUdtf {
     String vertexType = null;
     String bizId = null;
     Object s = context.get(srcAlias);
+    String rdfType = null;
+    if (args.size() > 0) {
+      rdfType = (String) args.get(0);
+    }
     if (s instanceof Map) {
       Map<String, Object> sMap = (Map<String, Object>) s;
       bizId = (String) sMap.get(Constants.NODE_ID_KEY);
@@ -75,7 +79,7 @@ public class RdfExpand extends BaseUdtf {
     }
     IVertexId id = new VertexBizId(bizId, vertexType);
     // 结果
-    List<LinkedUdtfResult> validBizIds = Utils.getAllRdfEntity(graphState, id);
+    List<LinkedUdtfResult> validBizIds = Utils.getAllRdfEntity(graphState, id, rdfType);
     for (LinkedUdtfResult udtfResult : validBizIds) {
       forward(Lists.newArrayList(udtfResult));
     }

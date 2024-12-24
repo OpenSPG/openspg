@@ -28,6 +28,9 @@ public class LinkedUdtfResult {
   /** The target vertex id of linked edge */
   private List<String> targetVertexIdList = new ArrayList<>();
 
+  /** The linked direction */
+  private List<String> direction = new ArrayList<>();
+
   /** The target vertex type of linked edge */
   private List<String> targetVertexTypeList = new ArrayList<>();
 
