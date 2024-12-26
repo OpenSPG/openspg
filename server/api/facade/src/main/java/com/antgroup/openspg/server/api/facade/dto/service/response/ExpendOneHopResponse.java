@@ -11,10 +11,11 @@
  * or implied.
  */
 
-package com.antgroup.openspg.server.api.facade.dto.service.request;
+package com.antgroup.openspg.server.api.facade.dto.service.response;
 
-import java.util.Map;
-import java.util.Set;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.EdgeRecord;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,10 +23,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TextSearchRequest {
-  private Long projectId;
-  private String queryString;
-  private Set<String> labelConstraints;
-  private Integer topk;
-  private Map<String, Object> params;
+public class ExpendOneHopResponse {
+
+  private VertexRecord vertex;
+  private List<EdgeRecord> edges;
+  private List<VertexRecord> adjacentVertices;
 }

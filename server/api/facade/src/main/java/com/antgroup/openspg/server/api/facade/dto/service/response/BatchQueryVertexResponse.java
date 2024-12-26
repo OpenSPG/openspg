@@ -11,21 +11,18 @@
  * or implied.
  */
 
-package com.antgroup.openspg.common.util;
+package com.antgroup.openspg.server.api.facade.dto.service.response;
 
-import lombok.extern.slf4j.Slf4j;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Slf4j
-public class JsonUtils {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class BatchQueryVertexResponse {
 
-  public static String toJsonString(Object object) {
-    String result = null;
-    try {
-      result = SchemaJsonUtils.serialize(object);
-    } catch (Exception e) {
-      log.error("toJsonString error, object={}", object, e);
-      result = StringUtils.toString(object);
-    }
-    return result;
-  }
+  private List<VertexRecord> vertices;
 }

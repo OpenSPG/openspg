@@ -31,8 +31,8 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.MatchQuery;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.QueryGroup;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.TermQuery;
+import com.antgroup.openspg.common.util.SchemaJsonUtils;
 import com.antgroup.openspg.common.util.StringUtils;
-import com.antgroup.openspg.server.api.facade.SchemaJsonUtils;
 import com.dtflys.forest.http.ForestResponse;
 import com.google.gson.reflect.TypeToken;
 import java.net.URLEncoder;

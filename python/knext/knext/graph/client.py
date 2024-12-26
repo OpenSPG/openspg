@@ -13,15 +13,19 @@ from typing import List, Dict
 
 from knext.common.base.client import Client
 from knext.common.rest import ApiClient, Configuration
-from knext.graph_algo import (
+from knext.graph import (
+    rest,
     GetPageRankScoresRequest,
     GetPageRankScoresRequestStartNodes,
     WriterGraphRequest,
+    QueryVertexRequest,
+    BatchQueryVertexRequest,
+    ExpendOneHopRequest,
+    EdgeTypeName,
 )
-from knext.graph_algo import rest
 
 
-class GraphAlgoClient(Client):
+class GraphClient(Client):
     """ """
 
     def __init__(self, host_addr: str = None, project_id: int = None):
@@ -67,9 +71,39 @@ class GraphAlgoClient(Client):
         )
         self._rest_client.graph_writer_graph_post(writer_graph_request=request)
 
+    def query_vertex(self, type_name: str, biz_id: str):
+        request = QueryVertexRequest(
+            project_id=self._project_id, type_name=type_name, biz_id=biz_id
+        )
+        return self._rest_client.graph_query_vertex_post(query_vertex_request=request)
+
+    def batch_query_vertex(self, type_name: str, biz_ids: List[str]):
+        request = BatchQueryVertexRequest(
+            project_id=self._project_id, type_name=type_name, biz_ids=biz_ids
+        )
+        return self._rest_client.graph_batch_query_vertex_post(
+            batch_query_vertex_request=request
+        )
+
+    def expend_one_hop(
+        self,
+        type_name: str,
+        biz_id: str,
+        edge_type_name_constraint: List[EdgeTypeName] = None,
+    ):
+        request = ExpendOneHopRequest(
+            project_id=self._project_id,
+            type_name=type_name,
+            biz_id=biz_id,
+            edge_type_name_constraint=edge_type_name_constraint,
+        )
+        return self._rest_client.graph_expend_one_hop_post(
+            expend_one_hop_request=request
+        )
+
 
 if __name__ == "__main__":
-    sc = GraphAlgoClient("http://127.0.0.1:8887", 4)
+    sc = GraphClient("http://127.0.0.1:8887", 4)
     out = sc.calculate_pagerank_scores(
         "Entity", [{"name": "Anxiety_and_nervousness", "type": "Entity"}]
     )

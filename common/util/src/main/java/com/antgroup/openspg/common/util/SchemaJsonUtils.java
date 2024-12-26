@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.openspg.server.api.facade;
+package com.antgroup.openspg.common.util;
 
 import com.antgroup.openspg.core.schema.model.constraint.BaseConstraintItem;
 import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;

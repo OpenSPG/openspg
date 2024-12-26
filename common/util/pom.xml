@@ -25,7 +25,7 @@
   <dependencies>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
-      <artifactId>api-facade</artifactId>
+      <artifactId>core-schema-model</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
@@ -58,6 +58,14 @@
     <dependency>
       <groupId>org.neo4j.driver</groupId>
       <artifactId>neo4j-java-driver</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.danilopianini</groupId>
+      <artifactId>gson-extras</artifactId>
     </dependency>
   </dependencies>
 </project>

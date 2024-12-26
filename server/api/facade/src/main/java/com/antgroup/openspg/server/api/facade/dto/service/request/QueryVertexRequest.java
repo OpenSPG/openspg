@@ -11,21 +11,18 @@
  * or implied.
  */
 
-package com.antgroup.openspg.common.util;
+package com.antgroup.openspg.server.api.facade.dto.service.request;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Slf4j
-public class JsonUtils {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class QueryVertexRequest {
 
-  public static String toJsonString(Object object) {
-    String result = null;
-    try {
-      result = SchemaJsonUtils.serialize(object);
-    } catch (Exception e) {
-      log.error("toJsonString error, object={}", object, e);
-      result = StringUtils.toString(object);
-    }
-    return result;
-  }
+  private Long projectId;
+  private String typeName;
+  private String bizId;
 }

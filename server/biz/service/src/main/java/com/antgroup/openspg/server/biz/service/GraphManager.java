@@ -14,8 +14,7 @@
 package com.antgroup.openspg.server.biz.service;
 
 import com.antgroup.openspg.server.api.facade.dto.service.request.*;
-import com.antgroup.openspg.server.api.facade.dto.service.response.ManipulateDataResponse;
-import com.antgroup.openspg.server.api.facade.dto.service.response.PageRankScoreInstance;
+import com.antgroup.openspg.server.api.facade.dto.service.response.*;
 import java.util.List;
 
 public interface GraphManager {
@@ -31,4 +30,10 @@ public interface GraphManager {
   ManipulateDataResponse deleteEdgeRequest(DeleteEdgeRequest request);
 
   List<PageRankScoreInstance> getPageRankScores(GetPageRankScoresRequest request);
+
+  QueryVertexResponse queryVertex(QueryVertexRequest request);
+
+  BatchQueryVertexResponse batchQueryVertex(BatchQueryVertexRequest request);
+
+  ExpendOneHopResponse expendOneHop(ExpendOneHopRequest request);
 }

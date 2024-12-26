@@ -43,9 +43,5 @@
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.antgroup.openspg</groupId>
-      <artifactId>common-util</artifactId>
-    </dependency>
   </dependencies>
 </project>

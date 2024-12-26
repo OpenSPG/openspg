@@ -10,7 +10,6 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-
 """
     knext
 
@@ -50,6 +49,7 @@ class VectorSearchRequest(object):
         "query_vector": "list[float]",
         "ef_search": "int",
         "topk": "int",
+        "params": "object",
     }
 
     attribute_map = {
@@ -59,6 +59,7 @@ class VectorSearchRequest(object):
         "query_vector": "queryVector",
         "ef_search": "efSearch",
         "topk": "topk",
+        "params": "params",
     }
 
     def __init__(
@@ -69,6 +70,7 @@ class VectorSearchRequest(object):
         query_vector=None,
         ef_search=None,
         topk=None,
+        params=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """VectorSearchRequest - a model defined in OpenAPI"""  # noqa: E501
@@ -82,6 +84,7 @@ class VectorSearchRequest(object):
         self._query_vector = None
         self._ef_search = None
         self._topk = None
+        self._params = None
         self.discriminator = None
 
         self.project_id = project_id
@@ -91,6 +94,8 @@ class VectorSearchRequest(object):
         if ef_search is not None:
             self.ef_search = ef_search
         self.topk = topk
+        if params is not None:
+            self.params = params
 
     @property
     def project_id(self):
@@ -249,6 +254,27 @@ class VectorSearchRequest(object):
             )  # noqa: E501
 
         self._topk = topk
+
+    @property
+    def params(self):
+        """Gets the params of this VectorSearchRequest.  # noqa: E501
+
+
+        :return: The params of this VectorSearchRequest.  # noqa: E501
+        :rtype: object
+        """
+        return self._params
+
+    @params.setter
+    def params(self, params):
+        """Sets the params of this VectorSearchRequest.
+
+
+        :param params: The params of this VectorSearchRequest.  # noqa: E501
+        :type: object
+        """
+
+        self._params = params
 
     def to_dict(self):
         """Returns the model properties as a dict"""
