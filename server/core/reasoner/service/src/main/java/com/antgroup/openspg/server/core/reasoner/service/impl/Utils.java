@@ -12,34 +12,31 @@
  */
 package com.antgroup.openspg.server.core.reasoner.service.impl;
 
-import com.antgroup.openspg.common.util.tuple.Tuple2;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.edge.Direction;
 import com.antgroup.openspg.reasoner.common.graph.edge.IEdge;
 import com.antgroup.openspg.reasoner.common.graph.edge.SPO;
 import com.antgroup.openspg.reasoner.common.graph.property.IProperty;
+import com.antgroup.openspg.reasoner.common.graph.property.impl.VertexVersionProperty;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertex;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.Vertex;
+import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexBizId;
 import com.antgroup.openspg.reasoner.graphstate.GraphState;
+import com.antgroup.openspg.reasoner.udf.model.LinkedUdtfResult;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 
-/**
- * @author donghai.ydh
- * @version Utils.java, v 0.1 2024-04-17 10:32 donghai.ydh
- */
 @Slf4j
 public class Utils {
 
-  public static Map<String, Set<Tuple2<String, String>>> getAllRdfEntity(
+  public static List<LinkedUdtfResult> getAllRdfEntity(
       GraphState<IVertexId> graphState, IVertexId id) {
 
-    Map<String, Set<Tuple2<String, String>>> result = new HashMap<>();
+    List<LinkedUdtfResult> result = new ArrayList<>();
 
     // find vertex prop
     IVertex<IVertexId, IProperty> vertex = graphState.getVertex(id, null, null);
@@ -48,12 +45,28 @@ public class Utils {
       log.info("vertex_property,{}", vertex);
       for (String propertyName : vertex.getValue().getKeySet()) {
         Object pValue = vertex.getValue().get(propertyName);
-        if (null == pValue) {
+        if (null == pValue || propertyName.startsWith("_")) {
           continue;
         }
-        result
-            .computeIfAbsent(propertyName, k -> new HashSet<>())
-            .add(new Tuple2<>(String.valueOf(pValue), "Text"));
+        IVertex<IVertexId, IProperty> propVertex = new Vertex<>();
+        propVertex.setId(new VertexBizId(String.valueOf(pValue), "Text"));
+        propVertex.setValue(
+            new VertexVersionProperty(
+                "id", String.valueOf(pValue),
+                "name", String.valueOf(pValue)));
+        graphState.addVertex(propVertex);
+        LinkedUdtfResult udtfRes = new LinkedUdtfResult();
+        udtfRes.setEdgeType(propertyName);
+        udtfRes.getTargetVertexIdList().add(String.valueOf(pValue));
+        if (pValue instanceof Integer) {
+          udtfRes.getTargetVertexTypeList().add("Int");
+        } else if (pValue instanceof Double || pValue instanceof Float) {
+          udtfRes.getTargetVertexTypeList().add("Float");
+        } else {
+          udtfRes.getTargetVertexTypeList().add("Text");
+        }
+        udtfRes.getEdgePropertyMap().put("value", pValue);
+        result.add(udtfRes);
       }
     }
 
@@ -68,9 +81,17 @@ public class Utils {
         }
         SPO spo = new SPO(edge.getType());
         log.info("TargetRdfProperty,id={},,edgeType={}", id, edge.getType());
-        result
-            .computeIfAbsent(spo.getP(), k -> new HashSet<>())
-            .add(new Tuple2<>(String.valueOf(toIdObj), edge.getTargetId().getType()));
+        LinkedUdtfResult udtfRes = new LinkedUdtfResult();
+        udtfRes.setEdgeType(spo.getP());
+        udtfRes.getTargetVertexIdList().add(String.valueOf(toIdObj));
+        udtfRes.getTargetVertexTypeList().add(edge.getTargetId().getType());
+        for (String propKey : edge.getValue().getKeySet()) {
+          if (propKey.startsWith("_")) {
+            continue;
+          }
+          udtfRes.getEdgePropertyMap().put(propKey, edge.getValue().get(propKey));
+        }
+        result.add(udtfRes);
       }
     }
     return result;

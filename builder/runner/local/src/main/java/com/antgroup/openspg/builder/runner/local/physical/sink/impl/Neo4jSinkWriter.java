@@ -51,13 +51,13 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
 
   private static final int NUM_THREADS = 10;
 
+  private static final int MAX_NUM_THREADS = 200;
+
   private ExecuteNode node;
   private Neo4jStoreClient client;
   private Project project;
   private static final String DOT = ".";
-  ExecutorService executor;
-
-  RejectedExecutionHandler handler =
+  private static RejectedExecutionHandler handler =
       (r, executor) -> {
         try {
           executor.getQueue().put(r);
@@ -65,6 +65,14 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
           Thread.currentThread().interrupt();
         }
       };
+  private static ExecutorService executor =
+      new ThreadPoolExecutor(
+          NUM_THREADS,
+          MAX_NUM_THREADS,
+          2 * 60L,
+          TimeUnit.SECONDS,
+          new LinkedBlockingQueue<>(200),
+          handler);
 
   public Neo4jSinkWriter(String id, String name, Neo4jSinkNodeConfig config) {
     super(id, name, config);
@@ -79,14 +87,6 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
     }
     client = new Neo4jStoreClient(context.getGraphStoreUrl());
     project = JSON.parseObject(context.getProject(), Project.class);
-    executor =
-        new ThreadPoolExecutor(
-            NUM_THREADS,
-            NUM_THREADS,
-            2 * 60L,
-            TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(100),
-            handler);
   }
 
   @Override
