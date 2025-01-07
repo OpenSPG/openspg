@@ -97,6 +97,9 @@ public class PhysicalPlan implements Serializable {
       case BUILDER_INDEX:
         return new BuilderIndexProcessor(
             node.getId(), node.getName(), (BuilderIndexNodeConfig) node.getNodeConfig());
+      case PYTHON:
+        return new PythonProcessor(
+            node.getId(), node.getName(), (PythonNodeConfig) node.getNodeConfig());
       case LLM_NL_EXTRACT:
         return new LLMNlExtractProcessor(
             node.getId(), node.getName(), (LLMNlExtractNodeConfig) node.getNodeConfig());

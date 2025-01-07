@@ -31,4 +31,11 @@ public class Paged<T> implements Serializable {
   public Long totalPageNum() {
     return (total / pageSize) + ((total % pageSize == 0) ? 0 : 1);
   }
+
+  public Paged() {}
+
+  public Paged(Integer pageSize, Integer pageIdx) {
+    this.pageSize = pageSize;
+    this.pageIdx = pageIdx;
+  }
 }

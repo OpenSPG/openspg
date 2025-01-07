@@ -34,13 +34,13 @@ import org.apache.commons.collections4.CollectionUtils;
 public class Utils {
 
   public static List<LinkedUdtfResult> getAllRdfEntity(
-      GraphState<IVertexId> graphState, IVertexId id) {
+      GraphState<IVertexId> graphState, IVertexId id, String rdfType) {
 
     List<LinkedUdtfResult> result = new ArrayList<>();
 
     // find vertex prop
     IVertex<IVertexId, IProperty> vertex = graphState.getVertex(id, null, null);
-    if (null != vertex && null != vertex.getValue()) {
+    if (null != vertex && null != vertex.getValue() && !"relation".equals(rdfType)) {
       // 提取属性
       log.info("vertex_property,{}", vertex);
       for (String propertyName : vertex.getValue().getKeySet()) {
@@ -56,6 +56,7 @@ public class Utils {
                 "name", String.valueOf(pValue)));
         graphState.addVertex(propVertex);
         LinkedUdtfResult udtfRes = new LinkedUdtfResult();
+        udtfRes.getDirection().add(Direction.OUT.name());
         udtfRes.setEdgeType(propertyName);
         udtfRes.getTargetVertexIdList().add(String.valueOf(pValue));
         if (pValue instanceof Integer) {
@@ -76,6 +77,14 @@ public class Utils {
     if (CollectionUtils.isNotEmpty(edgeList)) {
       for (IEdge<IVertexId, IProperty> edge : edgeList) {
         Object toIdObj = edge.getValue().get(Constants.EDGE_TO_ID_KEY);
+        String dir = Direction.OUT.name();
+        Object nodeIdObj = vertex.getValue().get(Constants.NODE_ID_KEY);
+        String targetType = edge.getTargetId().getType();
+        if (nodeIdObj.equals(toIdObj)) {
+          toIdObj = edge.getValue().get(Constants.EDGE_FROM_ID_KEY);
+          dir = Direction.IN.name();
+          targetType = String.valueOf(edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY));
+        }
         if (null == toIdObj) {
           continue;
         }
@@ -84,7 +93,8 @@ public class Utils {
         LinkedUdtfResult udtfRes = new LinkedUdtfResult();
         udtfRes.setEdgeType(spo.getP());
         udtfRes.getTargetVertexIdList().add(String.valueOf(toIdObj));
-        udtfRes.getTargetVertexTypeList().add(edge.getTargetId().getType());
+        udtfRes.getTargetVertexTypeList().add(targetType);
+        udtfRes.getDirection().add(dir);
         for (String propKey : edge.getValue().getKeySet()) {
           if (propKey.startsWith("_")) {
             continue;

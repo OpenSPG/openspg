@@ -84,5 +84,21 @@
         <table tableName="kg_ontology_release" domainObjectName="ReleaseDO">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
         </table>
+        <table tableName="kg_builder_job" domainObjectName="BuilderJobDO">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
+        </table>
+        <table tableName="kg_scheduler_job" domainObjectName="SchedulerJobDO">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
+        </table>
+        <table tableName="kg_scheduler_instance" domainObjectName="SchedulerInstanceDO">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
+        </table>
+        <table tableName="kg_scheduler_task" domainObjectName="SchedulerTaskDO">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
+        </table>
     </context>
 </generatorConfiguration>

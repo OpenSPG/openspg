@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+    <configuration>
+        <custom-converters> <!-- these are always bi-directional -->
+            <converter type="com.antgroup.openspg.common.util.converter.LocalDateTimeToDateDozerConverter">
+                <class-a>java.time.LocalDateTime</class-a>
+                <class-b>java.util.Date</class-b>
+            </converter>
+            <converter type="com.antgroup.openspg.common.util.converter.LocalDateTimeToLocalDateTimeDozerConverter">
+                <class-a>java.time.LocalDateTime</class-a>
+                <class-b>java.time.LocalDateTime</class-b>
+            </converter>
+            <converter type="com.antgroup.openspg.common.util.converter.LocalTimeToLocalTimeDozerConverter">
+                <class-a>java.time.LocalTime</class-a>
+                <class-b>java.time.LocalTime</class-b>
+            </converter>
+            <converter type="com.antgroup.openspg.common.util.converter.LocalDateToLocalDateDozerConverter">
+                <class-a>java.time.LocalDate</class-a>
+                <class-b>java.time.LocalDate</class-b>
+            </converter>
+            <converter type="com.antgroup.openspg.common.util.converter.EnumToStringConverter">
+                <class-a>java.lang.Enum</class-a>
+                <class-b>java.lang.String</class-b>
+            </converter>
+        </custom-converters>
+    </configuration>
+    <mapping>
+        <class-a>com.antgroup.openspg.server.infra.dao.dataobject.SchedulerJobDO</class-a>
+        <class-b>com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob</class-b>
+        <field-exclude>
+            <a>extension</a>
+            <b>extension</b>
+        </field-exclude>
+    </mapping>
+    <mapping>
+        <class-a>com.antgroup.openspg.server.infra.dao.dataobject.SchedulerInstanceDO</class-a>
+        <class-b>com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance</class-b>
+        <field-exclude>
+            <a>extension</a>
+            <b>extension</b>
+        </field-exclude>
+        <field-exclude>
+            <a>taskDag</a>
+            <b>taskDag</b>
+        </field-exclude>
+    </mapping>
+    <mapping>
+        <class-a>com.antgroup.openspg.server.infra.dao.dataobject.SchedulerTaskDO</class-a>
+        <class-b>com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask</class-b>
+        <field-exclude>
+            <a>extension</a>
+            <b>extension</b>
+        </field-exclude>
+    </mapping>
+    <mapping>
+        <class-a>com.antgroup.openspg.server.infra.dao.dataobject.SchedulerInfoDO</class-a>
+        <class-b>com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInfo</class-b>
+        <field-exclude>
+            <a>config</a>
+            <b>config</b>
+        </field-exclude>
+        <field-exclude>
+            <a>log</a>
+            <b>log</b>
+        </field-exclude>
+    </mapping>
+    <mapping>
+        <class-a>com.antgroup.openspg.server.infra.dao.dataobject.DataSourceDO</class-a>
+        <class-b>com.antgroup.openspg.server.common.model.datasource.DataSource</class-b>
+        <field-exclude>
+            <a>connectionInfo</a>
+            <b>connectionInfo</b>
+        </field-exclude>
+    </mapping>
+</mappings>

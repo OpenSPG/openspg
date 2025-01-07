@@ -9,6 +9,7 @@ services:
     depends_on:
       - mysql
       - neo4j
+      - minio
     volumes:
       - /etc/localtime:/etc/localtime:ro
     environment:
@@ -66,3 +67,18 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $HOME/dozerdb/logs:/logs
+
+  minio:
+    image: spg-registry.us-west-1.cr.aliyuncs.com/spg/openspg-minio:latest
+    container_name: release-openspg-minio
+    command: server --console-address ":9001" /data
+    restart: always
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio@openspg
+      TZ: Asia/Shanghaicd
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - /etc/localtime:/etc/localtime:ro

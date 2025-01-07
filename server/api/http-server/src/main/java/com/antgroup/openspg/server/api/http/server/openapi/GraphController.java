@@ -24,6 +24,7 @@ import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.builder.model.record.SubGraphRecord;
 import com.antgroup.openspg.builder.runner.local.physical.sink.impl.GraphStoreSinkWriter;
 import com.antgroup.openspg.builder.runner.local.physical.sink.impl.Neo4jSinkWriter;
+import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
@@ -44,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,6 +58,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/public/v1/graph")
+@Slf4j
 public class GraphController {
 
   @Value("${python.exec:}")
@@ -64,8 +67,11 @@ public class GraphController {
   @Value("${python.paths:}")
   private String pythonPaths;
 
-  @Value("${python.knext.path:}")
-  private String pythonKnextPath;
+  @Value("${provision.server:true}")
+  private Boolean provisionServer;
+
+  @Value("${provision.server.token:}")
+  private String provisionServerToken;
 
   @Autowired private GraphManager graphManager;
 
@@ -166,6 +172,19 @@ public class GraphController {
         new HttpBizCallback<Boolean>() {
           @Override
           public void check() {
+            log.info(
+                "/public/v1/graph/writerGraph request: {} provisionServerToken: {}",
+                JSON.toJSONString(request),
+                provisionServerToken);
+            if (provisionServer != null && !provisionServer) {
+              if (StringUtils.isBlank(provisionServerToken)
+                  || StringUtils.isBlank(request.getToken())) {
+                throw new RuntimeException("No service provided");
+              }
+              if (!request.getToken().startsWith(provisionServerToken)) {
+                throw new RuntimeException("Token Authentication failure: " + request.getToken());
+              }
+            }
             AssertUtils.assertParamObjectIsNotNull("request", request);
             AssertUtils.assertParamObjectIsNotNull("projectId", request.getProjectId());
             AssertUtils.assertParamObjectIsNotNull("operation", request.getOperation());
@@ -189,7 +208,6 @@ public class GraphController {
                     .setCatalog(new DefaultBuilderCatalog(projectSchema, conceptLists))
                     .setPythonExec(pythonExec)
                     .setPythonPaths(pythonPaths)
-                    .setPythonKnextPath(pythonKnextPath)
                     .setOperation(RecordAlterOperationEnum.valueOf(request.getOperation()))
                     .setEnableLeadTo(enableLeadTo)
                     .setProject(JSON.toJSONString(projectManager.queryById(request.getProjectId())))

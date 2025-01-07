@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +132,9 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     SchedulerTask old = schedulerTaskService.getById(task.getId());
     if (TaskStatus.isFinished(old.getStatus())) {
       context.addTraceLog("Task has been completed by other threads,status:%s!", old.getStatus());
+      if (StringUtils.isBlank(old.getOutput())) {
+        old.setOutput(task.getOutput());
+      }
       task = old;
     }
 
@@ -175,8 +179,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
       return;
     }
     SchedulerTask nextTask =
-        schedulerTaskService.queryByInstanceIdAndType(
-            task.getInstanceId(), nextNode.getTaskComponent());
+        schedulerTaskService.queryByInstanceIdAndNodeId(task.getInstanceId(), nextNode.getId());
     SchedulerTask updateTask = new SchedulerTask();
     updateTask.setId(nextTask.getId());
     String name = nextNode.getName();
@@ -208,8 +211,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   private boolean checkAllNodesFinished(SchedulerTask task, List<TaskExecuteDag.Node> nodes) {
     for (TaskExecuteDag.Node node : nodes) {
       SchedulerTask t =
-          schedulerTaskService.queryByInstanceIdAndType(
-              task.getInstanceId(), node.getTaskComponent());
+          schedulerTaskService.queryByInstanceIdAndNodeId(task.getInstanceId(), node.getId());
       if (!node.getId().equals(task.getNodeId()) && !TaskStatus.isFinished(t.getStatus())) {
         return false;
       }

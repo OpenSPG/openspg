@@ -82,7 +82,4 @@ public class SchedulerInstance extends BaseModel {
 
   /** task dag Config */
   private TaskExecuteDag taskDag;
-
-  /** start CreateTime Date For Query */
-  private transient Date startCreateTime;
 }

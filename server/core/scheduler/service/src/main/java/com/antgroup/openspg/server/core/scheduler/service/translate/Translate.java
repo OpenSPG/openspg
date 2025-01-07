@@ -12,6 +12,8 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.translate;
 
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum;
+import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 
@@ -25,4 +27,13 @@ public interface Translate {
    * @return
    */
   TaskExecuteDag translate(SchedulerJob job);
+
+  /**
+   * Status update callback
+   *
+   * @param job
+   * @return
+   */
+  void statusCallback(
+      SchedulerJob job, SchedulerInstance instance, SchedulerEnum.InstanceStatus instanceStatus);
 }

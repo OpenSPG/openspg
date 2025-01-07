@@ -16,6 +16,8 @@ import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -59,7 +61,9 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
   private ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(10);
 
   @Autowired SchedulerConfig schedulerConfig;
+
   @Autowired SchedulerJobService schedulerJobService;
+
   @Autowired SchedulerInstanceService schedulerInstanceService;
   @Autowired SchedulerTaskService schedulerTaskService;
   @Autowired SchedulerCommonService schedulerCommonService;
@@ -67,10 +71,10 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
   /** generate instances by period job */
   @Override
   public void generateInstances() {
-    SchedulerJob record = new SchedulerJob();
+    SchedulerJobQuery record = new SchedulerJobQuery();
     record.setLifeCycle(SchedulerEnum.LifeCycle.PERIOD);
     record.setStatus(SchedulerEnum.Status.ENABLE);
-    List<SchedulerJob> allJob = schedulerJobService.query(record);
+    List<SchedulerJob> allJob = schedulerJobService.query(record).getResults();
     log.info("getAllPeriodJob successful size:{}", allJob.size());
 
     if (CollectionUtils.isEmpty(allJob)) {
@@ -179,8 +183,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
     // execute all next task
     for (TaskExecuteDag.Node nextNode : nextNodes) {
       taskList.add(
-          schedulerTaskService.queryByInstanceIdAndType(
-              instance.getId(), nextNode.getTaskComponent()));
+          schedulerTaskService.queryByInstanceIdAndNodeId(instance.getId(), nextNode.getId()));
     }
     SchedulerInstance ins = schedulerInstanceService.getById(instance.getId());
     Runnable instanceRunnable = () -> executeInstance(ins, taskList);
@@ -217,8 +220,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
   /** check all nodes is finished */
   private boolean checkAllNodesFinished(Long instanceId, List<TaskExecuteDag.Node> nodes) {
     for (TaskExecuteDag.Node node : nodes) {
-      SchedulerTask t =
-          schedulerTaskService.queryByInstanceIdAndType(instanceId, node.getTaskComponent());
+      SchedulerTask t = schedulerTaskService.queryByInstanceIdAndNodeId(instanceId, node.getId());
       if (!TaskStatus.isFinished(t.getStatus())) {
         return false;
       }
@@ -228,7 +230,7 @@ public class SchedulerExecuteServiceImpl implements SchedulerExecuteService {
 
   /** get all not finish instances */
   private List<SchedulerInstance> getAllNotFinishInstances() {
-    SchedulerInstance record = new SchedulerInstance();
+    SchedulerInstanceQuery record = new SchedulerInstanceQuery();
     Integer maxDays = schedulerConfig.getExecuteMaxDay() + 1;
     Date startDate = DateUtils.addDays(new Date(), -maxDays);
     record.setStartCreateTime(startDate);

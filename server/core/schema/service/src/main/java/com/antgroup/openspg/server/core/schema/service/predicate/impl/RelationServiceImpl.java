@@ -149,4 +149,46 @@ public class RelationServiceImpl implements RelationService {
     return PredicateAssemble.toRelation(
         simplePredicates, spgTypes, subProperties, semantics, logicalRules);
   }
+
+  @Override
+  public List<Relation> queryByUniqueId(List<Long> uniqueIds) {
+    if (CollectionUtils.isEmpty(uniqueIds)) {
+      return Collections.emptyList();
+    }
+    List<SimpleProperty> simplePredicates =
+        propertyRepository.queryByUniqueId(uniqueIds, SPGOntologyEnum.RELATION);
+    if (CollectionUtils.isEmpty(simplePredicates)) {
+      return Collections.emptyList();
+    }
+
+    Set<Long> spgTypeIds = new HashSet<>();
+    spgTypeIds.addAll(
+        simplePredicates.stream()
+            .map(e -> e.getSubjectTypeId().getUniqueId())
+            .collect(Collectors.toList()));
+    spgTypeIds.addAll(
+        simplePredicates.stream()
+            .map(e -> e.getObjectTypeId().getUniqueId())
+            .collect(Collectors.toList()));
+    List<SimpleSPGType> spgTypes =
+        simpleSpgTypeRepository.queryByUniqueId(Lists.newArrayList(spgTypeIds));
+
+    List<Long> relationIds =
+        simplePredicates.stream().map(SimpleProperty::getUniqueId).collect(Collectors.toList());
+    List<SubProperty> subProperties =
+        subPropertyService.queryBySubjectId(relationIds, SPGOntologyEnum.RELATION);
+
+    List<PredicateSemantic> semantics =
+        semanticService.queryBySubjectIds(relationIds, SPGOntologyEnum.RELATION);
+
+    List<RuleCode> ruleCodes =
+        simplePredicates.stream()
+            .map(SimpleProperty::getRuleCode)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
+    List<LogicalRule> logicalRules = logicalRuleService.queryByRuleCode(ruleCodes);
+
+    return PredicateAssemble.toRelation(
+        simplePredicates, spgTypes, subProperties, semantics, logicalRules);
+  }
 }

@@ -14,6 +14,7 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.antgroup.openspg.builder.core.physical.operator.OperatorFactory;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
@@ -24,6 +25,9 @@ import com.antgroup.openspg.builder.model.pipeline.enums.StatusEnum;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.ChunkRecord;
 import com.antgroup.openspg.builder.model.record.SubGraphRecord;
+import com.antgroup.openspg.common.constants.BuilderConstant;
+import com.antgroup.openspg.server.common.model.CommonConstants;
+import com.antgroup.openspg.server.common.model.project.Project;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +44,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LLMNlExtractProcessor extends BasePythonProcessor<LLMNlExtractNodeConfig> {
 
-  private ExecuteNode node;
+  private ExecuteNode node = new ExecuteNode();
+  private Project project;
 
   private static final RejectedExecutionHandler handler =
       (r, executor) -> {
@@ -60,7 +65,10 @@ public class LLMNlExtractProcessor extends BasePythonProcessor<LLMNlExtractNodeC
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
     super.doInit(context);
-    this.node = context.getExecuteNodes().get(getId());
+    if (context.getExecuteNodes() != null) {
+      this.node = context.getExecuteNodes().get(getId());
+    }
+    project = JSON.parseObject(context.getProject(), Project.class);
     if (executor == null) {
       executor =
           new ThreadPoolExecutor(
@@ -84,7 +92,8 @@ public class LLMNlExtractProcessor extends BasePythonProcessor<LLMNlExtractNodeC
     for (BaseRecord record : inputs) {
       ChunkRecord chunkRecord = (ChunkRecord) record;
       Future<List<SubGraphRecord>> future =
-          executor.submit(new ExtractTaskCallable(node, chunkRecord, operatorFactory, config));
+          executor.submit(
+              new ExtractTaskCallable(node, chunkRecord, operatorFactory, config, project));
       futures.add(future);
     }
 
@@ -106,32 +115,44 @@ public class LLMNlExtractProcessor extends BasePythonProcessor<LLMNlExtractNodeC
     private final ChunkRecord chunkRecord;
     private final OperatorFactory operatorFactory;
     private final LLMNlExtractNodeConfig config;
+    private final Project project;
 
     public ExtractTaskCallable(
         ExecuteNode node,
         ChunkRecord chunkRecord,
         OperatorFactory operatorFactory,
-        LLMNlExtractNodeConfig config) {
+        LLMNlExtractNodeConfig config,
+        Project project) {
       this.chunkRecord = chunkRecord;
       this.node = node;
       this.operatorFactory = operatorFactory;
       this.config = config;
+      this.project = project;
     }
 
     @Override
     public List<SubGraphRecord> call() throws Exception {
       ChunkRecord.Chunk chunk = chunkRecord.getChunk();
       String names = chunk.getName();
+      String projectConfig = project.getConfig();
+      JSONObject llm = JSONObject.parseObject(projectConfig).getJSONObject(CommonConstants.LLM);
+      JSONObject pyConfig = new JSONObject();
+      pyConfig.put(BuilderConstant.TYPE, BuilderConstant.SCHEMA_FREE);
+      pyConfig.put(BuilderConstant.LLM, llm);
       node.addTraceLog(
           "invoke extract operator:%s chunk:%s", config.getOperatorConfig().getClassName(), names);
-
       Map record = new ObjectMapper().convertValue(chunk, Map.class);
-
       log.info("LLMNlExtractProcessor invoke Chunks: {}", names);
       List<Object> result =
-          (List<Object>) operatorFactory.invoke(config.getOperatorConfig(), record);
+          (List<Object>)
+              operatorFactory.invoke(
+                  config.getOperatorConfig(),
+                  BuilderConstant.EXTRACTOR_ABC,
+                  pyConfig.toJSONString(),
+                  record);
       List<SubGraphRecord> records =
           JSON.parseObject(JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
+      // CommonUtils.addLabelPrefix(project.getNamespace(), records);
       node.addTraceLog(
           "invoke extract operator:%s chunk:%s succeed",
           config.getOperatorConfig().getClassName(), names);

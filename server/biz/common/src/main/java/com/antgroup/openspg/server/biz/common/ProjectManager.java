@@ -48,4 +48,12 @@ public interface ProjectManager {
    * @return SearchEngine url
    */
   String getSearchEngineUrl(Long projectId);
+
+  /**
+   * query project by namespace
+   *
+   * @param namespace
+   * @return
+   */
+  Project queryByNamespace(String namespace);
 }

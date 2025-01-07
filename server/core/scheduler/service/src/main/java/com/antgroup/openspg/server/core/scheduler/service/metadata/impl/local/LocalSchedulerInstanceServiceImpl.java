@@ -12,11 +12,12 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
+import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInstanceService;
-import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.google.common.collect.Lists;
 import java.util.Date;
@@ -25,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +36,6 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
 
   private static ConcurrentHashMap<Long, SchedulerInstance> instances = new ConcurrentHashMap<>();
   private static AtomicLong maxId = new AtomicLong(0L);
-
-  @Autowired SchedulerTaskService schedulerTaskService;
 
   @Override
   public synchronized Long insert(SchedulerInstance record) {
@@ -109,7 +107,7 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
   }
 
   @Override
-  public List<SchedulerInstance> query(SchedulerInstance record) {
+  public Paged<SchedulerInstance> query(SchedulerInstanceQuery record) {
     List<SchedulerInstance> instanceList = Lists.newArrayList();
     for (Long key : instances.keySet()) {
       SchedulerInstance instance = instances.get(key);
@@ -140,12 +138,14 @@ public class LocalSchedulerInstanceServiceImpl implements SchedulerInstanceServi
       BeanUtils.copyProperties(instance, target);
       instanceList.add(target);
     }
-    return instanceList;
+    Paged<SchedulerInstance> paged = new Paged<>(record.getPageSize(), record.getPageNo());
+    paged.setResults(instanceList);
+    return paged;
   }
 
   @Override
-  public List<SchedulerInstance> getNotFinishInstance(SchedulerInstance record) {
-    List<SchedulerInstance> instanceList = query(record);
+  public List<SchedulerInstance> getNotFinishInstance(SchedulerInstanceQuery record) {
+    List<SchedulerInstance> instanceList = query(record).getResults();
     instanceList =
         instanceList.stream()
             .filter(s -> !InstanceStatus.isFinished(s.getStatus()))

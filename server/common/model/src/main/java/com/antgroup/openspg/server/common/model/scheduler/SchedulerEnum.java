@@ -76,9 +76,16 @@ public interface SchedulerEnum {
     }
   }
 
+  enum SchedulerInfoStatus {
+    WAIT,
+    RUNNING,
+    STOP
+  }
+
   /** Translate Enum */
   enum TranslateType {
-    LOCAL_EXAMPLE("localExampleTranslate");
+    LOCAL_EXAMPLE("localExampleTranslate"),
+    KAG_BUILDER("kagBuilderTranslate");
 
     private String type;
 

@@ -21,5 +21,6 @@ public class TextSearchRequest {
   private Long projectId;
   private String queryString;
   private Set<String> labelConstraints;
+  private Integer page;
   private Integer topk;
 }

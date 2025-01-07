@@ -14,8 +14,11 @@
 package com.antgroup.openspg.server.api.facade.dto.common.request;
 
 import com.antgroup.openspg.server.common.model.base.BaseRequest;
+import java.util.List;
 
 public class ProjectQueryRequest extends BaseRequest {
+
+  private Long id;
 
   private Long tenantId;
 
@@ -25,7 +28,11 @@ public class ProjectQueryRequest extends BaseRequest {
 
   private String namespace;
 
+  private String config;
+
   private Boolean orderByGmtCreateDesc;
+
+  private List<Long> projectIdList;
 
   public Long getTenantId() {
     return tenantId;
@@ -69,5 +76,29 @@ public class ProjectQueryRequest extends BaseRequest {
 
   public void setOrderByGmtCreateDesc(Boolean orderByGmtCreateDesc) {
     this.orderByGmtCreateDesc = orderByGmtCreateDesc;
+  }
+
+  public List<Long> getProjectIdList() {
+    return projectIdList;
+  }
+
+  public void setProjectIdList(List<Long> projectIdList) {
+    this.projectIdList = projectIdList;
+  }
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getConfig() {
+    return config;
+  }
+
+  public void setConfig(String config) {
+    this.config = config;
   }
 }

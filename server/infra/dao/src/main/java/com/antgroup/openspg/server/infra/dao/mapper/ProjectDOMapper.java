@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.mapper;
 
+import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDOExample;
 import java.util.List;
@@ -60,12 +61,12 @@ public interface ProjectDOMapper {
   int updateByPrimaryKey(ProjectDO record);
 
   List<ProjectDO> selectByCondition(
-      @Param("record") ProjectDO record,
+      @Param("record") ProjectQueryRequest record,
       @Param("orderByGmtCreateDesc") Boolean orderByGmtCreateDesc,
       @Param("start") int start,
       @Param("size") int size);
 
   long selectCountByCondition(
-      @Param("record") ProjectDO record,
+      @Param("record") ProjectQueryRequest record,
       @Param("orderByGmtCreateDesc") Boolean orderByGmtCreateDesc);
 }
