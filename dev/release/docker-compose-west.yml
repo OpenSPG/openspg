@@ -48,6 +48,7 @@ services:
     ]
 
   neo4j:
+    restart: always
     image: spg-registry.us-west-1.cr.aliyuncs.com/spg/openspg-neo4j:latest
     container_name: release-openspg-neo4j
     ports:
@@ -76,7 +77,7 @@ services:
     environment:
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio@openspg
-      TZ: Asia/Shanghaicd
+      TZ: Asia/Shanghai
     ports:
       - 9000:9000
       - 9001:9001
