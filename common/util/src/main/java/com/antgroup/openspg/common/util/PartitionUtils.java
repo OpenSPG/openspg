@@ -22,24 +22,10 @@ import org.springframework.util.Assert;
 
 public class PartitionUtils {
 
-  /**
-   * 解析分区信息
-   *
-   * @param partitionStr
-   * @param bizDate
-   * @return
-   */
   public static List<String> analysisPartition(String partitionStr, String bizDate) {
     return analysisPartition(partitionStr, bizDate, ",");
   }
 
-  /**
-   * 解析分区信息
-   *
-   * @param partitionStr
-   * @param bizDate
-   * @return
-   */
   public static List<String> analysisPartition(
       String partitionStr, String bizDate, String delimiter) {
     List<String> partitions = new ArrayList<>();
@@ -67,13 +53,6 @@ public class PartitionUtils {
     return partitions;
   }
 
-  /**
-   * * 获取dt变量
-   *
-   * @param partitionWithVariable
-   * @param bizDate
-   * @return
-   */
   public static String replaceDtVariable(
       String partitionWithVariable, String bizDate, String delimiter) {
     PartitionSpec partitionSpec;
@@ -95,12 +74,6 @@ public class PartitionUtils {
     return partitionSpec.toString(true, delimiter);
   }
 
-  /**
-   * * 获取dt变量
-   *
-   * @param partition
-   * @return
-   */
   public static PartitionSpec replacePartitionSpec(String partition) {
     PartitionSpec partitionSpec;
     try {
@@ -111,14 +84,6 @@ public class PartitionUtils {
     return partitionSpec;
   }
 
-  /**
-   * 解析分区信息
-   *
-   * @param
-   * @return
-   * @author 庄舟
-   * @date 2021/2/22 17:46
-   */
   public static List<String> replaceDtVariableAndMultiValue(
       String partitionWithVariable, String bizDate) {
     PartitionSpec partitionSpec;
@@ -149,14 +114,6 @@ public class PartitionUtils {
     return result;
   }
 
-  /**
-   * 根据完整的名称获取项目和表名
-   *
-   * @param
-   * @return
-   * @author 庄舟
-   * @date 2021/2/22 17:44
-   */
   public static String[] getDatabaseAndTable(String sourceId) {
     String[] split = StringUtils.split(sourceId, ".");
     Assert.isTrue(

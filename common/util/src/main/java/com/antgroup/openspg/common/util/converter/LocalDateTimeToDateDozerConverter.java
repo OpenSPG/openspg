@@ -1,3 +1,15 @@
+/*
+ * Copyright 2023 OpenSPG Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied.
+ */
 package com.antgroup.openspg.common.util.converter;
 
 import java.time.LocalDateTime;
@@ -7,26 +19,10 @@ import org.dozer.DozerConverter;
 
 public class LocalDateTimeToDateDozerConverter extends DozerConverter<LocalDateTime, Date> {
 
-  /**
-   * 转换信息
-   *
-   * @param
-   * @return
-   * @author 庄舟
-   * @date 2021/1/29 14:34
-   */
   public LocalDateTimeToDateDozerConverter() {
     super(LocalDateTime.class, Date.class);
   }
 
-  /**
-   * 转换信息
-   *
-   * @param
-   * @return
-   * @author 庄舟
-   * @date 2021/1/29 14:34
-   */
   @Override
   public LocalDateTime convertFrom(Date source, LocalDateTime destination) {
     return source == null
@@ -34,14 +30,6 @@ public class LocalDateTimeToDateDozerConverter extends DozerConverter<LocalDateT
         : LocalDateTime.ofInstant(source.toInstant(), ZoneId.systemDefault());
   }
 
-  /**
-   * 转换信息
-   *
-   * @param
-   * @return
-   * @author 庄舟
-   * @date 2021/1/29 14:34
-   */
   @Override
   public Date convertTo(LocalDateTime source, Date destination) {
     return source == null ? null : Date.from(source.atZone(ZoneId.systemDefault()).toInstant());

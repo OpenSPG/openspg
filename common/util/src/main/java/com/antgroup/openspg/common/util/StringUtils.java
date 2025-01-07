@@ -26,12 +26,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
   public static final String UNDERLINE_SEPARATOR = "_";
 
-  /**
-   * 将object转化成string返回，常用于POJO对象未实现toString()场景，
-   *
-   * @param object 对象
-   * @return 对象string表示
-   */
   public static String toString(Object object) {
     if (object instanceof String) {
       return object.toString();
