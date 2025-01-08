@@ -53,4 +53,12 @@ public interface RelationService {
    * @return list of relation type
    */
   List<Relation> queryBySubjectId(List<Long> subjectIds);
+
+  /**
+   * Query relation type by spg unique id.
+   *
+   * @param uniqueIds list of spg unique id
+   * @return list of relation type
+   */
+  List<Relation> queryByUniqueId(List<Long> uniqueIds);
 }

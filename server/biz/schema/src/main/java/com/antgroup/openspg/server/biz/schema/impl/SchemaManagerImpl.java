@@ -16,6 +16,8 @@ package com.antgroup.openspg.server.biz.schema.impl;
 import com.antgroup.openspg.core.schema.model.SchemaException;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.Property;
+import com.antgroup.openspg.core.schema.model.predicate.Relation;
+import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
@@ -29,6 +31,7 @@ import com.antgroup.openspg.server.common.service.lock.DistributeLockService;
 import com.antgroup.openspg.server.common.service.project.ProjectService;
 import com.antgroup.openspg.server.core.schema.service.alter.SchemaAlterPipeline;
 import com.antgroup.openspg.server.core.schema.service.alter.model.SchemaAlterContext;
+import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleProperty;
 import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
 import com.antgroup.openspg.server.core.schema.service.type.model.BuiltInPropertyEnum;
 import com.antgroup.openspg.server.core.schema.service.util.PropertyUtils;
@@ -95,6 +98,22 @@ public class SchemaManagerImpl implements SchemaManager {
   public BaseSPGType getSpgType(String uniqueName) {
     SPGTypeIdentifier spgTypeIdentifier = SPGTypeIdentifier.parse(uniqueName);
     return spgTypeService.querySPGTypeByIdentifier(spgTypeIdentifier);
+  }
+
+  @Override
+  public List<BaseSPGType> querySPGTypeById(List<Long> uniqueIds) {
+    return spgTypeService.querySPGTypeById(uniqueIds);
+  }
+
+  @Override
+  public List<Relation> queryRelationByUniqueId(List<Long> uniqueIds) {
+    return spgTypeService.queryRelationByUniqueId(uniqueIds);
+  }
+
+  @Override
+  public List<SimpleProperty> queryPropertyByUniqueId(
+      List<Long> uniqueIds, SPGOntologyEnum ontologyEnum) {
+    return spgTypeService.queryPropertyByUniqueId(uniqueIds, ontologyEnum);
   }
 
   @Override

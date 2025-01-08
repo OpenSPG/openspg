@@ -257,12 +257,13 @@ public class Neo4jIndexUtils {
 
   public List<Record> textSearch(
       @NonNull String queryString, @Nullable List<String> labelConstraints, int topk) {
-    return textSearch(queryString, labelConstraints, topk, null);
+    return textSearch(queryString, labelConstraints, 0, topk, null);
   }
 
   public List<Record> textSearch(
       @NonNull String queryString,
       @Nullable List<String> labelConstraints,
+      int page,
       int topk,
       @Nullable String indexName) {
     if (topk != -1 && topk <= 0)
@@ -290,8 +291,9 @@ public class Neo4jIndexUtils {
       sb.append(")");
     }
     sb.append("\nRETURN node, score");
-    sb.append(String.format("\nLIMIT %d", topk));
+    sb.append(String.format("\nSKIP %d LIMIT %d", page, topk));
     String query = sb.toString();
+    log.info("search:" + query);
     try (Session session = driver.session(SessionConfig.forDatabase(database))) {
       return session.readTransaction(
           tx -> {

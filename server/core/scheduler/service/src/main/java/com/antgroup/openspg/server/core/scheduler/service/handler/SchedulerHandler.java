@@ -12,12 +12,14 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.handler;
 
+import com.alibaba.fastjson.JSONObject;
+import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerHandlerResult;
+
 /** Scheduler Handler. To generate and execute Instances */
 public interface SchedulerHandler {
 
-  /** scheduler timer entrance. execute Instances */
-  void executeInstances();
+  SchedulerHandlerResult process(JSONObject params);
 
-  /** scheduler generate Instances timer */
-  void generateInstances();
+  /** @return Scheduling time interval Unit: seconds */
+  Long getPeriod();
 }

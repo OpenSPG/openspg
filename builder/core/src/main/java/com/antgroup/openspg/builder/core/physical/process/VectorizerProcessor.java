@@ -14,6 +14,7 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
@@ -22,6 +23,9 @@ import com.antgroup.openspg.builder.model.pipeline.config.predicting.VectorizerP
 import com.antgroup.openspg.builder.model.pipeline.enums.StatusEnum;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.SubGraphRecord;
+import com.antgroup.openspg.common.constants.BuilderConstant;
+import com.antgroup.openspg.server.common.model.CommonConstants;
+import com.antgroup.openspg.server.common.model.project.Project;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +33,8 @@ import java.util.Map;
 
 public class VectorizerProcessor extends BasePythonProcessor<VectorizerProcessorNodeConfig> {
 
-  private ExecuteNode node;
+  private ExecuteNode node = new ExecuteNode();
+  private Project project;
 
   public VectorizerProcessor(String id, String name, VectorizerProcessorNodeConfig config) {
     super(id, name, config);
@@ -38,12 +43,21 @@ public class VectorizerProcessor extends BasePythonProcessor<VectorizerProcessor
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
     super.doInit(context);
-    this.node = context.getExecuteNodes().get(getId());
+    if (context.getExecuteNodes() != null) {
+      this.node = context.getExecuteNodes().get(getId());
+    }
+    project = JSON.parseObject(context.getProject(), Project.class);
   }
 
   @Override
   public List<BaseRecord> process(List<BaseRecord> inputs) {
     node.setStatus(StatusEnum.RUNNING);
+    String projectConfig = project.getConfig();
+    JSONObject vec =
+        JSONObject.parseObject(projectConfig).getJSONObject(CommonConstants.VECTORIZER);
+    JSONObject pyConfig = new JSONObject();
+    pyConfig.put(BuilderConstant.TYPE, BuilderConstant.BATCH);
+    pyConfig.put(BuilderConstant.VECTORIZE_MODEL, vec);
     node.addTraceLog("Start vectorizer processor...");
     List<BaseRecord> results = new ArrayList<>();
     SubGraphRecord subGraph = new SubGraphRecord(Lists.newArrayList(), Lists.newArrayList());
@@ -56,7 +70,13 @@ public class VectorizerProcessor extends BasePythonProcessor<VectorizerProcessor
       Map map = mapper.convertValue(spgRecord, Map.class);
       node.addTraceLog(
           "invoke vectorizer processor operator:%s", config.getOperatorConfig().getClassName());
-      List<Object> result = (List<Object>) operatorFactory.invoke(config.getOperatorConfig(), map);
+      List<Object> result =
+          (List<Object>)
+              operatorFactory.invoke(
+                  config.getOperatorConfig(),
+                  BuilderConstant.VECTORIZER_ABC,
+                  pyConfig.toJSONString(),
+                  map);
       node.addTraceLog(
           "invoke vectorizer processor operator:%s succeed",
           config.getOperatorConfig().getClassName());

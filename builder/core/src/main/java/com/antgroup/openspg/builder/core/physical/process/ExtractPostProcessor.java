@@ -14,6 +14,8 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.ExecuteNode;
@@ -21,14 +23,14 @@ import com.antgroup.openspg.builder.model.pipeline.config.ExtractPostProcessorNo
 import com.antgroup.openspg.builder.model.pipeline.enums.StatusEnum;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.SubGraphRecord;
-import com.google.common.collect.Lists;
+import com.antgroup.openspg.common.constants.BuilderConstant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ExtractPostProcessor extends BasePythonProcessor<ExtractPostProcessorNodeConfig> {
 
-  private ExecuteNode node;
+  private ExecuteNode node = new ExecuteNode();
 
   public ExtractPostProcessor(String id, String name, ExtractPostProcessorNodeConfig config) {
     super(id, name, config);
@@ -37,39 +39,42 @@ public class ExtractPostProcessor extends BasePythonProcessor<ExtractPostProcess
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
     super.doInit(context);
-    this.node = context.getExecuteNodes().get(getId());
+    if (context.getExecuteNodes() != null) {
+      this.node = context.getExecuteNodes().get(getId());
+    }
   }
 
   @Override
   public List<BaseRecord> process(List<BaseRecord> inputs) {
     node.setStatus(StatusEnum.RUNNING);
-    node.addTraceLog("Start post processor...");
+    JSONObject pyConfig = new JSONObject();
+    pyConfig.put(BuilderConstant.TYPE, BuilderConstant.BASE);
+    node.addTraceLog("Start alignment...");
     List<BaseRecord> results = new ArrayList<>();
 
-    List<Map> lists = Lists.newArrayList();
     for (BaseRecord record : inputs) {
       SubGraphRecord spgRecord = (SubGraphRecord) record;
-      lists.add(mapper.convertValue(spgRecord, Map.class));
+      Map map = mapper.convertValue(spgRecord, Map.class);
+      node.addTraceLog("invoke alignment operator:%s", config.getOperatorConfig().getClassName());
+      List<Object> result =
+          (List<Object>)
+              operatorFactory.invoke(
+                  config.getOperatorConfig(),
+                  BuilderConstant.POSTPROCESSOR_ABC,
+                  pyConfig.toJSONString(),
+                  map);
+      node.addTraceLog(
+          "invoke alignment operator:%s succeed", config.getOperatorConfig().getClassName());
+      List<SubGraphRecord> records =
+          JSON.parseObject(JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
+      for (SubGraphRecord subGraph : records) {
+        node.addTraceLog(
+            "alignment succeed node:%s edge%s",
+            subGraph.getResultNodes().size(), subGraph.getResultEdges().size());
+        results.add(subGraph);
+      }
     }
-
-    node.addTraceLog(
-        "invoke post processor operator:%s", config.getOperatorConfig().getClassName());
-    Object result = operatorFactory.invoke(config.getOperatorConfig(), lists);
-    node.addTraceLog(
-        "invoke post processor operator:%s succeed", config.getOperatorConfig().getClassName());
-    SubGraphRecord subGraph = JSON.parseObject(JSON.toJSONString(result), SubGraphRecord.class);
-    node.addTraceLog(
-        "post processor succeed node:%s edge%s",
-        subGraph.getResultNodes().size(), subGraph.getResultEdges().size());
-
-    /*ProjectSchema projectSchema = CommonUtils.getProjectSchema(context);
-    List<BaseSPGRecord> nodes = CommonUtils.convertNodes(subGraph, projectSchema);
-    List<BaseSPGRecord> edges = CommonUtils.convertEdges(subGraph, projectSchema);
-    results.addAll(nodes);
-    results.addAll(edges);*/
-    results.add(subGraph);
-    node.addTraceLog("post processor complete...");
-    node.setOutputs(subGraph);
+    node.addTraceLog("alignment complete...");
     node.setStatus(StatusEnum.FINISH);
     return results;
   }

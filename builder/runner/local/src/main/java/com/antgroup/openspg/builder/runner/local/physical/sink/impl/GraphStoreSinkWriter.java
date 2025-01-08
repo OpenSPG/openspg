@@ -45,7 +45,7 @@ public class GraphStoreSinkWriter extends BaseSinkWriter<GraphStoreSinkNodeConfi
 
   private CheckProcessor checkProcessor;
 
-  private ExecuteNode node;
+  private ExecuteNode node = new ExecuteNode();
 
   private static final SPGTypeRef TEXT_REF =
       new SPGTypeRef(new BasicInfo<>(SPGTypeIdentifier.parse("Text")), SPGTypeEnum.BASIC_TYPE);

@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StringSourceReader extends BaseSourceReader<StringSourceNodeConfig> {
 
-  private ExecuteNode node;
+  private ExecuteNode node = new ExecuteNode();
 
   private String document;
 
@@ -40,7 +40,9 @@ public class StringSourceReader extends BaseSourceReader<StringSourceNodeConfig>
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
     if (context.getExecuteNodes() != null) {
-      this.node = context.getExecuteNodes().get(getId());
+      if (context.getExecuteNodes() != null) {
+        this.node = context.getExecuteNodes().get(getId());
+      }
       if (node != null) {
         node.setStatus(StatusEnum.RUNNING);
         node.addTraceLog("Start reading document...");

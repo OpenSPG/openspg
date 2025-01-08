@@ -12,10 +12,13 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.api;
 
+import com.antgroup.openspg.server.api.facade.Paged;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
-import java.util.List;
 
 /** Scheduler Service:submit,execute,delete and other scheduler interfaces */
 public interface SchedulerService {
@@ -35,13 +38,13 @@ public interface SchedulerService {
   Boolean deleteJob(Long jobId);
 
   /** update Job fields */
-  boolean updateJob(SchedulerJob job);
+  Boolean updateJob(SchedulerJob job);
 
   /** get Job details By id */
   SchedulerJob getJobById(Long jobId);
 
   /** search Jobs by fields */
-  List<SchedulerJob> searchJobs(SchedulerJob query);
+  Paged<SchedulerJob> searchJobs(SchedulerJobQuery query);
 
   /** get Instance details By id */
   SchedulerInstance getInstanceById(Long instanceId);
@@ -59,8 +62,8 @@ public interface SchedulerService {
   Boolean triggerInstance(Long instanceId);
 
   /** search Instances by fields */
-  List<SchedulerInstance> searchInstances(SchedulerInstance query);
+  Paged<SchedulerInstance> searchInstances(SchedulerInstanceQuery query);
 
   /** search Tasks by fields */
-  List<SchedulerTask> searchTasks(SchedulerTask query);
+  Paged<SchedulerTask> searchTasks(SchedulerTaskQuery query);
 }

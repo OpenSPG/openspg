@@ -14,7 +14,9 @@
 package com.antgroup.openspg.builder.core.physical.process;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.antgroup.openspg.builder.core.physical.utils.CommonUtils;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.ExecuteNode;
@@ -23,20 +25,18 @@ import com.antgroup.openspg.builder.model.pipeline.enums.StatusEnum;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
 import com.antgroup.openspg.builder.model.record.ChunkRecord;
 import com.antgroup.openspg.builder.model.record.StringRecord;
-import com.antgroup.openspg.common.util.Md5Utils;
+import com.antgroup.openspg.common.constants.BuilderConstant;
+import com.antgroup.openspg.common.util.pemja.PythonInvokeMethod;
+import com.antgroup.openspg.server.common.model.project.Project;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
-import pemja.core.PythonInterpreter;
-import pemja.core.PythonInterpreterConfig;
 
 public class ParagraphSplitProcessor extends BasePythonProcessor<ParagraphSplitNodeConfig> {
 
-  private ExecuteNode node;
+  private ExecuteNode node = new ExecuteNode();
+  private Project project;
 
   public ParagraphSplitProcessor(String id, String name, ParagraphSplitNodeConfig config) {
     super(id, name, config);
@@ -45,7 +45,10 @@ public class ParagraphSplitProcessor extends BasePythonProcessor<ParagraphSplitN
   @Override
   public void doInit(BuilderContext context) throws BuilderException {
     super.doInit(context);
-    this.node = context.getExecuteNodes().get(getId());
+    if (context.getExecuteNodes() != null) {
+      this.node = context.getExecuteNodes().get(getId());
+    }
+    project = JSON.parseObject(context.getProject(), Project.class);
   }
 
   @Override
@@ -53,24 +56,32 @@ public class ParagraphSplitProcessor extends BasePythonProcessor<ParagraphSplitN
     node.setStatus(StatusEnum.RUNNING);
     node.addTraceLog("Start split document...");
     List<BaseRecord> results = new ArrayList<>();
+    JSONObject pyConfig = new JSONObject();
+    JSONObject extension = JSON.parseObject(config.getExtension());
+    CommonUtils.getSplitterConfig(
+        pyConfig,
+        context.getPythonExec(),
+        context.getPythonPaths(),
+        context.getSchemaUrl(),
+        project,
+        extension);
     for (BaseRecord record : inputs) {
       StringRecord stringRecord = (StringRecord) record;
 
       String fileUrl = stringRecord.getDocument();
-      List<ChunkRecord.Chunk> chunks;
       String token = config.getToken();
-      if (StringUtils.isNotBlank(token)) {
-        chunks = readYuque(fileUrl, token);
-      } else {
-        chunks = readFile(fileUrl);
-      }
-
+      List<ChunkRecord.Chunk> chunks = readSource(fileUrl, token);
       node.addTraceLog("invoke split operator:%s", config.getOperatorConfig().getClassName());
       for (ChunkRecord.Chunk chunk : chunks) {
         node.addTraceLog("invoke split chunk:%s", chunk.getName());
         Map map = new ObjectMapper().convertValue(chunk, Map.class);
         List<Object> result =
-            (List<Object>) operatorFactory.invoke(config.getOperatorConfig(), map);
+            (List<Object>)
+                operatorFactory.invoke(
+                    config.getOperatorConfig(),
+                    BuilderConstant.SPLITTER_ABC,
+                    pyConfig.toJSONString(),
+                    map);
         List<ChunkRecord.Chunk> chunkList =
             JSON.parseObject(
                 JSON.toJSONString(result), new TypeReference<List<ChunkRecord.Chunk>>() {});
@@ -89,83 +100,19 @@ public class ParagraphSplitProcessor extends BasePythonProcessor<ParagraphSplitN
     return results;
   }
 
-  public List<ChunkRecord.Chunk> readYuque(String url, String token) {
-    PythonInterpreterConfig.PythonInterpreterConfigBuilder builder =
-        PythonInterpreterConfig.newBuilder();
-    builder.setPythonExec(context.getPythonExec());
-    builder.addPythonPaths(context.getPythonPaths());
-    PythonInterpreter pythonInterpreter = new PythonInterpreter(builder.build());
-    try {
-      if (StringUtils.isNotBlank(context.getPythonKnextPath())) {
-        pythonInterpreter.exec(
-            String.format("import sys; sys.path.append(\"%s\")", context.getPythonKnextPath()));
-      }
-      String className = "YuqueReader";
-      node.addTraceLog("invoke chunk operator:%s", className);
-      pythonInterpreter.exec("from kag.builder.component.reader import " + className);
-      String pythonObject = "pyo" + "_" + Md5Utils.md5Of(UUID.randomUUID().toString());
-      pythonInterpreter.exec(
-          String.format(
-              "%s=%s(**{'token' : '%s','project_id' : '%s'})",
-              pythonObject, className, token, context.getProjectId()));
-      List<Object> result =
-          (List<Object>) pythonInterpreter.invokeMethod(pythonObject, "_handle", url);
-      List<ChunkRecord.Chunk> chunkList =
-          JSON.parseObject(
-              JSON.toJSONString(result), new TypeReference<List<ChunkRecord.Chunk>>() {});
-      node.addTraceLog("invoke chunk operator:%s chunks:%s succeed", className, chunkList.size());
-      return chunkList;
-    } finally {
-      pythonInterpreter.close();
-    }
-  }
-
-  public List<ChunkRecord.Chunk> readFile(String fileUrl) {
-    PythonInterpreterConfig.PythonInterpreterConfigBuilder builder =
-        PythonInterpreterConfig.newBuilder();
-    builder.setPythonExec(context.getPythonExec());
-    builder.addPythonPaths(context.getPythonPaths());
-    PythonInterpreter pythonInterpreter = new PythonInterpreter(builder.build());
-    try {
-      if (StringUtils.isNotBlank(context.getPythonKnextPath())) {
-        pythonInterpreter.exec(
-            String.format("import sys; sys.path.append(\"%s\")", context.getPythonKnextPath()));
-      }
-      String extension = FilenameUtils.getExtension(fileUrl).toLowerCase();
-      String className = "TXTReader";
-      switch (extension) {
-        case "csv":
-          className = "CSVReader";
-          break;
-        case "pdf":
-          className = "PDFReader";
-          break;
-        case "md":
-          className = "MarkDownReader";
-          break;
-        case "json":
-          className = "JSONReader";
-          break;
-        case "doc":
-        case "docx":
-          className = "DocxReader";
-          break;
-      }
-      node.addTraceLog("invoke chunk operator:%s", className);
-      pythonInterpreter.exec("from kag.builder.component.reader import " + className);
-      String pythonObject = "pyo" + "_" + Md5Utils.md5Of(UUID.randomUUID().toString());
-      pythonInterpreter.exec(
-          String.format(
-              "%s=%s(**{'project_id' : '%s'})", pythonObject, className, context.getProjectId()));
-      List<Object> result =
-          (List<Object>) pythonInterpreter.invokeMethod(pythonObject, "_handle", fileUrl);
-      List<ChunkRecord.Chunk> chunkList =
-          JSON.parseObject(
-              JSON.toJSONString(result), new TypeReference<List<ChunkRecord.Chunk>>() {});
-      node.addTraceLog("invoke chunk operator:%s chunks:%s succeed", className, chunkList.size());
-      return chunkList;
-    } finally {
-      pythonInterpreter.close();
-    }
+  public List<ChunkRecord.Chunk> readSource(String url, String token) {
+    node.addTraceLog("invoke read operator:%s", PythonInvokeMethod.BRIDGE_READER.getMethod());
+    List<ChunkRecord.Chunk> chunkList =
+        CommonUtils.readSource(
+            context.getPythonExec(),
+            context.getPythonPaths(),
+            context.getSchemaUrl(),
+            project,
+            url,
+            token);
+    node.addTraceLog(
+        "invoke read operator:%s chunks:%s succeed",
+        PythonInvokeMethod.BRIDGE_READER.getMethod(), chunkList.size());
+    return chunkList;
   }
 }

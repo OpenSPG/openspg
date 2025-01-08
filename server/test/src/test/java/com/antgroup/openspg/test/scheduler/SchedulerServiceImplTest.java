@@ -24,6 +24,9 @@ import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Instance
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Status;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TranslateType;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -75,16 +78,16 @@ class SchedulerServiceImplTest {
     Long jobId = job.getId();
     assertTrue(jobId > 0);
 
-    SchedulerJob jobQuery = new SchedulerJob();
+    SchedulerJobQuery jobQuery = new SchedulerJobQuery();
     jobQuery.setId(jobId);
-    SchedulerInstance instanceQuery = new SchedulerInstance();
+    SchedulerInstanceQuery instanceQuery = new SchedulerInstanceQuery();
     instanceQuery.setJobId(jobId);
-    SchedulerTask taskQuery = new SchedulerTask();
+    SchedulerTaskQuery taskQuery = new SchedulerTaskQuery();
     taskQuery.setJobId(jobId);
 
     try {
       // step 2: query Jobs
-      List<SchedulerJob> jobs = schedulerService.searchJobs(jobQuery);
+      List<SchedulerJob> jobs = schedulerService.searchJobs(jobQuery).getResults();
       assertEquals(1, jobs.size());
 
       // step 3: offline job
@@ -117,7 +120,8 @@ class SchedulerServiceImplTest {
       ThreadUtils.sleep(100);
 
       // step 7: get Instance to set Finish
-      List<SchedulerInstance> instances = schedulerService.searchInstances(instanceQuery);
+      List<SchedulerInstance> instances =
+          schedulerService.searchInstances(instanceQuery).getResults();
       assertTrue(instances.size() > 0);
       SchedulerInstance instance = notFinishInstances.get(0);
       SchedulerInstance ins = schedulerService.getInstanceById(instance.getId());
@@ -154,14 +158,14 @@ class SchedulerServiceImplTest {
       ThreadUtils.sleep(100);
 
       // step 11: get tasks
-      List<SchedulerTask> tasks = schedulerService.searchTasks(taskQuery);
+      List<SchedulerTask> tasks = schedulerService.searchTasks(taskQuery).getResults();
       assertTrue(tasks.size() > 0);
     } finally {
       // step 12: delete Job
       assertTrue(schedulerService.deleteJob(jobId));
-      assertEquals(0, schedulerService.searchJobs(jobQuery).size());
-      assertEquals(0, schedulerService.searchInstances(instanceQuery).size());
-      assertEquals(0, schedulerService.searchTasks(taskQuery).size());
+      assertEquals(0, schedulerService.searchJobs(jobQuery).getResults().size());
+      assertEquals(0, schedulerService.searchInstances(instanceQuery).getResults().size());
+      assertEquals(0, schedulerService.searchTasks(taskQuery).getResults().size());
     }
   }
 
@@ -186,18 +190,19 @@ class SchedulerServiceImplTest {
     assertTrue(jobId > 0);
 
     ThreadUtils.sleep(100);
-    SchedulerJob jobQuery = new SchedulerJob();
+    SchedulerJobQuery jobQuery = new SchedulerJobQuery();
     jobQuery.setId(jobId);
-    SchedulerInstance instanceQuery = new SchedulerInstance();
+    SchedulerInstanceQuery instanceQuery = new SchedulerInstanceQuery();
     instanceQuery.setJobId(jobId);
-    SchedulerTask taskQuery = new SchedulerTask();
+    SchedulerTaskQuery taskQuery = new SchedulerTaskQuery();
     taskQuery.setJobId(jobId);
 
     try {
       // step 2: query Jobs and Instances
-      List<SchedulerJob> jobs = schedulerService.searchJobs(jobQuery);
+      List<SchedulerJob> jobs = schedulerService.searchJobs(jobQuery).getResults();
       assertEquals(1, jobs.size());
-      List<SchedulerInstance> instances = schedulerService.searchInstances(instanceQuery);
+      List<SchedulerInstance> instances =
+          schedulerService.searchInstances(instanceQuery).getResults();
       assertEquals(24, instances.size());
       ThreadUtils.sleep(100);
 
@@ -255,15 +260,15 @@ class SchedulerServiceImplTest {
       assertEquals(InstanceStatus.FINISH, instance.getStatus());
 
       // step 8: get tasks
-      List<SchedulerTask> tasks = schedulerService.searchTasks(taskQuery);
+      List<SchedulerTask> tasks = schedulerService.searchTasks(taskQuery).getResults();
       assertTrue(tasks.size() > 0);
 
     } finally {
       // step 9: delete Job
       assertTrue(schedulerService.deleteJob(jobId));
-      assertEquals(0, schedulerService.searchJobs(jobQuery).size());
-      assertEquals(0, schedulerService.searchInstances(instanceQuery).size());
-      assertEquals(0, schedulerService.searchTasks(taskQuery).size());
+      assertEquals(0, schedulerService.searchJobs(jobQuery).getResults().size());
+      assertEquals(0, schedulerService.searchInstances(instanceQuery).getResults().size());
+      assertEquals(0, schedulerService.searchTasks(taskQuery).getResults().size());
     }
   }
 
@@ -286,18 +291,19 @@ class SchedulerServiceImplTest {
     assertTrue(jobId > 0);
 
     ThreadUtils.sleep(100);
-    SchedulerJob jobQuery = new SchedulerJob();
+    SchedulerJobQuery jobQuery = new SchedulerJobQuery();
     jobQuery.setId(jobId);
-    SchedulerInstance instanceQuery = new SchedulerInstance();
+    SchedulerInstanceQuery instanceQuery = new SchedulerInstanceQuery();
     instanceQuery.setJobId(jobId);
-    SchedulerTask taskQuery = new SchedulerTask();
+    SchedulerTaskQuery taskQuery = new SchedulerTaskQuery();
     taskQuery.setJobId(jobId);
 
     try {
       // step 2: query Jobs and Instances
-      List<SchedulerJob> jobs = schedulerService.searchJobs(jobQuery);
+      List<SchedulerJob> jobs = schedulerService.searchJobs(jobQuery).getResults();
       assertEquals(1, jobs.size());
-      List<SchedulerInstance> instances = schedulerService.searchInstances(instanceQuery);
+      List<SchedulerInstance> instances =
+          schedulerService.searchInstances(instanceQuery).getResults();
       assertEquals(1, instances.size());
       ThreadUtils.sleep(100);
 
@@ -333,15 +339,15 @@ class SchedulerServiceImplTest {
       assertEquals(InstanceStatus.RUNNING, instance.getStatus());
 
       // step 6: get tasks
-      List<SchedulerTask> tasks = schedulerService.searchTasks(taskQuery);
+      List<SchedulerTask> tasks = schedulerService.searchTasks(taskQuery).getResults();
       assertTrue(tasks.size() > 0);
 
     } finally {
       // step 7: delete Job
       assertTrue(schedulerService.deleteJob(jobId));
-      assertEquals(0, schedulerService.searchJobs(jobQuery).size());
-      assertEquals(0, schedulerService.searchInstances(instanceQuery).size());
-      assertEquals(0, schedulerService.searchTasks(taskQuery).size());
+      assertEquals(0, schedulerService.searchJobs(jobQuery).getResults().size());
+      assertEquals(0, schedulerService.searchInstances(instanceQuery).getResults().size());
+      assertEquals(0, schedulerService.searchTasks(taskQuery).getResults().size());
     }
   }
 

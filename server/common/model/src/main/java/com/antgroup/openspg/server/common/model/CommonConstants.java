@@ -20,5 +20,6 @@ public class CommonConstants {
   public static final String VECTORIZER = "vectorizer";
   public static final String VECTOR_DIMENSIONS = "vector_dimensions";
   public static final String LLM = "llm";
+  public static final String LLM_SELECT = "llm_select";
   public static final String PROMPT = "prompt";
 }

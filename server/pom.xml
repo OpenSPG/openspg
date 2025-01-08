@@ -155,6 +155,11 @@
         <artifactId>test</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.antgroup.openspgapp</groupId>
+        <artifactId>common-util</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- openspg-server end -->
 
       <dependency>

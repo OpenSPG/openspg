@@ -84,4 +84,10 @@ public class DateUtils {
       throw new RuntimeException("date parse error...", e);
     }
   }
+
+  /** convert date to string */
+  public static String format(Date date, String pattern) {
+    SimpleDateFormat simpleDateFormat = getSimpleDateFormat(pattern);
+    return simpleDateFormat.format(date);
+  }
 }

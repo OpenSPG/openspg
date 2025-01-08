@@ -39,5 +39,29 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
     </dependency>
+    <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-interface-object-storage</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-objectstorage-minio</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-impl-objectstorage-oss</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.cloudext</groupId>
+      <artifactId>cloudext-interface-computing-engine</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.builder</groupId>
+      <artifactId>builder-runner-local</artifactId>
+    </dependency>
   </dependencies>
 </project>

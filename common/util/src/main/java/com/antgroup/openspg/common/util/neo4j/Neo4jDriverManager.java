@@ -44,7 +44,7 @@ public class Neo4jDriverManager {
             driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password), config);
             driver.verifyConnectivity();
           } catch (Exception e) {
-            throw new RuntimeException("init Neo4j Client failed :" + uri, e);
+            throw new RuntimeException("init Neo4j Client failed :" + uri + "，" + user, e);
           }
           instanceMap.put(uniqueKey, driver);
         }

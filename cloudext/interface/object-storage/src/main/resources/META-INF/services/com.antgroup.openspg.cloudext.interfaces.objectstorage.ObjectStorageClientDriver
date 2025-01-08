@@ -1,0 +1,2 @@
+com.antgroup.openspg.cloudext.impl.objectstorage.minio.MinioClientDriver
+com.antgroup.openspg.cloudext.impl.objectstorage.oss.OSSClientDriver

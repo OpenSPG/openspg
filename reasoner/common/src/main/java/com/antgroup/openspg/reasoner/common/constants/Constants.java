@@ -84,6 +84,10 @@ public class Constants {
   public static final Set<String> CONCEPT_HYPERNYM_EDGE_TYPE_SET =
       Sets.newHashSet("isA", "locateAt");
 
+  /** open hypernym predicate type */
+  public static final Set<String> OPEN_CONCEPT_HYPERNYM_PREDICATE =
+      Sets.newHashSet("isA", "locateAt", "mannerOf");
+
   public static final String CONCEPT_EDGE_EXPAND_FUNC_NAME = "concept_edge_expand";
 
   /** allow throw exception in udf */

@@ -18,7 +18,6 @@
 package com.antgroup.openspg.server.core.scheduler.service.config;
 
 import com.antgroup.openspg.common.util.StringUtils;
-import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,47 +25,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class SchedulerConfig {
 
-  @Value("${scheduler.execute.instances.period:}")
-  private String executeInstancesPeriod;
-
-  @Value("${scheduler.execute.instances.unit:}")
-  private String executeInstancesUnit;
-
-  @Value("${scheduler.generate.instances.period:}")
-  private String generateInstancesPeriod;
-
-  @Value("${scheduler.generate.instances.unit:}")
-  private String generateInstancesUnit;
+  @Value("${scheduler.handler.process.period:}")
+  private String handlerProcessPeriod;
 
   @Value("${scheduler.execute.max.day:}")
   private String executeMaxDay;
 
-  public Long getExecuteInstancesPeriod() {
-    if (StringUtils.isBlank(executeInstancesPeriod)) {
+  public Long getHandlerProcessPeriod() {
+    if (StringUtils.isBlank(handlerProcessPeriod)) {
       return null;
     }
-    return Long.valueOf(executeInstancesPeriod);
-  }
-
-  public TimeUnit getExecuteInstancesUnit() {
-    if (StringUtils.isBlank(executeInstancesPeriod)) {
-      return null;
-    }
-    return TimeUnit.valueOf(executeInstancesUnit);
-  }
-
-  public Long getGenerateInstancesPeriod() {
-    if (StringUtils.isBlank(generateInstancesPeriod)) {
-      return null;
-    }
-    return Long.valueOf(generateInstancesPeriod);
-  }
-
-  public TimeUnit getGenerateInstancesUnit() {
-    if (StringUtils.isBlank(generateInstancesUnit)) {
-      return null;
-    }
-    return TimeUnit.valueOf(generateInstancesUnit);
+    return Long.valueOf(handlerProcessPeriod);
   }
 
   public Integer getExecuteMaxDay() {
