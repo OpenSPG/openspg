@@ -26,7 +26,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.8'
-          cache: 'pip' # caching pip dependencies
       - run: pip install black==22.3.0
       - name: Build with Maven
         run: mvn -B install --file pom.xml
