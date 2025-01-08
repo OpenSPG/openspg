@@ -31,4 +31,6 @@ public interface ProjectRepository {
   Integer deleteById(Long projectId);
 
   Paged<Project> queryPaged(ProjectQueryRequest request, int start, int size);
+
+  Project queryByNamespace(String namespace);
 }

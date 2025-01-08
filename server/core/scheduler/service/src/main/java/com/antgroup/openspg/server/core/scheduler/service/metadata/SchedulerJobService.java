@@ -12,8 +12,9 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata;
 
+import com.antgroup.openspg.server.api.facade.Paged;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
-import java.util.List;
 
 /** Scheduler Job Service: Add, delete, update, and query Jobs */
 public interface SchedulerJobService {
@@ -31,5 +32,5 @@ public interface SchedulerJobService {
   SchedulerJob getById(Long id);
 
   /** query By Condition */
-  List<SchedulerJob> query(SchedulerJob record);
+  Paged<SchedulerJob> query(SchedulerJobQuery record);
 }

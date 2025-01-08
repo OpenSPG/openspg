@@ -12,7 +12,9 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
+import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerJobService;
 import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
@@ -73,7 +75,7 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
   }
 
   @Override
-  public List<SchedulerJob> query(SchedulerJob record) {
+  public Paged<SchedulerJob> query(SchedulerJobQuery record) {
     List<SchedulerJob> jobList = Lists.newArrayList();
     for (Long key : jobs.keySet()) {
       SchedulerJob job = jobs.get(key);
@@ -94,6 +96,8 @@ public class LocalSchedulerJobServiceImpl implements SchedulerJobService {
       BeanUtils.copyProperties(job, target);
       jobList.add(target);
     }
-    return jobList;
+    Paged<SchedulerJob> paged = new Paged<>(record.getPageSize(), record.getPageNo());
+    paged.setResults(jobList);
+    return paged;
   }
 }

@@ -206,7 +206,6 @@ public class LocalRDG extends RDG<LocalRDG> {
           sb.append(field._1).append(".").append(prop).append("=").append(values.get(prop));
         }
       }
-      System.out.println(sb.toString());
       java.util.List<IVertex<IVertexId, IProperty>> startVertexList =
           kgGraph.getVertex(this.curRdgStartVertexAlias);
       for (IVertex<IVertexId, IProperty> startId : startVertexList) {

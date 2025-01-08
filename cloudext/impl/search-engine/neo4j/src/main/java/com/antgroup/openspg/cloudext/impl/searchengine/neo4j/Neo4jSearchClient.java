@@ -32,12 +32,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.types.Node;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 public class Neo4jSearchClient extends BaseIdxSearchEngineClient {
 
   private final Neo4jIndexUtils client;
@@ -98,7 +100,8 @@ public class Neo4jSearchClient extends BaseIdxSearchEngineClient {
     if (query instanceof FullTextSearchQuery) {
       FullTextSearchQuery q = (FullTextSearchQuery) query;
       List<String> labelConstraints = q.getLabelConstraints();
-      return client.textSearch(q.getQueryString(), labelConstraints, topk, indexName);
+      return client.textSearch(
+          q.getQueryString(), labelConstraints, request.getFrom(), topk, indexName);
     } else if (query instanceof VectorSearchQuery) {
       VectorSearchQuery q = (VectorSearchQuery) query;
       return client.vectorSearch(
@@ -115,7 +118,7 @@ public class Neo4jSearchClient extends BaseIdxSearchEngineClient {
     List<IdxRecord> results = new ArrayList<>();
     for (Record r : records) {
       Node node = r.get("node").asNode();
-      String docId = node.get(Neo4jCommonUtils.ID).asString();
+      String docId = String.valueOf(node.id());
       double score = r.get("score").asDouble();
       Map<String, Object> fields = new HashMap<>(node.asMap());
       ArrayList<String> labels = new ArrayList<>();

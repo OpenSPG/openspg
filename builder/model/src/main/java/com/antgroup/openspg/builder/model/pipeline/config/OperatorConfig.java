@@ -14,6 +14,7 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.alibaba.fastjson.JSON;
+import com.antgroup.openspg.common.util.pemja.PythonInvokeMethod;
 import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import com.google.common.collect.Lists;
 import java.util.Map;
@@ -24,8 +25,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 public class OperatorConfig extends BaseValObj {
-
-  private final String filePath;
 
   private final String modulePath;
 
@@ -38,22 +37,25 @@ public class OperatorConfig extends BaseValObj {
   private final String paramsPrefix;
 
   public OperatorConfig(
-      String filePath,
-      String modulePath,
-      String className,
-      String method,
-      Map<String, String> params) {
-    this(filePath, modulePath, className, method, params, "");
+      String modulePath, String className, String method, Map<String, String> params) {
+    this(modulePath, className, method, params, "");
+  }
+
+  public OperatorConfig(PythonInvokeMethod method, Map<String, String> params) {
+    this(
+        method.getModulePath(),
+        method.getClassName(),
+        method.getMethod(),
+        params,
+        method.getParamsPrefix());
   }
 
   public OperatorConfig(
-      String filePath,
       String modulePath,
       String className,
       String method,
       Map<String, String> params,
       String paramsPrefix) {
-    this.filePath = filePath;
     this.modulePath = modulePath;
     this.className = className;
     this.method = method;
@@ -66,6 +68,6 @@ public class OperatorConfig extends BaseValObj {
         String.join(
             ";",
             Lists.newArrayList(
-                filePath, modulePath, className, method, JSON.toJSONString(params), paramsPrefix)));
+                modulePath, className, method, JSON.toJSONString(params), paramsPrefix)));
   }
 }

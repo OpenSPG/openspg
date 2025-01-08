@@ -233,6 +233,74 @@ CREATE TABLE `kg_ontology_ext` (
   UNIQUE KEY `uk_id_type_field`(`resource_id`, `resource_type`, `ext_type`, `field`)
 ) AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COMMENT = 'schema的扩展属性';
 
+CREATE TABLE `kg_user` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `user_no` varchar(255) NOT NULL COMMENT '用户工号',
+  `token` varchar(255) NOT NULL COMMENT 'token',
+  `last_token` varchar(255) DEFAULT NULL COMMENT '修改前token',
+  `salt` varchar(255) NOT NULL COMMENT '随机字符串',
+  `gmt_last_token_disable` timestamp NULL DEFAULT NULL COMMENT 'token修改时间',
+  `dw_access_id` varchar(32) DEFAULT NULL COMMENT '数仓用户ID',
+  `dw_access_key` varchar(64) DEFAULT NULL COMMENT '数仓用户密钥',
+  `real_name` varchar(50) DEFAULT NULL COMMENT '用户真名',
+  `nick_name` varchar(50) DEFAULT NULL COMMENT '用户花名',
+  `email` varchar(64) DEFAULT NULL COMMENT '用户邮箱',
+  `domain_account` varchar(64) DEFAULT NULL COMMENT '用户域账号',
+  `mobile` varchar(64) DEFAULT NULL COMMENT '用户手机号',
+  `wx_account` varchar(64) DEFAULT NULL COMMENT '用户微信账号',
+  `config` text DEFAULT NULL COMMENT '配置，json',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_userNo`(`user_no`),
+  UNIQUE KEY `uk_token`(`token`),
+  UNIQUE KEY `uk_domain_account`(`domain_account`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '用户管理表';
+
+CREATE TABLE `kg_config` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `project_id` varchar(64) NOT NULL COMMENT '项目id，可以为某个域的唯一值',
+  `config_name` varchar(64) NOT NULL COMMENT '配置名称',
+  `config_id` varchar(128) NOT NULL COMMENT '配置id',
+  `version` varchar(64) NOT NULL DEFAULT '1' COMMENT '配置版本',
+  `config` longtext NOT NULL COMMENT '配置，json',
+  `status` int(11) NOT NULL DEFAULT '1' COMMENT '状态，1有效',
+  `description` varchar(1024) DEFAULT NULL COMMENT '版本描述',
+  `resource_id` varchar(128) DEFAULT NULL COMMENT '资源id,用于外键关联schem视图',
+  `resource_type` varchar(128) DEFAULT 'CONFIG' COMMENT '资源类型',
+  `user_no` varchar(64) NOT NULL COMMENT '创建者',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_configidversion`(`config_id`, `version`),
+  KEY `idx_projectid`(`project_id`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '图谱配置表';
+
+CREATE TABLE `kg_resource_permission` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `user_no` varchar(255) NOT NULL COMMENT '用户工号',
+  `resource_id` bigint(20) NOT NULL COMMENT '资源id',
+  `role_id` bigint(20) NOT NULL COMMENT '角色id',
+  `resource_tag` varchar(50) NOT NULL DEFAULT 'TYPE' COMMENT '资源分类',
+  `status` varchar(2) NOT NULL DEFAULT '99' COMMENT '状态。-1：驳回;99：审批中;1：有效;9：删除',
+  `expire_date` date DEFAULT NULL COMMENT '过期日期',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_unique`(`user_no`, `resource_id`, `resource_tag`),
+  KEY `idx_resource`(`resource_id`, `role_id`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '资源权限表';
+
+CREATE TABLE `kg_role` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键，角色id',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `role_name` varchar(255) NOT NULL COMMENT '角色名',
+  `permission_detail` text DEFAULT NULL COMMENT '角色权限具体信息，json格式',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_role_name`(`role_name`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '平台角色表';
+
 INSERT INTO kg_biz_domain (`id`,`gmt_create`,`gmt_modified`,`name`,`status`,`description`,`global_config`) VALUES(1,'2023-09-01 00:00:00','2023-09-01 00:00:00','defaultTenant','VALID','',null);
 
 INSERT INTO kg_ontology_entity (`id`,`original_id`,`name`,`name_zh`,`entity_category`,`layer`,`description`,`description_zh`,`status`,`with_index`,`scope`,`version`,`version_status`,`gmt_create`,`gmt_modified`,`transformer_id`,`operator_config`,`config`,`unique_name`) VALUES(1,1,'Thing','事物','ADVANCED','EXTENSION','Base class for all schema types, all of which inherit the type either directly or indirectly','所有schema类型的基类，它们都直接或者间接继承该类型','1','TRUE','PUBLIC',44,'ONLINE','2023-09-01 00:00:00','2023-09-01 00:00:00',0,null,null,'Thing');
@@ -258,3 +326,15 @@ INSERT INTO kg_ontology_entity_parent (`id`,`entity_id`,`parent_id`,`status`,`gm
 INSERT INTO kg_ontology_entity_property_range (`id`,`domain_id`,`property_name`,`range_id`,`property_name_zh`,`constraint_id`,`property_category`,`map_type`,`version`,`status`,`gmt_create`,`gmt_modified`,`original_id`,`store_property_name`,`transformer_id`,`property_desc`,`property_desc_zh`,`project_id`,`original_domain_id`,`original_range_id`,`version_status`,`relation_source`,`direction`,`mask_type`,`multiver_config`,`property_source`,`property_config`) VALUES(1,1,'description',2,'描述',0,'BASIC','TYPE',44,'1','2022-03-21 19:24:54','2023-08-27 09:39:04',1,'description',0,null,null,0,1,2,'ONLINE',null,null,null,null,null,null);
 INSERT INTO kg_ontology_entity_property_range (`id`,`domain_id`,`property_name`,`range_id`,`property_name_zh`,`constraint_id`,`property_category`,`map_type`,`version`,`status`,`gmt_create`,`gmt_modified`,`original_id`,`store_property_name`,`transformer_id`,`property_desc`,`property_desc_zh`,`project_id`,`original_domain_id`,`original_range_id`,`version_status`,`relation_source`,`direction`,`mask_type`,`multiver_config`,`property_source`,`property_config`) VALUES(2,1,'id',2,'实体主键',0,'BASIC','TYPE',44,'1','2022-03-21 19:24:54','2023-08-27 09:39:04',2,'id',0,null,null,0,1,2,'ONLINE',null,null,null,null,null,null);
 INSERT INTO kg_ontology_entity_property_range (`id`,`domain_id`,`property_name`,`range_id`,`property_name_zh`,`constraint_id`,`property_category`,`map_type`,`version`,`status`,`gmt_create`,`gmt_modified`,`original_id`,`store_property_name`,`transformer_id`,`property_desc`,`property_desc_zh`,`project_id`,`original_domain_id`,`original_range_id`,`version_status`,`relation_source`,`direction`,`mask_type`,`multiver_config`,`property_source`,`property_config`) VALUES(3,1,'name',2,'名称',0,'BASIC','TYPE',44,'1','2022-03-21 19:24:54','2023-08-27 09:39:04',3,'name',0,null,null,0,1,2,'ONLINE',null,null,null,null,null,null);
+
+INSERT INTO kg_user (`gmt_create`,`gmt_modified`,`user_no`,`token`,`last_token`,`salt`,`gmt_last_token_disable`,`dw_access_id`,`dw_access_key`,`real_name`,`nick_name`,`email`,`domain_account`,`mobile`,`wx_account`,`config`) VALUES(now(),now(),'openspg','075Df6275475a739',null,'Ktu4O',null,null,'efea9c06f9a581fe392bab2ee9a0508b2878f958c1f422f8080999e7dc024b83','openspg','openspg',null,'openspg',null,null,'{"useCurrentLanguage":"zh-CN"}');
+
+INSERT INTO kg_role (`id`,`gmt_create`,`gmt_modified`,`role_name`,`permission_detail`) VALUES(1,now(),now(),'SUPER','');
+INSERT INTO kg_role (`id`,`gmt_create`,`gmt_modified`,`role_name`,`permission_detail`) VALUES(2,now(),now(),'OWNER','');
+INSERT INTO kg_role (`id`,`gmt_create`,`gmt_modified`,`role_name`,`permission_detail`) VALUES(3,now(),now(),'MEMBER','');
+
+INSERT INTO kg_resource_permission (`gmt_create`,`gmt_modified`,`user_no`,`resource_id`,`role_id`,`resource_tag`,`status`,`expire_date`) VALUES(now(),now(),'openspg',0,1,'PLATFORM','1',null);
+
+INSERT INTO kg_config (`id`,`gmt_create`,`gmt_modified`,`project_id`,`config_name`,`config_id`,`version`,`config`,`status`,`description`,`resource_id`,`resource_type`,`user_no`) VALUES(1,now(),now(),'0','KAG Support Model','KAG_SUPPORT_MODEL','1','[{"id":1,"vendor":"vllm","logo":"/img/logo/vllm.png","params":[{"ename":"base_url","cname":"base_url","required":true,"defaultValue":""},{"ename":"model","cname":"model","required":true,"defaultValue":""},{"ename":"desc","cname":"desc","required":true,"formProps":{"allowClear":true,"placeholder":"Please enter remarks for partitioning."}}]},{"id":2,"vendor":"maas","logo":"/img/logo/maas.png","params":[{"ename":"base_url","cname":"base_url","required":true,"defaultValue":""},{"ename":"api_key","cname":"api_key ","required":true,"defaultValue":""},{"ename":"model","cname":"model","required":true,"defaultValue":""},{"ename":"temperature","cname":"temperature","required":true,"formType":"number","defaultValue":0.7},{"ename":"stream","cname":"stream","required":true,"defaultValue":"False"},{"ename":"desc","cname":"desc","required":true,"formProps":{"allowClear":true,"placeholder":"Please enter remarks for partitioning."}}]},{"id":3,"vendor":"Ollama","logo":"/img/logo/ollama.png","params":[{"ename":"base_url","cname":"base_url","required":true,"defaultValue":""},{"ename":"model","cname":"model","required":true,"defaultValue":""},{"ename":"desc","cname":"desc","required":true,"formProps":{"allowClear":true,"placeholder":"Please enter remarks for partitioning."}}]}]',1,null,null,'SYSTEM_CONFIG','');
+INSERT INTO kg_config (`id`,`gmt_create`,`gmt_modified`,`project_id`,`config_name`,`config_id`,`version`,`config`,`status`,`description`,`resource_id`,`resource_type`,`user_no`) VALUES(2,now(),now(),'0','Global Configuration','KAG_CONFIG','1','',1,null,null,'CONFIG','admin');
+INSERT INTO kg_config (`id`,`gmt_create`,`gmt_modified`,`project_id`,`config_name`,`config_id`,`version`,`config`,`status`,`description`,`resource_id`,`resource_type`,`user_no`) VALUES(3,now(),now(),'0','KAG Environment Configuration','KAG_ENV','1','{"configTitle":{"graph_store":{"id":1,"title":[{"ename":"database","cname":"database","required":true,"defaultValue":"kag","formProps":{"disabled":true}},{"ename":"password","cname":"password","required":true,"defaultValue":""},{"ename":"uri","cname":"uri","required":true,"defaultValue":""},{"ename":"user","cname":"user","required":true,"defaultValue":""}]},"vectorizer":{"id":2,"title":[{"ename":"type","cname":"type","required":true,"defaultValue":"openai","formProps":{"disabled":true}},{"ename":"model","cname":"model","required":true,"defaultValue":""},{"ename":"base_url","cname":"base_url","required":true,"defaultValue":""},{"ename":"api_key","cname":"api_key","required":true,"defaultValue":""}]},"prompt":{"id":3,"title":[{"ename":"biz_scene","cname":"biz_scene","required":true,"defaultValue":""},{"ename":"language","cname":"language","required":true,"defaultValue":""}]}}}',1,null,null,'SYSTEM_CONFIG','');

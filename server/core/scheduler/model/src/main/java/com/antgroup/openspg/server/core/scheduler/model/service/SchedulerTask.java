@@ -13,7 +13,6 @@
 package com.antgroup.openspg.server.core.scheduler.model.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.base.BaseModel;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
@@ -46,6 +45,9 @@ public class SchedulerTask extends BaseModel {
 
   /** status */
   private TaskStatus status;
+
+  /** project id */
+  private Long projectId;
 
   /** SchedulerJob Id */
   private Long jobId;
@@ -93,6 +95,7 @@ public class SchedulerTask extends BaseModel {
     this.executeNum = 0;
     this.beginTime = new Date();
     this.status = status;
+    this.projectId = instance.getProjectId();
     this.jobId = instance.getJobId();
     this.instanceId = instance.getId();
     this.nodeId = node.getId();
@@ -102,11 +105,6 @@ public class SchedulerTask extends BaseModel {
     if (node.getProperties() != null) {
       this.extension = node.getProperties();
     }
-
-    StringBuffer log = new StringBuffer(DateTimeUtils.getDate2LongStr(new Date()));
-    log.append("Create new Task, Waiting preceding node to complete.....");
-    log.append(System.getProperty("line.separator"));
-
-    this.traceLog = log.toString();
+    this.traceLog = System.getProperty("line.separator");
   }
 }

@@ -27,9 +27,11 @@ import com.antgroup.openspg.server.core.reasoner.service.ReasonerService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class ReasonerManagerImpl implements ReasonerManager {
   @Autowired private ProjectManager projectManager;
@@ -68,6 +70,7 @@ public class ReasonerManagerImpl implements ReasonerManager {
     reasonerTask.setParams(request.getParams());
     reasonerTask.setProjectId(request.getProjectId());
     reasonerTask.setGraphStoreUrl(graphStoreUrl);
+    log.info("dsl: " + request.getDsl());
     ReasonerTask ret = reasonerService.runTask(reasonerTask);
     ReasonerTaskResponse reasonerTaskResponse = new ReasonerTaskResponse();
     reasonerTaskResponse.setProjectId(request.getProjectId());

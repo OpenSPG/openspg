@@ -19,9 +19,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Setter
+@Slf4j
 public class ExecuteNode extends BaseValObj {
 
   /** The id of the node. */
@@ -40,6 +42,8 @@ public class ExecuteNode extends BaseValObj {
 
   private StringBuffer traceLog;
 
+  public ExecuteNode() {}
+
   public ExecuteNode(Node node) {
     this.id = node.getId();
     this.name = node.getName();
@@ -51,6 +55,10 @@ public class ExecuteNode extends BaseValObj {
   public synchronized void addTraceLog(String message, Object... args) {
     message = String.format(message, args);
     String currentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-    traceLog.append(currentTime + ": " + message + System.getProperty("line.separator"));
+    if (traceLog == null) {
+      log.info("traceLog: " + message);
+    } else {
+      traceLog.append(currentTime + ": " + message + System.getProperty("line.separator"));
+    }
   }
 }

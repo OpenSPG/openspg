@@ -10,7 +10,9 @@
 # or implied.
 
 IMAGE="spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-python"
-VERSION="0.5.1"
+VERSION="0.6"
+LATEST="latest"
+
 cd ../../../../
 docker build -f openspg/dev/release/python/Dockerfile --platform linux/arm64/v8 --push \
   -t  ${IMAGE}:${VERSION}-arm64 \

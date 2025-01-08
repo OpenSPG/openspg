@@ -14,18 +14,18 @@
 package com.antgroup.openspg.common.util;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.text.StringSubstitutor;
 
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
-  /**
-   * 将object转化成string返回，常用于POJO对象未实现toString()场景，
-   *
-   * @param object 对象
-   * @return 对象string表示
-   */
+  private static Pattern humpPattern = Pattern.compile("[A-Z]");
+
+  public static final String UNDERLINE_SEPARATOR = "_";
+
   public static String toString(Object object) {
     if (object instanceof String) {
       return object.toString();
@@ -36,5 +36,15 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
   public static String dictFormat(Map<String, Object> vars, String template) {
     StringSubstitutor substitutor = new StringSubstitutor(vars, "${", "}");
     return substitutor.replace(template);
+  }
+
+  public static String humpToLine(String str) {
+    Matcher matcher = humpPattern.matcher(str);
+    StringBuffer sb = new StringBuffer();
+    while (matcher.find()) {
+      matcher.appendReplacement(sb, UNDERLINE_SEPARATOR + matcher.group(0).toLowerCase());
+    }
+    matcher.appendTail(sb);
+    return sb.toString();
   }
 }

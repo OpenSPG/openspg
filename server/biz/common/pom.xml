@@ -39,5 +39,13 @@
       <groupId>com.alibaba</groupId>
       <artifactId>pemja</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspgapp</groupId>
+      <artifactId>common-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>core-schema-service</artifactId>
+    </dependency>
   </dependencies>
 </project>

@@ -29,14 +29,17 @@ public class WriterGraphRequest extends BaseRequest {
 
   Boolean enableLeadTo;
 
+  String token;
+
   public WriterGraphRequest() {}
 
   public WriterGraphRequest(
-      SubGraph subGraph, String operation, Long projectId, Boolean enableLeadTo) {
+      SubGraph subGraph, String operation, Long projectId, Boolean enableLeadTo, String token) {
     this.subGraph = subGraph;
     this.operation = operation;
     this.projectId = projectId;
     this.enableLeadTo = enableLeadTo;
+    this.token = token;
   }
 
   public SubGraph getSubGraph() {
@@ -69,5 +72,13 @@ public class WriterGraphRequest extends BaseRequest {
 
   public void setEnableLeadTo(Boolean enableLeadTo) {
     this.enableLeadTo = enableLeadTo;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 }

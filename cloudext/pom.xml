@@ -38,11 +38,15 @@
     <module>interface/graph-store</module>
     <module>interface/search-engine</module>
     <module>interface/cache</module>
+    <module>interface/object-storage</module>
+    <module>interface/computing-engine</module>
     <module>impl/graph-store/tugraph</module>
     <module>impl/graph-store/neo4j</module>
     <module>impl/search-engine/elasticsearch</module>
     <module>impl/search-engine/neo4j</module>
     <module>impl/cache/redis</module>
+    <module>impl/object-storage/minio</module>
+    <module>impl/object-storage/oss</module>
   </modules>
 
   <properties/>

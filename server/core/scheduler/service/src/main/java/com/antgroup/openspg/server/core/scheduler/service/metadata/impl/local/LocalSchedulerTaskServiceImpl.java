@@ -12,8 +12,10 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.metadata.impl.local;
 
+import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
@@ -92,7 +94,7 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
   }
 
   @Override
-  public List<SchedulerTask> query(SchedulerTask record) {
+  public Paged<SchedulerTask> query(SchedulerTaskQuery record) {
     List<SchedulerTask> taskList = Lists.newArrayList();
     for (Long key : tasks.keySet()) {
       SchedulerTask task = tasks.get(key);
@@ -111,14 +113,16 @@ public class LocalSchedulerTaskServiceImpl implements SchedulerTaskService {
       BeanUtils.copyProperties(task, target);
       taskList.add(target);
     }
-    return taskList;
+    Paged<SchedulerTask> paged = new Paged<>(record.getPageSize(), record.getPageNo());
+    paged.setResults(taskList);
+    return paged;
   }
 
   @Override
-  public SchedulerTask queryByInstanceIdAndType(Long instanceId, String type) {
+  public SchedulerTask queryByInstanceIdAndNodeId(Long instanceId, String nodeId) {
     for (Long key : tasks.keySet()) {
       SchedulerTask task = tasks.get(key);
-      if (instanceId.equals(task.getInstanceId()) && type.equalsIgnoreCase(task.getType())) {
+      if (instanceId.equals(task.getInstanceId()) && nodeId.equalsIgnoreCase(task.getNodeId())) {
         SchedulerTask target = new SchedulerTask();
         BeanUtils.copyProperties(task, target);
         return target;

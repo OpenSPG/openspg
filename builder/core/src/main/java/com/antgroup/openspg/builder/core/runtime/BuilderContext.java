@@ -47,5 +47,4 @@ public class BuilderContext implements Serializable {
 
   private Map<String, ExecuteNode> executeNodes;
   private String schemaUrl;
-  private String pythonKnextPath;
 }

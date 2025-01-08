@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 OpenSPG Authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antgroup.openspg.server.infra.dao.mapper.SchedulerInstanceDOMapper">
+  <resultMap id="BaseResultMap" type="com.antgroup.openspg.server.infra.dao.dataobject.SchedulerInstanceDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="job_id" jdbcType="BIGINT" property="jobId" />
+    <result column="unique_id" jdbcType="VARCHAR" property="uniqueId" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="progress" jdbcType="BIGINT" property="progress" />
+    <result column="begin_running_time" jdbcType="TIMESTAMP" property="beginRunningTime" />
+    <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
+    <result column="life_cycle" jdbcType="VARCHAR" property="lifeCycle" />
+    <result column="dependence" jdbcType="VARCHAR" property="dependence" />
+    <result column="scheduler_date" jdbcType="TIMESTAMP" property="schedulerDate" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="extension" jdbcType="LONGVARCHAR" property="extension" />
+    <result column="task_dag" jdbcType="LONGVARCHAR" property="taskDag" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, gmt_create, gmt_modified, create_user, project_id, job_id, unique_id, type, status, progress, begin_running_time, finish_time, life_cycle, dependence, scheduler_date, version, extension, task_dag
+  </sql>
+
+  <insert id="insert" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.SchedulerInstanceDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into kg_scheduler_instance (gmt_create, gmt_modified, create_user, project_id, job_id, unique_id, type, status, progress,
+    begin_running_time, finish_time, life_cycle, dependence, scheduler_date, version, extension, task_dag)
+    values (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, #{createUser,jdbcType=VARCHAR}, #{projectId,jdbcType=BIGINT}, #{jobId,jdbcType=BIGINT},
+    #{uniqueId,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{progress,jdbcType=BIGINT},
+    #{beginRunningTime,jdbcType=TIMESTAMP}, #{finishTime,jdbcType=TIMESTAMP}, #{lifeCycle,jdbcType=VARCHAR}, #{dependence,jdbcType=VARCHAR},
+    #{schedulerDate,jdbcType=TIMESTAMP}, #{version,jdbcType=VARCHAR}, #{extension,jdbcType=LONGVARCHAR}, #{taskDag,jdbcType=LONGVARCHAR} )
+  </insert>
+
+  <delete id="deleteByJobId" parameterType="java.lang.Long">
+    delete from kg_scheduler_instance where job_id = #{jobId,jdbcType=BIGINT};
+  </delete>
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from kg_scheduler_instance where id = #{id,jdbcType=BIGINT};
+  </delete>
+
+  <update id="update" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.SchedulerInstanceDO">
+    update kg_scheduler_instance
+    <set>
+      gmt_modified = CURRENT_TIMESTAMP,
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="jobId != null">
+        job_id = #{jobId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null">
+        progress = #{progress,jdbcType=BIGINT},
+      </if>
+      <if test="beginRunningTime != null">
+        begin_running_time = #{beginRunningTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="finishTime != null">
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lifeCycle != null">
+        life_cycle = #{lifeCycle,jdbcType=VARCHAR},
+      </if>
+      <if test="dependence != null">
+        dependence = #{dependence,jdbcType=VARCHAR},
+      </if>
+      <if test="schedulerDate != null">
+        scheduler_date = #{schedulerDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="taskDag != null">
+        task_dag = #{taskDag,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap" useCache="false">
+    select 
+    <include refid="Base_Column_List" />
+    from kg_scheduler_instance
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getByUniqueId" parameterType="java.lang.String" resultMap="BaseResultMap" useCache="false">
+    select
+    <include refid="Base_Column_List" />
+    from kg_scheduler_instance
+    where unique_id = #{uniqueId,jdbcType=VARCHAR}
+  </select>
+
+  <sql id="Query_Where_Sql">
+    <if test="createUser != null">
+      create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="projectId != null">
+      and project_id = #{projectId,jdbcType=BIGINT}
+    </if>
+    <if test="jobId != null">
+      and job_id = #{jobId,jdbcType=BIGINT}
+    </if>
+    <if test="uniqueId != null">
+      and unique_id = #{uniqueId,jdbcType=VARCHAR}
+    </if>
+    <if test="type != null">
+      and type = #{type,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null">
+      and status = #{status,jdbcType=VARCHAR}
+    </if>
+    <if test="progress != null">
+      and progress = #{progress,jdbcType=BIGINT}
+    </if>
+    <if test="lifeCycle != null">
+      and life_cycle = #{lifeCycle,jdbcType=VARCHAR}
+    </if>
+    <if test="dependence != null">
+      and dependence = #{dependence,jdbcType=VARCHAR}
+    </if>
+    <if test="version != null">
+      and version = #{version,jdbcType=VARCHAR}
+    </if>
+    <if test="extension != null and extension != ''">
+      and extension like concat('%', #{extension,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="taskDag != null and taskDag != ''">
+      and task_dag like concat('%', #{taskDag,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="startCreateTime != null">
+      and gmt_create &gt;= #{startCreateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endCreateTime != null">
+      and gmt_create &lt;= #{endCreateTime,jdbcType=TIMESTAMP}
+    </if>
+  </sql>
+
+  <select id="query" parameterType="com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery" resultMap="BaseResultMap" useCache="false">
+    select <include refid="Base_Column_List" /> from kg_scheduler_instance
+    <trim prefix="where" prefixOverrides="and">
+      <include refid="Query_Where_Sql"/>
+    </trim>
+    <choose>
+      <when test="sort != null">
+        order by ${@com.antgroup.openspg.common.util.StringUtils@humpToLine(sort)}
+        <choose> <when test="order == 'desc'">  desc </when> <otherwise>  asc  </otherwise> </choose>
+      </when>
+      <otherwise>
+        order by id desc
+      </otherwise>
+    </choose>
+    <if test="pageNo != null">
+      limit ${(pageNo - 1) * pageSize}, #{pageSize}
+    </if>
+  </select>
+
+  <select id="selectCountByQuery" parameterType="com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery"
+          resultType="java.lang.Integer" useCache="false">
+    select count(*) from kg_scheduler_instance
+    <trim prefix="where" prefixOverrides="and">
+        <include refid="Query_Where_Sql"/>
+    </trim>
+  </select>
+
+  <select id="getNotFinishInstance" parameterType="com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery" resultMap="BaseResultMap" useCache="false">
+    select <include refid="Base_Column_List"/>
+    from kg_scheduler_instance
+    <trim prefix="where" prefixOverrides="and">
+      <include refid="Query_Where_Sql"/>
+      and status != 'FINISH'
+    </trim>
+    <choose>
+      <when test="sort != null">
+        order by ${@com.antgroup.openspg.common.util.StringUtils@humpToLine(sort)}
+        <choose> <when test="order == 'desc'">  desc </when> <otherwise>  asc  </otherwise> </choose>
+      </when>
+      <otherwise>
+        order by id desc
+      </otherwise>
+    </choose>
+    <if test="pageNo != null">
+      limit ${(pageNo - 1) * pageSize}, #{pageSize}
+    </if>
+  </select>
+
+</mapper>

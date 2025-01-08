@@ -206,6 +206,17 @@ class BaseProperty(ABC):
         """
         self._rest_model.object_type_ref.basic_info.name_zh = object_type_name_zh
 
+    @object_type_name_en.setter
+    def object_type_name_en(self, object_type_name_en: str):
+        """Sets the object_type_name_en of this Property/Relation.
+
+
+        :param object_type_name_en: The object_type_name_en of this Property/Relation.  # noqa: E501
+        :type: str
+        """
+        self._rest_model.object_type_ref.basic_info.name_en = object_type_name_en
+
+
     @property
     def inherited(self) -> bool:
         """Gets the `inherited` of this Property/Relation.  # noqa: E501

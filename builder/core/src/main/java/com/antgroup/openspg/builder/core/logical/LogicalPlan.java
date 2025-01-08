@@ -92,6 +92,9 @@ public class LogicalPlan implements Serializable {
       case BUILDER_INDEX:
         return new BuilderIndexNode(
             node.getId(), node.getName(), (BuilderIndexNodeConfig) node.getNodeConfig());
+      case PYTHON:
+        return new PythonNode(
+            node.getId(), node.getName(), (PythonNodeConfig) node.getNodeConfig());
       case PARAGRAPH_SPLIT:
         return new ParagraphSplitNode(
             node.getId(), node.getName(), (ParagraphSplitNodeConfig) node.getNodeConfig());

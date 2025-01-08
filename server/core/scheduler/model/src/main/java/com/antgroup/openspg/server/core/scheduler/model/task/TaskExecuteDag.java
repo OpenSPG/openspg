@@ -13,9 +13,14 @@
 package com.antgroup.openspg.server.core.scheduler.model.task;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,6 +52,49 @@ public class TaskExecuteDag {
     return this.nodes.stream()
         .filter(node -> idList.contains(node.getId()))
         .collect(Collectors.toList());
+  }
+
+  @JSONField(serialize = false)
+  public List<Node> getNodesByType(String nodeType) {
+    List<Node> nodes = Lists.newArrayList();
+    if (nodeType == null) {
+      return nodes;
+    }
+    for (Node node : this.nodes) {
+      if (node == null) {
+        continue;
+      }
+      if (nodeType.equals(node.getTaskComponent())) {
+        nodes.add(node);
+      }
+    }
+    return nodes;
+  }
+
+  public List<Node> getSuccessorNodes(String startNodeId) {
+    Set<String> visited = new HashSet<>();
+    List<Node> result = new ArrayList<>();
+    dfs(startNodeId, visited, result);
+    return result;
+  }
+
+  private void dfs(String nodeId, Set<String> visited, List<Node> result) {
+    if (visited.contains(nodeId)) {
+      return;
+    }
+    visited.add(nodeId);
+
+    List<Edge> outgoingEdges =
+        edges.stream().filter(edge -> edge.getFrom().equals(nodeId)).collect(Collectors.toList());
+    for (Edge edge : outgoingEdges) {
+      Optional<Node> targetNodeOptional =
+          nodes.stream().filter(node -> node.getId().equals(edge.getTo())).findFirst();
+      if (targetNodeOptional.isPresent()) {
+        Node targetNode = targetNodeOptional.get();
+        result.add(targetNode);
+        dfs(targetNode.getId(), visited, result);
+      }
+    }
   }
 
   @Getter

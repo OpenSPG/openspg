@@ -15,20 +15,17 @@ package com.antgroup.openspg.builder.core.physical.operator;
 
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.pipeline.config.OperatorConfig;
-import java.util.*;
-import java.util.stream.Collectors;
+import com.antgroup.openspg.common.util.pemja.PemjaUtils;
+import com.antgroup.openspg.common.util.pemja.model.PemjaConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.StringUtils;
-import pemja.core.PythonInterpreter;
-import pemja.core.PythonInterpreterConfig;
 
 @Slf4j
 public class PythonOperatorFactory implements OperatorFactory {
 
   private String pythonExec;
-  private String[] pythonPaths;
-  private String pythonKnextPath;
+  private String pythonPaths;
+  private String hostAddr;
+  private Long projectId;
 
   private PythonOperatorFactory() {}
 
@@ -36,31 +33,13 @@ public class PythonOperatorFactory implements OperatorFactory {
     return new PythonOperatorFactory();
   }
 
-  private PythonInterpreter newPythonInterpreter() {
-
-    PythonInterpreterConfig.PythonInterpreterConfigBuilder builder =
-        PythonInterpreterConfig.newBuilder();
-    if (pythonExec != null) {
-      builder.setPythonExec(pythonExec);
-    }
-    if (pythonPaths != null) {
-      builder.addPythonPaths(pythonPaths);
-    }
-    return new PythonInterpreter(builder.build());
-  }
-
   @Override
   public void init(BuilderContext context) {
     pythonExec = context.getPythonExec();
-    pythonPaths = (context.getPythonPaths() != null ? context.getPythonPaths().split(";") : null);
-    pythonKnextPath = context.getPythonKnextPath();
-    log.info("pythonExec={}, pythonPaths={}", pythonExec, Arrays.toString(pythonPaths));
-  }
-
-  public PythonInterpreter getPythonInterpreter(OperatorConfig config) {
-    PythonInterpreter interpreter = newPythonInterpreter();
-    loadOperatorObject(config, interpreter);
-    return interpreter;
+    pythonPaths = context.getPythonPaths();
+    hostAddr = context.getSchemaUrl();
+    projectId = context.getProjectId();
+    log.info("pythonExec={}, pythonPaths={}", pythonExec, pythonPaths);
   }
 
   @Override
@@ -68,46 +47,17 @@ public class PythonOperatorFactory implements OperatorFactory {
 
   @Override
   public Object invoke(OperatorConfig config, Object... input) {
-    PythonInterpreter interpreter = getPythonInterpreter(config);
-    String pythonObject = getPythonOperatorObject(config);
-    try {
-      return interpreter.invokeMethod(pythonObject, config.getMethod(), input);
-    } finally {
-      interpreter.close();
-    }
-  }
-
-  private void loadOperatorObject(OperatorConfig config, PythonInterpreter interpreter) {
-    if (StringUtils.isNotBlank(pythonKnextPath)) {
-      interpreter.exec(String.format("import sys; sys.path.append(\"%s\")", pythonKnextPath));
-    }
-    String pythonOperatorObject = getPythonOperatorObject(config);
-    interpreter.exec(
-        String.format("from %s import %s", config.getModulePath(), config.getClassName()));
-    interpreter.exec(
-        String.format(
-            "%s=%s(%s)",
-            pythonOperatorObject,
+    PemjaConfig pemjaConfig =
+        new PemjaConfig(
+            pythonExec,
+            pythonPaths,
+            hostAddr,
+            projectId,
+            config.getModulePath(),
             config.getClassName(),
-            paramToPythonString(config.getParams(), config.getParamsPrefix())));
-  }
-
-  private String getPythonOperatorObject(OperatorConfig config) {
-    String pythonOperatorObject = config.getClassName() + "_" + config.getUniqueKey();
-    return pythonOperatorObject;
-  }
-
-  private String paramToPythonString(Map<String, String> params, String paramsPrefix) {
-    if (MapUtils.isEmpty(params)) {
-      return "";
-    }
-    if (StringUtils.isBlank(paramsPrefix)) {
-      paramsPrefix = "";
-    }
-    String keyValue =
-        params.entrySet().stream()
-            .map(entry -> String.format("'%s': '%s'", entry.getKey(), entry.getValue()))
-            .collect(Collectors.joining(","));
-    return String.format("%s{%s}", paramsPrefix, keyValue);
+            config.getMethod(),
+            config.getParams(),
+            config.getParamsPrefix());
+    return PemjaUtils.invoke(pemjaConfig, input);
   }
 }

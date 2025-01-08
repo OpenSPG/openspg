@@ -23,6 +23,7 @@ import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDO;
 import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.ProjectDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.common.convertor.ProjectConvertor;
+import com.antgroup.openspg.server.infra.dao.repository.schema.enums.ValidStatusEnum;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -107,26 +108,35 @@ public class ProjectRepositoryImpl implements ProjectRepository {
   }
 
   @Override
-  public Paged<Project> queryPaged(ProjectQueryRequest request, int start, int size) {
+  public Paged<Project> queryPaged(ProjectQueryRequest query, int start, int size) {
     Paged<Project> result = new Paged<>();
     result.setPageIdx(start);
     result.setPageSize(size);
-    ProjectDO projectDO = new ProjectDO();
-    projectDO.setName(request.getName());
-    projectDO.setBizDomainId(request.getTenantId());
-    long count =
-        projectDOMapper.selectCountByCondition(projectDO, request.getOrderByGmtCreateDesc());
+    long count = projectDOMapper.selectCountByCondition(query, query.getOrderByGmtCreateDesc());
     result.setTotal(count);
     List<Project> list = new ArrayList<>();
     start = start > 0 ? start : 1;
     int startPage = (start - 1) * size;
     List<ProjectDO> projectDOS =
-        projectDOMapper.selectByCondition(
-            projectDO, request.getOrderByGmtCreateDesc(), startPage, size);
+        projectDOMapper.selectByCondition(query, query.getOrderByGmtCreateDesc(), startPage, size);
     if (CollectionUtils.isNotEmpty(projectDOS)) {
       list = projectDOS.stream().map(ProjectConvertor::toModel).collect(Collectors.toList());
     }
     result.setResults(list);
     return result;
+  }
+
+  @Override
+  public Project queryByNamespace(String namespace) {
+    ProjectDOExample example = new ProjectDOExample();
+    ProjectDOExample.Criteria criteria = example.createCriteria();
+    criteria.andNamespaceEqualTo(namespace);
+    criteria.andStatusEqualTo(ValidStatusEnum.VALID.name());
+    List<ProjectDO> projectDOS = projectDOMapper.selectByExample(example);
+    if (CollectionUtils.isEmpty(projectDOS)) {
+      return null;
+    }
+    ProjectDO projectDO = projectDOS.get(0);
+    return ProjectConvertor.toModel(projectDO);
   }
 }

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 OpenSPG Authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antgroup.openspg.server.infra.dao.mapper.BuilderJobDOMapper">
+  <resultMap id="BaseResultMap" type="com.antgroup.openspg.server.infra.dao.dataobject.BuilderJobDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="modify_user" jdbcType="VARCHAR" property="modifyUser" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="task_id" jdbcType="BIGINT" property="taskId" />
+    <result column="job_name" jdbcType="VARCHAR" property="jobName" />
+    <result column="chunk_num" jdbcType="BIGINT" property="chunkNum" />
+    <result column="file_url" jdbcType="VARCHAR" property="fileUrl" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="extension" jdbcType="LONGVARCHAR" property="extension" />
+    <result column="computing_conf" jdbcType="LONGVARCHAR" property="computingConf" />
+    <result column="life_cycle" jdbcType="VARCHAR" property="lifeCycle" />
+    <result column="action" jdbcType="VARCHAR" property="action" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, gmt_create, gmt_modified, create_user, modify_user, project_id, task_id, job_name, chunk_num, file_url, status, type, version, extension, computing_conf, life_cycle, action
+  </sql>
+
+  <insert id="insert" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.BuilderJobDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into kg_builder_job (project_id, gmt_create, gmt_modified,
+    create_user, modify_user, task_id,
+    job_name, chunk_num, file_url,
+    status, type, version, extension,
+    computing_conf, life_cycle, action
+    )
+    values (#{projectId,jdbcType=BIGINT}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
+    #{createUser,jdbcType=VARCHAR}, #{modifyUser,jdbcType=VARCHAR}, #{taskId,jdbcType=BIGINT},
+    #{jobName,jdbcType=VARCHAR}, #{chunkNum,jdbcType=BIGINT}, #{fileUrl,jdbcType=VARCHAR},
+    #{status,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, #{extension,jdbcType=LONGVARCHAR},
+    #{computingConf,jdbcType=LONGVARCHAR}, #{lifeCycle,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}
+    )
+  </insert>
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from kg_builder_job where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <update id="update" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.BuilderJobDO">
+    update kg_builder_job
+    <set>
+      gmt_modified = CURRENT_TIMESTAMP,
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyUser != null">
+        modify_user = #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="taskId != null">
+        task_id = #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="jobName != null">
+        job_name = #{jobName,jdbcType=VARCHAR},
+      </if>
+      <if test="chunkNum != null">
+        chunk_num = #{chunkNum,jdbcType=BIGINT},
+      </if>
+      <if test="fileUrl != null">
+        file_url = #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="computingConf != null">
+        computing_conf = #{computingConf,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="lifeCycle != null">
+        life_cycle = #{lifeCycle,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null">
+        action = #{action,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap" useCache="false">
+    select 
+    <include refid="Base_Column_List" />
+    from kg_builder_job
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <sql id="Query_Where_Sql">
+    <if test="keyword != null and keyword != ''">
+    and ( job_name like concat('%', #{keyword}, '%') or
+      file_url like concat('%', #{keyword}, '%') or
+      extension like concat('%', #{keyword}, '%') )
+    </if>
+    <if test="createUser != null">
+      create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="modifyUser != null">
+      and modify_user = #{modifyUser,jdbcType=VARCHAR}
+    </if>
+    <if test="projectId != null">
+      and project_id = #{projectId,jdbcType=BIGINT}
+    </if>
+    <if test="taskId != null">
+      and task_id = #{taskId,jdbcType=BIGINT}
+    </if>
+    <if test="jobName != null">
+      and job_name like concat('%', #{jobName,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="chunkNum != null">
+      and chunk_num = #{chunkNum,jdbcType=BIGINT}
+    </if>
+    <if test="fileUrl != null">
+      and file_url like concat('%', #{fileUrl,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="status != null">
+      and status = #{status,jdbcType=VARCHAR}
+    </if>
+    <if test="type != null">
+      and type = #{type,jdbcType=VARCHAR}
+    </if>
+    <if test="version != null">
+      and version = #{version,jdbcType=VARCHAR}
+    </if>
+    <if test="extension != null and extension != ''">
+      and extension like concat('%', #{extension,jdbcType=LONGVARCHAR}, '%')
+    </if>
+    <if test="computingConf != null and computingConf != ''">
+      and computing_conf like concat('%', #{computingConf,jdbcType=LONGVARCHAR}, '%')
+    </if>
+    <if test="lifeCycle != null">
+      and life_cycle = #{lifeCycle,jdbcType=VARCHAR}
+    </if>
+    <if test="action != null">
+      and action = #{action,jdbcType=VARCHAR}
+    </if>
+    <if test="startCreateTime != null">
+      and gmt_create &gt;= #{startCreateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endCreateTime != null">
+      and gmt_create &lt;= #{endCreateTime,jdbcType=TIMESTAMP}
+    </if>
+  </sql>
+
+  <select id="query" parameterType="com.antgroup.openspg.server.common.model.bulider.BuilderJobQuery" resultMap="BaseResultMap" useCache="false">
+    select <include refid="Base_Column_List" /> from kg_builder_job
+    <trim prefix="where" prefixOverrides="and">
+      <include refid="Query_Where_Sql"/>
+    </trim>
+    <choose>
+      <when test="sort != null">
+        order by ${@com.antgroup.openspg.common.util.StringUtils@humpToLine(sort)}
+        <choose> <when test="order == 'desc'">  desc </when> <otherwise>  asc  </otherwise> </choose>
+      </when>
+      <otherwise>
+        order by id desc
+      </otherwise>
+    </choose>
+    <if test="pageNo != null">
+      limit ${(pageNo - 1) * pageSize}, #{pageSize}
+    </if>
+  </select>
+
+  <select id="selectCountByQuery" parameterType="com.antgroup.openspg.server.common.model.bulider.BuilderJobQuery"
+          resultType="java.lang.Integer" useCache="false">
+    select count(*) from kg_builder_job
+    <trim prefix="where" prefixOverrides="and">
+      <include refid="Query_Where_Sql"/>
+    </trim>
+  </select>
+
+</mapper>
