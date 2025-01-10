@@ -12,14 +12,9 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.task.async.builder;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-
 import com.antgroup.openspg.builder.model.record.SubGraphRecord;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClient;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClientDriverManager;
@@ -42,6 +37,9 @@ import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
