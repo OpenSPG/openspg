@@ -12,9 +12,14 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.task.async.builder;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+
 import com.antgroup.openspg.builder.model.record.SubGraphRecord;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClient;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClientDriverManager;
@@ -37,9 +42,6 @@ import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -93,7 +95,7 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
     SchedulerTask task = memoryTaskServer.getTask(resource);
     SchedulerTask schedulerTask = context.getTask();
     if (task == null) {
-      context.addTraceLog("Splitter task not found, recreating……");
+      context.addTraceLog("Alignment task not found, recreating……");
       submit(context);
       return SchedulerEnum.TaskStatus.RUNNING;
     }
@@ -110,7 +112,7 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
-          context.addTraceLog("Splitter task execute failed, recreating……");
+          context.addTraceLog("Alignment task execute failed, recreating……");
           memoryTaskServer.stopTask(resource);
           submit(context);
           return SchedulerEnum.TaskStatus.RUNNING;
