@@ -228,7 +228,8 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
                   ? 0
                   : subGraphRecord.getResultEdges().size();
 
-          addTraceLog("Alignment operator was invoked successfully nodes:%s edges:%s", nodes, edges);
+          addTraceLog(
+              "Alignment operator was invoked successfully nodes:%s edges:%s", nodes, edges);
         }
       }
       return subGraphList;
