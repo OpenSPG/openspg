@@ -129,7 +129,7 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
     SchedulerTask task = memoryTaskServer.getTask(resource);
     SchedulerTask schedulerTask = context.getTask();
     if (task == null) {
-      context.addTraceLog("Extractor task not found, recreate it");
+      context.addTraceLog("Extractor task not found, recreating……");
       submit(context);
       return SchedulerEnum.TaskStatus.RUNNING;
     }

@@ -94,7 +94,7 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
     SchedulerTask task = memoryTaskServer.getTask(resource);
     SchedulerTask schedulerTask = context.getTask();
     if (task == null) {
-      context.addTraceLog("Splitter task not found, recreate it");
+      context.addTraceLog("Splitter task not found, recreating……");
       submit(context);
       return SchedulerEnum.TaskStatus.RUNNING;
     }

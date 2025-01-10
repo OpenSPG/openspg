@@ -96,7 +96,7 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
     SchedulerTask task = memoryTaskServer.getTask(resource);
     SchedulerTask schedulerTask = context.getTask();
     if (task == null) {
-      context.addTraceLog("Writer task not found, recreate it");
+      context.addTraceLog("Writer task not found, recreating……");
       submit(context);
       return SchedulerEnum.TaskStatus.RUNNING;
     }
