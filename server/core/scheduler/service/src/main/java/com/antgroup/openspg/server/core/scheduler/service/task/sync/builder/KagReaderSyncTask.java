@@ -62,7 +62,8 @@ public class KagReaderSyncTask extends SyncTaskExecuteTemplate {
     objectStorageClient.saveString(
         value.getBuilderBucketName(), JSON.toJSONString(chunks), fileKey);
     context.addTraceLog(
-        "The read Chunks is stored bucket:%s file:%s", value.getBuilderBucketName(), fileKey);
+        "Store the results of the read operator. file:%s/%s",
+        value.getBuilderBucketName(), fileKey);
     task.setOutput(fileKey);
     return SchedulerEnum.TaskStatus.FINISH;
   }
@@ -70,7 +71,7 @@ public class KagReaderSyncTask extends SyncTaskExecuteTemplate {
   public List<ChunkRecord.Chunk> readSource(TaskExecuteContext context, String url, String token) {
     Long projectId = context.getInstance().getProjectId();
     Project project = projectService.queryById(projectId);
-    context.addTraceLog("invoke read operator:%s", PythonInvokeMethod.BRIDGE_READER.getMethod());
+    context.addTraceLog("Invoke read operator:%s", PythonInvokeMethod.BRIDGE_READER.getMethod());
     List<ChunkRecord.Chunk> chunkList =
         com.antgroup.openspg.builder.core.physical.utils.CommonUtils.readSource(
             value.getPythonExec(),
@@ -80,8 +81,7 @@ public class KagReaderSyncTask extends SyncTaskExecuteTemplate {
             url,
             token);
     context.addTraceLog(
-        "invoke read operator:%s chunks:%s succeed",
-        PythonInvokeMethod.BRIDGE_READER.getMethod(), chunkList.size());
+        "The read operator was invoked successfully. chunk size:%s", chunkList.size());
 
     return chunkList;
   }

@@ -14,13 +14,13 @@
 package com.antgroup.openspg.server.infra.dao.repository.common;
 
 import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.common.util.enums.PermissionEnum;
 import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.common.model.permission.Permission;
 import com.antgroup.openspg.server.common.service.permission.PermissionRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.PermissionDO;
 import com.antgroup.openspg.server.infra.dao.mapper.PermissionMapper;
 import com.antgroup.openspg.server.infra.dao.repository.common.convertor.PermissionConvertor;
-import com.antgroup.openspgapp.common.util.enums.PermissionEnum;
 import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;

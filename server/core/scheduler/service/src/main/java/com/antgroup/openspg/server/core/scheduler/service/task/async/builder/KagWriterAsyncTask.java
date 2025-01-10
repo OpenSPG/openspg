@@ -33,11 +33,14 @@ import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.MemoryTaskServer;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
+import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.google.common.collect.Lists;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -61,7 +64,7 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
             task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
     SchedulerTask memoryTask = memoryTaskServer.getTask(key);
     if (memoryTask != null) {
-      context.addTraceLog("Writer task already exists; reuse it");
+      context.addTraceLog("Writer task has been created!");
       return memoryTask.getNodeId();
     }
 
@@ -69,6 +72,7 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
     String taskId =
         memoryTaskServer.submit(
             new WriterTaskCallable(value, projectManager, context, inputs), key);
+    context.addTraceLog("Writer task has been successfully created!");
     return taskId;
   }
 
@@ -92,15 +96,14 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
     SchedulerTask task = memoryTaskServer.getTask(resource);
     SchedulerTask schedulerTask = context.getTask();
     if (task == null) {
-      context.addTraceLog("Writer task(%s) not found, resubmit", resource);
+      context.addTraceLog("Writer task not found, recreating……");
       submit(context);
-      context.addTraceLog("Async task resubmit successful!");
       return SchedulerEnum.TaskStatus.RUNNING;
     }
     context.addTraceLog("Writer task status is %s", task.getStatus());
     if (StringUtils.isNotBlank(task.getTraceLog())) {
       context.addTraceLog(
-          "Writer task traceLog:%s%s", System.getProperty("line.separator"), task.getTraceLog());
+          "Writer task trace log:%s%s", System.getProperty("line.separator"), task.getTraceLog());
       task.setTraceLog("");
     }
     switch (task.getStatus()) {
@@ -109,10 +112,9 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
-          context.addTraceLog("Writer task(%s) status is ERROR, resubmit", resource);
+          context.addTraceLog("Writer task execute failed, recreating……");
           memoryTaskServer.stopTask(resource);
           submit(context);
-          context.addTraceLog("Async task resubmit successful!");
           return SchedulerEnum.TaskStatus.RUNNING;
         }
         break;
@@ -122,7 +124,8 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
         removeInputs(context);
         break;
       default:
-        context.addTraceLog("Writer Task Status is %s. Do nothing", task.getStatus());
+        context.addTraceLog(
+            "Writer task status is %s. wait for the next scheduling", task.getStatus());
         break;
     }
     return task.getStatus();
@@ -174,7 +177,7 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
     @Override
     public String call() throws Exception {
       List<SubGraphRecord> subGraphList = Lists.newArrayList();
-      addTraceLog("Start write task...");
+      addTraceLog("Start write task!");
       for (String input : inputs) {
         String data = objectStorageClient.getString(value.getBuilderBucketName(), input);
         List<SubGraphRecord> subGraphs =
@@ -182,7 +185,10 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
         writer(value, projectManager, context, subGraphs);
         subGraphList.addAll(simpleSubGraph(subGraphs));
       }
-      addTraceLog("Writer task complete...");
+      AtomicLong nodes = new AtomicLong(0);
+      AtomicLong edges = new AtomicLong(0);
+      SchedulerUtils.getGraphSize(subGraphList, nodes, edges);
+      addTraceLog("Write task complete. nodes:%s. edges:%s", nodes.get(), edges.get());
       SchedulerTask task = context.getTask();
       String fileKey =
           CommonUtils.getTaskStorageFileKey(
@@ -190,7 +196,8 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
       objectStorageClient.saveString(
           value.getBuilderBucketName(), JSON.toJSONString(subGraphList), fileKey);
       addTraceLog(
-          "Writer result is stored bucket:%s file:%s", value.getBuilderBucketName(), fileKey);
+          "Store the results of the write operator. file:%s/%s",
+          value.getBuilderBucketName(), fileKey);
       return fileKey;
     }
 
@@ -234,12 +241,19 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
               .setGraphStoreUrl(
                   projectManager.getGraphStoreUrl(context.getInstance().getProjectId()));
       writer.init(builderContext);
+      int index = 0;
       for (SubGraphRecord subGraph : subGraphs) {
-        addTraceLog("Start Writer processor...");
+        addTraceLog("Invoke the write operator. index:%s/%s", ++index, subGraphs.size());
         writer.writeToNeo4j(subGraph);
-        addTraceLog(
-            "Writer processor succeed node:%s edge%s",
-            subGraph.getResultNodes().size(), subGraph.getResultEdges().size());
+        int nodes =
+            CollectionUtils.isEmpty(subGraph.getResultNodes())
+                ? 0
+                : subGraph.getResultNodes().size();
+        int edges =
+            CollectionUtils.isEmpty(subGraph.getResultEdges())
+                ? 0
+                : subGraph.getResultEdges().size();
+        addTraceLog("Write operator was invoked successfully nodes:%s edges:%s", nodes, edges);
       }
     }
   }
