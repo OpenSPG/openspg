@@ -12,6 +12,9 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.task;
 
+import java.util.Date;
+import java.util.List;
+
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
@@ -23,8 +26,6 @@ import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
-import java.util.Date;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -55,7 +56,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
       }
     } catch (Throwable e) {
       context.getTask().setStatus(TaskStatus.ERROR);
-      context.addTraceLog("Scheduler execute error：%s", ExceptionUtils.getStackTrace(e));
+      context.addTraceLog("Scheduler execute failed with error:%s", ExceptionUtils.getStackTrace(e));
       log.error("JobTask process error uniqueId:{}", context.getInstance().getUniqueId(), e);
     }
 
@@ -68,7 +69,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
         setTaskFinish(context);
       }
     } catch (Throwable e) {
-      context.addTraceLog("Scheduler save status error：%s", ExceptionUtils.getStackTrace(e));
+      context.addTraceLog("Scheduler save failed with error:%s", ExceptionUtils.getStackTrace(e));
       log.error("process status error uniqueId:{}", context.getInstance().getUniqueId(), e);
     } finally {
       unlockTask(context, lock);
@@ -182,7 +183,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     updateTask.setId(nextTask.getId());
     String name = nextNode.getName();
     if (!TaskStatus.WAIT.equals(nextTask.getStatus())) {
-      context.addTraceLog("%s status is %s,Only WAIT can be modified", name, nextTask.getStatus());
+      context.addTraceLog("current status of %s is %s, and can not be modified", name, nextTask.getStatus());
       return;
     }
     updateTask.setStatus(TaskStatus.RUNNING);

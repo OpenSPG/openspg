@@ -14,7 +14,7 @@ package com.antgroup.openspg.common.util.enums;
 
 public enum ModelType {
   MAAS("maas", "maas模型"),
-  OLLAMA("ollama", "SPG模型"),
+  OLLAMA("ollama", "ollama模型"),
   VLLM("vllm", "vllm模型");
   private String code;
   private String desc;

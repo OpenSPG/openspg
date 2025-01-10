@@ -146,7 +146,7 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
-          context.addTraceLog("Extractor task status is ERROR, recreate it");
+          context.addTraceLog("Extractor task execute failed, recreating……");
           memoryTaskServer.stopTask(resource);
           submit(context);
           return SchedulerEnum.TaskStatus.RUNNING;

@@ -115,7 +115,7 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
-          context.addTraceLog("Vectorizer task status is ERROR, recreate it");
+          context.addTraceLog("Vectorizer task execute failed, recreating……");
           memoryTaskServer.stopTask(resource);
           submit(context);
           return SchedulerEnum.TaskStatus.RUNNING;
@@ -230,7 +230,7 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
               CollectionUtils.isEmpty(subGraphRecord.getResultEdges())
                   ? 0
                   : subGraphRecord.getResultEdges().size();
-          addTraceLog("Vector operator was invoked successfully node:%s edge:%s", nodes, edges);
+          addTraceLog("Vector operator was invoked successfully nodes:%s edges:%s", nodes, edges);
         }
       }
       return subGraphList;

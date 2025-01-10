@@ -12,8 +12,15 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.task.async.builder;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.pipeline.config.Neo4jSinkNodeConfig;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
@@ -35,11 +42,6 @@ import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTask
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
 import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.google.common.collect.Lists;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicLong;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -112,7 +114,7 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
-          context.addTraceLog("Writer task status is ERROR, recreate it");
+          context.addTraceLog("Writer task execute failed, recreating……");
           memoryTaskServer.stopTask(resource);
           submit(context);
           return SchedulerEnum.TaskStatus.RUNNING;
@@ -253,7 +255,7 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
             CollectionUtils.isEmpty(subGraph.getResultEdges())
                 ? 0
                 : subGraph.getResultEdges().size();
-        addTraceLog("Write operator was invoked successfully node:%s edge:%s", nodes, edges);
+        addTraceLog("Write operator was invoked successfully nodes:%s edges:%s", nodes, edges);
       }
     }
   }

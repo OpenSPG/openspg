@@ -43,7 +43,7 @@ public abstract class AsyncTaskExecuteTemplate extends TaskExecuteTemplate
       return TaskStatus.RUNNING;
     }
 
-    context.addTraceLog("The asynchronous task creation was successful! resource：%s", resource);
+    context.addTraceLog("The asynchronous task created successfully! resource：%s", resource);
     SchedulerTask updateTask = new SchedulerTask();
     updateTask.setId(task.getId());
     updateTask.setResource(resource);

@@ -84,7 +84,7 @@ public class VectorizerProcessor extends BasePythonProcessor<VectorizerProcessor
           JSON.parseObject(JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
       for (SubGraphRecord subGraphRecord : records) {
         node.addTraceLog(
-            "vectorizer processor succeed node:%s edge:%s",
+            "vectorizer processor succeed nodes:%s edges:%s",
             subGraphRecord.getResultNodes().size(), subGraphRecord.getResultEdges().size());
         subGraph.getResultNodes().addAll(subGraphRecord.getResultNodes());
         subGraph.getResultEdges().addAll(subGraphRecord.getResultEdges());
