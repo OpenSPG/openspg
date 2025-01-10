@@ -35,11 +35,14 @@ import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.MemoryTaskServer;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
+import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -63,7 +66,7 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
             task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
     SchedulerTask memoryTask = memoryTaskServer.getTask(key);
     if (memoryTask != null) {
-      context.addTraceLog("Vectorizer task already exists; reuse it");
+      context.addTraceLog("Vectorizer task has been created!");
       return memoryTask.getNodeId();
     }
 
@@ -71,6 +74,7 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
     String taskId =
         memoryTaskServer.submit(
             new VectorizerTaskCallable(value, projectService, context, inputs), key);
+    context.addTraceLog("Vectorizer task has been successfully created!");
     return taskId;
   }
 
@@ -94,15 +98,14 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
     SchedulerTask task = memoryTaskServer.getTask(resource);
     SchedulerTask schedulerTask = context.getTask();
     if (task == null) {
-      context.addTraceLog("Vectorizer task(%s) not found, resubmit", resource);
+      context.addTraceLog("Vectorizer task not found, recreate it");
       submit(context);
-      context.addTraceLog("Async task resubmit successful!");
       return SchedulerEnum.TaskStatus.RUNNING;
     }
     context.addTraceLog("Vectorizer task status is %s", task.getStatus());
     if (StringUtils.isNotBlank(task.getTraceLog())) {
       context.addTraceLog(
-          "Vectorizer task traceLog:%s%s",
+          "Vectorizer task trace log:%s%s",
           System.getProperty("line.separator"), task.getTraceLog());
       task.setTraceLog("");
     }
@@ -112,10 +115,9 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
-          context.addTraceLog("Vectorizer task(%s) status is ERROR, resubmit", resource);
+          context.addTraceLog("Vectorizer task status is ERROR, recreate it");
           memoryTaskServer.stopTask(resource);
           submit(context);
-          context.addTraceLog("Async task resubmit successful!");
           return SchedulerEnum.TaskStatus.RUNNING;
         }
         break;
@@ -124,7 +126,8 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
         schedulerTask.setOutput(resource);
         break;
       default:
-        context.addTraceLog("Vectorizer Task Status is %s. Do nothing", task.getStatus());
+        context.addTraceLog(
+            "Vectorizer task status is %s. wait for the next scheduling", task.getStatus());
         break;
     }
     return task.getStatus();
@@ -163,14 +166,17 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
     @Override
     public String call() throws Exception {
       List<SubGraphRecord> subGraphList = Lists.newArrayList();
-      addTraceLog("Start vectorizer task...");
+      addTraceLog("Start vectorized document!");
       for (String input : inputs) {
         String data = objectStorageClient.getString(value.getBuilderBucketName(), input);
         List<SubGraphRecord> subGraphs =
             JSON.parseObject(data, new TypeReference<List<SubGraphRecord>>() {});
         subGraphList.addAll(vectorizer(context, subGraphs));
       }
-      addTraceLog("vectorizer task complete...");
+      AtomicLong nodes = new AtomicLong(0);
+      AtomicLong edges = new AtomicLong(0);
+      SchedulerUtils.getGraphSize(subGraphList, nodes, edges);
+      addTraceLog("Vectorized document complete. nodes:%s. edges:%s", nodes.get(), edges.get());
       SchedulerTask task = context.getTask();
       String fileKey =
           CommonUtils.getTaskStorageFileKey(
@@ -178,7 +184,8 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
       objectStorageClient.saveString(
           value.getBuilderBucketName(), JSON.toJSONString(subGraphList), fileKey);
       addTraceLog(
-          "vectorizer result is stored bucket:%s file:%s", value.getBuilderBucketName(), fileKey);
+          "Store the results of the vector operator. file:%s/%s",
+          value.getBuilderBucketName(), fileKey);
       return fileKey;
     }
 
@@ -202,8 +209,9 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
               projectId,
               vectorizer,
               Maps.newHashMap());
+      int index = 0;
       for (SubGraphRecord subGraph : subGraphs) {
-        addTraceLog("invoke vectorizer processor operator:%s", pemjaConfig.getClassName());
+        addTraceLog("Invoke the vector operator. index:%s/%s", ++index, subGraphs.size());
         Map map = new ObjectMapper().convertValue(subGraph, Map.class);
         List<Object> result =
             (List<Object>)
@@ -214,9 +222,15 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
                 JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
         subGraphList.addAll(records);
         for (SubGraphRecord subGraphRecord : records) {
-          addTraceLog(
-              "vectorizer processor succeed node:%s edge%s",
-              subGraphRecord.getResultNodes().size(), subGraphRecord.getResultEdges().size());
+          int nodes =
+              CollectionUtils.isEmpty(subGraphRecord.getResultNodes())
+                  ? 0
+                  : subGraphRecord.getResultNodes().size();
+          int edges =
+              CollectionUtils.isEmpty(subGraphRecord.getResultEdges())
+                  ? 0
+                  : subGraphRecord.getResultEdges().size();
+          addTraceLog("Vector operator was invoked successfully node:%s edge:%s", nodes, edges);
         }
       }
       return subGraphList;

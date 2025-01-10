@@ -14,6 +14,8 @@
 package com.antgroup.openspg.server.biz.common.impl;
 
 import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.common.util.enums.PermissionEnum;
+import com.antgroup.openspg.common.util.enums.ResourceTagEnum;
 import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.api.facade.dto.common.request.PermissionRequest;
 import com.antgroup.openspg.server.biz.common.AccountManager;
@@ -22,8 +24,6 @@ import com.antgroup.openspg.server.common.model.account.Account;
 import com.antgroup.openspg.server.common.model.permission.Permission;
 import com.antgroup.openspg.server.common.model.project.AccountRoleInfo;
 import com.antgroup.openspg.server.common.service.permission.PermissionRepository;
-import com.antgroup.openspgapp.common.util.enums.PermissionEnum;
-import com.antgroup.openspgapp.common.util.enums.ResourceTagEnum;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;

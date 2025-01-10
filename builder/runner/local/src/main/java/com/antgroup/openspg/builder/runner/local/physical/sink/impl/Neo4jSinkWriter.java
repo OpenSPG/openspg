@@ -102,7 +102,7 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
       SubGraphRecord subGraphRecord = (SubGraphRecord) record;
       writeToNeo4j(subGraphRecord);
       node.addTraceLog(
-          "Writer processor succeed node:%s edge%s",
+          "Writer processor succeed node:%s edge:%s",
           subGraphRecord.getResultNodes().size(), subGraphRecord.getResultEdges().size());
     }
   }

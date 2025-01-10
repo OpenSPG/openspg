@@ -14,11 +14,11 @@
 package com.antgroup.openspg.server.api.http.server;
 
 import com.antgroup.openspg.common.util.NetworkAddressUtils;
+import com.antgroup.openspg.common.util.exception.SpgException;
 import com.antgroup.openspg.server.api.facade.ApiConstants;
 import com.antgroup.openspg.server.biz.common.util.BizThreadLocal;
 import com.antgroup.openspg.server.common.model.exception.IllegalParamsException;
 import com.antgroup.openspg.server.common.model.exception.OpenSPGException;
-import com.antgroup.openspgapp.common.util.utils.exception.SpgAppException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -77,7 +77,7 @@ public class HttpBizTemplate {
       callback.check();
       T result = callback.action();
       httpResult = HttpResult.success(result);
-    } catch (SpgAppException e) {
+    } catch (SpgException e) {
       log.error("execute http spg app exception", e);
       httpResult = HttpResult.failed(e.getCode(), e.getMessage());
     } catch (IllegalParamsException e) {

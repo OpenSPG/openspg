@@ -14,10 +14,12 @@
 package com.antgroup.openspg.builder.model.record;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 @Getter
 @AllArgsConstructor
@@ -41,5 +43,17 @@ public class ChunkRecord extends BaseRecord {
     private final String summary;
     private final String textIndex;
     private final String vecIndex;
+
+    @JSONField(serialize = false)
+    public String getShortId() {
+      if (StringUtils.isBlank(id)) {
+        return "";
+      }
+      Integer length = 6;
+      if (length >= id.length()) {
+        return id;
+      }
+      return id.substring(0, 6);
+    }
   }
 }

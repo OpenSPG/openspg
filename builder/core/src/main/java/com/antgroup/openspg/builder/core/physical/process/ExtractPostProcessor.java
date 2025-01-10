@@ -69,7 +69,7 @@ public class ExtractPostProcessor extends BasePythonProcessor<ExtractPostProcess
           JSON.parseObject(JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
       for (SubGraphRecord subGraph : records) {
         node.addTraceLog(
-            "alignment succeed node:%s edge%s",
+            "alignment succeed node:%s edge:%s",
             subGraph.getResultNodes().size(), subGraph.getResultEdges().size());
         results.add(subGraph);
       }

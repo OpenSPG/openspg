@@ -15,6 +15,7 @@ package com.antgroup.openspg.server.api.http.server.openapi;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.antgroup.openspg.common.constants.SpgAppConstant;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectCreateRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.SchemaAlterRequest;
@@ -24,7 +25,6 @@ import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.server.biz.common.ConfigManager;
 import com.antgroup.openspg.server.biz.common.ProjectManager;
 import com.antgroup.openspg.server.common.model.project.Project;
-import com.antgroup.openspgapp.common.util.utils.SpgAppConstant;
 import java.util.List;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
