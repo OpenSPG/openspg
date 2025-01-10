@@ -18,13 +18,13 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientD
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.SearchRequest;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.*;
+import com.antgroup.openspg.common.constants.SpgAppConstant;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.api.facade.dto.service.request.SPGTypeSearchRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.request.TextSearchRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.request.VectorSearchRequest;
 import com.antgroup.openspg.server.biz.common.ProjectManager;
 import com.antgroup.openspg.server.biz.service.SearchManager;
-import com.antgroup.openspgapp.common.util.utils.SpgAppConstant;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.List;

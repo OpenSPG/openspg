@@ -14,14 +14,14 @@
 package com.antgroup.openspg.server.biz.common.impl;
 
 import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.common.util.enums.PermissionEnum;
+import com.antgroup.openspg.common.util.enums.ResourceTagEnum;
 import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.biz.common.AccountManager;
 import com.antgroup.openspg.server.biz.common.PermissionManager;
 import com.antgroup.openspg.server.common.model.account.Account;
 import com.antgroup.openspg.server.common.model.permission.Permission;
 import com.antgroup.openspg.server.common.service.account.AccountRepository;
-import com.antgroup.openspgapp.common.util.enums.PermissionEnum;
-import com.antgroup.openspgapp.common.util.enums.ResourceTagEnum;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.HashMap;

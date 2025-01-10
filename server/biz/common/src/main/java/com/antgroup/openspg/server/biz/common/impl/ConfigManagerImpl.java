@@ -16,13 +16,13 @@ package com.antgroup.openspg.server.biz.common.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.antgroup.openspg.common.constants.SpgAppConstant;
 import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.common.util.enums.ModelType;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ConfigRequest;
 import com.antgroup.openspg.server.biz.common.ConfigManager;
 import com.antgroup.openspg.server.common.model.config.Config;
 import com.antgroup.openspg.server.common.service.config.ConfigRepository;
-import com.antgroup.openspgapp.common.util.enums.ModelType;
-import com.antgroup.openspgapp.common.util.utils.SpgAppConstant;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -74,6 +74,9 @@ public class ConfigManagerImpl implements ConfigManager {
       return configStr;
     }
     JSONObject config = JSON.parseObject(configStr);
+    if (config == null) {
+      return "";
+    }
     JSONObject vectorizerJson = config.getJSONObject(SpgAppConstant.VECTORIZER);
     if (vectorizerJson != null && vectorizerJson.containsKey(SpgAppConstant.API_KEY)) {
       vectorizerJson.put(SpgAppConstant.API_KEY, SpgAppConstant.DEFAULT_VECTORIZER_API_KEY);
@@ -153,6 +156,15 @@ public class ConfigManagerImpl implements ConfigManager {
         JSONObject oldLlm = oldLlmMap.get(llm.getString(SpgAppConstant.LLM_ID));
         if (null == oldLlm) {
           JSONObject oldLlmJson = oldConfigJson.getJSONObject(SpgAppConstant.LLM);
+          if (oldLlmJson == null) {
+            if (oldConfigJson.containsKey(SpgAppConstant.CHAT_LLM)) {
+              oldLlmJson = oldConfigJson.getJSONObject(SpgAppConstant.CHAT_LLM);
+            }
+            if (oldLlmJson == null && oldConfigJson.containsKey(SpgAppConstant.OPENIE_LLM)) {
+              oldLlmJson = oldConfigJson.getJSONObject(SpgAppConstant.OPENIE_LLM);
+            }
+          }
+          backwardCompatibleLLM(oldLlmJson);
           if (oldLlmJson != null
               && StringUtils.equals(
                   oldLlmJson.getString(SpgAppConstant.TYPE), llm.getString(SpgAppConstant.TYPE))
@@ -269,6 +281,19 @@ public class ConfigManagerImpl implements ConfigManager {
     if (llmJson != null) {
       backwardCompatibleLLM(llmJson);
       config.put(SpgAppConstant.LLM, llmJson);
+    } else {
+      if (config.containsKey(SpgAppConstant.CHAT_LLM)) {
+        llmJson =
+            JSON.parseObject(JSON.toJSONString(config.getJSONObject(SpgAppConstant.CHAT_LLM)));
+      }
+      if (llmJson == null && config.containsKey(SpgAppConstant.OPENIE_LLM)) {
+        llmJson =
+            JSON.parseObject(JSON.toJSONString(config.getJSONObject(SpgAppConstant.OPENIE_LLM)));
+      }
+      if (llmJson != null) {
+        backwardCompatibleLLM(llmJson);
+        config.put(SpgAppConstant.LLM, llmJson);
+      }
     }
 
     // llm_select 0.5 -> 0.6

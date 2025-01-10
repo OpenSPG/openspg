@@ -11,7 +11,6 @@
   ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
   ~ or implied.
 -->
-
 <mappings xmlns="http://dozer.sourceforge.net"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://dozer.sourceforge.net

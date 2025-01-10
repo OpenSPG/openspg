@@ -12,6 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.utils;
 
+import com.antgroup.openspg.builder.model.record.SubGraphRecord;
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -21,7 +22,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.quartz.CronExpression;
 
@@ -133,6 +136,22 @@ public class SchedulerUtils {
         return ((Date) key).before((Date) content);
       default:
         return false;
+    }
+  }
+
+  public static void getGraphSize(
+      List<SubGraphRecord> records, AtomicLong nodes, AtomicLong edges) {
+    nodes = (nodes == null) ? new AtomicLong(0) : nodes;
+    edges = (edges == null) ? new AtomicLong(0) : edges;
+    for (SubGraphRecord record : records) {
+      List<SubGraphRecord.Node> resultNodes = record.getResultNodes();
+      if (CollectionUtils.isNotEmpty(resultNodes)) {
+        nodes.addAndGet(resultNodes.size());
+      }
+      List<SubGraphRecord.Edge> resultEdges = record.getResultEdges();
+      if (CollectionUtils.isNotEmpty(resultEdges)) {
+        edges.addAndGet(resultEdges.size());
+      }
     }
   }
 }

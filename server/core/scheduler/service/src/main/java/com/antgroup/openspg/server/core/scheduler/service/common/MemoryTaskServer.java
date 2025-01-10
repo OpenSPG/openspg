@@ -112,8 +112,6 @@ public class MemoryTaskServer {
 
     private SchedulerTask task;
 
-    private StringBuffer traceLog = new StringBuffer();
-
     public SchedulerTask getTask() {
       return task;
     }
@@ -122,19 +120,14 @@ public class MemoryTaskServer {
       this.task = task;
     }
 
-    public StringBuffer getTraceLog() {
-      return traceLog;
-    }
-
     public void addTraceLog(String message, Object... args) {
-      int dstOffset = 0;
       StringBuffer log = new StringBuffer("    >> ");
       log.append(DateTimeUtils.getDate2Str("HH:mm:ss", new Date()))
-          .append("(Task): ")
+          .append(": ")
           .append(String.format(message, args))
           .append(System.getProperty("line.separator"));
-      traceLog.insert(dstOffset, log);
-      task.setTraceLog(traceLog.toString());
+      String traceLog = (task.getTraceLog() == null) ? "" : task.getTraceLog();
+      task.setTraceLog(log + traceLog);
     }
 
     @Override

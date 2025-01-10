@@ -32,18 +32,18 @@ public abstract class AsyncTaskExecuteTemplate extends TaskExecuteTemplate
     String resource = task.getResource();
     // if resource not blank trigger getStatus
     if (StringUtils.isNotBlank(resource)) {
-      context.addTraceLog("Async task submitted! Get task status. resource：%s", resource);
+      context.addTraceLog("The asynchronous task has been created! resource:%s", resource);
       return getStatus(context, resource);
     }
 
-    context.addTraceLog("The Async task has not been submit! Go to submit");
+    context.addTraceLog("The asynchronous task has not been created yet!");
     // if resource is blank trigger submit
     resource = submit(context);
     if (StringUtils.isBlank(resource)) {
       return TaskStatus.RUNNING;
     }
 
-    context.addTraceLog("Async task submit successful! resource：%s", resource);
+    context.addTraceLog("The asynchronous task created successfully! resource：%s", resource);
     SchedulerTask updateTask = new SchedulerTask();
     updateTask.setId(task.getId());
     updateTask.setResource(resource);

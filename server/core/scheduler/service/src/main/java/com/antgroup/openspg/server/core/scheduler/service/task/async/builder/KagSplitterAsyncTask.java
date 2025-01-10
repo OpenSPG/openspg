@@ -66,7 +66,7 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
             task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
     SchedulerTask memoryTask = memoryTaskServer.getTask(key);
     if (memoryTask != null) {
-      context.addTraceLog("Splitter task already exists; reuse it");
+      context.addTraceLog("Splitter task has been created!");
       return memoryTask.getNodeId();
     }
 
@@ -85,6 +85,7 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
         memoryTaskServer.submit(
             new SplitterTaskCallable(value, builderJobService, projectService, context, inputs),
             key);
+    context.addTraceLog("Splitter task has been successfully created!");
     return taskId;
   }
 
@@ -93,15 +94,14 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
     SchedulerTask task = memoryTaskServer.getTask(resource);
     SchedulerTask schedulerTask = context.getTask();
     if (task == null) {
-      context.addTraceLog("Splitter task(%s) not found, resubmit", resource);
+      context.addTraceLog("Splitter task not found, recreating……");
       submit(context);
-      context.addTraceLog("Async task resubmit successful!");
       return SchedulerEnum.TaskStatus.RUNNING;
     }
     context.addTraceLog("Splitter task status is %s", task.getStatus());
     if (StringUtils.isNotBlank(task.getTraceLog())) {
       context.addTraceLog(
-          "Splitter task traceLog:%s%s", System.getProperty("line.separator"), task.getTraceLog());
+          "Splitter task trace log:%s%s", System.getProperty("line.separator"), task.getTraceLog());
       task.setTraceLog("");
     }
     switch (task.getStatus()) {
@@ -110,10 +110,9 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
-          context.addTraceLog("Splitter task(%s) status is ERROR, resubmit", resource);
+          context.addTraceLog("Splitter task execute failed, recreating……");
           memoryTaskServer.stopTask(resource);
           submit(context);
-          context.addTraceLog("Async task resubmit successful!");
           return SchedulerEnum.TaskStatus.RUNNING;
         }
         break;
@@ -128,7 +127,8 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
         schedulerTask.setOutput(fileKey);
         break;
       default:
-        context.addTraceLog("Splitter Task Status is %s. Do nothing", task.getStatus());
+        context.addTraceLog(
+            "Splitter task status is %s. wait for the next scheduling", task.getStatus());
         break;
     }
     return task.getStatus();
@@ -171,7 +171,7 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
     @Override
     public String call() throws Exception {
       List<ChunkRecord.Chunk> chunkList = Lists.newArrayList();
-      addTraceLog("Start split document...");
+      addTraceLog("Start split document!");
       for (String input : inputs) {
         String data = objectStorageClient.getString(value.getBuilderBucketName(), input);
         List<ChunkRecord.Chunk> chunks =
@@ -186,7 +186,8 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
       objectStorageClient.saveString(
           value.getBuilderBucketName(), JSON.toJSONString(chunkList), fileKey);
       addTraceLog(
-          "split result is stored bucket:%s file:%s", value.getBuilderBucketName(), fileKey);
+          "Store the results of the split operator. file:%s/%s",
+          value.getBuilderBucketName(), fileKey);
       return fileKey;
     }
 
@@ -206,9 +207,9 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
               value.getSchemaUrlHost(),
               project,
               extension);
-      addTraceLog("invoke split operator:%s", pemjaConfig.getClassName());
+      addTraceLog("Invoke the split operator");
       for (ChunkRecord.Chunk chunk : chunks) {
-        addTraceLog("invoke split chunk:%s", chunk.getName());
+        addTraceLog("Split chunk(%s)", chunk.getName());
         Map map = new ObjectMapper().convertValue(chunk, Map.class);
         List<Object> result =
             (List<Object>)
@@ -218,9 +219,9 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
             JSON.parseObject(
                 JSON.toJSONString(result), new TypeReference<List<ChunkRecord.Chunk>>() {});
         chunkList.addAll(datas);
-        addTraceLog("invoke split chunk:%s size:%s succeed", chunk.getName(), chunkList.size());
+        addTraceLog("Split chunk(%s) successfully. chunk size:%s", chunk.getName(), datas.size());
       }
-      addTraceLog("invoke split operator:%s succeed", pemjaConfig.getClassName());
+      addTraceLog("The split operator was invoked successfully. chunk size:%s", chunkList.size());
 
       return chunkList;
     }

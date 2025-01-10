@@ -12,9 +12,14 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.task.async.builder;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+
 import com.antgroup.openspg.builder.model.record.SubGraphRecord;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClient;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClientDriverManager;
@@ -33,11 +38,11 @@ import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.MemoryTaskServer;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
+import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.util.List;
-import java.util.Map;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -59,13 +64,14 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
             task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
     SchedulerTask memoryTask = memoryTaskServer.getTask(key);
     if (memoryTask != null) {
-      context.addTraceLog("Alignment task already exists; reuse it");
+      context.addTraceLog("Alignment task has been created!");
       return memoryTask.getNodeId();
     }
 
     List<String> inputs = getInputs(instance, task);
     String taskId =
         memoryTaskServer.submit(new VectorizerTaskCallable(value, context, inputs), key);
+    context.addTraceLog("Alignment task has been successfully created!");
     return taskId;
   }
 
@@ -89,15 +95,15 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
     SchedulerTask task = memoryTaskServer.getTask(resource);
     SchedulerTask schedulerTask = context.getTask();
     if (task == null) {
-      context.addTraceLog("Alignment task(%s) not found, resubmit", resource);
+      context.addTraceLog("Alignment task not found, recreating……");
       submit(context);
-      context.addTraceLog("Async task resubmit successful!");
       return SchedulerEnum.TaskStatus.RUNNING;
     }
     context.addTraceLog("Alignment task status is %s", task.getStatus());
     if (StringUtils.isNotBlank(task.getTraceLog())) {
       context.addTraceLog(
-          "Alignment task traceLog:%s%s", System.getProperty("line.separator"), task.getTraceLog());
+          "Alignment task trace log:%s%s",
+          System.getProperty("line.separator"), task.getTraceLog());
       task.setTraceLog("");
     }
     switch (task.getStatus()) {
@@ -106,10 +112,9 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
-          context.addTraceLog("Alignment task(%s) status is ERROR, resubmit", resource);
+          context.addTraceLog("Alignment task execute failed, recreating……");
           memoryTaskServer.stopTask(resource);
           submit(context);
-          context.addTraceLog("Async task resubmit successful!");
           return SchedulerEnum.TaskStatus.RUNNING;
         }
         break;
@@ -119,7 +124,8 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
         removeInputs(context);
         break;
       default:
-        context.addTraceLog("Alignment Task Status is %s. Do nothing", task.getStatus());
+        context.addTraceLog(
+            "Alignment task status is %s. wait for the next scheduling", task.getStatus());
         break;
     }
     return task.getStatus();
@@ -163,14 +169,17 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
     @Override
     public String call() throws Exception {
       List<SubGraphRecord> subGraphList = Lists.newArrayList();
-      addTraceLog("Start Alignment task...");
+      addTraceLog("Start Alignment task!");
       for (String input : inputs) {
         String data = objectStorageClient.getString(value.getBuilderBucketName(), input);
         List<SubGraphRecord> subGraphs =
             JSON.parseObject(data, new TypeReference<List<SubGraphRecord>>() {});
         subGraphList.addAll(alignment(context, subGraphs));
       }
-      addTraceLog("Alignment task complete...");
+      AtomicLong nodes = new AtomicLong(0);
+      AtomicLong edges = new AtomicLong(0);
+      SchedulerUtils.getGraphSize(subGraphList, nodes, edges);
+      addTraceLog("Alignment task complete. nodes:%s. edges:%s", nodes.get(), edges.get());
       SchedulerTask task = context.getTask();
       String fileKey =
           CommonUtils.getTaskStorageFileKey(
@@ -178,7 +187,8 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
       objectStorageClient.saveString(
           value.getBuilderBucketName(), JSON.toJSONString(subGraphList), fileKey);
       addTraceLog(
-          "Alignment result is stored bucket:%s file:%s", value.getBuilderBucketName(), fileKey);
+          "Store the results of the alignment operator. file:%s/%s",
+          value.getBuilderBucketName(), fileKey);
       return fileKey;
     }
 
@@ -198,8 +208,9 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
               projectId,
               alignment,
               Maps.newHashMap());
+      int index = 0;
       for (SubGraphRecord subGraph : subGraphs) {
-        addTraceLog("invoke alignment processor operator:%s", pemjaConfig.getClassName());
+        addTraceLog("Invoke the alignment operator. index:%s/%s", ++index, subGraphs.size());
         Map map = new ObjectMapper().convertValue(subGraph, Map.class);
         List<Object> result =
             (List<Object>)
@@ -210,9 +221,17 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
                 JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
         subGraphList.addAll(records);
         for (SubGraphRecord subGraphRecord : records) {
+          int nodes =
+              CollectionUtils.isEmpty(subGraphRecord.getResultNodes())
+                  ? 0
+                  : subGraphRecord.getResultNodes().size();
+          int edges =
+              CollectionUtils.isEmpty(subGraphRecord.getResultEdges())
+                  ? 0
+                  : subGraphRecord.getResultEdges().size();
+
           addTraceLog(
-              "alignment processor succeed node:%s edge%s",
-              subGraphRecord.getResultNodes().size(), subGraphRecord.getResultEdges().size());
+              "Alignment operator was invoked successfully nodes:%s edges:%s", nodes, edges);
         }
       }
       return subGraphList;

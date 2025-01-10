@@ -15,11 +15,11 @@ package com.antgroup.openspg.server.infra.dao.repository.common.convertor;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.antgroup.openspg.common.constants.SpgAppConstant;
 import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.common.util.enums.LanguageEnum;
 import com.antgroup.openspg.server.common.model.account.Account;
 import com.antgroup.openspg.server.infra.dao.dataobject.AccountDO;
-import com.antgroup.openspgapp.common.util.enums.LanguageEnum;
-import com.antgroup.openspgapp.common.util.utils.SpgAppConstant;
 
 public class AccountConvertor {
 

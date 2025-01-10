@@ -37,6 +37,7 @@ import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.MemoryTaskServer;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
+import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -50,7 +51,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import javax.annotation.PostConstruct;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -99,7 +102,7 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
             task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
     SchedulerTask memoryTask = memoryTaskServer.getTask(key);
     if (memoryTask != null) {
-      context.addTraceLog("Extractor task already exists; reuse it");
+      context.addTraceLog("Extractor task has been created!");
       return memoryTask.getNodeId();
     }
 
@@ -117,6 +120,7 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
     Project project = projectService.queryById(instance.getProjectId());
     String taskId =
         memoryTaskServer.submit(new ExtractorTaskCallable(value, project, context, inputs), key);
+    context.addTraceLog("Extractor task has been successfully created!");
     return taskId;
   }
 
@@ -125,15 +129,15 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
     SchedulerTask task = memoryTaskServer.getTask(resource);
     SchedulerTask schedulerTask = context.getTask();
     if (task == null) {
-      context.addTraceLog("Extractor task(%s) not found, resubmit", resource);
+      context.addTraceLog("Extractor task not found, recreating……");
       submit(context);
-      context.addTraceLog("Async task resubmit successful!");
       return SchedulerEnum.TaskStatus.RUNNING;
     }
     context.addTraceLog("Extractor task status is %s", task.getStatus());
     if (StringUtils.isNotBlank(task.getTraceLog())) {
       context.addTraceLog(
-          "Extractor task traceLog:%s%s", System.getProperty("line.separator"), task.getTraceLog());
+          "Extractor task trace log:%s%s",
+          System.getProperty("line.separator"), task.getTraceLog());
       task.setTraceLog("");
     }
     switch (task.getStatus()) {
@@ -142,10 +146,9 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
-          context.addTraceLog("Extractor task(%s) status is ERROR, resubmit", resource);
+          context.addTraceLog("Extractor task execute failed, recreating……");
           memoryTaskServer.stopTask(resource);
           submit(context);
-          context.addTraceLog("Async task resubmit successful!");
           return SchedulerEnum.TaskStatus.RUNNING;
         }
         break;
@@ -160,7 +163,8 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
         schedulerTask.setOutput(fileKey);
         break;
       default:
-        context.addTraceLog("Extractor Task Status is %s. Do nothing", task.getStatus());
+        context.addTraceLog(
+            "Extractor task status is %s. wait for the next scheduling", task.getStatus());
         break;
     }
     return task.getStatus();
@@ -202,7 +206,7 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
             JSON.parseObject(data, new TypeReference<List<ChunkRecord.Chunk>>() {});
         chunkList.addAll(chunks);
       }
-      addTraceLog("Start extract document chunk. chunk size:%s", chunkList.size());
+      addTraceLog("Start extract document. chunk size:%s", chunkList.size());
 
       List<Future<List<SubGraphRecord>>> futures = new ArrayList<>();
       List<SubGraphRecord> results = new ArrayList<>();
@@ -220,7 +224,10 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
           throw new RuntimeException("invoke extract Exception", e);
         }
       }
-      addTraceLog("extract document complete.");
+      AtomicLong nodes = new AtomicLong(0);
+      AtomicLong edges = new AtomicLong(0);
+      SchedulerUtils.getGraphSize(results, nodes, edges);
+      addTraceLog("Extract document complete. nodes:%s. edges:%s", nodes.get(), edges.get());
 
       SchedulerTask task = context.getTask();
       String fileKey =
@@ -229,7 +236,8 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
       objectStorageClient.saveString(
           value.getBuilderBucketName(), JSON.toJSONString(results), fileKey);
       addTraceLog(
-          "extract result is stored bucket:%s file:%s", value.getBuilderBucketName(), fileKey);
+          "Store the results of the extract operator. file:%s/%s",
+          value.getBuilderBucketName(), fileKey);
       return fileKey;
     }
 
@@ -260,7 +268,7 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
                 project.getId(),
                 extractor,
                 Maps.newHashMap());
-        addTraceLog("invoke extractor chunk:%s", chunk.getName());
+        addTraceLog("Start extract chunk(%s:%s)", chunk.getName(), chunk.getShortId());
         Map map = new ObjectMapper().convertValue(chunk, Map.class);
         List<Object> result =
             (List<Object>)
@@ -269,10 +277,20 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
         List<SubGraphRecord> records =
             JSON.parseObject(
                 JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
-        // com.antgroup.openspg.builder.core.physical.utils.CommonUtils.addLabelPrefix(project.getNamespace(), records);
-        addTraceLog(
-            "invoke extract operator:%s chunk:%s succeed",
-            pemjaConfig.getClassName(), chunk.getName());
+
+        for (SubGraphRecord subGraphRecord : records) {
+          int nodes =
+              CollectionUtils.isEmpty(subGraphRecord.getResultNodes())
+                  ? 0
+                  : subGraphRecord.getResultNodes().size();
+          int edges =
+              CollectionUtils.isEmpty(subGraphRecord.getResultEdges())
+                  ? 0
+                  : subGraphRecord.getResultEdges().size();
+          addTraceLog(
+              "Extract chunk(%s:%s) successfully. nodes:%s. edges:%s",
+              chunk.getName(), chunk.getShortId(), nodes, edges);
+        }
         return records;
       }
     }
