@@ -44,24 +44,30 @@ class GetPageRankScoresRequest(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        "project_id": "int",
-        "target_vertex_type": "str",
-        "start_nodes": "list[GetPageRankScoresRequestStartNodes]",
+        'project_id': 'int',
+        'target_vertex_type': 'str',
+        'start_nodes': 'list[GetPageRankScoresRequestStartNodes]',
+        'max_iterations': 'int',
+        'parallel': 'int',
+        'damping_factor': 'float',
+        'directed': 'bool',
+        'tolerance': 'float',
+        'top_k': 'int'
     }
 
     attribute_map = {
-        "project_id": "projectId",
-        "target_vertex_type": "targetVertexType",
-        "start_nodes": "startNodes",
+        'project_id': 'projectId',
+        'target_vertex_type': 'targetVertexType',
+        'start_nodes': 'startNodes',
+        'max_iterations': 'maxIterations',
+        'parallel': 'parallel',
+        'damping_factor': 'dampingFactor',
+        'directed': 'directed',
+        'tolerance': 'tolerance',
+        'top_k': 'topK'
     }
 
-    def __init__(
-        self,
-        project_id=None,
-        target_vertex_type=None,
-        start_nodes=None,
-        local_vars_configuration=None,
-    ):  # noqa: E501
+    def __init__(self, project_id=None, target_vertex_type=None, start_nodes=None, max_iterations=None, parallel=None, damping_factor=None, directed=None, tolerance=None, top_k=None, local_vars_configuration=None):  # noqa: E501
         """GetPageRankScoresRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -70,11 +76,29 @@ class GetPageRankScoresRequest(object):
         self._project_id = None
         self._target_vertex_type = None
         self._start_nodes = None
+        self._max_iterations = None
+        self._parallel = None
+        self._damping_factor = None
+        self._directed = None
+        self._tolerance = None
+        self._top_k = None
         self.discriminator = None
 
         self.project_id = project_id
         self.target_vertex_type = target_vertex_type
         self.start_nodes = start_nodes
+        if max_iterations is not None:
+            self.max_iterations = max_iterations
+        if parallel is not None:
+            self.parallel = parallel
+        if damping_factor is not None:
+            self.damping_factor = damping_factor
+        if directed is not None:
+            self.directed = directed
+        if tolerance is not None:
+            self.tolerance = tolerance
+        if top_k is not None:
+            self.top_k = top_k
 
     @property
     def project_id(self):
@@ -94,12 +118,8 @@ class GetPageRankScoresRequest(object):
         :param project_id: The project_id of this GetPageRankScoresRequest.  # noqa: E501
         :type: int
         """
-        if (
-            self.local_vars_configuration.client_side_validation and project_id is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `project_id`, must not be `None`"
-            )  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and project_id is None:  # noqa: E501
+            raise ValueError("Invalid value for `project_id`, must not be `None`")  # noqa: E501
 
         self._project_id = project_id
 
@@ -121,13 +141,8 @@ class GetPageRankScoresRequest(object):
         :param target_vertex_type: The target_vertex_type of this GetPageRankScoresRequest.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation
-            and target_vertex_type is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `target_vertex_type`, must not be `None`"
-            )  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and target_vertex_type is None:  # noqa: E501
+            raise ValueError("Invalid value for `target_vertex_type`, must not be `None`")  # noqa: E501
 
         self._target_vertex_type = target_vertex_type
 
@@ -149,14 +164,136 @@ class GetPageRankScoresRequest(object):
         :param start_nodes: The start_nodes of this GetPageRankScoresRequest.  # noqa: E501
         :type: list[GetPageRankScoresRequestStartNodes]
         """
-        if (
-            self.local_vars_configuration.client_side_validation and start_nodes is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `start_nodes`, must not be `None`"
-            )  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and start_nodes is None:  # noqa: E501
+            raise ValueError("Invalid value for `start_nodes`, must not be `None`")  # noqa: E501
 
         self._start_nodes = start_nodes
+
+    @property
+    def max_iterations(self):
+        """Gets the max_iterations of this GetPageRankScoresRequest.  # noqa: E501
+
+
+        :return: The max_iterations of this GetPageRankScoresRequest.  # noqa: E501
+        :rtype: int
+        """
+        return self._max_iterations
+
+    @max_iterations.setter
+    def max_iterations(self, max_iterations):
+        """Sets the max_iterations of this GetPageRankScoresRequest.
+
+
+        :param max_iterations: The max_iterations of this GetPageRankScoresRequest.  # noqa: E501
+        :type: int
+        """
+
+        self._max_iterations = max_iterations
+
+    @property
+    def parallel(self):
+        """Gets the parallel of this GetPageRankScoresRequest.  # noqa: E501
+
+
+        :return: The parallel of this GetPageRankScoresRequest.  # noqa: E501
+        :rtype: int
+        """
+        return self._parallel
+
+    @parallel.setter
+    def parallel(self, parallel):
+        """Sets the parallel of this GetPageRankScoresRequest.
+
+
+        :param parallel: The parallel of this GetPageRankScoresRequest.  # noqa: E501
+        :type: int
+        """
+
+        self._parallel = parallel
+
+    @property
+    def damping_factor(self):
+        """Gets the damping_factor of this GetPageRankScoresRequest.  # noqa: E501
+
+
+        :return: The damping_factor of this GetPageRankScoresRequest.  # noqa: E501
+        :rtype: float
+        """
+        return self._damping_factor
+
+    @damping_factor.setter
+    def damping_factor(self, damping_factor):
+        """Sets the damping_factor of this GetPageRankScoresRequest.
+
+
+        :param damping_factor: The damping_factor of this GetPageRankScoresRequest.  # noqa: E501
+        :type: float
+        """
+
+        self._damping_factor = damping_factor
+
+    @property
+    def directed(self):
+        """Gets the directed of this GetPageRankScoresRequest.  # noqa: E501
+
+
+        :return: The directed of this GetPageRankScoresRequest.  # noqa: E501
+        :rtype: bool
+        """
+        return self._directed
+
+    @directed.setter
+    def directed(self, directed):
+        """Sets the directed of this GetPageRankScoresRequest.
+
+
+        :param directed: The directed of this GetPageRankScoresRequest.  # noqa: E501
+        :type: bool
+        """
+
+        self._directed = directed
+
+    @property
+    def tolerance(self):
+        """Gets the tolerance of this GetPageRankScoresRequest.  # noqa: E501
+
+
+        :return: The tolerance of this GetPageRankScoresRequest.  # noqa: E501
+        :rtype: float
+        """
+        return self._tolerance
+
+    @tolerance.setter
+    def tolerance(self, tolerance):
+        """Sets the tolerance of this GetPageRankScoresRequest.
+
+
+        :param tolerance: The tolerance of this GetPageRankScoresRequest.  # noqa: E501
+        :type: float
+        """
+
+        self._tolerance = tolerance
+
+    @property
+    def top_k(self):
+        """Gets the top_k of this GetPageRankScoresRequest.  # noqa: E501
+
+
+        :return: The top_k of this GetPageRankScoresRequest.  # noqa: E501
+        :rtype: int
+        """
+        return self._top_k
+
+    @top_k.setter
+    def top_k(self, top_k):
+        """Sets the top_k of this GetPageRankScoresRequest.
+
+
+        :param top_k: The top_k of this GetPageRankScoresRequest.  # noqa: E501
+        :type: int
+        """
+
+        self._top_k = top_k
 
     def to_dict(self):
         """Returns the model properties as a dict"""
@@ -165,20 +302,18 @@ class GetPageRankScoresRequest(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
+                result[attr] = list(map(
+                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
+                    value
+                ))
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
-                )
+                result[attr] = dict(map(
+                    lambda item: (item[0], item[1].to_dict())
+                    if hasattr(item[1], "to_dict") else item,
+                    value.items()
+                ))
             else:
                 result[attr] = value
 

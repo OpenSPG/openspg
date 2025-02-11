@@ -22,4 +22,11 @@ public class GetPageRankScoresRequest {
   private Long projectId;
   private String targetVertexType;
   private List<VertexRecordInstance> startNodes = new ArrayList<>();
+  private Integer maxIterations;
+  private Integer parallel;
+  private Boolean directed;
+  private Float dampingFactor;
+  private Float tolerance;
+  private Integer topK;
+
 }

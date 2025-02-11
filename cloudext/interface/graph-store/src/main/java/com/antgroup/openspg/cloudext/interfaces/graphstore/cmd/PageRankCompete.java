@@ -23,6 +23,10 @@ public class PageRankCompete {
   private String targetVertexType;
   private Float dampingFactor = 0.85f;
   private Integer maxIterations = 20;
+  private Integer parallel;
+  private Boolean directed;
+  private Float tolerance;
+  private Integer topK;
 
   public PageRankCompete(List<VertexRecord> startVertices, String targetVertexType) {
     this.startVertices = startVertices;
