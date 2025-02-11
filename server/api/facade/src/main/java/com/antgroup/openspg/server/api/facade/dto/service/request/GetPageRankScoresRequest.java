@@ -28,5 +28,4 @@ public class GetPageRankScoresRequest {
   private Float dampingFactor;
   private Float tolerance;
   private Integer topK;
-
 }

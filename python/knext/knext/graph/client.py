@@ -43,15 +43,15 @@ class GraphClient(Client):
         )
 
     def calculate_pagerank_scores(
-            self,
-            target_vertex_type,
-            start_nodes: List[Dict],
-            max_iterations=20,
-            damping_factor=0.85,
-            parallel=None,
-            directed=None,
-            tolerance=None,
-            top_k=None
+        self,
+        target_vertex_type,
+        start_nodes: List[Dict],
+        max_iterations=20,
+        damping_factor=0.85,
+        parallel=None,
+        directed=None,
+        tolerance=None,
+        top_k=None,
     ):
         """
         Calculate and retrieve PageRank scores for the given starting nodes.
@@ -73,9 +73,15 @@ class GraphClient(Client):
             for node in start_nodes
         ]
         req = GetPageRankScoresRequest(
-            project_id=self._project_id, target_vertex_type=target_vertex_type, start_nodes=ppr_start_nodes,
-            max_iterations=max_iterations, parallel=parallel, damping_factor=damping_factor, directed=directed,
-            tolerance=tolerance, top_k=top_k
+            project_id=self._project_id,
+            target_vertex_type=target_vertex_type,
+            start_nodes=ppr_start_nodes,
+            max_iterations=max_iterations,
+            parallel=parallel,
+            damping_factor=damping_factor,
+            directed=directed,
+            tolerance=tolerance,
+            top_k=top_k,
         )
         resp = self._rest_client.graph_get_page_rank_scores_post(
             get_page_rank_scores_request=req

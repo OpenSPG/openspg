@@ -44,30 +44,42 @@ class GetPageRankScoresRequest(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'project_id': 'int',
-        'target_vertex_type': 'str',
-        'start_nodes': 'list[GetPageRankScoresRequestStartNodes]',
-        'max_iterations': 'int',
-        'parallel': 'int',
-        'damping_factor': 'float',
-        'directed': 'bool',
-        'tolerance': 'float',
-        'top_k': 'int'
+        "project_id": "int",
+        "target_vertex_type": "str",
+        "start_nodes": "list[GetPageRankScoresRequestStartNodes]",
+        "max_iterations": "int",
+        "parallel": "int",
+        "damping_factor": "float",
+        "directed": "bool",
+        "tolerance": "float",
+        "top_k": "int",
     }
 
     attribute_map = {
-        'project_id': 'projectId',
-        'target_vertex_type': 'targetVertexType',
-        'start_nodes': 'startNodes',
-        'max_iterations': 'maxIterations',
-        'parallel': 'parallel',
-        'damping_factor': 'dampingFactor',
-        'directed': 'directed',
-        'tolerance': 'tolerance',
-        'top_k': 'topK'
+        "project_id": "projectId",
+        "target_vertex_type": "targetVertexType",
+        "start_nodes": "startNodes",
+        "max_iterations": "maxIterations",
+        "parallel": "parallel",
+        "damping_factor": "dampingFactor",
+        "directed": "directed",
+        "tolerance": "tolerance",
+        "top_k": "topK",
     }
 
-    def __init__(self, project_id=None, target_vertex_type=None, start_nodes=None, max_iterations=None, parallel=None, damping_factor=None, directed=None, tolerance=None, top_k=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        project_id=None,
+        target_vertex_type=None,
+        start_nodes=None,
+        max_iterations=None,
+        parallel=None,
+        damping_factor=None,
+        directed=None,
+        tolerance=None,
+        top_k=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """GetPageRankScoresRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -118,8 +130,12 @@ class GetPageRankScoresRequest(object):
         :param project_id: The project_id of this GetPageRankScoresRequest.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and project_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `project_id`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and project_id is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `project_id`, must not be `None`"
+            )  # noqa: E501
 
         self._project_id = project_id
 
@@ -141,8 +157,13 @@ class GetPageRankScoresRequest(object):
         :param target_vertex_type: The target_vertex_type of this GetPageRankScoresRequest.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and target_vertex_type is None:  # noqa: E501
-            raise ValueError("Invalid value for `target_vertex_type`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation
+            and target_vertex_type is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `target_vertex_type`, must not be `None`"
+            )  # noqa: E501
 
         self._target_vertex_type = target_vertex_type
 
@@ -164,8 +185,12 @@ class GetPageRankScoresRequest(object):
         :param start_nodes: The start_nodes of this GetPageRankScoresRequest.  # noqa: E501
         :type: list[GetPageRankScoresRequestStartNodes]
         """
-        if self.local_vars_configuration.client_side_validation and start_nodes is None:  # noqa: E501
-            raise ValueError("Invalid value for `start_nodes`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and start_nodes is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `start_nodes`, must not be `None`"
+            )  # noqa: E501
 
         self._start_nodes = start_nodes
 
@@ -302,18 +327,20 @@ class GetPageRankScoresRequest(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 
