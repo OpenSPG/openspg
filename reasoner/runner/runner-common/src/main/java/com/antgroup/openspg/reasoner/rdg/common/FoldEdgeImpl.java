@@ -152,6 +152,16 @@ public class FoldEdgeImpl implements Serializable {
     // 开始构造新的PathEdge
     Set<IEdge<IVertexId, IProperty>> newPathEdgeSet = new HashSet<>();
     for (IEdge<IVertexId, IProperty> edge : pathEdgeSet) {
+      if (edge instanceof OptionalEdge) {
+        // 构造只有一条边的PathEdge
+        List<IEdge<IVertexId, IProperty>> nextEdgeList = fromEdgeMap.get(edge.getTargetId());
+        for (IEdge<IVertexId, IProperty> nextIEdge : nextEdgeList) {
+          PathEdge<IVertexId, IProperty, IProperty> pathEdge =
+              new PathEdge<>((Edge<IVertexId, IProperty>) nextIEdge);
+          newPathEdgeSet.add(pathEdge);
+        }
+        continue;
+      }
       PathEdge<IVertexId, IProperty, IProperty> pathEdge =
           (PathEdge<IVertexId, IProperty, IProperty>) edge;
       IVertexId pathEdgeSearchId = pathEdge.getTargetId();
