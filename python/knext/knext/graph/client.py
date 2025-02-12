@@ -42,17 +42,7 @@ class GraphClient(Client):
             api_client=ApiClient(configuration=Configuration(host=host_addr))
         )
 
-    def calculate_pagerank_scores(
-        self,
-        target_vertex_type,
-        start_nodes: List[Dict],
-        max_iterations=20,
-        damping_factor=0.85,
-        parallel=None,
-        directed=None,
-        tolerance=None,
-        top_k=None,
-    ):
+    def calculate_pagerank_scores(self, target_vertex_type, start_nodes: List[Dict]):
         """
         Calculate and retrieve PageRank scores for the given starting nodes.
 
@@ -73,6 +63,29 @@ class GraphClient(Client):
             for node in start_nodes
         ]
         req = GetPageRankScoresRequest(
+            self._project_id, target_vertex_type, ppr_start_nodes
+        )
+        resp = self._rest_client.graph_get_page_rank_scores_post(
+            get_page_rank_scores_request=req
+        )
+        return {item.id: item.score for item in resp}
+
+    def run_page_rank(
+        self,
+        target_vertex_type,
+        start_nodes: List[Dict],
+        max_iterations=20,
+        damping_factor=0.85,
+        parallel=None,
+        directed=None,
+        tolerance=None,
+        top_k=None,
+    ):
+        ppr_start_nodes = [
+            GetPageRankScoresRequestStartNodes(id=node["id"], type=node["type"])
+            for node in start_nodes
+        ]
+        req = GetPageRankScoresRequest(
             project_id=self._project_id,
             target_vertex_type=target_vertex_type,
             start_nodes=ppr_start_nodes,
@@ -86,7 +99,7 @@ class GraphClient(Client):
         resp = self._rest_client.graph_get_page_rank_scores_post(
             get_page_rank_scores_request=req
         )
-        return {item.id: item.score for item in resp}
+        return resp
 
     def write_graph(self, sub_graph: dict, operation: str, lead_to_builder: bool):
         request = WriterGraphRequest(

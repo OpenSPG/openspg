@@ -15,12 +15,21 @@ package com.antgroup.openspg.server.api.facade.dto.service.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class PageRankScoreInstance {
 
   private String type;
   private String id;
+  private Map<String, Object> properties;
   private double score;
+
+  public PageRankScoreInstance(String type, String id, double score) {
+    this.type = type;
+    this.id = id;
+    this.score = score;
+  }
 }

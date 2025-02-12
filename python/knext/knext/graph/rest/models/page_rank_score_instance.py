@@ -43,12 +43,27 @@ class PageRankScoreInstance(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"type": "str", "id": "str", "score": "float"}
+    openapi_types = {
+        "type": "str",
+        "id": "str",
+        "score": "float",
+        "properties": "object",
+    }
 
-    attribute_map = {"type": "type", "id": "id", "score": "score"}
+    attribute_map = {
+        "type": "type",
+        "id": "id",
+        "score": "score",
+        "properties": "properties",
+    }
 
     def __init__(
-        self, type=None, id=None, score=None, local_vars_configuration=None
+        self,
+        type=None,
+        id=None,
+        score=None,
+        properties=None,
+        local_vars_configuration=None,
     ):  # noqa: E501
         """PageRankScoreInstance - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
@@ -58,11 +73,14 @@ class PageRankScoreInstance(object):
         self._type = None
         self._id = None
         self._score = None
+        self._properties = None
         self.discriminator = None
 
         self.type = type
         self.id = id
         self.score = score
+        if properties is not None:
+            self.properties = properties
 
     @property
     def type(self):
@@ -142,6 +160,27 @@ class PageRankScoreInstance(object):
             )  # noqa: E501
 
         self._score = score
+
+    @property
+    def properties(self):
+        """Gets the properties of this PageRankScoreInstance.  # noqa: E501
+
+
+        :return: The properties of this PageRankScoreInstance.  # noqa: E501
+        :rtype: object
+        """
+        return self._properties
+
+    @properties.setter
+    def properties(self, properties):
+        """Sets the properties of this PageRankScoreInstance.
+
+
+        :param properties: The properties of this PageRankScoreInstance.  # noqa: E501
+        :type: object
+        """
+
+        self._properties = properties
 
     def to_dict(self):
         """Returns the model properties as a dict"""
