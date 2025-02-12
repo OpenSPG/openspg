@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.server.api.facade.dto.service.response;
 
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
