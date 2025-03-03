@@ -83,5 +83,5 @@ If you use this software, please cite it as below:
 
 [Apache License 2.0](LICENSE)
 
-# KAG Core Team
+# OpenSPG Core Team
 Lei Liang, Mengshu Sun, Zhengke Gui, Zhongshu Zhu, Zhouyu Jiang, Ling Zhong, Peilong Zhao, Zhongpu Bo, Jin Yang, Huaidong Xiong, Lin Yuan, Jun Xu, Zaoyang Wang, Zhiqiang Zhang, Wen Zhang, Huajun Chen, Wenguang Chen, Jun Zhou, Haofen Wang
