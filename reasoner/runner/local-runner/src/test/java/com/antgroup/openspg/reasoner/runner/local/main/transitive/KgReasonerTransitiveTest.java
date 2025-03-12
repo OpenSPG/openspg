@@ -285,6 +285,29 @@ public class KgReasonerTransitiveTest {
     Assert.assertEquals(result.getRows().get(0)[2], "0.125");
   }
 
+
+  @Test
+  public void chetestTransitiveWithMultiRepeat() {
+    String dsl =
+            "GraphStructure {\n"
+                    + "  A [RelatedParty, __start__='true']\n"
+                    + "  B,C [RelatedParty]\n"
+                    + " D [RelatedParty]\n"
+                    + "  A->B [holdShare] \n"
+                    + "  A->C [holdShare] \n"
+                    + "  C->D [holdShare] repeat(0,1) as e\n"
+                    + "  B->D [holdShare] repeat(0,1) as e\n"
+                    + "}\n"
+                    + "Rule {\n"
+                    + "}\n"
+                    + "Action {\n"
+                    + "  get(A.id, D.id)  \n"
+                    + "}";
+    LocalReasonerResult result = doProcess(dsl);
+    // check result
+    Assert.assertEquals(2, result.getRows().size());
+  }
+
   @Test
   public void testTransitiveWithRule1() {
     String dsl =
