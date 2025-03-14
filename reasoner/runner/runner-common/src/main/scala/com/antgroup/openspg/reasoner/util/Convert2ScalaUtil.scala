@@ -33,4 +33,8 @@ object Convert2ScalaUtil {
     jSet.asScala.toSet
   }
 
+  def toJavaList[T](scalaList: List[T]): java.util.List[T] = {
+    scalaList.asJava
+  }
+
 }
