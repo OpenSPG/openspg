@@ -34,6 +34,9 @@ object Convert2ScalaUtil {
   }
 
   def toJavaList[T](scalaList: List[T]): java.util.List[T] = {
+    if (scalaList == null || scalaList.isEmpty) {
+      return new java.util.ArrayList[T]()
+    }
     scalaList.asJava
   }
 
