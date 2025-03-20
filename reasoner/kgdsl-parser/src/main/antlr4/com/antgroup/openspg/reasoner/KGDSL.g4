@@ -543,6 +543,7 @@ REPEAT : 'repeat' ;
 WHERE : ('W' | 'w')('H' | 'h')('E' | 'e')('R' | 'r')('E' | 'e') ;
 MATCH : ('M' | 'm')('A' | 'a')('T' | 't')('C' | 'c')('H' | 'h') ;
 RETURN : ('R' | 'r')('E' | 'e')('T' | 't')('U' | 'u')('R' | 'r')('N' | 'n') ;
+PRIORITY : ('P' | 'p')('R' | 'r')('I' | 'i')('O' | 'o')('R' | 'r')('I' | 'i')('T' | 't')('Y' | 'y');
 DEFINE_PRIORITY : 'DefinePriority' ;
 DESCRIPTION : 'Description';
 // rule 表达式
@@ -718,6 +719,7 @@ double_solidus : '//' ;
 underscore : '_' ;
 vertical_bar : '|' ;
 labmda_body_array : '=>' ;
+necessary_symbol : '<=' ;
 
 separator : ( comment|whitespace )+ ;
 whitespace : WHITESPACE ;
@@ -967,6 +969,7 @@ thinker_script: (
 		| define_rule_on_relation_to_concept
 		| define_proiority_rule_on_concept
 		| logical_deduce
+		| necessary_logical_deduce
 )*;
 
 /*
@@ -983,11 +986,13 @@ Define (Med.drug)-[基本用药方案]->(药品/`ACEI+噻嗪类利尿剂`) {
 */
 define_rule_on_relation_to_concept : define_rule_on_relation_to_concept_structure (description)?;
 
-logical_deduce : deduce_premise labmda_body_array deduce_conclusion description?;
+logical_deduce : deduce_premise labmda_body_array deduce_conclusion priority_assignment_statement? description?;
 
 deduce_premise : logical_statement;
 
 deduce_conclusion : logical_statement;
+
+necessary_logical_deduce : deduce_premise necessary_symbol deduce_conclusion priority_assignment_statement? description?;
 
 /*
 DefinePriority(危险水平分层) {
@@ -1038,3 +1043,5 @@ assiginment_structure : left_brace muliti_assignment_statement right_brace;
 muliti_assignment_statement : assignment_statement*;
 
 assignment_statement : identifier assignment_operator logical_statement;
+
+priority_assignment_statement : left_bracket PRIORITY assignment_operator oC_IntegerLiteral right_bracket;
