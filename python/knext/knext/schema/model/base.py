@@ -205,7 +205,6 @@ class BaseProperty(ABC):
         """
         self._rest_model.object_type_ref.basic_info.name_en = object_type_name_en
 
-
     @property
     def inherited(self) -> bool:
         """Gets the `inherited` of this Property/Relation.  # noqa: E501
