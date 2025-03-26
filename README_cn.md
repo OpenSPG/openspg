@@ -44,16 +44,15 @@ OpenSPG核心能力模型包括：
 
 ## Get Started
 
-* [安装说明](https://openspg.yuque.com/ndx6g9/ooil9x/xht6kkegvs33cwwr)
+* [安装说明](https://openspg.yuque.com/ndx6g9/0.5/nbb1bn3wegwue6yo)
 * 通过案例快速上手:
-  * [企业供应链图谱](https://openspg.yuque.com/ndx6g9/ooil9x/bf5kppyi5w0g7se5)
-  * [黑产挖掘图谱](https://openspg.yuque.com/ndx6g9/ooil9x/pst9v980k2u2p17o)
-  * [医疗知识图谱](https://openspg.yuque.com/ndx6g9/ooil9x/odbzpk4694lc7yfd)
+  * [企业供应链图谱](https://openspg.yuque.com/ndx6g9/0.5/cefh3sufvay63tb0)
+  * [黑产挖掘图谱](https://openspg.yuque.com/ndx6g9/0.5/haf99dg5w8wrkvop)
+  * [医疗知识图谱](https://openspg.yuque.com/ndx6g9/0.5/otced6rb3z4vtq2y)
 
 ## 进阶教程
 
-* [OpenSPG用户手册](https://openspg.yuque.com/ndx6g9/nmwkzz)
-* [OneKE用户手册](https://openspg.yuque.com/ndx6g9/nmwkzz/dht0wtgycuw032gd)
+* [OpenSPG用户手册](https://openspg.yuque.com/ndx6g9/0.5)
 
 # 如何贡献代码
 
@@ -68,7 +67,7 @@ OpenSPG核心能力模型包括：
 ```bibtex
 @article{liang2024kag,
   title={KAG: Boosting LLMs in Professional Domains via Knowledge Augmented Generation},
-  author={Liang, Lei and Sun, Mengshu and Gui, Zhengke and Zhu, Zhongshu and Jiang, Zhouyu and Zhong, Ling and Qu, Yuan and Zhao, Peilong and Bo, Zhongpu and Yang, Jin and others},
+  author={Liang, Lei and Sun, Mengshu and Gui, Zhengke and Zhu, Zhongshu and Jiang, Zhouyu and Zhong, Ling and Zhao, Peilong and Bo, Zhongpu and Yang, Jin and others},
   journal={arXiv preprint arXiv:2409.13731},
   year={2024}
 }
@@ -82,3 +81,8 @@ OpenSPG核心能力模型包括：
 # License
 
 [Apache License 2.0](LICENSE)
+
+# OpenSPG 核心团队
+
+梁磊，孙梦姝，桂正科，朱仲书，江洲钰，钟玲，赵培龙，伯仲璞，阳进，熊怀东，袁琳，徐军，汪兆洋，张志强，张文，陈华钧，陈文光，周俊，王昊奋
+

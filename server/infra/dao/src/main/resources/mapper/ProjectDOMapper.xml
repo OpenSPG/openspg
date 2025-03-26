@@ -113,25 +113,25 @@
     DELETE FROM kg_ontology_entity WHERE name like concat(#{namespace}, '.%') ;
   </delete>
   <delete id="deleteFromKgOntologyEntityPropertyRange" parameterType="java.lang.Long">
-    DELETE FROM kg_ontology_entity_property_range WHERE id = #{id,jdbcType=BIGINT};
+    DELETE FROM kg_ontology_entity_property_range WHERE project_id = #{id,jdbcType=BIGINT};
   </delete>
   <delete id="deleteFromKgProjectEntity" parameterType="java.lang.Long">
-    DELETE FROM kg_project_entity WHERE id = #{id,jdbcType=BIGINT};
+    DELETE FROM kg_project_entity WHERE project_id = #{id,jdbcType=BIGINT};
   </delete>
   <delete id="deleteFromKgOntologyRelease" parameterType="java.lang.Long">
-    DELETE FROM kg_ontology_release WHERE id = #{id,jdbcType=BIGINT};
+    DELETE FROM kg_ontology_release WHERE project_id = #{id,jdbcType=BIGINT};
   </delete>
   <delete id="deleteFromKgReasonSession" parameterType="java.lang.Long">
-    DELETE FROM kg_reason_session WHERE id = #{id,jdbcType=BIGINT};
+    DELETE FROM kg_reason_session WHERE project_id = #{id,jdbcType=BIGINT};
   </delete>
   <delete id="deleteFromKgReasonTask" parameterType="java.lang.Long">
-    DELETE FROM kg_reason_task WHERE id = #{id,jdbcType=BIGINT};
+    DELETE FROM kg_reason_task WHERE project_id = #{id,jdbcType=BIGINT};
   </delete>
   <delete id="deleteFromKgReasonTutorial" parameterType="java.lang.Long">
-    DELETE FROM kg_reason_tutorial WHERE id = #{id,jdbcType=BIGINT};
+    DELETE FROM kg_reason_tutorial WHERE project_id = #{id,jdbcType=BIGINT};
   </delete>
   <delete id="deleteFromKgBuilderJob" parameterType="java.lang.Long">
-    DELETE FROM kg_builder_job WHERE id = #{id,jdbcType=BIGINT};
+    DELETE FROM kg_builder_job WHERE project_id = #{id,jdbcType=BIGINT};
   </delete>
   <delete id="deleteByExample" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.ProjectDOExample">
     delete from kg_project_info
@@ -316,11 +316,18 @@
     <if test="record.namespace != null and record.namespace != ''">
       namespace like concat('%', #{record.namespace}, '%') and
     </if>
-    <if test="record.bizDomainId != null">
-      biz_domain_id = #{record.bizDomainId,jdbcType=BIGINT} and
+    <if test="record.tenantId != null">
+      biz_domain_id = #{record.tenantId,jdbcType=BIGINT} and
     </if>
     <if test="record.config != null and record.config != ''">
       config like concat('%', #{record.config}, '%') and
+    </if>
+    <if test="record.projectIdList != null and record.projectIdList.size() > 0">
+      id in
+      <foreach collection="record.projectIdList" item="projectId" open="(" separator="," close=")">
+        #{projectId,jdbcType=BIGINT}
+      </foreach>
+      and
     </if>
     1 = 1
   </sql>
@@ -329,14 +336,16 @@
     <if test="orderByGmtCreateDesc != null">
       <choose>
         <when test="orderByGmtCreateDesc">
-          gmt_create DESC,
+          gmt_create DESC
         </when>
         <otherwise>
-          gmt_create ASC,
+          gmt_create ASC
         </otherwise>
       </choose>
     </if>
-    gmt_modified DESC
+    <if test="orderByGmtCreateDesc == null">
+      gmt_modified DESC
+    </if>
   </sql>
 
   <select id="selectByCondition" resultMap="BaseResultMap">
@@ -348,6 +357,5 @@
   <select id="selectCountByCondition" resultType="java.lang.Long">
     select count(*) from kg_project_info where
     <include refid="Query_Condition"/>
-    <include refid="Order_Condition"/>
   </select>
 </mapper>

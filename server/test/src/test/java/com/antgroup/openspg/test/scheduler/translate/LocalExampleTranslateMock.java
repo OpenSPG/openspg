@@ -12,6 +12,8 @@
  */
 package com.antgroup.openspg.test.scheduler.translate;
 
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum;
+import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.translate.Translate;
@@ -19,7 +21,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
-/** scheduler Translate Local implementation class. SchedulerJob to TaskDag */
+/** scheduler Translate Local implementation class. SchedulerJobDO to TaskDag */
 @Component("localExampleTranslate")
 public class LocalExampleTranslateMock implements Translate {
 
@@ -27,6 +29,10 @@ public class LocalExampleTranslateMock implements Translate {
   public TaskExecuteDag translate(SchedulerJob schedulerJob) {
     return getTaskDag();
   }
+
+  @Override
+  public void statusCallback(
+      SchedulerJob job, SchedulerInstance instance, SchedulerEnum.InstanceStatus instanceStatus) {}
 
   /** get Local Example TaskDag */
   public TaskExecuteDag getTaskDag() {

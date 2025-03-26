@@ -34,6 +34,10 @@
     </dependency>
     <dependency>
       <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>core-scheduler-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>common-service</artifactId>
     </dependency>
     <dependency>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 OpenSPG Authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antgroup.openspg.server.infra.dao.mapper.SchedulerJobDOMapper">
+  <resultMap id="BaseResultMap" type="com.antgroup.openspg.server.infra.dao.dataobject.SchedulerJobDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="modify_user" jdbcType="VARCHAR" property="modifyUser" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="life_cycle" jdbcType="VARCHAR" property="lifeCycle" />
+    <result column="translate_type" jdbcType="VARCHAR" property="translateType" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="dependence" jdbcType="VARCHAR" property="dependence" />
+    <result column="scheduler_cron" jdbcType="VARCHAR" property="schedulerCron" />
+    <result column="last_execute_time" jdbcType="TIMESTAMP" property="lastExecuteTime" />
+    <result column="invoker_id" jdbcType="VARCHAR" property="invokerId" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="extension" jdbcType="LONGVARCHAR" property="extension" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, gmt_create, gmt_modified, create_user, modify_user, project_id, name, life_cycle, translate_type, status, dependence, scheduler_cron, last_execute_time, invoker_id, version, extension
+  </sql>
+
+  <insert id="insert" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.SchedulerJobDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into kg_scheduler_job (gmt_create, gmt_modified, create_user, modify_user, project_id, name, life_cycle, translate_type, status,
+    dependence, scheduler_cron, last_execute_time, invoker_id, version, extension)
+    values (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, #{createUser,jdbcType=VARCHAR}, #{modifyUser,jdbcType=VARCHAR}, #{projectId,jdbcType=BIGINT},
+    #{name,jdbcType=VARCHAR}, #{lifeCycle,jdbcType=VARCHAR}, #{translateType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},
+    #{dependence,jdbcType=VARCHAR}, #{schedulerCron,jdbcType=VARCHAR}, #{lastExecuteTime,jdbcType=TIMESTAMP}, #{invokerId,jdbcType=VARCHAR},
+    #{version,jdbcType=VARCHAR}, #{extension,jdbcType=LONGVARCHAR} )
+  </insert>
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from kg_scheduler_job where id = #{id,jdbcType=BIGINT};
+  </delete>
+
+  <update id="update" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.SchedulerJobDO">
+    update kg_scheduler_job
+    <set>
+      gmt_modified = CURRENT_TIMESTAMP,
+      <if test="modifyUser != null">
+        modify_user = #{modifyUser,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="lifeCycle != null">
+        life_cycle = #{lifeCycle,jdbcType=VARCHAR},
+      </if>
+      <if test="translateType != null">
+        translate_type = #{translateType,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="dependence != null">
+        dependence = #{dependence,jdbcType=VARCHAR},
+      </if>
+      <if test="schedulerCron != null">
+        scheduler_cron = #{schedulerCron,jdbcType=VARCHAR},
+      </if>
+      <if test="lastExecuteTime != null">
+        last_execute_time = #{lastExecuteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="invokerId != null">
+        invoker_id = #{invokerId,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap" useCache="false">
+    select 
+    <include refid="Base_Column_List" />
+    from kg_scheduler_job
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <sql id="Query_Where_Sql">
+    <if test="createUser != null">
+      create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="modifyUser != null">
+      and modify_user = #{modifyUser,jdbcType=VARCHAR}
+    </if>
+    <if test="projectId != null">
+      and project_id = #{projectId,jdbcType=BIGINT}
+    </if>
+    <if test="name != null">
+      and name like concat('%', #{name,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="lifeCycle != null">
+      and life_cycle = #{lifeCycle,jdbcType=VARCHAR}
+    </if>
+    <if test="translateType != null">
+      and translate_type = #{translateType,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null">
+      and status = #{status,jdbcType=VARCHAR}
+    </if>
+    <if test="dependence != null">
+      and dependence = #{dependence,jdbcType=VARCHAR}
+    </if>
+    <if test="schedulerCron != null">
+      and scheduler_cron = #{schedulerCron,jdbcType=VARCHAR}
+    </if>
+    <if test="invokerId != null">
+      and invoker_id = #{invokerId,jdbcType=VARCHAR}
+    </if>
+    <if test="version != null">
+      and version = #{version,jdbcType=VARCHAR}
+    </if>
+    <if test="extension != null and extension != ''">
+      and extension like concat('%', #{extension,jdbcType=LONGVARCHAR}, '%')
+    </if>
+    <if test="startCreateTime != null">
+      and gmt_create &gt;= #{startCreateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endCreateTime != null">
+      and gmt_create &lt;= #{endCreateTime,jdbcType=TIMESTAMP}
+    </if>
+  </sql>
+
+  <select id="query" parameterType="com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery" resultMap="BaseResultMap" useCache="false">
+    select <include refid="Base_Column_List" /> from kg_scheduler_job
+    <trim prefix="where" prefixOverrides="and">
+      <include refid="Query_Where_Sql"/>
+    </trim>
+    <choose>
+      <when test="sort != null">
+        order by ${@com.antgroup.openspg.common.util.StringUtils@humpToLine(sort)}
+        <choose> <when test="order == 'desc'">  desc </when> <otherwise>  asc  </otherwise> </choose>
+      </when>
+      <otherwise>
+        order by id desc
+      </otherwise>
+    </choose>
+    <if test="pageNo != null">
+      limit ${(pageNo - 1) * pageSize}, #{pageSize}
+    </if>
+  </select>
+
+  <select id="selectCountByQuery" parameterType="com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery"
+          resultType="java.lang.Integer" useCache="false">
+    select count(*) from kg_scheduler_job
+    <trim prefix="where" prefixOverrides="and">
+      <include refid="Query_Where_Sql"/>
+    </trim>
+  </select>
+
+</mapper>

@@ -20,6 +20,7 @@ public enum NodeTypeEnum {
 
   PARAGRAPH_SPLIT,
   BUILDER_INDEX,
+  PYTHON,
 
   /** MAPPING Component */
   RELATION_MAPPING,

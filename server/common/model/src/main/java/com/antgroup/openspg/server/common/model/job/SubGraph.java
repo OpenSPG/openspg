@@ -29,6 +29,7 @@ public class SubGraph extends BaseModel {
 
   private List<Node> resultNodes;
   private List<Edge> resultEdges;
+  private String className;
 
   @Data
   public static class Node extends BaseModel {

@@ -18,6 +18,7 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.SearchEngineClientD
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.SearchRequest;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.*;
+import com.antgroup.openspg.common.constants.SpgAppConstant;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.api.facade.dto.service.request.SPGTypeSearchRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.request.TextSearchRequest;
@@ -27,10 +28,12 @@ import com.antgroup.openspg.server.biz.service.SearchManager;
 import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class SearchManagerImpl implements SearchManager {
 
@@ -63,10 +66,18 @@ public class SearchManagerImpl implements SearchManager {
       String[] labels = new String[request.getLabelConstraints().size()];
       labelConstraints = Arrays.asList(request.getLabelConstraints().toArray(labels));
     }
-    int topk = -1;
-    if (request.getTopk() != null && request.getTopk() > 0) topk = request.getTopk();
+    int page =
+        (null == request.getPage() || request.getPage() <= 0)
+            ? SpgAppConstant.DEFAULT_PAGE
+            : request.getPage();
+    int topk =
+        (null == request.getTopk() || request.getTopk() <= 0)
+            ? SpgAppConstant.DEFAULT_PAGE_SIZE
+            : request.getTopk();
+    page = (page - 1) * topk;
     SearchRequest searchRequest = new SearchRequest();
     searchRequest.setQuery(new FullTextSearchQuery(queryString, labelConstraints));
+    searchRequest.setFrom(page);
     searchRequest.setSize(topk);
     return searchEngineClient.search(searchRequest);
   }

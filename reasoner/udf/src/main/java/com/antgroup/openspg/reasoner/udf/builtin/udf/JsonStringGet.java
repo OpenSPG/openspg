@@ -17,8 +17,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONPath;
 import com.alibaba.fastjson.JSONValidator;
 import com.antgroup.openspg.reasoner.udf.model.UdfDefine;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class JsonStringGet {
@@ -66,7 +64,6 @@ public class JsonStringGet {
   public Object getRdfProperty(Object properties, String propKey) {
     if (properties instanceof Map) {
       Map<String, Object> objectMap = (Map<String, Object>) properties;
-      List<String> jsonStrList = new ArrayList<>();
       for (String key : objectMap.keySet()) {
         if (!key.contains("basicInfo")) {
           continue;

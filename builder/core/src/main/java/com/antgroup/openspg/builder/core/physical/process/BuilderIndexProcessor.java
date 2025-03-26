@@ -35,7 +35,7 @@ import java.util.Map;
 
 public class BuilderIndexProcessor extends BaseProcessor<BuilderIndexNodeConfig> {
 
-  private ExecuteNode node;
+  private ExecuteNode node = new ExecuteNode();
   private SearchEngineClient searchEngineClient;
   private CacheClient cacheClient;
 
@@ -48,7 +48,9 @@ public class BuilderIndexProcessor extends BaseProcessor<BuilderIndexNodeConfig>
     super.doInit(context);
     searchEngineClient = SearchEngineClientDriverManager.getClient(context.getSearchEngineUrl());
     cacheClient = CacheClientDriverManager.getClient(context.getCacheUrl());
-    this.node = context.getExecuteNodes().get(getId());
+    if (context.getExecuteNodes() != null) {
+      this.node = context.getExecuteNodes().get(getId());
+    }
   }
 
   @Override

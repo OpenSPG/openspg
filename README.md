@@ -45,16 +45,15 @@ OpenSPG Core Capabilities:
 
 ## Get Started
 
-* [Install OpenSPG](https://openspg.yuque.com/ndx6g9/ns5nw2/yl9p847hcfpluv46)
+* [Install OpenSPG](https://openspg.yuque.com/ndx6g9/wc9oyq/yexegklu44bqqicm)
 * Quick start with examples:
-  * [Enterprise Supply Chain Knowledge Graph](https://openspg.yuque.com/ndx6g9/ns5nw2/gyd703vk4l5qqb9y)
-  * [Risk Mining Knowledge Graph](https://openspg.yuque.com/ndx6g9/ns5nw2/yoleogat9akvyqnz)
-  * [Medical Knowledge Graph](https://openspg.yuque.com/ndx6g9/ns5nw2/kadwgc3iarqqemo1)
+  * [Enterprise Supply Chain Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/wni2suux7g2tt6s2)
+  * [Risk Mining Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/da4h0fbphifg3dpe)
+  * [Medical Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/iiktuogkwigoegcv)
 
 ## Advanced tutorials
 
-* [OpenSPG User Guide](https://openspg.yuque.com/ndx6g9/ps5q6b)
-* [OneKE   User Guide](https://openspg.yuque.com/ndx6g9/ps5q6b/vfoi61ks3mqwygvy)
+* [OpenSPG User Guide](https://openspg.yuque.com/ndx6g9/wc9oyq)
 
 # How to contribute
 
@@ -69,7 +68,7 @@ If you use this software, please cite it as below:
 ```bibtex
 @article{liang2024kag,
   title={KAG: Boosting LLMs in Professional Domains via Knowledge Augmented Generation},
-  author={Liang, Lei and Sun, Mengshu and Gui, Zhengke and Zhu, Zhongshu and Jiang, Zhouyu and Zhong, Ling and Qu, Yuan and Zhao, Peilong and Bo, Zhongpu and Yang, Jin and others},
+  author={Liang, Lei and Sun, Mengshu and Gui, Zhengke and Zhu, Zhongshu and Jiang, Zhouyu and Zhong, Ling and Zhao, Peilong and Bo, Zhongpu and Yang, Jin and others},
   journal={arXiv preprint arXiv:2409.13731},
   year={2024}
 }
@@ -83,3 +82,7 @@ If you use this software, please cite it as below:
 # License
 
 [Apache License 2.0](LICENSE)
+
+# OpenSPG Core Team
+
+Lei Liang, Mengshu Sun, Zhengke Gui, Zhongshu Zhu, Zhouyu Jiang, Ling Zhong, Peilong Zhao, Zhongpu Bo, Jin Yang, Huaidong Xiong, Lin Yuan, Jun Xu, Zaoyang Wang, Zhiqiang Zhang, Wen Zhang, Huajun Chen, Wenguang Chen, Jun Zhou, Haofen Wang

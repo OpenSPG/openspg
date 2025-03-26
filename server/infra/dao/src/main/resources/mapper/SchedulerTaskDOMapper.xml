@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 OpenSPG Authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antgroup.openspg.server.infra.dao.mapper.SchedulerTaskDOMapper">
+  <resultMap id="BaseResultMap" type="com.antgroup.openspg.server.infra.dao.dataobject.SchedulerTaskDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="job_id" jdbcType="BIGINT" property="jobId" />
+    <result column="instance_id" jdbcType="BIGINT" property="instanceId" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="execute_num" jdbcType="INTEGER" property="executeNum" />
+    <result column="begin_time" jdbcType="TIMESTAMP" property="beginTime" />
+    <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
+    <result column="estimate_finish_time" jdbcType="TIMESTAMP" property="estimateFinishTime" />
+    <result column="trace_log" jdbcType="LONGVARCHAR" property="traceLog" />
+    <result column="lock_time" jdbcType="TIMESTAMP" property="lockTime" />
+    <result column="resource" jdbcType="VARCHAR" property="resource" />
+    <result column="input" jdbcType="LONGVARCHAR" property="input" />
+    <result column="output" jdbcType="LONGVARCHAR" property="output" />
+    <result column="node_id" jdbcType="VARCHAR" property="nodeId" />
+    <result column="extension" jdbcType="LONGVARCHAR" property="extension" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, gmt_create, gmt_modified, project_id, job_id, instance_id, type, title, status, execute_num, begin_time, finish_time, estimate_finish_time, trace_log, lock_time, resource, input, output, node_id, extension
+  </sql>
+
+  <insert id="insert" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.SchedulerTaskDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into kg_scheduler_task (gmt_create, gmt_modified, project_id, job_id, instance_id, type, title, status, execute_num,
+    begin_time, finish_time, estimate_finish_time, trace_log, lock_time, resource, input, output, node_id, extension)
+    values (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, #{projectId,jdbcType=BIGINT}, #{jobId,jdbcType=BIGINT}, #{instanceId,jdbcType=BIGINT},
+    #{type,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{executeNum,jdbcType=INTEGER}, #{beginTime,jdbcType=TIMESTAMP},
+    #{finishTime,jdbcType=TIMESTAMP}, #{estimateFinishTime,jdbcType=TIMESTAMP}, #{traceLog,jdbcType=LONGVARCHAR}, #{lockTime,jdbcType=TIMESTAMP},
+    #{resource,jdbcType=VARCHAR}, #{input,jdbcType=LONGVARCHAR}, #{output,jdbcType=LONGVARCHAR}, #{nodeId,jdbcType=VARCHAR}, #{extension,jdbcType=LONGVARCHAR} )
+  </insert>
+
+  <delete id="deleteByJobId" parameterType="java.lang.Long">
+    delete from kg_scheduler_task where job_id = #{jobId,jdbcType=BIGINT}
+  </delete>
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from kg_scheduler_task where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <update id="update" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.SchedulerTaskDO">
+    update kg_scheduler_task
+    <set>
+      gmt_modified = CURRENT_TIMESTAMP,
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="jobId != null">
+        job_id = #{jobId,jdbcType=BIGINT},
+      </if>
+      <if test="instanceId != null">
+        instance_id = #{instanceId,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="executeNum != null">
+        execute_num = #{executeNum,jdbcType=INTEGER},
+      </if>
+      <if test="beginTime != null">
+        begin_time = #{beginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="finishTime != null">
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="estimateFinishTime != null">
+        estimate_finish_time = #{estimateFinishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="traceLog != null">
+        trace_log = #{traceLog,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="lockTime != null">
+        lock_time = #{lockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="resource != null">
+        resource = #{resource,jdbcType=VARCHAR},
+      </if>
+      <if test="input != null">
+        input = #{input,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="output != null">
+        output = #{output,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="nodeId != null">
+        node_id = #{nodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap" useCache="false">
+    select 
+    <include refid="Base_Column_List" />
+    from kg_scheduler_task
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <sql id="Query_Where_Sql">
+    <if test="projectId != null">
+      and project_id = #{projectId,jdbcType=BIGINT}
+    </if>
+    <if test="jobId != null">
+      and job_id = #{jobId,jdbcType=BIGINT}
+    </if>
+    <if test="instanceId != null">
+      and instance_id = #{instanceId,jdbcType=BIGINT}
+    </if>
+    <if test="type != null">
+      and type = #{type,jdbcType=VARCHAR}
+    </if>
+    <if test="title != null and title != ''">
+      and title like concat('%', #{title,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="status != null">
+      and status = #{status,jdbcType=VARCHAR}
+    </if>
+    <if test="executeNum != null">
+      and execute_num = #{executeNum,jdbcType=INTEGER}
+    </if>
+    <if test="lockTime != null">
+      and lock_time = #{lockTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="resource != null and resource != ''">
+      and resource like concat('%', #{resource,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="nodeId != null">
+      and node_id = #{nodeId,jdbcType=VARCHAR}
+    </if>
+    <if test="extension != null and extension != ''">
+      and extension like concat('%', #{extension,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="startCreateTime != null">
+      and gmt_create &gt;= #{startCreateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endCreateTime != null">
+      and gmt_create &lt;= #{endCreateTime,jdbcType=TIMESTAMP}
+    </if>
+  </sql>
+
+  <select id="query" parameterType="com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery" resultMap="BaseResultMap" useCache="false">
+    select <include refid="Base_Column_List" /> from kg_scheduler_task
+    <trim prefix="where" prefixOverrides="and">
+      <include refid="Query_Where_Sql"/>
+    </trim>
+    <choose>
+      <when test="sort != null">
+        order by ${@com.antgroup.openspg.common.util.StringUtils@humpToLine(sort)}
+        <choose> <when test="order == 'desc'">  desc </when> <otherwise>  asc  </otherwise> </choose>
+      </when>
+      <otherwise>
+        order by id desc
+      </otherwise>
+    </choose>
+    <if test="pageNo != null">
+      limit ${(pageNo - 1) * pageSize}, #{pageSize}
+    </if>
+  </select>
+
+  <select id="selectCountByQuery" parameterType="com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery"
+          resultType="java.lang.Integer" useCache="false">
+    select count(*) from kg_scheduler_task
+    <trim prefix="where" prefixOverrides="and">
+      <include refid="Query_Where_Sql"/>
+    </trim>
+  </select>
+
+  <select id="queryByInstanceIdAndNodeId" resultMap="BaseResultMap" useCache="false">
+    select
+    <include refid="Base_Column_List" />
+    from kg_scheduler_task
+    where instance_id = #{instanceId} and node_id = #{nodeId}
+  </select>
+
+  <select id="queryByInstanceId" resultMap="BaseResultMap" parameterType="java.lang.Long" useCache="false">
+    select <include refid="Base_Column_List" /> from kg_scheduler_task  where instance_id = #{instanceId,jdbcType=BIGINT}
+  </select>
+
+  <update id="setStatusByInstanceId">
+    update kg_scheduler_task
+    set gmt_modified = CURRENT_TIMESTAMP,
+        status = #{status}
+    where instance_id = #{instanceId}
+      and status != 'FINISH'
+  </update>
+
+  <update id="updateLock">
+    update kg_scheduler_task set lock_time = CURRENT_TIMESTAMP  where id = #{id,jdbcType=BIGINT} and lock_time is NULL
+  </update>
+
+  <update id="updateUnlock">
+    update kg_scheduler_task set lock_time = null where id = #{id,jdbcType=BIGINT}
+  </update>
+
+</mapper>

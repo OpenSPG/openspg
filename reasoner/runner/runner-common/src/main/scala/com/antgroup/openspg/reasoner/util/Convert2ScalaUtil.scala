@@ -33,4 +33,11 @@ object Convert2ScalaUtil {
     jSet.asScala.toSet
   }
 
+  def toJavaList[T](scalaList: List[T]): java.util.List[T] = {
+    if (scalaList == null || scalaList.isEmpty) {
+      return new java.util.ArrayList()
+    }
+    scalaList.asJava
+  }
+
 }

@@ -15,6 +15,7 @@ package com.antgroup.openspg.server.common.service.spring;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -52,6 +53,13 @@ public class SpringContextHolder implements ApplicationContextAware {
   public static <T> List<T> getBeans(Class<T> clazz) {
     if (applicationContext != null) {
       return new ArrayList<>(applicationContext.getBeansOfType(clazz).values());
+    }
+    return null;
+  }
+
+  public static <T> Map<String, T> getBeanMap(Class<T> clazz) {
+    if (applicationContext != null) {
+      return applicationContext.getBeansOfType(clazz);
     }
     return null;
   }

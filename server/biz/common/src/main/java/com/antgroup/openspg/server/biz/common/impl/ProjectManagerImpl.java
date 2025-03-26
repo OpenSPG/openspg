@@ -17,6 +17,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.cloudext.impl.graphstore.neo4j.Neo4jConstants;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.common.util.neo4j.Neo4jAdminUtils;
+import com.antgroup.openspg.core.schema.model.SPGSchema;
+import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
+import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
+import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectCreateRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
@@ -25,7 +29,13 @@ import com.antgroup.openspg.server.common.model.CommonConstants;
 import com.antgroup.openspg.server.common.model.project.Project;
 import com.antgroup.openspg.server.common.service.project.ProjectRepository;
 import com.antgroup.openspg.server.common.service.project.ProjectService;
+import com.antgroup.openspg.server.core.schema.service.alter.sync.BaseSchemaSyncer;
+import com.antgroup.openspg.server.core.schema.service.alter.sync.SchemaStorageEnum;
+import com.antgroup.openspg.server.core.schema.service.alter.sync.SchemaSyncerFactory;
+import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
 import java.util.List;
+import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -33,10 +43,13 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
+@Slf4j
 public class ProjectManagerImpl implements ProjectManager {
 
   @Autowired private ProjectRepository projectRepository;
   @Autowired private ProjectService projectService;
+  @Autowired private SchemaSyncerFactory schemaSyncerFactory;
+  @Autowired private SPGTypeService spgTypeService;
 
   @Value("${cloudext.graphstore.url:}")
   private String url;
@@ -44,15 +57,15 @@ public class ProjectManagerImpl implements ProjectManager {
   @Override
   public Project create(ProjectCreateRequest request) {
     JSONObject config = setDatabase(request.getConfig(), request.getNamespace());
-    setGraphStore(request.getNamespace(), config, true);
     Project project =
         new Project(
             null,
             request.getName(),
-            request.getDesc(),
+            request.getDescription(),
             request.getNamespace(),
             request.getTenantId(),
             config.toJSONString());
+    setGraphStore(project, config, true);
     Long projectId = projectRepository.save(project);
     project.setId(projectId);
     return project;
@@ -62,10 +75,21 @@ public class ProjectManagerImpl implements ProjectManager {
   public Project update(ProjectCreateRequest request) {
     Project project = projectRepository.queryById(request.getId());
     JSONObject config = setDatabase(request.getConfig(), project.getNamespace());
-    setGraphStore(request.getNamespace(), config, false);
+    setGraphStore(project, config, true);
     config = setVectorDimensions(config, project);
-    Project update = new Project(request.getId(), null, null, null, null, config.toJSONString());
-    return projectRepository.update(update);
+    Project update =
+        new Project(
+            request.getId(),
+            request.getName(),
+            request.getDescription(),
+            null,
+            null,
+            config.toJSONString());
+    update = projectRepository.update(update);
+    long start = System.currentTimeMillis();
+    createSchema(request.getId());
+    log.info("createSchema cost {} ms", System.currentTimeMillis() - start);
+    return update;
   }
 
   private JSONObject setDatabase(String configStr, String namespace) {
@@ -120,7 +144,11 @@ public class ProjectManagerImpl implements ProjectManager {
     if (project == null) {
       return 0;
     }
-    deleteDatabase(project);
+    try {
+      deleteDatabase(project);
+    } catch (Exception e) {
+      log.error("delete project database Exception:" + project, e);
+    }
 
     return projectRepository.deleteById(projectId);
   }
@@ -129,16 +157,28 @@ public class ProjectManagerImpl implements ProjectManager {
     JSONObject config = JSONObject.parseObject(project.getConfig());
     UriComponents uriComponents = UriComponentsBuilder.fromUriString(url).build();
     String database = uriComponents.getQueryParams().getFirst(Neo4jConstants.DATABASE);
+    String host =
+        String.format(
+            "%s://%s:%s",
+            uriComponents.getScheme(), uriComponents.getHost(), uriComponents.getPort());
+    String user = uriComponents.getQueryParams().getFirst(Neo4jConstants.USER);
+    String password = uriComponents.getQueryParams().getFirst(Neo4jConstants.PASSWORD);
     JSONObject graphStore = config.getJSONObject(CommonConstants.GRAPH_STORE);
-    String host = graphStore.getString(Neo4jConstants.URI);
-    String user = graphStore.getString(Neo4jConstants.USER);
-    String password = graphStore.getString(Neo4jConstants.PASSWORD);
+    if (graphStore.containsKey(Neo4jConstants.URI)) {
+      host = graphStore.getString(Neo4jConstants.URI);
+    }
+    if (graphStore.containsKey(Neo4jConstants.USER)) {
+      user = graphStore.getString(Neo4jConstants.USER);
+    }
+    if (graphStore.containsKey(Neo4jConstants.PASSWORD)) {
+      password = graphStore.getString(Neo4jConstants.PASSWORD);
+    }
     String dropDatabase = project.getNamespace().toLowerCase();
     Neo4jAdminUtils driver = new Neo4jAdminUtils(host, user, password, database);
     driver.neo4jGraph.dropDatabase(dropDatabase);
   }
 
-  public void setGraphStore(String namespace, JSONObject config, boolean createDatabase) {
+  public void setGraphStore(Project project, JSONObject config, boolean createDatabase) {
     UriComponents uriComponents = UriComponentsBuilder.fromUriString(url).build();
     String database = uriComponents.getQueryParams().getFirst(Neo4jConstants.DATABASE);
     String host =
@@ -151,6 +191,8 @@ public class ProjectManagerImpl implements ProjectManager {
     JSONObject graphStore = config.getJSONObject(CommonConstants.GRAPH_STORE);
     if (graphStore.containsKey(Neo4jConstants.URI)) {
       host = graphStore.getString(Neo4jConstants.URI);
+    } else {
+      graphStore.put(Neo4jConstants.URI, host);
     }
     if (graphStore.containsKey(Neo4jConstants.USER)) {
       user = graphStore.getString(Neo4jConstants.USER);
@@ -164,8 +206,23 @@ public class ProjectManagerImpl implements ProjectManager {
     }
     if (createDatabase) {
       Neo4jAdminUtils driver = new Neo4jAdminUtils(host, user, password, database);
-      String projectDatabase = namespace.toLowerCase();
+      String projectDatabase = project.getNamespace().toLowerCase();
       driver.neo4jGraph.createDatabase(projectDatabase);
+    }
+  }
+
+  public void createSchema(Long projectId) {
+    try {
+      BaseSchemaSyncer schemaSyncer = schemaSyncerFactory.getSchemaSyncer(SchemaStorageEnum.GRAPH);
+      if (schemaSyncer != null) {
+        Set<SPGTypeIdentifier> spreadStdTypeNames = spgTypeService.querySpreadStdTypeName();
+        List<BaseSPGType> spgTypes = spgTypeService.queryProjectSchema(projectId).getSpgTypes();
+        SPGSchemaAlterCmd schemaEditCmd =
+            new SPGSchemaAlterCmd(new SPGSchema(spgTypes, spreadStdTypeNames));
+        schemaSyncer.syncSchema(projectId, schemaEditCmd);
+      }
+    } catch (Exception e) {
+      log.error("createSchema Exception:" + projectId, e);
     }
   }
 
@@ -188,5 +245,10 @@ public class ProjectManagerImpl implements ProjectManager {
   public String getSearchEngineUrl(Long projectId) {
     // For Neo4j, GraphStore and SearchEngine are the same.
     return getGraphStoreUrl(projectId);
+  }
+
+  @Override
+  public Project queryByNamespace(String namespace) {
+    return projectRepository.queryByNamespace(namespace);
   }
 }

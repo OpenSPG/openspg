@@ -18,7 +18,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.exception.BuilderException;
 import com.antgroup.openspg.builder.model.pipeline.ExecuteNode;
-import com.antgroup.openspg.builder.model.pipeline.Node;
 import com.antgroup.openspg.builder.model.pipeline.config.Neo4jSinkNodeConfig;
 import com.antgroup.openspg.builder.model.pipeline.enums.StatusEnum;
 import com.antgroup.openspg.builder.model.record.BaseRecord;
@@ -49,15 +48,14 @@ import org.apache.commons.lang3.StringUtils;
 @Slf4j
 public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
 
-  private static final int NUM_THREADS = 10;
+  private static final int NUM_THREADS = 60;
 
-  private ExecuteNode node;
+  private ExecuteNode node = new ExecuteNode();
   private Neo4jStoreClient client;
   private Project project;
   private static final String DOT = ".";
-  ExecutorService executor;
 
-  RejectedExecutionHandler handler =
+  private static RejectedExecutionHandler handler =
       (r, executor) -> {
         try {
           executor.getQueue().put(r);
@@ -65,6 +63,14 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
           Thread.currentThread().interrupt();
         }
       };
+  private static ExecutorService executor =
+      new ThreadPoolExecutor(
+          NUM_THREADS,
+          NUM_THREADS,
+          2 * 60L,
+          TimeUnit.SECONDS,
+          new LinkedBlockingQueue<>(100),
+          handler);
 
   public Neo4jSinkWriter(String id, String name, Neo4jSinkNodeConfig config) {
     super(id, name, config);
@@ -74,19 +80,9 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
   public void doInit(BuilderContext context) throws BuilderException {
     if (context.getExecuteNodes() != null) {
       this.node = context.getExecuteNodes().get(getId());
-    } else {
-      this.node = new ExecuteNode(new Node(getId(), getName(), getConfig()));
     }
     client = new Neo4jStoreClient(context.getGraphStoreUrl());
     project = JSON.parseObject(context.getProject(), Project.class);
-    executor =
-        new ThreadPoolExecutor(
-            NUM_THREADS,
-            NUM_THREADS,
-            2 * 60L,
-            TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(100),
-            handler);
   }
 
   @Override
@@ -106,7 +102,7 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
       SubGraphRecord subGraphRecord = (SubGraphRecord) record;
       writeToNeo4j(subGraphRecord);
       node.addTraceLog(
-          "Writer processor succeed node:%s edge%s",
+          "Writer processor succeed nodes:%s edges:%s",
           subGraphRecord.getResultNodes().size(), subGraphRecord.getResultEdges().size());
     }
   }
@@ -242,8 +238,8 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
       }
       log.info(
           String.format(
-              "write Edge succeed id:%s cons:%s",
-              edge.getId(), System.currentTimeMillis() - statr));
+              "write Edge succeed from:%s to:%s cons:%s",
+              edge.getFrom(), edge.getTo(), System.currentTimeMillis() - statr));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

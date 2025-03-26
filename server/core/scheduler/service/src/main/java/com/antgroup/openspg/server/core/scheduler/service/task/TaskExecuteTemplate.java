@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,8 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
       }
     } catch (Throwable e) {
       context.getTask().setStatus(TaskStatus.ERROR);
-      context.addTraceLog("Scheduling execute exception：%s", ExceptionUtils.getStackTrace(e));
+      context.addTraceLog(
+          "Scheduler execute failed with error:%s", ExceptionUtils.getStackTrace(e));
       log.error("JobTask process error uniqueId:{}", context.getInstance().getUniqueId(), e);
     }
 
@@ -67,7 +69,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
         setTaskFinish(context);
       }
     } catch (Throwable e) {
-      context.addTraceLog("Scheduling save status error：%s", ExceptionUtils.getStackTrace(e));
+      context.addTraceLog("Scheduler save failed with error:%s", ExceptionUtils.getStackTrace(e));
       log.error("process status error uniqueId:{}", context.getInstance().getUniqueId(), e);
     } finally {
       unlockTask(context, lock);
@@ -83,7 +85,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
         context.addTraceLog("Failed to preempt lock, the lock is already occupied!");
         return false;
       }
-      context.addTraceLog("Lock preempt successful!");
+      context.addTraceLog("Lock preempted successfully!");
       return true;
     }
 
@@ -118,9 +120,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     context.addTraceLog("Lock released successfully!");
   }
 
-  public void before(TaskExecuteContext context) {
-    context.addTraceLog("Start process task!");
-  }
+  public void before(TaskExecuteContext context) {}
 
   /** the finally Func */
   public void finallyFunc(TaskExecuteContext context) {
@@ -131,6 +131,9 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
     SchedulerTask old = schedulerTaskService.getById(task.getId());
     if (TaskStatus.isFinished(old.getStatus())) {
       context.addTraceLog("Task has been completed by other threads,status:%s!", old.getStatus());
+      if (StringUtils.isBlank(old.getOutput())) {
+        old.setOutput(task.getOutput());
+      }
       task = old;
     }
 
@@ -175,14 +178,13 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
       return;
     }
     SchedulerTask nextTask =
-        schedulerTaskService.queryByInstanceIdAndType(
-            task.getInstanceId(), nextNode.getTaskComponent());
+        schedulerTaskService.queryByInstanceIdAndNodeId(task.getInstanceId(), nextNode.getId());
     SchedulerTask updateTask = new SchedulerTask();
     updateTask.setId(nextTask.getId());
     String name = nextNode.getName();
-    context.addTraceLog("current node is completed to trigger next node:%s", name);
     if (!TaskStatus.WAIT.equals(nextTask.getStatus())) {
-      context.addTraceLog("%s status:%s,Only WAIT can be modified", name, nextTask.getStatus());
+      context.addTraceLog(
+          "current status of %s is %s, and can not be modified", name, nextTask.getStatus());
       return;
     }
     updateTask.setStatus(TaskStatus.RUNNING);
@@ -208,8 +210,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
   private boolean checkAllNodesFinished(SchedulerTask task, List<TaskExecuteDag.Node> nodes) {
     for (TaskExecuteDag.Node node : nodes) {
       SchedulerTask t =
-          schedulerTaskService.queryByInstanceIdAndType(
-              task.getInstanceId(), node.getTaskComponent());
+          schedulerTaskService.queryByInstanceIdAndNodeId(task.getInstanceId(), node.getId());
       if (!node.getId().equals(task.getNodeId()) && !TaskStatus.isFinished(t.getStatus())) {
         return false;
       }
@@ -222,7 +223,7 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
       TaskExecuteContext context, TaskStatus taskStatus, InstanceStatus instanceStatus) {
     SchedulerInstance instance = context.getInstance();
     context.addTraceLog(
-        "Complete instance,Subsequent task status will all be changed to:%s. instance status set to:%s",
+        "Set instance status to: %s, and all task statuses to: %s",
         taskStatus.name(), instanceStatus.name());
     schedulerCommonService.setInstanceFinish(instance, instanceStatus, taskStatus);
   }

@@ -19,24 +19,12 @@ import lombok.Getter;
 @Getter
 public class ParagraphSplitNodeConfig extends BasePythonNodeConfig {
 
-  private final String nl;
-  private final Boolean semanticSplit;
-  private final Long splitLength;
-  private final Boolean builderIndex;
   private final String token;
+  private final String extension;
 
-  public ParagraphSplitNodeConfig(
-      OperatorConfig operatorConfig,
-      String nl,
-      Boolean semanticSplit,
-      Long splitLength,
-      Boolean builderIndex,
-      String token) {
+  public ParagraphSplitNodeConfig(OperatorConfig operatorConfig, String token, String extension) {
     super(NodeTypeEnum.PARAGRAPH_SPLIT, operatorConfig);
-    this.nl = nl;
-    this.semanticSplit = semanticSplit;
-    this.splitLength = splitLength;
-    this.builderIndex = builderIndex;
     this.token = token;
+    this.extension = extension;
   }
 }

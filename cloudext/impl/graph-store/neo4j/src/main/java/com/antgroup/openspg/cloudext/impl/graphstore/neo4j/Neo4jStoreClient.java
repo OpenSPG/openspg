@@ -128,7 +128,6 @@ public class Neo4jStoreClient extends BaseLPGGraphStoreClient {
   @Override
   public void upsertVertex(@NonNull String vertexTypeName, List<VertexRecord> vertexRecords)
       throws Exception {
-    Long statr = System.currentTimeMillis();
     if (CollectionUtils.isEmpty(vertexRecords)) {
       return;
     }
@@ -151,7 +150,6 @@ public class Neo4jStoreClient extends BaseLPGGraphStoreClient {
     } else {
       dataUtil.upsertNodes(label, propertiesList, Neo4jCommonUtils.ID, extraLabelsInNeo4j);
     }
-    log.info(String.format("upsertVertex cons:%s", System.currentTimeMillis() - statr));
   }
 
   @Override

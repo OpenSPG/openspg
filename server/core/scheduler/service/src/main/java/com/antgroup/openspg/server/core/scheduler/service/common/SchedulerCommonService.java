@@ -16,6 +16,7 @@ import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -32,6 +33,8 @@ import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +52,7 @@ public class SchedulerCommonService {
   public static final Long FINISH = 100L;
 
   @Autowired SchedulerJobService schedulerJobService;
+
   @Autowired SchedulerInstanceService schedulerInstanceService;
   @Autowired SchedulerTaskService schedulerTaskService;
   @Autowired SchedulerConfig schedulerConfig;
@@ -67,6 +71,32 @@ public class SchedulerCommonService {
 
     stopRunningTasks(instance);
     schedulerTaskService.setStatusByInstanceId(instance.getId(), taskStatus);
+    SchedulerJob job = schedulerJobService.getById(instance.getJobId());
+    TranslatorFactory.getTranslator(job.getTranslateType())
+        .statusCallback(job, instance, instanceStatus);
+  }
+
+  /** Rerun all tasks after the specified task */
+  public void RerunFromTask(SchedulerInstance instance, String taskType) {
+    TaskExecuteDag taskDag = instance.getTaskDag();
+    List<TaskExecuteDag.Node> nodes = taskDag.getNodesByType(taskType);
+    List<SchedulerTask> tasks = schedulerTaskService.queryByInstanceId(instance.getId());
+    Map<String, SchedulerTask> taskMap =
+        tasks.stream()
+            .collect(Collectors.toMap(SchedulerTask::getNodeId, SchedulerTask -> SchedulerTask));
+    for (TaskExecuteDag.Node node : nodes) {
+      SchedulerTask task = taskMap.get(node.getId());
+      SchedulerTask runningTask = new SchedulerTask(instance, TaskStatus.RUNNING, node);
+      runningTask.setId(task.getId());
+      schedulerTaskService.update(runningTask);
+      List<TaskExecuteDag.Node> subsequentNodes = taskDag.getSuccessorNodes(node.getId());
+      for (TaskExecuteDag.Node subsequentNode : subsequentNodes) {
+        SchedulerTask subsequentTask = taskMap.get(subsequentNode.getId());
+        SchedulerTask waitTask = new SchedulerTask(instance, TaskStatus.WAIT, node);
+        waitTask.setId(subsequentTask.getId());
+        schedulerTaskService.update(waitTask);
+      }
+    }
   }
 
   /** stop all running tasks by instance */
@@ -76,34 +106,37 @@ public class SchedulerCommonService {
     SchedulerJob job = schedulerJobService.getById(instance.getJobId());
 
     for (SchedulerTask task : taskList) {
-      // Filter non-running tasks
-      if (!TaskStatus.isRunning(task.getStatus()) || StringUtils.isBlank(task.getType())) {
-        continue;
-      }
-
-      // get AsyncTaskExecute by type
-      String type = task.getType().split(UNDERLINE_SEPARATOR)[0];
-      TaskExecute jobTask = SpringContextHolder.getBean(type, TaskExecute.class);
-      boolean isAsyncTask = (jobTask != null && jobTask instanceof AsyncTaskExecute);
-      if (!isAsyncTask) {
-        log.warn("get bean is null or not instance of JobAsyncTask id: {}", task.getId());
-        continue;
-      }
-
-      // transform to jobAsyncTask trigger stop
-      AsyncTaskExecute jobAsyncTask = (AsyncTaskExecute) jobTask;
-      TaskExecuteContext context = new TaskExecuteContext(job, instance, task);
-      jobAsyncTask.stop(context, task.getResource());
+      stopRunningTask(job, instance, task);
     }
+  }
+
+  /** stop running task */
+  private void stopRunningTask(SchedulerJob job, SchedulerInstance instance, SchedulerTask task) {
+    // Filter non-running tasks
+    if (!TaskStatus.isRunning(task.getStatus()) || StringUtils.isBlank(task.getType())) {
+      return;
+    }
+    // get AsyncTaskExecute by type
+    String type = task.getType().split(UNDERLINE_SEPARATOR)[0];
+    TaskExecute jobTask = SpringContextHolder.getBean(type, TaskExecute.class);
+    boolean isAsyncTask = (jobTask != null && jobTask instanceof AsyncTaskExecute);
+    if (!isAsyncTask) {
+      log.warn("get bean is null or not instance of JobAsyncTask id: {}", task.getId());
+      return;
+    }
+    // transform to jobAsyncTask trigger stop
+    AsyncTaskExecute jobAsyncTask = (AsyncTaskExecute) jobTask;
+    TaskExecuteContext context = new TaskExecuteContext(job, instance, task);
+    jobAsyncTask.stop(context, task.getResource());
   }
 
   /** check Instance is Running within 24H */
   private void checkInstanceRunning(SchedulerJob job) {
-    SchedulerInstance query = new SchedulerInstance();
+    SchedulerInstanceQuery query = new SchedulerInstanceQuery();
     query.setJobId(job.getId());
     query.setStartCreateTime(DateUtils.addDays(new Date(), -1));
 
-    List<SchedulerInstance> instances = schedulerInstanceService.query(query);
+    List<SchedulerInstance> instances = schedulerInstanceService.query(query).getResults();
     for (SchedulerInstance instance : instances) {
       if (!InstanceStatus.isFinished(instance.getStatus())) {
         throw new SchedulerException("Running {} exist within 24H", instance.getUniqueId());

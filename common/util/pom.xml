@@ -59,5 +59,17 @@
       <groupId>org.neo4j.driver</groupId>
       <artifactId>neo4j-java-driver</artifactId>
     </dependency>
+    <dependency>
+      <groupId>net.sf.dozer</groupId>
+      <artifactId>dozer</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>pemja</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.rholder</groupId>
+      <artifactId>guava-retrying</artifactId>
+    </dependency>
   </dependencies>
 </project>

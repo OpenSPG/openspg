@@ -12,11 +12,15 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.api.impl;
 
+import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.LifeCycle;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.Status;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -48,6 +52,7 @@ public class SchedulerServiceImpl implements SchedulerService {
       new ThreadPoolExecutor(1, 20, 30, TimeUnit.MINUTES, new LinkedBlockingQueue<>(100));
 
   @Autowired SchedulerJobService schedulerJobService;
+
   @Autowired SchedulerInstanceService schedulerInstanceService;
   @Autowired SchedulerTaskService schedulerTaskService;
   @Autowired SchedulerCommonService schedulerCommonService;
@@ -122,7 +127,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
   /** stop all not finish instance by job id */
   private void stopJobAllInstance(Long jobId) {
-    SchedulerInstance query = new SchedulerInstance();
+    SchedulerInstanceQuery query = new SchedulerInstanceQuery();
     query.setJobId(jobId);
     List<SchedulerInstance> instances = schedulerInstanceService.getNotFinishInstance(query);
     if (CollectionUtils.isEmpty(instances)) {
@@ -176,7 +181,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  public boolean updateJob(SchedulerJob job) {
+  public Boolean updateJob(SchedulerJob job) {
     Long id = schedulerJobService.update(job);
     return id > 0;
   }
@@ -187,7 +192,7 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  public List<SchedulerJob> searchJobs(SchedulerJob query) {
+  public Paged<SchedulerJob> searchJobs(SchedulerJobQuery query) {
     return schedulerJobService.query(query);
   }
 
@@ -234,12 +239,12 @@ public class SchedulerServiceImpl implements SchedulerService {
   }
 
   @Override
-  public List<SchedulerInstance> searchInstances(SchedulerInstance query) {
+  public Paged<SchedulerInstance> searchInstances(SchedulerInstanceQuery query) {
     return schedulerInstanceService.query(query);
   }
 
   @Override
-  public List<SchedulerTask> searchTasks(SchedulerTask query) {
+  public Paged<SchedulerTask> searchTasks(SchedulerTaskQuery query) {
     return schedulerTaskService.query(query);
   }
 }

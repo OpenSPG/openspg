@@ -20,9 +20,11 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.FileAppender;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.ParserConfig;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.core.runtime.impl.DefaultBuilderCatalog;
-import com.antgroup.openspg.builder.model.BuilderJsonUtils;
+import com.antgroup.openspg.builder.model.BuilderConstants;
 import com.antgroup.openspg.builder.model.exception.PipelineConfigException;
 import com.antgroup.openspg.builder.model.pipeline.Pipeline;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
@@ -50,19 +52,6 @@ import org.slf4j.LoggerFactory;
 @Slf4j
 public class LocalBuilderMain {
 
-  private static final String PROJECT_ID_OPTION = "projectId";
-  private static final String JOB_NAME_OPTION = "jobName";
-  private static final String PIPELINE_OPTION = "pipeline";
-  private static final String PYTHON_EXEC_OPTION = "pythonExec";
-  private static final String PYTHON_PATHS_OPTION = "pythonPaths";
-  private static final String SCHEMA_URL_OPTION = "schemaUrl";
-  private static final String PARALLELISM_OPTION = "parallelism";
-  private static final String ALTER_OPERATION_OPTION = "alterOperation";
-  private static final String LOG_FILE_OPTION = "logFile";
-  private static final String LEAD_TO_OPTION = "leadTo";
-  private static final String GRAPH_STORE_URL_OPTION = "graphStoreUrl";
-  private static final String SEARCH_ENGINE_URL_OPTION = "searchEngineUrl";
-
   public static void main(String[] args) {
     CommandLine commandLine = parseArgs(args);
     try {
@@ -77,21 +66,55 @@ public class LocalBuilderMain {
     CommandLineParser parser = new DefaultParser();
     Options options = new Options();
 
-    options.addRequiredOption(PROJECT_ID_OPTION, PROJECT_ID_OPTION, true, "project id");
-    options.addRequiredOption(JOB_NAME_OPTION, JOB_NAME_OPTION, true, "job name");
-    options.addRequiredOption(PIPELINE_OPTION, PIPELINE_OPTION, true, "pipeline info");
-    options.addRequiredOption(PYTHON_EXEC_OPTION, PYTHON_EXEC_OPTION, true, "python exec");
-    options.addRequiredOption(PYTHON_PATHS_OPTION, PYTHON_PATHS_OPTION, true, "python path");
-    options.addRequiredOption(SCHEMA_URL_OPTION, SCHEMA_URL_OPTION, true, "schema url");
-    options.addOption(PARALLELISM_OPTION, PARALLELISM_OPTION, true, "parallelism");
+    options.addRequiredOption(
+        BuilderConstants.PROJECT_ID_OPTION, BuilderConstants.PROJECT_ID_OPTION, true, "project id");
+    options.addRequiredOption(
+        BuilderConstants.JOB_NAME_OPTION, BuilderConstants.JOB_NAME_OPTION, true, "job name");
+    options.addRequiredOption(
+        BuilderConstants.PIPELINE_OPTION, BuilderConstants.PIPELINE_OPTION, true, "pipeline info");
+    options.addRequiredOption(
+        BuilderConstants.PYTHON_EXEC_OPTION,
+        BuilderConstants.PYTHON_EXEC_OPTION,
+        true,
+        "python exec");
+    options.addRequiredOption(
+        BuilderConstants.PYTHON_PATHS_OPTION,
+        BuilderConstants.PYTHON_PATHS_OPTION,
+        true,
+        "python path");
+    options.addRequiredOption(
+        BuilderConstants.SCHEMA_URL_OPTION, BuilderConstants.SCHEMA_URL_OPTION, true, "schema url");
     options.addOption(
-        ALTER_OPERATION_OPTION, ALTER_OPERATION_OPTION, true, "alter operation, upsert or delete");
-    options.addOption(LOG_FILE_OPTION, LOG_FILE_OPTION, true, "log file");
-    options.addOption(LEAD_TO_OPTION, LEAD_TO_OPTION, false, "enable leadTo");
+        BuilderConstants.PARALLELISM_OPTION,
+        BuilderConstants.PARALLELISM_OPTION,
+        true,
+        "parallelism");
+    options.addOption(
+        BuilderConstants.ALTER_OPERATION_OPTION,
+        BuilderConstants.ALTER_OPERATION_OPTION,
+        true,
+        "alter operation, upsert or delete");
+    options.addOption(
+        BuilderConstants.LOG_FILE_OPTION, BuilderConstants.LOG_FILE_OPTION, true, "log file");
+    options.addOption(
+        BuilderConstants.LEAD_TO_OPTION, BuilderConstants.LEAD_TO_OPTION, false, "enable leadTo");
     options.addRequiredOption(
-        GRAPH_STORE_URL_OPTION, GRAPH_STORE_URL_OPTION, true, "graph store url");
+        BuilderConstants.GRAPH_STORE_URL_OPTION,
+        BuilderConstants.GRAPH_STORE_URL_OPTION,
+        true,
+        "graph store url");
     options.addRequiredOption(
-        SEARCH_ENGINE_URL_OPTION, SEARCH_ENGINE_URL_OPTION, true, "search engine url");
+        BuilderConstants.SEARCH_ENGINE_URL_OPTION,
+        BuilderConstants.SEARCH_ENGINE_URL_OPTION,
+        true,
+        "search engine url");
+    options.addRequiredOption(
+        BuilderConstants.PROJECT_OPTION, BuilderConstants.PROJECT_OPTION, true, "project");
+    options.addOption(
+        BuilderConstants.MODEL_EXECUTE_NUM_OPTION,
+        BuilderConstants.MODEL_EXECUTE_NUM_OPTION,
+        true,
+        "model execute num");
 
     CommandLine commandLine = null;
     HelpFormatter helper = new HelpFormatter();
@@ -105,29 +128,37 @@ public class LocalBuilderMain {
   }
 
   private static void run(CommandLine commandLine) throws Exception {
-    String logFileName = commandLine.getOptionValue(LOG_FILE_OPTION);
+    ParserConfig.getGlobalInstance().setAutoTypeSupport(true);
+    String logFileName = commandLine.getOptionValue(BuilderConstants.LOG_FILE_OPTION);
     setUpLogFile(logFileName);
 
-    long projectId = Long.parseLong(commandLine.getOptionValue(PROJECT_ID_OPTION));
-    String jobName = commandLine.getOptionValue(JOB_NAME_OPTION);
+    long projectId = Long.parseLong(commandLine.getOptionValue(BuilderConstants.PROJECT_ID_OPTION));
+    String jobName = commandLine.getOptionValue(BuilderConstants.JOB_NAME_OPTION);
 
-    String pipelineStr = commandLine.getOptionValue(PIPELINE_OPTION);
-    Pipeline pipeline = BuilderJsonUtils.deserialize(pipelineStr, Pipeline.class);
+    String pipelineStr = commandLine.getOptionValue(BuilderConstants.PIPELINE_OPTION);
+    Pipeline pipeline = JSONObject.parseObject(pipelineStr, Pipeline.class);
 
-    String pythonExec = commandLine.getOptionValue(PYTHON_EXEC_OPTION);
-    String pythonPaths = commandLine.getOptionValue(PYTHON_PATHS_OPTION);
-    String schemaUrl = commandLine.getOptionValue(SCHEMA_URL_OPTION);
+    String pythonExec = commandLine.getOptionValue(BuilderConstants.PYTHON_EXEC_OPTION);
+    String pythonPaths = commandLine.getOptionValue(BuilderConstants.PYTHON_PATHS_OPTION);
+    String schemaUrl = commandLine.getOptionValue(BuilderConstants.SCHEMA_URL_OPTION);
 
-    String parallelismStr = commandLine.getOptionValue(PARALLELISM_OPTION);
+    String parallelismStr = commandLine.getOptionValue(BuilderConstants.PARALLELISM_OPTION);
     int parallelism = (parallelismStr == null ? 1 : Integer.parseInt(parallelismStr));
 
-    String alterOperation = commandLine.getOptionValue(ALTER_OPERATION_OPTION);
+    String modelExecuteNumStr =
+        commandLine.getOptionValue(BuilderConstants.MODEL_EXECUTE_NUM_OPTION);
+    Integer modelExecuteNum =
+        (modelExecuteNumStr == null ? 5 : Integer.parseInt(modelExecuteNumStr));
+
+    String alterOperation = commandLine.getOptionValue(BuilderConstants.ALTER_OPERATION_OPTION);
     RecordAlterOperationEnum alterOperationEnum = RecordAlterOperationEnum.valueOf(alterOperation);
 
-    boolean enableLeadTo = commandLine.hasOption(LEAD_TO_OPTION);
+    boolean enableLeadTo = commandLine.hasOption(BuilderConstants.LEAD_TO_OPTION);
 
-    String graphStoreUrl = commandLine.getOptionValue(GRAPH_STORE_URL_OPTION);
-    String searchEngineUrl = commandLine.getOptionValue(SEARCH_ENGINE_URL_OPTION);
+    String graphStoreUrl = commandLine.getOptionValue(BuilderConstants.GRAPH_STORE_URL_OPTION);
+    String searchEngineUrl = commandLine.getOptionValue(BuilderConstants.SEARCH_ENGINE_URL_OPTION);
+
+    String project = commandLine.getOptionValue(BuilderConstants.PROJECT_OPTION);
 
     ProjectSchema projectSchema = getProjectSchema(projectId, schemaUrl);
     Map<SPGTypeIdentifier, ConceptList> conceptLists = getConceptLists(enableLeadTo, projectSchema);
@@ -141,16 +172,22 @@ public class LocalBuilderMain {
             .setOperation(alterOperationEnum)
             .setEnableLeadTo(enableLeadTo)
             .setGraphStoreUrl(graphStoreUrl)
-            .setSearchEngineUrl(searchEngineUrl);
+            .setSearchEngineUrl(searchEngineUrl)
+            .setProject(project)
+            .setModelExecuteNum(modelExecuteNum)
+            .setSchemaUrl(schemaUrl);
 
     LocalBuilderRunner runner = new LocalBuilderRunner(parallelism);
     runner.init(pipeline, builderContext);
 
     try {
       runner.execute();
+    } catch (Exception e) {
+      throw new RuntimeException("runner execute exception ", e);
     } finally {
       runner.close();
     }
+    System.exit(0);
   }
 
   private static ProjectSchema getProjectSchema(long projectId, String schemaUrl) {

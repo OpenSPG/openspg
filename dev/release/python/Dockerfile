@@ -9,7 +9,7 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-FROM m.daocloud.io/ubuntu:20.04
+FROM docker.m.daocloud.io/ubuntu:20.04
 
 # For apt to be noninteractive
 ENV DEBIAN_FRONTEND noninteractive
@@ -23,7 +23,7 @@ ARG APT_INSTALL="apt-get install --no-install-recommends -y"
 RUN apt-get clean && apt-get update && \
     $APT_INSTALL ca-certificates && \
     $APT_INSTALL ca-certificates-java && \
-    $APT_INSTALL git less vim && \
+    $APT_INSTALL git less vim wget curl telnet nano jq procps net-tools unzip zip tar gzip  && \
     # Install openjdk 8.
     $APT_INSTALL openjdk-8-jdk && \
     update-alternatives --set java /usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)/jre/bin/java && \
@@ -44,10 +44,9 @@ RUN if [ "${TARGETPLATFORM}" = "linux/amd64" ]; then \
 RUN python3 -m venv /openspg_venv && \
     . /openspg_venv/bin/activate && \
     export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture) && \
-    pip3 install openspg-kag==0.5.1b3 && \
+    pip3 install openspg-kag==0.6.0b2 && \
     pip3 install pemja==0.4.0 && \
-    pip3 install -U "http://alps-common.oss-cn-hangzhou-zmf.aliyuncs.com/nscommon/shiji/nscommon-0.0.1.tar.gz" &&\
+    pip3 install -U "http://alps-common.oss-cn-hangzhou-zmf.aliyuncs.com/nscommon/shiji/nscommon-0.0.1.tar.gz" && \
     echo "if (tty -s); then \n   . /openspg_venv/bin/activate \nfi" >> ~/.bashrc
 
-
-COPY openspg/ /openspg
+ADD openspg/dev/release/python/lib/builder*.jar /openspg_venv/lib/python3.8/site-packages/knext/builder/lib

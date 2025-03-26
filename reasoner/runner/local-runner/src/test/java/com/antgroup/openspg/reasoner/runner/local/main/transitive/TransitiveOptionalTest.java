@@ -137,6 +137,85 @@ public class TransitiveOptionalTest {
   }
 
   @Test
+  public void testOptionalLoop() {
+    String dsl =
+        "\n"
+            + "GraphStructure {\n"
+            + "    API [RAC.ServiceApi, __start__='true']\n"
+            + "    DbTable [RAC.DbTable]\n"
+            + "    //F_IdParam [RAC.Feature]\n"
+            + "    //F_SensResp [RAC.Feature]\n"
+            + "\n"
+            + "    // 正向链路\n"
+            + "    A [RAC.Param]\n"
+            + "    B [RAC.Param]\n"
+            + "    API->A [api2param] as api2param\n"
+            + "    A->B [virtualDataFlowEdge] repeat(0,3) as e\n"
+            + "    B->DbTable [param2table]\n"
+            + "    // // 特征\n"
+            + "    //A->F_IdParam[param2feature, __optional__='true'] as paramId\n"
+            + "    //API->F_SensResp[api2feature, __optional__='true'] as apiSensResp\n"
+            + "\n"
+            + "\n"
+            + "    // 反向链路\n"
+            + "    C [RAC.Param]\n"
+            + "    D [RAC.Param]\n"
+            + "    API->D [api2param] as api2param_r\n"
+            + "    C->D [virtualDataFlowEdge] repeat(0,3) as e_r\n"
+            + "    C->DbTable [param2table]\n"
+            + "\n"
+            + "}\n"
+            + "\n"
+            + "Rule {\n"
+            + "    time = to_timestamp(now() * 1000)\n"
+            + "    //L_permissionCheck1 = e.edges().reduce((res, ele) => concat(res, ele.L_permissionCheck), '') \n"
+            + "    //L_permissionCheck2 = e_r.edges().reduce((res, ele) => concat(res, ele.L_permissionCheck), '')\n"
+            + "    \n"
+            + "    // check L_permissionCheck\n"
+            + "    // R1: e.edges().constraint((pre, cur) => (cur.L_permissionCheck != \"true\"))\n"
+            + "    // R2: e_r.edges().constraint((pre, cur) => (cur.L_permissionCheck != \"true\"))\n"
+            + "}\n"
+            + "\n"
+            + "Action {\n"
+            + "    get(API.id,__path__)\n"
+            + "}";
+
+    String dataGraphStr =
+        "Graph {\n"
+            + "  API_1 [RAC.ServiceApi]\n"
+            + "  DbTable_1 [RAC.DbTable]\n"
+            + "  P_A1 [RAC.Param]\n"
+            + "  P_B2 [RAC.Param]\n"
+            + "  P_C3 [RAC.Param]\n"
+            + "  P_D4 [RAC.Param]\n"
+            + "\n"
+            + "  API_1 -> P_A1 [api2param]\n"
+            + "  API_1 -> P_D4 [api2param]\n"
+            + "  P_B2 -> DbTable_1 [param2table]\n"
+            + "  P_C3 -> DbTable_1 [param2table]\n"
+            + "  P_C3 -> P_D4 [virtualDataFlowEdge]\n"
+            + "  P_A1 -> P_B2 [virtualDataFlowEdge]\n"
+            + "}";
+    Map<String, Set<String>> schema = new HashMap<>();
+    schema.put("RAC.ServiceApi", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put("RAC.DbTable", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put("RAC.Param", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put(
+        "RAC.ServiceApi_api2param_RAC.Param",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put(
+        "RAC.Param_virtualDataFlowEdge_RAC.Param",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+    schema.put(
+        "RAC.Param_param2table_RAC.DbTable",
+        Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+
+    LocalReasonerResult rst = runTest(schema, dsl, dataGraphStr);
+
+    Assert.assertEquals(1, rst.getRows().size());
+  }
+
+  @Test
   public void testOptional1() {
     String dsl =
         ""

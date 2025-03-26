@@ -14,6 +14,7 @@
 package com.antgroup.openspg.server.api.http.server;
 
 import com.antgroup.openspg.common.util.NetworkAddressUtils;
+import com.antgroup.openspg.common.util.exception.SpgException;
 import com.antgroup.openspg.server.api.facade.ApiConstants;
 import com.antgroup.openspg.server.biz.common.util.BizThreadLocal;
 import com.antgroup.openspg.server.common.model.exception.IllegalParamsException;
@@ -76,6 +77,9 @@ public class HttpBizTemplate {
       callback.check();
       T result = callback.action();
       httpResult = HttpResult.success(result);
+    } catch (SpgException e) {
+      log.error("execute http spg app exception", e);
+      httpResult = HttpResult.failed(e.getCode(), e.getMessage());
     } catch (IllegalParamsException e) {
       log.error("error http illegal params", e);
       httpResult = HttpResult.failed("illegal params", e.getMessage());

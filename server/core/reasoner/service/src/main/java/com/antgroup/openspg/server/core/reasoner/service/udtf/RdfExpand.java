@@ -12,7 +12,6 @@
  */
 package com.antgroup.openspg.server.core.reasoner.service.udtf;
 
-import com.antgroup.openspg.common.util.tuple.Tuple2;
 import com.antgroup.openspg.reasoner.common.constants.Constants;
 import com.antgroup.openspg.reasoner.common.graph.vertex.IVertexId;
 import com.antgroup.openspg.reasoner.common.graph.vertex.impl.VertexBizId;
@@ -27,7 +26,6 @@ import com.antgroup.openspg.server.core.reasoner.service.impl.Utils;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -70,23 +68,19 @@ public class RdfExpand extends BaseUdtf {
     String vertexType = null;
     String bizId = null;
     Object s = context.get(srcAlias);
+    String rdfType = null;
+    if (args.size() > 0) {
+      rdfType = (String) args.get(0);
+    }
     if (s instanceof Map) {
       Map<String, Object> sMap = (Map<String, Object>) s;
       bizId = (String) sMap.get(Constants.NODE_ID_KEY);
       vertexType = (String) sMap.get(Constants.CONTEXT_LABEL);
     }
     IVertexId id = new VertexBizId(bizId, vertexType);
-
     // 结果
-    Map<String, Set<Tuple2<String, String>>> validBizIdMap = Utils.getAllRdfEntity(graphState, id);
-
-    for (Map.Entry<String, Set<Tuple2<String, String>>> entry : validBizIdMap.entrySet()) {
-      LinkedUdtfResult udtfResult = new LinkedUdtfResult();
-      udtfResult.setEdgeType(entry.getKey());
-      for (Tuple2<String, String> data : entry.getValue()) {
-        udtfResult.getTargetVertexIdList().add(data.first);
-        udtfResult.getTargetVertexTypeList().add(data.second);
-      }
+    List<LinkedUdtfResult> validBizIds = Utils.getAllRdfEntity(graphState, id, rdfType);
+    for (LinkedUdtfResult udtfResult : validBizIds) {
       forward(Lists.newArrayList(udtfResult));
     }
   }

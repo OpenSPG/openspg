@@ -25,6 +25,8 @@ import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.WithAlterOperation;
 import com.antgroup.openspg.server.core.schema.service.predicate.PropertyService;
 import com.antgroup.openspg.server.core.schema.service.predicate.RelationService;
+import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleProperty;
+import com.antgroup.openspg.server.core.schema.service.predicate.repository.PropertyRepository;
 import com.antgroup.openspg.server.core.schema.service.type.SPGTypeService;
 import com.antgroup.openspg.server.core.schema.service.type.convertor.SPGTypeAssemble;
 import com.antgroup.openspg.server.core.schema.service.type.convertor.SPGTypeConvertor;
@@ -53,6 +55,7 @@ public class SPGTypeServiceImpl implements SPGTypeService {
   @Autowired private SPGTypeRepository spgTypeRepository;
   @Autowired private PropertyService propertyService;
   @Autowired private RelationService relationService;
+  @Autowired private PropertyRepository propertyRepository;
   @Autowired private ProjectOntologyRelRepository projectOntologyRelRepository;
 
   @Override
@@ -159,6 +162,20 @@ public class SPGTypeServiceImpl implements SPGTypeService {
         });
     spgTypes.addAll(this.withDetail(advancedSimpleTypes));
     return spgTypes;
+  }
+
+  @Override
+  public List<Relation> queryRelationByUniqueId(List<Long> uniqueIds) {
+    if (CollectionUtils.isEmpty(uniqueIds)) {
+      return Collections.emptyList();
+    }
+    return relationService.queryByUniqueId(uniqueIds);
+  }
+
+  @Override
+  public List<SimpleProperty> queryPropertyByUniqueId(
+      List<Long> uniqueIds, SPGOntologyEnum ontologyEnum) {
+    return propertyRepository.queryByUniqueId(uniqueIds, ontologyEnum);
   }
 
   private List<BaseAdvancedType> queryCustomizedType(Long projectId) {
