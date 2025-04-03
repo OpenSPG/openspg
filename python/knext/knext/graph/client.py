@@ -80,6 +80,7 @@ class GraphClient(Client):
         directed=None,
         tolerance=None,
         top_k=None,
+        reset: List[float] = None,
     ):
         ppr_start_nodes = [
             GetPageRankScoresRequestStartNodes(id=node["id"], type=node["type"])
@@ -95,6 +96,7 @@ class GraphClient(Client):
             directed=directed,
             tolerance=tolerance,
             top_k=top_k,
+            reset=reset,
         )
         resp = self._rest_client.graph_get_page_rank_scores_post(
             get_page_rank_scores_request=req

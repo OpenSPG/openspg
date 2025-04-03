@@ -53,6 +53,7 @@ class GetPageRankScoresRequest(object):
         "directed": "bool",
         "tolerance": "float",
         "top_k": "int",
+        "reset": "list[float]",
     }
 
     attribute_map = {
@@ -65,6 +66,7 @@ class GetPageRankScoresRequest(object):
         "directed": "directed",
         "tolerance": "tolerance",
         "top_k": "topK",
+        "reset": "reset",
     }
 
     def __init__(
@@ -78,6 +80,7 @@ class GetPageRankScoresRequest(object):
         directed=None,
         tolerance=None,
         top_k=None,
+        reset=None,
         local_vars_configuration=None,
     ):  # noqa: E501
         """GetPageRankScoresRequest - a model defined in OpenAPI"""  # noqa: E501
@@ -94,6 +97,7 @@ class GetPageRankScoresRequest(object):
         self._directed = None
         self._tolerance = None
         self._top_k = None
+        self._reset = None
         self.discriminator = None
 
         self.project_id = project_id
@@ -111,6 +115,8 @@ class GetPageRankScoresRequest(object):
             self.tolerance = tolerance
         if top_k is not None:
             self.top_k = top_k
+        if reset is not None:
+            self.reset = reset
 
     @property
     def project_id(self):
@@ -319,6 +325,27 @@ class GetPageRankScoresRequest(object):
         """
 
         self._top_k = top_k
+
+    @property
+    def reset(self):
+        """Gets the reset of this GetPageRankScoresRequest.  # noqa: E501
+
+
+        :return: The reset of this GetPageRankScoresRequest.  # noqa: E501
+        :rtype: list[float]
+        """
+        return self._reset
+
+    @reset.setter
+    def reset(self, reset):
+        """Sets the reset of this GetPageRankScoresRequest.
+
+
+        :param reset: The reset of this GetPageRankScoresRequest.  # noqa: E501
+        :type: list[float]
+        """
+
+        self._reset = reset
 
     def to_dict(self):
         """Returns the model properties as a dict"""
