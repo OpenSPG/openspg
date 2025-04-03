@@ -164,9 +164,16 @@ class GraphClient(Client):
 
 
 if __name__ == "__main__":
-    sc = GraphClient("http://127.0.0.1:8887", 4)
-    out = sc.calculate_pagerank_scores(
-        "Entity", [{"name": "Anxiety_and_nervousness", "type": "Entity"}]
+    sc = GraphClient("spgservice-152.gz00b.dev.alipay.net", 767)
+    out = sc.run_page_rank(
+        target_vertex_type="vt",
+        start_nodes=[{"type":"vt", "id":"2"}, {"type":"vt", "id":"3"}],
+        max_iterations=5,
+        damping_factor=0.85,
+        parallel=1,
+        directed=True,
+        tolerance=0.0001,
+        top_k=10,
+        reset=[0.345, 0.678],
     )
-    for o in out:
-        print(o)
+    print(out)
