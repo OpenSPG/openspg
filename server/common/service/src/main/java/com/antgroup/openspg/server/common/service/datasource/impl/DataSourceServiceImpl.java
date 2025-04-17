@@ -111,6 +111,7 @@ public class DataSourceServiceImpl implements DataSourceService {
 
   @Override
   public Boolean testConnect(DataSource record) {
+    setEncrypt(record);
     return dataSourceMeta.testConnect(CloudDataSource.toCloud(record));
   }
 

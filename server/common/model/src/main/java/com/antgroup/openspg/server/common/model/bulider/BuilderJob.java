@@ -34,6 +34,7 @@ public class BuilderJob extends BaseModel {
   private Long chunkNum;
   private String fileUrl;
   private String status;
+  private String dataSourceType;
   private String type;
   private String extension;
   private String version;
@@ -42,4 +43,5 @@ public class BuilderJob extends BaseModel {
   private String computingConf;
   private String lifeCycle;
   private String action;
+  private String dependence;
 }

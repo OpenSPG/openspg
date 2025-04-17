@@ -147,9 +147,16 @@ public class SchedulerCommonService {
   /** generate Period Instance by Cron */
   public List<SchedulerInstance> generatePeriodInstance(SchedulerJob job) {
     List<SchedulerInstance> instances = Lists.newArrayList();
+    Date pre = SchedulerUtils.getPreviousValidTime(job.getSchedulerCron(), new Date());
+    pre = SchedulerUtils.getPreviousValidTime(job.getSchedulerCron(), pre);
 
     // get period instance all execution Dates
-    List<Date> executionDates = SchedulerUtils.getCronExecutionDatesByToday(job.getSchedulerCron());
+    List<Date> executionDates =
+        SchedulerUtils.getCronExecutionDates(job.getSchedulerCron(), pre, new Date());
+    if (CollectionUtils.isEmpty(executionDates)) {
+      executionDates = Lists.newArrayList();
+      executionDates.add(SchedulerUtils.getPreviousValidTime(job.getSchedulerCron(), new Date()));
+    }
     for (Date schedulerDate : executionDates) {
       String uniqueId = SchedulerUtils.getUniqueId(job.getId(), schedulerDate);
       SchedulerInstance instance = generateInstance(job, uniqueId, schedulerDate);
@@ -163,8 +170,9 @@ public class SchedulerCommonService {
   /** generate Once/RealTime Instance */
   public SchedulerInstance generateInstance(SchedulerJob job) {
     checkInstanceRunning(job);
-    String uniqueId = job.getId().toString() + System.currentTimeMillis();
-    return generateInstance(job, uniqueId, new Date());
+    Date schedulerDate = new Date();
+    String uniqueId = SchedulerUtils.getUniqueId(job.getId(), schedulerDate);
+    return generateInstance(job, uniqueId, schedulerDate);
   }
 
   /** generate Instance by schedulerDate */

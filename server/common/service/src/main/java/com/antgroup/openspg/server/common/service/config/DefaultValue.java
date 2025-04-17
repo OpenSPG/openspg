@@ -47,6 +47,15 @@ public class DefaultValue {
   @Value("${python.paths:}")
   private String pythonPaths;
 
+  @Value("${python.env:}")
+  private String pythonEnv;
+
   @Value("${objectStorage.builder.bucketName:}")
   private String builderBucketName;
+
+  @Value("${objectStorage.upload.bucketName:}")
+  private String uploadBucketName;
+
+  @Value("${yuque.api.url:}")
+  private String yuQueApiUrl;
 }

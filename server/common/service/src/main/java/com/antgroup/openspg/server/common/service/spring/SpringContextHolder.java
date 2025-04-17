@@ -50,6 +50,13 @@ public class SpringContextHolder implements ApplicationContextAware {
     return null;
   }
 
+  public static Object getBean(String name) {
+    if (applicationContext != null) {
+      return applicationContext.getBean(name);
+    }
+    return null;
+  }
+
   public static <T> List<T> getBeans(Class<T> clazz) {
     if (applicationContext != null) {
       return new ArrayList<>(applicationContext.getBeansOfType(clazz).values());
@@ -60,6 +67,13 @@ public class SpringContextHolder implements ApplicationContextAware {
   public static <T> Map<String, T> getBeanMap(Class<T> clazz) {
     if (applicationContext != null) {
       return applicationContext.getBeansOfType(clazz);
+    }
+    return null;
+  }
+
+  public static String[] getBeanDefinitionNames() {
+    if (applicationContext != null) {
+      return applicationContext.getBeanDefinitionNames();
     }
     return null;
   }

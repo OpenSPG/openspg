@@ -57,6 +57,9 @@ public class SpgAppConstant {
   /** kag config */
   public static final String KAG_CONFIG = "KAG_CONFIG";
 
+  /** kag config */
+  public static final String APPLICATION_PROPERTIES = "APPLICATION_PROPERTIES";
+
   /** client type */
   public static final String CLIENT_TYPE = "client_type";
 
@@ -99,8 +102,8 @@ public class SpgAppConstant {
   /** open_spg_token_secret */
   public static final String OPEN_SPG_TOKEN_SECRET = "open_spg_token_secret";
 
-  /** UNDERLINE */
-  public static final String UNDERLINE = "_";
+  /** colon */
+  public static final String COLON_SEPARATOR = ":";
 
   /** useCurrentLanguage */
   public static final String USE_CURRENT_LANGUAGE = "useCurrentLanguage";
@@ -132,4 +135,19 @@ public class SpgAppConstant {
   /** hidden property */
   public static Set<String> HIDDEN_PROPERTY =
       new HashSet<String>(Arrays.asList("_content_vector", "_name_vector", "_desc_vector"));
+
+  /** text/event-stream */
+  public static final String STEAM_CONTENT_TYPE = "text/event-stream;charset=UTF-8";
+
+  /** json/application */
+  public static final String JSON_CONTENT_TYPE = "application/json;charset=UTF-8";
+
+  /** stream end line */
+  public static final String STREAM_END_LINE = "data: [DONE]\n\n";
+
+  /** stream timeout line */
+  public static final String STREAM_TIMEOUT_LINE = "data: [TIMEOUT]\n\n";
+
+  /** stream error line */
+  public static final String STREAM_ERROR_LINE = "data: [ERROR]\n\n";
 }

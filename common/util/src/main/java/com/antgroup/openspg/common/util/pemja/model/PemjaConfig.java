@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.common.util.pemja.model;
 
+import com.antgroup.openspg.common.util.constants.CommonConstant;
 import com.antgroup.openspg.common.util.pemja.PythonInvokeMethod;
 import java.util.Map;
 import lombok.EqualsAndHashCode;
@@ -45,6 +46,7 @@ public class PemjaConfig {
   public PemjaConfig(
       String pythonExec,
       String pythonPaths,
+      String pythonEnv,
       String hostAddr,
       Long projectId,
       String modulePath,
@@ -54,7 +56,8 @@ public class PemjaConfig {
       String paramsPrefix) {
     this.pythonExec = pythonExec;
     this.pythonPaths = pythonPaths;
-    this.modulePath = modulePath;
+    pythonEnv = (pythonEnv == null) ? CommonConstant.KAG : pythonEnv;
+    this.modulePath = pythonEnv + modulePath;
     this.className = className;
     this.method = method;
     this.params = params;
@@ -66,6 +69,7 @@ public class PemjaConfig {
   public PemjaConfig(
       String pythonExec,
       String pythonPaths,
+      String pythonEnv,
       String hostAddr,
       Long projectId,
       PythonInvokeMethod pythonInvoke,
@@ -73,6 +77,7 @@ public class PemjaConfig {
     this(
         pythonExec,
         pythonPaths,
+        pythonEnv,
         hostAddr,
         projectId,
         pythonInvoke.getModulePath(),

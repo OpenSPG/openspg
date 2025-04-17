@@ -31,6 +31,7 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.Vert
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
 import com.antgroup.openspg.server.common.model.project.Project;
 import com.google.common.collect.Lists;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -143,6 +144,9 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
           }
         }
         entry.setValue(doubleList);
+      }
+      if (entry.getValue() instanceof BigDecimal) {
+        entry.setValue(((BigDecimal) entry.getValue()).doubleValue());
       }
     }
   }

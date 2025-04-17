@@ -13,17 +13,19 @@
 package com.antgroup.openspg.common.util.exception.message;
 
 public enum SpgMessageEnum implements Message {
-  LOGIN_USER_NOT_EXIST("LOGIN_0001", "login user not exist"),
-  LOGIN_USER_NOT_LOGIN("LOGIN_0002", "not login"),
-  LOGIN_SUPER_PASSWORD_NOT_CHANGE("LOGIN_0003", "super password not change"),
+  KAG_ERROR("KAG_0001", "Some error, please check /home/admin/logs/antspg/common-error.log"),
+  LOGIN_USER_NOT_EXIST("LOGIN_0001", "User does not exist"),
+  LOGIN_USER_NOT_LOGIN("LOGIN_0002", "User not logged in"),
+  LOGIN_SUPER_PASSWORD_NOT_CHANGE(
+      "LOGIN_0003", "The default password of the system needs to be changed"),
 
-  PROJECT_MEMBER_NOT_EXIST("PRO_0001", "user is not a member of the project"),
-  PROJECT_NOT_EXIST("PRO_0002", "project does not exist"),
-  PROJECT_NAMESPACE_NOT_EXIST("PRO_0003", "namespace corresponds to a non-existent project"),
+  PROJECT_MEMBER_NOT_EXIST("PRO_0001", "User does not have project member permission"),
+  PROJECT_NOT_EXIST("PRO_0002", "Project does not exist"),
+  PROJECT_NAMESPACE_NOT_EXIST("PRO_0003", "Namespace does not exist"),
 
-  SCHEMA_CHANGE_NODE_TYPE("SCHEMA_0001", "schema advanced node type cannot be changed"),
-  SCHEMA_CHANGE_PROPERTY_TYPE("SCHEMA_0001", "schema property type cannot be changed"),
-  SCHEMA_CHANGE_HYPERNYM_PREDICATE("SCHEMA_0001", "schema hypernymPredicate cannot be changed"),
+  SCHEMA_CHANGE_NODE_TYPE("SCHEMA_0001", "Schema advanced node type cannot be changed"),
+  SCHEMA_CHANGE_PROPERTY_TYPE("SCHEMA_0001", "Schema property type cannot be changed"),
+  SCHEMA_CHANGE_HYPERNYM_PREDICATE("SCHEMA_0001", "Schema hypernymPredicate cannot be changed"),
   ;
 
   SpgMessageEnum(String code, String message) {

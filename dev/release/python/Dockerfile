@@ -15,22 +15,21 @@ FROM docker.m.daocloud.io/ubuntu:20.04
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 ENV LANG C.UTF-8
+ENV PATH=/home/admin/miniconda3/bin:$PATH
 
 ARG TARGETPLATFORM
 ARG APT_INSTALL="apt-get install --no-install-recommends -y"
-
+ARG MINICONDA_FILE
 
 RUN apt-get clean && apt-get update && \
     $APT_INSTALL ca-certificates && \
     $APT_INSTALL ca-certificates-java && \
-    $APT_INSTALL git less vim wget curl telnet nano jq procps net-tools unzip zip tar gzip  && \
+    $APT_INSTALL git less vim wget curl telnet nano jq procps net-tools unzip zip tar gzip nfs-common && \
     # Install openjdk 8.
     $APT_INSTALL openjdk-8-jdk && \
     update-alternatives --set java /usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)/jre/bin/java && \
     # Install build / source control tools
-    $APT_INSTALL wget git maven less vim && \
-    # Install needed python packages. Use pip for installing packages (for consistency).
-    $APT_INSTALL python3.8 python3-pip python3.8-venv
+    $APT_INSTALL wget git maven less vim
 
 RUN if [ "${TARGETPLATFORM}" = "linux/amd64" ]; then \
       export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64; \
@@ -41,12 +40,24 @@ RUN if [ "${TARGETPLATFORM}" = "linux/amd64" ]; then \
     fi && \
     echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile
 
-RUN python3 -m venv /openspg_venv && \
-    . /openspg_venv/bin/activate && \
-    export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture) && \
-    pip3 install openspg-kag==0.6.0b2 && \
-    pip3 install pemja==0.4.0 && \
-    pip3 install -U "http://alps-common.oss-cn-hangzhou-zmf.aliyuncs.com/nscommon/shiji/nscommon-0.0.1.tar.gz" && \
-    echo "if (tty -s); then \n   . /openspg_venv/bin/activate \nfi" >> ~/.bashrc
+RUN . /etc/profile && echo ${JAVA_HOME} && mkdir -p /home/admin/ && chmod -R 777 /home/admin &&\
+    # wget -q http://hyperloop.cn-hangzhou.alipay.aliyun-inc.com/kgrl/user/zhongshu.zzs/tmp/Miniconda3-py310_25.1.1-2-Linux-x86_64.sh && \
+    wget -q http://hyperloop.cn-hangzhou.alipay.aliyun-inc.com/kgrl/user/zhongshu.zzs/tmp/$MINICONDA_FILE && \
+    ln -s /usr/bin/md5sum /usr/bin/md5 &&\
+    bash $MINICONDA_FILE -b -u -p /home/admin/miniconda3 &&\
+    rm -rf $MINICONDA_FILE && \
+    /home/admin/miniconda3/bin/conda init &&\
+    pip install openspg-kag==0.7.0 &&\
+    pip install pemja==0.4.0 && \
+    pip cache purge
 
-ADD openspg/dev/release/python/lib/builder*.jar /openspg_venv/lib/python3.8/site-packages/knext/builder/lib
+
+# RUN python3 -m venv /openspg_venv && \
+#     . /openspg_venv/bin/activate && \
+#     export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture) && \
+#     pip3 install openspg-kag==0.6.0b9 -i https://artifacts.antgroup-inc.cn/artifact/repositories/simple-dev/ && \
+#     pip3 install pemja==0.4.0 && \
+#     pip3 install -U "http://alps-common.oss-cn-hangzhou-zmf.aliyuncs.com/nscommon/shiji/nscommon-0.0.1.tar.gz" && \
+#     echo "if (tty -s); then \n   . /openspg_venv/bin/activate \nfi" >> ~/.bashrc
+
+# ADD openspg/dev/release/python/lib/builder*.jar /home/admin/miniconda3/lib/python3.10/site-packages/knext/builder/lib

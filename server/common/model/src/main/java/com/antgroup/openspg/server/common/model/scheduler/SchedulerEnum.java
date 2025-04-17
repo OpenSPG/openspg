@@ -85,7 +85,10 @@ public interface SchedulerEnum {
   /** Translate Enum */
   enum TranslateType {
     LOCAL_EXAMPLE("localExampleTranslate"),
-    KAG_BUILDER("kagBuilderTranslate");
+    KAG_BUILDER("kagBuilderTranslate"),
+    KAG_STRUCTURE_BUILDER("kagStructureBuilderTranslate"),
+    KAG_ENTIRETY_BUILDER("kagEntiretyBuilderTranslate"),
+    KAG_COMMAND_BUILDER("kagCommandBuilderTranslate");
 
     private String type;
 

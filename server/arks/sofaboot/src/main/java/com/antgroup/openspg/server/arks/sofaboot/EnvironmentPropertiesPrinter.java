@@ -30,12 +30,16 @@ public class EnvironmentPropertiesPrinter {
     ConfigurableEnvironment env =
         (ConfigurableEnvironment) event.getApplicationContext().getEnvironment();
 
-    env.getPropertySources().stream()
-        .filter(ps -> ps instanceof MapPropertySource)
-        .map(ps -> ((MapPropertySource) ps).getSource().keySet())
-        .flatMap(Collection::stream)
-        .distinct()
-        .sorted()
-        .forEach(key -> log.info("{}={}", key, env.getProperty(key)));
+    try {
+      env.getPropertySources().stream()
+          .filter(ps -> ps instanceof MapPropertySource)
+          .map(ps -> ((MapPropertySource) ps).getSource().keySet())
+          .flatMap(Collection::stream)
+          .distinct()
+          .sorted()
+          .forEach(key -> log.info("{}={}", key, env.getProperty(key)));
+    } catch (Exception e) {
+      log.error("getPropertySources Exception", e);
+    }
   }
 }

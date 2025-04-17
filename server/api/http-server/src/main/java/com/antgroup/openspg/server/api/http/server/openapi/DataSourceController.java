@@ -14,12 +14,15 @@
 package com.antgroup.openspg.server.api.http.server.openapi;
 
 import com.alibaba.fastjson.JSON;
+import com.antgroup.openspg.common.constants.BuilderConstant;
 import com.antgroup.openspg.server.api.facade.Paged;
+import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.server.api.http.server.HttpResult;
 import com.antgroup.openspg.server.biz.common.util.AssertUtils;
 import com.antgroup.openspg.server.common.model.CommonEnum;
+import com.antgroup.openspg.server.common.model.account.Account;
 import com.antgroup.openspg.server.common.model.datasource.Column;
 import com.antgroup.openspg.server.common.model.datasource.DataSource;
 import com.antgroup.openspg.server.common.model.datasource.DataSourceQuery;
@@ -27,6 +30,7 @@ import com.antgroup.openspg.server.common.service.datasource.DataSourceService;
 import com.google.common.collect.Lists;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +41,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/public/v1/datasource")
 @Slf4j
-public class DataSourceController {
+public class DataSourceController extends BaseController {
 
   @Autowired private DataSourceService dataSourceService;
 
@@ -56,6 +60,12 @@ public class DataSourceController {
 
           @Override
           public Boolean action() {
+            if (StringUtils.isBlank(request.getCreateUser())) {
+              Account account = getLoginAccount();
+              String user = account != null ? account.getAccount() : BuilderConstant.SYSTEM;
+              request.setCreateUser(user);
+            }
+            request.setUpdateUser(request.getCreateUser());
             return dataSourceService.insert(request) > 0;
           }
         });
@@ -77,6 +87,9 @@ public class DataSourceController {
 
           @Override
           public Boolean action() {
+            Account account = getLoginAccount();
+            String user = account != null ? account.getAccount() : BuilderConstant.SYSTEM;
+            request.setUpdateUser(user);
             return dataSourceService.update(request) > 0;
           }
         });

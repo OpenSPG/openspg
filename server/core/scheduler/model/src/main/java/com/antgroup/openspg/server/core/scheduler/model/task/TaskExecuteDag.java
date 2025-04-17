@@ -71,6 +71,7 @@ public class TaskExecuteDag {
     return nodes;
   }
 
+  @JSONField(serialize = false)
   public List<Node> getSuccessorNodes(String startNodeId) {
     Set<String> visited = new HashSet<>();
     List<Node> result = new ArrayList<>();
@@ -95,6 +96,16 @@ public class TaskExecuteDag {
         dfs(targetNode.getId(), visited, result);
       }
     }
+  }
+
+  @JSONField(serialize = false)
+  public Node getNode(String nodeId) {
+    for (Node node : nodes) {
+      if (node.getId().equals(nodeId)) {
+        return node;
+      }
+    }
+    return null;
   }
 
   @Getter
