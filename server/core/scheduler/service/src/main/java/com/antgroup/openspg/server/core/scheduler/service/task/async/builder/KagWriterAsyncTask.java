@@ -23,13 +23,15 @@ import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClien
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClientDriverManager;
 import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.server.common.model.bulider.BuilderJob;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum;
+import com.antgroup.openspg.server.common.service.builder.BuilderJobService;
 import com.antgroup.openspg.server.common.service.config.DefaultValue;
 import com.antgroup.openspg.server.common.service.project.ProjectService;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
+import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
-import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.MemoryTaskServer;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
@@ -55,6 +57,8 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
 
   @Autowired private SchedulerTaskService taskService;
 
+  @Autowired private BuilderJobService builderJobService;
+
   @Override
   public String submit(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
@@ -67,28 +71,16 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
       context.addTraceLog("Writer task has been created!");
       return memoryTask.getNodeId();
     }
+    SchedulerJob job = context.getJob();
+    BuilderJob builderJob = builderJobService.getById(Long.valueOf(job.getInvokerId()));
 
-    List<String> inputs = getInputs(instance, task);
+    List<String> inputs = SchedulerUtils.getTaskInputs(taskService, instance, task);
     String taskId =
         memoryTaskServer.submit(
-            new WriterTaskCallable(value, projectManager, context, inputs), key);
+            new WriterTaskCallable(value, projectManager, context, builderJob.getAction(), inputs),
+            key);
     context.addTraceLog("Writer task has been successfully created!");
     return taskId;
-  }
-
-  private List<String> getInputs(SchedulerInstance instance, SchedulerTask task) {
-    List<TaskExecuteDag.Node> nodes =
-        instance.getTaskDag().getRelatedNodes(task.getNodeId(), false);
-    List<String> inputs = Lists.newArrayList();
-    nodes.forEach(
-        node -> {
-          SchedulerTask preTask =
-              taskService.queryByInstanceIdAndNodeId(task.getInstanceId(), node.getId());
-          if (preTask != null && StringUtils.isNotBlank(preTask.getOutput())) {
-            inputs.add(preTask.getOutput());
-          }
-        });
-    return inputs;
   }
 
   @Override
@@ -134,7 +126,7 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
   public void removeInputs(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
-    List<String> inputs = getInputs(instance, task);
+    List<String> inputs = SchedulerUtils.getTaskInputs(taskService, instance, task);
     ObjectStorageClient objectStorageClient =
         ObjectStorageClientDriverManager.getClient(value.getObjectStorageUrl());
     for (String input : inputs) {
@@ -157,6 +149,8 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
 
     private TaskExecuteContext context;
 
+    private String action;
+
     private List<String> inputs;
 
     private static final String VECTOR = "_vector";
@@ -165,12 +159,14 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
         DefaultValue value,
         ProjectService projectManager,
         TaskExecuteContext context,
+        String action,
         List<String> inputs) {
       this.value = value;
       this.projectManager = projectManager;
       this.objectStorageClient =
           ObjectStorageClientDriverManager.getClient(value.getObjectStorageUrl());
       this.context = context;
+      this.action = action;
       this.inputs = inputs;
     }
 
@@ -178,11 +174,15 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
     public String call() throws Exception {
       List<SubGraphRecord> subGraphList = Lists.newArrayList();
       addTraceLog("Start write task!");
+      RecordAlterOperationEnum action = RecordAlterOperationEnum.UPSERT;
+      if (RecordAlterOperationEnum.DELETE.name().equalsIgnoreCase(this.action)) {
+        action = RecordAlterOperationEnum.DELETE;
+      }
       for (String input : inputs) {
         String data = objectStorageClient.getString(value.getBuilderBucketName(), input);
         List<SubGraphRecord> subGraphs =
             JSON.parseObject(data, new TypeReference<List<SubGraphRecord>>() {});
-        writer(value, projectManager, context, subGraphs);
+        writer(value, projectManager, context, action, subGraphs);
         subGraphList.addAll(simpleSubGraph(subGraphs));
       }
       AtomicLong nodes = new AtomicLong(0);
@@ -224,6 +224,7 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
         DefaultValue value,
         ProjectService projectManager,
         TaskExecuteContext context,
+        RecordAlterOperationEnum action,
         List<SubGraphRecord> subGraphs) {
       Neo4jSinkWriter writer =
           new Neo4jSinkWriter(
@@ -234,7 +235,8 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
               .setJobName("writer")
               .setPythonExec(value.getPythonExec())
               .setPythonPaths(value.getPythonPaths())
-              .setOperation(RecordAlterOperationEnum.UPSERT)
+              .setPythonEnv(value.getPythonEnv())
+              .setOperation(action)
               .setEnableLeadTo(false)
               .setProject(
                   JSON.toJSONString(projectManager.queryById(context.getInstance().getProjectId())))

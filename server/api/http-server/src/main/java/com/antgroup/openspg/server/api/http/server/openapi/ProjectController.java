@@ -15,7 +15,6 @@ package com.antgroup.openspg.server.api.http.server.openapi;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.antgroup.openspg.common.constants.SpgAppConstant;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectCreateRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.SchemaAlterRequest;
@@ -26,6 +25,7 @@ import com.antgroup.openspg.server.biz.common.ConfigManager;
 import com.antgroup.openspg.server.biz.common.ProjectManager;
 import com.antgroup.openspg.server.common.model.project.Project;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/public/v1/project")
+@Slf4j
 public class ProjectController extends BaseController {
 
   @Autowired private SchemaController schemaController;
@@ -47,6 +48,7 @@ public class ProjectController extends BaseController {
 
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity<Object> create(@RequestBody ProjectCreateRequest request) {
+    log.info("HTTP Create Project Params: {}", JSON.toJSONString(request));
     return HttpBizTemplate.execute(
         new HttpBizCallback<Project>() {
           @Override
@@ -89,11 +91,6 @@ public class ProjectController extends BaseController {
                   JSONObject configJson = JSON.parseObject(config);
                   if (configJson != null) {
                     configManager.backwardCompatible(configJson);
-                    JSONObject vectorizer =
-                        configManager.clearRedundantField(
-                            configJson.getJSONObject(SpgAppConstant.VECTORIZER),
-                            SpgAppConstant.VECTORIZER);
-                    configJson.put(SpgAppConstant.VECTORIZER, vectorizer);
                     config = configJson.toJSONString();
                   }
                   newProjectList.add(
@@ -112,6 +109,7 @@ public class ProjectController extends BaseController {
 
   @RequestMapping(method = RequestMethod.POST, value = "/update")
   public ResponseEntity<Object> update(@RequestBody ProjectCreateRequest request) {
+    log.info("HTTP Update Project Params: {}", JSON.toJSONString(request));
     return HttpBizTemplate.execute(
         new HttpBizCallback<Project>() {
           @Override

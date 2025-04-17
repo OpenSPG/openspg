@@ -17,7 +17,7 @@ import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.common.model.account.Account;
 import java.io.IOException;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 /** get account from hr interface(ant) */
@@ -97,19 +97,18 @@ public interface AccountService {
    */
   String getSha256HexPassword(String password, String salt);
 
-  Account getCurrentAccount(HttpServletRequest request) throws IOException;
+  Account getCurrentAccount(Cookie[] cookies) throws IOException;
 
-  boolean login(HttpServletRequest request, HttpServletResponse response, Account account);
+  boolean login(Account account, HttpServletResponse response);
 
-  String logout(
-      HttpServletRequest request, HttpServletResponse response, String workNo, String redirectUrl);
+  String logout(String workNo, String redirectUrl);
 
   /**
    * update user config
    *
-   * @param userNo
-   * @param config
+   * @param account
+   * @param cookies
    * @return
    */
-  int updateUserConfig(String userNo, String config);
+  int updateUserConfig(Account account, Cookie[] cookies);
 }

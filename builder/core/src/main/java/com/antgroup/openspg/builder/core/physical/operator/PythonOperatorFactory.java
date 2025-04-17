@@ -24,6 +24,7 @@ public class PythonOperatorFactory implements OperatorFactory {
 
   private String pythonExec;
   private String pythonPaths;
+  private String pythonEnv;
   private String hostAddr;
   private Long projectId;
 
@@ -37,6 +38,7 @@ public class PythonOperatorFactory implements OperatorFactory {
   public void init(BuilderContext context) {
     pythonExec = context.getPythonExec();
     pythonPaths = context.getPythonPaths();
+    pythonEnv = context.getPythonEnv();
     hostAddr = context.getSchemaUrl();
     projectId = context.getProjectId();
     log.info("pythonExec={}, pythonPaths={}", pythonExec, pythonPaths);
@@ -51,6 +53,7 @@ public class PythonOperatorFactory implements OperatorFactory {
         new PemjaConfig(
             pythonExec,
             pythonPaths,
+            pythonEnv,
             hostAddr,
             projectId,
             config.getModulePath(),

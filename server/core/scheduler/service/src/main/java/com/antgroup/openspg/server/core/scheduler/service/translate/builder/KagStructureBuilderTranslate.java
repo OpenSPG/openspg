@@ -32,8 +32,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("kagBuilderTranslate")
-public class KagBuilderTranslate implements Translate {
+@Component("kagStructureBuilderTranslate")
+public class KagStructureBuilderTranslate implements Translate {
 
   @Autowired private BuilderJobService builderJobService;
 
@@ -70,7 +70,7 @@ public class KagBuilderTranslate implements Translate {
     }
   }
 
-  /** get KAG Builder TaskDag */
+  /** get KAG Structure Builder TaskDag */
   public TaskExecuteDag getTaskDag(BuilderJob builderJob) {
 
     List<TaskExecuteDag.Node> nodes = Lists.newArrayList();
@@ -87,26 +87,19 @@ public class KagBuilderTranslate implements Translate {
       nodes.add(checkPartition);
     }
 
-    TaskExecuteDag.Node reader = new TaskExecuteDag.Node();
-    String readerId = UUID.randomUUID().toString();
-    reader.setId(readerId);
-    reader.setName("Reader");
-    reader.setTaskComponent("kagReaderSyncTask");
-    nodes.add(reader);
+    TaskExecuteDag.Node scan = new TaskExecuteDag.Node();
+    String scannerId = UUID.randomUUID().toString();
+    scan.setId(scannerId);
+    scan.setName("Scanner");
+    scan.setTaskComponent("kagScannerSyncTask");
+    nodes.add(scan);
 
-    TaskExecuteDag.Node splitter = new TaskExecuteDag.Node();
-    String splitterId = UUID.randomUUID().toString();
-    splitter.setId(splitterId);
-    splitter.setName("Splitter");
-    splitter.setTaskComponent("kagSplitterAsyncTask");
-    nodes.add(splitter);
-
-    TaskExecuteDag.Node extractor = new TaskExecuteDag.Node();
-    String extractorId = UUID.randomUUID().toString();
-    extractor.setId(extractorId);
-    extractor.setName("Extractor");
-    extractor.setTaskComponent("kagExtractorAsyncTask");
-    nodes.add(extractor);
+    TaskExecuteDag.Node mapping = new TaskExecuteDag.Node();
+    String mappingId = UUID.randomUUID().toString();
+    mapping.setId(mappingId);
+    mapping.setName("Mapping");
+    mapping.setTaskComponent("kagMappingSyncTask");
+    nodes.add(mapping);
 
     TaskExecuteDag.Node vectorizer = new TaskExecuteDag.Node();
     String vectorizerId = UUID.randomUUID().toString();
@@ -114,13 +107,6 @@ public class KagBuilderTranslate implements Translate {
     vectorizer.setName("Vectorizer");
     vectorizer.setTaskComponent("kagVectorizerAsyncTask");
     nodes.add(vectorizer);
-
-    TaskExecuteDag.Node alignment = new TaskExecuteDag.Node();
-    String alignmentId = UUID.randomUUID().toString();
-    alignment.setId(alignmentId);
-    alignment.setName("Alignment");
-    alignment.setTaskComponent("kagAlignmentAsyncTask");
-    nodes.add(alignment);
 
     TaskExecuteDag.Node writer = new TaskExecuteDag.Node();
     String writerId = UUID.randomUUID().toString();
@@ -132,32 +118,22 @@ public class KagBuilderTranslate implements Translate {
     if (BuilderConstant.ODPS.equalsIgnoreCase(builderJob.getDataSourceType())) {
       TaskExecuteDag.Edge checkPartitionEdge = new TaskExecuteDag.Edge();
       checkPartitionEdge.setFrom(checkPartitionId);
-      checkPartitionEdge.setTo(readerId);
+      checkPartitionEdge.setTo(scannerId);
       edges.add(checkPartitionEdge);
     }
 
     TaskExecuteDag.Edge edge = new TaskExecuteDag.Edge();
-    edge.setFrom(readerId);
-    edge.setTo(splitterId);
+    edge.setFrom(scannerId);
+    edge.setTo(mappingId);
     edges.add(edge);
 
-    TaskExecuteDag.Edge edge1 = new TaskExecuteDag.Edge();
-    edge1.setFrom(splitterId);
-    edge1.setTo(extractorId);
-    edges.add(edge1);
-
     TaskExecuteDag.Edge edge2 = new TaskExecuteDag.Edge();
-    edge2.setFrom(extractorId);
+    edge2.setFrom(mappingId);
     edge2.setTo(vectorizerId);
     edges.add(edge2);
 
-    TaskExecuteDag.Edge edge3 = new TaskExecuteDag.Edge();
-    edge3.setFrom(vectorizerId);
-    edge3.setTo(alignmentId);
-    edges.add(edge3);
-
     TaskExecuteDag.Edge edge4 = new TaskExecuteDag.Edge();
-    edge4.setFrom(alignmentId);
+    edge4.setFrom(vectorizerId);
     edge4.setTo(writerId);
     edges.add(edge4);
 

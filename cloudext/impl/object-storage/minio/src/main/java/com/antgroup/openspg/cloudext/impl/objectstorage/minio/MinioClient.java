@@ -23,6 +23,7 @@ import io.minio.MakeBucketArgs;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
 import io.minio.Result;
+import io.minio.SetBucketPolicyArgs;
 import io.minio.StatObjectArgs;
 import io.minio.http.Method;
 import io.minio.messages.Item;
@@ -34,6 +35,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import lombok.Getter;
@@ -83,7 +85,7 @@ public class MinioClient implements ObjectStorageClient {
       return true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("minio saveData Exception", e);
+      throw new RuntimeException("minio saveData Exception:" + e.getMessage(), e);
     } finally {
       IOUtils.closeQuietly(inputStream);
     }
@@ -97,7 +99,7 @@ public class MinioClient implements ObjectStorageClient {
       return inputStreamToByteArray(minioClient.getObject(getObjectArgs));
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("minio getData Exception", e);
+      throw new RuntimeException("minio getData Exception:" + e.getMessage(), e);
     }
   }
 
@@ -130,20 +132,30 @@ public class MinioClient implements ObjectStorageClient {
 
   @Override
   public Boolean saveFile(String bucketName, File file, String fileKey) {
-    InputStream inputStream = null;
     try {
-      inputStream = new FileInputStream(file);
+      InputStream inputStream = new FileInputStream(file);
+      return saveFile(bucketName, inputStream, file.length(), fileKey);
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new RuntimeException("minio saveFile Exception:" + e.getMessage(), e);
+    }
+  }
+
+  @Override
+  public Boolean saveFile(
+      String bucketName, InputStream inputStream, long fileSize, String fileKey) {
+    try {
       makeBucket(bucketName);
       PutObjectArgs putObjectArgs =
           PutObjectArgs.builder().bucket(bucketName).object(fileKey).stream(
-                  inputStream, file.length(), -1)
+                  inputStream, fileSize, -1)
               .contentType("application/octet-stream")
               .build();
       minioClient.putObject(putObjectArgs);
       return true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("minio saveFile Exception", e);
+      throw new RuntimeException("minio saveFile inputStream Exception:" + e.getMessage(), e);
     } finally {
       IOUtils.closeQuietly(inputStream);
     }
@@ -156,7 +168,7 @@ public class MinioClient implements ObjectStorageClient {
           GetObjectArgs.builder().bucket(bucketName).object(fileKey).build());
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("minio getObject Exception", e);
+      throw new RuntimeException("minio getObject Exception:" + e.getMessage(), e);
     }
   }
 
@@ -180,7 +192,7 @@ public class MinioClient implements ObjectStorageClient {
       return true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("minio downloadFile Exception", e);
+      throw new RuntimeException("minio downloadFile Exception:" + e.getMessage(), e);
     } finally {
       IOUtils.closeQuietly(stream);
       IOUtils.closeQuietly(outputStream);
@@ -200,7 +212,7 @@ public class MinioClient implements ObjectStorageClient {
       return minioClient.getPresignedObjectUrl(args);
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("minio getUrl Exception", e);
+      throw new RuntimeException("minio getUrl Exception:" + e.getMessage(), e);
     }
   }
 
@@ -213,10 +225,14 @@ public class MinioClient implements ObjectStorageClient {
               .bucket(bucketName)
               .object(fileKey)
               .build();
-      return minioClient.getPresignedObjectUrl(args);
+      String baseUrl = minioClient.getPresignedObjectUrl(args);
+      URI uri = new URI(baseUrl);
+      String publicUrl =
+          uri.getScheme() + "://" + uri.getHost() + ":" + uri.getPort() + uri.getPath();
+      return publicUrl;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("minio getUrlWithoutExpiration Exception", e);
+      throw new RuntimeException("minio getUrlWithoutExpiration Exception:" + e.getMessage(), e);
     }
   }
 
@@ -229,7 +245,7 @@ public class MinioClient implements ObjectStorageClient {
       return true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("minio removeObject Exception", e);
+      throw new RuntimeException("minio removeObject Exception:" + e.getMessage(), e);
     }
   }
 
@@ -254,7 +270,7 @@ public class MinioClient implements ObjectStorageClient {
       return true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("minio removeDirectory Exception", e);
+      throw new RuntimeException("minio removeDirectory Exception:" + e.getMessage(), e);
     }
   }
 
@@ -267,7 +283,7 @@ public class MinioClient implements ObjectStorageClient {
       return minioClient.statObject(statObjectArgs).size();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("minio getContentLength Exception", e);
+      throw new RuntimeException("minio getContentLength Exception:" + e.getMessage(), e);
     }
   }
 
@@ -277,10 +293,40 @@ public class MinioClient implements ObjectStorageClient {
           minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
       if (!isExist) {
         minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+        setBucketPublic(bucketName);
       }
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("minio makeBucket Exception", e);
+      throw new RuntimeException("minio makeBucket Exception:" + e.getMessage(), e);
+    }
+  }
+
+  public void setBucketPublic(String bucketName) {
+    try {
+      if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
+        minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+      }
+
+      String publicReadPolicy =
+          "{\n"
+              + "  \"Version\": \"2012-10-17\",\n"
+              + "  \"Statement\": [\n"
+              + "    {\n"
+              + "      \"Effect\": \"Allow\",\n"
+              + "      \"Principal\": \"*\",\n"
+              + "      \"Action\": \"s3:GetObject\",\n"
+              + "      \"Resource\": \"arn:aws:s3:::"
+              + bucketName
+              + "/*\"\n"
+              + "    }\n"
+              + "  ]\n"
+              + "}";
+
+      minioClient.setBucketPolicy(
+          SetBucketPolicyArgs.builder().bucket(bucketName).config(publicReadPolicy).build());
+    } catch (Exception e) {
+      log.error("Error making bucket public: " + bucketName, e);
+      throw new RuntimeException("Failed to set public access for bucket: " + bucketName, e);
     }
   }
 }

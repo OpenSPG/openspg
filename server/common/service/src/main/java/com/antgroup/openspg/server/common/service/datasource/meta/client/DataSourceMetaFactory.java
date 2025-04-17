@@ -14,7 +14,6 @@ package com.antgroup.openspg.server.common.service.datasource.meta.client;
 
 import com.antgroup.openspg.server.common.model.CommonEnum;
 import com.antgroup.openspg.server.common.service.datasource.meta.client.impl.DefaultMetaClientImpl;
-import com.antgroup.openspg.server.common.service.datasource.meta.client.impl.JdbcMetaClientImpl;
 import com.antgroup.openspg.server.common.service.datasource.meta.client.impl.OdpsMetaClientImpl;
 import org.springframework.util.Assert;
 
@@ -24,15 +23,15 @@ public class DataSourceMetaFactory {
     Assert.notNull(type, "datasource type");
     DataSourceMetaClient dataSourceMetaClient;
     switch (type) {
-      case HIVE:
-      case MYSQL:
-      case ORACLE:
-      case POSTGRESQL:
-      case DB2:
-      case MARIA_DB:
-      case MS_SQL:
-        dataSourceMetaClient = new JdbcMetaClientImpl(type.getDriver());
-        break;
+        /*case Hive:
+        case MySQL:
+        case Oracle:
+        case PostgreSQL:
+        case DB2:
+        case MariaDB:
+        case MSSql:
+          dataSourceMetaClient = new JdbcMetaClientImpl(type.getDriver());
+          break;*/
       case ODPS:
         dataSourceMetaClient = new OdpsMetaClientImpl();
         break;

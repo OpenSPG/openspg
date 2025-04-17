@@ -14,17 +14,18 @@
 package com.antgroup.openspg.builder.model.pipeline.config;
 
 import com.antgroup.openspg.builder.model.pipeline.enums.NodeTypeEnum;
+import com.antgroup.openspg.server.common.model.bulider.BuilderJob;
 import lombok.Getter;
 
 @Getter
 public class ParagraphSplitNodeConfig extends BasePythonNodeConfig {
 
   private final String token;
-  private final String extension;
+  private final BuilderJob job;
 
-  public ParagraphSplitNodeConfig(OperatorConfig operatorConfig, String token, String extension) {
+  public ParagraphSplitNodeConfig(OperatorConfig operatorConfig, String token, BuilderJob job) {
     super(NodeTypeEnum.PARAGRAPH_SPLIT, operatorConfig);
     this.token = token;
-    this.extension = extension;
+    this.job = job;
   }
 }

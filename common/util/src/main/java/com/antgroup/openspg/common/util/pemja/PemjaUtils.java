@@ -13,24 +13,37 @@
 
 package com.antgroup.openspg.common.util.pemja;
 
+import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.common.util.Md5Utils;
 import com.antgroup.openspg.common.util.pemja.model.PemjaConfig;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import pemja.core.PythonInterpreter;
 import pemja.core.PythonInterpreterConfig;
 
+@Slf4j
 public class PemjaUtils {
 
   public static Object invoke(PemjaConfig config, Object... input) {
     String uniqueKey = config.getClassName() + "_" + Md5Utils.md5Of(UUID.randomUUID().toString());
+    log.info(
+        "PemjaUtils.invoke uniqueKey:{} config:{} input:{}",
+        uniqueKey,
+        JSONObject.toJSONString(config),
+        JSONObject.toJSONString(input));
     PythonInterpreter interpreter = null;
     try {
       interpreter = getPythonInterpreter(config, uniqueKey);
-      return interpreter.invokeMethod(uniqueKey, config.getMethod(), input);
+      Object result = interpreter.invokeMethod(uniqueKey, config.getMethod(), input);
+      log.info(
+          "PemjaUtils.invoke succeed uniqueKey:{} result:{}",
+          uniqueKey,
+          JSONObject.toJSONString(result));
+      return result;
     } finally {
       if (interpreter != null) {
         interpreter.close();

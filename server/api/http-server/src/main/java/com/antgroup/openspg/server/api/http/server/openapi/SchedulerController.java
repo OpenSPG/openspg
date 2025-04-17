@@ -14,18 +14,26 @@
 package com.antgroup.openspg.server.api.http.server.openapi;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.api.facade.Paged;
+import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.server.api.http.server.HttpResult;
 import com.antgroup.openspg.server.biz.common.util.AssertUtils;
+import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInfoQuery;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerJobQuery;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery;
+import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInfo;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.service.api.SchedulerService;
+import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInfoService;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,9 +45,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/public/v1/scheduler")
 @Slf4j
-public class SchedulerController {
+public class SchedulerController extends BaseController {
 
   @Autowired private SchedulerService schedulerService;
+  @Autowired private SchedulerInfoService schedulerInfoService;
 
   @RequestMapping(value = "/job/submit", method = RequestMethod.POST)
   @ResponseBody
@@ -299,7 +308,7 @@ public class SchedulerController {
 
   @RequestMapping(value = "/task/search", method = RequestMethod.POST)
   @ResponseBody
-  public HttpResult<Paged<SchedulerTask>> searchJobs(@RequestBody SchedulerTaskQuery request) {
+  public HttpResult<Paged<SchedulerTask>> searchTasks(@RequestBody SchedulerTaskQuery request) {
     return HttpBizTemplate.execute2(
         new HttpBizCallback<Paged<SchedulerTask>>() {
           @Override
@@ -310,6 +319,40 @@ public class SchedulerController {
           @Override
           public Paged<SchedulerTask> action() {
             return schedulerService.searchTasks(request);
+          }
+        });
+  }
+
+  @RequestMapping(value = "/setIp", method = RequestMethod.GET)
+  @ResponseBody
+  public HttpResult<Boolean> deleteJob(String ip) {
+    return HttpBizTemplate.execute2(
+        new HttpBizCallback<Boolean>() {
+          @Override
+          public void check() {
+            log.info("/scheduler/setIp ip: {}", ip);
+          }
+
+          @Override
+          public Boolean action() {
+            List<SchedulerInfo> infos =
+                schedulerInfoService.query(new SchedulerInfoQuery()).getResults();
+            infos.forEach(
+                info -> {
+                  JSONObject config = info.getConfig();
+                  if (StringUtils.isBlank(ip)) {
+                    config.remove(SchedulerInfo.WHITE_IP_KEY);
+                  } else {
+                    JSONArray array = new JSONArray();
+                    array.add(ip);
+                    config.put(SchedulerInfo.WHITE_IP_KEY, array);
+                  }
+                  SchedulerInfo updateInfo = new SchedulerInfo();
+                  updateInfo.setId(info.getId());
+                  updateInfo.setConfig(config);
+                  schedulerInfoService.update(updateInfo);
+                });
+            return true;
           }
         });
   }

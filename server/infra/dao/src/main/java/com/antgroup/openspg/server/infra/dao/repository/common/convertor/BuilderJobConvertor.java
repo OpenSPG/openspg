@@ -13,11 +13,18 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.common.convertor;
 
+import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
+import com.antgroup.openspg.common.constants.BuilderConstant;
 import com.antgroup.openspg.common.util.DozerBeanMapperUtil;
 import com.antgroup.openspg.server.common.model.bulider.BuilderJob;
+import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum;
 import com.antgroup.openspg.server.infra.dao.dataobject.BuilderJobDO;
 import com.google.common.collect.Lists;
 import java.util.List;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 public class BuilderJobConvertor {
 
@@ -35,6 +42,22 @@ public class BuilderJobConvertor {
     }
 
     BuilderJob job = DozerBeanMapperUtil.map(schedulerJobDO, BuilderJob.class);
+    if (StringUtils.isBlank(job.getLifeCycle())) {
+      job.setLifeCycle(SchedulerEnum.LifeCycle.ONCE.name());
+    }
+    if (StringUtils.isBlank(job.getAction())) {
+      job.setAction(RecordAlterOperationEnum.UPSERT.name());
+    }
+    if (StringUtils.isBlank(job.getDataSourceType())) {
+      if ("FILE_EXTRACT".equals(job.getType())) {
+        UriComponents uri = UriComponentsBuilder.fromUriString(job.getFileUrl()).build();
+        String extension = FilenameUtils.getExtension(uri.getPath()).toLowerCase();
+        job.setDataSourceType(extension.toUpperCase());
+      }
+      if ("YUQUE_EXTRACT".equals(job.getType())) {
+        job.setDataSourceType(BuilderConstant.YU_QUE.toUpperCase());
+      }
+    }
     return job;
   }
 

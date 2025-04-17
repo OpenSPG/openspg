@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,7 +79,7 @@ public class OSSClient implements ObjectStorageClient {
       return true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("OSS saveData Exception", e);
+      throw new RuntimeException("OSS saveData Exception:" + e.getMessage(), e);
     }
   }
 
@@ -89,7 +90,7 @@ public class OSSClient implements ObjectStorageClient {
       return inputStreamToByteArray(inputStream);
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("OSS getData Exception", e);
+      throw new RuntimeException("OSS getData Exception:" + e.getMessage(), e);
     }
   }
 
@@ -122,12 +123,26 @@ public class OSSClient implements ObjectStorageClient {
 
   @Override
   public Boolean saveFile(String bucketName, File file, String fileKey) {
-    try (InputStream inputStream = new FileInputStream(file)) {
+    try {
+      InputStream inputStream = new FileInputStream(file);
+      return saveFile(bucketName, inputStream, file.length(), fileKey);
+    } catch (FileNotFoundException e) {
+      log.error(e.getMessage(), e);
+      throw new RuntimeException("OSS saveFile Exception:" + e.getMessage(), e);
+    }
+  }
+
+  @Override
+  public Boolean saveFile(
+      String bucketName, InputStream inputStream, long fileSize, String fileKey) {
+    try {
       ossClient.putObject(bucketName, fileKey, inputStream);
       return true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("OSS saveFile Exception", e);
+      throw new RuntimeException("OSS saveFile InputStream Exception:" + e.getMessage(), e);
+    } finally {
+      IOUtils.closeQuietly(inputStream);
     }
   }
 
@@ -138,7 +153,7 @@ public class OSSClient implements ObjectStorageClient {
       return ossObject.getObjectContent();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("OSS getObject Exception", e);
+      throw new RuntimeException("OSS getObject Exception:" + e.getMessage(), e);
     }
   }
 
@@ -162,7 +177,7 @@ public class OSSClient implements ObjectStorageClient {
       return true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("OSS downloadFile Exception", e);
+      throw new RuntimeException("OSS downloadFile Exception:" + e.getMessage(), e);
     } finally {
       IOUtils.closeQuietly(stream);
       IOUtils.closeQuietly(outputStream);
@@ -175,7 +190,7 @@ public class OSSClient implements ObjectStorageClient {
       return ossClient.generatePresignedUrl(bucketName, fileKey, expiration).toString();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("OSS getUrl Exception", e);
+      throw new RuntimeException("OSS getUrl Exception:" + e.getMessage(), e);
     }
   }
 
@@ -187,7 +202,7 @@ public class OSSClient implements ObjectStorageClient {
           .toString();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("OSS getUrlWithoutExpiration Exception", e);
+      throw new RuntimeException("OSS getUrlWithoutExpiration Exception:" + e.getMessage(), e);
     }
   }
 
@@ -198,7 +213,7 @@ public class OSSClient implements ObjectStorageClient {
       return true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("OSS removeObject Exception", e);
+      throw new RuntimeException("OSS removeObject Exception:" + e.getMessage(), e);
     }
   }
 
@@ -222,7 +237,7 @@ public class OSSClient implements ObjectStorageClient {
       return true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("OSS removeDirectory Exception", e);
+      throw new RuntimeException("OSS removeDirectory Exception:" + e.getMessage(), e);
     }
   }
 
@@ -233,7 +248,7 @@ public class OSSClient implements ObjectStorageClient {
       return metadata.getContentLength();
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("OSS getContentLength Exception", e);
+      throw new RuntimeException("OSS getContentLength Exception:" + e.getMessage(), e);
     }
   }
 }

@@ -16,6 +16,7 @@ package com.antgroup.openspg.server.biz.common.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alipay.sofa.common.utils.ObjectUtil;
 import com.antgroup.openspg.common.constants.SpgAppConstant;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.common.util.enums.ModelType;
@@ -23,11 +24,9 @@ import com.antgroup.openspg.server.api.facade.dto.common.request.ConfigRequest;
 import com.antgroup.openspg.server.biz.common.ConfigManager;
 import com.antgroup.openspg.server.common.model.config.Config;
 import com.antgroup.openspg.server.common.service.config.ConfigRepository;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -241,14 +240,14 @@ public class ConfigManagerImpl implements ConfigManager {
         if (llm == null) {
           continue;
         }
-        if (llm.getBooleanValue(SpgAppConstant.DEFAULT)) {
-          config.put(SpgAppConstant.LLM, clearRedundantField(llm, SpgAppConstant.LLM));
-        } else {
-          llm.remove(SpgAppConstant.LLM);
-        }
         if (StringUtils.isBlank(llm.getString(SpgAppConstant.LLM_ID))) {
           String llmId = UUID.randomUUID().toString();
           llm.put(SpgAppConstant.LLM_ID, llmId);
+        }
+        if (llm.getBooleanValue(SpgAppConstant.DEFAULT)) {
+          config.put(SpgAppConstant.LLM, JSON.parseObject(llm.toJSONString()));
+        } else {
+          llm.remove(SpgAppConstant.LLM);
         }
       }
       config.put(SpgAppConstant.LLM_SELECT, llmArray);
@@ -268,10 +267,6 @@ public class ConfigManagerImpl implements ConfigManager {
       }
       if (!vectorizerJson.containsKey(SpgAppConstant.TYPE)) {
         vectorizerJson.put(SpgAppConstant.TYPE, SpgAppConstant.OPENAI);
-      }
-      String model = vectorizerJson.getString(SpgAppConstant.MODEL);
-      if (StringUtils.equals(model, "bge-m3")) {
-        vectorizerJson.put(SpgAppConstant.MODEL, "BAAI/bge-m3");
       }
       config.put(SpgAppConstant.VECTORIZER, vectorizerJson);
     }
@@ -307,9 +302,7 @@ public class ConfigManagerImpl implements ConfigManager {
     } else if (CollectionUtils.isEmpty(llmSelectJson) && llmJson != null) {
       llmSelectJson = new JSONArray();
       JSONObject llm = JSON.parseObject(llmJson.toJSONString());
-      String llmId = UUID.randomUUID().toString();
       backwardCompatibleLLM(llm);
-      llm.put(SpgAppConstant.LLM_ID, llmId);
       llm.put(SpgAppConstant.DEFAULT, true);
       llm.put(SpgAppConstant.DESC, "");
       llmSelectJson.add(llm);
@@ -318,43 +311,47 @@ public class ConfigManagerImpl implements ConfigManager {
   }
 
   @Override
-  public JSONObject clearRedundantField(JSONObject jsonObject, String configType) {
-    if (jsonObject == null) {
-      return new JSONObject();
+  public String getLLMIdByConfig(JSONObject config) {
+    if (config == null) {
+      return null;
     }
-    List<String> llmKeyList;
-    if (StringUtils.equals(configType, SpgAppConstant.LLM)) {
-      llmKeyList =
-          Arrays.asList(
-              SpgAppConstant.TYPE,
-              SpgAppConstant.BASE_URL,
-              SpgAppConstant.API_KEY,
-              SpgAppConstant.MODEL,
-              SpgAppConstant.TEMPERATURE,
-              SpgAppConstant.STREAM);
-    } else if (StringUtils.equals(configType, SpgAppConstant.VECTORIZER)) {
-      llmKeyList =
-          Arrays.asList(
-              SpgAppConstant.TYPE,
-              SpgAppConstant.MODEL,
-              SpgAppConstant.BASE_URL,
-              SpgAppConstant.API_KEY,
-              SpgAppConstant.VECTOR_DIMENSIONS);
-    } else {
-      return new JSONObject();
+    JSONObject llmJson = config.getJSONObject(SpgAppConstant.LLM);
+    if (llmJson == null) {
+      return null;
     }
-    JSONObject llmHandle = JSON.parseObject(jsonObject.toString());
-    if (llmHandle == null) {
-      return new JSONObject();
+    return llmJson.getString(SpgAppConstant.LLM_ID);
+  }
+
+  @Override
+  public boolean isLLMChange(JSONObject oldConfig, JSONObject config) {
+    if (oldConfig == null || config == null) {
+      return false;
     }
-    Iterator<String> keys = jsonObject.keySet().iterator();
-    while (keys.hasNext()) {
-      String key = keys.next();
-      if (!llmKeyList.contains(key)) {
-        llmHandle.remove(key);
+    JSONObject oldLlmJson = oldConfig.getJSONObject(SpgAppConstant.LLM);
+    JSONObject llmJson = config.getJSONObject(SpgAppConstant.LLM);
+    if (oldLlmJson == null && llmJson == null) {
+      return false;
+    } else if (oldLlmJson == null && llmJson != null) {
+      return true;
+    }
+    if (oldLlmJson.size() != llmJson.size()) {
+      return true;
+    }
+    Set<String> keys = llmJson.keySet();
+    for (String key : keys) {
+      if (StringUtils.equals(key, SpgAppConstant.LLM_ID)) {
+        continue;
+      }
+      if (!oldLlmJson.containsKey(key)) {
+        return true;
+      }
+      Object oldVal = oldLlmJson.get(key);
+      Object newVal = llmJson.get(key);
+      if (!ObjectUtil.equals(oldVal, newVal)) {
+        return true;
       }
     }
-    return llmHandle;
+    return false;
   }
 
   private static void backwardCompatibleLLM(JSONObject llmJson) {
@@ -368,6 +365,10 @@ public class ConfigManagerImpl implements ConfigManager {
     }
     if (modelType == null) {
       return;
+    }
+    if (!llmJson.containsKey(SpgAppConstant.LLM_ID)) {
+      String llmId = UUID.randomUUID().toString();
+      llmJson.put(SpgAppConstant.LLM_ID, llmId);
     }
     switch (modelType) {
       case MAAS:

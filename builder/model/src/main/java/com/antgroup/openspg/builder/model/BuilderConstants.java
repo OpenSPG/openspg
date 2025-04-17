@@ -19,6 +19,7 @@ public class BuilderConstants {
   public static final String PIPELINE_OPTION = "pipeline";
   public static final String PYTHON_EXEC_OPTION = "pythonExec";
   public static final String PYTHON_PATHS_OPTION = "pythonPaths";
+  public static final String PYTHON_ENV_OPTION = "pythonEnv";
   public static final String SCHEMA_URL_OPTION = "schemaUrl";
   public static final String PARALLELISM_OPTION = "parallelism";
   public static final String ALTER_OPERATION_OPTION = "alterOperation";

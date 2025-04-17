@@ -27,6 +27,7 @@
     <result column="file_url" jdbcType="VARCHAR" property="fileUrl" />
     <result column="status" jdbcType="VARCHAR" property="status" />
     <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="data_source_type" jdbcType="VARCHAR" property="dataSourceType" />
     <result column="version" jdbcType="VARCHAR" property="version" />
     <result column="extension" jdbcType="LONGVARCHAR" property="extension" />
     <result column="computing_conf" jdbcType="LONGVARCHAR" property="computingConf" />
@@ -35,7 +36,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, gmt_create, gmt_modified, create_user, modify_user, project_id, task_id, job_name, chunk_num, file_url, status, type, version, extension, computing_conf, life_cycle, action
+    id, gmt_create, gmt_modified, create_user, modify_user, project_id, task_id, job_name, chunk_num, file_url, status, type, data_source_type, version, extension, computing_conf, life_cycle, action
   </sql>
 
   <insert id="insert" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.BuilderJobDO">
@@ -45,13 +46,13 @@
     insert into kg_builder_job (project_id, gmt_create, gmt_modified,
     create_user, modify_user, task_id,
     job_name, chunk_num, file_url,
-    status, type, version, extension,
+    status, type, data_source_type, version, extension,
     computing_conf, life_cycle, action
     )
     values (#{projectId,jdbcType=BIGINT}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
     #{createUser,jdbcType=VARCHAR}, #{modifyUser,jdbcType=VARCHAR}, #{taskId,jdbcType=BIGINT},
     #{jobName,jdbcType=VARCHAR}, #{chunkNum,jdbcType=BIGINT}, #{fileUrl,jdbcType=VARCHAR},
-    #{status,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, #{extension,jdbcType=LONGVARCHAR},
+    #{status,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{dataSourceType,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, #{extension,jdbcType=LONGVARCHAR},
     #{computingConf,jdbcType=LONGVARCHAR}, #{lifeCycle,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}
     )
   </insert>
@@ -87,6 +88,9 @@
       </if>
       <if test="type != null">
         type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="dataSourceType != null">
+        data_source_type = #{dataSourceType,jdbcType=VARCHAR},
       </if>
       <if test="version != null">
         version = #{version,jdbcType=VARCHAR},
@@ -146,6 +150,9 @@
     </if>
     <if test="type != null">
       and type = #{type,jdbcType=VARCHAR}
+    </if>
+    <if test="dataSourceType != null">
+      and data_source_type = #{dataSourceType,jdbcType=VARCHAR}
     </if>
     <if test="version != null">
       and version = #{version,jdbcType=VARCHAR}

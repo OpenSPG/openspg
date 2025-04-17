@@ -37,7 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class TaskExecuteTemplate implements TaskExecute {
 
   /** lock max time */
-  public static final Integer LOCK_TIME_MINUTES = 15;
+  public static final Integer LOCK_TIME_MINUTES = 10;
 
   @Autowired SchedulerTaskService schedulerTaskService;
   @Autowired SchedulerCommonService schedulerCommonService;
@@ -57,7 +57,11 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
       context.getTask().setStatus(TaskStatus.ERROR);
       context.addTraceLog(
           "Scheduler execute failed with error:%s", ExceptionUtils.getStackTrace(e));
-      log.error("JobTask process error uniqueId:{}", context.getInstance().getUniqueId(), e);
+      log.error(
+          "JobTask process error projectId:{} uniqueId:{}",
+          context.getInstance().getProjectId(),
+          context.getInstance().getUniqueId(),
+          e);
     }
 
     processStatus(context, status, lock);

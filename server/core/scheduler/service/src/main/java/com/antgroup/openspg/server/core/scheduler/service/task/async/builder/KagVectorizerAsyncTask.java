@@ -31,7 +31,6 @@ import com.antgroup.openspg.server.common.service.project.ProjectService;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
-import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.MemoryTaskServer;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
@@ -70,27 +69,12 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
       return memoryTask.getNodeId();
     }
 
-    List<String> inputs = getInputs(instance, task);
+    List<String> inputs = SchedulerUtils.getTaskInputs(taskService, instance, task);
     String taskId =
         memoryTaskServer.submit(
             new VectorizerTaskCallable(value, projectService, context, inputs), key);
     context.addTraceLog("Vectorizer task has been successfully created!");
     return taskId;
-  }
-
-  private List<String> getInputs(SchedulerInstance instance, SchedulerTask task) {
-    List<TaskExecuteDag.Node> nodes =
-        instance.getTaskDag().getRelatedNodes(task.getNodeId(), false);
-    List<String> inputs = Lists.newArrayList();
-    nodes.forEach(
-        node -> {
-          SchedulerTask preTask =
-              taskService.queryByInstanceIdAndNodeId(task.getInstanceId(), node.getId());
-          if (preTask != null && StringUtils.isNotBlank(preTask.getOutput())) {
-            inputs.add(preTask.getOutput());
-          }
-        });
-    return inputs;
   }
 
   @Override
@@ -205,6 +189,7 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
           new PemjaConfig(
               value.getPythonExec(),
               value.getPythonPaths(),
+              value.getPythonEnv(),
               value.getSchemaUrlHost(),
               projectId,
               vectorizer,

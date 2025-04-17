@@ -30,6 +30,8 @@ public interface ObjectStorageClient extends CloudExtClient {
 
   Boolean saveFile(String bucketName, File file, String fileKey);
 
+  Boolean saveFile(String bucketName, InputStream inputStream, long fileSize, String fileKey);
+
   public InputStream downloadFile(String bucketName, String fileKey);
 
   Boolean downloadFile(String bucketName, String fileKey, String directoryPath);

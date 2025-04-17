@@ -19,5 +19,12 @@ public enum ComputingStatusEnum {
   FAILED,
   STOP,
   NOTFOUND,
-  UNDEFINED
+  UNDEFINED;
+
+  public static boolean isException(ComputingStatusEnum status) {
+    return ComputingStatusEnum.FAILED.equals(status)
+        || ComputingStatusEnum.STOP.equals(status)
+        || ComputingStatusEnum.NOTFOUND.equals(status)
+        || ComputingStatusEnum.UNDEFINED.equals(status);
+  }
 }

@@ -24,7 +24,7 @@ services:
       "arks-sofaboot-0.0.1-SNAPSHOT-executable.jar",
       '--server.repository.impl.jdbc.host=mysql',
       '--server.repository.impl.jdbc.password=openspg',
-      '--builder.model.execute.num=5',
+      '--builder.model.execute.num=20',
       '--cloudext.graphstore.url=neo4j://release-openspg-neo4j:7687?user=neo4j&password=neo4j@openspg&database=neo4j',
       '--cloudext.searchengine.url=neo4j://release-openspg-neo4j:7687?user=neo4j&password=neo4j@openspg&database=neo4j'
     ]

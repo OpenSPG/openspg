@@ -14,6 +14,12 @@ package com.antgroup.openspg.server.core.scheduler.service.utils;
 
 import com.antgroup.openspg.builder.model.record.SubGraphRecord;
 import com.antgroup.openspg.common.util.DateTimeUtils;
+import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
+import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
+import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
+import com.google.common.collect.Lists;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -81,11 +87,9 @@ public class SchedulerUtils {
   }
 
   /** get Cron Execution Dates By Today */
-  public static List<Date> getCronExecutionDatesByToday(String cron) {
+  public static List<Date> getCronExecutionDates(String cron, Date startDate, Date endDate) {
     CronExpression expression = getCronExpression(cron);
     List<Date> dates = new ArrayList<>();
-    Date startDate = DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH);
-    Date endDate = DateUtils.addDays(startDate, 1);
 
     if (expression.isSatisfiedBy(startDate)) {
       dates.add(startDate);
@@ -97,6 +101,13 @@ public class SchedulerUtils {
     }
 
     return dates;
+  }
+
+  /** get Cron Execution Dates By Today */
+  public static List<Date> getCronExecutionDatesByToday(String cron) {
+    Date startDate = DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH);
+    Date endDate = DateUtils.addDays(startDate, 1);
+    return getCronExecutionDates(cron, startDate, endDate);
   }
 
   /** get Previous ValidTime */
@@ -153,5 +164,21 @@ public class SchedulerUtils {
         edges.addAndGet(resultEdges.size());
       }
     }
+  }
+
+  public static List<String> getTaskInputs(
+      SchedulerTaskService taskService, SchedulerInstance instance, SchedulerTask task) {
+    List<TaskExecuteDag.Node> nodes =
+        instance.getTaskDag().getRelatedNodes(task.getNodeId(), false);
+    List<String> inputs = Lists.newArrayList();
+    nodes.forEach(
+        node -> {
+          SchedulerTask preTask =
+              taskService.queryByInstanceIdAndNodeId(task.getInstanceId(), node.getId());
+          if (preTask != null && StringUtils.isNotBlank(preTask.getOutput())) {
+            inputs.add(preTask.getOutput());
+          }
+        });
+    return inputs;
   }
 }

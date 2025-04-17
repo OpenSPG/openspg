@@ -25,7 +25,6 @@ import com.aliyun.odps.Table;
 import com.aliyun.odps.TableSchema;
 import com.aliyun.odps.data.Record;
 import com.aliyun.odps.data.RecordReader;
-import com.aliyun.odps.task.SQLTask;
 import com.aliyun.odps.tunnel.TableTunnel;
 import com.antgroup.openspg.common.util.PartitionUtils;
 import com.antgroup.openspg.server.common.model.datasource.Column;
@@ -85,7 +84,7 @@ public class OdpsMetaClientImpl implements DataSourceMetaClient {
               "odps describeTable %s %s %s Exception:",
               JSON.toJSONString(dataSource), database, tableName),
           e);
-      throw new RuntimeException("odps describeTable Exception", e);
+      throw new RuntimeException("odps describeTable Exception:" + e.getMessage(), e);
     }
   }
 
@@ -107,7 +106,7 @@ public class OdpsMetaClientImpl implements DataSourceMetaClient {
           });
     } catch (Exception e) {
       log.warn(String.format("odps showDatabases %s Exception:", JSON.toJSONString(dataSource)), e);
-      throw new RuntimeException("odps showDatabases Exception", e);
+      throw new RuntimeException("odps showDatabases Exception:" + e.getMessage(), e);
     }
   }
 
@@ -115,13 +114,18 @@ public class OdpsMetaClientImpl implements DataSourceMetaClient {
   public List<String> showTables(CloudDataSource dataSource, String database, String keyword) {
     try {
       Odps odps = OdpsClient.getClient(dataSource, database);
-      Assert.isTrue(odps.projects().exists(database), "database does not exist!");
+      List<String> tables = Lists.newArrayList();
+      /*Assert.isTrue(odps.projects().exists(database), "database does not exist!");
       Instance i = SQLTask.run(odps, "SHOW TABLES LIKE '*" + keyword + "*';");
       i.waitForSuccess();
-      return parse(i);
+      return parse(i);*/
+      if (OdpsClient.tableExists(odps, database, keyword)) {
+        tables.add(keyword);
+      }
+      return tables;
     } catch (Exception e) {
       log.warn(String.format("odps showTables %s Exception:", JSON.toJSONString(dataSource)), e);
-      throw new RuntimeException("odps showTables Exception", e);
+      throw new RuntimeException("odps showTables Exception:" + e.getMessage(), e);
     }
   }
 
@@ -137,7 +141,7 @@ public class OdpsMetaClientImpl implements DataSourceMetaClient {
     } catch (Exception e) {
       log.warn(
           String.format("odps isPartitionTable %s Exception:", JSON.toJSONString(dataSource)), e);
-      throw new RuntimeException("odps isPartitionTable Exception", e);
+      throw new RuntimeException("odps isPartitionTable Exception:" + e.getMessage(), e);
     }
   }
 
@@ -179,7 +183,7 @@ public class OdpsMetaClientImpl implements DataSourceMetaClient {
       return Boolean.TRUE;
     } catch (Exception e) {
       log.warn(String.format("odps testConnect %s Exception:", JSON.toJSONString(dataSource)), e);
-      throw new RuntimeException("odps testConnect Exception", e);
+      throw new RuntimeException("odps testConnect Exception:" + e.getMessage(), e);
     }
   }
 
@@ -215,7 +219,7 @@ public class OdpsMetaClientImpl implements DataSourceMetaClient {
               "odps sampleDateForPartition %s %s %s %s %s Exception:",
               JSON.toJSONString(dataSource), dataSourceId, partitionStr, bizDate, limit),
           e);
-      throw new RuntimeException("odps sampleDateForPartition Exception", e);
+      throw new RuntimeException("odps sampleDateForPartition Exception:" + e.getMessage(), e);
     }
 
     return data;
@@ -246,7 +250,7 @@ public class OdpsMetaClientImpl implements DataSourceMetaClient {
               "odps hasPartition %s %s %s %s Exception:",
               JSON.toJSONString(dataSource), dataSourceId, partitionStr, bizDate),
           e);
-      throw new RuntimeException("hasPartition Exception", e);
+      throw new RuntimeException("hasPartition Exception:" + e.getMessage(), e);
     }
   }
 
@@ -274,7 +278,7 @@ public class OdpsMetaClientImpl implements DataSourceMetaClient {
               "getRecordCount %s %s %s %s Exception:",
               JSON.toJSONString(dataSource), dataSourceId, partitionStr, bizDate),
           e);
-      throw new RuntimeException("getRecordCount Exception", e);
+      throw new RuntimeException("getRecordCount Exception:" + e.getMessage(), e);
     }
     return count;
   }
@@ -293,7 +297,7 @@ public class OdpsMetaClientImpl implements DataSourceMetaClient {
               "odps getAllPartitions %s %s Exception:",
               JSON.toJSONString(dataSource), dataSourceId),
           e);
-      throw new RuntimeException("odps getAllPartitions Exception", e);
+      throw new RuntimeException("odps getAllPartitions Exception:" + e.getMessage(), e);
     }
   }
 

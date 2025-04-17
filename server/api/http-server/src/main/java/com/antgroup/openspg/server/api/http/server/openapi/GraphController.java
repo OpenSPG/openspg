@@ -24,7 +24,6 @@ import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
 import com.antgroup.openspg.builder.model.record.SubGraphRecord;
 import com.antgroup.openspg.builder.runner.local.physical.sink.impl.GraphStoreSinkWriter;
 import com.antgroup.openspg.builder.runner.local.physical.sink.impl.Neo4jSinkWriter;
-import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.ConceptList;
@@ -32,6 +31,7 @@ import com.antgroup.openspg.core.schema.model.type.ProjectSchema;
 import com.antgroup.openspg.server.api.facade.dto.service.request.*;
 import com.antgroup.openspg.server.api.facade.dto.service.response.ManipulateDataResponse;
 import com.antgroup.openspg.server.api.facade.dto.service.response.PageRankScoreInstance;
+import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
 import com.antgroup.openspg.server.api.http.server.HttpResult;
@@ -59,7 +59,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/public/v1/graph")
 @Slf4j
-public class GraphController {
+public class GraphController extends BaseController {
 
   @Value("${python.exec:}")
   private String pythonExec;
@@ -67,11 +67,8 @@ public class GraphController {
   @Value("${python.paths:}")
   private String pythonPaths;
 
-  @Value("${provision.server:true}")
-  private Boolean provisionServer;
-
-  @Value("${provision.server.token:}")
-  private String provisionServerToken;
+  @Value("${python.env:}")
+  private String pythonEnv;
 
   @Autowired private GraphManager graphManager;
 
@@ -172,19 +169,6 @@ public class GraphController {
         new HttpBizCallback<Boolean>() {
           @Override
           public void check() {
-            log.info(
-                "/public/v1/graph/writerGraph request: {} provisionServerToken: {}",
-                JSON.toJSONString(request),
-                provisionServerToken);
-            if (provisionServer != null && !provisionServer) {
-              if (StringUtils.isBlank(provisionServerToken)
-                  || StringUtils.isBlank(request.getToken())) {
-                throw new RuntimeException("No service provided");
-              }
-              if (!request.getToken().startsWith(provisionServerToken)) {
-                throw new RuntimeException("Token Authentication failure: " + request.getToken());
-              }
-            }
             AssertUtils.assertParamObjectIsNotNull("request", request);
             AssertUtils.assertParamObjectIsNotNull("projectId", request.getProjectId());
             AssertUtils.assertParamObjectIsNotNull("operation", request.getOperation());
@@ -208,6 +192,7 @@ public class GraphController {
                     .setCatalog(new DefaultBuilderCatalog(projectSchema, conceptLists))
                     .setPythonExec(pythonExec)
                     .setPythonPaths(pythonPaths)
+                    .setPythonEnv(pythonEnv)
                     .setOperation(RecordAlterOperationEnum.valueOf(request.getOperation()))
                     .setEnableLeadTo(enableLeadTo)
                     .setProject(JSON.toJSONString(projectManager.queryById(request.getProjectId())))

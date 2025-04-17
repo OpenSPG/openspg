@@ -36,6 +36,7 @@ public class BuilderContext implements Serializable {
 
   private String pythonExec;
   private String pythonPaths;
+  private String pythonEnv;
   private String graphStoreUrl;
   private String searchEngineUrl;
   private String cacheUrl;
