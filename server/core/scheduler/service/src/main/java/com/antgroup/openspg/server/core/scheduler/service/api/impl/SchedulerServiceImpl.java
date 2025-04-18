@@ -12,6 +12,7 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.api.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
@@ -24,6 +25,7 @@ import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerTaskQuery
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.api.SchedulerService;
 import com.antgroup.openspg.server.core.scheduler.service.common.SchedulerCommonService;
 import com.antgroup.openspg.server.core.scheduler.service.engine.SchedulerExecuteService;
@@ -173,6 +175,9 @@ public class SchedulerServiceImpl implements SchedulerService {
 
   @Override
   public Boolean deleteJob(Long jobId) {
+    if (jobId == null) {
+      return true;
+    }
     stopJobAllInstance(jobId);
     schedulerJobService.deleteById(jobId);
     schedulerInstanceService.deleteByJobId(jobId);
@@ -198,7 +203,32 @@ public class SchedulerServiceImpl implements SchedulerService {
 
   @Override
   public SchedulerInstance getInstanceById(Long instanceId) {
-    return schedulerInstanceService.getById(instanceId);
+    SchedulerInstance instance = schedulerInstanceService.getById(instanceId);
+    paddingTaskDag(instance);
+    return instance;
+  }
+
+  private void paddingTaskDag(SchedulerInstance instance) {
+    List<SchedulerTask> tasks = schedulerTaskService.queryByInstanceId(instance.getId());
+    TaskExecuteDag taskDag = instance.getTaskDag();
+    if (CollectionUtils.isEmpty(tasks) || taskDag == null) {
+      return;
+    }
+    for (SchedulerTask task : tasks) {
+      TaskExecuteDag.Node kgNode = taskDag.getNode(task.getNodeId());
+      if (kgNode == null) {
+        continue;
+      }
+      JSONObject properties =
+          ((kgNode.getProperties() == null) ? new JSONObject() : kgNode.getProperties());
+      properties.put("status", task.getStatus().name());
+      properties.put("executeNum", task.getExecuteNum());
+      properties.put("beginTime", task.getBeginTime());
+      properties.put("finishTime", task.getFinishTime());
+      properties.put("estimateFinishTime", task.getEstimateFinishTime());
+      kgNode.setProperties(properties);
+    }
+    instance.setTaskDag(taskDag);
   }
 
   @Override
@@ -240,7 +270,13 @@ public class SchedulerServiceImpl implements SchedulerService {
 
   @Override
   public Paged<SchedulerInstance> searchInstances(SchedulerInstanceQuery query) {
-    return schedulerInstanceService.query(query);
+    Paged<SchedulerInstance> pageData = schedulerInstanceService.query(query);
+    List<SchedulerInstance> instances = pageData.getResults();
+    if (CollectionUtils.isEmpty(instances)) {
+      return pageData;
+    }
+    instances.forEach(instance -> paddingTaskDag(instance));
+    return pageData;
   }
 
   @Override

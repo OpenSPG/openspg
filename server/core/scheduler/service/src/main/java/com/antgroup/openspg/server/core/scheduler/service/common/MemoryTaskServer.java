@@ -42,8 +42,8 @@ public class MemoryTaskServer {
           10,
           60 * 60,
           TimeUnit.SECONDS,
-          new LinkedBlockingQueue<>(10),
-          new ThreadPoolExecutor.CallerRunsPolicy());;
+          new LinkedBlockingQueue<>(1000),
+          new ThreadPoolExecutor.CallerRunsPolicy());
 
   public String submit(MemoryTaskCallable<String> taskCallable, String taskId) {
     SchedulerTask taskInfo = new SchedulerTask();

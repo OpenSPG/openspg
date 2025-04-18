@@ -32,6 +32,7 @@ public class BuilderJobDO {
   private Long chunkNum;
   private String fileUrl;
   private String status;
+  private String dataSourceType;
   private String type;
   private String extension;
   private String version;

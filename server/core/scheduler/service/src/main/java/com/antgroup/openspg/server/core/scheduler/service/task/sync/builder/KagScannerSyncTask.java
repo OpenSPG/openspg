@@ -13,7 +13,6 @@
 package com.antgroup.openspg.server.core.scheduler.service.task.sync.builder;
 
 import com.alibaba.fastjson.JSON;
-import com.antgroup.openspg.builder.model.record.ChunkRecord;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClient;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClientDriverManager;
 import com.antgroup.openspg.common.util.CommonUtils;
@@ -30,11 +29,12 @@ import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
 import com.antgroup.openspg.server.core.scheduler.service.task.sync.SyncTaskExecuteTemplate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component("kagReaderSyncTask")
-public class KagReaderSyncTask extends SyncTaskExecuteTemplate {
+@Component("kagScannerSyncTask")
+public class KagScannerSyncTask extends SyncTaskExecuteTemplate {
 
   @Autowired private DefaultValue value;
 
@@ -48,28 +48,27 @@ public class KagReaderSyncTask extends SyncTaskExecuteTemplate {
   public SchedulerEnum.TaskStatus submit(TaskExecuteContext context) {
     SchedulerJob job = context.getJob();
     BuilderJob builderJob = builderJobService.getById(Long.valueOf(job.getInvokerId()));
-    List<ChunkRecord.Chunk> chunks = readSource(context, builderJob);
+    List<Map<String, Object>> datas = readSource(context, builderJob);
     SchedulerTask task = context.getTask();
     String fileKey =
         CommonUtils.getTaskStorageFileKey(
             task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
     objectStorageClient = ObjectStorageClientDriverManager.getClient(value.getObjectStorageUrl());
-    objectStorageClient.saveString(
-        value.getBuilderBucketName(), JSON.toJSONString(chunks), fileKey);
+    objectStorageClient.saveString(value.getBuilderBucketName(), JSON.toJSONString(datas), fileKey);
     context.addTraceLog(
-        "Store the results of the read operator. file:%s/%s",
+        "Store the results of the scan operator. file:%s/%s",
         value.getBuilderBucketName(), fileKey);
     task.setOutput(fileKey);
     return SchedulerEnum.TaskStatus.FINISH;
   }
 
-  public List<ChunkRecord.Chunk> readSource(TaskExecuteContext context, BuilderJob builderJob) {
+  public List<Map<String, Object>> readSource(TaskExecuteContext context, BuilderJob builderJob) {
     Long projectId = context.getInstance().getProjectId();
     Date bizDate = context.getInstance().getSchedulerDate();
     Project project = projectService.queryById(projectId);
-    context.addTraceLog("Invoke read operator:%s", PythonInvokeMethod.BRIDGE_READER.getMethod());
-    List<ChunkRecord.Chunk> chunkList =
-        com.antgroup.openspg.builder.core.physical.utils.CommonUtils.readSource(
+    context.addTraceLog("Invoke scan operator:%s", PythonInvokeMethod.BRIDGE_READER.getMethod());
+    List<Map<String, Object>> datas =
+        com.antgroup.openspg.builder.core.physical.utils.CommonUtils.scanSource(
             value.getPythonExec(),
             value.getPythonPaths(),
             value.getPythonEnv(),
@@ -77,9 +76,8 @@ public class KagReaderSyncTask extends SyncTaskExecuteTemplate {
             project,
             builderJob,
             bizDate);
-    context.addTraceLog(
-        "The read operator was invoked successfully. chunk size:%s", chunkList.size());
+    context.addTraceLog("The scan operator was invoked successfully. data size:%s", datas.size());
 
-    return chunkList;
+    return datas;
   }
 }

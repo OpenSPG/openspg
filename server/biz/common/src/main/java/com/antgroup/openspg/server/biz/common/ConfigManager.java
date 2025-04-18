@@ -84,9 +84,18 @@ public interface ConfigManager {
   void backwardCompatible(JSONObject config);
 
   /**
-   * clear redundant field
+   * get llm id by config
    *
-   * @param jsonObject model json config
+   * @param config
+   * @return
    */
-  JSONObject clearRedundantField(JSONObject jsonObject, String configType);
+  String getLLMIdByConfig(JSONObject config);
+  /**
+   * check llm change
+   *
+   * @param oldConfig
+   * @param config
+   * @return
+   */
+  boolean isLLMChange(JSONObject oldConfig, JSONObject config);
 }

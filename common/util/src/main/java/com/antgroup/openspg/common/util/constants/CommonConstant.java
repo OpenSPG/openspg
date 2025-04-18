@@ -17,4 +17,6 @@ public class CommonConstant {
   public static final String ECB_PASSWORD_KEY = "ECB_PASSWORD_O2P0E2N4SPG";
 
   public static final String TUNNEL_ENDPOINT = "TunnelEndpoint";
+
+  public static final String KAG = "kag.";
 }

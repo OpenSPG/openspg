@@ -33,10 +33,10 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstanc
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
-import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.MemoryTaskServer;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
+import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import java.util.List;
@@ -70,17 +70,7 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
       return memoryTask.getNodeId();
     }
 
-    List<TaskExecuteDag.Node> nodes =
-        instance.getTaskDag().getRelatedNodes(task.getNodeId(), false);
-    List<String> inputs = Lists.newArrayList();
-    nodes.forEach(
-        node -> {
-          SchedulerTask preTask =
-              taskService.queryByInstanceIdAndNodeId(task.getInstanceId(), node.getId());
-          if (preTask != null && StringUtils.isNotBlank(preTask.getOutput())) {
-            inputs.add(preTask.getOutput());
-          }
-        });
+    List<String> inputs = SchedulerUtils.getTaskInputs(taskService, instance, task);
     String taskId =
         memoryTaskServer.submit(
             new SplitterTaskCallable(value, builderJobService, projectService, context, inputs),
@@ -204,6 +194,7 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
               pyConfig,
               value.getPythonExec(),
               value.getPythonPaths(),
+              value.getPythonEnv(),
               value.getSchemaUrlHost(),
               project,
               extension);

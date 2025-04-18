@@ -14,17 +14,14 @@
 package com.antgroup.openspg.common.util.pemja;
 
 public enum PythonInvokeMethod {
-  BRIDGE_READER("kag.bridge.spg_server_bridge", "SPGServerBridge", "run_reader", ""),
-  BRIDGE_COMPONENT("kag.bridge.spg_server_bridge", "SPGServerBridge", "run_component", ""),
-  BATCH_VECTORIZER(
-      "kag.builder.component.vectorizer.batch_vectorizer", "BatchVectorizer", "_handle", "**"),
-  LLM_CONFIG_CHECKER("kag.common.llm.llm_config_checker", "LLMConfigChecker", "check", ""),
-  VECTORIZER_CONFIG_CHECKER(
-      "kag.common.vectorize_model.vectorize_model_config_checker",
-      "VectorizeModelConfigChecker",
-      "check",
-      ""),
-  SOLVER_MAIN("kag.solver.main_solver", "SolverMain", "invoke", "");
+  BRIDGE_READER("bridge.spg_server_bridge", "SPGServerBridge", "run_reader", ""),
+  BRIDGE_SCANNER("bridge.spg_server_bridge", "SPGServerBridge", "run_scanner", ""),
+  BRIDGE_COMPONENT("bridge.spg_server_bridge", "SPGServerBridge", "run_component", ""),
+  BRIDGE_LLM_CHECKER("bridge.spg_server_bridge", "SPGServerBridge", "run_llm_config_check", ""),
+  BRIDGE_VECTORIZER_CHECKER(
+      "bridge.spg_server_bridge", "SPGServerBridge", "run_vectorizer_config_check", ""),
+  BRIDGE_SOLVER_MAIN("bridge.spg_server_bridge", "SPGServerBridge", "run_solver", ""),
+  BRIDGE_BUILDER_MAIN("bridge.spg_server_bridge", "SPGServerBridge", "run_builder", "");
 
   String modulePath;
 

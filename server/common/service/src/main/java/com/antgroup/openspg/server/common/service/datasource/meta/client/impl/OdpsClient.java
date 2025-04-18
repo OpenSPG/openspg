@@ -133,6 +133,19 @@ public class OdpsClient {
     }
   }
 
+  public static Boolean tableExists(Odps odps, String project, String table) {
+    try {
+      long start = System.currentTimeMillis();
+      Boolean t = odps.tables().exists(project, table);
+      long cost = System.currentTimeMillis() - start;
+      log.info("table exists end:", project, table, cost);
+      return t;
+    } catch (Exception e) {
+      log.warn(String.format("table exists %s %s Exception:", project, table), e);
+      throw new RuntimeException("table exists Exception", e);
+    }
+  }
+
   /**
    * 重试机制获取获取DownloadSession
    *

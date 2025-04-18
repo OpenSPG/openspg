@@ -13,4 +13,14 @@
 
 package com.antgroup.openspg.server.api.http.server;
 
-public class BaseController {}
+import com.antgroup.openspg.server.api.http.client.account.AccountService;
+import com.antgroup.openspg.server.common.model.account.Account;
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class BaseController {
+  @Autowired public AccountService accountService;
+
+  public Account getLoginAccount() {
+    return accountService.getLoginUser();
+  }
+}

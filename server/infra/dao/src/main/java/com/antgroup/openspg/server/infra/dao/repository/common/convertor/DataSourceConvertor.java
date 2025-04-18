@@ -15,6 +15,7 @@ package com.antgroup.openspg.server.infra.dao.repository.common.convertor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.common.util.DozerBeanMapperUtil;
+import com.antgroup.openspg.common.util.constants.CommonConstant;
 import com.antgroup.openspg.server.common.model.datasource.DataSource;
 import com.antgroup.openspg.server.infra.dao.dataobject.DataSourceDO;
 import com.google.common.collect.Lists;
@@ -31,6 +32,9 @@ public class DataSourceConvertor {
     if (dataSource.getConnectionInfo() != null) {
       dataSourceDO.setConnectionInfo(JSONObject.toJSONString(dataSource.getConnectionInfo()));
     }
+    if (CommonConstant.DEFAULT_PASSWORD.equals(dataSource.getDbPassword())) {
+      dataSourceDO.setDbPassword(null);
+    }
     return dataSourceDO;
   }
 
@@ -44,6 +48,9 @@ public class DataSourceConvertor {
       dataSource.setConnectionInfo(JSONObject.parseObject(dataSourceDO.getConnectionInfo()));
     } else {
       dataSource.setConnectionInfo(new JSONObject());
+    }
+    if (StringUtils.isNotBlank(dataSourceDO.getDbPassword())) {
+      dataSource.setDbPassword(CommonConstant.DEFAULT_PASSWORD);
     }
     return dataSource;
   }

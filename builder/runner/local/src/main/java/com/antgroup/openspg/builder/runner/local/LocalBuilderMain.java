@@ -140,6 +140,7 @@ public class LocalBuilderMain {
 
     String pythonExec = commandLine.getOptionValue(BuilderConstants.PYTHON_EXEC_OPTION);
     String pythonPaths = commandLine.getOptionValue(BuilderConstants.PYTHON_PATHS_OPTION);
+    String pythonEnv = commandLine.getOptionValue(BuilderConstants.PYTHON_ENV_OPTION);
     String schemaUrl = commandLine.getOptionValue(BuilderConstants.SCHEMA_URL_OPTION);
 
     String parallelismStr = commandLine.getOptionValue(BuilderConstants.PARALLELISM_OPTION);
@@ -169,6 +170,7 @@ public class LocalBuilderMain {
             .setCatalog(new DefaultBuilderCatalog(projectSchema, conceptLists))
             .setPythonExec(pythonExec)
             .setPythonPaths(pythonPaths)
+            .setPythonEnv(pythonEnv)
             .setOperation(alterOperationEnum)
             .setEnableLeadTo(enableLeadTo)
             .setGraphStoreUrl(graphStoreUrl)

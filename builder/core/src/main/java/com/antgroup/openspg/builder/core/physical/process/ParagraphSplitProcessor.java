@@ -27,6 +27,7 @@ import com.antgroup.openspg.builder.model.record.ChunkRecord;
 import com.antgroup.openspg.builder.model.record.StringRecord;
 import com.antgroup.openspg.common.constants.BuilderConstant;
 import com.antgroup.openspg.common.util.pemja.PythonInvokeMethod;
+import com.antgroup.openspg.server.common.model.bulider.BuilderJob;
 import com.antgroup.openspg.server.common.model.project.Project;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
@@ -57,11 +58,13 @@ public class ParagraphSplitProcessor extends BasePythonProcessor<ParagraphSplitN
     node.addTraceLog("Start split document...");
     List<BaseRecord> results = new ArrayList<>();
     JSONObject pyConfig = new JSONObject();
-    JSONObject extension = JSON.parseObject(config.getExtension());
+    BuilderJob job = config.getJob();
+    JSONObject extension = JSON.parseObject(job.getExtension());
     CommonUtils.getSplitterConfig(
         pyConfig,
         context.getPythonExec(),
         context.getPythonPaths(),
+        context.getPythonEnv(),
         context.getSchemaUrl(),
         project,
         extension);
@@ -69,8 +72,8 @@ public class ParagraphSplitProcessor extends BasePythonProcessor<ParagraphSplitN
       StringRecord stringRecord = (StringRecord) record;
 
       String fileUrl = stringRecord.getDocument();
-      String token = config.getToken();
-      List<ChunkRecord.Chunk> chunks = readSource(fileUrl, token);
+      node.addTraceLog("invoke split fileUrl:%s", fileUrl);
+      List<ChunkRecord.Chunk> chunks = readSource(job);
       node.addTraceLog("invoke split operator:%s", config.getOperatorConfig().getClassName());
       for (ChunkRecord.Chunk chunk : chunks) {
         node.addTraceLog("invoke split chunk:%s", chunk.getName());
@@ -100,16 +103,17 @@ public class ParagraphSplitProcessor extends BasePythonProcessor<ParagraphSplitN
     return results;
   }
 
-  public List<ChunkRecord.Chunk> readSource(String url, String token) {
+  public List<ChunkRecord.Chunk> readSource(BuilderJob job) {
     node.addTraceLog("invoke read operator:%s", PythonInvokeMethod.BRIDGE_READER.getMethod());
     List<ChunkRecord.Chunk> chunkList =
         CommonUtils.readSource(
             context.getPythonExec(),
             context.getPythonPaths(),
+            context.getPythonEnv(),
             context.getSchemaUrl(),
             project,
-            url,
-            token);
+            job,
+            null);
     node.addTraceLog(
         "invoke read operator:%s chunks:%s succeed",
         PythonInvokeMethod.BRIDGE_READER.getMethod(), chunkList.size());

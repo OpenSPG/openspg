@@ -71,7 +71,7 @@ public class JdbcMetaClientImpl implements DataSourceMetaClient {
               "jdbc describeTable Exception: %s %s %s",
               JSON.toJSONString(dataSource), database, tableName),
           e);
-      throw new RuntimeException("jdbc describeTable Exception", e);
+      throw new RuntimeException("jdbc describeTable Exception:" + e.getMessage(), e);
     } finally {
       JdbcClient.closeResultSet(res);
       JdbcClient.closeStatement(stmt);
@@ -96,7 +96,7 @@ public class JdbcMetaClientImpl implements DataSourceMetaClient {
       }
     } catch (Exception e) {
       log.warn(String.format("jdbc showDatabases Exception: %s", JSON.toJSONString(dataSource)), e);
-      throw new RuntimeException("jdbc showDatabases Exception", e);
+      throw new RuntimeException("jdbc showDatabases Exception:" + e.getMessage(), e);
     } finally {
       JdbcClient.closeResultSet(res);
       JdbcClient.closeStatement(stmt);
@@ -132,7 +132,7 @@ public class JdbcMetaClientImpl implements DataSourceMetaClient {
           String.format(
               "jdbc showTables Exception: %s %s", JSON.toJSONString(dataSource), database),
           e);
-      throw new RuntimeException("jdbc showTables Exception", e);
+      throw new RuntimeException("jdbc showTables Exception:" + e.getMessage(), e);
     } finally {
       JdbcClient.closeResultSet(res);
       JdbcClient.closeStatement(stmt);
@@ -163,7 +163,7 @@ public class JdbcMetaClientImpl implements DataSourceMetaClient {
               "jdbc isPartitionTable Exception: %s %s %s",
               JSON.toJSONString(dataSource), database, tableName),
           e);
-      throw new RuntimeException("jdbc isPartitionTable Exception", e);
+      throw new RuntimeException("jdbc isPartitionTable Exception:" + e.getMessage(), e);
     } finally {
       JdbcClient.closeResultSet(res);
       JdbcClient.closeStatement(stmt);
@@ -182,7 +182,7 @@ public class JdbcMetaClientImpl implements DataSourceMetaClient {
       stmt.executeQuery("show databases");
     } catch (Exception e) {
       log.warn(String.format("testConnect Exception: %s", JSON.toJSONString(dataSource)), e);
-      throw new RuntimeException("testConnect Exception", e);
+      throw new RuntimeException("testConnect Exception:" + e.getMessage(), e);
     } finally {
       JdbcClient.closeStatement(stmt);
       JdbcClient.closeConnection(conn);
@@ -215,7 +215,7 @@ public class JdbcMetaClientImpl implements DataSourceMetaClient {
               "jdbc sampleDateForPartition Exception: %s %s %s %s %s",
               JSON.toJSONString(dataSource), dataSourceId, partitionStr, bizDate, limit),
           e);
-      throw new RuntimeException("jdbc sampleDateForPartition Exception", e);
+      throw new RuntimeException("jdbc sampleDateForPartition Exception:" + e.getMessage(), e);
     } finally {
       JdbcClient.closeConnection(conn);
     }
@@ -242,7 +242,7 @@ public class JdbcMetaClientImpl implements DataSourceMetaClient {
               "jdbc hasPartition Exception: %s %s %s %s",
               JSON.toJSONString(dataSource), dataSourceId, partitionStr, bizDate),
           e);
-      throw new RuntimeException("jdbc hasPartition Exception", e);
+      throw new RuntimeException("jdbc hasPartition Exception:" + e.getMessage(), e);
     } finally {
       JdbcClient.closeConnection(conn);
     }
@@ -276,7 +276,7 @@ public class JdbcMetaClientImpl implements DataSourceMetaClient {
               "jdbc getRecordCount Exception: %s %s %s %s",
               JSON.toJSONString(dataSource), dataSourceId, partitionStr, bizDate),
           e);
-      throw new RuntimeException("jdbc getRecordCount Exception", e);
+      throw new RuntimeException("jdbc getRecordCount Exception:" + e.getMessage(), e);
     } finally {
       JdbcClient.closeStatement(stmt);
       JdbcClient.closeConnection(conn);
@@ -308,7 +308,7 @@ public class JdbcMetaClientImpl implements DataSourceMetaClient {
               "jdbc getAllPartitions Exception: %s %s",
               JSON.toJSONString(dataSource), dataSourceId),
           e);
-      throw new RuntimeException("jdbc getAllPartitions Exception", e);
+      throw new RuntimeException("jdbc getAllPartitions Exception:" + e.getMessage(), e);
     } finally {
       JdbcClient.closeResultSet(res);
       JdbcClient.closeStatement(stmt);

@@ -44,13 +44,11 @@ public class PipelineUtils {
     String splitId = UUID.randomUUID().toString();
     PythonInvokeMethod splitMethod = PythonInvokeMethod.BRIDGE_COMPONENT;
     JSONObject config = extension.getJSONObject(BuilderConstant.YU_QUE_CONFIG);
-    String token = (config == null) ? null : config.getString(BuilderConstant.TOKEN);
+    String token = (config == null) ? null : config.getString(BuilderConstant.YU_QUE_TOKEN);
     OperatorConfig operatorConfigSplit = new OperatorConfig(splitMethod, Maps.newHashMap());
     Node split =
         new Node(
-            splitId,
-            "Splitter",
-            new ParagraphSplitNodeConfig(operatorConfigSplit, token, job.getExtension()));
+            splitId, "Splitter", new ParagraphSplitNodeConfig(operatorConfigSplit, token, job));
     nodes.add(split);
     edges.add(new Edge(sourceId, splitId));
 
@@ -83,10 +81,9 @@ public class PipelineUtils {
     edges.add(new Edge(vectorizerId, alignmentId));
 
     String sinkId = UUID.randomUUID().toString();
+    JSONObject extractConfig = extension.getJSONObject(BuilderConstant.EXTRACT_CONFIG);
     Boolean autoWrite =
-        extension
-            .getJSONObject(BuilderConstant.EXTRACT_CONFIG)
-            .getBoolean(BuilderConstant.AUTO_WRITE);
+        (extractConfig == null) ? true : extractConfig.getBoolean(BuilderConstant.AUTO_WRITE);
     Node sink = new Node(sinkId, "Writer", new Neo4jSinkNodeConfig(autoWrite));
     nodes.add(sink);
     edges.add(new Edge(alignmentId, sinkId));

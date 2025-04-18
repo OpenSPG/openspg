@@ -8,43 +8,43 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
+alias docker=podman
 IMAGE="spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-python"
 VERSION="0.6"
 LATEST="latest"
 
 cd ../../../../
-docker build -f openspg/dev/release/python/Dockerfile --platform linux/arm64/v8 --push \
-  -t  ${IMAGE}:${VERSION}-arm64 \
-  .
-docker build -f openspg/dev/release/python/Dockerfile --platform linux/amd64 --push \
-  -t  ${IMAGE}:${VERSION}-amd64 \
-  .
+docker build -f openspg/dev/release/python/Dockerfile --platform linux/arm64/v8 --build-arg MINICONDA_FILE=Miniconda3-py310_25.1.1-2-Linux-aarch64.sh --push \
+	-t ${IMAGE}:${VERSION}-arm64 \
+	.
+docker build -f openspg/dev/release/python/Dockerfile --platform linux/amd64 --build-arg MINICONDA_FILE=Miniconda3-py310_25.1.1-2-Linux-x86_64.sh --push \
+	-t ${IMAGE}:${VERSION}-amd64 \
+	.
 
-if docker manifest inspect ${IMAGE}:${VERSION} &> /dev/null; then
-  echo "Manifest already exists, removing it..."
-  docker manifest rm ${IMAGE}:${VERSION}
+if docker manifest inspect ${IMAGE}:${VERSION} &>/dev/null; then
+	echo "Manifest already exists, removing it..."
+	docker manifest rm ${IMAGE}:${VERSION}
 else
-  echo "Manifest does not exist, proceeding with creation and push."
+	echo "Manifest does not exist, proceeding with creation and push."
 fi
 
 docker manifest create \
-   ${IMAGE}:${VERSION} \
-   ${IMAGE}:${VERSION}-amd64 \
-   ${IMAGE}:${VERSION}-arm64
+	${IMAGE}:${VERSION} \
+	${IMAGE}:${VERSION}-amd64 \
+	${IMAGE}:${VERSION}-arm64
 
-docker manifest push  ${IMAGE}:${VERSION}
+docker manifest push ${IMAGE}:${VERSION}
 
-if docker manifest inspect ${IMAGE}:${LATEST} &> /dev/null; then
-  echo "Manifest already exists, removing it..."
-  docker manifest rm ${IMAGE}:${LATEST}
+if docker manifest inspect ${IMAGE}:${LATEST} &>/dev/null; then
+	echo "Manifest already exists, removing it..."
+	docker manifest rm ${IMAGE}:${LATEST}
 else
-  echo "Manifest does not exist, proceeding with creation and push."
+	echo "Manifest does not exist, proceeding with creation and push."
 fi
 
 docker manifest create \
-  ${IMAGE}:${LATEST} \
-  ${IMAGE}:${VERSION}-amd64 \
-  ${IMAGE}:${VERSION}-arm64
+	${IMAGE}:${LATEST} \
+	${IMAGE}:${VERSION}-amd64 \
+	${IMAGE}:${VERSION}-arm64
 
 docker manifest push ${IMAGE}:${LATEST}

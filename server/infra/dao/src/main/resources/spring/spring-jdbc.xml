@@ -21,8 +21,12 @@
     <bean id="defaultDataSource" class="org.apache.ibatis.datasource.pooled.PooledDataSource">
         <property name="url" value="${server.repository.impl.jdbc.url}"/>
         <property name="username" value="${server.repository.impl.jdbc.username}"/>
-        <property name="password" value="${server.repository.impl.jdbc.password}"/>
+        <property name="password" value="#{ T(com.antgroup.openspg.server.infra.dao.JasyptUtils).decryptIfEncrypted('${server.repository.impl.jdbc.password}','${jasypt.encryptor.password}') }"/>
         <property name="driver" value="${server.repository.impl.jdbc.driver}"/>
+        <property name="poolMaximumActiveConnections" value="20"/>
+        <property name="poolPingEnabled" value="true"/>
+        <property name="poolPingConnectionsNotUsedFor" value="21600000"/>
+        <property name="poolPingQuery" value="SELECT 1"/>
     </bean>
 
     <bean id="transactionManager"

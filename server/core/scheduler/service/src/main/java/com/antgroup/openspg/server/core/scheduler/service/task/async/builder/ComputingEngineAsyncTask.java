@@ -21,7 +21,10 @@ import com.antgroup.openspg.cloudext.interfaces.computingengine.ComputingEngineC
 import com.antgroup.openspg.cloudext.interfaces.computingengine.ComputingEngineConstants;
 import com.antgroup.openspg.cloudext.interfaces.computingengine.model.ComputingStatusEnum;
 import com.antgroup.openspg.cloudext.interfaces.computingengine.model.ComputingTask;
+import com.antgroup.openspg.common.constants.BuilderConstant;
+import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.server.common.model.bulider.BuilderJob;
+import com.antgroup.openspg.server.common.model.project.Project;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum;
 import com.antgroup.openspg.server.common.service.builder.BuilderJobService;
 import com.antgroup.openspg.server.common.service.config.DefaultValue;
@@ -34,12 +37,16 @@ import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerInst
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
 import java.util.Date;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 @Component("computingEngineAsyncTask")
 public class ComputingEngineAsyncTask extends AsyncTaskExecuteTemplate {
+
+  private static final String EXCEPTION_NUM = "exceptionNum";
+  private static final Integer MAX_EXCEPTION_NUM = 50;
 
   @Autowired private DefaultValue value;
 
@@ -54,11 +61,12 @@ public class ComputingEngineAsyncTask extends AsyncTaskExecuteTemplate {
   @Override
   public String submit(TaskExecuteContext context) {
     SchedulerJob job = context.getJob();
+    SchedulerInstance instance = context.getInstance();
     BuilderJob builderJob = builderJobService.getById(Long.valueOf(job.getInvokerId()));
     ComputingEngineClient client =
         ComputingEngineClientDriverManager.getClient(value.getComputingEngineUrl());
     context.addTraceLog("Start assembling the computing engine configuration information");
-    JSONObject extension = initExtension(builderJob);
+    JSONObject extension = initExtension(builderJob, instance);
     long startTime = System.currentTimeMillis();
     ComputingTask computingTask = client.submitBuilderJob(builderJob, extension);
     long time = System.currentTimeMillis() - startTime;
@@ -79,8 +87,18 @@ public class ComputingEngineAsyncTask extends AsyncTaskExecuteTemplate {
     return;
   }
 
-  public JSONObject initExtension(BuilderJob builderJob) {
+  public JSONObject initExtension(BuilderJob builderJob, SchedulerInstance instance) {
     JSONObject extension = JSONObject.parseObject(builderJob.getComputingConf());
+    String command = extension.getString(BuilderConstant.COMMAND);
+    if (StringUtils.isBlank(command) && !BuilderConstant.KAG_COMMAND.equals(builderJob.getType())) {
+      Project project = projectManager.queryById(builderJob.getProjectId());
+      JSONObject config =
+          CommonUtils.getKagBuilderConfig(project, builderJob, value.getSchemaUrlHost());
+      String input = CommonUtils.getKagBuilderInput(builderJob, instance.getSchedulerDate());
+      extension.put(
+          BuilderConstant.COMMAND,
+          String.format(BuilderConstant.SPG_DEFAULT_COMMAND, config.toJSONString(), input));
+    }
     putOrDefault(extension, BuilderConstants.PYTHON_EXEC_OPTION, value.getPythonExec());
     putOrDefault(extension, BuilderConstants.PYTHON_PATHS_OPTION, value.getPythonPaths());
     putOrDefault(extension, BuilderConstants.SCHEMA_URL_OPTION, value.getSchemaUrlHost());
@@ -108,8 +126,27 @@ public class ComputingEngineAsyncTask extends AsyncTaskExecuteTemplate {
     context.addTraceLog("Get the computing engine task status based on taskId:%s", resource);
     ComputingStatusEnum statusEnum = client.queryStatus(new JSONObject(), resource);
     context.addTraceLog(
-        "The computing engine status was obtained successfully. The status is:%s",
-        statusEnum.name());
+        "The computing engine status was obtained successfully. The(%s) status is:%s",
+        resource, statusEnum.name());
+    SchedulerTask task = context.getTask();
+    JSONObject extensionJson = task.getExtension();
+    extensionJson = extensionJson == null ? new JSONObject() : extensionJson;
+    Integer exceptionNum = 0;
+    if (extensionJson.containsKey(EXCEPTION_NUM)) {
+      exceptionNum = extensionJson.getInteger(EXCEPTION_NUM);
+    }
+    if (ComputingStatusEnum.isException(statusEnum)) {
+      exceptionNum = exceptionNum + 1;
+    }
+    extensionJson.put(EXCEPTION_NUM, exceptionNum);
+    task.setExtension(extensionJson);
+
+    if (exceptionNum > MAX_EXCEPTION_NUM) {
+      context.addTraceLog(
+          "After multiple retries, the status is still abnormal. Terminate the task!");
+      setInstanceFinished(
+          context, SchedulerEnum.TaskStatus.TERMINATE, SchedulerEnum.InstanceStatus.TERMINATE);
+    }
     switch (statusEnum) {
       case RUNNING:
         return processByRunning(context);
@@ -160,6 +197,7 @@ public class ComputingEngineAsyncTask extends AsyncTaskExecuteTemplate {
       SchedulerTask updateTask = new SchedulerTask();
       updateTask.setId(task.getId());
       updateTask.setResource(taskId);
+      task.setResource(taskId);
       taskService.update(updateTask);
       return SchedulerEnum.TaskStatus.RUNNING;
     }
@@ -181,6 +219,7 @@ public class ComputingEngineAsyncTask extends AsyncTaskExecuteTemplate {
     context.addTraceLog("The computing engine task resubmit successful! taskId:%s", taskId);
     SchedulerTask updateTask = new SchedulerTask();
     updateTask.setId(task.getId());
+    task.setResource(taskId);
     updateTask.setResource(taskId);
     taskService.update(updateTask);
     return SchedulerEnum.TaskStatus.RUNNING;
