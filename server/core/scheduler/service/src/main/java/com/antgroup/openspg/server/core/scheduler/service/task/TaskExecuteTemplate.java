@@ -138,6 +138,9 @@ public abstract class TaskExecuteTemplate implements TaskExecute {
       if (StringUtils.isBlank(old.getOutput())) {
         old.setOutput(task.getOutput());
       }
+      if (old.getFinishTime() == null) {
+        old.setFinishTime(task.getFinishTime());
+      }
       task = old;
     }
 

@@ -67,7 +67,8 @@ public class KagAlignmentAsyncTask extends AsyncTaskExecuteTemplate {
 
     List<String> inputs = SchedulerUtils.getTaskInputs(taskService, instance, task);
     String taskId =
-        memoryTaskServer.submit(new VectorizerTaskCallable(value, context, inputs), key);
+        memoryTaskServer.submit(
+            new VectorizerTaskCallable(value, context, inputs), key, instance.getId());
     context.addTraceLog("Alignment task has been successfully created!");
     return taskId;
   }
