@@ -38,6 +38,7 @@ import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -72,7 +73,9 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
     List<String> inputs = SchedulerUtils.getTaskInputs(taskService, instance, task);
     String taskId =
         memoryTaskServer.submit(
-            new VectorizerTaskCallable(value, projectService, context, inputs), key);
+            new VectorizerTaskCallable(value, projectService, context, inputs),
+            key,
+            instance.getId());
     context.addTraceLog("Vectorizer task has been successfully created!");
     return taskId;
   }
@@ -165,11 +168,14 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
       String fileKey =
           CommonUtils.getTaskStorageFileKey(
               task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
-      objectStorageClient.saveString(
-          value.getBuilderBucketName(), JSON.toJSONString(subGraphList), fileKey);
+      String results = JSON.toJSONString(subGraphList);
+      Long statr = System.currentTimeMillis();
+      byte[] bytes = results.getBytes(StandardCharsets.UTF_8);
+      addTraceLog("Start Store the results of the vector operator! byte length:%s", bytes.length);
+      objectStorageClient.saveData(value.getBuilderBucketName(), bytes, fileKey);
       addTraceLog(
-          "Store the results of the vector operator. file:%s/%s",
-          value.getBuilderBucketName(), fileKey);
+          "Store the results of the vector operator. file:%s/%s cons:%s",
+          value.getBuilderBucketName(), fileKey, System.currentTimeMillis() - statr);
       return fileKey;
     }
 

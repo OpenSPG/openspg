@@ -12,6 +12,8 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.translate.builder;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClient;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClientDriverManager;
 import com.antgroup.openspg.common.constants.BuilderConstant;
@@ -76,6 +78,12 @@ public class KagStructureBuilderTranslate implements Translate {
     List<TaskExecuteDag.Node> nodes = Lists.newArrayList();
     List<TaskExecuteDag.Edge> edges = Lists.newArrayList();
 
+    JSONObject extension = JSON.parseObject(builderJob.getExtension());
+    JSONObject mappingConf = extension.getJSONObject(BuilderConstant.MAPPING_CONFIG);
+    String type =
+        (String)
+            mappingConf.getOrDefault(BuilderConstant.MAPPING_TYPE, BuilderConstant.ENTITY_MAPPING);
+
     TaskExecuteDag taskDag = new TaskExecuteDag();
 
     String checkPartitionId = UUID.randomUUID().toString();
@@ -101,12 +109,14 @@ public class KagStructureBuilderTranslate implements Translate {
     mapping.setTaskComponent("kagMappingSyncTask");
     nodes.add(mapping);
 
-    TaskExecuteDag.Node vectorizer = new TaskExecuteDag.Node();
     String vectorizerId = UUID.randomUUID().toString();
-    vectorizer.setId(vectorizerId);
-    vectorizer.setName("Vectorizer");
-    vectorizer.setTaskComponent("kagVectorizerAsyncTask");
-    nodes.add(vectorizer);
+    if (BuilderConstant.ENTITY_MAPPING.equalsIgnoreCase(type)) {
+      TaskExecuteDag.Node vectorizer = new TaskExecuteDag.Node();
+      vectorizer.setId(vectorizerId);
+      vectorizer.setName("Vectorizer");
+      vectorizer.setTaskComponent("kagVectorizerAsyncTask");
+      nodes.add(vectorizer);
+    }
 
     TaskExecuteDag.Node writer = new TaskExecuteDag.Node();
     String writerId = UUID.randomUUID().toString();
@@ -127,15 +137,22 @@ public class KagStructureBuilderTranslate implements Translate {
     edge.setTo(mappingId);
     edges.add(edge);
 
-    TaskExecuteDag.Edge edge2 = new TaskExecuteDag.Edge();
-    edge2.setFrom(mappingId);
-    edge2.setTo(vectorizerId);
-    edges.add(edge2);
+    if (BuilderConstant.ENTITY_MAPPING.equalsIgnoreCase(type)) {
+      TaskExecuteDag.Edge edge2 = new TaskExecuteDag.Edge();
+      edge2.setFrom(mappingId);
+      edge2.setTo(vectorizerId);
+      edges.add(edge2);
 
-    TaskExecuteDag.Edge edge4 = new TaskExecuteDag.Edge();
-    edge4.setFrom(vectorizerId);
-    edge4.setTo(writerId);
-    edges.add(edge4);
+      TaskExecuteDag.Edge edge4 = new TaskExecuteDag.Edge();
+      edge4.setFrom(vectorizerId);
+      edge4.setTo(writerId);
+      edges.add(edge4);
+    } else {
+      TaskExecuteDag.Edge edge2 = new TaskExecuteDag.Edge();
+      edge2.setFrom(mappingId);
+      edge2.setTo(writerId);
+      edges.add(edge2);
+    }
 
     taskDag.setNodes(nodes);
     taskDag.setEdges(edges);

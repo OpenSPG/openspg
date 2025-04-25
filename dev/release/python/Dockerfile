@@ -50,14 +50,3 @@ RUN . /etc/profile && echo ${JAVA_HOME} && mkdir -p /home/admin/ && chmod -R 777
     pip install openspg-kag==0.7.0 &&\
     pip install pemja==0.4.0 && \
     pip cache purge
-
-
-# RUN python3 -m venv /openspg_venv && \
-#     . /openspg_venv/bin/activate && \
-#     export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture) && \
-#     pip3 install openspg-kag==0.6.0b9 -i https://artifacts.antgroup-inc.cn/artifact/repositories/simple-dev/ && \
-#     pip3 install pemja==0.4.0 && \
-#     pip3 install -U "http://alps-common.oss-cn-hangzhou-zmf.aliyuncs.com/nscommon/shiji/nscommon-0.0.1.tar.gz" && \
-#     echo "if (tty -s); then \n   . /openspg_venv/bin/activate \nfi" >> ~/.bashrc
-
-# ADD openspg/dev/release/python/lib/builder*.jar /home/admin/miniconda3/lib/python3.10/site-packages/knext/builder/lib

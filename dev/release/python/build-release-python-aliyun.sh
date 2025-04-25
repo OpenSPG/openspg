@@ -10,7 +10,7 @@
 # or implied.
 alias docker=podman
 IMAGE="spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-python"
-VERSION="0.6"
+VERSION="0.7"
 LATEST="latest"
 
 cd ../../../../

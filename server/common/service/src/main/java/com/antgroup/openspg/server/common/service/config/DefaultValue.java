@@ -38,7 +38,7 @@ public class DefaultValue {
   @Value("${schema.uri:}")
   private String schemaUrlHost;
 
-  @Value("${builder.model.execute.num:5}")
+  @Value("${builder.model.execute.num:20}")
   private Integer modelExecuteNum;
 
   @Value("${python.exec:}")

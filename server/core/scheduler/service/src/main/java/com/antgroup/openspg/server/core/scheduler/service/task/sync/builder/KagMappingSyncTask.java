@@ -46,6 +46,8 @@ import org.springframework.stereotype.Component;
 @Component("kagMappingSyncTask")
 public class KagMappingSyncTask extends SyncTaskExecuteTemplate {
 
+  private static final Integer BATCH_MAX_NUM = 2000;
+
   @Autowired private DefaultValue value;
 
   @Autowired private BuilderJobService builderJobService;
@@ -109,28 +111,34 @@ public class KagMappingSyncTask extends SyncTaskExecuteTemplate {
             projectId,
             mapping,
             Maps.newHashMap());
-    int index = 0;
-    for (Map<String, Object> data : datas) {
-      context.addTraceLog("Invoke the mapping operator. index:%s/%s", ++index, datas.size());
+
+    for (int i = 0; i < datas.size(); i += BATCH_MAX_NUM) {
+      int index = Math.min(i + BATCH_MAX_NUM, datas.size());
+      context.addTraceLog("Invoke the mapping operator. index:%s/%s", index, datas.size());
+      List<Map<String, Object>> batch = datas.subList(i, index);
       List<Object> result =
           (List<Object>)
               PemjaUtils.invoke(
-                  pemjaConfig, BuilderConstant.MAPPING_ABC, pyConfig.toJSONString(), data);
+                  pemjaConfig, BuilderConstant.MAPPING_ABC, pyConfig.toJSONString(), batch);
       List<SubGraphRecord> records =
           JSON.parseObject(JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
       subGraphList.addAll(records);
+      int nodes = 0;
+      int edges = 0;
       for (SubGraphRecord subGraphRecord : records) {
-        int nodes =
-            CollectionUtils.isEmpty(subGraphRecord.getResultNodes())
-                ? 0
-                : subGraphRecord.getResultNodes().size();
-        int edges =
-            CollectionUtils.isEmpty(subGraphRecord.getResultEdges())
-                ? 0
-                : subGraphRecord.getResultEdges().size();
-        context.addTraceLog(
-            "Mapping operator was invoked successfully nodes:%s edges:%s", nodes, edges);
+        nodes =
+            nodes
+                + (CollectionUtils.isEmpty(subGraphRecord.getResultNodes())
+                    ? 0
+                    : subGraphRecord.getResultNodes().size());
+        edges =
+            edges
+                + (CollectionUtils.isEmpty(subGraphRecord.getResultEdges())
+                    ? 0
+                    : subGraphRecord.getResultEdges().size());
       }
+      context.addTraceLog(
+          "Mapping operator was invoked successfully nodes:%s edges:%s", nodes, edges);
     }
     return subGraphList;
   }
