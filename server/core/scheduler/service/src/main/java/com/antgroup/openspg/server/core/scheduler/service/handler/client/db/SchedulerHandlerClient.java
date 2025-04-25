@@ -200,17 +200,16 @@ public class SchedulerHandlerClient {
       if (CollectionUtils.isEmpty(infoLogs)) {
         return true;
       }
+      SchedulerInfoLog schedulerLog = infoLogs.get(infoLogs.size() - 1);
       Date nowDate = new Date();
       if (SchedulerInfoStatus.RUNNING.equals(schedulerInfo.getStatus())) {
         Long hostExceptionTimeout = schedulerInfo.getHostExceptionTimeout();
         if (hostExceptionTimeout != null
-            && nowDate.getTime() - schedulerInfo.getGmtModified().getTime()
-                >= hostExceptionTimeout * 1000) {
+            && nowDate.getTime() - schedulerLog.getRt().getTime() >= hostExceptionTimeout * 1000) {
           log.info("running and timeout to pull again {} {}", name, hostExceptionTimeout);
           return true;
         }
       }
-      SchedulerInfoLog schedulerLog = infoLogs.get(infoLogs.size() - 1);
       if (SchedulerInfoStatus.WAIT.equals(schedulerInfo.getStatus())
           && nowDate.getTime() - schedulerLog.getRt().getTime()
               >= schedulerInfo.getPeriod() * 1000) {

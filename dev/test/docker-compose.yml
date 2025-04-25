@@ -38,3 +38,18 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $HOME/dozerdb/logs:/logs
+
+  minio:
+    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-minio:latest
+    container_name: release-openspg-minio
+    command: server --console-address ":9001" /data
+    restart: always
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio@openspg
+      TZ: Asia/Shanghai
+    ports:
+      - 9000:9000
+      - 9001:9001
+    volumes:
+      - /etc/localtime:/etc/localtime:ro

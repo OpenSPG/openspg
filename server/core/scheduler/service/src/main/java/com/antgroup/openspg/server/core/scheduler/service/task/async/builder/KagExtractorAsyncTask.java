@@ -119,7 +119,7 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
     JSONObject llm = JSONObject.parseObject(extractConfig.getString(CommonConstants.LLM));
     String taskId =
         memoryTaskServer.submit(
-            new ExtractorTaskCallable(value, llm, project, context, inputs), key);
+            new ExtractorTaskCallable(value, llm, project, context, inputs), key, instance.getId());
     context.addTraceLog("Extractor task has been successfully created!");
     return taskId;
   }
