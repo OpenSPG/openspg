@@ -37,6 +37,7 @@ import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTask
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
 import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.google.common.collect.Lists;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,8 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
     String taskId =
         memoryTaskServer.submit(
             new WriterTaskCallable(value, projectManager, context, builderJob.getAction(), inputs),
-            key);
+            key,
+            instance.getId());
     context.addTraceLog("Writer task has been successfully created!");
     return taskId;
   }
@@ -114,6 +116,7 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
         memoryTaskServer.stopTask(resource);
         schedulerTask.setOutput(resource);
         removeInputs(context);
+        task.setFinishTime(new Date());
         break;
       default:
         context.addTraceLog(

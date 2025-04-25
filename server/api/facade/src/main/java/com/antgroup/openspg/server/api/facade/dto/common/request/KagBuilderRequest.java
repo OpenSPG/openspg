@@ -36,6 +36,8 @@ public class KagBuilderRequest extends BaseRequest {
 
   private Integer workerGpu;
 
+  private String workerGpuType;
+
   private Integer workerMemory;
 
   private Integer workerStorage;

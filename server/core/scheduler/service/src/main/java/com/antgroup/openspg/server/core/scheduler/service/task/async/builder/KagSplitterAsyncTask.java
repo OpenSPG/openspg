@@ -74,7 +74,8 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
     String taskId =
         memoryTaskServer.submit(
             new SplitterTaskCallable(value, builderJobService, projectService, context, inputs),
-            key);
+            key,
+            instance.getId());
     context.addTraceLog("Splitter task has been successfully created!");
     return taskId;
   }

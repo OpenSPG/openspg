@@ -150,5 +150,9 @@
       <version>0.36.4-public</version>
     </dependency>
     <!-- dataSource end -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
   </dependencies>
 </project>

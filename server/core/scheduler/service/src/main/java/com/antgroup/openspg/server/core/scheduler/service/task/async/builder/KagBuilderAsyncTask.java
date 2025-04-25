@@ -58,7 +58,9 @@ public class KagBuilderAsyncTask extends AsyncTaskExecuteTemplate {
     }
     String taskId =
         memoryTaskServer.submit(
-            new BuilderTaskCallable(value, builderJobService, projectService, context), key);
+            new BuilderTaskCallable(value, builderJobService, projectService, context),
+            key,
+            context.getInstance().getId());
     context.addTraceLog("Builder task has been successfully created!");
     return taskId;
   }

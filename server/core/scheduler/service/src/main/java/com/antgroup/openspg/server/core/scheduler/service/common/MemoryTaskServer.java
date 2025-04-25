@@ -15,6 +15,7 @@ package com.antgroup.openspg.server.core.scheduler.service.common;
 import com.antgroup.openspg.common.util.DateTimeUtils;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
+import com.antgroup.openspg.server.core.scheduler.service.api.SchedulerService;
 import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
@@ -27,11 +28,14 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 public class MemoryTaskServer {
+
+  @Autowired private SchedulerService schedulerService;
 
   private final ConcurrentMap<String, SchedulerTask> taskMap = new ConcurrentHashMap<>();
   private final ConcurrentMap<String, Future<?>> futureMap = new ConcurrentHashMap<>();
@@ -45,21 +49,24 @@ public class MemoryTaskServer {
           new LinkedBlockingQueue<>(1000),
           new ThreadPoolExecutor.CallerRunsPolicy());
 
-  public String submit(MemoryTaskCallable<String> taskCallable, String taskId) {
+  public String submit(MemoryTaskCallable<String> taskCallable, String taskId, Long instanceId) {
     SchedulerTask taskInfo = new SchedulerTask();
     taskInfo.setNodeId(taskId);
     taskInfo.setStatus(SchedulerEnum.TaskStatus.WAIT);
+    taskInfo.setInstanceId(instanceId);
     taskMap.put(taskId, taskInfo);
     taskCallable.setTask(taskInfo);
 
     Future<?> future =
-        CompletableFuture.supplyAsync(() -> executeTask(taskId, taskCallable), executorService);
+        CompletableFuture.supplyAsync(
+            () -> executeTask(taskId, instanceId, taskCallable), executorService);
     futureMap.put(taskId, future);
 
     return taskId;
   }
 
-  private String executeTask(String taskId, MemoryTaskCallable<String> taskCallable) {
+  private String executeTask(
+      String taskId, Long instanceId, MemoryTaskCallable<String> taskCallable) {
     SchedulerTask taskInfo = taskMap.get(taskId);
     taskInfo.setStatus(SchedulerEnum.TaskStatus.RUNNING);
     taskInfo.setBeginTime(new Date());
@@ -70,9 +77,10 @@ public class MemoryTaskServer {
     } catch (Exception e) {
       taskInfo.setStatus(SchedulerEnum.TaskStatus.ERROR);
       taskInfo.setTraceLog(ExceptionUtils.getStackTrace(e));
-      log.error("executeTask Exception", e);
+      log.error("executeTask Exception instanceId:" + instanceId, e);
     } finally {
       taskInfo.setFinishTime(new Date());
+      schedulerService.triggerInstance(instanceId);
     }
     return taskId;
   }
@@ -87,9 +95,6 @@ public class MemoryTaskServer {
       if (future != null && !future.isDone()) {
         boolean cancelled = future.cancel(true);
         if (cancelled) {
-          SchedulerTask taskInfo = taskMap.get(taskId);
-          taskInfo.setStatus(SchedulerEnum.TaskStatus.TERMINATE);
-          taskMap.put(taskId, taskInfo);
           futureMap.remove(taskId);
           return true;
         }
