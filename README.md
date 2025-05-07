@@ -13,7 +13,7 @@
 SPG (Semantic-enhanced Programmable Graph): semantic-enhanced programmable framework is a set of semantic representation framework based on property graph precipitated by Ant Knowledge Graph platform after years of supporting business in the financial field. It creatively integrates LPG structural and RDF semantic, which overcomes the problem that RDF/OWL semantic complexity cannot be industrially landed, and fully inherits the advantages of LPG structural simplicity and compatibility with big data system. The framework defines and represents knowledge semantics from three aspects. First, SPG explicitly defines the formal representation and programmable framework of "knowledge", so that it can be defined, programmed, understood and processed by machines. Secondly, SPG achieves compatibility and progressive advancement between knowledge levels, supporting the construction of knowledge graphs and the continuous iterative evolution of incomplete data states in industrial-level scenarios. Finally, SPG serves as an effective bridge between big data and AI technology systems, facilitating the efficient transformation of massive data into knowledge-based insights. By doing so, it enhances the value and application potential of the data. With the SPG framework, we can construct and manage graph data more efficiently, and at the same time, we can better support business requirements and application scenarios. Since SPG framework has good scalability and flexibility, new business scenarios can quickly build their domain models and solutions by extending the domain knowledge model and developing new
 operators.
 
-For a detailed introduction to SPG, please refer to **the [《SPG White Paper》](https://spg.openkg.cn/en-US "SPG White Paper") jointly released by Ant Group and OpenKG**.
+For a detailed introduction to SPG, please refer to **the [《SPG White Paper》](https://openspg.github.io/v2/blog/design_philosophy/white_paper/openspg) jointly released by Ant Group and OpenKG**.
 
 # OpenSPG
 
@@ -41,28 +41,40 @@ OpenSPG Core Capabilities:
   * Extensible/adaptable customized graph storage/graph calculation engine
   * Extensible/adaptable machine learning framework suitable for their own business characteristics
 
-# How to use
+# Relationship between KAG and OpenSPG
+OpenSPG is a semantic enhanced programmable knowledge graph. KAG is a professional domain knowledge service framework focused on Knowledge Enhancement Generation. KAG relies on the engine  adaptation, knowledge indexing, logical reasoning and other capabilities provided by OpenSPG.
 
-## Get Started
+# Quick Start
+[Quick Start Tutorial](https://openspg.yuque.com/ndx6g9/docs_en/rs7gr8g4s538b1n7)
+[Compilation and deployment of OpenSPG](https://openspg.yuque.com/ndx6g9/docs_en/mudrfu5ibk4eh26g)
 
-* [Install OpenSPG](https://openspg.yuque.com/ndx6g9/wc9oyq/yexegklu44bqqicm)
-* Quick start with examples:
-  * [Enterprise Supply Chain Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/wni2suux7g2tt6s2)
-  * [Risk Mining Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/da4h0fbphifg3dpe)
-  * [Medical Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/iiktuogkwigoegcv)
+# Community & Support
 
-## Advanced tutorials
+**GitHub**: <https://github.com/OpenSPG/KAG>
 
-* [OpenSPG User Guide](https://openspg.yuque.com/ndx6g9/wc9oyq)
+**Website**: <https://openspg.github.io/v2/docs_en>
 
-# How to contribute
+## Discord <a href="https://discord.gg/PURG77zhQ7"> <img src="https://img.shields.io/discord/1329648479709958236?style=for-the-badge&logo=discord&label=Discord" alt="Discord"></a>
 
-* [Contribution Guidelines](https://spg.openkg.cn/en-US/quick-start/contribution)
+Join our [Discord](https://discord.gg/PURG77zhQ7) community.
 
-# Cite
+## WeChat
+
+Follow OpenSPG Official Account to get technical articles and product updates about OpenSPG and KAG.
+
+<img src="./_static/images/openspg-qr.png" alt="Contact Us: OpenSPG QR-code" width="200">
+
+Scan the QR code below to join our WeChat group. 
+
+<img src="./_static/images/robot-qr.JPG" alt="Join WeChat group" width="200">
+
+
+# Citation
 
 If you use this software, please cite it as below:
+
 * [KAG: Boosting LLMs in Professional Domains via Knowledge Augmented Generation](https://arxiv.org/abs/2409.13731)
+
 * KGFabric: A Scalable Knowledge Graph Warehouse for Enterprise Data Interconnection
 
 ```bibtex
@@ -83,6 +95,5 @@ If you use this software, please cite it as below:
 
 [Apache License 2.0](LICENSE)
 
-# OpenSPG Core Team
-
+# KAG Core Team
 Lei Liang, Mengshu Sun, Zhengke Gui, Zhongshu Zhu, Zhouyu Jiang, Ling Zhong, Peilong Zhao, Zhongpu Bo, Jin Yang, Huaidong Xiong, Lin Yuan, Jun Xu, Zaoyang Wang, Zhiqiang Zhang, Wen Zhang, Huajun Chen, Wenguang Chen, Jun Zhou, Haofen Wang
