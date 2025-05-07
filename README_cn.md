@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 
-(OpenSPG)[https://spg.openkg.cn] 是蚂蚁集团结合多年金融领域多元场景知识图谱构建与应用业务经验的总结，并与OpenKG联合推出的基于SPG(Semantic-enhanced Programmable Graph)框架研发的知识图谱引擎。
+[OpenSPG](https://openspg.github.io/v2) 是蚂蚁集团结合多年金融领域多元场景知识图谱构建与应用业务经验的总结，并与OpenKG联合推出的基于SPG(Semantic-enhanced Programmable Graph)框架研发的知识图谱引擎。
 
 ![OpenSPG Architecture](https://mdn.alipayobjects.com/huamei_xgb3qj/afts/img/A*DsIHS7Fe78AAAAAAAAAAAAAADtmcAQ/original)
 
@@ -10,7 +10,7 @@
 
 SPG(Semantic-enhanced Programmable Graph)：语义增强可编程框架，是蚂蚁知识图谱平台经过多年金融领域业务的支撑，沉淀的一套基于属性图的语义表示框架。它创造性地融合了LPG结构性与RDF语义性，既克服了RDF/OWL语义复杂无法工业落地的问题，又充分继承了LPG结构简单与大数据体系兼容的优势。该框架从三个方面来定义和表示知识语义。首先，SPG明确定义了"知识"的形式化表示和可编程框架，使其可定义、可编程，机器可理解和处理。其次，SPG实现了知识层级间的兼容递进，支持工业级场景下非完备数据状态的图谱构建和持续迭代演化。最后，SPG有效衔接大数据与AI技术体系，支持对海量数据进行高效的知识化转换，帮助提高数据价值和应用价值。通过SPG框架，我们可以更加高效地构建和管理图谱数据，同时可以更好地支持业务需求和应用场景。由于SPG框架具有良好的可扩展性和灵活性，新的业务场景可以通过扩展领域知识模型及开发新算子，快速构建其领域模型和解决方案。
 
-SPG的详细介绍请参考**蚂蚁集团和OpenKG联合发布**的[《SPG白皮书》](https://spg.openkg.cn/ "SPG白皮书")。
+SPG的详细介绍请参考**蚂蚁集团和OpenKG联合发布**的[《SPG白皮书》](https://openspg.github.io/v2/blog/design_philosophy/white_paper/openspg)。
 
 # OpenSPG介绍
 
@@ -44,19 +44,19 @@ OpenSPG核心能力模型包括：
 
 ## Get Started
 
-* [安装说明](https://openspg.yuque.com/ndx6g9/0.5/nbb1bn3wegwue6yo)
+* [安装说明](https://openspg.yuque.com/ndx6g9/docs/zxh5a5dr03945l1x)
 * 通过案例快速上手:
-  * [企业供应链图谱](https://openspg.yuque.com/ndx6g9/0.5/cefh3sufvay63tb0)
-  * [黑产挖掘图谱](https://openspg.yuque.com/ndx6g9/0.5/haf99dg5w8wrkvop)
-  * [医疗知识图谱](https://openspg.yuque.com/ndx6g9/0.5/otced6rb3z4vtq2y)
+  * [企业供应链图谱](https://openspg.yuque.com/ndx6g9/docs/dq9ptys5u5dvh0ia)
+  * [黑产挖掘图谱](https://openspg.yuque.com/ndx6g9/docs/xq9fwzuqr272smno)
+  * [医疗知识图谱](https://openspg.yuque.com/ndx6g9/docs/bo7b9kwhkl6zynsh)
 
 ## 进阶教程
 
-* [OpenSPG用户手册](https://openspg.yuque.com/ndx6g9/0.5)
+* [OpenSPG用户手册](https://openspg.yuque.com/ndx6g9/docs)
 
 # 如何贡献代码
 
-* [Contribution Guidelines](https://spg.openkg.cn/quick-start/contribution)
+* [Contribution Guidelines](https://openspg.yuque.com/ndx6g9/docs/yv8rahc3dewb1gy8#Pqcd)
 
 # Cite
 
