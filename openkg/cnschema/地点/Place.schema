@@ -1,0 +1,41 @@
+namespace Openkg
+
+PlaceType(地点类型): ConceptType
+    hypernymPredicate: isA
+
+Organization(机构): EntityType
+
+URL(链接): EntityType
+
+Place(地点): EntityType
+	desc: 用于描述具有地理位置特征和功能属性的实体，包括但不限于自然地理实体、历史文化遗产、行政区划、住宅区与社区、旅游景点、市政建筑及本地商铺等。
+	properties:
+    IND#belongTo(属于): PlaceType
+    	desc: 如自然公园、历史遗址、市区、大学城、购物中心、风景名胜区等
+    foundingDate(创建日期): STD.Date
+    	desc: 地点建立或首次记录的时间
+    location(地理位置): Text
+    	desc: 包含经度和纬度信息的地理坐标实体
+    timeZone(时区): Text
+    	desc: 地点所在的时区
+    area(区域面积): Text
+    	desc: 地点所覆盖的物理面积大小
+    openingHours(开放时间): STD.Date
+    	desc: 地点对公众开放的具体时段
+    contactInfo(联系方式): Text
+    	desc: 提供地点的电话、邮箱或其他联系方式
+    administratedBy(行政归属): Place
+    	desc: 表明该地点所属的上级行政区划单位
+    governingBody(管理机构): Organization
+    	desc: 负责管理和维护该地点的相关组织或政府部门
+    images(图片资料): URL
+    	desc: 展示地点外观或内部景象的图片链接
+    	constraint: MultiValue
+    accessibility(可达性): Text
+    	desc: 描述地点的交通便利程度以及无障碍设施情况
+    landmarks(地标性建筑或景观): Place
+      desc: 该地点内的重要标志性建筑或景观
+      constraint: MultiValue
+    reviews(用户评价): Text
+      desc: 游客或用户对该地点的评价和反馈
+      constraint: MultiValue
