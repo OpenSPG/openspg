@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Implementation-Title: biz-builder
+Implementation-Version: 0.0.1-SNAPSHOT
+Build-Jdk-Spec: 1.8
+Created-By: Maven JAR Plugin 3.2.2
+
