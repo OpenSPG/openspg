@@ -4,7 +4,7 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 
-[OpenSPG](https://spg.openkg.cn/en-US) is a knowledge graph engine developed by Ant Group in collaboration with OpenKG, based on the SPG (Semantic-enhanced Programmable Graph) framework, which is a summary of Ant Group's years of experience in constructing and applying diverse domain knowledge graphs in the financial scenarios.
+[OpenSPG](https://openspg.github.io/v2) is a knowledge graph engine developed by Ant Group in collaboration with OpenKG, based on the SPG (Semantic-enhanced Programmable Graph) framework, which is a summary of Ant Group's years of experience in constructing and applying diverse domain knowledge graphs in the financial scenarios.
 
 ![OpenSPG Architecture](https://github.com/user-attachments/assets/56c2772b-7343-41ce-a17e-f6d838d2f791)
 
@@ -13,7 +13,7 @@
 SPG (Semantic-enhanced Programmable Graph): semantic-enhanced programmable framework is a set of semantic representation framework based on property graph precipitated by Ant Knowledge Graph platform after years of supporting business in the financial field. It creatively integrates LPG structural and RDF semantic, which overcomes the problem that RDF/OWL semantic complexity cannot be industrially landed, and fully inherits the advantages of LPG structural simplicity and compatibility with big data system. The framework defines and represents knowledge semantics from three aspects. First, SPG explicitly defines the formal representation and programmable framework of "knowledge", so that it can be defined, programmed, understood and processed by machines. Secondly, SPG achieves compatibility and progressive advancement between knowledge levels, supporting the construction of knowledge graphs and the continuous iterative evolution of incomplete data states in industrial-level scenarios. Finally, SPG serves as an effective bridge between big data and AI technology systems, facilitating the efficient transformation of massive data into knowledge-based insights. By doing so, it enhances the value and application potential of the data. With the SPG framework, we can construct and manage graph data more efficiently, and at the same time, we can better support business requirements and application scenarios. Since SPG framework has good scalability and flexibility, new business scenarios can quickly build their domain models and solutions by extending the domain knowledge model and developing new
 operators.
 
-For a detailed introduction to SPG, please refer to **the [《SPG White Paper》](https://spg.openkg.cn/en-US "SPG White Paper") jointly released by Ant Group and OpenKG**.
+For a detailed introduction to SPG, please refer to **the [《SPG White Paper》](https://openspg.github.io/v2/blog/design_philosophy/white_paper/openspg) jointly released by Ant Group and OpenKG**.
 
 # OpenSPG
 
@@ -45,19 +45,19 @@ OpenSPG Core Capabilities:
 
 ## Get Started
 
-* [Install OpenSPG](https://openspg.yuque.com/ndx6g9/wc9oyq/yexegklu44bqqicm)
+* [Install OpenSPG](https://openspg.yuque.com/ndx6g9/docs_en/rs7gr8g4s538b1n7)
 * Quick start with examples:
-  * [Enterprise Supply Chain Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/wni2suux7g2tt6s2)
-  * [Risk Mining Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/da4h0fbphifg3dpe)
-  * [Medical Knowledge Graph](https://openspg.yuque.com/ndx6g9/wc9oyq/iiktuogkwigoegcv)
+  * [Enterprise Supply Chain Knowledge Graph](https://openspg.yuque.com/ndx6g9/docs_en/tmebvz9z74rc4szu)
+  * [Risk Mining Knowledge Graph](https://openspg.yuque.com/ndx6g9/docs_en/merirblg8d1cbgkg)
+  * [Medical Knowledge Graph](https://openspg.yuque.com/ndx6g9/docs_en/bkvfaunnpl65rsrk)
 
 ## Advanced tutorials
 
-* [OpenSPG User Guide](https://openspg.yuque.com/ndx6g9/wc9oyq)
+* [OpenSPG User Guide](https://openspg.yuque.com/ndx6g9/docs_en)
 
 # How to contribute
 
-* [Contribution Guidelines](https://spg.openkg.cn/en-US/quick-start/contribution)
+* [Contribution Guidelines](https://openspg.yuque.com/ndx6g9/docs_en/ae57imdlmnwa5rls)
 
 # Cite
 
