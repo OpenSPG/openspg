@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 OpenSPG Authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied.
+  -->
+
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <context id="MyBatis3Tables" targetRuntime="MyBatis3">
+        <!--覆盖生成XML文件-->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://127.0.0.1:3306/openspg?useUnicode=true&amp;characterEncoding=utf8&amp;autoReconnect=true"
+                        userId="root"
+                        password="openspg">
+        </jdbcConnection>
+
+        <javaModelGenerator targetPackage="com.antgroup.openspgapp.infra.dao.dataobject"
+                            targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mapper2" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.antgroup.openspgapp.infra.dao.mapper"
+                             targetProject="src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table tableName="kg_reason_session" domainObjectName="ReasonSessionDO">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
+        </table>
+        <table tableName="kg_reason_task" domainObjectName="ReasonTaskDO">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
+        </table>
+        <table tableName="kg_reason_tutorial" domainObjectName="ReasonTutorialDO">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <generatedKey column="id" sqlStatement="SELECT LAST_INSERT_ID()" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>
+
