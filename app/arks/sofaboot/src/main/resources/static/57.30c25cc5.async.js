@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkcognik_web_app=self.webpackChunkcognik_web_app||[]).push([[57],{90057:function(c,n,t){t.r(n),t.d(n,{default:function(){return e}});var s=t(75271),u=t(86487),E=t(52676);function e(){var o=(0,u.useOutletContext)();return(0,E.jsx)(u.Outlet,{context:o})}}}]);
