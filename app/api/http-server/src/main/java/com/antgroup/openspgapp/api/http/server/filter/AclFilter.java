@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -55,6 +56,7 @@ public class AclFilter implements Filter, Ordered {
   @Value("${noAuthCheckWhitelist:}")
   private String noAuthCheckWhitelist;
 
+  public static final String API_PREFIX = "/api/";
   private static final String SUCCESS = "success";
   private static final String MESSAGE = "errorMsg";
   private static final String CODE = "errorCode";
@@ -71,14 +73,20 @@ public class AclFilter implements Filter, Ordered {
   private static final String CORS_ALLOW_ALL = "*";
   private static final String CORS_ALLOW_CREDENTIALS = "true";
   private static final String CORS_MAX_AGE_VALUE = "3600";
-  private static final String SUPER_PASSWORD_CHANGER = "/v1/accounts/updatePassword";
+  private static final String SUPER_PASSWORD_CHANGER = API_PREFIX + "/v1/accounts/updatePassword";
   private static final Logger log = LoggerFactory.getLogger(AclFilter.class);
   private static List<String> noAuthCheckPatterns = new ArrayList();
 
   @PostConstruct
   public void init() {
     if (StringUtils.isNotBlank(this.noAuthCheckWhitelist)) {
-      noAuthCheckPatterns = Arrays.asList(this.noAuthCheckWhitelist.split(";"));
+      noAuthCheckPatterns =
+          Arrays.stream(this.noAuthCheckWhitelist.split(";"))
+              .map(
+                  p -> {
+                    return String.join("", API_PREFIX, p);
+                  })
+              .collect(Collectors.toList());
     }
   }
 

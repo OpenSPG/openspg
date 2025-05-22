@@ -1,14 +1,16 @@
 package com.antgroup.openspgapp.arks.sofaboot;
 
+import static com.antgroup.openspgapp.api.http.server.filter.AclFilter.API_PREFIX;
+
 import com.antgroup.openspgapp.api.http.server.filter.AclFilter;
+import java.util.function.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 /* loaded from: WebConfig.class */
@@ -22,6 +24,19 @@ public class WebConfig implements WebMvcConfigurer {
     registrationBean.setFilter(this.aclFilter);
     registrationBean.addUrlPatterns(new String[] {"/*"});
     return registrationBean;
+  }
+
+  @Override
+  public void configurePathMatch(PathMatchConfigurer configurer) {
+    configurer.addPathPrefix(
+        API_PREFIX,
+        new Predicate<Class<?>>() {
+          @Override
+          public boolean test(Class<?> c) {
+            return c.isAnnotationPresent(Controller.class)
+                || c.isAnnotationPresent(RestController.class);
+          }
+        });
   }
 
   public void addCorsMappings(CorsRegistry registry) {
