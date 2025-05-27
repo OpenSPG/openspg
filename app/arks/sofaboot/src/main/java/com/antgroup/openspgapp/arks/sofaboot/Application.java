@@ -9,7 +9,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @ImportResource({"classpath*:spring/*.xml"})
@@ -17,10 +16,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.antgroup.openspgapp"})
-@PropertySource({"classpath:config/application-dev.properties"})
 /* loaded from: Application.class */
 public class Application {
-  private static final Logger log = LoggerFactory.getLogger(Application.class);
   private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
   public static void main(String[] args) {

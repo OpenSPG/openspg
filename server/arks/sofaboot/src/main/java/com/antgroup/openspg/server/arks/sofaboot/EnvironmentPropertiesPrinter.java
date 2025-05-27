@@ -37,7 +37,14 @@ public class EnvironmentPropertiesPrinter {
           .flatMap(Collection::stream)
           .distinct()
           .sorted()
-          .forEach(key -> log.info("{}={}", key, env.getProperty(key)));
+          .forEach(
+              key -> {
+                try {
+                  log.info("{}={}", key, env.getProperty(key));
+                } catch (Exception e) {
+                  log.error("getProperty Exception, {} {}", key, e.getMessage());
+                }
+              });
     } catch (Exception e) {
       log.error("getPropertySources Exception", e);
     }

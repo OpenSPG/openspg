@@ -81,12 +81,7 @@ public class AclFilter implements Filter, Ordered {
   public void init() {
     if (StringUtils.isNotBlank(this.noAuthCheckWhitelist)) {
       noAuthCheckPatterns =
-          Arrays.stream(this.noAuthCheckWhitelist.split(";"))
-              .map(
-                  p -> {
-                    return String.join("", API_PREFIX, p);
-                  })
-              .collect(Collectors.toList());
+          Arrays.stream(this.noAuthCheckWhitelist.split(";")).collect(Collectors.toList());
     }
   }
 
