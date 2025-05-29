@@ -30,7 +30,7 @@ public class PemjaUtils {
 
   public static Object invoke(PemjaConfig config, Object... input) {
     String uniqueKey = config.getClassName() + "_" + Md5Utils.md5Of(UUID.randomUUID().toString());
-    log.info(
+    log.debug(
         "PemjaUtils.invoke uniqueKey:{} config:{} input:{}",
         uniqueKey,
         JSONObject.toJSONString(config),
@@ -39,7 +39,7 @@ public class PemjaUtils {
     try {
       interpreter = getPythonInterpreter(config, uniqueKey);
       Object result = interpreter.invokeMethod(uniqueKey, config.getMethod(), input);
-      log.info(
+      log.debug(
           "PemjaUtils.invoke succeed uniqueKey:{} result:{}",
           uniqueKey,
           JSONObject.toJSONString(result));

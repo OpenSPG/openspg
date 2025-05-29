@@ -86,7 +86,6 @@
   </logger>
 
   <root level="${logging.level}">
-    <appender-ref ref="STDOUT"/>
     <appender-ref ref="ROOT-APPENDER"/>
     <appender-ref ref="ERROR-APPENDER"/>
   </root>
