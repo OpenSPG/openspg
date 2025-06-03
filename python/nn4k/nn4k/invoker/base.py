@@ -17,6 +17,7 @@ from nn4k.executor import LLMExecutor
 
 
 class SubmitMode(Enum):
+    Local = "local"
     K8s = "k8s"
     Docker = "docker"
 

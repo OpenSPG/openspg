@@ -58,6 +58,8 @@ OpenSPG核心能力模型包括：
 
 # Cite
 
+None
+
 # License
 
 [Apache License 2.0](LICENSE)
