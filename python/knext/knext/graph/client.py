@@ -81,7 +81,7 @@ class GraphClient(Client):
         tolerance=None,
         top_k=None,
         reset: List[float] = None,
-        params: dict = None
+        params: dict = None,
     ):
         ppr_start_nodes = [
             GetPageRankScoresRequestStartNodes(id=node["id"], type=node["type"])
@@ -98,7 +98,7 @@ class GraphClient(Client):
             tolerance=tolerance,
             top_k=top_k,
             reset=reset,
-            params=params
+            params=params,
         )
         resp = self._rest_client.graph_get_page_rank_scores_post(
             get_page_rank_scores_request=req
@@ -169,7 +169,7 @@ if __name__ == "__main__":
     sc = GraphClient("spgservice-152.gz00b.dev.alipay.net", 767)
     out = sc.run_page_rank(
         target_vertex_type="vt",
-        start_nodes=[{"type":"vt", "id":"2"}, {"type":"vt", "id":"3"}],
+        start_nodes=[{"type": "vt", "id": "2"}, {"type": "vt", "id": "3"}],
         max_iterations=5,
         damping_factor=0.85,
         parallel=1,

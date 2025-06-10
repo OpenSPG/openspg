@@ -17,7 +17,7 @@
   <parent>
     <groupId>com.antgroup.openspg.server</groupId>
     <artifactId>server-parent</artifactId>
-    <version>bc-20250211-SNAPSHOT</version>
+    <version>bc-20250211</version>
   </parent>
 
   <artifactId>testdata</artifactId>

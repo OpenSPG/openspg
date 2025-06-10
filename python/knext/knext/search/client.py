@@ -12,7 +12,7 @@
 from knext.common.base.client import Client
 from knext.common.rest import Configuration, ApiClient
 
-from knext.search import rest, TextSearchRequest, VectorSearchRequest, IdxRecord
+from knext.search import rest, TextSearchRequest, VectorSearchRequest, SparseVectorSearchRequest, IdxRecord
 
 
 def idx_record_to_dict(record: IdxRecord):
@@ -42,6 +42,13 @@ class SearchClient(Client):
             self._project_id, label, property_key, query_vector, ef_search, topk, params
         )
         records = self._rest_client.search_vector_post(vector_search_request=req)
+        return [idx_record_to_dict(record) for record in records]
+
+    def search_sparse_vector(self, label, property_key, query_vector: dict, topk: int = 10, params: dict = None):
+        req = SparseVectorSearchRequest(
+            self._project_id, label, property_key, query_vector, topk, params
+        )
+        records = self._rest_client.search_sparse_vector_post(sparse_vector_search_request=req)
         return [idx_record_to_dict(record) for record in records]
 
 
