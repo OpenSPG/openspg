@@ -30,7 +30,7 @@ public class PemjaUtils {
 
   public static Object invoke(PemjaConfig config, Object... input) {
     String uniqueKey = config.getClassName() + "_" + Md5Utils.md5Of(UUID.randomUUID().toString());
-    log.info(
+    log.debug(
         "PemjaUtils.invoke uniqueKey:{} config:{} input:{}",
         uniqueKey,
         JSONObject.toJSONString(config),
@@ -39,11 +39,14 @@ public class PemjaUtils {
     try {
       interpreter = getPythonInterpreter(config, uniqueKey);
       Object result = interpreter.invokeMethod(uniqueKey, config.getMethod(), input);
-      log.info(
+      log.debug(
           "PemjaUtils.invoke succeed uniqueKey:{} result:{}",
           uniqueKey,
           JSONObject.toJSONString(result));
       return result;
+    } catch (Throwable e) {
+      log.error("invoke failed", e);
+      throw e;
     } finally {
       if (interpreter != null) {
         interpreter.close();
@@ -72,8 +75,13 @@ public class PemjaUtils {
   }
 
   public static PythonInterpreter newPythonInterpreter(String pythonExec, String pythonPaths) {
-    PythonInterpreterConfig.PythonInterpreterConfigBuilder builder =
-        PythonInterpreterConfig.newBuilder();
+    PythonInterpreterConfig.PythonInterpreterConfigBuilder builder;
+    try {
+      builder = PythonInterpreterConfig.newBuilder();
+    } catch (Exception e) {
+      log.error("create PythonInterpreterConfigBuilder failed", e);
+      throw e;
+    }
     if (StringUtils.isNotBlank(pythonExec)) {
       builder.setPythonExec(pythonExec);
     }

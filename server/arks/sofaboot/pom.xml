@@ -35,6 +35,18 @@
       <groupId>com.antgroup.openspg.server</groupId>
       <artifactId>infra-dao</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.app</groupId>
+      <artifactId>app-api-http-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.app</groupId>
+      <artifactId>app-biz-schema</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.app</groupId>
+      <artifactId>app-infra-dao</artifactId>
+    </dependency>
 
     <!-- sofa -->
     <dependency>

@@ -13,8 +13,10 @@
 
 package com.antgroup.openspg.common.util.neo4j;
 
+import lombok.extern.slf4j.Slf4j;
 import org.neo4j.driver.*;
 
+@Slf4j
 public class Neo4jAdminUtils {
 
   private Driver driver;
@@ -25,6 +27,7 @@ public class Neo4jAdminUtils {
   public Neo4jGraphUtils neo4jGraph;
 
   public Neo4jAdminUtils(String uri, String user, String password, String database) {
+    log.info("trying to create neo4j driver with {}, {}, {}, {}", uri, user, password, database);
     this.driver = Neo4jDriverManager.getNeo4jDriver(uri, user, password);
     this.database = database;
     this.neo4jIndex = new Neo4jIndexUtils(this.driver, this.database);
