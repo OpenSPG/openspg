@@ -1,0 +1,44 @@
+namespace Openkg
+
+TypeOfBuilding(建筑类型): ConceptType
+    hypernymPredicate: isA
+
+Person(人物): EntityType
+
+Service(服务): EntityType
+
+Organization(机构): EntityType
+
+Place(地点): EntityType
+
+MunicipalBuilding(市政建筑): EntityType
+	desc: 指由政府或公共部门拥有并管理的，用于城市公共服务和行政管理目的的建筑物和设施。
+	properties:
+    IND#belongTo(属于): TypeOfBuilding
+    	desc: 如政府办公大楼、公共图书馆、市民中心、博物馆、公园管理处、消防局、警察局、法院、医院、学校)公立)、体育场馆、公共交通枢纽等
+    address(地址): Place
+    	desc: 具体街道地址、城市名、省名和国家名
+    owner(所有者): Organization
+   	 desc: 建筑物的所有权归属单位，通常是政府部门或当地市政府
+    purpose(用途): Text
+    	desc: 建筑物的主要功能和用途
+    constructionDate(建设日期): STD.Date
+    	desc: 市政建筑开始建设或竣工的时间
+    architect(建筑师): Person
+    	desc: 负责设计该市政建筑的建筑师姓名及其团队
+    architecturalStyle(建筑风格): Text
+    	desc: 建筑所体现的设计风格，如现代主义、后现代主义、新古典主义等
+    floorArea(建筑面积): Text
+    	desc: 建筑物总的占地面积和使用面积
+    maintenanceStatus(维护状况): Text
+    	desc: 描述建筑的维护情况，如良好、需要维修、待翻新等
+    accessibility(可达性): Text
+    	desc: 描述建筑对公众开放的程度以及无障碍设施配备情况
+    operationalHours(运营时间): STD.Date
+    	desc: 对公众服务的开放时间和周期
+    servicesProvided(提供的服务): Service
+    	desc: 该市政建筑内具体提供的公共服务项目列表
+    	constraint: MultiValue
+    associatedDepartments(关联部门): Organization
+    	desc: 在该建筑中办公的政府机构或部门
+    	constraint: MultiValue
