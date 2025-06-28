@@ -77,10 +77,13 @@ public class Utils {
     if (CollectionUtils.isNotEmpty(edgeList)) {
       for (IEdge<IVertexId, IProperty> edge : edgeList) {
         Object toIdObj = edge.getValue().get(Constants.EDGE_TO_ID_KEY);
+        String toIdType = (String) edge.getValue().get(Constants.EDGE_TO_ID_TYPE_KEY);
+
         String dir = Direction.OUT.name();
         Object nodeIdObj = vertex.getValue().get(Constants.NODE_ID_KEY);
+        String nodeType = vertex.getId().getType();
         String targetType = edge.getTargetId().getType();
-        if (nodeIdObj.equals(toIdObj)) {
+        if (nodeIdObj.equals(toIdObj) && nodeType.equals(toIdType)) {
           toIdObj = edge.getValue().get(Constants.EDGE_FROM_ID_KEY);
           dir = Direction.IN.name();
           targetType = String.valueOf(edge.getValue().get(Constants.EDGE_FROM_ID_TYPE_KEY));

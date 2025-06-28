@@ -48,7 +48,6 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.oper
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.operation.SchemaAtomicOperationEnum;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.util.TypeNameUtils;
 import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum;
-import com.antgroup.openspg.server.api.facade.ApiConstants;
 import com.antgroup.tugraph.TuGraphDbRpcClient;
 import com.google.common.collect.Lists;
 import java.io.InputStream;
@@ -78,13 +77,16 @@ public class TuGraphStoreClient extends BaseLPGGraphStoreClient {
   @Getter private final LPGTypeNameConvertor typeNameConvertor;
   @Getter private final String connUrl;
 
+  private static final String ACCESS_ID = "accessId";
+  private static final String ACCESS_KEY = "accessKey";
+  private static final String TIMEOUT = "timeout";
+
   public TuGraphStoreClient(String connUrl, LPGTypeNameConvertor typeNameConvertor) {
     UriComponents uriComponents = UriComponentsBuilder.fromUriString(connUrl).build();
     this.connUrl = connUrl;
     this.graphName = uriComponents.getQueryParams().getFirst(TuGraphConstants.GRAPH_NAME);
     this.timeout =
-        Double.parseDouble(
-            String.valueOf(uriComponents.getQueryParams().getFirst(ApiConstants.TIMEOUT)));
+        Double.parseDouble(String.valueOf(uriComponents.getQueryParams().getFirst(TIMEOUT)));
     this.client = initTuGraphClient(uriComponents);
     this.internalIdGenerator = new NoChangedIdGenerator();
     this.typeNameConvertor = typeNameConvertor;
@@ -149,8 +151,8 @@ public class TuGraphStoreClient extends BaseLPGGraphStoreClient {
 
   private TuGraphDbRpcClient initTuGraphClient(UriComponents uriComponents) {
     String host = String.format("%s:%s", uriComponents.getHost(), uriComponents.getPort());
-    String accessId = uriComponents.getQueryParams().getFirst(ApiConstants.ACCESS_ID);
-    String accessKey = uriComponents.getQueryParams().getFirst(ApiConstants.ACCESS_KEY);
+    String accessId = uriComponents.getQueryParams().getFirst(ACCESS_ID);
+    String accessKey = uriComponents.getQueryParams().getFirst(ACCESS_KEY);
     TuGraphDbRpcClient client = null;
     try {
       client = new TuGraphDbRpcClient(host, accessId, accessKey);

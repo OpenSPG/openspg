@@ -33,10 +33,11 @@
     <result column="computing_conf" jdbcType="LONGVARCHAR" property="computingConf" />
     <result column="life_cycle" jdbcType="VARCHAR" property="lifeCycle" />
     <result column="action" jdbcType="VARCHAR" property="action" />
+    <result column="retrievals" jdbcType="VARCHAR" property="retrievals" />
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, gmt_create, gmt_modified, create_user, modify_user, project_id, task_id, job_name, chunk_num, file_url, status, type, data_source_type, version, extension, computing_conf, life_cycle, action
+    id, gmt_create, gmt_modified, create_user, modify_user, project_id, task_id, job_name, chunk_num, file_url, status, type, data_source_type, version, extension, computing_conf, life_cycle, action, retrievals
   </sql>
 
   <insert id="insert" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.BuilderJobDO">
@@ -47,13 +48,13 @@
     create_user, modify_user, task_id,
     job_name, chunk_num, file_url,
     status, type, data_source_type, version, extension,
-    computing_conf, life_cycle, action
+    computing_conf, life_cycle, action, retrievals
     )
     values (#{projectId,jdbcType=BIGINT}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
     #{createUser,jdbcType=VARCHAR}, #{modifyUser,jdbcType=VARCHAR}, #{taskId,jdbcType=BIGINT},
     #{jobName,jdbcType=VARCHAR}, #{chunkNum,jdbcType=BIGINT}, #{fileUrl,jdbcType=VARCHAR},
     #{status,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{dataSourceType,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, #{extension,jdbcType=LONGVARCHAR},
-    #{computingConf,jdbcType=LONGVARCHAR}, #{lifeCycle,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}
+    #{computingConf,jdbcType=LONGVARCHAR}, #{lifeCycle,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}, #{retrievals,jdbcType=VARCHAR}
     )
   </insert>
 
@@ -106,6 +107,9 @@
       </if>
       <if test="action != null">
         action = #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="retrievals != null">
+        retrievals = #{retrievals,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -168,6 +172,9 @@
     </if>
     <if test="action != null">
       and action = #{action,jdbcType=VARCHAR}
+    </if>
+    <if test="retrievals != null">
+      and retrievals like concat('%', #{retrievals,jdbcType=VARCHAR}, '%')
     </if>
     <if test="startCreateTime != null">
       and gmt_create &gt;= #{startCreateTime,jdbcType=TIMESTAMP}

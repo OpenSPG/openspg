@@ -50,12 +50,14 @@ public class BuilderConstant {
   public static final String BUILDER_TYPE = "builderType";
   public static final String KAG = "kag";
   public static final String LOCAL = "local";
+  public static final String AISTUDIO = "aistudio";
   public static final String DISTRIBUTED = "distributed";
   public static final String COMMAND = "command";
   public static final String SPG_DEFAULT_COMMAND =
-      ". /openspg_venv/bin/activate "
-          + "&&/openspg_venv/bin/pip3.8 install openspg-kag==0.6.2b1 -i https://artifacts.antgroup-inc.cn/artifact/repositories/simple-dev/ "
-          + "&&python -c 'from kag.bridge.spg_server_bridge import SPGServerBridge; builder = SPGServerBridge(); builder.run_builder(%s,%s)'";
+      "pip install openspg-kag-ant==0.7.0.202505062 -i https://artifacts.antgroup-inc.cn/artifact/repositories/simple-dev/ "
+          + "&&pip uninstall -y openspg-kag "
+          + "&&pip install openspg-kag==0.7.1.20250605 -i https://artifacts.antgroup-inc.cn/artifact/repositories/simple-dev/ "
+          + "&&python -c 'import kag_ant; from kag.bridge.spg_server_bridge import init_kag_config; init_kag_config(\"%s\",\"%s\"); from kag.bridge.spg_server_bridge import SPGServerBridge; builder = SPGServerBridge(); builder.run_builder(%s,\"%s\")'";
   public static final String STRUCTURE = "structure";
   public static final String STRUCTURED_BUILDER_CHAIN = "structured_builder_chain";
   public static final String UNSTRUCTURED_BUILDER_CHAIN = "unstructured_builder_chain";
@@ -166,4 +168,9 @@ public class BuilderConstant {
   public static final String DELETE = "delete";
   public static final String BATCH_VECTORIZER = "batch_vectorizer";
   public static final String KAG_POST_PROCESSOR = "kag_post_processor";
+
+  public static final String TOKENS_COST = "tokensCost";
+  public static final String TIME_COST = "timeCost";
+  public static final String STORAGE_COST = "storageCost";
+  public static final String COMPLETION_TOKENS = "completion_tokens";
 }

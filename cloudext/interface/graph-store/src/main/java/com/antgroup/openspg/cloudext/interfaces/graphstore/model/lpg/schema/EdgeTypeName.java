@@ -17,6 +17,7 @@ import com.antgroup.openspg.server.common.model.base.BaseValObj;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * {@link EdgeTypeName EdgeTypeName} is the unique identifier of {@link EdgeType EdgeType}, and it
@@ -25,15 +26,16 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class EdgeTypeName extends BaseValObj {
 
-  private final String startVertexType;
+  private String startVertexType;
 
   /** The label of edge type */
-  private final String edgeLabel;
+  private String edgeLabel;
 
-  private final String endVertexType;
+  private String endVertexType;
 
   public static EdgeTypeName parse(String edgeTypeName) {
     String[] splits = edgeTypeName.split("_");

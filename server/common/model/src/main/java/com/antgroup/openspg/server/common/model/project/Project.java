@@ -35,20 +35,32 @@ public class Project extends BaseModel {
   /** The namespace that isolate entity from different project. */
   private final String namespace;
 
+  /** The visibility of the project */
+  private String visibility;
+
   /** The tenant id that project belong to. */
   private final Long tenantId;
 
   /** Base configuration for the project dimension. */
   private final String config;
 
+  private String tag;
+
   public Project(
-      Long id, String name, String description, String namespace, Long tenantId, String config) {
+      Long id,
+      String name,
+      String description,
+      String namespace,
+      Long tenantId,
+      String config,
+      String tag) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.namespace = namespace;
     this.tenantId = tenantId;
     this.config = config;
+    this.tag = tag;
   }
 
   public void setId(Long id) {
@@ -77,5 +89,21 @@ public class Project extends BaseModel {
 
   public String getConfig() {
     return config;
+  }
+
+  public String getVisibility() {
+    return visibility;
+  }
+
+  public void setVisibility(String visibility) {
+    this.visibility = visibility;
+  }
+
+  public String getTag() {
+    return tag;
+  }
+
+  public void setTag(String tag) {
+    this.tag = tag;
   }
 }

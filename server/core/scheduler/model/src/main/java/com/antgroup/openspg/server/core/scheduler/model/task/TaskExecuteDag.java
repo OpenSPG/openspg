@@ -122,7 +122,7 @@ public class TaskExecuteDag {
     private String taskComponent;
 
     /** properties */
-    private JSONObject properties;
+    private JSONObject properties = new JSONObject();
   }
 
   @Getter

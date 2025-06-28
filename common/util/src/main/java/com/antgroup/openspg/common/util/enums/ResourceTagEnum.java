@@ -14,11 +14,14 @@ package com.antgroup.openspg.common.util.enums;
 
 public enum ResourceTagEnum {
 
-  /** project */
-  PROJECT,
-
   /** platform */
   PLATFORM,
+
+  /** app */
+  APP,
+
+  /** knowledge base */
+  KNOWLEDGE_BASE,
   ;
 
   /**

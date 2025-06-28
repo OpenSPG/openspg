@@ -14,6 +14,7 @@
 package com.antgroup.openspg.server.infra.dao.repository.schema.convertor;
 
 import com.alibaba.fastjson.JSON;
+import com.antgroup.openspg.common.util.SchemaJsonUtils;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.OntologyId;
@@ -23,7 +24,6 @@ import com.antgroup.openspg.core.schema.model.alter.AlterStatusEnum;
 import com.antgroup.openspg.core.schema.model.identifier.PredicateIdentifier;
 import com.antgroup.openspg.core.schema.model.predicate.EncryptTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.MultiVersionConfig;
-import com.antgroup.openspg.server.api.facade.SchemaJsonUtils;
 import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleSubProperty;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDO;
 import com.antgroup.openspg.server.infra.dao.repository.schema.enums.MapTypeEnum;

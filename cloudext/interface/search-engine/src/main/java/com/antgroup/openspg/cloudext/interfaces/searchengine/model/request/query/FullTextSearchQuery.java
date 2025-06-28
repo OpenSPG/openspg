@@ -22,13 +22,22 @@ public class FullTextSearchQuery extends BaseQuery {
 
   @Getter private final String queryString;
   @Getter private final List<String> labelConstraints;
+  @Getter private final String propertyKey;
 
   public FullTextSearchQuery(@NonNull String queryString) {
     this(queryString, null);
   }
 
   public FullTextSearchQuery(@NonNull String queryString, @Nullable List<String> labelConstraints) {
+    this(queryString, labelConstraints, null);
+  }
+
+  public FullTextSearchQuery(
+      @NonNull String queryString,
+      @Nullable List<String> labelConstraints,
+      @Nullable String propertyKey) {
     this.queryString = queryString;
     this.labelConstraints = labelConstraints;
+    this.propertyKey = propertyKey;
   }
 }

@@ -37,6 +37,7 @@ public interface LPGDataDefinitionService {
    */
   LPGSchema querySchema();
 
+  @Deprecated
   List<String> queryAllVertexLabels();
 
   /**

@@ -29,6 +29,10 @@
       <artifactId>api-facade</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.antgroup.openspg</groupId>
+      <artifactId>common-util</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.dtflys.forest</groupId>
       <artifactId>forest-core</artifactId>
     </dependency>

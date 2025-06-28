@@ -47,7 +47,7 @@ public class Config extends BaseModel {
   private Integer status;
 
   /** config json */
-  private String config;
+  private Object config;
 
   /** version description */
   private String description;
@@ -58,13 +58,9 @@ public class Config extends BaseModel {
   /** resource type */
   private String resourceType;
 
-  private boolean showProfilePicture = false;
-
-  private boolean showUserConfig = false;
-
   public Config() {}
 
-  public Config(Long id, String configName, String configId, String config, String resourceType) {
+  public Config(Long id, String configName, String configId, Object config, String resourceType) {
     this.id = id;
     this.configName = configName;
     this.configId = configId;

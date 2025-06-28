@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.server.biz.common;
 
-import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.api.facade.dto.common.request.PermissionRequest;
 import com.antgroup.openspg.server.common.model.permission.Permission;
 import java.util.List;
@@ -36,25 +35,6 @@ public interface PermissionManager {
    * @return
    */
   Integer update(PermissionRequest request);
-
-  /**
-   * query page permission or query by condition
-   *
-   * @param userNo
-   * @param roleType
-   * @param resourceId
-   * @param resourceTag
-   * @param page
-   * @param size
-   * @return
-   */
-  Paged<Permission> query(
-      String userNo,
-      String roleType,
-      Long resourceId,
-      String resourceTag,
-      Integer page,
-      Integer size);
 
   /**
    * remove permission
@@ -88,21 +68,34 @@ public interface PermissionManager {
   boolean isSuper(String userNo);
 
   /**
-   * is project role
+   * has permission
    *
    * @param userNo
-   * @param projectId
+   * @param resourceId
+   * @param resourceType
+   * @param roleType
    * @return
    */
-  boolean isProjectRole(String userNo, Long projectId);
+  boolean hasPermission(String userNo, Long resourceId, String resourceType, String roleType);
 
   /**
-   * get owner user name by project id
+   * is role members
    *
-   * @param projectId
+   * @param userNo
+   * @param resourceId
+   * @param resourceType
    * @return
    */
-  List<String> getOwnerUserNameByProjectId(Long projectId);
+  boolean isRoleMembers(String userNo, Long resourceId, String resourceType);
+
+  /**
+   * get owner user name by resource id
+   *
+   * @param resourceId
+   * @param resourceType
+   * @return
+   */
+  List<String> getOwnerUserNameByResourceId(Long resourceId, String resourceType);
 
   /**
    * get by id
@@ -111,4 +104,39 @@ public interface PermissionManager {
    * @return
    */
   Permission selectByPrimaryKey(Long id);
+
+  /**
+   * select page
+   *
+   * @param userNo
+   * @param roleType
+   * @param resourceId
+   * @param resourceTag
+   * @param start
+   * @param size
+   * @return
+   */
+  List<Permission> selectLikeByUserNoAndRoleId(
+      String userNo, String roleType, Long resourceId, String resourceTag, Long start, Long size);
+
+  /**
+   * the count of selectLikeByUserNoAndRoleId
+   *
+   * @param userNo
+   * @param roleType
+   * @param resourceId
+   * @param resourceTag
+   * @return
+   */
+  long selectLikeCountByUserNoAndRoleId(
+      String userNo, String roleType, Long resourceId, String resourceTag);
+
+  /**
+   * Delete Records Corresponding to the Resource
+   *
+   * @param resourceId
+   * @param resourceTag
+   * @return
+   */
+  int deleteByResourceId(Long resourceId, String resourceTag);
 }

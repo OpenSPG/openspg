@@ -17,6 +17,7 @@ import com.antgroup.openspg.common.util.cloudext.CloudExtClient;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.List;
 
 public interface ObjectStorageClient extends CloudExtClient {
 
@@ -44,5 +45,11 @@ public interface ObjectStorageClient extends CloudExtClient {
 
   Boolean removeDirectory(String bucketName, String directoryPath);
 
+  Boolean isDirectory(String bucketName, String path);
+
+  List<String> getAllFilesRecursively(String bucketName, String directoryPath);
+
   Long getContentLength(String bucketName, String objectName);
+
+  long getStorageSize(String bucketName, String path);
 }

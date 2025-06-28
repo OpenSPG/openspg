@@ -73,7 +73,7 @@ public class SchemaController extends BaseController {
     chunkProperties.put("content", IndexTypeEnum.TEXT_AND_VECTOR);
 
     Map<String, IndexTypeEnum> properties = Maps.newHashMap();
-    properties.put("desc", IndexTypeEnum.TEXT_AND_VECTOR);
+    // properties.put("desc", IndexTypeEnum.TEXT_AND_VECTOR);
     properties.put("semanticType", IndexTypeEnum.TEXT);
 
     schemaTypes.add(getBaseSPGType(namespace, "Chunk", "文本块", chunkProperties));

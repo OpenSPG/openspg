@@ -20,7 +20,7 @@
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
     <result column="project_id" jdbcType="BIGINT" property="projectId" />
     <result column="version" jdbcType="INTEGER" property="version" />
-    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="user_no" jdbcType="VARCHAR" property="userNo" />
     <result column="status" jdbcType="VARCHAR" property="status" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.antgroup.openspg.server.infra.dao.dataobject.ReleaseDOWithBLOBs">
@@ -90,7 +90,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, gmt_create, gmt_modified, project_id, version, user_id, status
+    id, gmt_create, gmt_modified, project_id, version, user_no, status
   </sql>
   <sql id="Blob_Column_List">
     schema_view, description, change_procedure_id, operation_detail, error_detail, operation_info
@@ -144,13 +144,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.ReleaseDOWithBLOBs">
-    insert into kg_ontology_release (id, gmt_create, gmt_modified, 
-      project_id, version, user_id, 
+    insert into kg_ontology_release (
+      id, gmt_create, gmt_modified,
+      project_id, version, user_id, user_no,
       status, schema_view, description, 
       change_procedure_id, operation_detail, 
       error_detail, operation_info)
     values (#{id,jdbcType=BIGINT}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
-      #{projectId,jdbcType=BIGINT}, #{version,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, 
+      #{projectId,jdbcType=BIGINT}, #{version,jdbcType=INTEGER}, 0, #{userNo,jdbcType=VARCHAR},
       #{status,jdbcType=VARCHAR}, #{schemaView,jdbcType=LONGVARCHAR}, #{description,jdbcType=LONGVARCHAR}, 
       #{changeProcedureId,jdbcType=LONGVARCHAR}, #{operationDetail,jdbcType=LONGVARCHAR}, 
       #{errorDetail,jdbcType=LONGVARCHAR}, #{operationInfo,jdbcType=LONGVARCHAR})
@@ -173,8 +174,9 @@
       <if test="version != null">
         version,
       </if>
-      <if test="userId != null">
-        user_id,
+      user_id,
+      <if test="userNo != null">
+        user_no,
       </if>
       <if test="status != null">
         status,
@@ -214,8 +216,9 @@
       <if test="version != null">
         #{version,jdbcType=INTEGER},
       </if>
-      <if test="userId != null">
-        #{userId,jdbcType=VARCHAR},
+      0,
+      <if test="userNo != null">
+        #{userNo,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         #{status,jdbcType=VARCHAR},
@@ -264,8 +267,8 @@
       <if test="record.version != null">
         version = #{record.version,jdbcType=INTEGER},
       </if>
-      <if test="record.userId != null">
-        user_id = #{record.userId,jdbcType=VARCHAR},
+      <if test="record.userNo != null">
+        user_no = #{record.userNo,jdbcType=VARCHAR},
       </if>
       <if test="record.status != null">
         status = #{record.status,jdbcType=VARCHAR},
@@ -300,7 +303,7 @@
       gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
       project_id = #{record.projectId,jdbcType=BIGINT},
       version = #{record.version,jdbcType=INTEGER},
-      user_id = #{record.userId,jdbcType=VARCHAR},
+      user_no = #{record.userNo,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=VARCHAR},
       schema_view = #{record.schemaView,jdbcType=LONGVARCHAR},
       description = #{record.description,jdbcType=LONGVARCHAR},
@@ -319,7 +322,7 @@
       gmt_modified = #{record.gmtModified,jdbcType=TIMESTAMP},
       project_id = #{record.projectId,jdbcType=BIGINT},
       version = #{record.version,jdbcType=INTEGER},
-      user_id = #{record.userId,jdbcType=VARCHAR},
+      user_no = #{record.userNo,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -340,8 +343,8 @@
       <if test="version != null">
         version = #{version,jdbcType=INTEGER},
       </if>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=VARCHAR},
+      <if test="userNo != null">
+        user_no = #{userNo,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=VARCHAR},
@@ -373,7 +376,7 @@
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       project_id = #{projectId,jdbcType=BIGINT},
       version = #{version,jdbcType=INTEGER},
-      user_id = #{userId,jdbcType=VARCHAR},
+      user_no = #{userNo,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       schema_view = #{schemaView,jdbcType=LONGVARCHAR},
       description = #{description,jdbcType=LONGVARCHAR},
@@ -389,7 +392,7 @@
       gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
       project_id = #{projectId,jdbcType=BIGINT},
       version = #{version,jdbcType=INTEGER},
-      user_id = #{userId,jdbcType=VARCHAR},
+      user_no = #{userNo,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>

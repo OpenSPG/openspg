@@ -81,6 +81,15 @@ public class CommonUtils {
     return getInstanceStorageFileKey(projectId, instanceId) + taskId + "_" + type + ".kag";
   }
 
+  public static String getTaskStoragePathKey(
+      Long projectId, Long instanceId, Long taskId, String type) {
+    return getInstanceStorageFileKey(projectId, instanceId) + taskId + "_" + type + File.separator;
+  }
+
+  public static String getTaskStorageFileKey(String path, String name) {
+    return path + name + ".kag";
+  }
+
   public static JSONObject getKagBuilderConfig(
       Project project, BuilderJob builderJob, String hostAddr) {
     JSONObject extension = JSON.parseObject(builderJob.getExtension());
@@ -135,6 +144,7 @@ public class CommonUtils {
 
     JSONObject writer = new JSONObject();
     writer.put(BuilderConstant.TYPE, BuilderConstant.KG_WRITER);
+    writer.put(BuilderConstant.PROJECT_ID, project.getId());
     if (BuilderConstant.DELETE.equalsIgnoreCase(builderJob.getAction())) {
       writer.put(BuilderConstant.DELETE, true);
     }

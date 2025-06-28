@@ -52,4 +52,6 @@ public interface OntologyPropertyDOMapper {
   int updateByPrimaryKeyWithBLOBs(OntologyPropertyDO record);
 
   int updateByPrimaryKey(OntologyPropertyDO record);
+
+  int deleteIndexType(OntologyPropertyDO record);
 }

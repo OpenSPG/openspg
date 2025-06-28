@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.common.util;
 
-import com.antgroup.openspg.server.api.facade.SchemaJsonUtils;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,5 +28,28 @@ public class JsonUtils {
       result = StringUtils.toString(object);
     }
     return result;
+  }
+
+  /**
+   * Flatten the json object
+   *
+   * @param jsonObject
+   * @return
+   */
+  public static JSONObject flatten(JSONObject jsonObject) {
+    JSONObject flattenedObject = new JSONObject();
+    flatten(jsonObject, flattenedObject, "");
+    return flattenedObject;
+  }
+
+  private static void flatten(JSONObject jsonObject, JSONObject flattenedObject, String prefix) {
+    for (String key : jsonObject.keySet()) {
+      Object value = jsonObject.get(key);
+      if (value instanceof JSONObject) {
+        flatten((JSONObject) value, flattenedObject, prefix);
+      } else {
+        flattenedObject.put(prefix.isEmpty() ? key : prefix + "." + key, value);
+      }
+    }
   }
 }

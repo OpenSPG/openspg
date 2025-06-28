@@ -23,5 +23,6 @@ public interface ConceptInstanceManager {
 
   ConceptLevelInstanceResponse queryConceptLevelInstance(ConceptLevelInstanceRequest request);
 
-  List<ConceptInstanceResponse> query(String conceptType, Set<String> conceptInstanceIds);
+  List<ConceptInstanceResponse> query(
+      Long projectId, String conceptType, Set<String> conceptInstanceIds);
 }

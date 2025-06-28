@@ -20,6 +20,7 @@ import com.antgroup.openspg.core.schema.model.type.BasicType;
 import com.antgroup.openspg.core.schema.model.type.ConceptType;
 import com.antgroup.openspg.core.schema.model.type.EntityType;
 import com.antgroup.openspg.core.schema.model.type.EventType;
+import com.antgroup.openspg.core.schema.model.type.IndexType;
 import com.antgroup.openspg.core.schema.model.type.OperatorTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeAdvancedConfig;
 import com.antgroup.openspg.core.schema.model.type.StandardType;
@@ -177,6 +178,15 @@ public class SPGTypeConvertor {
       case EVENT_TYPE:
         baseSpgType =
             new EventType(
+                simpleSpgType.getBasicInfo(),
+                simpleSpgType.getParentTypeInfo(),
+                propertys,
+                relations,
+                getAdvancedConfig(simpleSpgType));
+        break;
+      case INDEX_TYPE:
+        baseSpgType =
+            new IndexType(
                 simpleSpgType.getBasicInfo(),
                 simpleSpgType.getParentTypeInfo(),
                 propertys,

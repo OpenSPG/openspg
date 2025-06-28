@@ -39,4 +39,5 @@ public class BuilderJobDO {
   private String computingConf;
   private String lifeCycle;
   private String action;
+  private String retrievals;
 }

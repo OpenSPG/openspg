@@ -15,7 +15,6 @@ package com.antgroup.openspg.server.infra.dao.repository.common;
 
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.common.util.enums.PermissionEnum;
-import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.common.model.permission.Permission;
 import com.antgroup.openspg.server.common.service.permission.PermissionRepository;
 import com.antgroup.openspg.server.infra.dao.dataobject.PermissionDO;
@@ -61,92 +60,12 @@ public class PermissionRepositoryImpl implements PermissionRepository {
   }
 
   @Override
-  public List<Permission> query(
-      Long resourceId, String resourceTag, Integer page, Integer pageSize) {
-    return query(null, null, resourceId, resourceTag, page, pageSize);
-  }
-
-  @Override
   public List<Permission> queryByUserNoAndRoleId(
-      String userNo,
-      Long roleId,
-      Long resourceId,
-      String resourceTag,
-      Integer page,
-      Integer pageSize) {
+      String userNo, Long roleId, Long resourceId, String resourceTag, Long page, Long pageSize) {
     if (StringUtils.isBlank(userNo)) {
       return Lists.newArrayList();
     }
-    return query(userNo, roleId, resourceId, resourceTag, page, pageSize);
-  }
-
-  private List<Permission> query(
-      String userNo,
-      Long roleId,
-      Long resourceId,
-      String resourceTag,
-      Integer page,
-      Integer pageSize) {
-    if (null == resourceId || StringUtils.isBlank(resourceTag)) {
-      return Lists.newArrayList();
-    }
-    if (null == pageSize) {
-      pageSize = 10;
-    }
-    page = page > 0 ? page : 1;
-    int start = (page - 1) * pageSize;
-    List<PermissionDO> permissionList;
-    if (StringUtils.isBlank(userNo)) {
-      PermissionDO permissionDO = new PermissionDO();
-      permissionDO.setResourceId(resourceId);
-      permissionDO.setResourceTag(resourceTag);
-      permissionList = permissionMapper.selectByCondition(permissionDO, start, pageSize);
-    } else {
-      permissionList =
-          permissionMapper.selectLikeByUserNoAndRoleId(
-              userNo, roleId, resourceId, resourceTag, start, pageSize);
-    }
-    if (CollectionUtils.isNotEmpty(permissionList)) {
-      return permissionList.stream().map(PermissionConvertor::toModel).collect(Collectors.toList());
-    }
-    return Lists.newArrayList();
-  }
-
-  @Override
-  public Paged<Permission> queryPage(
-      String userNo, Long roleId, Long resourceId, String resourceTag, Integer page, Integer size) {
-    Paged<Permission> result = new Paged<>();
-    result.setPageIdx(page);
-    result.setPageSize(size);
-    List<PermissionDO> permissionList;
-    PermissionDO permissionDO = new PermissionDO();
-    permissionDO.setResourceTag(resourceTag);
-    permissionDO.setResourceId(resourceId);
-    permissionDO.setRoleId(roleId);
-    if (null == size) {
-      size = 10;
-    }
-    page = page > 0 ? page : 1;
-    int start = (page - 1) * size;
-    if (StringUtils.isNotBlank(userNo)) {
-      permissionDO.setUserNo(userNo);
-      result.setTotal(
-          (long)
-              permissionMapper.selectLikeCountByUserNoAndRoleId(
-                  userNo, roleId, resourceId, resourceTag));
-      permissionList =
-          permissionMapper.selectLikeByUserNoAndRoleId(
-              userNo, roleId, resourceId, resourceTag, start, size);
-    } else {
-      result.setTotal((long) permissionMapper.selectCountByCondition(permissionDO));
-      permissionList = permissionMapper.selectByCondition(permissionDO, start, size);
-    }
-
-    if (CollectionUtils.isNotEmpty(permissionList)) {
-      result.setResults(
-          permissionList.stream().map(PermissionConvertor::toModel).collect(Collectors.toList()));
-    }
-    return result;
+    return selectLikeByUserNoAndRoleId(userNo, roleId, resourceId, resourceTag, page, pageSize);
   }
 
   @Override
@@ -208,5 +127,57 @@ public class PermissionRepositoryImpl implements PermissionRepository {
   public Permission selectByPrimaryKey(Long id) {
     PermissionDO permissionDO = permissionMapper.selectByPrimaryKey(id);
     return PermissionConvertor.toModel(permissionDO);
+  }
+
+  @Override
+  public List<Permission> selectLikeByUserNoAndRoleId(
+      String userNo, Long roleId, Long resourceId, String resourceTag, Long page, Long size) {
+    if (null == resourceId || StringUtils.isBlank(resourceTag)) {
+      return Lists.newArrayList();
+    }
+    List<PermissionDO> permissionList;
+    if (null == size) {
+      size = 10L;
+    }
+    page = page > 0 ? page : 1;
+    Long start = (page - 1) * size;
+    if (StringUtils.isNotBlank(userNo)) {
+      permissionList =
+          permissionMapper.selectLikeByUserNoAndRoleId(
+              userNo, roleId, resourceId, resourceTag, start, size);
+    } else {
+      PermissionDO permissionDO = new PermissionDO();
+      permissionDO.setResourceTag(resourceTag);
+      permissionDO.setResourceId(resourceId);
+      permissionDO.setRoleId(roleId);
+      permissionList = permissionMapper.selectByCondition(permissionDO, start, size);
+    }
+    return PermissionConvertor.toModelList(permissionList);
+  }
+
+  @Override
+  public long selectLikeCountByUserNoAndRoleId(
+      String userNo, Long roleId, Long resourceId, String resourceTag) {
+    if (null == resourceId || StringUtils.isBlank(resourceTag)) {
+      return 0;
+    }
+    Long count;
+    if (StringUtils.isNotBlank(userNo)) {
+      count =
+          permissionMapper.selectLikeCountByUserNoAndRoleId(
+              userNo, roleId, resourceId, resourceTag);
+    } else {
+      PermissionDO permissionDO = new PermissionDO();
+      permissionDO.setResourceTag(resourceTag);
+      permissionDO.setResourceId(resourceId);
+      permissionDO.setRoleId(roleId);
+      count = permissionMapper.selectCountByCondition(permissionDO);
+    }
+    return count;
+  }
+
+  @Override
+  public int deleteByResourceId(Long resourceId, String resourceTag) {
+    return permissionMapper.deleteByResourceId(resourceId, resourceTag);
   }
 }

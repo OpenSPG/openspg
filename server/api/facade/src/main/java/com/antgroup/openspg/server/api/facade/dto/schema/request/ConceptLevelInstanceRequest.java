@@ -18,6 +18,7 @@ import lombok.Data;
 
 @Data
 public class ConceptLevelInstanceRequest {
+  private Long projectId;
   private String conceptType;
   private String rootConceptInstance = ConceptIdentifier.ROOT;
 }

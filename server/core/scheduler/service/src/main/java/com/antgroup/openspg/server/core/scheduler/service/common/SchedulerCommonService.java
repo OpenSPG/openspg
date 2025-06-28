@@ -12,9 +12,19 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.common;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClient;
+import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClientDriverManager;
+import com.antgroup.openspg.common.constants.BuilderConstant;
+import com.antgroup.openspg.common.util.CommonUtils;
+import com.antgroup.openspg.common.util.pemja.PemjaUtils;
+import com.antgroup.openspg.common.util.pemja.PythonInvokeMethod;
+import com.antgroup.openspg.common.util.pemja.model.PemjaConfig;
 import com.antgroup.openspg.server.common.model.exception.SchedulerException;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.InstanceStatus;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum.TaskStatus;
+import com.antgroup.openspg.server.common.service.config.DefaultValue;
 import com.antgroup.openspg.server.common.service.spring.SpringContextHolder;
 import com.antgroup.openspg.server.core.scheduler.model.query.SchedulerInstanceQuery;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
@@ -31,6 +41,7 @@ import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskEx
 import com.antgroup.openspg.server.core.scheduler.service.translate.TranslatorFactory;
 import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +62,8 @@ public class SchedulerCommonService {
   public static final String UNDERLINE_SEPARATOR = "_";
   public static final Long FINISH = 100L;
 
+  @Autowired DefaultValue value;
+
   @Autowired SchedulerJobService schedulerJobService;
 
   @Autowired SchedulerInstanceService schedulerInstanceService;
@@ -61,6 +74,7 @@ public class SchedulerCommonService {
   public void setInstanceFinish(
       SchedulerInstance instance, InstanceStatus instanceStatus, TaskStatus taskStatus) {
     Date finishTime = (instance.getFinishTime() == null ? new Date() : instance.getFinishTime());
+    costStatistics(instance);
     SchedulerInstance updateInstance = new SchedulerInstance();
     updateInstance.setId(instance.getId());
     updateInstance.setStatus(instanceStatus);
@@ -219,5 +233,62 @@ public class SchedulerCommonService {
     schedulerJobService.update(updateJob);
 
     return instance;
+  }
+
+  public void costStatistics(SchedulerInstance instance) {
+    SchedulerInstance old = schedulerInstanceService.getById(instance.getId());
+    JSONObject extension = old.getExtension();
+    extension = (extension == null) ? new JSONObject() : extension;
+    PemjaConfig pemjaConfig =
+        new PemjaConfig(
+            value.getPythonExec(),
+            value.getPythonPaths(),
+            value.getPythonEnv(),
+            value.getSchemaUrlHost(),
+            null,
+            PythonInvokeMethod.BRIDGE_GET_LLM_TOKEN_INFO,
+            Maps.newHashMap());
+    Object result = PemjaUtils.invoke(pemjaConfig, instance.getId());
+    JSONObject tokens = JSON.parseObject(JSON.toJSONString(result));
+    if (tokens != null) {
+      Integer token = tokens.getInteger(BuilderConstant.COMPLETION_TOKENS);
+      extension.put(BuilderConstant.TOKENS_COST, token.toString());
+    }
+
+    Date finishTime = (instance.getFinishTime() == null ? new Date() : instance.getFinishTime());
+    long diffInMillis = finishTime.getTime() - instance.getGmtCreate().getTime();
+    long hours = diffInMillis / (1000 * 60 * 60);
+    long minutes = (diffInMillis % (1000 * 60 * 60)) / (1000 * 60);
+    long seconds = (diffInMillis % (1000 * 60)) / 1000;
+    String time = String.format("%sh %sm %ss", hours, minutes, seconds);
+    extension.put(BuilderConstant.TIME_COST, time);
+
+    ObjectStorageClient objectStorageClient =
+        ObjectStorageClientDriverManager.getClient(value.getObjectStorageUrl());
+    long totalSizeInBytes =
+        objectStorageClient.getStorageSize(
+            value.getBuilderBucketName(),
+            CommonUtils.getInstanceStorageFileKey(instance.getProjectId(), instance.getId()));
+    extension.put(BuilderConstant.STORAGE_COST, formatBytes(totalSizeInBytes));
+
+    SchedulerInstance updateInstance = new SchedulerInstance();
+    updateInstance.setId(instance.getId());
+    updateInstance.setExtension(extension);
+    schedulerInstanceService.update(updateInstance);
+  }
+
+  public static String formatBytes(long sizeInBytes) {
+    final String[] units = {"Bytes", "KB", "MB", "GB", "TB", "PB"};
+    final double base = 1024.0;
+    if (sizeInBytes < base) {
+      return sizeInBytes + " Bytes";
+    }
+    int unitIndex = 0;
+    double size = sizeInBytes;
+    while (size >= base && unitIndex < units.length - 1) {
+      size /= base;
+      unitIndex++;
+    }
+    return String.format("%.2f %s", size, units[unitIndex]);
   }
 }

@@ -13,23 +13,25 @@ use openspg;
 
 CREATE TABLE `kg_reason_session` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `project_id` bigint(20) unsigned NOT NULL COMMENT '项目ID',
-  `user_id` bigint(20) unsigned NOT NULL COMMENT '用户ID',
+  `project_id` bigint(20) unsigned NOT NULL COMMENT '项目ID,新版本会话存放appId',
+  `user_id` bigint(20) unsigned NOT NULL COMMENT '字段已废弃',
   `name` varchar(1024) NOT NULL COMMENT '会话名称',
   `description` longtext DEFAULT NULL COMMENT '会话描述信息',
-  `gmt_create` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '创建时间',
-  `gmt_modified` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '修改时间',
-  PRIMARY KEY (`id`),
-  KEY `idx_project_id` (`project_id`,`id`)
-) DEFAULT CHARSET=utf8mb4 COMMENT='图谱推理任务会话表';
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `user_no` varchar(255) DEFAULT NULL COMMENT '用户工号',
+  `type` varchar(64) NOT NULL DEFAULT 'NORMAL' COMMENT '会话类型：DEBUG,NORMAL',
+  PRIMARY KEY(`id`),
+  KEY `idx_project_id`(`project_id`, `id`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '图谱推理任务会话表';
 
 CREATE TABLE `kg_reason_task` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `project_id` bigint(20) unsigned NOT NULL COMMENT '项目ID',
-  `user_id` bigint(20) unsigned NOT NULL COMMENT '用户ID',
+  `project_id` bigint(20) unsigned NOT NULL COMMENT '项目ID，新版本会话存放appId',
+  `user_id` bigint(20) unsigned NOT NULL COMMENT '字段已废弃',
   `session_id` bigint(20) unsigned NOT NULL COMMENT '会话ID',
-  `gmt_create` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '创建时间',
-  `gmt_modified` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() COMMENT '修改时间',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `mark` varchar(16) DEFAULT 'NULL' COMMENT '收藏状态',
   `status` varchar(32) DEFAULT NULL COMMENT '状态',
   `dsl` longtext DEFAULT NULL COMMENT 'DSL执行语句',
@@ -40,11 +42,13 @@ CREATE TABLE `kg_reason_task` (
   `result_nodes` longtext DEFAULT NULL COMMENT '执行结果，点数据',
   `result_edges` longtext DEFAULT NULL COMMENT '执行结果，边数据',
   `result_paths` longtext DEFAULT NULL COMMENT '执行结果，路径数据',
-  PRIMARY KEY (`id`),
-  KEY `idx_session_id_id` (`session_id`,`id`),
-  KEY `idx_project_user_mark` (`project_id`,`user_id`,`mark`),
-  KEY `idx_user_mark_id` (`user_id`,`mark`,`id`)
-) DEFAULT CHARSET=utf8mb4 COMMENT='图谱推理任务表';
+  `user_no` varchar(255) DEFAULT NULL COMMENT '用户工号',
+  `reaction_type` varchar(64) DEFAULT NULL COMMENT '反应类型：UP/DOWN',
+  PRIMARY KEY(`id`),
+  KEY `idx_session_id_id`(`session_id`, `id`),
+  KEY `idx_project_userno_mark`(`project_id`, `user_no`, `mark`),
+  KEY `idx_userno_mark_id`(`user_no`, `mark`, `id`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '图谱推理任务表';
 
 CREATE TABLE `kg_reason_tutorial` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -80,6 +84,7 @@ CREATE TABLE `kg_builder_job` (
   `life_cycle` varchar(64) DEFAULT NULL COMMENT '执行周期类型',
   `action` varchar(64) DEFAULT NULL COMMENT '数据操作类型',
   `computing_conf` longtext DEFAULT NULL COMMENT '计算引擎配置',
+  `retrievals` varchar(512) DEFAULT NULL COMMENT '索引列表',
   PRIMARY KEY (`id`),
   KEY `idx_project_id` (`project_id`),
   KEY `idx_task_id` (`task_id`)
@@ -183,8 +188,8 @@ CREATE TABLE `kg_data_source`(
  `id`              bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
  `gmt_create`      timestamp     NOT NULL DEFAULT current_timestamp() COMMENT '创建时间',
  `gmt_modified`    timestamp     NOT NULL DEFAULT current_timestamp() on update current_timestamp () COMMENT '修改时间',
- `create_user`     varchar(64)   NOT NULL DEFAULT 'system' COMMENT '创建用户',
- `update_user`     varchar(64)   NOT NULL DEFAULT 'system' COMMENT '修改用户',
+ `create_user`     varchar(32)   NOT NULL DEFAULT 'system' COMMENT '创建用户',
+ `update_user`     varchar(32)   NOT NULL DEFAULT 'system' COMMENT '修改用户',
  `status`          varchar(64)   NOT NULL DEFAULT 'ENABLE' COMMENT '状态',
  `remark`          varchar(1024)          DEFAULT NULL COMMENT '描述',
  `type`            varchar(64)   NOT NULL DEFAULT 'MYSQL' COMMENT '数据源类型',
@@ -200,3 +205,30 @@ UNIQUE KEY `uk_db_name` (`db_name`)
 ) DEFAULT CHARSET=utf8mb4 COMMENT='数据源管理表';
 
 
+CREATE TABLE `kg_retrieval`
+(
+    `id`             bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `gmt_create`     timestamp    NOT NULL DEFAULT current_timestamp() COMMENT '创建时间',
+    `gmt_modified`   timestamp    NOT NULL DEFAULT current_timestamp() on update current_timestamp () COMMENT '修改时间',
+    `create_user`    varchar(32)  NOT NULL DEFAULT 'system' COMMENT '创建用户',
+    `update_user`    varchar(32)  NOT NULL DEFAULT 'system' COMMENT '修改用户',
+    `type`           varchar(64)  NOT NULL DEFAULT 'KAG' COMMENT '类型',
+    `status`         varchar(64)  NOT NULL DEFAULT 'ENABLE' COMMENT '状态',
+    `is_default`     varchar(8)   NOT NULL DEFAULT 'N' comment '是否默认选中,取值：Y，N',
+    `name`           varchar(128) NOT NULL COMMENT '名称',
+    `chinese_name`   varchar(128)          DEFAULT NULL COMMENT '中文名称',
+    `schema_desc`    longtext              DEFAULT NULL COMMENT 'schema描述',
+    `scenarios_desc` longtext              DEFAULT NULL COMMENT '应用场景描述',
+    `cost_desc`      longtext              DEFAULT NULL COMMENT '成本描述',
+    `method_desc`    longtext              DEFAULT NULL COMMENT '索引方法描述',
+    `extractor_desc` longtext              DEFAULT NULL COMMENT '索引抽取描述',
+    `retriever_desc` longtext              DEFAULT NULL COMMENT '索引召回描述',
+    `module_path`    varchar(128) NOT NULL DEFAULT '' COMMENT '索引类路径',
+    `class_name`     varchar(128) NOT NULL DEFAULT '' COMMENT '索引类名称',
+    `method`         varchar(128) NOT NULL DEFAULT '' COMMENT '索引类方法',
+    `extension`      longtext              DEFAULT NULL COMMENT '扩展信息',
+    `config`         longtext              DEFAULT NULL COMMENT '配置信息',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_path_class_method` (`module_path`,`class_name`,`method`),
+    UNIQUE KEY `uk_name` (`name`)
+) DEFAULT CHARSET=utf8mb4 COMMENT='索引类配置表';

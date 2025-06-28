@@ -62,7 +62,7 @@ public class DataSourceController extends BaseController {
           public Boolean action() {
             if (StringUtils.isBlank(request.getCreateUser())) {
               Account account = getLoginAccount();
-              String user = account != null ? account.getAccount() : BuilderConstant.SYSTEM;
+              String user = account != null ? account.getWorkNo() : BuilderConstant.SYSTEM;
               request.setCreateUser(user);
             }
             request.setUpdateUser(request.getCreateUser());
@@ -88,7 +88,7 @@ public class DataSourceController extends BaseController {
           @Override
           public Boolean action() {
             Account account = getLoginAccount();
-            String user = account != null ? account.getAccount() : BuilderConstant.SYSTEM;
+            String user = account != null ? account.getWorkNo() : BuilderConstant.SYSTEM;
             request.setUpdateUser(user);
             return dataSourceService.update(request) > 0;
           }

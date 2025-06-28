@@ -12,20 +12,21 @@
 use openspg;
 
 CREATE TABLE `kg_project_info` (
-`id` bigint(20) NOT NULL AUTO_INCREMENT comment '主键',
-`name` varchar(255) NOT NULL comment '项目名称',
-`description` varchar(1024) DEFAULT NULL comment '项目描述信息',
-`status` varchar(20) NOT NULL DEFAULT 'INVALID' comment 'DELETE:删除 VALID:有效 INVALID：无效',
-`gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment '创建时间',
-`gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '修改时间',
-`namespace` varchar(64) NOT NULL DEFAULT '' comment '命名空间',
-`biz_domain_id` bigint(20) DEFAULT NULL comment '业务域主键',
-`config` text DEFAULT NULL comment '项目配置信息',
-PRIMARY KEY(`id`),
-UNIQUE KEY `uk_name`(`name`),
-KEY `idx_biz_domain_id`(`biz_domain_id`)
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(255) NOT NULL COMMENT '项目名称',
+  `description` varchar(1024) DEFAULT NULL COMMENT '项目描述信息',
+  `status` varchar(20) NOT NULL DEFAULT 'INVALID' COMMENT 'DELETE:删除 VALID:有效 INVALID：无效',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `namespace` varchar(64) NOT NULL DEFAULT '' COMMENT '命名空间',
+  `biz_domain_id` bigint(20) DEFAULT NULL COMMENT '业务域主键',
+  `config` text DEFAULT NULL COMMENT '项目配置信息',
+  `visibility` varchar(64) DEFAULT 'PRIVATE' COMMENT '可见性：PRIVATE、PUBLIC_READ',
+  `tag` varchar(64) NOT NULL DEFAULT 'LOCAL' COMMENT '知识库标签：本地知识库（LOCAL）、公网知识库（PUBLIC-NET）',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_name`(`name`),
+  KEY `idx_biz_domain_id`(`biz_domain_id`)
 ) DEFAULT CHARSET = utf8mb4 COMMENT = '图谱项目信息表';
-
 
 CREATE TABLE `kg_biz_domain` (
 `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT comment '主键',
@@ -207,6 +208,7 @@ CREATE TABLE `kg_ontology_release` (
 `version` int(11) NOT NULL comment '发布版本',
 `schema_view` longtext DEFAULT NULL comment '当前版本schema视图',
 `user_id` varchar(20) NOT NULL comment '发布人',
+`user_no` varchar(255) NOT NULL COMMENT '发布人工号',
 `description` text NOT NULL comment '发布描述',
 `status` varchar(20) NOT NULL comment '状态',
 `change_procedure_id` text DEFAULT NULL comment '变更流程id',
@@ -226,8 +228,8 @@ CREATE TABLE `kg_ontology_ext` (
   `ext_type` varchar(64) NOT NULL comment '扩展类型：标签、回流、颜色',
   `field` varchar(64) NOT NULL comment '扩展属性所属域，比如区分用户',
   `config` mediumtext DEFAULT NULL comment '配置内容',
-  `creator` varchar(64) NOT NULL comment '创建者',
-  `modifier` varchar(64) NOT NULL comment '更新者',
+  `creator` varchar(255) NOT NULL comment '创建者',
+  `modifier` varchar(255) NOT NULL comment '更新者',
   `status` int(10) unsigned NOT NULL comment '状态 1：有效 0：无效',
   PRIMARY KEY(`id`),
   UNIQUE KEY `uk_id_type_field`(`resource_id`, `resource_type`, `ext_type`, `field`)
@@ -301,6 +303,133 @@ CREATE TABLE `kg_role` (
   UNIQUE KEY `uk_role_name`(`role_name`)
 ) DEFAULT CHARSET = utf8mb4 COMMENT = '平台角色表';
 
+
+CREATE TABLE `kg_ref` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `name` varchar(512) NOT NULL COMMENT '关联名称',
+  `ref_id` varchar(255) NOT NULL COMMENT '关联id',
+  `ref_type` varchar(64) NOT NULL COMMENT '关联类型',
+  `refed_id` varchar(255) NOT NULL COMMENT '被关联Id',
+  `refed_type` varchar(64) NOT NULL COMMENT '被关联类型',
+  `config` longtext DEFAULT NULL COMMENT '配置详情',
+  `status` int(11) NOT NULL DEFAULT '1' COMMENT '状态：1 有效',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_id_type`(`ref_id`, `ref_type`, `refed_id`, `refed_type`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '关联表';
+
+CREATE TABLE `kg_model_provider` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `name` varchar(32) NOT NULL COMMENT '名称',
+  `provider` varchar(32) NOT NULL COMMENT '供应商英文名称',
+  `status` varchar(32) NOT NULL COMMENT '状态 0：禁用，1：启用',
+  `page_mode` varchar(32) NOT NULL COMMENT '添加模型模式，ALL:全部模型，SINGLE:单个模型',
+  `model_type` varchar(255) NOT NULL COMMENT '支持模型类型(以逗号拼接)',
+  `logo` varchar(255) NOT NULL COMMENT '图标',
+  `tags` varchar(255) NOT NULL COMMENT '标签',
+  `params` longtext NOT NULL COMMENT '供应商参数json',
+  `creator` varchar(64) NOT NULL COMMENT '创建用户',
+  `modifier` varchar(64) NOT NULL COMMENT '修改用户',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_provider`(`provider`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '模型供应商表';
+
+CREATE TABLE `kg_provider_param` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `provider` varchar(32) NOT NULL COMMENT '供应商英文名称',
+  `model_type` varchar(32) NOT NULL COMMENT '模型类型',
+  `model_name` varchar(32) DEFAULT NULL COMMENT '基础模型名称',
+  `params` longtext NOT NULL COMMENT '定制参数json',
+  `creator` varchar(64) NOT NULL DEFAULT 'system' COMMENT '创建用户',
+  `modifier` varchar(64) NOT NULL DEFAULT 'system' COMMENT '修改用户',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_provider_model_type`(`provider`, `model_type`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '供应商参数表';
+
+CREATE TABLE `kg_model_detail` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `provider` varchar(32) NOT NULL COMMENT '供应商英文名称',
+  `type` varchar(32) NOT NULL COMMENT '模型类型',
+  `name` varchar(64) NOT NULL COMMENT '名称',
+  `description` varchar(255) DEFAULT NULL COMMENT '备注',
+  `params` longtext DEFAULT NULL COMMENT '模型参数json',
+  `creator` varchar(64) NOT NULL DEFAULT 'system' COMMENT '创建用户',
+  `modifier` varchar(64) NOT NULL DEFAULT 'system' COMMENT '修改用户',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_provider_type_name`(`provider`, `type`, `name`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '模型配置详情表';
+
+
+CREATE TABLE `kg_user_model` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `instance_id` varchar(64) NOT NULL COMMENT '实例id',
+  `visibility` varchar(32) NOT NULL COMMENT '可见性，PUBLIC_READ：公有、PRIVATE：私有',
+  `provider` varchar(32) NOT NULL COMMENT '供应商英文名称',
+  `name` varchar(64) NOT NULL COMMENT '唯一名称',
+  `config` longtext DEFAULT NULL COMMENT '模型配置字段json',
+  `creator` varchar(64) NOT NULL DEFAULT 'system' COMMENT '创建用户',
+  `modifier` varchar(64) NOT NULL DEFAULT 'system' COMMENT '修改用户',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_instanceid`(`instance_id`),
+  UNIQUE KEY `uk_provider_name_visibility`(`provider`, `name`, `visibility`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '用户模型表';
+
+CREATE TABLE `kg_app` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `creator` varchar(64) NOT NULL DEFAULT 'system' COMMENT '创建用户',
+  `modifier` varchar(64) NOT NULL DEFAULT 'system' COMMENT '修改用户',
+  `name` varchar(64) NOT NULL COMMENT '应用名称',
+  `description` text DEFAULT NULL COMMENT '备注',
+  `logo` varchar(1024) NOT NULL COMMENT '图标',
+  `config` longtext DEFAULT NULL COMMENT '应用参数',
+  `alias` varchar(32) DEFAULT NULL COMMENT '别名',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_name`(`name`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '应用表';
+
+CREATE TABLE `kg_feedback` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `creator` varchar(64) NOT NULL DEFAULT 'system' COMMENT '创建用户',
+  `modifier` varchar(64) NOT NULL DEFAULT 'system' COMMENT '修改用户',
+  `module_type` varchar(65) NOT NULL COMMENT '功能模块类型，QA:问答',
+  `one_category` varchar(255) NOT NULL COMMENT '一级类目',
+  `two_category` varchar(255) DEFAULT NULL COMMENT '二级类目',
+  `three_category` varchar(255) DEFAULT NULL COMMENT '三级类目',
+  `four_category` varchar(255) DEFAULT NULL COMMENT '四级类目',
+  `five_category` varchar(255) DEFAULT NULL COMMENT '五级类目',
+  `reaction_type` varchar(64) NOT NULL COMMENT '反应类型：DEFAULT/UP/DOWN',
+  `reason` longtext DEFAULT NULL COMMENT '点踩原因',
+  PRIMARY KEY(`id`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '反馈记录表';
+
+CREATE TABLE `kg_statistics` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  `creator` varchar(64) NOT NULL DEFAULT 'system' COMMENT '创建用户',
+  `modifier` varchar(64) NOT NULL DEFAULT 'system' COMMENT '修改用户',
+  `resource_tag` varchar(50) NOT NULL COMMENT '资源分类',
+  `resource_id` varchar(50) NOT NULL COMMENT '资源id：应用id、平台0',
+  `statistics_type` varchar(50) NOT NULL COMMENT '指标维度',
+  `statistics_date` varchar(50) NOT NULL COMMENT '统计具体时间',
+  `num` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '指标数量',
+  PRIMARY KEY(`id`),
+  UNIQUE KEY `uk_unique`(`resource_tag`, `resource_id`, `statistics_type`, `statistics_date`)
+) DEFAULT CHARSET = utf8mb4 COMMENT = '统计汇总表';
+
 INSERT INTO kg_biz_domain (`id`,`gmt_create`,`gmt_modified`,`name`,`status`,`description`,`global_config`) VALUES(1,'2023-09-01 00:00:00','2023-09-01 00:00:00','defaultTenant','VALID','',null);
 
 INSERT INTO kg_ontology_entity (`id`,`original_id`,`name`,`name_zh`,`entity_category`,`layer`,`description`,`description_zh`,`status`,`with_index`,`scope`,`version`,`version_status`,`gmt_create`,`gmt_modified`,`transformer_id`,`operator_config`,`config`,`unique_name`) VALUES(1,1,'Thing','事物','ADVANCED','EXTENSION','Base class for all schema types, all of which inherit the type either directly or indirectly','所有schema类型的基类，它们都直接或者间接继承该类型','1','TRUE','PUBLIC',44,'ONLINE','2023-09-01 00:00:00','2023-09-01 00:00:00',0,null,null,'Thing');
@@ -335,6 +464,30 @@ INSERT INTO kg_role (`id`,`gmt_create`,`gmt_modified`,`role_name`,`permission_de
 
 INSERT INTO kg_resource_permission (`gmt_create`,`gmt_modified`,`user_no`,`resource_id`,`role_id`,`resource_tag`,`status`,`expire_date`) VALUES(now(),now(),'openspg',0,1,'PLATFORM','1',null);
 
-INSERT INTO kg_config (`id`,`gmt_create`,`gmt_modified`,`project_id`,`config_name`,`config_id`,`version`,`config`,`status`,`description`,`resource_id`,`resource_type`,`user_no`) VALUES(1,now(),now(),'0','KAG Support Model','KAG_SUPPORT_MODEL','1','[{"id":1,"vendor":"vllm","logo":"/img/logo/vllm.png","params":[{"ename":"base_url","cname":"base_url","required":true,"defaultValue":""},{"ename":"model","cname":"model","required":true,"defaultValue":""},{"ename":"desc","cname":"desc","required":true,"formProps":{"allowClear":true,"placeholder":"Please enter remarks for partitioning."}}]},{"id":2,"vendor":"maas","logo":"/img/logo/maas.png","params":[{"ename":"base_url","cname":"base_url","required":true,"defaultValue":""},{"ename":"api_key","cname":"api_key ","required":true,"defaultValue":""},{"ename":"model","cname":"model","required":true,"defaultValue":""},{"ename":"temperature","cname":"temperature","required":true,"formType":"number","defaultValue":0.7},{"ename":"stream","cname":"stream","required":true,"defaultValue":"False"},{"ename":"desc","cname":"desc","required":true,"formProps":{"allowClear":true,"placeholder":"Please enter remarks for partitioning."}}]},{"id":3,"vendor":"Ollama","logo":"/img/logo/ollama.png","params":[{"ename":"base_url","cname":"base_url","required":true,"defaultValue":""},{"ename":"model","cname":"model","required":true,"defaultValue":""},{"ename":"desc","cname":"desc","required":true,"formProps":{"allowClear":true,"placeholder":"Please enter remarks for partitioning."}}]}]',1,null,null,'SYSTEM_CONFIG','');
-INSERT INTO kg_config (`id`,`gmt_create`,`gmt_modified`,`project_id`,`config_name`,`config_id`,`version`,`config`,`status`,`description`,`resource_id`,`resource_type`,`user_no`) VALUES(2,now(),now(),'0','Global Configuration','KAG_CONFIG','1','',1,null,null,'CONFIG','admin');
-INSERT INTO kg_config (`id`,`gmt_create`,`gmt_modified`,`project_id`,`config_name`,`config_id`,`version`,`config`,`status`,`description`,`resource_id`,`resource_type`,`user_no`) VALUES(3,now(),now(),'0','KAG Environment Configuration','KAG_ENV','1','{"configTitle":{"graph_store":{"id":1,"title":[{"ename":"database","cname":"database","required":true,"defaultValue":"kag","formProps":{"disabled":true}},{"ename":"password","cname":"password","required":true,"defaultValue":""},{"ename":"uri","cname":"uri","required":true,"defaultValue":""},{"ename":"user","cname":"user","required":true,"defaultValue":""}]},"vectorizer":{"id":2,"title":[{"ename":"type","cname":"type","required":true,"defaultValue":"openai","formProps":{"disabled":true}},{"ename":"model","cname":"model","required":true,"defaultValue":""},{"ename":"base_url","cname":"base_url","required":true,"defaultValue":""},{"ename":"api_key","cname":"api_key","required":true,"defaultValue":""}]},"prompt":{"id":3,"title":[{"ename":"biz_scene","cname":"biz_scene","required":true,"defaultValue":""},{"ename":"language","cname":"language","required":true,"defaultValue":""}]}}}',1,null,null,'SYSTEM_CONFIG','');
+INSERT INTO kg_config (`id`,`gmt_create`,`gmt_modified`,`project_id`,`config_name`,`config_id`,`version`,`config`,`status`,`description`,`resource_id`,`resource_type`,`user_no`) VALUES(1,now(),now(),'0','KAG Support Model','KAG_SUPPORT_MODEL','1','[{"id":1,"vendor":"vllm","logo":"/img/logo/vllm.png","params":[{"ename":"base_url","cname":"base_url","required":true,"defaultValue":""},{"ename":"model","cname":"model","required":true,"defaultValue":""},{"ename":"desc","cname":"desc","required":true,"formProps":{"allowClear":true,"placeholder":"Please enter remarks for partitioning."}}]},{"id":2,"vendor":"maas","logo":"/img/logo/maas.png","params":[{"ename":"base_url","cname":"base_url","required":true,"defaultValue":""},{"ename":"api_key","cname":"api_key ","required":true,"defaultValue":""},{"ename":"model","cname":"model","required":true,"defaultValue":""},{"ename":"temperature","cname":"temperature","required":true,"formType":"number","defaultValue":0.7},{"ename":"stream","cname":"stream","required":true,"defaultValue":"False"},{"ename":"desc","cname":"desc","required":true,"formProps":{"allowClear":true,"placeholder":"Please enter remarks for partitioning."}}]},{"id":3,"vendor":"ollama","logo":"/img/logo/ollama.png","params":[{"ename":"base_url","cname":"base_url","required":true,"defaultValue":""},{"ename":"model","cname":"model","required":true,"defaultValue":""},{"ename":"desc","cname":"desc","required":true,"formProps":{"allowClear":true,"placeholder":"Please enter remarks for partitioning."}}]}]',1,null,null,'SYSTEM_CONFIG','');
+INSERT INTO kg_config (`id`,`gmt_create`,`gmt_modified`,`project_id`,`config_name`,`config_id`,`version`,`config`,`status`,`description`,`resource_id`,`resource_type`,`user_no`) VALUES(3,now(),now(),'0','KAG Environment Configuration','KAG_ENV','1','{"showProfilePicture":false,"showUserConfig":true,"showLinks":false,"configTitle":{"graph_store":{"id":1,"title":[{"ename":"database","cname":"database","required":true,"inputType":"text","defaultValue":"kag","formProps":{"disabled":true}},{"ename":"password","cname":"password","required":true,"inputType":"text","defaultValue":"neo4j@openspg"},{"ename":"uri","cname":"uri","required":true,"inputType":"text","defaultValue":"neo4j://release-openspg-neo4j:7687"},{"ename":"user","cname":"user","required":true,"inputType":"text","defaultValue":"neo4j"}]},"prompt":{"id":3,"title":[{"ename":"language","cname":"语言","required":true,"defaultValue":"zh","inputType":"select","formProps":{"options":[{"label":"中文","value":"zh"},{"label":"英文","value":"en"}]}}]}}}',1,null,null,'SYSTEM_CONFIG','');
+INSERT INTO kg_config (`id`,`gmt_create`,`gmt_modified`,`project_id`,`config_name`,`config_id`,`version`,`config`,`status`,`description`,`resource_id`,`resource_type`,`user_no`) VALUES(6,now(),now(),'0','APP_CHAT','APP_CHAT','1','[{"id":2,"cname":"推理问答","ename":"think_pipeline","logo":"/img/logo/modal_2.png","cdesc":"基于蚂蚁集团开源的专业领域知识服务框架KAG搭建的问答模板，擅长逻辑推理、数值计算等任务，可以协助解答相关问题、提供信息支持或进行数据分析","edesc":"The Q&A module, built on Ant Group\'s open-source KAG framework (a domain-specific knowledge service platform), demonstrates strong capabilities in logical reasoning and numerical computations. It effectively assists with problem-solving, delivers informational support, and performs data analysis tasks","thinking_enabled":{"defaultValue":true,"disabled":false}},{"id":4,"cname":"KAG Model问答","ename":"kag_thinker_pipeline","logo":"/img/logo/modal_2.png","thinking_enabled":{"defaultValue":true,"disabled":true},"cdesc":"基于蚂蚁集团开源的思考大模型及KAG搭建的问答模板，擅长逻辑推理、数值计算等任务，可以协助解答相关问题、提供信息支持或进行数据分析","edesc":"The Q&A template built on Ant Group\'s open-source thinking large model and KAG is excellent at tasks such as logical reasoning and numerical calculations. It can assist in answering relevant questions, providing information support, or conducting data analysis."}]', 1, NULL, NULL, 'SYSTEM_CONFIG', 'system');
+INSERT INTO kg_config (`id`,`gmt_create`,`gmt_modified`,`project_id`,`config_name`,`config_id`,`version`,`config`,`status`,`description`,`resource_id`,`resource_type`,`user_no`) VALUES(8,now(),now(),'0','PROVIDER BASE INFO','PROVIDER_BASE_INFO','1','{"modelType":{"OpenAI_chat":"maas","Google_embedding":"openai","OpenAI_embedding":"openai","SILICONFLOW_chat":"maas","Ollama_chat":"ollama","DeepSeek_chat":"maas","BaiLian_embedding":"openai","ant_gpt_chat":"ant_gpt","maya_chat":"maya","Google_chat":"maas","OpenRouter_chat":"maas","ant_bailian_chat":"ant_bailian","ant_deepseek_chat":"ant_deepseek","maya_embedding":"maya","SILICONFLOW_embedding":"openai","zdfmng_stream_chat":"zdfmng_stream","BaiLian_chat":"maas","Ollama_embedding":"openai"}}',1,null,null,'SYSTEM_CONFIG','system');
+INSERT INTO kg_config (`id`,`gmt_create`,`gmt_modified`,`project_id`,`config_name`,`config_id`,`version`,`config`,`status`,`description`,`resource_id`,`resource_type`,`user_no`) VALUES(11,NOW(),NOW(),'0','FEEDBACK_REASON','FEEDBACK_REASON','1','[{"label":"理解","value":"UNDERSTAND","child":[{"value":"DISOBEYING_INSTRUCTIONS","label":"不理解问题/不服从指令"},{"value":"NOT_UNDERSTANDING_THE_CONTEXT","label":"不理解上下文"}]},{"label":"答案","value":"ANSWER","child":[{"value":"HALLUCINATIONS","label":"事实错误/幻觉"},{"value":"REASONING","label":"推理/计算错误"},{"value":"INCOMPLETE","label":"答案截断/不完整"},{"value":"REPEAT_OUTPUT","label":"重复输出"},{"value":"INCONSISTENT_LANGUAGE","label":"语言不一致"},{"value":"FORMAT_ERROR","label":"格式错误"},{"value":"CODE_SYNTAX_ERROR","label":"代码语法错误"},{"value":"IMAGE_COMPREHENSION_ERROR","label":"图片理解错误"},{"value":"LOW_QUALITY_IMAGE_GENERATION","label":"图片生成质量低"},{"value":"BORING","label":"内容没有帮助/无趣"},{"value":"CONTENT_IS_TOO_SHORT","label":"内容过短"},{"value":"REDUNDANCY","label":"内容过长/冗余"}]},{"label":"安全","value":"SAFETY","child":[{"value":"HARMFUL_CONTENT","label":"内容有害（违法违规）"},{"value":"ETHICS","label":"价值观（伦理道德）"},{"value":"PRIVACY_LEAKAGE","label":"隐私泄露"},{"value":"EXCESSIVE_REFUSAL_TO_ANSWER","label":"过度拒答"}]},{"label":"产品","value":"PRODUCT","child":[{"value":"NO_RESPONSE","label":"系统BUG/无响应"},{"value":"SLOW_OPERATION","label":"运行慢/体验差"}]}]',1,null,null,'CONFIG','admin');
+
+INSERT INTO kg_model_provider (`id`,`gmt_create`,`gmt_modified`,`name`,`provider`,`status`,`page_mode`,`model_type`,`logo`,`tags`,`params`,`creator`,`modifier`) VALUES(10,now(),now(),'BaiLing','BaiLing','1','SINGLE','chat','/img/logo/bailing.png','LLM','[]','system','system');
+INSERT INTO kg_model_provider (`id`,`gmt_create`,`gmt_modified`,`name`,`provider`,`status`,`page_mode`,`model_type`,`logo`,`tags`,`params`,`creator`,`modifier`) VALUES(20,now(),now(),'BaiLian','BaiLian','1','SINGLE','chat,embedding','/img/logo/bailian.png','LLM,TEXT EMBEDDING','[]','system','system');
+INSERT INTO kg_model_provider (`id`,`gmt_create`,`gmt_modified`,`name`,`provider`,`status`,`page_mode`,`model_type`,`logo`,`tags`,`params`,`creator`,`modifier`) VALUES(30,now(),now(),'DeepSeek','DeepSeek','1','ALL','chat','/img/logo/deepseek.png','LLM','[{"inputType":"text","cname":"base_url","ename":"base_url","required":true,"defaultValue":"https://api.siliconflow.cn/v1"},{"inputType":"text","cname":"API-Key","ename":"api_key","required":true}]','system','system');
+INSERT INTO kg_model_provider (`id`,`gmt_create`,`gmt_modified`,`name`,`provider`,`status`,`page_mode`,`model_type`,`logo`,`tags`,`params`,`creator`,`modifier`) VALUES(40,now(),now(),'Ollama','Ollama','1','SINGLE','chat,embedding','/img/logo/ollama.png','LLM,TEXT EMBEDDING','[]','system','system');
+INSERT INTO kg_model_provider (`id`,`gmt_create`,`gmt_modified`,`name`,`provider`,`status`,`page_mode`,`model_type`,`logo`,`tags`,`params`,`creator`,`modifier`) VALUES(50,now(),now(),'SILICONFLOW','SILICONFLOW','1','SINGLE','chat,embedding','/img/logo/siliconflow.png','LLM,TEXT EMBEDDING','[]','system','system');
+INSERT INTO kg_model_provider (`id`,`gmt_create`,`gmt_modified`,`name`,`provider`,`status`,`page_mode`,`model_type`,`logo`,`tags`,`params`,`creator`,`modifier`) VALUES(60,now(),now(),'OpenAI','OpenAI','1','SINGLE','chat,embedding','/img/logo/openai.png','LLM,TEXT EMBEDDING','[]','system','system');
+INSERT INTO kg_model_provider (`id`,`gmt_create`,`gmt_modified`,`name`,`provider`,`status`,`page_mode`,`model_type`,`logo`,`tags`,`params`,`creator`,`modifier`) VALUES(70,now(),now(),'OpenRouter','OpenRouter','1','SINGLE','chat','/img/logo/openrouter.png','LLM','[]','system','system');
+
+INSERT INTO kg_provider_param (`id`,`gmt_create`,`gmt_modified`,`provider`,`model_type`,`model_name`,`params`,`creator`,`modifier`) VALUES(1,now(),now(),'BaiLing','chat',null,'[{"inputType":"text","cname":"base_url","ename":"base_url","required":true,"defaultValue":"https://antchat.alipay.com/v1"},{"inputType":"text","cname":"API-Key","ename":"api_key","required":true},{"inputType":"text","cname":"Model","ename":"model","required":true}]','system','system');
+INSERT INTO kg_provider_param (`id`,`gmt_create`,`gmt_modified`,`provider`,`model_type`,`model_name`,`params`,`creator`,`modifier`) VALUES(2,now(),now(),'BaiLian','chat',null,'[{"inputType":"text","cname":"base_url","ename":"base_url","required":true,"defaultValue":"https://dashscope.aliyuncs.com/compatible-mode/v1"},{"inputType":"text","cname":"API-Key","ename":"api_key","required":true},{"inputType":"text","cname":"Model","ename":"model","required":true}]','system','system');
+INSERT INTO kg_provider_param (`id`,`gmt_create`,`gmt_modified`,`provider`,`model_type`,`model_name`,`params`,`creator`,`modifier`) VALUES(3,now(),now(),'BaiLian','embedding',null,'[{"inputType":"text","cname":"base_url","ename":"base_url","required":true,"defaultValue":"https://dashscope.aliyuncs.com/compatible-mode/v1"},{"inputType":"text","cname":"API-Key","ename":"api_key","required":true},{"inputType":"text","cname":"Model","ename":"model","required":true}]','system','system');
+INSERT INTO kg_provider_param (`id`,`gmt_create`,`gmt_modified`,`provider`,`model_type`,`model_name`,`params`,`creator`,`modifier`) VALUES(4,now(),now(),'ollama','chat',null,'[{"inputType":"select","cname":"Model","ename":"model","required":true},{"inputType":"text","cname":"base_url","ename":"base_url","required":true}]','system','system');
+INSERT INTO kg_provider_param (`id`,`gmt_create`,`gmt_modified`,`provider`,`model_type`,`model_name`,`params`,`creator`,`modifier`) VALUES(5,now(),now(),'ollama','embedding',null,'[{"inputType":"select","cname":"Model","ename":"model","required":true},{"inputType":"text","cname":"base_url","ename":"base_url","required":true}]','system','system');
+INSERT INTO kg_provider_param (`id`,`gmt_create`,`gmt_modified`,`provider`,`model_type`,`model_name`,`params`,`creator`,`modifier`) VALUES(6,now(),now(),'SILICONFLOW','chat',null,'[{"inputType":"text","cname":"base_url","ename":"base_url","required":true,"defaultValue":"https://api.siliconflow.cn/v1"},{"inputType":"text","cname":"API-Key","ename":"api_key","required":true},{"inputType":"text","cname":"Model","ename":"model","required":true}]','system','system');
+INSERT INTO kg_provider_param (`id`,`gmt_create`,`gmt_modified`,`provider`,`model_type`,`model_name`,`params`,`creator`,`modifier`) VALUES(7,now(),now(),'SILICONFLOW','embedding',null,'[{"inputType":"text","cname":"base_url","ename":"base_url","required":true,"defaultValue":"https://api.siliconflow.cn/v1"},{"inputType":"text","cname":"API-Key","ename":"api_key","required":true},{"inputType":"text","cname":"Model","ename":"model","required":true}]','system','system');
+INSERT INTO kg_provider_param (`id`,`gmt_create`,`gmt_modified`,`provider`,`model_type`,`model_name`,`params`,`creator`,`modifier`) VALUES(8,now(),now(),'OpenAI','chat',null,'[{"inputType":"text","cname":"base_url","ename":"base_url","required":true,"defaultValue":"https://api.openai.com"},{"inputType":"text","cname":"API-Key","ename":"api_key","required":true},{"inputType":"text","cname":"Model","ename":"model","required":true}]','system','system');
+INSERT INTO kg_provider_param (`id`,`gmt_create`,`gmt_modified`,`provider`,`model_type`,`model_name`,`params`,`creator`,`modifier`) VALUES(9,now(),now(),'OpenAI','embedding',null,'[{"inputType":"text","cname":"base_url","ename":"base_url","required":true,"defaultValue":"https://api.openai.com"},{"inputType":"text","cname":"API-Key","ename":"api_key","required":true},{"inputType":"text","cname":"Model","ename":"model","required":true}]','system','system');
+INSERT INTO kg_provider_param (`id`,`gmt_create`,`gmt_modified`,`provider`,`model_type`,`model_name`,`params`,`creator`,`modifier`) VALUES(10,now(),now(),'OpenRouter','chat',null,'[{"inputType":"text","cname":"base_url","ename":"base_url","required":true,"defaultValue":"https://openrouter.ai/api/v1"},{"inputType":"text","cname":"API-Key","ename":"api_key","required":true},{"inputType":"text","cname":"Model","ename":"model","required":true}]','system','system');
+
+INSERT INTO kg_model_detail (`id`,`gmt_create`,`gmt_modified`,`provider`,`type`,`name`,`description`,`params`,`creator`,`modifier`) VALUES(1,now(),now(),'DeepSeek','chat','deepseek-chat','deepseek-chat',null,'system','system');
+INSERT INTO kg_model_detail (`id`,`gmt_create`,`gmt_modified`,`provider`,`type`,`name`,`description`,`params`,`creator`,`modifier`) VALUES(2,now(),now(),'DeepSeek','chat','deepseek-reasoner','deepseek-reasoner',null,'system','system');

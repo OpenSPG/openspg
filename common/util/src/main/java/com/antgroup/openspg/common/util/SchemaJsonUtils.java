@@ -11,7 +11,7 @@
  * or implied.
  */
 
-package com.antgroup.openspg.server.api.facade;
+package com.antgroup.openspg.common.util;
 
 import com.antgroup.openspg.core.schema.model.constraint.BaseConstraintItem;
 import com.antgroup.openspg.core.schema.model.constraint.ConstraintTypeEnum;
@@ -39,6 +39,7 @@ import com.antgroup.openspg.core.schema.model.type.BasicTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.ConceptType;
 import com.antgroup.openspg.core.schema.model.type.EntityType;
 import com.antgroup.openspg.core.schema.model.type.EventType;
+import com.antgroup.openspg.core.schema.model.type.IndexType;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
 import com.antgroup.openspg.core.schema.model.type.StandardType;
 import com.google.gson.Gson;
@@ -68,6 +69,7 @@ public class SchemaJsonUtils {
                     .registerSubtype(EntityType.class, SPGTypeEnum.ENTITY_TYPE.name())
                     .registerSubtype(ConceptType.class, SPGTypeEnum.CONCEPT_TYPE.name())
                     .registerSubtype(EventType.class, SPGTypeEnum.EVENT_TYPE.name())
+                    .registerSubtype(IndexType.class, SPGTypeEnum.INDEX_TYPE.name())
                     .registerSubtype(StandardType.class, SPGTypeEnum.STANDARD_TYPE.name())
                     .registerSubtype(TextBasicType.class, BasicTypeEnum.TEXT.name())
                     .registerSubtype(LongBasicType.class, BasicTypeEnum.LONG.name())

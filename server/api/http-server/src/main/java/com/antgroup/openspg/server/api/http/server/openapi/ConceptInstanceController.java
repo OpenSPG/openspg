@@ -57,7 +57,9 @@ public class ConceptInstanceController extends BaseController {
   @RequestMapping(method = RequestMethod.GET)
   @ResponseBody
   public ResponseEntity<Object> query(
-      @RequestParam String conceptType, @RequestParam Set<String> conceptInstanceIds) {
+      @RequestParam(required = false) Long projectId,
+      @RequestParam String conceptType,
+      @RequestParam Set<String> conceptInstanceIds) {
     return HttpBizTemplate.execute(
         new HttpBizCallback<List<ConceptInstanceResponse>>() {
           @Override
@@ -65,7 +67,7 @@ public class ConceptInstanceController extends BaseController {
 
           @Override
           public List<ConceptInstanceResponse> action() {
-            return conceptInstanceManager.query(conceptType, conceptInstanceIds);
+            return conceptInstanceManager.query(projectId, conceptType, conceptInstanceIds);
           }
         });
   }

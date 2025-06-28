@@ -36,6 +36,7 @@ import java.util.List;
  *   <li>entity type: {@link EntityType}
  *   <li>concept type: {@link ConceptType}
  *   <li>event type: {@link EventType}
+ *   <li>index type: {@link IndexType}
  * </ul>
  */
 public abstract class BaseAdvancedType extends BaseSPGType {

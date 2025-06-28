@@ -33,7 +33,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.util.UriComponents;
@@ -41,6 +43,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Slf4j
 public class OSSClient implements ObjectStorageClient {
+
+  private static final String SLASH = "/";
 
   private final OSS ossClient;
 
@@ -209,8 +213,12 @@ public class OSSClient implements ObjectStorageClient {
   @Override
   public Boolean removeObject(String bucketName, String fileKey) {
     try {
-      ossClient.deleteObject(bucketName, fileKey);
-      return true;
+      if (isDirectory(bucketName, fileKey)) {
+        return removeDirectory(bucketName, fileKey);
+      } else {
+        ossClient.deleteObject(bucketName, fileKey);
+        return true;
+      }
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new RuntimeException("OSS removeObject Exception:" + e.getMessage(), e);
@@ -220,25 +228,67 @@ public class OSSClient implements ObjectStorageClient {
   @Override
   public Boolean removeDirectory(String bucketName, String directoryPath) {
     try {
-      ObjectListing objectListing;
+      List<String> files = getAllFilesRecursively(bucketName, directoryPath);
 
-      do {
-        objectListing = ossClient.listObjects(bucketName, directoryPath);
-        for (OSSObjectSummary objectSummary : objectListing.getObjectSummaries()) {
-          String objectName = objectSummary.getKey();
-          log.info("OSS Deleting: " + objectName);
-          if (objectName.startsWith(directoryPath)) {
-            removeObject(bucketName, objectName);
-          }
+      for (String file : files) {
+        log.info("OSS Deleting: " + file);
+        if (file.startsWith(directoryPath)) {
+          removeObject(bucketName, file);
         }
-        objectListing.getNextMarker();
-      } while (objectListing.isTruncated());
-
+      }
       return true;
     } catch (Exception e) {
       log.error(e.getMessage(), e);
-      throw new RuntimeException("OSS removeDirectory Exception:" + e.getMessage(), e);
+      throw new RuntimeException("OSS removeDirectory Exception: " + e.getMessage(), e);
     }
+  }
+
+  @Override
+  public Boolean isDirectory(String bucketName, String path) {
+    try {
+      ObjectListing objectListing = ossClient.listObjects(bucketName, path);
+      if (!objectListing.getCommonPrefixes().isEmpty()
+          || !objectListing.getObjectSummaries().isEmpty()) {
+        if (path.endsWith(SLASH)) {
+          return true;
+        }
+      }
+      for (OSSObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+        String objectName = objectSummary.getKey();
+        if (objectName.endsWith(SLASH) || !objectName.equals(path)) {
+          return true;
+        }
+      }
+      return false;
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new RuntimeException("OSS isDirectory Exception: " + e.getMessage(), e);
+    }
+  }
+
+  @Override
+  public List<String> getAllFilesRecursively(String bucketName, String directoryPath) {
+    List<String> filePaths = new ArrayList<>();
+    try {
+      String nextMarker;
+      do {
+        ObjectListing objectListing = ossClient.listObjects(bucketName, directoryPath);
+        List<OSSObjectSummary> objectSummaries = objectListing.getObjectSummaries();
+        for (OSSObjectSummary summary : objectSummaries) {
+          if (summary.getKey().endsWith(SLASH)) {
+            filePaths.addAll(getAllFilesRecursively(bucketName, summary.getKey()));
+          } else {
+            filePaths.add(summary.getKey());
+          }
+        }
+        nextMarker = objectListing.getNextMarker();
+      } while (nextMarker != null);
+
+    } catch (Exception e) {
+      log.error("OSS getAllFilesRecursively Exception: " + e.getMessage(), e);
+      throw new RuntimeException("OSS getAllFilesRecursively Exception: " + e.getMessage(), e);
+    }
+    return filePaths;
   }
 
   @Override
@@ -249,6 +299,27 @@ public class OSSClient implements ObjectStorageClient {
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new RuntimeException("OSS getContentLength Exception:" + e.getMessage(), e);
+    }
+  }
+
+  @Override
+  public long getStorageSize(String bucketName, String path) {
+    long totalSizeInBytes = 0L;
+
+    try {
+      String nextMarker;
+      do {
+        ObjectListing objectListing = ossClient.listObjects(bucketName, path);
+        for (OSSObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+          totalSizeInBytes += objectSummary.getSize();
+        }
+        nextMarker = objectListing.getNextMarker();
+      } while (nextMarker != null);
+      return totalSizeInBytes;
+
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new RuntimeException("OSS getStorageSize Exception:" + e.getMessage(), e);
     }
   }
 }

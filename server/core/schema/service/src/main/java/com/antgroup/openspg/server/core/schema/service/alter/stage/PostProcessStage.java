@@ -13,10 +13,12 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.stage;
 
+import com.antgroup.openspg.common.util.constants.CommonConstant;
 import com.antgroup.openspg.core.schema.model.SPGSchema;
 import com.antgroup.openspg.core.schema.model.SPGSchemaAlterCmd;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
+import com.antgroup.openspg.server.common.service.project.ProjectService;
 import com.antgroup.openspg.server.core.schema.service.alter.model.SchemaAlterContext;
 import com.antgroup.openspg.server.core.schema.service.alter.sync.BaseSchemaSyncer;
 import com.antgroup.openspg.server.core.schema.service.alter.sync.SchemaStorageEnum;
@@ -28,6 +30,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Post process after saving schema metadata to db. such as notify other system、save snapshot etc.
@@ -37,6 +41,7 @@ public class PostProcessStage extends BaseAlterStage {
 
   @Autowired private SchemaSyncerFactory schemaSyncerFactory;
   @Autowired private SPGTypeService spgTypeService;
+  @Autowired private ProjectService projectManager;
 
   /** Target storage to sync schema */
   private static final List<SchemaStorageEnum> TARGET_SYNC_STORE =
@@ -58,11 +63,29 @@ public class PostProcessStage extends BaseAlterStage {
     SPGSchemaAlterCmd schemaEditCmd =
         new SPGSchemaAlterCmd(new SPGSchema(spgTypes, spreadStdTypeNames));
 
+    Long projectId = context.getProject().getId();
+    String graphStoreEngineType = getGraphStoreEngineType(projectId);
+    // TODO: 这里先跳过，kgfabric driver schema/索引同步打通后放开 @秉初 底层支持索引灵活变更的接口5月底给出，排期530开发
+    if (CommonConstant.KGFABRIC_GRAPH_STORE.equalsIgnoreCase(graphStoreEngineType)) {
+      return;
+    }
     for (SchemaStorageEnum targetStorage : TARGET_SYNC_STORE) {
       BaseSchemaSyncer schemaSyncer = schemaSyncerFactory.getSchemaSyncer(targetStorage);
       if (schemaSyncer != null) {
         schemaSyncer.syncSchema(context.getProject().getId(), schemaEditCmd);
       }
     }
+  }
+
+  /**
+   * TODO：获取存储引擎类型的临时方法，对接kgfabric后下掉，这里不感知引擎类型
+   *
+   * @param projectId
+   * @return
+   */
+  private String getGraphStoreEngineType(Long projectId) {
+    String graphStoreUrl = projectManager.getGraphStoreUrl(projectId);
+    UriComponents uriComponents = UriComponentsBuilder.fromUriString(graphStoreUrl).build();
+    return uriComponents.getScheme();
   }
 }

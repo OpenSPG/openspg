@@ -42,6 +42,8 @@ public interface ProjectDOMapper {
 
   void deleteFromKgBuilderJob(Long id);
 
+  void deleteFromKgResourcePermission(Long projectId);
+
   int insert(ProjectDO record);
 
   int insertSelective(ProjectDO record);

@@ -13,7 +13,6 @@
 package com.antgroup.openspg.server.core.scheduler.service.task.async.builder;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
 import com.antgroup.openspg.builder.core.runtime.BuilderContext;
 import com.antgroup.openspg.builder.model.pipeline.config.Neo4jSinkNodeConfig;
 import com.antgroup.openspg.builder.model.record.RecordAlterOperationEnum;
@@ -36,19 +35,37 @@ import com.antgroup.openspg.server.core.scheduler.service.common.MemoryTaskServe
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
 import com.antgroup.openspg.server.core.scheduler.service.utils.SchedulerUtils;
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("kagWriterAsyncTask")
 public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
+
+  private static final RejectedExecutionHandler handler =
+      (r, executor) -> {
+        try {
+          executor.getQueue().put(r);
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+        }
+      };
+
+  private static ThreadPoolExecutor executor;
 
   @Autowired private DefaultValue value;
 
@@ -60,12 +77,26 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
 
   @Autowired private BuilderJobService builderJobService;
 
+  @PostConstruct
+  public void init() {
+    if (executor == null) {
+      executor =
+          new ThreadPoolExecutor(
+              value.getModelExecuteNum(),
+              value.getModelExecuteNum(),
+              60 * 60,
+              TimeUnit.SECONDS,
+              new LinkedBlockingQueue<>(1000),
+              handler);
+    }
+  }
+
   @Override
   public String submit(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
     String key =
-        CommonUtils.getTaskStorageFileKey(
+        CommonUtils.getTaskStoragePathKey(
             task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
     SchedulerTask memoryTask = memoryTaskServer.getTask(key);
     if (memoryTask != null) {
@@ -103,6 +134,8 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
     switch (task.getStatus()) {
       case RUNNING:
         break;
+      case WAIT:
+        return SchedulerEnum.TaskStatus.RUNNING;
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
@@ -175,91 +208,122 @@ public class KagWriterAsyncTask extends AsyncTaskExecuteTemplate {
 
     @Override
     public String call() throws Exception {
-      List<SubGraphRecord> subGraphList = Lists.newArrayList();
       addTraceLog("Start write task!");
+      SchedulerTask task = context.getTask();
+      String pathKey =
+          CommonUtils.getTaskStoragePathKey(
+              task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
+
+      AtomicLong nodes = new AtomicLong(0);
+      AtomicLong edges = new AtomicLong(0);
+
+      List<Future<?>> futures = new ArrayList<>();
+
       RecordAlterOperationEnum action = RecordAlterOperationEnum.UPSERT;
       if (RecordAlterOperationEnum.DELETE.name().equalsIgnoreCase(this.action)) {
         action = RecordAlterOperationEnum.DELETE;
       }
-      for (String input : inputs) {
-        String data = objectStorageClient.getString(value.getBuilderBucketName(), input);
-        List<SubGraphRecord> subGraphs =
-            JSON.parseObject(data, new TypeReference<List<SubGraphRecord>>() {});
-        writer(value, projectManager, context, action, subGraphs);
-        subGraphList.addAll(simpleSubGraph(subGraphs));
+      Neo4jSinkWriter writer = getNeo4jSinkWriter(value, projectManager, context, action);
+      for (Integer i = 0; i < inputs.size(); i++) {
+        final Integer inputIndex = i;
+        List<String> files =
+            objectStorageClient.getAllFilesRecursively(value.getBuilderBucketName(), inputs.get(i));
+
+        for (Integer f = 0; f < files.size(); f++) {
+          final Integer fileIndex = f;
+          final String filePath = files.get(f);
+          addTraceLog(
+              "Write ThreadPool. size:%s active:%s completed:%s total:%s queue:%s",
+              executor.getPoolSize(),
+              executor.getActiveCount(),
+              executor.getCompletedTaskCount(),
+              executor.getTaskCount(),
+              executor.getQueue().size());
+          Future<?> future =
+              executor.submit(
+                  () -> {
+                    String data =
+                        objectStorageClient.getString(value.getBuilderBucketName(), filePath);
+                    SubGraphRecord subGraph = JSON.parseObject(data, SubGraphRecord.class);
+                    String indexStr = (fileIndex + 1) + "/" + files.size();
+                    addTraceLog("Invoke the write operator. index:%s", indexStr);
+                    writer(writer, subGraph, indexStr);
+                    simpleSubGraph(subGraph);
+                    SchedulerUtils.getGraphSize(subGraph, nodes, edges);
+                    String fileKey =
+                        CommonUtils.getTaskStorageFileKey(pathKey, inputIndex + "_" + fileIndex);
+                    objectStorageClient.saveString(
+                        value.getBuilderBucketName(), JSON.toJSONString(subGraph), fileKey);
+                    addTraceLog(
+                        "Store the results of the alignment operator. file:%s/%s",
+                        value.getBuilderBucketName(), fileKey);
+                  });
+          futures.add(future);
+        }
       }
-      AtomicLong nodes = new AtomicLong(0);
-      AtomicLong edges = new AtomicLong(0);
-      SchedulerUtils.getGraphSize(subGraphList, nodes, edges);
+      for (Future<?> future : futures) {
+        try {
+          future.get();
+        } catch (InterruptedException | ExecutionException e) {
+          throw new RuntimeException("invoke write Exception", e);
+        }
+      }
+
       addTraceLog("Write task complete. nodes:%s. edges:%s", nodes.get(), edges.get());
-      SchedulerTask task = context.getTask();
-      String fileKey =
-          CommonUtils.getTaskStorageFileKey(
-              task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
-      objectStorageClient.saveString(
-          value.getBuilderBucketName(), JSON.toJSONString(subGraphList), fileKey);
-      addTraceLog(
-          "Store the results of the write operator. file:%s/%s",
-          value.getBuilderBucketName(), fileKey);
-      return fileKey;
+      return pathKey;
     }
 
-    public List<SubGraphRecord> simpleSubGraph(List<SubGraphRecord> subGraphs) {
-      for (SubGraphRecord subGraph : subGraphs) {
-        subGraph
-            .getResultNodes()
-            .forEach(
-                node -> {
-                  Iterator<Map.Entry<String, Object>> iterator =
-                      node.getProperties().entrySet().iterator();
-                  while (iterator.hasNext()) {
-                    Map.Entry<String, Object> entry = iterator.next();
-                    if (entry.getKey().endsWith(VECTOR)) {
-                      iterator.remove();
-                    }
+    public void simpleSubGraph(SubGraphRecord subGraph) {
+      subGraph
+          .getResultNodes()
+          .forEach(
+              node -> {
+                Iterator<Map.Entry<String, Object>> iterator =
+                    node.getProperties().entrySet().iterator();
+                while (iterator.hasNext()) {
+                  Map.Entry<String, Object> entry = iterator.next();
+                  if (entry.getKey().endsWith(VECTOR)) {
+                    iterator.remove();
                   }
-                });
-      }
-      return subGraphs;
+                }
+              });
+
+      return;
     }
 
-    public void writer(
-        DefaultValue value,
-        ProjectService projectManager,
-        TaskExecuteContext context,
-        RecordAlterOperationEnum action,
-        List<SubGraphRecord> subGraphs) {
-      Neo4jSinkWriter writer =
-          new Neo4jSinkWriter(
-              UUID.randomUUID().toString(), "writer", new Neo4jSinkNodeConfig(true));
-      BuilderContext builderContext =
-          new BuilderContext()
-              .setProjectId(context.getInstance().getProjectId())
-              .setJobName("writer")
-              .setPythonExec(value.getPythonExec())
-              .setPythonPaths(value.getPythonPaths())
-              .setPythonEnv(value.getPythonEnv())
-              .setOperation(action)
-              .setEnableLeadTo(false)
-              .setProject(
-                  JSON.toJSONString(projectManager.queryById(context.getInstance().getProjectId())))
-              .setGraphStoreUrl(
-                  projectManager.getGraphStoreUrl(context.getInstance().getProjectId()));
-      writer.init(builderContext);
-      int index = 0;
-      for (SubGraphRecord subGraph : subGraphs) {
-        addTraceLog("Invoke the write operator. index:%s/%s", ++index, subGraphs.size());
-        writer.writeToNeo4j(subGraph);
-        int nodes =
-            CollectionUtils.isEmpty(subGraph.getResultNodes())
-                ? 0
-                : subGraph.getResultNodes().size();
-        int edges =
-            CollectionUtils.isEmpty(subGraph.getResultEdges())
-                ? 0
-                : subGraph.getResultEdges().size();
-        addTraceLog("Write operator was invoked successfully nodes:%s edges:%s", nodes, edges);
-      }
+    public void writer(Neo4jSinkWriter writer, SubGraphRecord subGraph, String indexStr) {
+      writer.writeToNeo4j(subGraph);
+      int nodes =
+          CollectionUtils.isEmpty(subGraph.getResultNodes()) ? 0 : subGraph.getResultNodes().size();
+      int edges =
+          CollectionUtils.isEmpty(subGraph.getResultEdges()) ? 0 : subGraph.getResultEdges().size();
+      addTraceLog(
+          "Write operator was invoked successfully index:%s nodes:%s edges:%s",
+          indexStr, nodes, edges);
     }
+  }
+
+  private static Neo4jSinkWriter getNeo4jSinkWriter(
+      DefaultValue value,
+      ProjectService projectManager,
+      TaskExecuteContext context,
+      RecordAlterOperationEnum action) {
+    Neo4jSinkWriter writer =
+        new Neo4jSinkWriter(UUID.randomUUID().toString(), "writer", new Neo4jSinkNodeConfig(true));
+    BuilderContext builderContext =
+        new BuilderContext()
+            .setProjectId(context.getInstance().getProjectId())
+            .setJobName("writer")
+            .setPythonExec(value.getPythonExec())
+            .setPythonPaths(value.getPythonPaths())
+            .setPythonEnv(value.getPythonEnv())
+            .setOperation(action)
+            .setEnableLeadTo(false)
+            .setProject(
+                JSON.toJSONString(projectManager.queryById(context.getInstance().getProjectId())))
+            .setGraphStoreUrl(
+                projectManager.getGraphStoreUrl(context.getInstance().getProjectId()));
+    writer.init(builderContext);
+    return writer;
   }
 }

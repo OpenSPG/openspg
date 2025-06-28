@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.server.api.facade.dto.common.request;
 
+import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.server.common.model.base.BaseRequest;
 import lombok.Data;
 
@@ -27,9 +28,17 @@ public class ProjectCreateRequest extends BaseRequest {
 
   private String namespace;
 
+  private String visibility;
+
   private Long tenantId;
 
-  private String config;
+  private JSONObject config;
 
   private Boolean autoSchema;
+
+  private String tag;
+
+  private String userNo;
+
+  private Boolean isKnext;
 }

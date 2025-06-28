@@ -55,6 +55,9 @@ public class PropertyRepositoryImpl implements PropertyRepository {
   @Override
   public int update(SimpleProperty simpleProperty) {
     OntologyPropertyDO propertyDO = SimplePropertyConvertor.toUpdateDO(simpleProperty);
+    if (propertyDO.getIndexType() == null) {
+      ontologyPropertyDOMapper.deleteIndexType(propertyDO);
+    }
     return ontologyPropertyDOMapper.updateByPrimaryKeySelective(propertyDO);
   }
 

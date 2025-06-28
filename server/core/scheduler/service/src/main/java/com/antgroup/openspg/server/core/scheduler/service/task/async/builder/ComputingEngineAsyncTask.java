@@ -90,18 +90,26 @@ public class ComputingEngineAsyncTask extends AsyncTaskExecuteTemplate {
   public JSONObject initExtension(BuilderJob builderJob, SchedulerInstance instance) {
     JSONObject extension = JSONObject.parseObject(builderJob.getComputingConf());
     String command = extension.getString(BuilderConstant.COMMAND);
+    String url =
+        StringUtils.isBlank(value.getWebRequestUrl())
+            ? value.getSchemaUrlHost()
+            : value.getWebRequestUrl();
     if (StringUtils.isBlank(command) && !BuilderConstant.KAG_COMMAND.equals(builderJob.getType())) {
       Project project = projectManager.queryById(builderJob.getProjectId());
-      JSONObject config =
-          CommonUtils.getKagBuilderConfig(project, builderJob, value.getSchemaUrlHost());
+      JSONObject config = CommonUtils.getKagBuilderConfig(project, builderJob, url);
       String input = CommonUtils.getKagBuilderInput(builderJob, instance.getSchedulerDate());
       extension.put(
           BuilderConstant.COMMAND,
-          String.format(BuilderConstant.SPG_DEFAULT_COMMAND, config.toJSONString(), input));
+          String.format(
+              BuilderConstant.SPG_DEFAULT_COMMAND,
+              builderJob.getProjectId(),
+              url,
+              config.toJSONString(),
+              input));
     }
     putOrDefault(extension, BuilderConstants.PYTHON_EXEC_OPTION, value.getPythonExec());
     putOrDefault(extension, BuilderConstants.PYTHON_PATHS_OPTION, value.getPythonPaths());
-    putOrDefault(extension, BuilderConstants.SCHEMA_URL_OPTION, value.getSchemaUrlHost());
+    putOrDefault(extension, BuilderConstants.SCHEMA_URL_OPTION, url);
     putOrDefault(extension, BuilderConstants.PARALLELISM_OPTION, 1);
     String jobAction =
         (builderJob.getAction() != null)
@@ -242,10 +250,8 @@ public class ComputingEngineAsyncTask extends AsyncTaskExecuteTemplate {
   public Boolean stop(TaskExecuteContext context, String resource) {
     ComputingEngineClient client =
         ComputingEngineClientDriverManager.getClient(value.getComputingEngineUrl());
-    SchedulerJob job = context.getJob();
-    BuilderJob builderJob = builderJobService.getById(Long.valueOf(job.getInvokerId()));
     JSONObject extension = new JSONObject();
-    extension.put(ComputingEngineConstants.USER_NUMBER, builderJob.getModifyUser());
+    extension.put(ComputingEngineConstants.USER_NUMBER, ComputingEngineConstants.DEFAULT_NUMBER);
     return client.stop(extension, resource);
   }
 }

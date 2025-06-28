@@ -36,12 +36,12 @@ public class BuilderJobConvertor {
     return jobDO;
   }
 
-  public static BuilderJob toModel(BuilderJobDO schedulerJobDO) {
-    if (null == schedulerJobDO) {
+  public static BuilderJob toModel(BuilderJobDO builderJobDO) {
+    if (null == builderJobDO) {
       return null;
     }
 
-    BuilderJob job = DozerBeanMapperUtil.map(schedulerJobDO, BuilderJob.class);
+    BuilderJob job = DozerBeanMapperUtil.map(builderJobDO, BuilderJob.class);
     if (StringUtils.isBlank(job.getLifeCycle())) {
       job.setLifeCycle(SchedulerEnum.LifeCycle.ONCE.name());
     }
@@ -72,13 +72,13 @@ public class BuilderJobConvertor {
     return dos;
   }
 
-  public static List<BuilderJob> toModelList(List<BuilderJobDO> schedulerJobDOs) {
-    if (schedulerJobDOs == null) {
+  public static List<BuilderJob> toModelList(List<BuilderJobDO> builderJobDOS) {
+    if (builderJobDOS == null) {
       return null;
     }
     List<BuilderJob> jobs = Lists.newArrayList();
-    for (BuilderJobDO schedulerJobDO : schedulerJobDOs) {
-      jobs.add(toModel(schedulerJobDO));
+    for (BuilderJobDO builderJobDO : builderJobDOS) {
+      jobs.add(toModel(builderJobDO));
     }
     return jobs;
   }

@@ -13,7 +13,6 @@
 
 package com.antgroup.openspg.server.common.service.permission;
 
-import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.common.model.permission.Permission;
 import java.util.List;
 
@@ -37,17 +36,6 @@ public interface PermissionRepository {
   Integer update(Permission permission);
 
   /**
-   * query all permission by resourceId
-   *
-   * @param resourceId
-   * @param resourceTag
-   * @param page
-   * @param pageSize
-   * @return
-   */
-  List<Permission> query(Long resourceId, String resourceTag, Integer page, Integer pageSize);
-
-  /**
    * query by roleId nad the part of userNo
    *
    * @param userNo
@@ -59,31 +47,7 @@ public interface PermissionRepository {
    * @return
    */
   List<Permission> queryByUserNoAndRoleId(
-      String userNo,
-      Long roleId,
-      Long resourceId,
-      String resourceTag,
-      Integer page,
-      Integer pageSize);
-
-  /**
-   * query page
-   *
-   * @param userNo
-   * @param roleId
-   * @param resourceId
-   * @param resourceTag
-   * @param page
-   * @param pageSize
-   * @return
-   */
-  Paged<Permission> queryPage(
-      String userNo,
-      Long roleId,
-      Long resourceId,
-      String resourceTag,
-      Integer page,
-      Integer pageSize);
+      String userNo, Long roleId, Long resourceId, String resourceTag, Long page, Long pageSize);
 
   /**
    * delete permission
@@ -130,4 +94,36 @@ public interface PermissionRepository {
    * @return
    */
   Permission selectByPrimaryKey(Long id);
+
+  /**
+   * select page
+   *
+   * @param userNo
+   * @param roleId
+   * @param resourceTag
+   * @return
+   */
+  List<Permission> selectLikeByUserNoAndRoleId(
+      String userNo, Long roleId, Long resourceId, String resourceTag, Long start, Long size);
+
+  /**
+   * the count of selectLikeByUserNoAndRoleId
+   *
+   * @param userNo
+   * @param roleId
+   * @param resourceId
+   * @param resourceTag
+   * @return
+   */
+  long selectLikeCountByUserNoAndRoleId(
+      String userNo, Long roleId, Long resourceId, String resourceTag);
+
+  /**
+   * Delete Records Corresponding to the Resource
+   *
+   * @param resourceId
+   * @param resourceTag
+   * @return
+   */
+  int deleteByResourceId(Long resourceId, String resourceTag);
 }

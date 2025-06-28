@@ -24,7 +24,9 @@ public enum EntityCategoryEnum {
 
   CONCEPT,
 
-  EVENT;
+  EVENT,
+
+  INDEX;
 
   public static EntityCategoryEnum getEnum(String val) {
     for (EntityCategoryEnum entityCategoryEnum : EntityCategoryEnum.values()) {
@@ -47,6 +49,8 @@ public enum EntityCategoryEnum {
         return CONCEPT;
       case EVENT_TYPE:
         return EVENT;
+      case INDEX_TYPE:
+        return INDEX;
       default:
         throw new IllegalArgumentException("illegal type=" + spgTypeEnum.name());
     }
@@ -65,6 +69,8 @@ public enum EntityCategoryEnum {
         return SPGTypeEnum.CONCEPT_TYPE;
       case EVENT:
         return SPGTypeEnum.EVENT_TYPE;
+      case INDEX:
+        return SPGTypeEnum.INDEX_TYPE;
       default:
         throw new IllegalArgumentException("illegal type=" + name);
     }

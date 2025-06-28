@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.server.core.schema.service.alter.stage;
 
+import com.antgroup.openspg.common.constants.SpgAppConstant;
 import com.antgroup.openspg.core.schema.model.SchemaConstants;
 import com.antgroup.openspg.core.schema.model.SchemaException;
 import com.antgroup.openspg.core.schema.model.identifier.SPGTypeIdentifier;
@@ -22,6 +23,7 @@ import com.antgroup.openspg.core.schema.model.type.BaseAdvancedType;
 import com.antgroup.openspg.core.schema.model.type.BaseSPGType;
 import com.antgroup.openspg.core.schema.model.type.StandardType;
 import com.antgroup.openspg.core.schema.model.type.WithAlterOperation;
+import com.antgroup.openspg.core.schema.model.type.WithBasicInfo;
 import com.antgroup.openspg.server.core.schema.service.alter.check.SchemaAlterChecker;
 import com.antgroup.openspg.server.core.schema.service.alter.check.SchemaCheckContext;
 import com.antgroup.openspg.server.core.schema.service.alter.check.SchemaMap;
@@ -111,6 +113,12 @@ public class PreProcessStage extends BaseAlterStage {
       BaseSPGType spgType,
       List<BaseSPGType> parentTypes,
       Set<SPGTypeIdentifier> spreadStandardTypeIdentifiers) {
+    List<String> selfProp =
+        CollectionUtils.isEmpty(spgType.getProperties())
+            ? new ArrayList<>()
+            : spgType.getProperties().stream()
+                .map(WithBasicInfo::getName)
+                .collect(Collectors.toList());
     for (BaseSPGType parentType : parentTypes) {
       if (CollectionUtils.isEmpty(parentType.getProperties())) {
         continue;
@@ -118,6 +126,10 @@ public class PreProcessStage extends BaseAlterStage {
 
       for (Property property : parentType.getProperties()) {
         if (Boolean.TRUE.equals(property.getInherited())) {
+          continue;
+        }
+        if (SpgAppConstant.DISPLAY_INHERIT_PROPERTIES.contains(property.getName())
+            && selfProp.contains(property.getName())) {
           continue;
         }
 

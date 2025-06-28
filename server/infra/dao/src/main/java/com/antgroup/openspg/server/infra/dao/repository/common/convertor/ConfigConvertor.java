@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.common.convertor;
 
+import com.alibaba.fastjson.JSON;
 import com.antgroup.openspg.server.common.model.config.Config;
 import com.antgroup.openspg.server.infra.dao.dataobject.ConfigDO;
 
@@ -22,11 +23,20 @@ public class ConfigConvertor {
     if (null == configDO) {
       return null;
     }
+    Object config = null;
+    String json = configDO.getConfig().trim(); // 去除头尾的空格
+    if (json.startsWith("{") && json.endsWith("}")) {
+      config = JSON.parseObject(json);
+    } else if (json.startsWith("[") && json.endsWith("]")) {
+      config = JSON.parseArray(json);
+    } else {
+      config = json;
+    }
     return new Config(
         configDO.getId(),
         configDO.getConfigName(),
         configDO.getConfigId(),
-        configDO.getConfig(),
+        config,
         configDO.getResourceType());
   }
 
@@ -37,7 +47,7 @@ public class ConfigConvertor {
     configDO.setProjectId(config.getProjectId());
     configDO.setConfigName(config.getConfigName());
     configDO.setConfigId(config.getConfigId());
-    configDO.setConfig(config.getConfig());
+    configDO.setConfig(JSON.toJSONString(config.getConfig()));
     configDO.setVersion(config.getVersion());
     configDO.setDescription(config.getDescription());
     configDO.setResourceId(config.getResourceId());

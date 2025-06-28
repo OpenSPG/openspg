@@ -25,9 +25,18 @@ public class IdxRecord extends BaseValObj {
 
   @Setter private String idxName;
 
+  @Setter private String label;
+
   private final String docId;
 
   private final double score;
 
   private final Map<String, Object> fields;
+
+  public IdxRecord(String idxName, String docId, double score, Map<String, Object> fields) {
+    this.idxName = idxName;
+    this.docId = docId;
+    this.score = score;
+    this.fields = fields;
+  }
 }

@@ -13,7 +13,7 @@
 
 package com.antgroup.openspg.server.biz.common;
 
-import com.antgroup.openspg.server.api.facade.Paged;
+import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectCreateRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.server.common.model.project.Project;
@@ -31,8 +31,9 @@ public interface ProjectManager {
 
   List<Project> query(ProjectQueryRequest request);
 
-  Paged<Project> queryPaged(ProjectQueryRequest request, int start, int size);
+  List<Project> queryPageData(ProjectQueryRequest request, int start, int size);
 
+  Long queryPageCount(ProjectQueryRequest request);
   /**
    * get GraphStore Url by project ID.
    *
@@ -56,4 +57,11 @@ public interface ProjectManager {
    * @return
    */
   Project queryByNamespace(String namespace);
+
+  /**
+   * completion vectorizer
+   *
+   * @param projectConfig
+   */
+  void completionVectorizer(JSONObject projectConfig);
 }

@@ -31,6 +31,7 @@ public class SchemaAlterChecker {
     validatorMap.put(SPGTypeEnum.ENTITY_TYPE, new EntityTypeChecker());
     validatorMap.put(SPGTypeEnum.CONCEPT_TYPE, new ConceptTypeChecker());
     validatorMap.put(SPGTypeEnum.EVENT_TYPE, new EventTypeChecker());
+    validatorMap.put(SPGTypeEnum.INDEX_TYPE, new IndexTypeChecker());
   }
 
   public void check(SchemaCheckContext context) {

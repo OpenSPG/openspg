@@ -13,6 +13,7 @@
 package com.antgroup.openspg.server.core.scheduler.service.task.async.builder;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.antgroup.openspg.builder.model.record.ChunkRecord;
@@ -36,6 +37,7 @@ import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstanc
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
 import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteContext;
+import com.antgroup.openspg.server.core.scheduler.model.task.TaskExecuteDag;
 import com.antgroup.openspg.server.core.scheduler.service.common.MemoryTaskServer;
 import com.antgroup.openspg.server.core.scheduler.service.metadata.SchedulerTaskService;
 import com.antgroup.openspg.server.core.scheduler.service.task.async.AsyncTaskExecuteTemplate;
@@ -65,6 +67,8 @@ import org.springframework.stereotype.Component;
 public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
 
   public static final String LLM_ID = "llm_id";
+  public static final String CONFIG = "config";
+  public static final String EXTRACTOR = "extractor";
 
   private static final RejectedExecutionHandler handler =
       (r, executor) -> {
@@ -93,7 +97,7 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
         value.getModelExecuteNum(),
         60,
         TimeUnit.SECONDS,
-        new LinkedBlockingQueue<>(100),
+        new LinkedBlockingQueue<>(1000),
         handler);
   }
 
@@ -102,7 +106,7 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
     String key =
-        CommonUtils.getTaskStorageFileKey(
+        CommonUtils.getTaskStoragePathKey(
             task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
     SchedulerTask memoryTask = memoryTaskServer.getTask(key);
     if (memoryTask != null) {
@@ -143,6 +147,8 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
     switch (task.getStatus()) {
       case RUNNING:
         break;
+      case WAIT:
+        return SchedulerEnum.TaskStatus.RUNNING;
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
@@ -154,7 +160,7 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
         break;
       case FINISH:
         String fileKey =
-            CommonUtils.getTaskStorageFileKey(
+            CommonUtils.getTaskStoragePathKey(
                 schedulerTask.getProjectId(),
                 schedulerTask.getInstanceId(),
                 schedulerTask.getId(),
@@ -219,8 +225,10 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
             JSON.parseObject(data, new TypeReference<List<ChunkRecord.Chunk>>() {});
         chunkList.addAll(chunks);
       }
-      addTraceLog("Start extract document. chunk size:%s", chunkList.size());
-
+      TaskExecuteDag.Node node =
+          context.getInstance().getTaskDag().getNode(context.getTask().getNodeId());
+      String name = node.getProperties().getString("retrievalName");
+      addTraceLog("Start extract(%s) document. chunk size:%s", name, chunkList.size());
       List<Future<List<SubGraphRecord>>> futures = new ArrayList<>();
       List<SubGraphRecord> results = new ArrayList<>();
       int index = 0;
@@ -235,15 +243,22 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
             executor.getCompletedTaskCount(),
             executor.getTaskCount(),
             executor.getQueue().size());
-        Future<List<SubGraphRecord>> future =
-            executor.submit(new ExtractTaskCallable(chunk, value, llm, project, indexStr));
-        futures.add(future);
+        JSONArray extractors = getPyConfig(project, value, llm, name);
+        for (int i = 0; i < extractors.size(); i++) {
+          JSONObject pyConfig = extractors.getJSONObject(i);
+          pyConfig.put(CommonConstants.TASK_ID, context.getInstance().getId());
+          Future<List<SubGraphRecord>> future =
+              executor.submit(new ExtractTaskCallable(chunk, value, pyConfig, project, indexStr));
+          futures.add(future);
+        }
       }
 
       for (Future<List<SubGraphRecord>> future : futures) {
         try {
           List<SubGraphRecord> result = future.get();
-          results.addAll(result);
+          result.forEach(
+              subGraphRecord ->
+                  SchedulerUtils.addSubGraph(results, subGraphRecord, value.getSubGraphBatchMax()));
         } catch (InterruptedException | ExecutionException e) {
           throw new RuntimeException("invoke extract Exception", e);
         }
@@ -254,33 +269,62 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
       addTraceLog("Extract document complete. nodes:%s. edges:%s", nodes.get(), edges.get());
 
       SchedulerTask task = context.getTask();
-      String fileKey =
-          CommonUtils.getTaskStorageFileKey(
+      String pathKey =
+          CommonUtils.getTaskStoragePathKey(
               task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
-      objectStorageClient.saveString(
-          value.getBuilderBucketName(), JSON.toJSONString(results), fileKey);
-      addTraceLog(
-          "Store the results of the extract operator. file:%s/%s",
-          value.getBuilderBucketName(), fileKey);
-      return fileKey;
+      for (Integer i = 0; i < results.size(); i++) {
+        String fileKey = CommonUtils.getTaskStorageFileKey(pathKey, i.toString());
+        objectStorageClient.saveString(
+            value.getBuilderBucketName(), JSON.toJSONString(results.get(i)), fileKey);
+        addTraceLog(
+            "Store the results of the extract operator. file:%s/%s",
+            value.getBuilderBucketName(), fileKey);
+      }
+      return pathKey;
+    }
+
+    public JSONArray getPyConfig(Project project, DefaultValue value, JSONObject llm, String name) {
+      if (StringUtils.isBlank(name) || "_default".equals(name)) {
+        JSONArray extractors = new JSONArray();
+        JSONObject pyConfig = new JSONObject();
+        pyConfig.put(BuilderConstant.TYPE, BuilderConstant.SCHEMA_FREE);
+        pyConfig.put(BuilderConstant.LLM, this.llm);
+        extractors.add(pyConfig);
+        return extractors;
+      }
+      PemjaConfig pemjaConfig =
+          new PemjaConfig(
+              value.getPythonExec(),
+              value.getPythonPaths(),
+              value.getPythonEnv(),
+              value.getSchemaUrlHost(),
+              project.getId(),
+              PythonInvokeMethod.BRIDGE_GET_INDEX_MANAGER_INFO,
+              Maps.newHashMap());
+      JSONObject vec =
+          JSONObject.parseObject(project.getConfig()).getJSONObject(CommonConstants.VECTORIZER);
+      Object result = PemjaUtils.invoke(pemjaConfig, name, llm.toJSONString(), vec.toJSONString());
+      JSONObject info = JSON.parseObject(result.toString());
+      JSONArray extractors = info.getJSONObject(CONFIG).getJSONArray(EXTRACTOR);
+      return extractors;
     }
 
     class ExtractTaskCallable implements Callable<List<SubGraphRecord>> {
       private final ChunkRecord.Chunk chunk;
       private final DefaultValue value;
-      private final JSONObject llm;
+      private final JSONObject pyConfig;
       private final Project project;
       private final String indexStr;
 
       public ExtractTaskCallable(
           ChunkRecord.Chunk chunk,
           DefaultValue value,
-          JSONObject llm,
+          JSONObject pyConfig,
           Project project,
           String indexStr) {
         this.chunk = chunk;
         this.value = value;
-        this.llm = llm;
+        this.pyConfig = pyConfig;
         this.project = project;
         this.indexStr = indexStr;
       }
@@ -288,9 +332,6 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
       @Override
       public List<SubGraphRecord> call() throws Exception {
         PythonInvokeMethod extractor = PythonInvokeMethod.BRIDGE_COMPONENT;
-        JSONObject pyConfig = new JSONObject();
-        pyConfig.put(BuilderConstant.TYPE, BuilderConstant.SCHEMA_FREE);
-        pyConfig.put(BuilderConstant.LLM, this.llm);
         PemjaConfig pemjaConfig =
             new PemjaConfig(
                 value.getPythonExec(),
@@ -308,7 +349,10 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
           List<Object> result =
               (List<Object>)
                   PemjaUtils.invoke(
-                      pemjaConfig, BuilderConstant.EXTRACTOR_ABC, pyConfig.toJSONString(), map);
+                      pemjaConfig,
+                      BuilderConstant.EXTRACTOR_ABC,
+                      this.pyConfig.toJSONString(),
+                      map);
           records =
               JSON.parseObject(
                   JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
@@ -342,7 +386,7 @@ public class KagExtractorAsyncTask extends AsyncTaskExecuteTemplate {
                   ? 0
                   : subGraphRecord.getResultEdges().size();
           addTraceLog(
-              "Extract chunk(%s:%s) index:%s successfully. nodes:%s. edges:%s",
+              "Extract chunk(%s:%s) successfully. index:%s nodes:%s. edges:%s",
               chunk.getName(), chunk.getShortId(), indexStr, nodes, edges);
         }
         return records;

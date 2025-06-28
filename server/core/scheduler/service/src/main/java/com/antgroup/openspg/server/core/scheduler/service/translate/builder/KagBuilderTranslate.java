@@ -12,13 +12,18 @@
  */
 package com.antgroup.openspg.server.core.scheduler.service.translate.builder;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClient;
 import com.antgroup.openspg.cloudext.interfaces.objectstorage.ObjectStorageClientDriverManager;
 import com.antgroup.openspg.common.constants.BuilderConstant;
 import com.antgroup.openspg.server.common.model.bulider.BuilderJob;
+import com.antgroup.openspg.server.common.model.retrieval.Retrieval;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum;
 import com.antgroup.openspg.server.common.service.builder.BuilderJobService;
 import com.antgroup.openspg.server.common.service.config.DefaultValue;
+import com.antgroup.openspg.server.common.service.retrieval.RetrievalService;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerInstance;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerJob;
 import com.antgroup.openspg.server.core.scheduler.model.service.SchedulerTask;
@@ -28,6 +33,7 @@ import com.antgroup.openspg.server.core.scheduler.service.translate.Translate;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.UUID;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,6 +46,8 @@ public class KagBuilderTranslate implements Translate {
   @Autowired private SchedulerTaskService taskService;
 
   @Autowired private DefaultValue value;
+
+  @Autowired private RetrievalService retrievalService;
 
   @Override
   public TaskExecuteDag translate(SchedulerJob schedulerJob) {
@@ -75,8 +83,20 @@ public class KagBuilderTranslate implements Translate {
 
     List<TaskExecuteDag.Node> nodes = Lists.newArrayList();
     List<TaskExecuteDag.Edge> edges = Lists.newArrayList();
+    String retrievals = builderJob.getRetrievals();
+    List<Long> retrievalList = Lists.newArrayList();
+    if (StringUtils.isNotBlank(retrievals)) {
+      retrievalList = JSON.parseObject(retrievals, new TypeReference<List<Long>>() {});
+    }
 
     TaskExecuteDag taskDag = new TaskExecuteDag();
+
+    TaskExecuteDag.Node retrievalNode = new TaskExecuteDag.Node();
+    String retrievalId = UUID.randomUUID().toString();
+    retrievalNode.setId(retrievalId);
+    retrievalNode.setName("Create Index");
+    retrievalNode.setTaskComponent("retrievalSyncTask");
+    nodes.add(retrievalNode);
 
     String checkPartitionId = UUID.randomUUID().toString();
     if (BuilderConstant.ODPS.equalsIgnoreCase(builderJob.getDataSourceType())) {
@@ -101,12 +121,34 @@ public class KagBuilderTranslate implements Translate {
     splitter.setTaskComponent("kagSplitterAsyncTask");
     nodes.add(splitter);
 
-    TaskExecuteDag.Node extractor = new TaskExecuteDag.Node();
-    String extractorId = UUID.randomUUID().toString();
-    extractor.setId(extractorId);
-    extractor.setName("Extractor");
-    extractor.setTaskComponent("kagExtractorAsyncTask");
-    nodes.add(extractor);
+    List<String> extractorIds = Lists.newArrayList();
+    if (CollectionUtils.isEmpty(retrievalList)) {
+      TaskExecuteDag.Node extractor = new TaskExecuteDag.Node();
+      String extractorId = UUID.randomUUID().toString();
+      extractorIds.add(extractorId);
+      extractor.setId(extractorId);
+      extractor.setName("Extractor");
+      extractor.setTaskComponent("kagExtractorAsyncTask");
+      JSONObject properties = new JSONObject();
+      properties.put("retrievalName", "_default");
+      extractor.setProperties(properties);
+      nodes.add(extractor);
+    } else {
+      for (Long id : retrievalList) {
+        Retrieval retrieval = retrievalService.getById(id);
+        TaskExecuteDag.Node extractor = new TaskExecuteDag.Node();
+        String extractorId = UUID.randomUUID().toString();
+        extractorIds.add(extractorId);
+        extractor.setId(extractorId);
+        extractor.setName("Extractor(" + retrieval.getName() + ")");
+        extractor.setTaskComponent("kagExtractorAsyncTask_" + retrieval.getName());
+        JSONObject properties = new JSONObject();
+        properties.put("retrievalId", retrieval.getId());
+        properties.put("retrievalName", retrieval.getName());
+        extractor.setProperties(properties);
+        nodes.add(extractor);
+      }
+    }
 
     TaskExecuteDag.Node vectorizer = new TaskExecuteDag.Node();
     String vectorizerId = UUID.randomUUID().toString();
@@ -129,11 +171,18 @@ public class KagBuilderTranslate implements Translate {
     writer.setTaskComponent("kagWriterAsyncTask");
     nodes.add(writer);
 
+    TaskExecuteDag.Edge retrievalEdge = new TaskExecuteDag.Edge();
+    retrievalEdge.setFrom(retrievalId);
     if (BuilderConstant.ODPS.equalsIgnoreCase(builderJob.getDataSourceType())) {
+      retrievalEdge.setTo(checkPartitionId);
+      edges.add(retrievalEdge);
       TaskExecuteDag.Edge checkPartitionEdge = new TaskExecuteDag.Edge();
       checkPartitionEdge.setFrom(checkPartitionId);
       checkPartitionEdge.setTo(readerId);
       edges.add(checkPartitionEdge);
+    } else {
+      retrievalEdge.setTo(readerId);
+      edges.add(retrievalEdge);
     }
 
     TaskExecuteDag.Edge edge = new TaskExecuteDag.Edge();
@@ -141,15 +190,17 @@ public class KagBuilderTranslate implements Translate {
     edge.setTo(splitterId);
     edges.add(edge);
 
-    TaskExecuteDag.Edge edge1 = new TaskExecuteDag.Edge();
-    edge1.setFrom(splitterId);
-    edge1.setTo(extractorId);
-    edges.add(edge1);
+    for (String extractorId : extractorIds) {
+      TaskExecuteDag.Edge edge1 = new TaskExecuteDag.Edge();
+      edge1.setFrom(splitterId);
+      edge1.setTo(extractorId);
+      edges.add(edge1);
 
-    TaskExecuteDag.Edge edge2 = new TaskExecuteDag.Edge();
-    edge2.setFrom(extractorId);
-    edge2.setTo(vectorizerId);
-    edges.add(edge2);
+      TaskExecuteDag.Edge edge2 = new TaskExecuteDag.Edge();
+      edge2.setFrom(extractorId);
+      edge2.setTo(vectorizerId);
+      edges.add(edge2);
+    }
 
     TaskExecuteDag.Edge edge3 = new TaskExecuteDag.Edge();
     edge3.setFrom(vectorizerId);

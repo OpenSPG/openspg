@@ -16,7 +16,6 @@ package com.antgroup.openspg.server.biz.common.impl;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.common.util.enums.PermissionEnum;
 import com.antgroup.openspg.common.util.enums.ResourceTagEnum;
-import com.antgroup.openspg.server.api.facade.Paged;
 import com.antgroup.openspg.server.api.facade.dto.common.request.PermissionRequest;
 import com.antgroup.openspg.server.biz.common.AccountManager;
 import com.antgroup.openspg.server.biz.common.PermissionManager;
@@ -82,47 +81,6 @@ public class PermissionManagerImpl implements PermissionManager {
   }
 
   @Override
-  public Paged<Permission> query(
-      String userNo,
-      String roleType,
-      Long resourceId,
-      String resourceTag,
-      Integer page,
-      Integer size) {
-    if (StringUtils.isBlank(resourceTag) || null == resourceId) {
-      return new Paged<>();
-    }
-    // 翻译roleId
-    Long roleId = null;
-    if (StringUtils.isNotBlank(roleType)) {
-      roleId = PermissionEnum.valueOf(roleType).getId();
-    }
-    Paged<Permission> permissionPage =
-        permissionRepository.queryPage(userNo, roleId, resourceId, resourceTag, page, size);
-    if (permissionPage.getTotal() > 0 && CollectionUtils.isNotEmpty(permissionPage.getResults())) {
-      List<Permission> permissionList = permissionPage.getResults();
-      Set<String> userNos =
-          permissionList.stream().map(Permission::getUserNo).collect(Collectors.toSet());
-      Map<String, Account> userNameMap =
-          accountManager.getSimpleAccountByUserNoList(userNos).stream()
-              .collect(Collectors.toMap(Account::getWorkNo, account -> account));
-      permissionList.forEach(
-          permission -> {
-            Account account = userNameMap.get(permission.getUserNo());
-            if (null != account) {
-              permission.setUserName(
-                  StringUtils.isNotBlank(account.getNickName())
-                      ? account.getNickName()
-                      : account.getWorkNo());
-            }
-            permission.setAccountRoleInfo(
-                new AccountRoleInfo(PermissionEnum.getRoleTypeById(permission.getRoleId()).name()));
-          });
-    }
-    return permissionPage;
-  }
-
-  @Override
   public Integer removePermission(PermissionRequest request) {
     int count = 0;
     if (null != request.getId()) {
@@ -160,10 +118,24 @@ public class PermissionManagerImpl implements PermissionManager {
   }
 
   @Override
-  public boolean isProjectRole(String userNo, Long projectId) {
+  public boolean hasPermission(
+      String userNo, Long resourceId, String resourceType, String roleType) {
+    if (isSuper(userNo)) {
+      return true;
+    }
+    if (PermissionEnum.MEMBER.name().equals(roleType)) {
+      return isRoleMembers(userNo, resourceId, resourceType);
+    }
     List<Permission> permissionList =
         getPermissionByUserRolesAndId(
-            Lists.newArrayList(projectId), null, null, ResourceTagEnum.PROJECT.name());
+            Lists.newArrayList(resourceId), userNo, roleType, resourceType);
+    return CollectionUtils.isNotEmpty(permissionList);
+  }
+
+  @Override
+  public boolean isRoleMembers(String userNo, Long resourceId, String resourceType) {
+    List<Permission> permissionList =
+        getPermissionByUserRolesAndId(Lists.newArrayList(resourceId), null, null, resourceType);
     if (CollectionUtils.isEmpty(permissionList)) {
       return false;
     }
@@ -172,14 +144,11 @@ public class PermissionManagerImpl implements PermissionManager {
   }
 
   @Override
-  public List<String> getOwnerUserNameByProjectId(Long projectId) {
+  public List<String> getOwnerUserNameByResourceId(Long resourceId, String resourceType) {
     String defaultOwner = "there is no resource administrator for the project";
     List<Permission> permissionList =
         getPermissionByUserRolesAndId(
-            Lists.newArrayList(projectId),
-            null,
-            PermissionEnum.OWNER.name(),
-            ResourceTagEnum.PROJECT.name());
+            Lists.newArrayList(resourceId), null, PermissionEnum.OWNER.name(), resourceType);
     List<String> userNoList =
         permissionList.stream()
             .filter(permission -> permission.getRoleId().equals(PermissionEnum.OWNER.getId()))
@@ -207,9 +176,57 @@ public class PermissionManagerImpl implements PermissionManager {
     return permissionRepository.selectByPrimaryKey(id);
   }
 
+  @Override
+  public List<Permission> selectLikeByUserNoAndRoleId(
+      String userNo, String roleType, Long resourceId, String resourceTag, Long page, Long size) {
+    Long roleId = null;
+    if (StringUtils.isNotBlank(roleType)) {
+      roleId = PermissionEnum.valueOf(roleType).getId();
+    }
+    List<Permission> permissionList =
+        permissionRepository.selectLikeByUserNoAndRoleId(
+            userNo, roleId, resourceId, resourceTag, page, size);
+    if (CollectionUtils.isNotEmpty(permissionList)) {
+      Set<String> userNos =
+          permissionList.stream().map(Permission::getUserNo).collect(Collectors.toSet());
+      Map<String, Account> userNameMap =
+          accountManager.getSimpleAccountByUserNoList(userNos).stream()
+              .collect(Collectors.toMap(Account::getWorkNo, account -> account));
+      permissionList.forEach(
+          permission -> {
+            Account account = userNameMap.get(permission.getUserNo());
+            if (null != account) {
+              permission.setUserName(
+                  StringUtils.isNotBlank(account.getNickName())
+                      ? account.getNickName()
+                      : account.getWorkNo());
+            }
+            permission.setAccountRoleInfo(
+                new AccountRoleInfo(PermissionEnum.getRoleTypeById(permission.getRoleId()).name()));
+          });
+    }
+    return permissionList;
+  }
+
+  @Override
+  public long selectLikeCountByUserNoAndRoleId(
+      String userNo, String roleType, Long resourceId, String resourceTag) {
+    Long roleId = null;
+    if (StringUtils.isNotBlank(roleType)) {
+      roleId = PermissionEnum.valueOf(roleType).getId();
+    }
+    return permissionRepository.selectLikeCountByUserNoAndRoleId(
+        userNo, roleId, resourceId, resourceTag);
+  }
+
+  @Override
+  public int deleteByResourceId(Long resourceId, String resourceTag) {
+    return permissionRepository.deleteByResourceId(resourceId, resourceTag);
+  }
+
   private List<Permission> toModels(PermissionRequest request) {
     Long roleId = null;
-    if (StringUtils.equals(request.getResourceTag(), ResourceTagEnum.PROJECT.name())) {
+    if (StringUtils.isNotBlank(request.getRoleType())) {
       roleId = PermissionEnum.valueOf(request.getRoleType()).getId();
     }
     List<Permission> permissionList = new ArrayList<>();

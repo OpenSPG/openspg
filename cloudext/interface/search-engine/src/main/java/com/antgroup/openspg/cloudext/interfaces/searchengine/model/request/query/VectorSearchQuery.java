@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query;
 
+import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -24,12 +25,12 @@ public class VectorSearchQuery extends BaseQuery {
   @Getter private final int efSearch;
 
   public VectorSearchQuery(
-      @NonNull String label, @NonNull String propertyKey, float @NonNull [] queryVector) {
+      @Nullable String label, @NonNull String propertyKey, float @NonNull [] queryVector) {
     this(label, propertyKey, queryVector, -1);
   }
 
   public VectorSearchQuery(
-      @NonNull String label,
+      @Nullable String label,
       @NonNull String propertyKey,
       float @NonNull [] queryVector,
       int efSearch) {

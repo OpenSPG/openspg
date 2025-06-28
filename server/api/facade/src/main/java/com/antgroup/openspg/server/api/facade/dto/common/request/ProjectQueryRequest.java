@@ -34,8 +34,20 @@ public class ProjectQueryRequest extends BaseRequest {
 
   private List<Long> projectIdList;
 
+  private Boolean isOwner;
+
+  private String visibility;
+
   public Long getTenantId() {
     return tenantId;
+  }
+
+  public Boolean getOwner() {
+    return isOwner;
+  }
+
+  public void setOwner(Boolean owner) {
+    isOwner = owner;
   }
 
   public ProjectQueryRequest setTenantId(Long tenantId) {
@@ -100,5 +112,13 @@ public class ProjectQueryRequest extends BaseRequest {
 
   public void setConfig(String config) {
     this.config = config;
+  }
+
+  public String getVisibility() {
+    return visibility;
+  }
+
+  public void setVisibility(String visibility) {
+    this.visibility = visibility;
   }
 }
