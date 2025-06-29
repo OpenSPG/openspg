@@ -14,7 +14,7 @@
 package com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record;
 
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.VertexType;
-import com.antgroup.openspg.server.api.facade.ApiConstants;
+import com.google.common.collect.Lists;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +35,16 @@ public class VertexRecord extends BaseLPGRecord {
 
   private final String id;
 
+  private static final long DEFAULT_VERSION = 0L;
+
   public VertexRecord(String id, String vertexType, List<LPGPropertyRecord> properties) {
     super(LPGRecordTypeEnum.VERTEX, properties);
     this.id = id;
     this.vertexType = vertexType;
+  }
+
+  public VertexRecord(String id, String vertexType) {
+    this(id, vertexType, Lists.newArrayList());
   }
 
   @Override
@@ -55,7 +61,7 @@ public class VertexRecord extends BaseLPGRecord {
     otherProperties.forEach(
         (key, value) -> {
           TreeMap<Long, Object> propertyVersion = new TreeMap<>();
-          propertyVersion.put(ApiConstants.DEFAULT_VERSION, value);
+          propertyVersion.put(DEFAULT_VERSION, value);
           results.put(key, propertyVersion);
         });
     return results;

@@ -61,36 +61,43 @@ public class KagMappingSyncTask extends SyncTaskExecuteTemplate {
     objectStorageClient = ObjectStorageClientDriverManager.getClient(value.getObjectStorageUrl());
     SchedulerJob job = context.getJob();
     BuilderJob builderJob = builderJobService.getById(Long.valueOf(job.getInvokerId()));
-    List<SubGraphRecord> chunks = loadData(context, builderJob);
+    List<SubGraphRecord> results = loadData(context, builderJob);
+
     SchedulerTask task = context.getTask();
-    String fileKey =
-        com.antgroup.openspg.common.util.CommonUtils.getTaskStorageFileKey(
+    String pathKey =
+        CommonUtils.getTaskStoragePathKey(
             task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
-    objectStorageClient.saveString(
-        value.getBuilderBucketName(), JSON.toJSONString(chunks), fileKey);
-    context.addTraceLog(
-        "Store the results of the mapping operator. file:%s/%s",
-        value.getBuilderBucketName(), fileKey);
-    task.setOutput(fileKey);
+    for (Integer i = 0; i < results.size(); i++) {
+      String fileKey = CommonUtils.getTaskStorageFileKey(pathKey, i.toString());
+      objectStorageClient.saveString(
+          value.getBuilderBucketName(), JSON.toJSONString(results.get(i)), fileKey);
+      context.addTraceLog(
+          "Store the results of the mapping operator. file:%s/%s",
+          value.getBuilderBucketName(), fileKey);
+    }
+    task.setOutput(pathKey);
     return SchedulerEnum.TaskStatus.FINISH;
   }
 
   public List<SubGraphRecord> loadData(TaskExecuteContext context, BuilderJob builderJob) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
+    List<SubGraphRecord> results = Lists.newArrayList();
     List<String> inputs = SchedulerUtils.getTaskInputs(taskService, instance, task);
-    List<SubGraphRecord> subGraphList = Lists.newArrayList();
     for (String input : inputs) {
       String data = objectStorageClient.getString(value.getBuilderBucketName(), input);
       List<Map<String, Object>> datas =
           JSON.parseObject(data, new TypeReference<List<Map<String, Object>>>() {});
-      subGraphList.addAll(mapping(context, datas, builderJob));
+      List<SubGraphRecord> result = mapping(context, datas, builderJob);
+      result.forEach(
+          subGraphRecord ->
+              SchedulerUtils.addSubGraph(results, subGraphRecord, value.getSubGraphBatchMax()));
     }
     AtomicLong nodes = new AtomicLong(0);
     AtomicLong edges = new AtomicLong(0);
-    SchedulerUtils.getGraphSize(subGraphList, nodes, edges);
+    SchedulerUtils.getGraphSize(results, nodes, edges);
     context.addTraceLog("Data mapping complete. nodes:%s. edges:%s", nodes.get(), edges.get());
-    return subGraphList;
+    return results;
   }
 
   public List<SubGraphRecord> mapping(

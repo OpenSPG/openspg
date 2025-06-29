@@ -71,6 +71,7 @@ public class VertexRecordConvertor {
     BaseAdvancedRecord advancedRecord = null;
     switch (baseSpgType.getSpgTypeEnum()) {
       case ENTITY_TYPE:
+      case INDEX_TYPE:
         advancedRecord =
             new EntityRecord(
                 (EntityType) baseSpgType,

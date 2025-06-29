@@ -13,6 +13,7 @@
 
 package com.antgroup.openspg.server.infra.dao.repository.schema.convertor;
 
+import com.antgroup.openspg.common.util.SchemaJsonUtils;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.core.schema.model.BasicInfo;
 import com.antgroup.openspg.core.schema.model.OntologyId;
@@ -28,7 +29,6 @@ import com.antgroup.openspg.core.schema.model.semantic.RuleCode;
 import com.antgroup.openspg.core.schema.model.semantic.SPGOntologyEnum;
 import com.antgroup.openspg.core.schema.model.type.MultiVersionConfig;
 import com.antgroup.openspg.core.schema.model.type.SPGTypeEnum;
-import com.antgroup.openspg.server.api.facade.SchemaJsonUtils;
 import com.antgroup.openspg.server.core.schema.service.predicate.model.SimpleProperty;
 import com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDO;
 import com.antgroup.openspg.server.infra.dao.repository.schema.enums.MapTypeEnum;

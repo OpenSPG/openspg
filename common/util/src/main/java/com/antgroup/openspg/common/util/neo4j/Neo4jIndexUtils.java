@@ -364,6 +364,18 @@ public class Neo4jIndexUtils {
     }
   }
 
+  public List<Record> customSearch(@NonNull String customQuery) {
+    try (Session session = driver.session(SessionConfig.forDatabase(database))) {
+      return session.readTransaction(
+          tx -> {
+            Result result = tx.run(customQuery);
+            List<Record> records = result.list();
+            tx.commit();
+            return records;
+          });
+    }
+  }
+
   public Map<String, Set<String>> getVectorIndexMeta() {
     String query = "SHOW VECTOR INDEX";
     try (Session session = driver.session(SessionConfig.forDatabase(database))) {
@@ -418,6 +430,7 @@ public class Neo4jIndexUtils {
       switch (indexType) {
         case TEXT:
         case TEXT_AND_VECTOR:
+        case TEXT_AND_SPARSE_VECTOR:
           return true;
         default:
           return false;

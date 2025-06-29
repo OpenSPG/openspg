@@ -83,6 +83,8 @@ public class KagBuilderAsyncTask extends AsyncTaskExecuteTemplate {
     switch (task.getStatus()) {
       case RUNNING:
         break;
+      case WAIT:
+        return SchedulerEnum.TaskStatus.RUNNING;
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {

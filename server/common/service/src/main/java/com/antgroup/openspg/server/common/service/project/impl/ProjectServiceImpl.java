@@ -16,11 +16,15 @@ package com.antgroup.openspg.server.common.service.project.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.antgroup.openspg.cloudext.impl.graphstore.neo4j.Neo4jConstants;
+import com.antgroup.openspg.common.constants.BuilderConstant;
+import com.antgroup.openspg.common.constants.SpgAppConstant;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.server.common.model.CommonConstants;
 import com.antgroup.openspg.server.common.model.project.Project;
 import com.antgroup.openspg.server.common.service.project.ProjectRepository;
 import com.antgroup.openspg.server.common.service.project.ProjectService;
+import com.antgroup.openspg.server.common.service.usermodel.UserModelRepository;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,17 +36,52 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Autowired private ProjectRepository projectRepository;
 
+  @Autowired private UserModelRepository userModelRepository;
+
   @Value("${cloudext.graphstore.url:}")
   private String url;
 
   @Override
   public Project queryById(Long projectId) {
-    return projectRepository.queryById(projectId);
+    Project project = projectRepository.queryById(projectId);
+    if (project == null) {
+      return null;
+    }
+    if (StringUtils.isBlank(project.getConfig())) {
+      return project;
+    }
+    JSONObject projectConfig = JSON.parseObject(project.getConfig());
+    if (projectConfig != null && projectConfig.containsKey(CommonConstants.VECTORIZER)) {
+      JSONObject vectorizer = projectConfig.getJSONObject(CommonConstants.VECTORIZER);
+      String modelId = vectorizer.getString(SpgAppConstant.MODEL_ID);
+      JSONObject llmInfo = userModelRepository.getByModelId(modelId);
+      if (llmInfo != null) {
+        for (Map.Entry<String, Object> entry : llmInfo.entrySet()) {
+          String key = entry.getKey();
+          Object value = entry.getValue();
+          vectorizer.put(key, value);
+        }
+        projectConfig.put(BuilderConstant.VECTORIZER, vectorizer);
+      }
+      project =
+          new Project(
+              project.getId(),
+              project.getName(),
+              project.getDescription(),
+              project.getNamespace(),
+              project.getTenantId(),
+              projectConfig.toJSONString(),
+              project.getTag());
+    }
+    return project;
   }
 
   @Override
   public String getGraphStoreUrl(Long projectId) {
     Project project = projectRepository.queryById(projectId);
+    if (project == null) {
+      return this.url;
+    }
     String url = this.url;
     String user = null;
     String password = null;

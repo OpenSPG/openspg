@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 OpenSPG Authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antgroup.openspg.server.infra.dao.mapper.AppMapper">
+    <resultMap id="BaseResultMap" type="com.antgroup.openspg.server.infra.dao.dataobject.AppDO">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="logo" jdbcType="VARCHAR" property="logo" />
+        <result column="config" jdbcType="VARCHAR" property="config" />
+        <result column="alias" jdbcType="VARCHAR" property="alias" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, gmt_create, gmt_modified, creator, modifier, name, description, logo, config, alias
+    </sql>
+
+    <insert id="insert" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.AppDO">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into kg_app (gmt_create, gmt_modified,
+        creator, modifier, name, description,
+        logo, config, alias
+        )
+        values (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+        #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{name}, #{description,jdbcType=VARCHAR},
+        #{logo,jdbcType=VARCHAR}, #{config,jdbcType=VARCHAR}, #{alias,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from kg_app where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <update id="update" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.AppDO">
+        UPDATE kg_app
+        <set>
+            gmt_modified = CURRENT_TIMESTAMP,
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="logo != null">
+                logo = #{logo,jdbcType=VARCHAR},
+            </if>
+            <if test="config != null">
+                config = #{config,jdbcType=VARCHAR},
+            </if>
+            <if test="alias != null">
+                alias = #{alias,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from kg_app
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <sql id="Query_Where_Sql">
+        <if test="request.userNo != null">
+            and creator = #{request.userNo,jdbcType=VARCHAR}
+        </if>
+        <if test="request.name != null" >
+            and name like concat('%',#{request.name,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="request.idList != null and request.idList.size()>0">
+            and id in
+            <foreach collection="request.idList" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </sql>
+
+    <select id="selectByCondition" resultMap="BaseResultMap" useCache="false">
+        select
+        <include refid="Base_Column_List"/>
+        from kg_app
+        <trim prefix="where" prefixOverrides="and">
+            <include refid="Query_Where_Sql"/>
+        </trim>
+        order by gmt_create desc limit #{start}, #{size}
+    </select>
+
+    <select id="selectCountByCondition" resultType="java.lang.Long">
+        select count(*)
+        from kg_app
+        <trim prefix="where" prefixOverrides="and">
+            <include refid="Query_Where_Sql"/>
+        </trim>
+    </select>
+
+    <select id="getByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from kg_app
+        where name = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="queryByCondition" resultMap="BaseResultMap" parameterType="com.antgroup.openspg.server.api.facade.dto.common.request.AppRequest">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM  kg_app
+        <trim prefix="where" prefixOverrides="and">
+            <include refid="Query_Where_Sql_AppRequest"/>
+        </trim>
+    </select>
+
+    <sql id="Query_Where_Sql_AppRequest">
+        <if test="id != null">
+            AND id = #{id,jdbcType=BIGINT}
+        </if>
+        <if test="name != null and name != ''">
+            AND name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="logo != null and logo != ''">
+            AND logo = #{logo,jdbcType=VARCHAR}
+        </if>
+        <if test="description != null and description != ''">
+            AND description = #{description,jdbcType=VARCHAR}
+        </if>
+        <if test="userNo != null and userNo != ''">
+            AND creator = #{userNo,jdbcType=VARCHAR}
+        </if>
+        <if test="alias != null and alias != ''">
+            AND alias = #{alias,jdbcType=VARCHAR}
+        </if>
+        <if test="idList != null and idList.size() > 0">
+            AND id IN
+            <foreach collection="idList" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </sql>
+
+</mapper>

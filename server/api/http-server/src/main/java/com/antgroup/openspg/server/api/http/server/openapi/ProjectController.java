@@ -13,17 +13,29 @@
 
 package com.antgroup.openspg.server.api.http.server.openapi;
 
+import static com.antgroup.openspg.common.constants.SpgAppConstant.ACCOUNT_PATTERN;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.antgroup.openspg.common.constants.SpgAppConstant;
+import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.common.util.enums.PermissionEnum;
+import com.antgroup.openspg.common.util.enums.ProjectTagEnum;
+import com.antgroup.openspg.common.util.enums.ResourceTagEnum;
+import com.antgroup.openspg.common.util.exception.SpgException;
+import com.antgroup.openspg.common.util.exception.message.SpgMessageEnum;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectCreateRequest;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.server.api.facade.dto.schema.request.SchemaAlterRequest;
 import com.antgroup.openspg.server.api.http.server.BaseController;
 import com.antgroup.openspg.server.api.http.server.HttpBizCallback;
 import com.antgroup.openspg.server.api.http.server.HttpBizTemplate;
-import com.antgroup.openspg.server.biz.common.ConfigManager;
+import com.antgroup.openspg.server.biz.common.PermissionManager;
 import com.antgroup.openspg.server.biz.common.ProjectManager;
+import com.antgroup.openspg.server.biz.common.util.AssertUtils;
+import com.antgroup.openspg.server.common.model.exception.IllegalParamsException;
 import com.antgroup.openspg.server.common.model.project.Project;
+import com.baidu.brpc.utils.CollectionUtils;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
@@ -44,7 +56,7 @@ public class ProjectController extends BaseController {
 
   @Autowired private ProjectManager projectManager;
 
-  @Autowired private ConfigManager configManager;
+  @Autowired private PermissionManager permissionManager;
 
   @RequestMapping(method = RequestMethod.POST)
   public ResponseEntity<Object> create(@RequestBody ProjectCreateRequest request) {
@@ -52,11 +64,36 @@ public class ProjectController extends BaseController {
     return HttpBizTemplate.execute(
         new HttpBizCallback<Project>() {
           @Override
-          public void check() {}
+          public void check() {
+            AssertUtils.assertParamObjectIsNotNull("request body", request);
+            AssertUtils.assertParamObjectIsNotNull("userNo", request.getUserNo());
+            if (!ACCOUNT_PATTERN.matcher(request.getUserNo()).matches()) {
+              throw new IllegalParamsException(
+                  "account(userNo) length is 6-20, only support letters,numbers and underscores");
+            }
+            AssertUtils.assertParamObjectIsNotNull("name", request.getName());
+            AssertUtils.assertParamObjectIsNotNull("namespace", request.getNamespace());
+            AssertUtils.assertParamStringIsNotBlank("tag", request.getTag());
+            AssertUtils.assertParamStringIsNotBlank("visibility", request.getVisibility());
+            AssertUtils.assertParamObjectIsNotNull("config", request.getConfig());
+            AssertUtils.assertParamIsTrue(
+                "namespace length >= 3", request.getNamespace().length() >= 3);
+            if (StringUtils.equals(request.getTag(), ProjectTagEnum.LOCAL.name())
+                && !request.getConfig().containsKey(SpgAppConstant.VECTORIZER)) {
+              throw new IllegalParamsException("tag = LOCAL, vectorizer cannot be empty");
+            }
+          }
 
           @Override
           public Project action() {
+            request.setIsKnext(Boolean.TRUE);
             Project project = projectManager.create(request);
+            if (null == project || null == project.getId()) {
+              return null;
+            }
+            if (ProjectTagEnum.PUBLIC_NET.name().equalsIgnoreCase(request.getTag())) {
+              return project;
+            }
             if (request.getAutoSchema() == null || Boolean.TRUE.equals(request.getAutoSchema())) {
               SchemaAlterRequest request = new SchemaAlterRequest();
               request.setProjectId(project.getId());
@@ -90,7 +127,7 @@ public class ProjectController extends BaseController {
                   String config = project.getConfig();
                   JSONObject configJson = JSON.parseObject(config);
                   if (configJson != null) {
-                    configManager.backwardCompatible(configJson);
+                    projectManager.completionVectorizer(configJson);
                     config = configJson.toJSONString();
                   }
                   newProjectList.add(
@@ -100,7 +137,8 @@ public class ProjectController extends BaseController {
                           project.getDescription(),
                           project.getNamespace(),
                           project.getTenantId(),
-                          config));
+                          config,
+                          project.getTag()));
                 });
             return newProjectList;
           }
@@ -112,11 +150,37 @@ public class ProjectController extends BaseController {
     log.info("HTTP Update Project Params: {}", JSON.toJSONString(request));
     return HttpBizTemplate.execute(
         new HttpBizCallback<Project>() {
+
           @Override
-          public void check() {}
+          public void check() {
+            AssertUtils.assertParamObjectIsNotNull("request body", request);
+            AssertUtils.assertParamObjectIsNotNull("id", request.getId());
+            AssertUtils.assertParamStringIsNotBlank("userNo", request.getUserNo());
+            AssertUtils.assertParamObjectIsNotNull("config", request.getConfig());
+            String userNo = request.getUserNo();
+            boolean hasPermission =
+                permissionManager.hasPermission(
+                    userNo,
+                    request.getId(),
+                    ResourceTagEnum.KNOWLEDGE_BASE.name(),
+                    PermissionEnum.OWNER.name());
+            if (!hasPermission) {
+              throw new SpgException(SpgMessageEnum.KB_NOT_OWNER);
+            }
+            Project project = projectManager.queryById(request.getId());
+            AssertUtils.assertParamObjectIsNotNull("query project by id", project);
+            ProjectQueryRequest projectQueryRequest = new ProjectQueryRequest();
+            projectQueryRequest.setName(request.getName());
+            List<Project> query = projectManager.query(projectQueryRequest);
+            if (CollectionUtils.isNotEmpty(query)
+                && query.stream().anyMatch(it -> !it.getId().equals(request.getId()))) {
+              throw new SpgException(SpgMessageEnum.KB_NAME_EXIST);
+            }
+          }
 
           @Override
           public Project action() {
+            request.setIsKnext(Boolean.TRUE);
             return projectManager.update(request);
           }
         });

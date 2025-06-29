@@ -19,11 +19,17 @@ public enum IndexTypeEnum {
   /** vector index. */
   VECTOR("VECTOR", "Vector"),
 
+  /** sparse vector index. */
+  SPARSE_VECTOR("SPARSE_VECTOR", "SparseVector"),
+
   /** text index. */
   TEXT("TEXT", "Text"),
 
   /** text and vector index. */
-  TEXT_AND_VECTOR("TEXT_AND_VECTOR", "TextAndVector");
+  TEXT_AND_VECTOR("TEXT_AND_VECTOR", "TextAndVector"),
+
+  /** text and sparse vector index. */
+  TEXT_AND_SPARSE_VECTOR("TEXT_AND_SPARSE_VECTOR", "TextAndSparseVector");
 
   /** Name of index. */
   private final String nameEn;

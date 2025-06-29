@@ -15,4 +15,5 @@ package com.antgroup.openspg.cloudext.interfaces.computingengine;
 
 public class ComputingEngineConstants {
   public static final String USER_NUMBER = "userNumber";
+  public static final String DEFAULT_NUMBER = "164072";
 }

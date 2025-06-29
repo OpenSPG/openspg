@@ -15,6 +15,7 @@ package com.antgroup.openspg.server.biz.common.util;
 
 import com.antgroup.openspg.server.common.model.exception.IllegalParamsException;
 import java.util.Collection;
+import java.util.regex.Pattern;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -144,6 +145,18 @@ public class AssertUtils {
     }
     if (object > max || object < min) {
       throw new IllegalParamsException(objectName + " must <= " + max + " and >=" + min);
+    }
+  }
+  /**
+   * Asserts that a string matches a given regular expression.
+   *
+   * @param value The string to be validated
+   * @param regex The regular expression to match
+   * @param message The error message to throw if the validation fails
+   */
+  public static void assertValidPattern(String value, String regex, String message) {
+    if (value == null || !Pattern.matches(regex, value)) {
+      throw new IllegalParamsException(message);
     }
   }
 }

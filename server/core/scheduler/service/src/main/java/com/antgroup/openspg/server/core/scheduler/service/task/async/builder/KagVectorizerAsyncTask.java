@@ -39,15 +39,34 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("kagVectorizerAsyncTask")
 public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
+
+  private static final RejectedExecutionHandler handler =
+      (r, executor) -> {
+        try {
+          executor.getQueue().put(r);
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+        }
+      };
+
+  private static ThreadPoolExecutor executor;
 
   @Autowired private DefaultValue value;
 
@@ -57,12 +76,26 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
 
   @Autowired private ProjectService projectService;
 
+  @PostConstruct
+  public void init() {
+    if (executor == null) {
+      executor =
+          new ThreadPoolExecutor(
+              value.getModelExecuteNum(),
+              value.getModelExecuteNum(),
+              60 * 60,
+              TimeUnit.SECONDS,
+              new LinkedBlockingQueue<>(1000),
+              handler);
+    }
+  }
+
   @Override
   public String submit(TaskExecuteContext context) {
     SchedulerInstance instance = context.getInstance();
     SchedulerTask task = context.getTask();
     String key =
-        CommonUtils.getTaskStorageFileKey(
+        CommonUtils.getTaskStoragePathKey(
             task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
     SchedulerTask memoryTask = memoryTaskServer.getTask(key);
     if (memoryTask != null) {
@@ -99,6 +132,8 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
     switch (task.getStatus()) {
       case RUNNING:
         break;
+      case WAIT:
+        return SchedulerEnum.TaskStatus.RUNNING;
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
@@ -152,45 +187,102 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
 
     @Override
     public String call() throws Exception {
-      List<SubGraphRecord> subGraphList = Lists.newArrayList();
       addTraceLog("Start vectorized document!");
-      for (String input : inputs) {
-        String data = objectStorageClient.getString(value.getBuilderBucketName(), input);
-        List<SubGraphRecord> subGraphs =
-            JSON.parseObject(data, new TypeReference<List<SubGraphRecord>>() {});
-        subGraphList.addAll(vectorizer(context, subGraphs));
-      }
+      SchedulerTask task = context.getTask();
+      Long projectId = context.getInstance().getProjectId();
+      String pathKey =
+          CommonUtils.getTaskStoragePathKey(
+              task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
+
+      JSONObject pyConfig = getPyConfig(projectId);
+      PemjaConfig pemjaConfig = getPemjaConfig(projectId);
       AtomicLong nodes = new AtomicLong(0);
       AtomicLong edges = new AtomicLong(0);
-      SchedulerUtils.getGraphSize(subGraphList, nodes, edges);
+
+      List<Future<?>> futures = new ArrayList<>();
+
+      for (Integer i = 0; i < inputs.size(); i++) {
+        final Integer inputIndex = i;
+        List<String> files =
+            objectStorageClient.getAllFilesRecursively(value.getBuilderBucketName(), inputs.get(i));
+
+        for (Integer f = 0; f < files.size(); f++) {
+          final Integer fileIndex = f;
+          final String filePath = files.get(f);
+          addTraceLog(
+              "Vector ThreadPool. size:%s active:%s completed:%s total:%s queue:%s",
+              executor.getPoolSize(),
+              executor.getActiveCount(),
+              executor.getCompletedTaskCount(),
+              executor.getTaskCount(),
+              executor.getQueue().size());
+          Future<?> future =
+              executor.submit(
+                  () -> {
+                    String data =
+                        objectStorageClient.getString(value.getBuilderBucketName(), filePath);
+                    SubGraphRecord subGraph = JSON.parseObject(data, SubGraphRecord.class);
+                    addTraceLog(
+                        "Invoke the vector operator. index:%s/%s", fileIndex + 1, files.size());
+                    subGraph = vectorizer(pyConfig, pemjaConfig, subGraph);
+                    addTraceLog(
+                        "Vector operator was invoked successfully index:%s/%s nodes:%s edges:%s",
+                        fileIndex + 1,
+                        files.size(),
+                        subGraph.getResultNodes().size(),
+                        subGraph.getResultEdges().size());
+                    SchedulerUtils.getGraphSize(subGraph, nodes, edges);
+                    String fileKey =
+                        CommonUtils.getTaskStorageFileKey(pathKey, inputIndex + "_" + fileIndex);
+                    String results = JSON.toJSONString(subGraph);
+                    Long start = System.currentTimeMillis();
+                    byte[] bytes = results.getBytes(StandardCharsets.UTF_8);
+                    objectStorageClient.saveData(value.getBuilderBucketName(), bytes, fileKey);
+                    addTraceLog(
+                        "Store the results of the vector operator. file:%s/%s length:%s cons:%s",
+                        value.getBuilderBucketName(),
+                        fileKey,
+                        bytes.length,
+                        System.currentTimeMillis() - start);
+                  });
+          futures.add(future);
+        }
+      }
+      for (Future<?> future : futures) {
+        try {
+          future.get();
+        } catch (InterruptedException | ExecutionException e) {
+          throw new RuntimeException("invoke vector Exception", e);
+        }
+      }
+
       addTraceLog("Vectorized document complete. nodes:%s. edges:%s", nodes.get(), edges.get());
-      SchedulerTask task = context.getTask();
-      String fileKey =
-          CommonUtils.getTaskStorageFileKey(
-              task.getProjectId(), task.getInstanceId(), task.getId(), task.getType());
-      String results = JSON.toJSONString(subGraphList);
-      Long statr = System.currentTimeMillis();
-      byte[] bytes = results.getBytes(StandardCharsets.UTF_8);
-      addTraceLog("Start Store the results of the vector operator! byte length:%s", bytes.length);
-      objectStorageClient.saveData(value.getBuilderBucketName(), bytes, fileKey);
-      addTraceLog(
-          "Store the results of the vector operator. file:%s/%s cons:%s",
-          value.getBuilderBucketName(), fileKey, System.currentTimeMillis() - statr);
-      return fileKey;
+      return pathKey;
     }
 
-    public List<SubGraphRecord> vectorizer(
-        TaskExecuteContext context, List<SubGraphRecord> subGraphs) {
-      List<SubGraphRecord> subGraphList = Lists.newArrayList();
-      Long projectId = context.getInstance().getProjectId();
-      String projectConfig = projectService.queryById(projectId).getConfig();
-      JSONObject vec =
-          JSONObject.parseObject(projectConfig).getJSONObject(CommonConstants.VECTORIZER);
-      PythonInvokeMethod vectorizer = PythonInvokeMethod.BRIDGE_COMPONENT;
-      JSONObject pyConfig = new JSONObject();
-      pyConfig.put(BuilderConstant.TYPE, BuilderConstant.BATCH);
-      pyConfig.put(BuilderConstant.VECTORIZE_MODEL, vec);
+    public SubGraphRecord vectorizer(
+        JSONObject pyConfig, PemjaConfig pemjaConfig, SubGraphRecord subGraph) {
+      SubGraphRecord record = new SubGraphRecord(Lists.newArrayList(), Lists.newArrayList());
+      Map map = new ObjectMapper().convertValue(subGraph, Map.class);
+      List<Object> result =
+          (List<Object>)
+              PemjaUtils.invoke(
+                  pemjaConfig, BuilderConstant.VECTORIZER_ABC, pyConfig.toJSONString(), map);
+      List<SubGraphRecord> records =
+          JSON.parseObject(JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
+      for (SubGraphRecord subGraphRecord : records) {
+        if (CollectionUtils.isNotEmpty(subGraphRecord.getResultNodes())) {
+          record.getResultNodes().addAll(subGraphRecord.getResultNodes());
+        }
+        if (CollectionUtils.isNotEmpty(subGraphRecord.getResultEdges())) {
+          record.getResultEdges().addAll(subGraphRecord.getResultEdges());
+        }
+      }
+      return record;
+    }
 
+    private PemjaConfig getPemjaConfig(Long projectId) {
+      PythonInvokeMethod vectorizer = PythonInvokeMethod.BRIDGE_COMPONENT;
       PemjaConfig pemjaConfig =
           new PemjaConfig(
               value.getPythonExec(),
@@ -200,31 +292,18 @@ public class KagVectorizerAsyncTask extends AsyncTaskExecuteTemplate {
               projectId,
               vectorizer,
               Maps.newHashMap());
-      int index = 0;
-      for (SubGraphRecord subGraph : subGraphs) {
-        addTraceLog("Invoke the vector operator. index:%s/%s", ++index, subGraphs.size());
-        Map map = new ObjectMapper().convertValue(subGraph, Map.class);
-        List<Object> result =
-            (List<Object>)
-                PemjaUtils.invoke(
-                    pemjaConfig, BuilderConstant.VECTORIZER_ABC, pyConfig.toJSONString(), map);
-        List<SubGraphRecord> records =
-            JSON.parseObject(
-                JSON.toJSONString(result), new TypeReference<List<SubGraphRecord>>() {});
-        subGraphList.addAll(records);
-        for (SubGraphRecord subGraphRecord : records) {
-          int nodes =
-              CollectionUtils.isEmpty(subGraphRecord.getResultNodes())
-                  ? 0
-                  : subGraphRecord.getResultNodes().size();
-          int edges =
-              CollectionUtils.isEmpty(subGraphRecord.getResultEdges())
-                  ? 0
-                  : subGraphRecord.getResultEdges().size();
-          addTraceLog("Vector operator was invoked successfully nodes:%s edges:%s", nodes, edges);
-        }
-      }
-      return subGraphList;
+      return pemjaConfig;
+    }
+
+    private JSONObject getPyConfig(Long projectId) {
+      String projectConfig = projectService.queryById(projectId).getConfig();
+      JSONObject vec =
+          JSONObject.parseObject(projectConfig).getJSONObject(CommonConstants.VECTORIZER);
+      JSONObject pyConfig = new JSONObject();
+      pyConfig.put(BuilderConstant.TYPE, BuilderConstant.BATCH);
+      pyConfig.put(BuilderConstant.VECTORIZE_MODEL, vec);
+      pyConfig.put(CommonConstants.TASK_ID, context.getInstance().getId());
+      return pyConfig;
     }
   }
 }

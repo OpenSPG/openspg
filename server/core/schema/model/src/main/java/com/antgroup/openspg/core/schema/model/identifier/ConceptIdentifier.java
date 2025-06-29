@@ -24,7 +24,7 @@ public class ConceptIdentifier extends BaseSPGIdentifier {
   /** The seperator symbol between parent and child concept names. */
   public static final String SEPARATOR = "-";
 
-  public static final String ROOT = "__ROOT__";
+  public static final String ROOT = "_root";
 
   /** Unique id of concept node. */
   private final String id;

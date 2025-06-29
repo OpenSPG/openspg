@@ -14,7 +14,8 @@
 package com.antgroup.openspg.server.infra.dao.repository.common;
 
 import com.antgroup.openspg.common.util.CollectionsUtils;
-import com.antgroup.openspg.server.api.facade.Paged;
+import com.antgroup.openspg.common.util.StringUtils;
+import com.antgroup.openspg.common.util.enums.VisibilityEnum;
 import com.antgroup.openspg.server.api.facade.dto.common.request.ProjectQueryRequest;
 import com.antgroup.openspg.server.common.model.exception.ProjectException;
 import com.antgroup.openspg.server.common.model.project.Project;
@@ -24,7 +25,6 @@ import com.antgroup.openspg.server.infra.dao.dataobject.ProjectDOExample;
 import com.antgroup.openspg.server.infra.dao.mapper.ProjectDOMapper;
 import com.antgroup.openspg.server.infra.dao.repository.common.convertor.ProjectConvertor;
 import com.antgroup.openspg.server.infra.dao.repository.schema.enums.ValidStatusEnum;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,6 +53,9 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     ProjectDO projectDO = ProjectConvertor.toDO(project);
     projectDO.setGmtModified(new Date());
     projectDO.setGmtCreate(new Date());
+    if (StringUtils.isBlank(projectDO.getVisibility())) {
+      projectDO.setVisibility(VisibilityEnum.PRIVATE.name());
+    }
     projectDOMapper.insert(projectDO);
     return projectDO.getId();
   }
@@ -82,6 +85,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     projectDOMapper.deleteFromKgReasonTask(projectId);
     projectDOMapper.deleteFromKgReasonTutorial(projectId);
     projectDOMapper.deleteFromKgBuilderJob(projectId);
+    projectDOMapper.deleteFromKgResourcePermission(projectId);
     return projectDOMapper.deleteByPrimaryKey(projectId);
   }
 
@@ -102,28 +106,26 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     if (request.getNamespace() != null) {
       criteria.andNamespaceEqualTo(request.getNamespace());
     }
+    if (CollectionUtils.isNotEmpty(request.getProjectIdList())) {
+      criteria.andIdIn(request.getProjectIdList());
+    }
 
     List<ProjectDO> projectDOS = projectDOMapper.selectByExample(example);
     return CollectionsUtils.listMap(projectDOS, ProjectConvertor::toModel);
   }
 
   @Override
-  public Paged<Project> queryPaged(ProjectQueryRequest query, int start, int size) {
-    Paged<Project> result = new Paged<>();
-    result.setPageIdx(start);
-    result.setPageSize(size);
-    long count = projectDOMapper.selectCountByCondition(query, query.getOrderByGmtCreateDesc());
-    result.setTotal(count);
-    List<Project> list = new ArrayList<>();
-    start = start > 0 ? start : 1;
-    int startPage = (start - 1) * size;
-    List<ProjectDO> projectDOS =
-        projectDOMapper.selectByCondition(query, query.getOrderByGmtCreateDesc(), startPage, size);
-    if (CollectionUtils.isNotEmpty(projectDOS)) {
-      list = projectDOS.stream().map(ProjectConvertor::toModel).collect(Collectors.toList());
-    }
-    result.setResults(list);
-    return result;
+  public List<Project> queryPageData(ProjectQueryRequest query, int start, int size) {
+    int startIndex = (Math.max(start, 1) - 1) * size;
+    return projectDOMapper
+        .selectByCondition(query, query.getOrderByGmtCreateDesc(), startIndex, size).stream()
+        .map(ProjectConvertor::toModel)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public Long queryPageCount(ProjectQueryRequest query) {
+    return projectDOMapper.selectCountByCondition(query, query.getOrderByGmtCreateDesc());
   }
 
   @Override

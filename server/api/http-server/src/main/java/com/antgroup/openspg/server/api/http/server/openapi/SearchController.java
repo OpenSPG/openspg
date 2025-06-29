@@ -14,6 +14,7 @@
 package com.antgroup.openspg.server.api.http.server.openapi;
 
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.IdxRecord;
+import com.antgroup.openspg.server.api.facade.dto.service.request.CustomSearchRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.request.SPGTypeSearchRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.request.TextSearchRequest;
 import com.antgroup.openspg.server.api.facade.dto.service.request.VectorSearchRequest;
@@ -73,6 +74,20 @@ public class SearchController extends BaseController {
           @Override
           public List<IdxRecord> action() {
             return searchManager.vectorSearch(request);
+          }
+        });
+  }
+
+  @RequestMapping(method = RequestMethod.POST, value = "/custom")
+  public ResponseEntity<Object> textSearch(@RequestBody CustomSearchRequest request) {
+    return HttpBizTemplate.execute(
+        new HttpBizCallback<List<IdxRecord>>() {
+          @Override
+          public void check() {}
+
+          @Override
+          public List<IdxRecord> action() {
+            return searchManager.customSearch(request);
           }
         });
   }

@@ -26,7 +26,7 @@ public class ReleaseDO {
 
   private Integer version;
 
-  private String userId;
+  private String userNo;
 
   private String status;
 
@@ -70,12 +70,12 @@ public class ReleaseDO {
     this.version = version;
   }
 
-  public String getUserId() {
-    return userId;
+  public String getUserNo() {
+    return userNo;
   }
 
-  public void setUserId(String userId) {
-    this.userId = userId == null ? null : userId.trim();
+  public void setUserNo(String userNo) {
+    this.userNo = userNo == null ? null : userNo.trim();
   }
 
   public String getStatus() {

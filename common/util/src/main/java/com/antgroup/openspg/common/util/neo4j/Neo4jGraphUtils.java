@@ -70,6 +70,10 @@ public class Neo4jGraphUtils {
                 neo4jIndex.createVectorIndex(
                     schemaType.getName(), property.getName(), vectorDimensions);
                 break;
+              case SPARSE_VECTOR:
+              case TEXT_AND_SPARSE_VECTOR:
+                log.info("Neo4j doesn't support sparse vector index: {}", indexType);
+                break;
               default:
                 log.info("Undefined IndexTypeEnum {}", indexType);
             }

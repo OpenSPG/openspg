@@ -23,6 +23,7 @@ import com.antgroup.openspg.common.util.CommonUtils;
 import com.antgroup.openspg.common.util.StringUtils;
 import com.antgroup.openspg.common.util.pemja.PemjaUtils;
 import com.antgroup.openspg.common.util.pemja.model.PemjaConfig;
+import com.antgroup.openspg.server.common.model.CommonConstants;
 import com.antgroup.openspg.server.common.model.bulider.BuilderJob;
 import com.antgroup.openspg.server.common.model.project.Project;
 import com.antgroup.openspg.server.common.model.scheduler.SchedulerEnum;
@@ -98,6 +99,8 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
     switch (task.getStatus()) {
       case RUNNING:
         break;
+      case WAIT:
+        return SchedulerEnum.TaskStatus.RUNNING;
       case ERROR:
         int retryNum = 3;
         if (schedulerTask.getExecuteNum() % retryNum == 0) {
@@ -186,6 +189,7 @@ public class KagSplitterAsyncTask extends AsyncTaskExecuteTemplate {
         TaskExecuteContext context, List<ChunkRecord.Chunk> chunks) {
       List<ChunkRecord.Chunk> chunkList = Lists.newArrayList();
       JSONObject pyConfig = new JSONObject();
+      pyConfig.put(CommonConstants.TASK_ID, context.getInstance().getId());
       Project project = projectService.queryById(context.getInstance().getProjectId());
       SchedulerJob job = context.getJob();
       BuilderJob builderJob = builderJobService.getById(Long.valueOf(job.getInvokerId()));

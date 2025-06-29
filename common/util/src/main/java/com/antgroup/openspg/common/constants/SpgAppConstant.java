@@ -12,9 +12,12 @@
  */
 package com.antgroup.openspg.common.constants;
 
+import com.google.common.collect.Lists;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class SpgAppConstant {
 
@@ -56,6 +59,9 @@ public class SpgAppConstant {
 
   /** kag config */
   public static final String KAG_CONFIG = "KAG_CONFIG";
+
+  /** kag env */
+  public static final String KAG_ENV = "KAG_ENV";
 
   /** kag config */
   public static final String APPLICATION_PROPERTIES = "APPLICATION_PROPERTIES";
@@ -111,6 +117,9 @@ public class SpgAppConstant {
   /** currentLanguage */
   public static final String CURRENT_LANGUAGE = "currentLanguage";
 
+  /** LANGUAGE */
+  public static final String LANGUAGE = "language";
+
   /** temperature */
   public static final String TEMPERATURE = "temperature";
 
@@ -134,13 +143,26 @@ public class SpgAppConstant {
 
   /** hidden property */
   public static Set<String> HIDDEN_PROPERTY =
-      new HashSet<String>(Arrays.asList("_content_vector", "_name_vector", "_desc_vector"));
+      new HashSet<String>(
+          Arrays.asList("_content_vector", "_name_vector", "_desc_vector", "_description_vector"));
+
+  /** model id */
+  public static final String MODEL_ID = "modelId";
+
+  /** model type */
+  public static final String MODEL_TYPE = "modelType";
+
+  /** logo */
+  public static final String LOGO = "logo";
 
   /** text/event-stream */
   public static final String STEAM_CONTENT_TYPE = "text/event-stream;charset=UTF-8";
 
   /** json/application */
   public static final String JSON_CONTENT_TYPE = "application/json;charset=UTF-8";
+
+  /** stream empty line */
+  public static final String STREAM_EMPTY_LINE = "data: \n\n";
 
   /** stream end line */
   public static final String STREAM_END_LINE = "data: [DONE]\n\n";
@@ -150,4 +172,43 @@ public class SpgAppConstant {
 
   /** stream error line */
   public static final String STREAM_ERROR_LINE = "data: [ERROR]\n\n";
+
+  /** stream think end tag */
+  public static final String STREAM_THINK_END_TAG = "</think>";
+
+  /** visibility */
+  public static final String VISIBILITY = "visibility";
+
+  /** customize */
+  public static final String CUSTOMIZE = "customize";
+
+  /** mcp servers */
+  public static final String MCP_SERVERS = "mcp_servers";
+
+  /** senior */
+  public static final String SENIOR = "senior";
+
+  /** provider */
+  public static final String PROVIDER = "provider";
+
+  /** app_id */
+  public static final String APP_ID = "app_id";
+
+  /** web display inherited properties */
+  public static final List<String> DISPLAY_INHERIT_PROPERTIES =
+      Lists.newArrayList("name", "description");
+
+  public static final String NAME = "name";
+  public static final String NAME_ZH = "名称";
+
+  public static final String DESCRIPTION = "description";
+  public static final String DESCRIPTION_ZH = "描述";
+
+  public static final String CHAT = "chat";
+  public static final String ENAME = "ename";
+  public static final String HOST_ADDR = "host_addr";
+  public static final String MAYA_HTTP = "maya_http";
+
+  /** account name check pattern */
+  public static final Pattern ACCOUNT_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{6,20}$");
 }

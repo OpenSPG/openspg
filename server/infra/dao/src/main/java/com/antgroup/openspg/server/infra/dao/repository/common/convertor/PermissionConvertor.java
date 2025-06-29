@@ -15,6 +15,8 @@ package com.antgroup.openspg.server.infra.dao.repository.common.convertor;
 
 import com.antgroup.openspg.server.common.model.permission.Permission;
 import com.antgroup.openspg.server.infra.dao.dataobject.PermissionDO;
+import com.google.common.collect.Lists;
+import java.util.List;
 
 public class PermissionConvertor {
 
@@ -41,5 +43,16 @@ public class PermissionConvertor {
         permissionDO.getResourceId(),
         permissionDO.getResourceTag(),
         permissionDO.getRoleId());
+  }
+
+  public static List<Permission> toModelList(List<PermissionDO> paramDOs) {
+    if (paramDOs == null) {
+      return null;
+    }
+    List<Permission> permissionList = Lists.newArrayList();
+    for (PermissionDO permissionDO : paramDOs) {
+      permissionList.add(toModel(permissionDO));
+    }
+    return permissionList;
   }
 }

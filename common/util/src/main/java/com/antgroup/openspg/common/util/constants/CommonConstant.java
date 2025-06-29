@@ -19,4 +19,6 @@ public class CommonConstant {
   public static final String TUNNEL_ENDPOINT = "TunnelEndpoint";
 
   public static final String KAG = "kag.";
+
+  public static final String KGFABRIC_GRAPH_STORE = "kgfabric";
 }

@@ -29,19 +29,14 @@ import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.Edge
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.LPGPropertyRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.record.VertexRecord;
 import com.antgroup.openspg.cloudext.interfaces.graphstore.model.lpg.schema.EdgeTypeName;
+import com.antgroup.openspg.cloudext.interfaces.graphstore.util.TypeChecker;
 import com.antgroup.openspg.server.common.model.project.Project;
 import com.google.common.collect.Lists;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -188,7 +183,11 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
       List<VertexRecord> vertexRecords = Lists.newArrayList();
       List<LPGPropertyRecord> properties = Lists.newArrayList();
       for (Map.Entry<String, Object> entry : node.getProperties().entrySet()) {
-        properties.add(new LPGPropertyRecord(entry.getKey(), entry.getValue()));
+        Object entryValue = entry.getValue();
+        if (!TypeChecker.isArrayOrCollectionOfPrimitives(entryValue)) {
+          entryValue = JSON.toJSONString(entryValue);
+        }
+        properties.add(new LPGPropertyRecord(entry.getKey(), entryValue));
       }
       VertexRecord vertexRecord = new VertexRecord(node.getId(), label, properties);
       vertexRecords.add(vertexRecord);
@@ -226,7 +225,11 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
       List<EdgeRecord> edgeRecords = Lists.newArrayList();
       List<LPGPropertyRecord> properties = Lists.newArrayList();
       for (Map.Entry<String, Object> entry : edge.getProperties().entrySet()) {
-        properties.add(new LPGPropertyRecord(entry.getKey(), entry.getValue()));
+        Object entryValue = entry.getValue();
+        if (!TypeChecker.isArrayOrCollectionOfPrimitives(entryValue)) {
+          entryValue = JSON.toJSONString(entryValue);
+        }
+        properties.add(new LPGPropertyRecord(entry.getKey(), entryValue));
       }
 
       EdgeTypeName edgeTypeName =

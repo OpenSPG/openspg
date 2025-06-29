@@ -63,5 +63,9 @@
       <groupId>com.antgroup.openspg.builder</groupId>
       <artifactId>builder-runner-local</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.antgroup.openspg.server</groupId>
+      <artifactId>biz-schema</artifactId>
+    </dependency>
   </dependencies>
 </project>

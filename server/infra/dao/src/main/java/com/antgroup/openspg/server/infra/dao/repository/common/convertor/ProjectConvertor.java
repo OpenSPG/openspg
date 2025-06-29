@@ -20,7 +20,6 @@ public class ProjectConvertor {
 
   public static ProjectDO toDO(Project project) {
     ProjectDO projectInfoDO = new ProjectDO();
-
     projectInfoDO.setId(project.getId());
     projectInfoDO.setName(project.getName());
     projectInfoDO.setDescription(project.getDescription());
@@ -28,6 +27,8 @@ public class ProjectConvertor {
     projectInfoDO.setBizDomainId(project.getTenantId());
     projectInfoDO.setNamespace(project.getNamespace());
     projectInfoDO.setConfig(project.getConfig());
+    projectInfoDO.setVisibility(project.getVisibility());
+    projectInfoDO.setTag(project.getTag());
     return projectInfoDO;
   }
 
@@ -35,13 +36,16 @@ public class ProjectConvertor {
     if (null == projectInfoDO) {
       return null;
     }
-
-    return new Project(
-        projectInfoDO.getId(),
-        projectInfoDO.getName(),
-        projectInfoDO.getDescription(),
-        projectInfoDO.getNamespace(),
-        projectInfoDO.getBizDomainId(),
-        projectInfoDO.getConfig());
+    Project project =
+        new Project(
+            projectInfoDO.getId(),
+            projectInfoDO.getName(),
+            projectInfoDO.getDescription(),
+            projectInfoDO.getNamespace(),
+            projectInfoDO.getBizDomainId(),
+            projectInfoDO.getConfig(),
+            projectInfoDO.getTag());
+    project.setVisibility(projectInfoDO.getVisibility());
+    return project;
   }
 }

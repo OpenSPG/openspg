@@ -49,6 +49,8 @@ object PropertySchemaOps {
     spgType match {
       case entityType: EntityType =>
         KTAdvanced(entityType.getName)
+      case indexType: IndexType =>
+        KTAdvanced(indexType.getName)
       case conceptType: ConceptType =>
         KTConcept(conceptType.getName)
       case eventType: EventType =>
@@ -65,6 +67,8 @@ object PropertySchemaOps {
   def toNodeType(spgType: SPGTypeEnum): NodeType.Value = {
     spgType match {
       case SPGTypeEnum.ENTITY_TYPE =>
+        NodeType.ADVANCED
+      case SPGTypeEnum.INDEX_TYPE =>
         NodeType.ADVANCED
       case SPGTypeEnum.CONCEPT_TYPE =>
         NodeType.CONCEPT

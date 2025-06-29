@@ -44,4 +44,5 @@ public class BuilderJob extends BaseModel {
   private String lifeCycle;
   private String action;
   private String dependence;
+  private String retrievals;
 }

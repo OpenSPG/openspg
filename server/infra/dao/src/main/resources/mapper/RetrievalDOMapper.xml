@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 OpenSPG Authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antgroup.openspg.server.infra.dao.mapper.RetrievalDOMapper">
+  <resultMap id="BaseResultMap" type="com.antgroup.openspg.server.infra.dao.dataobject.RetrievalDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="is_default" jdbcType="VARCHAR" property="isDefault" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="chinese_name" jdbcType="VARCHAR" property="chineseName" />
+    <result column="schema_desc" jdbcType="LONGVARCHAR" property="schemaDesc" />
+    <result column="scenarios_desc" jdbcType="LONGVARCHAR" property="scenariosDesc" />
+    <result column="cost_desc" jdbcType="LONGVARCHAR" property="costDesc" />
+    <result column="method_desc" jdbcType="LONGVARCHAR" property="methodDesc" />
+    <result column="extractor_desc" jdbcType="LONGVARCHAR" property="extractorDesc" />
+    <result column="retriever_desc" jdbcType="LONGVARCHAR" property="retrieverDesc" />
+    <result column="module_path" jdbcType="VARCHAR" property="modulePath" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="extension" jdbcType="LONGVARCHAR" property="extension" />
+    <result column="config" jdbcType="LONGVARCHAR" property="config" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, gmt_create, gmt_modified, create_user, update_user, type, status, is_default, name, chinese_name, schema_desc, scenarios_desc, cost_desc, method_desc, extractor_desc, retriever_desc, module_path, class_name, method, extension, config
+  </sql>
+
+  <insert id="insert" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.RetrievalDO">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into kg_retrieval (gmt_create, gmt_modified,
+    create_user, update_user, type, status, is_default,
+    name, chinese_name, schema_desc,
+    scenarios_desc, cost_desc, method_desc, extractor_desc, retriever_desc,
+    module_path, class_name, method, extension, config
+    )
+    values (#{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP},
+    #{createUser,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},  #{status,jdbcType=VARCHAR}, #{isDefault,jdbcType=VARCHAR},
+    #{name,jdbcType=VARCHAR}, #{chineseName,jdbcType=VARCHAR}, #{schemaDesc,jdbcType=LONGVARCHAR}, #{scenariosDesc,jdbcType=LONGVARCHAR}, #{costDesc,jdbcType=LONGVARCHAR},
+    #{methodDesc,jdbcType=LONGVARCHAR}, #{extractorDesc,jdbcType=LONGVARCHAR}, #{retrieverDesc,jdbcType=LONGVARCHAR}, #{modulePath,jdbcType=VARCHAR},
+    #{className,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{extension,jdbcType=LONGVARCHAR}, #{config,jdbcType=LONGVARCHAR}
+    )
+  </insert>
+
+  <delete id="deleteById" parameterType="java.lang.Long">
+    delete from kg_retrieval where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <update id="update" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.RetrievalDO">
+    update kg_retrieval
+    <set>
+      gmt_modified = CURRENT_TIMESTAMP,
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null">
+        is_default = #{isDefault,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="chineseName != null">
+        chinese_name = #{chineseName,jdbcType=VARCHAR},
+      </if>
+      <if test="schemaDesc != null">
+        schema_desc = #{schemaDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="scenariosDesc != null">
+        scenarios_desc = #{scenariosDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="costDesc != null">
+        cost_desc = #{costDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="methodDesc != null">
+        method_desc = #{methodDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="extractorDesc != null">
+        extractor_desc = #{extractorDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="retrieverDesc != null">
+        retriever_desc = #{retrieverDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="modulePath != null">
+        module_path = #{modulePath,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null">
+        class_name = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        method = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="config != null">
+        config = #{config,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap" useCache="false">
+    select 
+    <include refid="Base_Column_List" />
+    from kg_retrieval
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="getByName" parameterType="java.lang.String" resultMap="BaseResultMap" useCache="false">
+    select
+    <include refid="Base_Column_List" />
+    from kg_retrieval
+    where name = #{name,jdbcType=VARCHAR}
+  </select>
+
+  <sql id="Query_Where_Sql">
+    <if test="keyword != null and keyword != ''">
+    and ( name like concat('%', #{keyword}, '%') or
+      chinese_name like concat('%', #{keyword}, '%') or
+      schema_desc like concat('%', #{keyword}, '%') or
+      scenarios_desc like concat('%', #{keyword}, '%') or
+      cost_desc like concat('%', #{keyword}, '%') or
+      method_desc like concat('%', #{keyword}, '%') or
+      module_path like concat('%', #{keyword}, '%') or
+      class_name like concat('%', #{keyword}, '%') or
+      method like concat('%', #{keyword}, '%') )
+    </if>
+    <if test="createUser != null">
+      create_user = #{createUser,jdbcType=VARCHAR}
+    </if>
+    <if test="updateUser != null">
+      and update_user = #{updateUser,jdbcType=VARCHAR}
+    </if>
+    <if test="type != null">
+      and type = #{type,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null">
+      and status = #{status,jdbcType=VARCHAR},
+    </if>
+    <if test="isDefault != null">
+      and is_default = #{isDefault,jdbcType=VARCHAR},
+    </if>
+    <if test="name != null">
+      and name like concat('%', #{name,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="chineseName != null">
+      and chinese_name like concat('%', #{chineseName,jdbcType=VARCHAR}, '%')
+    </if>
+    <if test="schemaDesc != null">
+      and schema_desc like concat('%', #{schemaDesc,jdbcType=LONGVARCHAR}, '%')
+    </if>
+    <if test="scenariosDesc != null">
+      and scenarios_desc like concat('%', #{scenariosDesc,jdbcType=LONGVARCHAR}, '%')
+    </if>
+    <if test="costDesc != null">
+      and cost_desc like concat('%', #{costDesc,jdbcType=LONGVARCHAR}, '%')
+    </if>
+    <if test="modulePath != null">
+      and module_path = #{modulePath,jdbcType=VARCHAR}
+    </if>
+    <if test="className != null">
+      and class_name = #{className,jdbcType=VARCHAR}
+    </if>
+    <if test="method != null">
+      and method = #{method,jdbcType=VARCHAR}
+    </if>
+    <if test="extension != null and extension != ''">
+      and extension like concat('%', #{extension,jdbcType=LONGVARCHAR}, '%')
+    </if>
+    <if test="config != null and computingConf != ''">
+      and config like concat('%', #{config,jdbcType=LONGVARCHAR}, '%')
+    </if>
+    <if test="ids != null and ids.size() > 0">
+      and id in
+      <foreach collection="ids" item="item" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
+  </sql>
+
+  <select id="query" parameterType="com.antgroup.openspg.server.common.model.retrieval.RetrievalQuery" resultMap="BaseResultMap" useCache="false">
+    select <include refid="Base_Column_List" /> from kg_retrieval
+    <trim prefix="where" prefixOverrides="and">
+      <include refid="Query_Where_Sql"/>
+    </trim>
+    <choose>
+      <when test="sort != null">
+        order by ${@com.antgroup.openspg.common.util.StringUtils@humpToLine(sort)}
+        <choose> <when test="order == 'desc'">  desc </when> <otherwise>  asc  </otherwise> </choose>
+      </when>
+      <otherwise>
+        order by id desc
+      </otherwise>
+    </choose>
+    <if test="pageNo != null">
+      limit ${(pageNo - 1) * pageSize}, #{pageSize}
+    </if>
+  </select>
+
+  <select id="selectCountByQuery" parameterType="com.antgroup.openspg.server.common.model.retrieval.RetrievalQuery"
+          resultType="java.lang.Integer" useCache="false">
+    select count(*) from kg_retrieval
+    <trim prefix="where" prefixOverrides="and">
+      <include refid="Query_Where_Sql"/>
+    </trim>
+  </select>
+
+</mapper>

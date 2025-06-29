@@ -162,6 +162,11 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
+  <update id="deleteIndexType">
+    update kg_ontology_entity_property_range
+    set index_type = null
+    where id = #{id,jdbcType=BIGINT}
+  </update>
   <insert id="insert" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.OntologyPropertyDO">
     insert into kg_ontology_entity_property_range (id, domain_id, property_name, 
       range_id, property_name_zh, constraint_id, 

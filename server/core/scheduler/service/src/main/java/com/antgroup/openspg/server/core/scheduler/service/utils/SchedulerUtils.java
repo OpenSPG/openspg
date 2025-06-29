@@ -166,6 +166,20 @@ public class SchedulerUtils {
     }
   }
 
+  public static void getGraphSize(SubGraphRecord record, AtomicLong nodes, AtomicLong edges) {
+    nodes = (nodes == null) ? new AtomicLong(0) : nodes;
+    edges = (edges == null) ? new AtomicLong(0) : edges;
+
+    List<SubGraphRecord.Node> resultNodes = record.getResultNodes();
+    if (CollectionUtils.isNotEmpty(resultNodes)) {
+      nodes.addAndGet(resultNodes.size());
+    }
+    List<SubGraphRecord.Edge> resultEdges = record.getResultEdges();
+    if (CollectionUtils.isNotEmpty(resultEdges)) {
+      edges.addAndGet(resultEdges.size());
+    }
+  }
+
   public static List<String> getTaskInputs(
       SchedulerTaskService taskService, SchedulerInstance instance, SchedulerTask task) {
     List<TaskExecuteDag.Node> nodes =
@@ -180,5 +194,36 @@ public class SchedulerUtils {
           }
         });
     return inputs;
+  }
+
+  public static void addSubGraph(
+      List<SubGraphRecord> result, SubGraphRecord newRecord, Integer subGraphBatchMax) {
+    if (CollectionUtils.isEmpty(result)) {
+      result.add(newRecord);
+      return;
+    }
+    if (CollectionUtils.isEmpty(newRecord.getResultNodes())) {
+      newRecord.setResultNodes(Lists.newArrayList());
+    }
+    if (CollectionUtils.isEmpty(newRecord.getResultEdges())) {
+      newRecord.setResultEdges(Lists.newArrayList());
+    }
+
+    SubGraphRecord lastRecord = result.get(result.size() - 1);
+    if (CollectionUtils.isEmpty(lastRecord.getResultNodes())) {
+      lastRecord.setResultNodes(Lists.newArrayList());
+    }
+    if (CollectionUtils.isEmpty(lastRecord.getResultEdges())) {
+      lastRecord.setResultEdges(Lists.newArrayList());
+    }
+
+    int totalNodesAndEdges = lastRecord.getResultNodes().size();
+
+    if (totalNodesAndEdges + newRecord.getResultNodes().size() > subGraphBatchMax) {
+      result.add(newRecord);
+    } else {
+      lastRecord.getResultNodes().addAll(newRecord.getResultNodes());
+      lastRecord.getResultEdges().addAll(newRecord.getResultEdges());
+    }
   }
 }

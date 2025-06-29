@@ -32,6 +32,9 @@ public class DefaultValue {
   @Value("${cloudext.objectstorage.url:}")
   private String objectStorageUrl;
 
+  @Value("${cloudext.objectstorage.show.url:}")
+  private String objectStorageShowUrl;
+
   @Value("${cloudext.computingengine.url:}")
   private String computingEngineUrl;
 
@@ -40,6 +43,9 @@ public class DefaultValue {
 
   @Value("${builder.model.execute.num:20}")
   private Integer modelExecuteNum;
+
+  @Value("${builder.subgraph.batch.max:100}")
+  private Integer subGraphBatchMax;
 
   @Value("${python.exec:}")
   private String pythonExec;
@@ -58,4 +64,7 @@ public class DefaultValue {
 
   @Value("${yuque.api.url:}")
   private String yuQueApiUrl;
+
+  @Value("${web_request_url:}")
+  private String webRequestUrl;
 }

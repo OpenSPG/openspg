@@ -22,6 +22,7 @@ import com.antgroup.openspg.server.core.schema.service.type.model.SimpleSPGType;
 import com.antgroup.openspg.server.core.schema.service.util.PropertyUtils;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -83,6 +84,19 @@ public class SPGTypeAssemble {
         typeProperties.add(p);
       }
     }
+    typeProperties =
+        typeProperties.stream()
+            .collect(
+                Collectors.collectingAndThen(
+                    Collectors.toMap(
+                        Property::getName,
+                        p -> p,
+                        (existing, replacement) ->
+                            existing.getInherited() && !replacement.getInherited()
+                                ? replacement
+                                : existing,
+                        LinkedHashMap::new),
+                    map -> new ArrayList<>(map.values())));
     return typeProperties;
   }
 

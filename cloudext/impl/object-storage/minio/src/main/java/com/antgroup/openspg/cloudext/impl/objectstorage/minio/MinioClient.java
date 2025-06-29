@@ -37,7 +37,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.IOUtils;
@@ -72,6 +74,7 @@ public class MinioClient implements ObjectStorageClient {
 
   @Override
   public Boolean saveData(String bucketName, byte[] data, String fileKey) {
+    Long start = System.currentTimeMillis();
     ByteArrayInputStream inputStream = null;
     try {
       inputStream = new ByteArrayInputStream(data);
@@ -87,12 +90,14 @@ public class MinioClient implements ObjectStorageClient {
       log.error(e.getMessage(), e);
       throw new RuntimeException("minio saveData Exception:" + e.getMessage(), e);
     } finally {
+      log.info("minio saveData cons:{} fileKey:{}", System.currentTimeMillis() - start, fileKey);
       IOUtils.closeQuietly(inputStream);
     }
   }
 
   @Override
   public byte[] getData(String bucketName, String fileKey) {
+    Long start = System.currentTimeMillis();
     try {
       GetObjectArgs getObjectArgs =
           GetObjectArgs.builder().bucket(bucketName).object(fileKey).build();
@@ -100,6 +105,8 @@ public class MinioClient implements ObjectStorageClient {
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new RuntimeException("minio getData Exception:" + e.getMessage(), e);
+    } finally {
+      log.info("minio getData cons:{} fileKey:{}", System.currentTimeMillis() - start, fileKey);
     }
   }
 
@@ -239,10 +246,14 @@ public class MinioClient implements ObjectStorageClient {
   @Override
   public Boolean removeObject(String bucketName, String fileKey) {
     try {
-      RemoveObjectArgs removeObjectArgs =
-          RemoveObjectArgs.builder().bucket(bucketName).object(fileKey).build();
-      minioClient.removeObject(removeObjectArgs);
-      return true;
+      if (isDirectory(bucketName, fileKey)) {
+        return removeDirectory(bucketName, fileKey);
+      } else {
+        RemoveObjectArgs removeObjectArgs =
+            RemoveObjectArgs.builder().bucket(bucketName).object(fileKey).build();
+        minioClient.removeObject(removeObjectArgs);
+        return true;
+      }
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new RuntimeException("minio removeObject Exception:" + e.getMessage(), e);
@@ -252,19 +263,12 @@ public class MinioClient implements ObjectStorageClient {
   @Override
   public Boolean removeDirectory(String bucketName, String directoryPath) {
     try {
-      Iterable<Result<Item>> objects =
-          minioClient.listObjects(
-              ListObjectsArgs.builder()
-                  .bucket(bucketName)
-                  .prefix(directoryPath)
-                  .recursive(true)
-                  .build());
+      List<String> files = getAllFilesRecursively(bucketName, directoryPath);
 
-      for (Result<Item> result : objects) {
-        Item item = result.get();
-        log.info("minio Deleting: " + item.objectName());
-        if (item.objectName().startsWith(directoryPath)) {
-          removeObject(bucketName, item.objectName());
+      for (String file : files) {
+        log.info("minio Deleting: " + file);
+        if (file.startsWith(directoryPath)) {
+          removeObject(bucketName, file);
         }
       }
       return true;
@@ -272,6 +276,51 @@ public class MinioClient implements ObjectStorageClient {
       log.error(e.getMessage(), e);
       throw new RuntimeException("minio removeDirectory Exception:" + e.getMessage(), e);
     }
+  }
+
+  @Override
+  public Boolean isDirectory(String bucketName, String path) {
+    try {
+      Iterable<Result<Item>> items =
+          minioClient.listObjects(
+              ListObjectsArgs.builder().bucket(bucketName).prefix(path).recursive(false).build());
+      for (Result<Item> result : items) {
+        Item item = result.get();
+        if (item.isDir() || !item.objectName().equals(path)) {
+          return true;
+        }
+      }
+      return false;
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new RuntimeException("minio isDirectory Exception:" + e.getMessage(), e);
+    }
+  }
+
+  @Override
+  public List<String> getAllFilesRecursively(String bucketName, String directoryPath) {
+    List<String> filePaths = new ArrayList<>();
+    try {
+      Iterable<Result<Item>> items =
+          minioClient.listObjects(
+              ListObjectsArgs.builder()
+                  .bucket(bucketName)
+                  .prefix(directoryPath)
+                  .recursive(false)
+                  .build());
+      for (Result<Item> result : items) {
+        Item item = result.get();
+        if (item.isDir()) {
+          filePaths.addAll(getAllFilesRecursively(bucketName, item.objectName()));
+        } else {
+          filePaths.add(item.objectName());
+        }
+      }
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new RuntimeException("minio getAllFilesRecursively Exception: " + e.getMessage(), e);
+    }
+    return filePaths;
   }
 
   @Override
@@ -284,6 +333,27 @@ public class MinioClient implements ObjectStorageClient {
     } catch (Exception e) {
       log.error(e.getMessage(), e);
       throw new RuntimeException("minio getContentLength Exception:" + e.getMessage(), e);
+    }
+  }
+
+  @Override
+  public long getStorageSize(String bucketName, String path) {
+    try {
+      Iterable<Result<Item>> items =
+          minioClient.listObjects(
+              ListObjectsArgs.builder().bucket(bucketName).prefix(path).recursive(true).build());
+
+      long totalSizeInBytes = 0;
+      for (Result<Item> itemResult : items) {
+        Item item = itemResult.get();
+        if (!item.isDir()) {
+          totalSizeInBytes += item.size();
+        }
+      }
+      return totalSizeInBytes;
+    } catch (Exception e) {
+      log.error(e.getMessage(), e);
+      throw new RuntimeException("minio getStorageSize Exception:" + e.getMessage(), e);
     }
   }
 

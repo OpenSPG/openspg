@@ -22,6 +22,7 @@ import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.record.Id
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.idx.schema.IdxSchema;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.SearchRequest;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.BaseQuery;
+import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.CustomSearchQuery;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.FullTextSearchQuery;
 import com.antgroup.openspg.cloudext.interfaces.searchengine.model.request.query.VectorSearchQuery;
 import com.antgroup.openspg.common.util.neo4j.Neo4jCommonUtils;
@@ -106,9 +107,12 @@ public class Neo4jSearchClient extends BaseIdxSearchEngineClient {
       VectorSearchQuery q = (VectorSearchQuery) query;
       return client.vectorSearch(
           q.getLabel(), q.getPropertyKey(), q.getQueryVector(), topk, indexName, q.getEfSearch());
+    } else if (query instanceof CustomSearchQuery) {
+      CustomSearchQuery q = (CustomSearchQuery) query;
+      return client.customSearch(q.getCustomQuery());
     } else {
       throw new RuntimeException(
-          "Neo4jSearchClient only supports FullTextSearchQuery and VectorSearchQuery.");
+          "Neo4jSearchClient only supports FullTextSearchQuery, VectorSearchQuery and CustomSearchQuery.");
     }
   }
 

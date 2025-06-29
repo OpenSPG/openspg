@@ -22,6 +22,9 @@ public enum SPGTypeEnum {
   /** @see EntityType */
   ENTITY_TYPE,
 
+  /** @see IndexType */
+  INDEX_TYPE,
+
   /** @see ConceptType */
   CONCEPT_TYPE,
 

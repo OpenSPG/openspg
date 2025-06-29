@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 OpenSPG Authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the License
+  ~ is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied.
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.antgroup.openspg.server.infra.dao.mapper.UserModelDOMapper">
+    <resultMap id="BaseResultMap" type="com.antgroup.openspg.server.infra.dao.dataobject.UserModelDO">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+        <result column="creator" jdbcType="VARCHAR" property="creator" />
+        <result column="modifier" jdbcType="VARCHAR" property="modifier" />
+        <result column="instance_id" jdbcType="VARCHAR" property="instanceId" />
+        <result column="visibility" jdbcType="VARCHAR" property="visibility" />
+        <result column="provider" jdbcType="VARCHAR" property="provider" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="config" jdbcType="VARCHAR" property="config" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, gmt_create, gmt_modified, creator, modifier, instance_id, visibility, provider, name, config
+    </sql>
+
+    <insert id="insert" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.UserModelDO">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into kg_user_model (gmt_create, gmt_modified,
+        creator, modifier, instance_id, visibility,
+        provider, name, config
+        )
+        values (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+        #{creator,jdbcType=VARCHAR}, #{modifier,jdbcType=VARCHAR}, #{instanceId}, #{visibility,jdbcType=VARCHAR},
+        #{provider,jdbcType=VARCHAR}, #{name,jdbcType=BIGINT}, #{config,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete from kg_user_model where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="java.lang.Long">
+        delete from kg_user_model
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </delete>
+
+    <update id="update" parameterType="com.antgroup.openspg.server.infra.dao.dataobject.UserModelDO">
+        UPDATE kg_user_model
+        <set>
+            gmt_modified = CURRENT_TIMESTAMP,
+            <if test="modifier != null">
+                modifier = #{modifier,jdbcType=VARCHAR},
+            </if>
+            <if test="visibility != null">
+                visibility = #{visibility,jdbcType=VARCHAR},
+            </if>
+            <if test="provider != null">
+                provider = #{provider,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="config != null">
+                config = #{config,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from kg_user_model
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="getByInstanceId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from kg_user_model
+        where instance_id = #{instanceId,jdbcType=VARCHAR}
+    </select>
+
+    <sql id="Query_Where_Sql">
+        <if test="userNo != null">
+            and creator = #{userNo,jdbcType=BIGINT}
+        </if>
+        <if test="provider != null">
+            and provider = #{provider,jdbcType=VARCHAR}
+        </if>
+        <if test="visibility != null">
+            and visibility = #{visibility,jdbcType=VARCHAR}
+        </if>
+        <if test="name != null">
+            and name = #{name,jdbcType=VARCHAR}
+        </if>
+    </sql>
+
+    <select id="query" parameterType="com.antgroup.openspg.server.common.model.usermodel.UserModelQuery" resultMap="BaseResultMap" useCache="false">
+        select
+        <include refid="Base_Column_List"/>
+        from kg_user_model
+        <trim prefix="where" prefixOverrides="and">
+            <include refid="Query_Where_Sql"/>
+        </trim>
+        <choose>
+            <when test="sort != null">
+                order by ${@com.antgroup.openspg.common.util.StringUtils@humpToLine(sort)}
+                <choose> <when test="order == 'desc'">  desc </when> <otherwise>  asc  </otherwise> </choose>
+            </when>
+            <otherwise>
+                order by id desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getByProviderAndName" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from kg_user_model
+        where provider = #{provider,jdbcType=VARCHAR} and name = #{name,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectUserPrivateOrPublic" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from kg_user_model
+        where
+        visibility = 'PUBLIC_READ' or (visibility = 'PRIVATE' and creator = #{userNo,jdbcType=VARCHAR})
+        order by id desc
+    </select>
+
+    <update id="updateBaseInfoByIds">
+        UPDATE kg_user_model
+        <set>
+            gmt_modified = CURRENT_TIMESTAMP,
+            <if test="userNo != null">
+                modifier = #{userNo,jdbcType=VARCHAR},
+            </if>
+            <if test="visibility != null">
+                visibility = #{visibility,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="config != null">
+                config = #{config,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id,jdbcType=BIGINT}
+        </foreach>
+    </update>
+</mapper>

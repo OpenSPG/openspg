@@ -42,6 +42,7 @@ import org.apache.commons.collections4.CollectionUtils;
  *   <li>{@link EntityType}：such as User,Company etc.
  *   <li>{@link ConceptType}：such as brand,Administration etc.
  *   <li>{@link EventType}：such as Epidemic event,Terrorist incident etc.
+ *   <li>{@link IndexType}: such as summary index, chunk2query index etc
  * </ul>
  *
  * <br>

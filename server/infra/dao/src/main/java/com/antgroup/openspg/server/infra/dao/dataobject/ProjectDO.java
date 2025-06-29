@@ -14,7 +14,9 @@
 package com.antgroup.openspg.server.infra.dao.dataobject;
 
 import java.util.Date;
+import lombok.Data;
 
+@Data
 public class ProjectDO {
   private Long id;
 
@@ -32,77 +34,9 @@ public class ProjectDO {
 
   private Long bizDomainId;
 
+  private String visibility;
+
   private String config;
 
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name == null ? null : name.trim();
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description == null ? null : description.trim();
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status == null ? null : status.trim();
-  }
-
-  public Date getGmtCreate() {
-    return gmtCreate;
-  }
-
-  public void setGmtCreate(Date gmtCreate) {
-    this.gmtCreate = gmtCreate;
-  }
-
-  public Date getGmtModified() {
-    return gmtModified;
-  }
-
-  public void setGmtModified(Date gmtModified) {
-    this.gmtModified = gmtModified;
-  }
-
-  public String getNamespace() {
-    return namespace;
-  }
-
-  public void setNamespace(String namespace) {
-    this.namespace = namespace == null ? null : namespace.trim();
-  }
-
-  public Long getBizDomainId() {
-    return bizDomainId;
-  }
-
-  public void setBizDomainId(Long bizDomainId) {
-    this.bizDomainId = bizDomainId;
-  }
-
-  public String getConfig() {
-    return config;
-  }
-
-  public void setConfig(String config) {
-    this.config = config;
-  }
+  private String tag;
 }
