@@ -43,21 +43,21 @@ class QueryVertexRequest(object):
       attribute_map (dict): The key is attribute name
                             and the value is json key in definition.
     """
-    openapi_types = {"project_id": "int", "type_name": "str", "biz_id": "str"}
-
-    attribute_map = {
-        "project_id": "projectId",
-        "type_name": "typeName",
-        "biz_id": "bizId",
+    openapi_types = {
+        'project_id': 'int',
+        'type_name': 'str',
+        'biz_id': 'str',
+        'params': 'object'
     }
 
-    def __init__(
-        self,
-        project_id=None,
-        type_name=None,
-        biz_id=None,
-        local_vars_configuration=None,
-    ):  # noqa: E501
+    attribute_map = {
+        'project_id': 'projectId',
+        'type_name': 'typeName',
+        'biz_id': 'bizId',
+        'params': 'params'
+    }
+
+    def __init__(self, project_id=None, type_name=None, biz_id=None, params=None, local_vars_configuration=None):  # noqa: E501
         """QueryVertexRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -66,11 +66,14 @@ class QueryVertexRequest(object):
         self._project_id = None
         self._type_name = None
         self._biz_id = None
+        self._params = None
         self.discriminator = None
 
         self.project_id = project_id
         self.type_name = type_name
         self.biz_id = biz_id
+        if params is not None:
+            self.params = params
 
     @property
     def project_id(self):
@@ -90,12 +93,8 @@ class QueryVertexRequest(object):
         :param project_id: The project_id of this QueryVertexRequest.  # noqa: E501
         :type: int
         """
-        if (
-            self.local_vars_configuration.client_side_validation and project_id is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `project_id`, must not be `None`"
-            )  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and project_id is None:  # noqa: E501
+            raise ValueError("Invalid value for `project_id`, must not be `None`")  # noqa: E501
 
         self._project_id = project_id
 
@@ -117,12 +116,8 @@ class QueryVertexRequest(object):
         :param type_name: The type_name of this QueryVertexRequest.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation and type_name is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `type_name`, must not be `None`"
-            )  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and type_name is None:  # noqa: E501
+            raise ValueError("Invalid value for `type_name`, must not be `None`")  # noqa: E501
 
         self._type_name = type_name
 
@@ -144,14 +139,31 @@ class QueryVertexRequest(object):
         :param biz_id: The biz_id of this QueryVertexRequest.  # noqa: E501
         :type: str
         """
-        if (
-            self.local_vars_configuration.client_side_validation and biz_id is None
-        ):  # noqa: E501
-            raise ValueError(
-                "Invalid value for `biz_id`, must not be `None`"
-            )  # noqa: E501
+        if self.local_vars_configuration.client_side_validation and biz_id is None:  # noqa: E501
+            raise ValueError("Invalid value for `biz_id`, must not be `None`")  # noqa: E501
 
         self._biz_id = biz_id
+
+    @property
+    def params(self):
+        """Gets the params of this QueryVertexRequest.  # noqa: E501
+
+
+        :return: The params of this QueryVertexRequest.  # noqa: E501
+        :rtype: object
+        """
+        return self._params
+
+    @params.setter
+    def params(self, params):
+        """Sets the params of this QueryVertexRequest.
+
+
+        :param params: The params of this QueryVertexRequest.  # noqa: E501
+        :type: object
+        """
+
+        self._params = params
 
     def to_dict(self):
         """Returns the model properties as a dict"""
@@ -160,20 +172,18 @@ class QueryVertexRequest(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
+                result[attr] = list(map(
+                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
+                    value
+                ))
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(
-                    map(
-                        lambda item: (item[0], item[1].to_dict())
-                        if hasattr(item[1], "to_dict")
-                        else item,
-                        value.items(),
-                    )
-                )
+                result[attr] = dict(map(
+                    lambda item: (item[0], item[1].to_dict())
+                    if hasattr(item[1], "to_dict") else item,
+                    value.items()
+                ))
             else:
                 result[attr] = value
 

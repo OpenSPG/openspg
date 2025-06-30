@@ -754,28 +754,28 @@ class GraphApi(object):
             collection_formats=collection_formats,
         )
 
-    def graph_expend_one_hop_post(self, **kwargs):  # noqa: E501
-        """expend_one_hop  # noqa: E501
+        def graph_expend_one_hop_post(self, **kwargs):  # noqa: E501
+            """expend_one_hop  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.graph_expend_one_hop_post(async_req=True)
-        >>> result = thread.get()
+            This method makes a synchronous HTTP request by default. To make an
+            asynchronous HTTP request, please pass async_req=True
+            >>> thread = api.graph_expend_one_hop_post(async_req=True)
+            >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param ExpendOneHopRequest expend_one_hop_request:
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: ExpendOneHopResponse
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
+            :param async_req bool: execute request asynchronously
+            :param ExpendOneHopRequest expend_one_hop_request:
+            :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                     be returned without reading/decoding response
+                                     data. Default is True.
+            :param _request_timeout: timeout setting for this request. If one
+                                     number provided, it will be total request
+                                     timeout. It can also be a pair (tuple) of
+                                     (connection, read) timeouts.
+            :return: ExpendOneHopResponse
+                     If the method is called asynchronously,
+                     returns the request thread.
+            """
+        kwargs['_return_http_data_only'] = True
         return self.graph_expend_one_hop_post_with_http_info(**kwargs)  # noqa: E501
 
     def graph_expend_one_hop_post_with_http_info(self, **kwargs):  # noqa: E501
@@ -804,24 +804,26 @@ class GraphApi(object):
 
         local_var_params = locals()
 
-        all_params = ["expend_one_hop_request"]
+        all_params = [
+            'expend_one_hop_request'
+        ]
         all_params.extend(
             [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
             ]
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method graph_expend_one_hop_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
 
         collection_formats = {}
 
@@ -835,65 +837,57 @@ class GraphApi(object):
         local_var_files = {}
 
         body_params = None
-        if "expend_one_hop_request" in local_var_params:
-            body_params = local_var_params["expend_one_hop_request"]
+        if 'expend_one_hop_request' in local_var_params:
+            body_params = local_var_params['expend_one_hop_request']
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            "/graph/expendOneHop",
-            "POST",
+            '/graph/expendOneHop', 'POST',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="ExpendOneHopResponse",  # noqa: E501
+            response_type='ExpendOneHopResponse',  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
-    def graph_query_vertex_post(self, **kwargs):  # noqa: E501
-        """query_vertex  # noqa: E501
+        def graph_query_vertex_post(self, **kwargs):  # noqa: E501
+            """query_vertex  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.graph_query_vertex_post(async_req=True)
-        >>> result = thread.get()
+            This method makes a synchronous HTTP request by default. To make an
+            asynchronous HTTP request, please pass async_req=True
+            >>> thread = api.graph_query_vertex_post(async_req=True)
+            >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param QueryVertexRequest query_vertex_request:
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: QueryVertexResponse
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
+            :param async_req bool: execute request asynchronously
+            :param QueryVertexRequest query_vertex_request:
+            :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                     be returned without reading/decoding response
+                                     data. Default is True.
+            :param _request_timeout: timeout setting for this request. If one
+                                     number provided, it will be total request
+                                     timeout. It can also be a pair (tuple) of
+                                     (connection, read) timeouts.
+            :return: QueryVertexResponse
+                     If the method is called asynchronously,
+                     returns the request thread.
+            """
+        kwargs['_return_http_data_only'] = True
         return self.graph_query_vertex_post_with_http_info(**kwargs)  # noqa: E501
 
     def graph_query_vertex_post_with_http_info(self, **kwargs):  # noqa: E501
@@ -922,24 +916,26 @@ class GraphApi(object):
 
         local_var_params = locals()
 
-        all_params = ["query_vertex_request"]
+        all_params = [
+            'query_vertex_request'
+        ]
         all_params.extend(
             [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
             ]
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method graph_query_vertex_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
 
         collection_formats = {}
 
@@ -953,65 +949,57 @@ class GraphApi(object):
         local_var_files = {}
 
         body_params = None
-        if "query_vertex_request" in local_var_params:
-            body_params = local_var_params["query_vertex_request"]
+        if 'query_vertex_request' in local_var_params:
+            body_params = local_var_params['query_vertex_request']
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            "/graph/queryVertex",
-            "POST",
+            '/graph/queryVertex', 'POST',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="QueryVertexResponse",  # noqa: E501
+            response_type='QueryVertexResponse',  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
-    def graph_batch_query_vertex_post(self, **kwargs):  # noqa: E501
-        """batch_query_vertex  # noqa: E501
+        def graph_batch_query_vertex_post(self, **kwargs):  # noqa: E501
+            """batch_query_vertex  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.graph_batch_query_vertex_post(async_req=True)
-        >>> result = thread.get()
+            This method makes a synchronous HTTP request by default. To make an
+            asynchronous HTTP request, please pass async_req=True
+            >>> thread = api.graph_batch_query_vertex_post(async_req=True)
+            >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param BatchQueryVertexRequest batch_query_vertex_request:
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: BatchQueryVertexResponse
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
+            :param async_req bool: execute request asynchronously
+            :param BatchQueryVertexRequest batch_query_vertex_request:
+            :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                     be returned without reading/decoding response
+                                     data. Default is True.
+            :param _request_timeout: timeout setting for this request. If one
+                                     number provided, it will be total request
+                                     timeout. It can also be a pair (tuple) of
+                                     (connection, read) timeouts.
+            :return: BatchQueryVertexResponse
+                     If the method is called asynchronously,
+                     returns the request thread.
+            """
+        kwargs['_return_http_data_only'] = True
         return self.graph_batch_query_vertex_post_with_http_info(**kwargs)  # noqa: E501
 
     def graph_batch_query_vertex_post_with_http_info(self, **kwargs):  # noqa: E501
@@ -1040,24 +1028,26 @@ class GraphApi(object):
 
         local_var_params = locals()
 
-        all_params = ["batch_query_vertex_request"]
+        all_params = [
+            'batch_query_vertex_request'
+        ]
         all_params.extend(
             [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
             ]
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method graph_batch_query_vertex_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
 
         collection_formats = {}
 
@@ -1071,65 +1061,57 @@ class GraphApi(object):
         local_var_files = {}
 
         body_params = None
-        if "batch_query_vertex_request" in local_var_params:
-            body_params = local_var_params["batch_query_vertex_request"]
+        if 'batch_query_vertex_request' in local_var_params:
+            body_params = local_var_params['batch_query_vertex_request']
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            "/graph/batchQueryVertex",
-            "POST",
+            '/graph/batchQueryVertex', 'POST',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="BatchQueryVertexResponse",  # noqa: E501
+            response_type='BatchQueryVertexResponse',  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
 
-    def graph_match_path_post(self, **kwargs):  # noqa: E501
-        """match_path  # noqa: E501
+        def graph_match_path_post(self, **kwargs):  # noqa: E501
+            """match_path  # noqa: E501
 
-        This method makes a synchronous HTTP request by default. To make an
-        asynchronous HTTP request, please pass async_req=True
-        >>> thread = api.graph_match_path_post(async_req=True)
-        >>> result = thread.get()
+            This method makes a synchronous HTTP request by default. To make an
+            asynchronous HTTP request, please pass async_req=True
+            >>> thread = api.graph_match_path_post(async_req=True)
+            >>> result = thread.get()
 
-        :param async_req bool: execute request asynchronously
-        :param PathMatchRequest path_match_request:
-        :param _preload_content: if False, the urllib3.HTTPResponse object will
-                                 be returned without reading/decoding response
-                                 data. Default is True.
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :return: PathMatchResponse
-                 If the method is called asynchronously,
-                 returns the request thread.
-        """
-        kwargs["_return_http_data_only"] = True
+            :param async_req bool: execute request asynchronously
+            :param PathMatchRequest path_match_request:
+            :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                     be returned without reading/decoding response
+                                     data. Default is True.
+            :param _request_timeout: timeout setting for this request. If one
+                                     number provided, it will be total request
+                                     timeout. It can also be a pair (tuple) of
+                                     (connection, read) timeouts.
+            :return: PathMatchResponse
+                     If the method is called asynchronously,
+                     returns the request thread.
+            """
+        kwargs['_return_http_data_only'] = True
         return self.graph_match_path_post_with_http_info(**kwargs)  # noqa: E501
 
     def graph_match_path_post_with_http_info(self, **kwargs):  # noqa: E501
@@ -1158,24 +1140,26 @@ class GraphApi(object):
 
         local_var_params = locals()
 
-        all_params = ["path_match_request"]
+        all_params = [
+            'path_match_request'
+        ]
         all_params.extend(
             [
-                "async_req",
-                "_return_http_data_only",
-                "_preload_content",
-                "_request_timeout",
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout'
             ]
         )
 
-        for key, val in six.iteritems(local_var_params["kwargs"]):
+        for key, val in six.iteritems(local_var_params['kwargs']):
             if key not in all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
                     " to method graph_match_path_post" % key
                 )
             local_var_params[key] = val
-        del local_var_params["kwargs"]
+        del local_var_params['kwargs']
 
         collection_formats = {}
 
@@ -1189,39 +1173,31 @@ class GraphApi(object):
         local_var_files = {}
 
         body_params = None
-        if "path_match_request" in local_var_params:
-            body_params = local_var_params["path_match_request"]
+        if 'path_match_request' in local_var_params:
+            body_params = local_var_params['path_match_request']
         # HTTP header `Accept`
-        header_params["Accept"] = self.api_client.select_header_accept(
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
 
         # HTTP header `Content-Type`
-        header_params[
-            "Content-Type"
-        ] = self.api_client.select_header_content_type(  # noqa: E501
-            ["application/json"]
-        )  # noqa: E501
+        header_params['Content-Type'] = self.api_client.select_header_content_type(  # noqa: E501
+            ['application/json'])  # noqa: E501
 
         # Authentication setting
         auth_settings = []  # noqa: E501
 
         return self.api_client.call_api(
-            "/graph/matchPath",
-            "POST",
+            '/graph/matchPath', 'POST',
             path_params,
             query_params,
             header_params,
             body=body_params,
             post_params=form_params,
             files=local_var_files,
-            response_type="PathMatchResponse",  # noqa: E501
+            response_type='PathMatchResponse',  # noqa: E501
             auth_settings=auth_settings,
-            async_req=local_var_params.get("async_req"),
-            _return_http_data_only=local_var_params.get(
-                "_return_http_data_only"
-            ),  # noqa: E501
-            _preload_content=local_var_params.get("_preload_content", True),
-            _request_timeout=local_var_params.get("_request_timeout"),
-            collection_formats=collection_formats,
-        )
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
