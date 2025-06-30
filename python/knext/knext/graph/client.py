@@ -116,13 +116,21 @@ class GraphClient(Client):
 
     def query_vertex(self, type_name: str, biz_id: str, params: dict = None):
         request = QueryVertexRequest(
-            project_id=self._project_id, type_name=type_name, biz_id=biz_id, params=params
+            project_id=self._project_id,
+            type_name=type_name,
+            biz_id=biz_id,
+            params=params,
         )
         return self._rest_client.graph_query_vertex_post(query_vertex_request=request)
 
-    def batch_query_vertex(self, type_name: str, biz_ids: List[str], params: dict = None):
+    def batch_query_vertex(
+        self, type_name: str, biz_ids: List[str], params: dict = None
+    ):
         request = BatchQueryVertexRequest(
-            project_id=self._project_id, type_name=type_name, biz_ids=biz_ids, params=params
+            project_id=self._project_id,
+            type_name=type_name,
+            biz_ids=biz_ids,
+            params=params,
         )
         return self._rest_client.graph_batch_query_vertex_post(
             batch_query_vertex_request=request
@@ -133,14 +141,14 @@ class GraphClient(Client):
         type_name: str,
         biz_id: str,
         edge_type_name_constraint: List[EdgeTypeName] = None,
-        params: dict = None
+        params: dict = None,
     ):
         request = ExpendOneHopRequest(
             project_id=self._project_id,
             type_name=type_name,
             biz_id=biz_id,
             edge_type_name_constraint=edge_type_name_constraint,
-            params=params
+            params=params,
         )
         return self._rest_client.graph_expend_one_hop_post(
             expend_one_hop_request=request
@@ -154,7 +162,7 @@ class GraphClient(Client):
         hops: List[HopMatchRule] = None,
         sort_rule: SortRule = None,
         page_rule: PageRule = None,
-        params: dict = None
+        params: dict = None,
     ):
         request = PathMatchRequest(
             project_id=self._project_id,
@@ -164,7 +172,7 @@ class GraphClient(Client):
             hops=hops,
             sort_rule=sort_rule,
             page_rule=page_rule,
-            params=params
+            params=params,
         )
         return self._rest_client.graph_match_path_post(path_match_request=request)
 

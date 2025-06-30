@@ -44,22 +44,30 @@ class ExpendOneHopRequest(object):
                             and the value is json key in definition.
     """
     openapi_types = {
-        'project_id': 'int',
-        'type_name': 'str',
-        'biz_id': 'str',
-        'edge_type_name_constraint': 'list[EdgeTypeName]',
-        'params': 'object'
+        "project_id": "int",
+        "type_name": "str",
+        "biz_id": "str",
+        "edge_type_name_constraint": "list[EdgeTypeName]",
+        "params": "object",
     }
 
     attribute_map = {
-        'project_id': 'projectId',
-        'type_name': 'typeName',
-        'biz_id': 'bizId',
-        'edge_type_name_constraint': 'edgeTypeNameConstraint',
-        'params': 'params'
+        "project_id": "projectId",
+        "type_name": "typeName",
+        "biz_id": "bizId",
+        "edge_type_name_constraint": "edgeTypeNameConstraint",
+        "params": "params",
     }
 
-    def __init__(self, project_id=None, type_name=None, biz_id=None, edge_type_name_constraint=None, params=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(
+        self,
+        project_id=None,
+        type_name=None,
+        biz_id=None,
+        edge_type_name_constraint=None,
+        params=None,
+        local_vars_configuration=None,
+    ):  # noqa: E501
         """ExpendOneHopRequest - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -97,8 +105,12 @@ class ExpendOneHopRequest(object):
         :param project_id: The project_id of this ExpendOneHopRequest.  # noqa: E501
         :type: int
         """
-        if self.local_vars_configuration.client_side_validation and project_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `project_id`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and project_id is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `project_id`, must not be `None`"
+            )  # noqa: E501
 
         self._project_id = project_id
 
@@ -120,8 +132,12 @@ class ExpendOneHopRequest(object):
         :param type_name: The type_name of this ExpendOneHopRequest.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and type_name is None:  # noqa: E501
-            raise ValueError("Invalid value for `type_name`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and type_name is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `type_name`, must not be `None`"
+            )  # noqa: E501
 
         self._type_name = type_name
 
@@ -143,8 +159,12 @@ class ExpendOneHopRequest(object):
         :param biz_id: The biz_id of this ExpendOneHopRequest.  # noqa: E501
         :type: str
         """
-        if self.local_vars_configuration.client_side_validation and biz_id is None:  # noqa: E501
-            raise ValueError("Invalid value for `biz_id`, must not be `None`")  # noqa: E501
+        if (
+            self.local_vars_configuration.client_side_validation and biz_id is None
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `biz_id`, must not be `None`"
+            )  # noqa: E501
 
         self._biz_id = biz_id
 
@@ -197,18 +217,20 @@ class ExpendOneHopRequest(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 
