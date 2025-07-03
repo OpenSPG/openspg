@@ -42,7 +42,7 @@ public class Utils {
     IVertex<IVertexId, IProperty> vertex = graphState.getVertex(id, null, null);
     if (null != vertex && null != vertex.getValue() && !"relation".equals(rdfType)) {
       // 提取属性
-      log.info("vertex_property,{}", vertex);
+      log.debug("vertex_property,{}", vertex);
       for (String propertyName : vertex.getValue().getKeySet()) {
         Object pValue = vertex.getValue().get(propertyName);
         if (null == pValue || propertyName.startsWith("_")) {
@@ -92,7 +92,7 @@ public class Utils {
           continue;
         }
         SPO spo = new SPO(edge.getType());
-        log.info("TargetRdfProperty,id={},,edgeType={}", id, edge.getType());
+        log.debug("TargetRdfProperty,id={},,edgeType={}", id, edge.getType());
         LinkedUdtfResult udtfRes = new LinkedUdtfResult();
         udtfRes.setEdgeType(spo.getP());
         udtfRes.getTargetVertexIdList().add(String.valueOf(toIdObj));
