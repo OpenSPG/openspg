@@ -1,0 +1,19 @@
+namespace Openkg
+
+SocialWelfareAndCharityField(社会公益与慈善领域): ConceptType
+	hypernymPredicate: isA
+
+Organization(机构): EntityType
+
+SocialWelfareAndCharityPeople(公益慈善人士): EntityType
+  desc: 包括慈善家、非政府组织工作者、志愿者、人权活动家等
+  properties:
+    philanthropicActivities(慈善活动): Text
+    	constraint: MultiValue
+    ngoAffiliations(非政府组织隶属关系): Organization
+    	constraint: MultiValue
+    advocacyIssues(倡导议题): Text
+    volunteerExperience(志愿者经历): Text
+    awardsAndRecognition(奖项与认可): Text
+    	constraint: MultiValue
+    IND#belongTo(所属领域): SocialWelfareAndCharityField

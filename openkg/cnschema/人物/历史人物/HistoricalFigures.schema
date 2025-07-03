@@ -1,0 +1,17 @@
+namespace Openkg
+
+HistoricalFiguresField(历史人物领域): ConceptType
+	hypernymPredicate: isA
+
+HistoricalFigures(历史人物): EntityType
+  desc: 包括已故的名人，他们在各个领域都有贡献
+  properties:
+    era(所处时代): Text
+    contributions(主要贡献): Text
+    	constraint: MultiValue
+    knownFor(以...著称): Text
+    historicalContext(历史背景): Text
+    legacy(遗产或影响): Text
+    relatedFields(相关领域): Text
+    	constraint: MultiValue
+    IND#belongTo(所属领域): HistoricalFiguresField

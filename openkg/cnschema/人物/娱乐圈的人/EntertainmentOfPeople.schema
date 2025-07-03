@@ -1,0 +1,23 @@
+namespace Openkg
+
+Entertainment(娱乐领域): ConceptType
+	desc: 指明个体主要在哪个娱乐领域活动，如电影、电视、音乐、戏剧等
+	hypernymPredicate: isA
+
+Product(物品): EntityType
+
+EntertainmentOfPeople(娱乐圈的人): EntityType
+  desc: 包括演员、歌手、导演、编剧、模特、主播等
+  properties:
+    debutDate(出道日期): STD.Date
+    participatingWorks(参与作品): Text
+      constraint: MultiValue
+    representativeWorks(代表作品): Product
+      constraint: MultiValue
+    affiliation(所属团体): Text
+    socialMediaProfiles(社交媒体账号): Text
+    	desc: 个人在不同社交媒体平台上的账号链接。
+		popularity(人气指数): Text
+			desc: 衡量个体在公众中的受欢迎程度。
+    educationalBackground(教育背景): Text
+    IND#belongTo(所属领域): Entertainment

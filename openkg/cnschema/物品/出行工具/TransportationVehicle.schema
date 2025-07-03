@@ -1,0 +1,48 @@
+namespace Openkg
+
+FuelCategory(燃料类型): ConceptType
+    hypernymPredicate: isA
+
+Category(类型): ConceptType
+    hypernymPredicate: isA
+
+Brand(品牌): EntityType
+
+OperatingSystem(操作系统): EntityType
+
+Color(颜色): EntityType
+
+Url(链接): EntityType
+
+Product(物品): EntityType
+
+TransportationVehicle(出行工具): EntityType
+    properties:
+        vehicleType(车辆类型): Category
+          desc: 描述出行工具的类型，如汽车、自行车、电动车、公共交通（公交车、地铁）、火车、飞机等
+        brand(品牌): Brand
+          desc: 出行工具的品牌名称及其相关信息。
+        model(型号): Text
+          desc: 出行工具的具体型号或版本。
+        manufactureYear(生产年份): STD.Date
+          desc: 出行工具制造的年份。
+        seatingCapacity(载客量): Text
+          desc: 出行工具可容纳的乘客数量。
+        fuelType(燃料类型): FuelCategory
+          desc: 对于需要消耗燃料的出行工具，描述其使用的燃料类型，如汽油、柴油、电力、氢能等。
+        range(续航里程): Text
+          desc: 单次最大行驶距离。
+        maxSpeed(最高时速): Text
+          desc: 出行工具在理想条件下的最高速度。
+        weight(重量): Text
+          desc: 出行工具的总重量。
+        dimensions(尺寸信息): Text
+          desc: 包含长度、宽度和高度的数据结构。
+        ownershipStatus(所有权状态): Text
+          desc: 表示出行工具的所有权状态，如私人拥有、共享租赁、公司运营等。
+        condition(使用状况): Text
+          desc: 描述出行工具当前的机械状况和外观状态，如全新、二手、良好、一般等。
+        price(价格): Text
+          desc: 出行工具的购买价格或租赁费用。
+        images(图片链接): Url
+          desc: 存储出行工具照片或宣传图的网络链接集合。

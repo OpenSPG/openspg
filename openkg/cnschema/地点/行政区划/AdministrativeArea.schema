@@ -1,0 +1,46 @@
+namespace Openkg
+
+AdministrativeAreaType(行政区划类型): ConceptType
+    hypernymPredicate: isA
+
+Language(语言): EntityType
+Place(地点): EntityType
+
+Organization(机构): EntityType
+
+AdministrativeArea(行政区划): EntityType
+	desc: 表示国家或地区为便于行政管理而划分的区域，包括省、自治区、直辖市、自治州、县、市等不同层级。
+	properties:
+        IND#belongTo(属于): AdministrativeAreaType
+            desc: 如省级行政区、地级行政区、县级行政区等
+        parentAdminArea(上级行政区划): AdministrativeArea
+            desc: 该行政区划所归属的上一级行政区划
+        iSOCode(ISO代码): Text
+            desc: 国际标准化组织分配给行政区划的标准代码，例如ISO 3166-2代码
+        capitalCity(首府城市): Place
+            desc: 行政区划内的首府或中心城市的实体
+        area(区域面积): Text
+            desc: 行政区划的总面积
+        population(人口数量): Text
+            desc: 行政区内常住居民的人口总数
+        establishmentDate(设立日期): STD.Date
+            desc: 行政区划正式建立的时间
+        governmentBody(政府机构): Organization
+            desc: 负责该行政区划内行政事务的政府部门或地方政府实体
+        subdivisions(下级行政区划): AdministrativeArea
+            desc: 包含在该行政区划下的更低级别行政区划列表
+            constraint: MultiValue
+        geography(地理特征): Text
+            desc: 行政区划的主要地理特征和地貌概况
+        languages(官方语言): Language
+            desc: 在该行政区划内官方承认并广泛使用的语言
+            constraint: MultiValue
+        timezone(时区): Text
+            desc: 行政区划所在的主要时区
+        gdp(地区生产总值): Text
+            desc: 行政区划内一年度的国内生产总值
+        postalCodePattern(邮政编码格式): Text
+            desc: 该行政区划内邮政编码的一般格式或范围
+        culturalHeritageSites(文化遗产地): Place
+          desc: 列入保护名录的文化遗产地点
+          constraint: MultiValue
