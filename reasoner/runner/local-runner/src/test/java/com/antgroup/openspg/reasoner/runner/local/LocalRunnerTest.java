@@ -270,6 +270,65 @@ public class LocalRunnerTest {
   }
 
   @Test
+  public void testx() {
+    String rule = "Define (s:SourceNumber)-[p:longCallContact]->(o:DestNumber) {\n"
+            + "                    STRUCTURE {\n"
+            + "                        (s)-[:hasRecord]->(r:Record)-[:destNumber]->(o)\n"
+            + "                    }\n"
+            + "                    CONSTRAINT {\n"
+            + "                        maxDuration = group(s,o).max(r.callDuration)\n"
+            + "                        R1(\"超长通话\"): maxDuration > 300\n"
+            + "                    }\n"
+            + "                }";
+
+
+    String dsl =
+            "match (s:SourceNumber)-[p:longCallContact]->(o:DestNumber) return s.id,p,o.id";
+    //    String dsl = rule;
+    LocalReasonerTask task = new LocalReasonerTask();
+    task.setDsl(dsl);
+    task.setGraphLoadClass(
+            "com.antgroup.openspg.reasoner.runner.local.loader.TestFanxiqianGraphLoader2");
+    task.getParams().put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true);
+    task.getParams().put(Constants.SPG_REASONER_LUBE_SUBQUERY_ENABLE, true);
+    task.getParams().put(ConfigKey.KG_REASONER_OUTPUT_GRAPH, true);
+    task.setStartIdList(Lists.newArrayList(new Tuple2<>("s1", "SourceNumber")));
+    task.setExecutionRecorder(new DefaultRecorder());
+    task.setExecutorTimeoutMs(99999999999999999L);
+
+    // add mock catalog
+    Map<String, scala.collection.immutable.Set<String>> schema = new HashMap<>();
+    schema.put(
+            "SourceNumber",
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+    schema.put(
+            "Record", Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id", "callDuration")));
+    schema.put(
+            "DestNumber",
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet("id")));
+
+    schema.put(
+            "SourceNumber_hasRecord_Record",
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+
+    schema.put(
+            "Record_destNumber_DestNumber",
+            Convert2ScalaUtil.toScalaImmutableSet(Sets.newHashSet()));
+
+    Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
+    catalog.init();
+    catalog .getGraph("KG")
+            .registerRule("SourceNumber_longCallContact_DestNumber", new GeneralSemanticRule(rule));
+    task.setCatalog(catalog);
+
+    LocalReasonerRunner runner = new LocalReasonerRunner();
+    LocalReasonerResult result = runner.run(task);
+    System.out.println(result);
+    System.out.println(task.getExecutionRecorder().toReadableString());
+    clear();
+
+  }
+  @Test
   public void doTestFilter() {
     String dsl =
         "GraphStructure {\n"
