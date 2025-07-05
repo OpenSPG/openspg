@@ -27,7 +27,7 @@ public class TestFanxiqianGraphLoader2 extends AbstractLocalGraphLoader {
         return Lists.newArrayList(
                 constructionVertex("s1", "SourceNumber", "id", "s1"),
                 constructionVertex(
-                        "r1", "Record", "id", "r1", "callDuration", "301"),
+                        "r1", "Record", "id", "r1", "callDuration", "101"),
                 constructionVertex(
                         "d1", "DestNumber", "id", "d1"));
     }

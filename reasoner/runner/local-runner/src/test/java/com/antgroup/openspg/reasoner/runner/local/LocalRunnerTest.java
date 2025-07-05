@@ -271,6 +271,7 @@ public class LocalRunnerTest {
 
   @Test
   public void testx() {
+    /*
     String rule = "Define (s:SourceNumber)-[p:longCallContact]->(o:DestNumber) {\n"
             + "                    STRUCTURE {\n"
             + "                        (s)-[:hasRecord]->(r:Record)-[:destNumber]->(o)\n"
@@ -281,12 +282,24 @@ public class LocalRunnerTest {
             + "                    }\n"
             + "                }";
 
-
     String dsl =
             "match (s:SourceNumber)-[p:longCallContact]->(o:DestNumber) return s.id,p,o.id";
+     */
+
+
+    String dsl2 = " GraphStructure{\n"
+            + "                        (s)-[:hasRecord]->(r:Record)-[:destNumber]->(o)\n"
+            + "                    }\n"
+            + "                    Rule {\n"
+            + "                        maxDuration = group(s,o).max(r.callDuration)\n"
+            + "                        R1(\"超长通话\"): maxDuration > 300\n"
+            + "                    }\n"
+            + "                Action {get(s.id,o.id)}";
+
+
     //    String dsl = rule;
     LocalReasonerTask task = new LocalReasonerTask();
-    task.setDsl(dsl);
+    task.setDsl(dsl2);
     task.setGraphLoadClass(
             "com.antgroup.openspg.reasoner.runner.local.loader.TestFanxiqianGraphLoader2");
     task.getParams().put(Constants.SPG_REASONER_PLAN_PRETTY_PRINT_LOGGER_ENABLE, true);
@@ -317,8 +330,10 @@ public class LocalRunnerTest {
 
     Catalog catalog = new PropertyGraphCatalog(Convert2ScalaUtil.toScalaImmutableMap(schema));
     catalog.init();
+    /*
     catalog .getGraph("KG")
             .registerRule("SourceNumber_longCallContact_DestNumber", new GeneralSemanticRule(rule));
+     */
     task.setCatalog(catalog);
 
     LocalReasonerRunner runner = new LocalReasonerRunner();
