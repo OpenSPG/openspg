@@ -77,6 +77,10 @@ public class RetrievalSyncTask extends SyncTaskExecuteTemplate {
     context.addTraceLog("update index schema index_ids:%s", retrievals);
     List<Long> retrievalList = JSON.parseObject(retrievals, new TypeReference<List<Long>>() {});
     Project project = projectService.queryById(job.getProjectId());
+    if (project == null) {
+      context.addTraceLog("project not exist");
+      return SchedulerEnum.TaskStatus.FINISH;
+    }
     for (Long id : retrievalList) {
       Retrieval retrieval = retrievalService.getById(id);
       context.addTraceLog("update index(%s) schema", retrieval.getName());
