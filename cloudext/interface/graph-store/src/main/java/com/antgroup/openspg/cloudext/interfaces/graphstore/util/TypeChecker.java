@@ -66,4 +66,36 @@ public class TypeChecker {
     }
     return false;
   }
+
+  public static boolean isBasicType(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (obj instanceof Object[]) {
+      for (Object element : (Object[]) obj) {
+        if (!isBasicType(element)) {
+          return false;
+        }
+      }
+      return true;
+
+    } else if (obj instanceof Collection<?>) {
+      for (Object element : (Collection<?>) obj) {
+        if (!isBasicType(element)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    return obj.getClass().isPrimitive()
+        || obj instanceof Integer
+        || obj instanceof Double
+        || obj instanceof Float
+        || obj instanceof Long
+        || obj instanceof Byte
+        || obj instanceof Boolean
+        || obj instanceof Character
+        || obj instanceof CharSequence;
+  }
 }

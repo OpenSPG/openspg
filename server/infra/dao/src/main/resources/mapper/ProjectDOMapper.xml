@@ -138,6 +138,15 @@
   <delete id="deleteFromKgBuilderJob" parameterType="java.lang.Long">
     DELETE FROM kg_builder_job WHERE project_id = #{id,jdbcType=BIGINT};
   </delete>
+  <delete id="deleteFromKgSchedulerInstance" parameterType="java.lang.Long">
+    DELETE FROM kg_scheduler_instance WHERE project_id = #{id,jdbcType=BIGINT};
+  </delete>
+  <delete id="deleteFromKgSchedulerJob" parameterType="java.lang.Long">
+    DELETE FROM kg_scheduler_job WHERE project_id = #{id,jdbcType=BIGINT};
+  </delete>
+  <delete id="deleteFromKgSchedulerTask" parameterType="java.lang.Long">
+    DELETE FROM kg_scheduler_task WHERE project_id = #{id,jdbcType=BIGINT};
+  </delete>
   <delete id="deleteFromKgResourcePermission" parameterType="java.lang.Long">
     DELETE FROM kg_resource_permission WHERE resource_id = #{id,jdbcType=BIGINT} and resource_tag = 'KNOWLEDGE_BASE';
   </delete>

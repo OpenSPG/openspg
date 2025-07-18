@@ -65,7 +65,9 @@ public class PropertyChecker {
         }
 
         this.checkBasicInfo(spgTypeIdentifier, property, context);
-        this.checkBuiltInProperty(advancedType.getSpgTypeEnum(), property);
+        if (!advancedType.isUpdate()) {
+          this.checkBuiltInProperty(advancedType.getSpgTypeEnum(), property);
+        }
         this.checkConstraint(property);
 
         if (property.getLogicalRule() != null) {

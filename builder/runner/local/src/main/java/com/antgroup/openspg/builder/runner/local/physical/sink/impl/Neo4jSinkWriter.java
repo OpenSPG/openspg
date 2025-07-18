@@ -51,7 +51,7 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
   private Project project;
   private static final String DOT = ".";
 
-  private static RejectedExecutionHandler handler =
+  private static final RejectedExecutionHandler handler =
       (r, executor) -> {
         try {
           executor.getQueue().put(r);
@@ -59,7 +59,7 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
           Thread.currentThread().interrupt();
         }
       };
-  private static ExecutorService executor =
+  private static final ExecutorService executor =
       new ThreadPoolExecutor(
           NUM_THREADS,
           NUM_THREADS,
@@ -169,7 +169,7 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
 
   private void writeNode(SubGraphRecord.Node node) {
     try {
-      Long statr = System.currentTimeMillis();
+      long start = System.currentTimeMillis();
       RecordAlterOperationEnum operation = context.getOperation();
       if (StringUtils.isBlank(node.getId())
           || StringUtils.isBlank(node.getName())
@@ -184,7 +184,7 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
       List<LPGPropertyRecord> properties = Lists.newArrayList();
       for (Map.Entry<String, Object> entry : node.getProperties().entrySet()) {
         Object entryValue = entry.getValue();
-        if (!TypeChecker.isArrayOrCollectionOfPrimitives(entryValue)) {
+        if (!TypeChecker.isBasicType(entryValue)) {
           entryValue = JSON.toJSONString(entryValue);
         }
         properties.add(new LPGPropertyRecord(entry.getKey(), entryValue));
@@ -199,7 +199,7 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
       log.info(
           String.format(
               "write Node succeed id:%s cons:%s",
-              node.getId(), System.currentTimeMillis() - statr));
+              node.getId(), System.currentTimeMillis() - start));
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -214,7 +214,7 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
 
   private void writeEdge(SubGraphRecord.Edge edge) {
     try {
-      Long statr = System.currentTimeMillis();
+      long start = System.currentTimeMillis();
       RecordAlterOperationEnum operation = context.getOperation();
       if (StringUtils.isBlank(edge.getFrom())
           || StringUtils.isBlank(edge.getTo())
@@ -226,7 +226,7 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
       List<LPGPropertyRecord> properties = Lists.newArrayList();
       for (Map.Entry<String, Object> entry : edge.getProperties().entrySet()) {
         Object entryValue = entry.getValue();
-        if (!TypeChecker.isArrayOrCollectionOfPrimitives(entryValue)) {
+        if (!TypeChecker.isBasicType(entryValue)) {
           entryValue = JSON.toJSONString(entryValue);
         }
         properties.add(new LPGPropertyRecord(entry.getKey(), entryValue));
@@ -244,9 +244,10 @@ public class Neo4jSinkWriter extends BaseSinkWriter<Neo4jSinkNodeConfig> {
         client.deleteEdge(edge.getLabel(), edgeRecords);
       }
       log.info(
-          String.format(
-              "write Edge succeed from:%s to:%s cons:%s",
-              edge.getFrom(), edge.getTo(), System.currentTimeMillis() - statr));
+          "write Edge succeed from:{} to:{} cons:{}",
+          edge.getFrom(),
+          edge.getTo(),
+          System.currentTimeMillis() - start);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

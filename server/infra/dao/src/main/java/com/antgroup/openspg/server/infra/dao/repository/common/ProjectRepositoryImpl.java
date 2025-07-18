@@ -85,6 +85,9 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     projectDOMapper.deleteFromKgReasonTask(projectId);
     projectDOMapper.deleteFromKgReasonTutorial(projectId);
     projectDOMapper.deleteFromKgBuilderJob(projectId);
+    projectDOMapper.deleteFromKgSchedulerInstance(projectId);
+    projectDOMapper.deleteFromKgSchedulerJob(projectId);
+    projectDOMapper.deleteFromKgSchedulerTask(projectId);
     projectDOMapper.deleteFromKgResourcePermission(projectId);
     return projectDOMapper.deleteByPrimaryKey(projectId);
   }
