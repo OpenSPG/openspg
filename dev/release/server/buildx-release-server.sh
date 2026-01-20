@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright 2023 OpenSPG Authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -8,11 +9,6 @@
 # Unless required by applicable law or agreed to in writing, software distributed under the License
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
-
-# docker buildx build -f Dockerfile --platform linux/arm64/v8,linux/amd64 --push \
-#   -t spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-server:0.7 \
-#   -t spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-server:latest \
-#   .
 
 docker buildx build -f Dockerfile --platform linux/arm64/v8,linux/amd64 --push \
   -t registry.cn-hangzhou.aliyuncs.com/lacogito/openspg-server:0.7 \

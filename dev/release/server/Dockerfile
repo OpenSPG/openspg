@@ -14,16 +14,17 @@
 # Includes:
 # * Java 17
 
-FROM registry.cn-hangzhou.aliyuncs.com/lacogito/ubuntu:22.04
+FROM registry.cn-hangzhou.aliyuncs.com/lacogito/conda-forge:ubuntu2204
+
+# Replace apt sources with Aliyun mirror for faster downloads
+RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
 
 # For apt to be noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN=true
 ENV LANG=C.UTF-8
-ENV CONDA_DIR=/home/admin/miniconda3
-ENV PATH=${CONDA_DIR}/bin:${PATH}
 
-ARG TARGETPLATFORM
 ARG APT_INSTALL="apt-get install --no-install-recommends -y"
 
 RUN apt-get clean && apt-get update && \
@@ -39,17 +40,12 @@ RUN JAVA_HOME=$(find /usr/lib/jvm/java-17-openjdk-* -maxdepth 0 -type d | head -
     fi && \
     echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile
 
-# Install Miniconda and Pemja
-RUN mkdir -p /home/admin && \
-    wget --quiet --no-check-certificate https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh && \
-    /bin/bash miniconda.sh -b -p /home/admin/miniconda3 && \
-    rm miniconda.sh && \
-    # Ensure we use the new python to install pemja
-    python -m pip install --no-cache-dir pemja==0.4.0 && \
+# Install pemja using the installed Miniconda
+RUN python -m pip install --no-cache-dir pemja==0.4.0 && \
     # Clean up to reduce layer size
     conda clean -afy && \
-    find /home/admin/miniconda3/ -follow -type f -name '*.a' -delete && \
-    find /home/admin/miniconda3/ -follow -type f -name '*.pyc' -delete
+    find $CONDA_DIR -follow -type f -name '*.a' -delete && \
+    find $CONDA_DIR -follow -type f -name '*.pyc' -delete
 
 EXPOSE 8887
 
