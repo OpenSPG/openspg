@@ -29,7 +29,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @ComponentScan(basePackages = "com.antgroup.openspg")
 @ImportResource({"classpath*:spring/*.xml"})
-@PropertySource(value = "classpath:config/application-default.properties")
+@PropertySource(
+    value = {
+      "classpath:config/application-default.properties",
+      "classpath:config/application-${env}.properties"
+    },
+    ignoreResourceNotFound = true)
 @EnableScheduling
 public class Application {
 

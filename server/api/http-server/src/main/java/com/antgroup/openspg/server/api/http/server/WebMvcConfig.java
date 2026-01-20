@@ -31,6 +31,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     gsonHttpMessageConverter.setGson(SchemaJsonUtils.gson);
     gsonHttpMessageConverter.setSupportedMediaTypes(
         Collections.singletonList(MediaType.APPLICATION_JSON));
-    converters.add(0, gsonHttpMessageConverter);
+    // Add Gson converter at the end, not at the beginning, to allow OpenAPI to use Jackson
+    converters.add(converters.size(), gsonHttpMessageConverter);
   }
 }

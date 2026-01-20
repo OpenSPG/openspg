@@ -2,7 +2,10 @@ version: "3.7"
 services:
   server:
     restart: always
-    image: spg-registry.cn-hangzhou.cr.aliyuncs.com/spg/openspg-server:latest
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: registry.cn-hangzhou.aliyuncs.com/lacogito/openspg-server:latest
     container_name: release-openspg-server
     ports:
       - "8887:8887"
