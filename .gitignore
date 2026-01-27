@@ -463,3 +463,8 @@ hs_err_pid*
 
 .java-version
 .vscode/
+
+.classpath
+.factorypath
+.project
+.settings/
