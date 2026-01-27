@@ -14,20 +14,20 @@
 package com.antgroup.openspg.common.util.pemja;
 
 public enum PythonInvokeMethod {
-  BRIDGE_READER("bridge.spg_server_bridge", "SPGServerBridge", "run_reader", ""),
-  BRIDGE_SCANNER("bridge.spg_server_bridge", "SPGServerBridge", "run_scanner", ""),
-  BRIDGE_COMPONENT("bridge.spg_server_bridge", "SPGServerBridge", "run_component", ""),
+  BRIDGE_READER("kag.bridge.spg_server_bridge", "SPGServerBridge", "run_reader", ""),
+  BRIDGE_SCANNER("kag.bridge.spg_server_bridge", "SPGServerBridge", "run_scanner", ""),
+  BRIDGE_COMPONENT("kag.bridge.spg_server_bridge", "SPGServerBridge", "run_component", ""),
   BRIDGE_GET_LLM_TOKEN_INFO(
-      "bridge.spg_server_bridge", "SPGServerBridge", "get_llm_token_info", ""),
+      "kag.bridge.spg_server_bridge", "SPGServerBridge", "get_llm_token_info", ""),
   BRIDGE_GET_INDEX_MANAGER_NAMES(
-      "bridge.spg_server_bridge", "SPGServerBridge", "get_index_manager_names", ""),
+      "kag.bridge.spg_server_bridge", "SPGServerBridge", "get_index_manager_names", ""),
   BRIDGE_GET_INDEX_MANAGER_INFO(
-      "bridge.spg_server_bridge", "SPGServerBridge", "get_index_manager_info", ""),
-  BRIDGE_LLM_CHECKER("bridge.spg_server_bridge", "SPGServerBridge", "run_llm_config_check", ""),
+      "kag.bridge.spg_server_bridge", "SPGServerBridge", "get_index_manager_info", ""),
+  BRIDGE_LLM_CHECKER("kag.bridge.spg_server_bridge", "SPGServerBridge", "run_llm_config_check", ""),
   BRIDGE_VECTORIZER_CHECKER(
-      "bridge.spg_server_bridge", "SPGServerBridge", "run_vectorizer_config_check", ""),
-  BRIDGE_SOLVER_MAIN("bridge.spg_server_bridge", "SPGServerBridge", "run_solver", ""),
-  BRIDGE_BUILDER_MAIN("bridge.spg_server_bridge", "SPGServerBridge", "run_builder", "");
+      "kag.bridge.spg_server_bridge", "SPGServerBridge", "run_vectorizer_config_check", ""),
+  BRIDGE_SOLVER_MAIN("kag.bridge.spg_server_bridge", "SPGServerBridge", "run_solver", ""),
+  BRIDGE_BUILDER_MAIN("kag.bridge.spg_server_bridge", "SPGServerBridge", "run_builder", "");
 
   String modulePath;
 

@@ -14,6 +14,7 @@
 # Includes:
 # * Java 17
 
+# Base image with conda installed at /opt/conda
 FROM registry.cn-hangzhou.aliyuncs.com/lacogito/conda-forge:ubuntu2204
 
 # Replace apt sources with Aliyun mirror for faster downloads
@@ -44,8 +45,8 @@ RUN echo "conda activate app_env" >> ~/.bashrc
 ENV CONDA_DEFAULT_ENV=app_env
 
 # Install pemja using the conda environment with Python 3.10
-RUN conda run -n app_env pip install --no-cache-dir pemja==0.4.0 && \
-    # Clean up to reduce layer size
+RUN conda run -n app_env pip install --no-cache-dir -i https://mirrors.aliyun.com/pypi/simple/ pemja==0.4.0 && \
+    conda run -n app_env pip install --no-cache-dir -i https://mirrors.aliyun.com/pypi/simple/ openspg-kag>=0.8.0 && \
     conda clean -afy && \
     find $CONDA_DIR -follow -type f -name '*.a' -delete && \
     find $CONDA_DIR -follow -type f -name '*.pyc' -delete

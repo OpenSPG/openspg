@@ -9,44 +9,57 @@
 # is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 # or implied.
 
-FROM docker.m.daocloud.io/ubuntu:20.04
+# Image for building OpenSPG Python releases. Based on the same base image as the server.
+#
+# Includes:
+# * Java 17 (from base image)
+# * Conda with Python environment
+# * Python packages: openspg-kag, pemja
+
+FROM registry.cn-hangzhou.aliyuncs.com/lacogito/conda-forge:ubuntu2204
+
+# Replace apt sources with Aliyun mirror for faster downloads
+RUN sed -i 's/archive.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list && \
+    sed -i 's/security.ubuntu.com/mirrors.aliyun.com/g' /etc/apt/sources.list
 
 # For apt to be noninteractive
-ENV DEBIAN_FRONTEND noninteractive
-ENV DEBCONF_NONINTERACTIVE_SEEN true
-ENV LANG C.UTF-8
-ENV PATH=/home/admin/miniconda3/bin:$PATH
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBCONF_NONINTERACTIVE_SEEN=true
+ENV LANG=C.UTF-8
 
 ARG TARGETPLATFORM
 ARG APT_INSTALL="apt-get install --no-install-recommends -y"
-ARG MINICONDA_FILE
 
 RUN apt-get clean && apt-get update && \
     $APT_INSTALL ca-certificates && \
     $APT_INSTALL ca-certificates-java && \
     $APT_INSTALL git less vim wget curl telnet nano jq procps net-tools unzip zip tar gzip nfs-common && \
-    # Install openjdk 8.
-    $APT_INSTALL openjdk-8-jdk && \
-    update-alternatives --set java /usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)/jre/bin/java && \
-    # Install build / source control tools
-    $APT_INSTALL wget git maven less vim
+    $APT_INSTALL openjdk-17-jre && \
+    apt-get clean
 
-RUN if [ "${TARGETPLATFORM}" = "linux/amd64" ]; then \
-      export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64; \
-    else \
-      export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64; \
-      $APT_INSTALL gcc-aarch64-linux-gnu; \
-      $APT_INSTALL build-essential libpython3.8-dev; \
-    fi && \
+# Java 17 is already installed in the base image, just set JAVA_HOME
+RUN JAVA_HOME=$(find /usr/lib/jvm/java-17-openjdk-* -maxdepth 0 -type d | head -1) && \
+    update-alternatives --set java "$JAVA_HOME/bin/java" && \
     echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile
 
-RUN . /etc/profile && echo ${JAVA_HOME} && mkdir -p /home/admin/ && chmod -R 777 /home/admin &&\
-    # wget -q http://hyperloop.cn-hangzhou.alipay.aliyun-inc.com/kgrl/user/zhongshu.zzs/tmp/Miniconda3-py310_25.1.1-2-Linux-x86_64.sh && \
-    wget -q http://hyperloop.cn-hangzhou.alipay.aliyun-inc.com/kgrl/user/zhongshu.zzs/tmp/$MINICONDA_FILE && \
-    ln -s /usr/bin/md5sum /usr/bin/md5 &&\
-    bash $MINICONDA_FILE -b -u -p /home/admin/miniconda3 &&\
-    rm -rf $MINICONDA_FILE && \
-    /home/admin/miniconda3/bin/conda init &&\
-    pip install openspg-kag==0.7.0 &&\
-    pip install pemja==0.4.0 && \
-    pip cache purge
+# Install additional build tools for ARM64 if needed
+RUN if [ "${TARGETPLATFORM}" = "linux/arm64" ]; then \
+      $APT_INSTALL gcc-aarch64-linux-gnu build-essential libpython3-dev; \
+    fi
+
+# Create a new environment named 'app_env' with Python 3.10 (matching server Dockerfile)
+RUN conda create -n app_env python=3.10 -y && conda clean -afy
+
+# Ensure the environment is activated by default in the shell
+RUN echo "conda activate app_env" >> ~/.bashrc
+ENV CONDA_DEFAULT_ENV=app_env
+ENV PATH=$CONDA_DIR/envs/app_env/bin:$PATH
+
+# Create admin user directory and install Python packages
+RUN mkdir -p /home/admin/ && chmod -R 777 /home/admin && \
+    ln -s /usr/bin/md5sum /usr/bin/md5 && \
+    conda run -n app_env pip install --no-cache-dir openspg-kag==0.7.0 && \
+    conda run -n app_env pip install --no-cache-dir pemja==0.4.0 && \
+    conda clean -afy && \
+    find $CONDA_DIR -follow -type f -name '*.a' -delete && \
+    find $CONDA_DIR -follow -type f -name '*.pyc' -delete

@@ -11,6 +11,6 @@
 # or implied.
 
 docker buildx build -f Dockerfile --platform linux/arm64/v8,linux/amd64 --push \
-  -t registry.cn-hangzhou.aliyuncs.com/lacogito/openspg-server:0.7 \
+  -t registry.cn-hangzhou.aliyuncs.com/lacogito/openspg-server:0.8 \
   -t registry.cn-hangzhou.aliyuncs.com/lacogito/openspg-server:latest \
   .
