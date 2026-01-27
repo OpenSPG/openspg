@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -84,6 +84,22 @@ java -jar builder/runner/local/target/builder-runner-local-*.jar
 # Local Reasoner Runner
 java -jar reasoner/runner/local-runner/target/reasoner-local-runner-*.jar
 ```
+
+### Building Docker Images
+
+The OpenSPG server Docker image uses a multi-stage build that automatically builds the JAR from source. The build context must be the project root directory.
+
+```bash
+# Build the server Docker image (from project root)
+cd dev/release/server
+./buildx-release-server.sh
+```
+
+**Important Notes:**
+- The Dockerfile uses a multi-stage build: first stage compiles the JAR, second stage creates the runtime image
+- The build context must be the project root (`.`), not the `dev/release/server` directory
+- The JAR file is built automatically during the Docker build - no need to build it separately first
+- If compilation errors occur, they will be visible during the Docker build process
 
 ## Architecture
 

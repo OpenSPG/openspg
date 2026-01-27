@@ -29,19 +29,22 @@ ARG APT_INSTALL="apt-get install --no-install-recommends -y"
 
 RUN apt-get clean && apt-get update && \
     $APT_INSTALL git less vim wget && \
-    $APT_INSTALL openjdk-17-jdk && \
+    $APT_INSTALL openjdk-17-jre && \
     apt-get clean
 
 RUN JAVA_HOME=$(find /usr/lib/jvm/java-17-openjdk-* -maxdepth 0 -type d | head -1) && \
-    if [ -f "$JAVA_HOME/jre/bin/java" ]; then \
-        update-alternatives --set java "$JAVA_HOME/jre/bin/java"; \
-    elif [ -f "$JAVA_HOME/bin/java" ]; then \
-        update-alternatives --set java "$JAVA_HOME/bin/java"; \
-    fi && \
+    update-alternatives --set java "$JAVA_HOME/bin/java" && \
     echo "export JAVA_HOME=${JAVA_HOME}" >> /etc/profile
 
-# Install pemja using the installed Miniconda
-RUN python -m pip install --no-cache-dir pemja==0.4.0 && \
+# Create a new environment named 'app_env' with Python 3.10
+RUN conda create -n app_env python=3.10 -y && conda clean -afy
+
+# Ensure the environment is activated by default in the shell
+RUN echo "conda activate app_env" >> ~/.bashrc
+ENV CONDA_DEFAULT_ENV=app_env
+
+# Install pemja using the conda environment with Python 3.10
+RUN conda run -n app_env pip install --no-cache-dir pemja==0.4.0 && \
     # Clean up to reduce layer size
     conda clean -afy && \
     find $CONDA_DIR -follow -type f -name '*.a' -delete && \
