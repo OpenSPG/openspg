@@ -51,7 +51,8 @@ RUN conda run -n app_env pip install --no-cache-dir -i https://mirrors.aliyun.co
     find $CONDA_DIR -follow -type f -name '*.a' -delete && \
     find $CONDA_DIR -follow -type f -name '*.pyc' -delete
 
+WORKDIR /app
 EXPOSE 8887
 
-ADD target/arks-sofaboot-0.0.1-SNAPSHOT-executable.jar /
-ENTRYPOINT ["java", "-jar", "arks-sofaboot-0.0.1-SNAPSHOT-executable.jar"]
+ADD target/arks-sofaboot-0.0.1-SNAPSHOT-executable.jar /app/
+ENTRYPOINT ["java", "-jar", "/app/arks-sofaboot-0.0.1-SNAPSHOT-executable.jar"]
