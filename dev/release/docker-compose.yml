@@ -15,7 +15,7 @@ services:
       - minio
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /tmp/kag_config.yaml:/app/kag_config.yaml:ro
+      - ./kag_config.yaml:/app/kag_config.yaml:ro
     environment:
       TZ: Asia/Shanghai
       LANG: C.UTF-8
