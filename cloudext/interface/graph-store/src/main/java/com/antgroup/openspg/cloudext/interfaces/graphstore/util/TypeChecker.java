@@ -42,12 +42,18 @@ public class TypeChecker {
         || clazz.equals(Short.class)
         || clazz.equals(Byte.class)
         || clazz.equals(Boolean.class)
-        || clazz.equals(Character.class);
+        || clazz.equals(Character.class)
+        || clazz.equals(String.class);
   }
 
   public static boolean isArrayOrCollectionOfPrimitives(Object obj) {
     if (obj == null) {
       return false;
+    }
+    if (obj instanceof String) {
+      // scalar strings must be stored as-is: JSON-encoding them adds surrounding
+      // quotes (e.g. 102191 -> "102191"), which breaks numeric coercion at read time
+      return true;
     }
     if (obj instanceof Object[]) {
       for (Object element : (Object[]) obj) {
