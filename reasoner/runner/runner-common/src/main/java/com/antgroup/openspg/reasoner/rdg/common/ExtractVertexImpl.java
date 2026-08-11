@@ -75,8 +75,9 @@ public class ExtractVertexImpl implements Serializable {
       vertexProps.put(propertyName, value);
     }
     IVertexId vertexId;
+    String bizId;
     if (vertexProps.containsKey("id")) {
-      vertexId = IVertexId.from(String.valueOf(vertexProps.get("id")), this.type);
+      bizId = String.valueOf(vertexProps.get("id"));
     } else {
       StringBuilder vertexIdSb = new StringBuilder();
       List<String> aliasList = Lists.newArrayList(kgGraph.getVertexAlias());
@@ -84,10 +85,15 @@ public class ExtractVertexImpl implements Serializable {
       for (String vertexAlias : aliasList) {
         vertexIdSb.append(kgGraph.getVertex(vertexAlias).get(0).getId());
       }
-      vertexId = IVertexId.from(vertexIdSb.toString(), this.type);
+      bizId = vertexIdSb.toString();
     }
+    vertexId = IVertexId.from(bizId, this.type);
     IVertex<IVertexId, IProperty> willAddedVertex =
         new Vertex<>(vertexId, getVertexProperty(vertexId, this.version, context));
+    // DDL-created vertices must carry their business id as the "id" property; a
+    // follow-up rule run that uses this vertex as a start id would otherwise die
+    // with an NPE in LocalRDG.generateStartNodeDebugInfo (get("id").toString())
+    willAddedVertex.getValue().put("id", bizId);
 
     Map<String, Set<IVertex<IVertexId, IProperty>>> alias2VertexMap = new HashMap<>();
     alias2VertexMap.put(this.alias, Sets.newHashSet(willAddedVertex));
