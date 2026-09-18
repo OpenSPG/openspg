@@ -271,9 +271,10 @@ public class CommonUtils {
     if (reader == null) {
       reader = new JSONObject();
     }
-    JSONObject builderExtension = JSON.parseObject(job.getExtension());
+    JSONObject builderExtension =
+        job == null ? new JSONObject() : JSON.parseObject(job.getExtension());
     JSONObject llm = JSONObject.parseObject(project.getConfig()).getJSONObject(CommonConstants.LLM);
-    String dataSourceType = job.getDataSourceType();
+    String dataSourceType = job == null ? null : job.getDataSourceType();
 
     if (BuilderConstant.YU_QUE.equalsIgnoreCase(dataSourceType)) {
       scanner.put(BuilderConstant.TYPE, BuilderConstant.YU_QUE);
@@ -420,6 +421,9 @@ public class CommonUtils {
   }
 
   public static String getKagBuilderInput(BuilderJob builderJob, Date bizDate) {
+    if (builderJob == null) {
+      return "";
+    }
     String input = builderJob.getFileUrl();
     String dataSourceType = builderJob.getDataSourceType().toLowerCase();
     if (BuilderConstant.ODPS.equalsIgnoreCase(dataSourceType)) {

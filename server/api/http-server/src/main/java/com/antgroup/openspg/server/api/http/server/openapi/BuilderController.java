@@ -128,7 +128,18 @@ public class BuilderController extends BaseController {
 
           @Override
           public Boolean action() {
-            return builderJobService.deleteById(id) > 0;
+            BuilderJob builderJob = builderJobService.getById(id);
+            if (builderJob == null) {
+              return Boolean.FALSE;
+            }
+            boolean deleted = builderJobService.deleteById(id) > 0;
+            // Tear down the linked scheduler job so its DAG instances do not keep
+            // executing sync tasks against a BuilderJob that no longer exists.
+            // Otherwise reader/retrieval sync tasks dereference a null BuilderJob (see #732).
+            if (deleted && builderJob.getTaskId() != null) {
+              schedulerService.deleteJob(builderJob.getTaskId());
+            }
+            return deleted;
           }
         });
   }

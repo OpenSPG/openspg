@@ -69,6 +69,10 @@ public class RetrievalSyncTask extends SyncTaskExecuteTemplate {
 
     SchedulerJob job = context.getJob();
     BuilderJob builderJob = builderJobService.getById(Long.valueOf(job.getInvokerId()));
+    if (builderJob == null) {
+      context.addTraceLog("builderJob %s not found, skip retrieval", job.getInvokerId());
+      return SchedulerEnum.TaskStatus.FINISH;
+    }
     String retrievals = builderJob.getRetrievals();
     if (StringUtils.isBlank(retrievals)) {
       context.addTraceLog("index not set");
@@ -79,6 +83,10 @@ public class RetrievalSyncTask extends SyncTaskExecuteTemplate {
     Project project = projectService.queryById(job.getProjectId());
     for (Long id : retrievalList) {
       Retrieval retrieval = retrievalService.getById(id);
+      if (retrieval == null) {
+        context.addTraceLog("retrieval %s not found, skip", id);
+        continue;
+      }
       context.addTraceLog("update index(%s) schema", retrieval.getName());
       String schemaDesc = retrieval.getSchemaDesc();
       if (StringUtils.isBlank(schemaDesc)) {

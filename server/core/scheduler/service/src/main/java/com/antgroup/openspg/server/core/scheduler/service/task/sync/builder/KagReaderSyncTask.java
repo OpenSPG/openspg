@@ -48,6 +48,10 @@ public class KagReaderSyncTask extends SyncTaskExecuteTemplate {
   public SchedulerEnum.TaskStatus submit(TaskExecuteContext context) {
     SchedulerJob job = context.getJob();
     BuilderJob builderJob = builderJobService.getById(Long.valueOf(job.getInvokerId()));
+    if (builderJob == null) {
+      context.addTraceLog("builderJob %s not found, skip reader", job.getInvokerId());
+      return SchedulerEnum.TaskStatus.FINISH;
+    }
     List<ChunkRecord.Chunk> chunks = readSource(context, builderJob);
     SchedulerTask task = context.getTask();
     String fileKey =
